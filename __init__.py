@@ -1,0 +1,1 @@
+__import__('abstract').declare_package(__name__)
