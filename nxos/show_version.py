@@ -111,13 +111,13 @@ class ShowVersion(MetaParser):
         
         netconf_request += "\n##\n"
         ncout = base.netconf.send_config(netconf_request)
-
-#        ### XML output from yang
-#        <ns0:rpc-reply xmlns:ns0="urn:ietf:params:xml:ns:netconf:base:1.0" 
-#        xmlns:ns1="urn:ios" message-id="101"><ns0:data><ns1:native>
-#        ....
-#        </ns1:native></ns0:data></ns0:rpc-reply>
-
+        
+        #    ### XML output from yang
+        #    <ns0:rpc-reply xmlns:ns0="urn:ietf:params:xml:ns:netconf:base:1.0" 
+        #    xmlns:ns1="urn:ios" message-id="101"><ns0:data><ns1:native>
+        #    ....
+        #    </ns1:native></ns0:data></ns0:rpc-reply>
+        
         filtered_result = xmltodict.parse(ncout, 
                                           process_namespaces=True,
                                           namespaces={

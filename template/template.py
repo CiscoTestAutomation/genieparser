@@ -14,7 +14,7 @@
 #*    Ke Liu, Automation Strategy - Core Software Group (CSG)
 #*
 #* Support:
-#*    pyats-support@cisco.com
+#*    asg-genie-support@cisco.com
 #*
 #* Description:
 #*   This template file describes how to write a specific parser class by
@@ -79,7 +79,7 @@ __credits__ = ["Sedy Yadollahi",
                "Siming Yuan", 
                "Jean-Benoit Aubin"]
 __maintainer__ = 'ASG/ATS team'
-__email__ = 'pyats-support@cisco.com'
+__email__ = 'asg-genie-support@cisco.com'
 __date__= 'May 01, 2016'
 __version__ = 1.0
 
