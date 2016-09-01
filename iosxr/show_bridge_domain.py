@@ -4,7 +4,7 @@ show bridge domain parser class
 
 '''
 from ats import tcl
-from ats.tcl import tclobj, tclstr
+from ats.tcl import tclobj, tclstr, KeyedList
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
 from xbu_shared.parser.iosxr import IosxrCaasMetaParser
@@ -100,7 +100,14 @@ class ShowL2VpnBridgeDomainSummary(IosxrCaasMetaParser):
         #TODO: look into how we can utilize hfr-mpls parsers
         result = tcl.q.caas.abstract(device=self.device.handle, 
                                      exec='show l2vpn bridge-domain summary')
-        return tcl.cast_any(result[1])
+        result_code = result[0]
+        result_msg = result[1:] if len(result) > 2 else result[1]
+        if str(result[0]) in ('passed', '1'):
+            if not isinstance(result_msg, KeyedList):
+                result_msg = tcl.cast_keyed_list(result_msg)
+            return result_msg
+        else:
+            raise RuntimeError(tcl.tclstr(result_msg))
 
 class ShowL2VpnBridgeDomainBrief(IosxrCaasMetaParser):
     """ parser class - implements detail parsing mechanisms for cli, xml, and 
@@ -161,7 +168,14 @@ class ShowL2VpnBridgeDomainBrief(IosxrCaasMetaParser):
         #TODO: look into how we can utilize hfr-mpls parsers
         result = tcl.q.caas.abstract(device=self.device.handle, 
                                      exec='show l2vpn bridge-domain brief')
-        return tcl.cast_any(result[1])
+        result_code = result[0]
+        result_msg = result[1:] if len(result) > 2 else result[1]
+        if str(result[0]) in ('passed', '1'):
+            if not isinstance(result_msg, KeyedList):
+                result_msg = tcl.cast_keyed_list(result_msg)
+            return result_msg
+        else:
+            raise RuntimeError(tcl.tclstr(result_msg))
 
 
 class ShowL2VpnBridgeDomain(IosxrCaasMetaParser):
@@ -223,7 +237,14 @@ class ShowL2VpnBridgeDomain(IosxrCaasMetaParser):
         #TODO: look into how we can utilize hfr-mpls parsers
         result = tcl.q.caas.abstract(device=self.device.handle, 
                                      exec='show l2vpn bridge-domain')
-        return tcl.cast_any(result[1])
+        result_code = result[0]
+        result_msg = result[1:] if len(result) > 2 else result[1]
+        if str(result[0]) in ('passed', '1'):
+            if not isinstance(result_msg, KeyedList):
+                result_msg = tcl.cast_keyed_list(result_msg)
+            return result_msg
+        else:
+            raise RuntimeError(tcl.tclstr(result_msg))
 
 
 class ShowL2VpnBridgeDomainDetail(IosxrCaasMetaParser):
@@ -285,4 +306,13 @@ class ShowL2VpnBridgeDomainDetail(IosxrCaasMetaParser):
         #TODO: look into how we can utilize hfr-mpls parsers
         result = tcl.q.caas.abstract(device=self.device.handle, 
                                      exec='show l2vpn bridge-domain detail')
-        return tcl.cast_any(result[1])
+        result_code = result[0]
+        result_msg = result[1:] if len(result) > 2 else result[1]
+        if str(result[0]) in ('passed', '1'):
+            if not isinstance(result_msg, KeyedList):
+                result_msg = tcl.cast_keyed_list(result_msg)
+            return result_msg
+        else:
+            raise RuntimeError(tcl.tclstr(result_msg))
+
+# vim: ft=python ts=8 sw=4 et
