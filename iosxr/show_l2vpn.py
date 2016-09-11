@@ -45,7 +45,7 @@ class ShowL2vpnMacLearning(MetaParser):
             m = re.match(r'^(?P<topo_id>\d+)'
                          r' +(?P<producer>\S+)'
                          r' +(?:none|(?P<next_hop>\S+))'
-                         r' +(<?P<mac>[A-Za-z0-9]+\.[A-Za-z0-9]+\.[A-Za-z0-9]+)'
+                         r' +(?P<mac>[A-Za-z0-9]+\.[A-Za-z0-9]+\.[A-Za-z0-9]+)'
                          r'(?: +(?P<ip_address>\d+\.\d+\.\d+\.\d+|[A-Za-z0-9:]+))?$', line)
             if m:
                 entry = {

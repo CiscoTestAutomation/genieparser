@@ -6,6 +6,7 @@ show evpn parser class
 
 from netaddr import EUI
 from ipaddress import ip_address
+import re
 
 from ats import tcl
 from ats.tcl import tclobj, tclstr
@@ -31,9 +32,9 @@ re_mac = r'(?:' + r'|'.join([
     r'\.'.join([re_8bit_x] * 6),
 ]) + r')'
 re_ipv4 = r'(?:' + r'\.'.join([re_8bit_u] * 4) + r')'
-re_ipv6 = r'(?[A-Fa-f0-9:]+(?::' + re_ipv4 + ')?)'
+re_ipv6 = r'(?:[A-Fa-f0-9:]+(?::' + re_ipv4 + ')?)'
 re_ip = r'(?:' + r'|'.join([re_ipv4, re_ipv6]) + ')'
-re_label_str = r'(' + r'|'.join([
+re_label_str = r'(?:' + r'|'.join([
     r'[0-9]+',
     r'[A-Za-z0-9-]+', # See mpls_label_strings @ mpls/base/include/mpls_label_defs_extra.h
 ]) + r')'
@@ -67,6 +68,7 @@ class ShowEvpnEviDetail(IosxrCaasMetaParser):
                                      exec='show evpn evi detail')
         return tcl.cast_any(result[1])
 
+
 class ShowEvpnEviMac(MetaParser):
     '''Parser class for 'show evpn evi mac' CLI.'''
 
@@ -95,7 +97,7 @@ class ShowEvpnEviMac(MetaParser):
             # -------------- --------------------------------------- -------- --------
 
             # 7777.7777.0002 N/A                                     24005    7       
-            m = re.match(r'^(<?P<mac>' + re_mac + ')'
+            m = re.match(r'^(?P<mac>' + re_mac + ')'
                          r' +(?:N/A|(?P<next_hop>' + re_ip + '))'
                          r' +(?P<label>' + re_label_str + ')'
                          r' +(?P<evi>[0-9]+)$', line)
@@ -114,4 +116,5 @@ class ShowEvpnEviMac(MetaParser):
                 continue
 
         return result
+
 # vim: ft=python ts=8 sw=4 et

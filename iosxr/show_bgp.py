@@ -3,6 +3,9 @@
 show bgp parser class
 
 '''
+
+import re
+
 from ats import tcl
 from ats.tcl import tclobj, tclstr
 from metaparser import MetaParser
@@ -115,28 +118,32 @@ class ShowBgpL2vpnEvpnAdvertised(MetaParser):
 
             #    EXTCOMM 
             #    ORG AS EXTCOMM 
-            m = re.match(r'^(?: +' + re_attr_string + r')+$' , line):
+            m = re.match(r'^(?: +' + re_attr_string + r')+$' , line)
             if m:
                 attr_info['attributes'] = set(line.split())
                 continue
 
             #    origin: IGP  
-            m = re.match(r'^ +origin: (?P<origin>.+)$', line):
+            m = re.match(r'^ +origin: (?P<origin>.+)$', line)
+            if m:
                 attr_info.update(m.groupdict())
                 continue
 
             #    aspath: 
-            m = re.match(r'^ +aspath: (?P<aspath>.+)$', line):
+            m = re.match(r'^ +aspath: (?P<aspath>.+)$', line)
+            if m:
                 attr_info.update(m.groupdict())
                 continue
 
             #    community: no-export
-            m = re.match(r'^ +community: (?P<comms>.+)$', line):
+            m = re.match(r'^ +community: (?P<comms>.+)$', line)
+            if m:
                 attr_info['comms'] = m.group('comms').split()
                 continue
 
             #    extended community: SoO:0.0.0.0:0 RT:100:7 
-            m = re.match(r'^ +extended community: (?P<extcomms>.+)$', line):
+            m = re.match(r'^ +extended community: (?P<extcomms>.+)$', line)
+            if m:
                 attr_info['extcomms'] = extcomms = []
                 s = ' ' + m.group('extcomms')
                 while s:
