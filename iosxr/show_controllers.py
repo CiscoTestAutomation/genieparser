@@ -43,7 +43,7 @@ class ShowControllersFiaDiagshellL2show(MetaParser):
             # Node ID: 0/0/CPU0
             m = re.match(r'^Node ID: (\S+)$', line)
             if m:
-                node_id = m.group(0)
+                node_id = m.group(1)
                 result['nodes'].setdefault(node_id, {
                     'entries': [],
                 })
