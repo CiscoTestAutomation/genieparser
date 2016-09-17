@@ -35,12 +35,11 @@ class ShowL2routeEvpnMac(MetaParser):
         for line in out.splitlines():
             line = line.rstrip()
 
-            # Topo ID  Mac Address    Prod   Next Hop(s)                             
-            # -------- -------------- ------ ----------------------------------------                          
+            # Topo ID  Mac Address    Prod   Next Hop(s)
+            # -------- -------------- ------ ----------------------------------------
 
-            # 1        7777.7777.0002 LOCAL  Bundle-Ether1.7      
-            # 50       fc00.0001.0000 L2VPN  192.0.0.0/28270/ME                      
-            # 50       fc00.0001.0002 LOCAL  GigabitEthernet0/0/0/38.0               
+            # 1        7777.7777.0002 LOCAL  Bundle-Ether1.7
+            # 50       fc00.0001.0000 L2VPN  192.0.0.0/28270/ME
             m = re.match(r'^(?P<topo_id>\d+)'
                          r' +(?P<mac>[A-Za-z0-9]+\.[A-Za-z0-9]+\.[A-Za-z0-9]+)'
                          r' +(?P<producer>\S+)'
