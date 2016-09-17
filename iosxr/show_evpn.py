@@ -32,7 +32,7 @@ re_mac = r'(?:' + r'|'.join([
     r'\.'.join([re_8bit_x] * 6),
 ]) + r')'
 re_ipv4 = r'(?:' + r'\.'.join([re_8bit_u] * 4) + r')'
-re_ipv6 = r'(?:[A-Fa-f0-9:]+(?::' + re_ipv4 + ')?)'
+re_ipv6 = r'(?:[A-Fa-f0-9:]*:[A-Fa-f0-9:]*(?::' + re_ipv4 + ')?)'
 re_ip = r'(?:' + r'|'.join([re_ipv4, re_ipv6]) + ')'
 re_label_str = r'(?:' + r'|'.join([
     r'[0-9]+',
@@ -93,19 +93,48 @@ class ShowEvpnEviMac(MetaParser):
         for line in out.splitlines():
             line = line.rstrip()
 
+            # EVI        MAC address    IP address                               Nexthop                                 Label
+            # ---------- -------------- ---------------------------------------- --------------------------------------- --------
+
+            # 65535      02e5.7847.6000 ::                                       Local                                   0
+            m = re.match(r'^(?P<evi>[0-9]+)'
+                         r' +(?P<mac>' + re_mac + ')'
+                         r' +(?P<ip>' + re_ip + ')'
+                         r' +(?P<next_hop>\S+)'
+                         r' +(?:(?P<label_int>\d+)|(?P<label_str>' + re_label_str + '))'
+                         r'$', line)
+            if m:
+                entry = {
+                    'evi': int(m.group('evi')),
+                    'mac': EUI(m.group('mac')),
+                    'ip': ip_address(m.group('ip')),
+                    'next_hop': m.group('next_hop'),
+                    'label': m.group('label_str') or int(m.group('label_int')),
+                }
+                try:
+                    entry['label'] = int(entry['label'])
+                except ValueError:
+                    pass
+                result['entries'].append(entry)
+                continue
+
+            # OLD
+
             # MAC address    Nexthop                                 Label    vpn-id  
             # -------------- --------------------------------------- -------- --------
 
             # 7777.7777.0002 N/A                                     24005    7       
             m = re.match(r'^(?P<mac>' + re_mac + ')'
-                         r' +(?:N/A|(?P<next_hop>' + re_ip + '))'
-                         r' +(?P<label>' + re_label_str + ')'
-                         r' +(?P<evi>[0-9]+)$', line)
+                         r' +(?:N/A|(?P<ip>' + re_ip + ')|(?P<next_hop>\S+))'
+                         r' +(?:(?P<label_int>\d+)|(?P<label_str>' + re_label_str + '))'
+                         r' +(?P<evi>[0-9]+)'
+                         r'$', line)
             if m:
                 entry = {
                     'mac': EUI(m.group('mac')),
-                    'next_hop': m.group('next_hop') and ip_address(m.group('next_hop')),
-                    'label': m.group('label'),
+                    'ip': m.group('ip') and ip_address(m.group('ip')),
+                    'next_hop': m.group('next_hop'),
+                    'label': m.group('label_str') or int(m.group('label_int')),
                     'evi': int(m.group('evi')),
                 }
                 try:
