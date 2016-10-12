@@ -79,7 +79,14 @@ class ShowEvpnEviMac(MetaParser):
         super().__init__(**kwargs)
 
     def cli(self):
-        cmd = 'show evpn evi mac'.format()
+        if True:
+            cmd = 'show evpn evi mac'.format()
+        else:
+            #bpetrovi Sept. 20th, 2016 - hacking to exclude remote
+            #trying to match enXR baseline for ATT suite in JST's absence
+            #bpetrovi Sept 27th, 2016, further changing local to Gi due to 
+            #latest image changes
+            cmd = 'show evpn evi mac | exclude 192.0.0.'.format()
         if self.mac:
             cmd += ' {mac}'.format(self.mac)
 
@@ -97,11 +104,14 @@ class ShowEvpnEviMac(MetaParser):
             # ---------- -------------- ---------------------------------------- --------------------------------------- --------
 
             # 65535      02e5.7847.6000 ::                                       Local                                   0
+            # 1          0000.0000.0001 ::                                       No remote pathlist
             m = re.match(r'^(?P<evi>[0-9]+)'
                          r' +(?P<mac>' + re_mac + ')'
                          r' +(?P<ip>' + re_ip + ')'
+                         r'(?: +No remote pathlist|'
                          r' +(?P<next_hop>\S+)'
                          r' +(?:(?P<label_int>\d+)|(?P<label_str>' + re_label_str + '))'
+                         r')'
                          r'$', line)
             if m:
                 entry = {
@@ -109,11 +119,12 @@ class ShowEvpnEviMac(MetaParser):
                     'mac': EUI(m.group('mac')),
                     'ip': ip_address(m.group('ip')),
                     'next_hop': m.group('next_hop'),
-                    'label': m.group('label_str') or int(m.group('label_int')),
+                    'label': m.group('label_str') \
+                    or (m.group('label_int') and int(m.group('label_int'))),
                 }
                 try:
-                    entry['label'] = int(entry['label'])
-                except ValueError:
+                    entry['next_hop'] = ip_address(entry['next_hop'])
+                except (TypeError, ValueError):
                     pass
                 result['entries'].append(entry)
                 continue
