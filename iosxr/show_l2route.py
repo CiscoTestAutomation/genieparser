@@ -14,6 +14,48 @@ from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
 
 
+class ShowL2routeTopology(MetaParser):
+    '''Parser class for 'show l2route topology' CLI.'''
+
+    # TODO schema
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def cli(self):
+        cmd = 'show l2route topology'.format()
+
+        out = self.device.execute(cmd)
+
+        result = {
+            'topologies': [],
+        }
+
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            # Topology ID   Topology Name    Type
+            # -----------   -------------    ----
+
+            # 51             bd2              L2VRF   
+            # 4294967294     GLOBAL           N/A     
+            # 4294967295     ALL              N/A     
+            m = re.match(r'^(?P<topo_id>\d+)'
+                         r' +(?P<name>\S+)'
+                         r' +(?:N/A|(?P<type>\S+))$', line)
+            if m:
+                topo_id = eval(m.group('topo_id'))
+                entry = {
+                    'topo_id': topo_id,
+                    'name': m.group('name'),
+                    'type': m.group('type'),
+                }
+                result['topologies'].append(entry)
+                continue
+
+        return result
+
 class ShowL2routeEvpnMac(MetaParser):
     '''Parser class for 'show l2route evpn mac all' CLI.'''
 
