@@ -79,14 +79,7 @@ class ShowEvpnEviMac(MetaParser):
         super().__init__(**kwargs)
 
     def cli(self):
-        if True:
-            cmd = 'show evpn evi mac'.format()
-        else:
-            #bpetrovi Sept. 20th, 2016 - hacking to exclude remote
-            #trying to match enXR baseline for ATT suite in JST's absence
-            #bpetrovi Sept 27th, 2016, further changing local to Gi due to 
-            #latest image changes
-            cmd = 'show evpn evi mac | exclude 192.0.0.'.format()
+        cmd = 'show evpn evi mac'.format()
         if self.mac:
             cmd += ' {mac}'.format(self.mac)
 
