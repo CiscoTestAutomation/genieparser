@@ -5,27 +5,99 @@ show bgp parser class
 '''
 
 import re
+import logging
 
-from ats import tcl
-from ats.tcl import tclobj, tclstr
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
-from xbu_shared.parser.iosxr import IosxrCaasMetaParser
+
+from xbu_shared.parser.base import *
+
+logger = logging.getLogger(__name__)
 
 
-class ShowBgpL2vpnEvpn(IosxrCaasMetaParser):
-    '''Parser class for 'show bgp l2vpn evpn' CLI.'''
+class ShowBgpVrfDbVrfAll(MetaParser):
+    '''Parser class for 'show bgp vrf-db vrf all'' CLI.'''
+
     # TODO schema
 
     def cli(self):
         ''' parsing mechanism: cli
-
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
         '''
-        result = tcl.q.caas.abstract(device=self.device.handle,
-                                     exec='show bgp l2vpn evpn')
-        return tcl.cast_any(result[1])
+
+        cmd = 'show bgp vrf-db vrf all'
+
+        out = self.device.execute(cmd)
+
+        result = {
+            'entries': [],
+        }
+
+        vrf_entry = None
+        afs_col = None
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            if not line:
+                continue
+
+            if afs_col is not None:
+                # Continuation of address families column
+
+                if len(line) >= afs_col \
+                        and line[:afs_col].isspace():
+                    # default                          0x60000000  0:0:0           6   v4u, Vv4u,
+                    #                                                                  L2evpn
+                    assert vrf_entry['afs'][-1] == ''
+                    vrf_entry['afs'][-1:] = [s.strip() for s in line[afs_col:].split(',')]
+                    if vrf_entry['afs'][-1] != '':
+                        afs_col = None
+                    continue
+
+                logger.warning('Failed to parse continuation of VRF address families')
+                afs_col = None
+
+            # VRF                              ID          RD              REF AFs
+
+            # irb1                             0x6000003a  192.0.0.0:2     4   v4u
+            # default                          0x60000000  0:0:0           6   v4u, Vv4u,
+            # bd1                              -           192.0.0.3:1     2   L2evpn
+            # bd2                              -           192.0.0.3:2     2   L2evpn
+            # ES:GLOBAL                        -           192.0.0.3:0     2   L2evpn
+            m = re.match(r'^(?P<name>\S+)' r' +(?:-|(?P<id>0x[A-Fa-f0-9]+))' r' +(?P<rd>\S+)' r' +(?P<refs>\d+)' r' +(?P<afs>.+)' r'$', line)
+            if m:
+                vrf_entry = {
+                    'name': m.group('name'),
+                    'id': m.group('id') and eval(m.group('id')),
+                    'rd': m.group('rd'),
+                    'refs': int(m.group('refs')),
+                    'afs': [s.strip() for s in m.group('afs').split(',')],
+                }
+                result['entries'].append(vrf_entry)
+                # NOTE: a ',' at the end of afs will leave an empty element which will be completed later
+                if vrf_entry['afs'][-1] == '':
+                    afs_col = m.span('afs')[0]
+                continue
+
+        return result
+
+
+class ShowBgpL2vpnEvpn(MetaParser):
+    '''Parser class for 'show bgp l2vpn evpn' CLI.'''
+
+    # TODO schema
+
+    def cli(self):
+        ''' parsing mechanism: cli
+        '''
+
+        cmd = 'show bgp l2vpn evpn'
+
+        tcl_package_require_caas_parsers()
+        kl = tcl_invoke_caas_abstract_parser(
+            device=self.device, exec=cmd)
+
+        return kl
 
 
 class ShowBgpL2vpnEvpnAdvertised(MetaParser):
@@ -33,16 +105,13 @@ class ShowBgpL2vpnEvpnAdvertised(MetaParser):
 
     # TODO schema
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
     def cli(self):
         cmd = 'show bgp l2vpn evpn advertised'.format()
 
         out = self.device.execute(cmd)
 
         result = {
-            'entries': []
+            'entries': [],
         }
 
         attr_strings = (
@@ -85,7 +154,7 @@ class ShowBgpL2vpnEvpnAdvertised(MetaParser):
                 path_info.update(m.groupdict())
                 continue
 
-            #    valid  redistributed  best  import-candidate  
+            #    valid  redistributed  best  import-candidate
             # TODO many different strings/formats and not necessarily the next line
 
             # Received Path ID 0, Local Path ID 0, version 193217
@@ -116,20 +185,20 @@ class ShowBgpL2vpnEvpnAdvertised(MetaParser):
                 path_info.update(m.groupdict())
                 continue
 
-            #    EXTCOMM 
-            #    ORG AS EXTCOMM 
-            m = re.match(r'^(?: +' + re_attr_string + r')+$' , line)
+            #    EXTCOMM
+            #    ORG AS EXTCOMM
+            m = re.match(r'^(?: +' + re_attr_string + r')+$', line)
             if m:
                 attr_info['attributes'] = set(line.split())
                 continue
 
-            #    origin: IGP  
+            #    origin: IGP
             m = re.match(r'^ +origin: (?P<origin>.+)$', line)
             if m:
                 attr_info.update(m.groupdict())
                 continue
 
-            #    aspath: 
+            #    aspath:
             m = re.match(r'^ +aspath: (?P<aspath>.+)$', line)
             if m:
                 attr_info.update(m.groupdict())
@@ -141,7 +210,7 @@ class ShowBgpL2vpnEvpnAdvertised(MetaParser):
                 attr_info['comms'] = m.group('comms').split()
                 continue
 
-            #    extended community: SoO:0.0.0.0:0 RT:100:7 
+            #    extended community: SoO:0.0.0.0:0 RT:100:7
             m = re.match(r'^ +extended community: (?P<extcomms>.+)$', line)
             if m:
                 attr_info['extcomms'] = extcomms = []
@@ -155,6 +224,5 @@ class ShowBgpL2vpnEvpnAdvertised(MetaParser):
                 continue
 
         return result
-
 
 # vim: ft=python ts=8 sw=4 et

@@ -3,14 +3,14 @@
 show bridge domain parser class
 
 '''
-from ats import tcl
-from ats.tcl import tclobj, tclstr, KeyedList
+
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
-from xbu_shared.parser.iosxr import IosxrCaasMetaParser
+
+from xbu_shared.parser.base import *
 
 """
-    TODO: bpetrovi - Aug 2, 2016 
+    TODO: bpetrovi - Aug 2, 2016
 # XR command: "show l2vpn bridge-domain [group <group>] [bd-name <name>]"
 # XR command: "show l2vpn bridge-domain [neighbor <neighbor> [pw-id <id>]]"
 # XR command: "show l2vpn bridge-domain [interface <interface>]"
@@ -41,15 +41,15 @@ from xbu_shared.parser.iosxr import IosxrCaasMetaParser
 """
 
 
-class ShowL2VpnBridgeDomainSummary(IosxrCaasMetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and 
+class ShowL2VpnBridgeDomainSummary(MetaParser):
+    """ parser class - implements detail parsing mechanisms for cli, xml, and
     yang output.
     """
     #*************************
     # schema - class variable
     #
-    # Purpose is to make sure the parser always return the output 
-    # (nested dict) that has the same data structure across all supported 
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
     """
     schema = {'TODO:': {
@@ -88,36 +88,29 @@ class ShowL2VpnBridgeDomainSummary(IosxrCaasMetaParser):
               'system_version': str,
               Any(): str,}
     """
+
     def cli(self):
-        ''' parsing mechanism: cli
-
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
+        '''parsing mechanism: cli
         '''
-        #no need to do router_show calls, internally MetaParser code looks
-        #in caas, then goes 4, or 7 levels down to find the right parser, with
-        #router_show being one of the options
-        #TODO: look into how we can utilize hfr-mpls parsers
-        result = tcl.q.caas.abstract(device=self.device.handle, 
-                                     exec='show l2vpn bridge-domain summary')
-        result_code = result[0]
-        result_msg = result[1:] if len(result) > 2 else result[1]
-        if str(result[0]) in ('passed', '1'):
-            if not isinstance(result_msg, KeyedList):
-                result_msg = tcl.cast_keyed_list(result_msg)
-            return result_msg
-        else:
-            raise RuntimeError(tcl.tclstr(result_msg))
 
-class ShowL2VpnBridgeDomainBrief(IosxrCaasMetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and 
+        cmd = 'show l2vpn bridge-domain summary'
+
+        tcl_package_require_caas_parsers()
+        kl = tcl_invoke_caas_abstract_parser(
+            device=self.device, exec=cmd)
+
+        return kl
+
+
+class ShowL2VpnBridgeDomainBrief(MetaParser):
+    """ parser class - implements detail parsing mechanisms for cli, xml, and
     yang output.
     """
     #*************************
     # schema - class variable
     #
-    # Purpose is to make sure the parser always return the output 
-    # (nested dict) that has the same data structure across all supported 
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
     """
     schema = {'TODO:': {
@@ -156,37 +149,29 @@ class ShowL2VpnBridgeDomainBrief(IosxrCaasMetaParser):
               'system_version': str,
               Any(): str,}
     """
+
     def cli(self):
-        ''' parsing mechanism: cli
-
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
+        '''parsing mechanism: cli
         '''
-        #no need to do router_show calls, internally MetaParser code looks
-        #in caas, then goes 4, or 7 levels down to find the right parser, with
-        #router_show being one of the options
-        #TODO: look into how we can utilize hfr-mpls parsers
-        result = tcl.q.caas.abstract(device=self.device.handle, 
-                                     exec='show l2vpn bridge-domain brief')
-        result_code = result[0]
-        result_msg = result[1:] if len(result) > 2 else result[1]
-        if str(result[0]) in ('passed', '1'):
-            if not isinstance(result_msg, KeyedList):
-                result_msg = tcl.cast_keyed_list(result_msg)
-            return result_msg
-        else:
-            raise RuntimeError(tcl.tclstr(result_msg))
+
+        cmd = 'show l2vpn bridge-domain brief'
+
+        tcl_package_require_caas_parsers()
+        kl = tcl_invoke_caas_abstract_parser(
+            device=self.device, exec=cmd)
+
+        return kl
 
 
-class ShowL2VpnBridgeDomain(IosxrCaasMetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and 
+class ShowL2VpnBridgeDomain(MetaParser):
+    """ parser class - implements detail parsing mechanisms for cli, xml, and
     yang output.
     """
     #*************************
     # schema - class variable
     #
-    # Purpose is to make sure the parser always return the output 
-    # (nested dict) that has the same data structure across all supported 
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
     """
     schema = {'TODO:': {
@@ -225,37 +210,29 @@ class ShowL2VpnBridgeDomain(IosxrCaasMetaParser):
               'system_version': str,
               Any(): str,}
     """
+
     def cli(self):
-        ''' parsing mechanism: cli
-
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
+        '''parsing mechanism: cli
         '''
-        #no need to do router_show calls, internally MetaParser code looks
-        #in caas, then goes 4, or 7 levels down to find the right parser, with
-        #router_show being one of the options
-        #TODO: look into how we can utilize hfr-mpls parsers
-        result = tcl.q.caas.abstract(device=self.device.handle, 
-                                     exec='show l2vpn bridge-domain')
-        result_code = result[0]
-        result_msg = result[1:] if len(result) > 2 else result[1]
-        if str(result[0]) in ('passed', '1'):
-            if not isinstance(result_msg, KeyedList):
-                result_msg = tcl.cast_keyed_list(result_msg)
-            return result_msg
-        else:
-            raise RuntimeError(tcl.tclstr(result_msg))
+
+        cmd = 'show l2vpn bridge-domain'
+
+        tcl_package_require_caas_parsers()
+        kl = tcl_invoke_caas_abstract_parser(
+            device=self.device, exec=cmd)
+
+        return kl
 
 
-class ShowL2VpnBridgeDomainDetail(IosxrCaasMetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and 
+class ShowL2VpnBridgeDomainDetail(MetaParser):
+    """ parser class - implements detail parsing mechanisms for cli, xml, and
     yang output.
     """
     #*************************
     # schema - class variable
     #
-    # Purpose is to make sure the parser always return the output 
-    # (nested dict) that has the same data structure across all supported 
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
     """
     schema = {'TODO:': {
@@ -294,25 +271,17 @@ class ShowL2VpnBridgeDomainDetail(IosxrCaasMetaParser):
               'system_version': str,
               Any(): str,}
     """
-    def cli(self):
-        ''' parsing mechanism: cli
 
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
+    def cli(self):
+        '''parsing mechanism: cli
         '''
-        #no need to do router_show calls, internally MetaParser code looks
-        #in caas, then goes 4, or 7 levels down to find the right parser, with
-        #router_show being one of the options
-        #TODO: look into how we can utilize hfr-mpls parsers
-        result = tcl.q.caas.abstract(device=self.device.handle, 
-                                     exec='show l2vpn bridge-domain detail')
-        result_code = result[0]
-        result_msg = result[1:] if len(result) > 2 else result[1]
-        if str(result[0]) in ('passed', '1'):
-            if not isinstance(result_msg, KeyedList):
-                result_msg = tcl.cast_keyed_list(result_msg)
-            return result_msg
-        else:
-            raise RuntimeError(tcl.tclstr(result_msg))
+
+        cmd = 'show l2vpn bridge-domain detail'
+
+        tcl_package_require_caas_parsers()
+        kl = tcl_invoke_caas_abstract_parser(
+            device=self.device, exec=cmd)
+
+        return kl
 
 # vim: ft=python ts=8 sw=4 et

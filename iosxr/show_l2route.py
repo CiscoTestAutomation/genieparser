@@ -8,10 +8,10 @@ import re
 from netaddr import EUI
 from ipaddress import ip_address
 
-from ats import tcl
-from ats.tcl import tclobj, tclstr
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
+
+from xbu_shared.parser.base import *
 
 
 class ShowL2routeTopology(MetaParser):
@@ -19,10 +19,8 @@ class ShowL2routeTopology(MetaParser):
 
     # TODO schema
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
     def cli(self):
+
         cmd = 'show l2route topology'.format()
 
         out = self.device.execute(cmd)
@@ -38,9 +36,9 @@ class ShowL2routeTopology(MetaParser):
             # Topology ID   Topology Name    Type
             # -----------   -------------    ----
 
-            # 51             bd2              L2VRF   
-            # 4294967294     GLOBAL           N/A     
-            # 4294967295     ALL              N/A     
+            # 51             bd2              L2VRF
+            # 4294967294     GLOBAL           N/A
+            # 4294967295     ALL              N/A
             m = re.match(r'^(?P<topo_id>\d+)'
                          r' +(?P<name>\S+)'
                          r' +(?:N/A|(?P<type>\S+))$', line)
@@ -56,21 +54,20 @@ class ShowL2routeTopology(MetaParser):
 
         return result
 
+
 class ShowL2routeEvpnMac(MetaParser):
     '''Parser class for 'show l2route evpn mac all' CLI.'''
 
     # TODO schema
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
     def cli(self):
+
         cmd = 'show l2route evpn mac all'.format()
 
         out = self.device.execute(cmd)
 
         result = {
-            'entries': []
+            'entries': [],
         }
 
 

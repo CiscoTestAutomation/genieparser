@@ -5,13 +5,15 @@ show controllers parser class
 '''
 
 import re
+import logging
 from netaddr import EUI
 
-from ats import tcl
-from ats.tcl import tclobj, tclstr
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
 
+from xbu_shared.parser.base import *
+
+logger = logging.getLogger(__name__)
 
 class ShowControllersFiaDiagshellL2show(MetaParser):
     '''Parser class for 'show controllers fia diagshell 0 "l2 show"' CLI.'''
@@ -34,7 +36,7 @@ class ShowControllersFiaDiagshellL2show(MetaParser):
         out = self.device.execute(cmd)
 
         result = {
-            'nodes': {}
+            'nodes': {},
         }
 
         node_id = None
@@ -49,10 +51,12 @@ class ShowControllersFiaDiagshellL2show(MetaParser):
                 })
                 continue
             # mac=fc:00:00:01:00:9b vlan=2544 GPORT=0x8000048 encap_id=0x2007
+            # mac=fc:00:00:01:00:02 vlan=2522 GPORT=0x9800401d Static encap_id=0xffffffff
             # mac=fc:00:00:01:00:9b vlan=2544 GPORT=0x8000048 Trunk=0 encap_id=0x2007
             m = re.match(r'^mac=(?P<mac>[A-Fa-f0-9:]+)'
                          r' +vlan=(?P<vlan>\d+)'
                          r' +GPORT=(?P<gport>\d+|0x[[A-Fa-f0-9]+)'
+                         r'(?P<b_static> +Static)?'
                          r'(?: +Trunk=(?P<trunk>\d+))?'
                          r' +encap_id=(?P<encap_id>\d+|0x[[A-Fa-f0-9]+)$', line)
             if m:
@@ -60,11 +64,15 @@ class ShowControllersFiaDiagshellL2show(MetaParser):
                     'mac': EUI(m.group('mac')),
                     'vlan': int(m.group('vlan')),
                     'gport': eval(m.group('gport')),
+                    'static': bool(m.group('b_static')),
                     'trunk': m.group('trunk') and eval(m.group('trunk')),
                     'encap_id': eval(m.group('encap_id')),
                 }
                 result['nodes'][node_id]['entries'].append(entry)
                 continue
+
+            if line.startswith('mac='):
+                logger.warning('Unrecognized MAC line in %r: %r', cmd, line)
 
         return result
 

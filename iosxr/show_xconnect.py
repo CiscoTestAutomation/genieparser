@@ -3,14 +3,14 @@
 show xsconnect parser class
 
 '''
-from ats import tcl
-from ats.tcl import tclobj, tclstr
+
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
-from xbu_shared.parser.iosxr import IosxrCaasMetaParser
+
+from xbu_shared.parser.base import *
 
 """
-    TODO: bpetrovi - Aug 2, 2016 
+    TODO: bpetrovi - Aug 2, 2016
         # XR command: "show l2vpn xconnect group xc1g"
         # XR command: "show l2vpn xconnect interface <intf>"
         # Yang section for all parsers
@@ -19,15 +19,16 @@ from xbu_shared.parser.iosxr import IosxrCaasMetaParser
 """
 
 
-class ShowL2VpnXconnectSummary(IosxrCaasMetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and 
+class ShowL2VpnXconnectSummary(MetaParser):
+    """ parser class - implements detail parsing mechanisms for cli, xml, and
     yang output.
     """
+
     #*************************
     # schema - class variable
     #
-    # Purpose is to make sure the parser always return the output 
-    # (nested dict) that has the same data structure across all supported 
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
     """
     schema = {'TODO:': {
@@ -66,30 +67,30 @@ class ShowL2VpnXconnectSummary(IosxrCaasMetaParser):
               'system_version': str,
               Any(): str,}
     """
-    def cli(self):
-        ''' parsing mechanism: cli
 
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
+    def cli(self):
+        '''parsing mechanism: cli
         '''
-        #no need to do router_show calls, internally MetaParser code looks
-        #in caas, then goes 4, or 7 levels down to find the right parser, with
-        #router_show being one of the options
-        #TODO: look into how we can utilize hfr-mpls parsers
-        result = tcl.q.caas.abstract(device=self.device.handle, 
-                                     exec='show l2vpn xconnect summary')
-        return tcl.cast_any(result[1])
+
+        cmd = 'show l2vpn xconnect summary'
+
+        tcl_package_require_caas_parsers()
+        kl = tcl_invoke_caas_abstract_parser(
+            device=self.device, exec=cmd)
+
+        return kl
 
 
 class ShowL2VpnXconnectBrief(MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and 
+    """ parser class - implements detail parsing mechanisms for cli, xml, and
     yang output.
     """
+
     #*************************
     # schema - class variable
     #
-    # Purpose is to make sure the parser always return the output 
-    # (nested dict) that has the same data structure across all supported 
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
     """
     schema = {'TODO:': {
@@ -128,31 +129,30 @@ class ShowL2VpnXconnectBrief(MetaParser):
               'system_version': str,
               Any(): str,}
     """
+
     def cli(self):
-        ''' parsing mechanism: cli
-
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
+        '''parsing mechanism: cli
         '''
-        #no need to do router_show calls, internally MetaParser code looks
-        #in caas, then goes 4, or 7 levels down to find the right parser, with
-        #router_show being one of the options
-        #TODO: look into how we can utilize hfr-mpls parsers
-        result = tcl.q.caas.abstract(device=self.device.handle, 
-                                     exec='show l2vpn xconnect brief')
-        return tcl.cast_any(result[1])
 
+        cmd = 'show l2vpn xconnect brief'
+
+        tcl_package_require_caas_parsers()
+        kl = tcl_invoke_caas_abstract_parser(
+            device=self.device, exec=cmd)
+
+        return kl
 
 
 class ShowL2VpnXconnectDetail(MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and 
+    """ parser class - implements detail parsing mechanisms for cli, xml, and
     yang output.
     """
+
     #*************************
     # schema - class variable
     #
-    # Purpose is to make sure the parser always return the output 
-    # (nested dict) that has the same data structure across all supported 
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
     """
     schema = {'cmp': {
@@ -191,30 +191,30 @@ class ShowL2VpnXconnectDetail(MetaParser):
               'system_version': str,
               Any(): str,}
     """
-    def cli(self):
-        ''' parsing mechanism: cli
 
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
+    def cli(self):
+        '''parsing mechanism: cli
         '''
-        #no need to do router_show calls, internally MetaParser code looks
-        #in caas, then goes 4, or 7 levels down to find the right parser, with
-        #router_show being one of the options
-        #TODO: look into how we can utilize hfr-mpls parsers
-        result = tcl.q.caas.abstract(device=self.device.handle, 
-                                     exec='show l2vpn xconnect detail')
-        return tcl.cast_any(result[1])
+
+        cmd = 'show l2vpn xconnect detail'
+
+        tcl_package_require_caas_parsers()
+        kl = tcl_invoke_caas_abstract_parser(
+            device=self.device, exec=cmd)
+
+        return kl
 
 
 class ShowL2VpnXconnectMp2mpDetail(MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and 
+    """ parser class - implements detail parsing mechanisms for cli, xml, and
     yang output.
     """
+
     #*************************
     # schema - class variable
     #
-    # Purpose is to make sure the parser always return the output 
-    # (nested dict) that has the same data structure across all supported 
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
     """
     schema = {'cmp': {
@@ -253,18 +253,17 @@ class ShowL2VpnXconnectMp2mpDetail(MetaParser):
               'system_version': str,
               Any(): str,}
     """
+
     def cli(self):
-        ''' parsing mechanism: cli
-
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
+        '''parsing mechanism: cli
         '''
-        #no need to do router_show calls, internally MetaParser code looks
-        #in caas, then goes 4, or 7 levels down to find the right parser, with
-        #router_show being one of the options
-        #TODO: look into how we can utilize hfr-mpls parsers
-        result = tcl.q.caas.abstract(device=self.device.handle, 
-                                     exec='show l2vpn xconnect mp2mp detail')
-        return tcl.cast_any(result[1])
 
+        cmd = 'show l2vpn xconnect mp2mp detail'
 
+        tcl_package_require_caas_parsers()
+        kl = tcl_invoke_caas_abstract_parser(
+            device=self.device, exec=cmd)
+
+        return kl
+
+# vim: ft=python ts=8 sw=4 et

@@ -8,10 +8,10 @@ import re
 from netaddr import EUI
 from ipaddress import ip_address
 
-from ats import tcl
-from ats.tcl import tclobj, tclstr
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
+
+from xbu_shared.parser.base import *
 
 
 class ShowL2vpnMacLearning(MetaParser):
@@ -25,6 +25,7 @@ class ShowL2vpnMacLearning(MetaParser):
         super().__init__(**kwargs)
 
     def cli(self):
+
         cmd = 'show l2vpn mac-learning {mac_type} all location {location}'.format(
             mac_type=self.mac_type,
             location=self.location)
@@ -32,16 +33,17 @@ class ShowL2vpnMacLearning(MetaParser):
         out = self.device.execute(cmd)
 
         result = {
-            'entries': []
+            'entries': [],
         }
 
 
         for line in out.splitlines():
             line = line.rstrip()
-            # Topo ID   Producer       Next Hop(s)       Mac Address       IP Address       
-            # -------   --------       -----------       --------------    ----------       
+            # Topo ID   Producer       Next Hop(s)       Mac Address       IP Address
+            # -------   --------       -----------       --------------    ----------
 
-            # 1         0/0/CPU0       BE1.7             7777.7777.0002      
+            # 1         0/0/CPU0       BE1.7             7777.7777.0002
+            # 0         0/0/CPU0       BV1               fc00.0001.0006    192.0.3.3
             m = re.match(r'^(?P<topo_id>\d+)'
                          r' +(?P<producer>\S+)'
                          r' +(?:none|(?P<next_hop>\S+))'
@@ -53,7 +55,8 @@ class ShowL2vpnMacLearning(MetaParser):
                     'producer': m.group('producer'),
                     'next_hop': m.group('next_hop'),
                     'mac': EUI(m.group('mac')),
-                    'ip_address': m.group('ip_address') and ip_address(m.group('ip_address')),
+                    'ip_address': m.group('ip_address') \
+                    and ip_address(m.group('ip_address')),
                 }
                 result['entries'].append(entry)
                 continue

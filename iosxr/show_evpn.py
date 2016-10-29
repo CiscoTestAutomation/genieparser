@@ -8,11 +8,10 @@ from netaddr import EUI
 from ipaddress import ip_address
 import re
 
-from ats import tcl
-from ats.tcl import tclobj, tclstr
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
-from xbu_shared.parser.iosxr import IosxrCaasMetaParser
+
+from xbu_shared.parser.base import *
 
 re_8bit_u = r'(?:' + r'|'.join([
     r'[0-9]',
@@ -36,37 +35,44 @@ re_ipv6 = r'(?:[A-Fa-f0-9:]*:[A-Fa-f0-9:]*(?::' + re_ipv4 + ')?)'
 re_ip = r'(?:' + r'|'.join([re_ipv4, re_ipv6]) + ')'
 re_label_str = r'(?:' + r'|'.join([
     r'[0-9]+',
-    r'[A-Za-z0-9-]+', # See mpls_label_strings @ mpls/base/include/mpls_label_defs_extra.h
+    r'[A-Za-z0-9-]+',  # See mpls_label_strings @ mpls/base/include/mpls_label_defs_extra.h
 ]) + r')'
 
-class ShowEvpnEvi(IosxrCaasMetaParser):
+
+class ShowEvpnEvi(MetaParser):
     '''Parser class for 'show evpn evi' CLI.'''
+
     # TODO schema
 
     def cli(self):
-        ''' parsing mechanism: cli
-
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
+        '''parsing mechanism: cli
         '''
-        result = tcl.q.caas.abstract(device=self.device.handle,
-                                     exec='show evpn evi')
-        return tcl.cast_any(result[1])
+
+        cmd = 'show evpn evi'
+
+        tcl_package_require_caas_parsers()
+        kl = tcl_invoke_caas_abstract_parser(
+            device=self.device, exec=cmd)
+
+        return kl
 
 
-class ShowEvpnEviDetail(IosxrCaasMetaParser):
+class ShowEvpnEviDetail(MetaParser):
     '''Parser class for 'show evpn evi detail' CLI.'''
+
     # TODO schema
 
     def cli(self):
-        ''' parsing mechanism: cli
-
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
+        '''parsing mechanism: cli
         '''
-        result = tcl.q.caas.abstract(device=self.device.handle,
-                                     exec='show evpn evi detail')
-        return tcl.cast_any(result[1])
+
+        cmd = 'show evpn evi detail'
+
+        tcl_package_require_caas_parsers()
+        kl = tcl_invoke_caas_abstract_parser(
+            device=self.device, exec=cmd)
+
+        return kl
 
 
 class ShowEvpnEviMac(MetaParser):
@@ -79,6 +85,7 @@ class ShowEvpnEviMac(MetaParser):
         super().__init__(**kwargs)
 
     def cli(self):
+
         cmd = 'show evpn evi mac'.format()
         if self.mac:
             cmd += ' {mac}'.format(self.mac)
@@ -86,9 +93,8 @@ class ShowEvpnEviMac(MetaParser):
         out = self.device.execute(cmd)
 
         result = {
-            'entries': []
+            'entries': [],
         }
-
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -124,10 +130,10 @@ class ShowEvpnEviMac(MetaParser):
 
             # OLD
 
-            # MAC address    Nexthop                                 Label    vpn-id  
+            # MAC address    Nexthop                                 Label    vpn-id
             # -------------- --------------------------------------- -------- --------
 
-            # 7777.7777.0002 N/A                                     24005    7       
+            # 7777.7777.0002 N/A                                     24005    7
             m = re.match(r'^(?P<mac>' + re_mac + ')'
                          r' +(?:N/A|(?P<ip>' + re_ip + ')|(?P<next_hop>\S+))'
                          r' +(?:(?P<label_int>\d+)|(?P<label_str>' + re_label_str + '))'
@@ -149,5 +155,33 @@ class ShowEvpnEviMac(MetaParser):
                 continue
 
         return result
+
+
+class ShowEvpnEthernetSegment(MetaParser):
+    '''Parser class for 'show evpn ethernet-segment' CLI.'''
+
+    # TODO schema
+
+    def __init__(self, detail=False, private=False, **kwargs):
+        self.detail = detail
+        self.private = private
+        super().__init__(**kwargs)
+
+    def cli(self):
+        '''parsing mechanism: cli
+        '''
+
+        cmd = 'show evpn ethernet-segment'
+        if self.private:
+            cmd += ' private'
+        elif self.detail:
+            cmd += ' detail'
+
+        tcl_package_require_caas_parsers()
+        kl = tcl_invoke_caas_abstract_parser(
+            device=self.device, exec=cmd)
+
+        return kl
+
 
 # vim: ft=python ts=8 sw=4 et
