@@ -15,6 +15,24 @@ from xbu_shared.parser.base import *
 logger = logging.getLogger(__name__)
 
 
+class ShowBgpSessions(MetaParser):
+    '''Parser class for 'show bgp sessions' CLI.'''
+
+    # TODO schema
+
+    def cli(self):
+        '''parsing mechanism: cli
+        '''
+
+        cmd = 'show bgp sessions'
+
+        tcl_package_require_caas_parsers()
+        kl = tcl_invoke_caas_abstract_parser(
+            device=self.device, exec=cmd)
+
+        return kl
+
+
 class ShowBgpVrfDbVrfAll(MetaParser):
     '''Parser class for 'show bgp vrf-db vrf all'' CLI.'''
 
