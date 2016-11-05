@@ -6,6 +6,8 @@ show bgp parser class
 
 import re
 import logging
+import collections
+from ipaddress import ip_address, ip_network
 
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
@@ -13,6 +15,8 @@ from metaparser.util.schemaengine import Any
 from xbu_shared.parser.base import *
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+#logger.setLevel(logging.DEBUG)
 
 
 class ShowBgpSessions(MetaParser):
@@ -111,11 +115,204 @@ class ShowBgpL2vpnEvpn(MetaParser):
 
         cmd = 'show bgp l2vpn evpn'
 
-        tcl_package_require_caas_parsers()
-        kl = tcl_invoke_caas_abstract_parser(
-            device=self.device, exec=cmd)
+        out = self.device.execute(cmd)
+        out = re.sub(r'\r+\n', r'\n', out)
 
-        return kl
+        result = {
+            'rds': collections.OrderedDict(),
+        }
+
+        def finalize_network_entry(network_entry):
+            m = re.match(r'^(?P<prefix>\S+)/(?P<prefix_len>\d+)$', network_entry['network'])
+            assert m, network_entry['network']
+            network_entry.update(m.groupdict())
+            for k, func in (
+                    ('network', ip_network),
+                    ('prefix', ip_address),
+                    ('prefix_len', int),
+            ):
+                v = network_entry.get(k, None)
+                if v is not None:
+                    v = v.strip()
+                    try:
+                        v = func(v)
+                    except (ValueError, TypeError):
+                        pass
+                    network_entry[k] = v
+
+        def finalize_path_entry(path_entry):
+            for k, func in (
+                    ('nexthop', ip_address),
+                    ('metric', int),
+                    ('localpref', int),
+                    ('weight', int),
+            ):
+                v = path_entry.get(k, None)
+                if v is not None:
+                    v = v.strip() or None
+                    if v is not None:
+                        try:
+                            v = func(v)
+                        except (ValueError, TypeError):
+                            pass
+                    path_entry[k] = v
+            path_entry['status_codes'] = tuple((path_entry['status_codes'] or '').replace(' ', ''))
+
+        m_network_heading = None
+        lines = out.splitlines()
+        while lines:
+            orig_line = lines.pop(0)
+            line = orig_line.rstrip()
+
+            if not m_network_heading:
+
+                # BGP router identifier 192.0.0.1, local AS number 100
+                m = re.match(r'^BGP router identifier (?P<router_id>\d+\.\d+\.\d+\.\d+), local AS number (?P<local_asn>\d+)$', line)
+                if m:
+                    result['router_id'] = ip_address(m.group('router_id'))
+                    result['local_asn'] = int(m.group('local_asn'))
+                    continue
+
+                # BGP generic scan interval 60 secs
+                # Non-stop routing is enabled
+                # BGP table state: Active
+                # Table ID: 0x0   RD version: 0
+                # BGP main routing table version 41
+                # BGP NSR Initial initsync version 7 (Reached)
+                # BGP NSR/ISSU Sync-Group versions 0/0
+                # BGP scan interval 60 secs
+
+                # Status codes: s suppressed, d damped, h history, * valid, > best
+                #               i - internal, r RIB-failure, S stale, N Nexthop-discard
+                # Origin codes: i - IGP, e - EGP, ? - incomplete
+
+                #    Network            Next Hop            Metric LocPrf Weight Path
+                m = re.match(r'(?P<status_codes>   )(?P<network>Network +)(?P<nexthop>Next Hop +)(?P<metric>Metric +)(?P<localpref>LocPrf +)(?P<weight>Weight )(?P<path>Path)$', line)
+                if m:
+                    m_network_heading = m
+                    # Notes:
+                    #  - Network column value could be too long to fit. In this case, the first line will contain only path status codes and the network, the following line will contain Next Hop and the other columns.
+                    #  - Values for Metric and LocPrf are optional
+                    #  - Path column always contains the path's origin code which could be preceeded be an aspath specification
+                    #  - After the first path, more paths for the same network can appear with a blank network column
+
+                    _re_status_codes = r'[sdh*>irSN ]' * len(m_network_heading.group('status_codes'))
+                    _re_skip_status_codes = r' ' * len(m_network_heading.group('status_codes'))
+                    _re_path_end = r'\S+(?: +\d+)?(?: +\d+)? +\d+(?: +(?:\S.* )?\S)$'
+                    _re_network_lookahead = r'(?=[0-9:\[])'
+                    _re_network = _re_network_lookahead + r'.' * len(m_network_heading.group('network'))
+                    _re_skip_network = r' ' * len(m_network_heading.group('network'))
+                    re_net_and_first_path = _re_status_codes + _re_network + _re_path_end
+                    re_status_and_net = r'(?P<status_codes>' + _re_status_codes + ')' + r'(?P<network>' + _re_network_lookahead + '\S+)$'
+                    re_continued_first_path = _re_skip_status_codes + _re_skip_network + _re_path_end
+                    re_more_path = _re_status_codes + _re_skip_network + _re_path_end
+
+                    logger.debug('re_net_and_first_path = %r', re_net_and_first_path)
+                    logger.debug('re_status_and_net = %r', re_status_and_net)
+                    logger.debug('re_continued_first_path = %r', re_continued_first_path)
+                    logger.debug('re_more_path = %r', re_more_path)
+
+                    # Example:
+                    #   re_net_and_first_path = '[sdh*>irSN ][sdh*>irSN ][sdh*>irSN ](?=[0-9:\\[])...................\\S+(?: +\\d+)?(?: +\\d+)? +\\d+(?: +(?:\\S.* )?\\S)$'
+                    #   re_status_and_net = '(?P<status_codes>[sdh*>irSN ][sdh*>irSN ][sdh*>irSN ])(?P<network>(?=[0-9:\\[])\\S+)$'
+                    #   re_continued_first_path = '                      \\S+(?: +\\d+)?(?: +\\d+)? +\\d+(?: +(?:\\S.* )?\\S)$'
+                    #   re_more_path = '[sdh*>irSN ][sdh*>irSN ][sdh*>irSN ]                   \\S+(?: +\\d+)?(?: +\\d+)? +\\d+(?: +(?:\\S.* )?\\S)$'
+
+                    path_slices = {
+                        'status_codes': slice(*m_network_heading.span('status_codes')),
+                        'network': slice(*m_network_heading.span('network')),
+                        'nexthop': slice(*m_network_heading.span('nexthop')),
+                        'metric': slice(*m_network_heading.span('metric')),
+                        'localpref': slice(*m_network_heading.span('localpref')),
+                        'weight': slice(*m_network_heading.span('weight')),
+                        'path': slice(m_network_heading.start('path'), None),
+                    }
+
+                    def extract_path_entry(line):
+                        path_entry = {k: line[v].strip() or None for k, v in path_slices.items()}
+                        path = path_entry.pop('path')
+                        m = re.match(r'^(?:(?P<aspath>.+) )?(?P<origin_code>\S)$', path)
+                        assert m, (line, path)
+                        path_entry.update(m.groupdict())
+                        return path_entry
+
+                    continue
+
+            if m_network_heading:
+
+                # Route Distinguisher: 192.0.0.4:0
+                # Route Distinguisher: 192.0.0.5:0 (default for vrf ES:GLOBAL)
+                # Route Distinguisher: 192.0.0.5:1 (default for vrf bd1)
+                m = re.match(r'^Route Distinguisher: (?P<rd>\S+)(?: \(default for vrf (?P<vrf>\S+)\))?$', line)
+                if m:
+                    rd_entry = {
+                        'rd': m.group('rd'),
+                        'vrf': m.group('vrf'),
+                        'networks': collections.OrderedDict(),
+                    }
+                    rd_key = rd_entry['rd']
+                    assert rd_key not in result['rds']
+                    result['rds'][rd_key] = rd_entry
+                    network_entry = None
+                    path_entry = None
+                    continue
+
+                m = re.match(re_net_and_first_path, line)
+                if m:
+                    path_entry = extract_path_entry(line)
+                    network_entry = {
+                        'network': path_entry.pop('network'),
+                        'paths': collections.OrderedDict(),
+                    }
+                    finalize_network_entry(network_entry)
+                    rd_entry['networks'][str(network_entry['network'])] = network_entry
+                    finalize_path_entry(path_entry)
+                    network_entry['paths'][str(path_entry['nexthop'])] = path_entry
+                    continue
+
+                # *>i[4][0001.2222.2222.2200.000a][32][192.0.0.4]/128
+                # *> [1][192.0.0.1:1][0001.2222.2222.2200.000a][4294967295]/184
+                m = re.match(re_status_and_net, line)
+                if m:
+                    line2 = lines.pop(0).rstrip()
+                    #                       0.0.0.0                                0 i
+                    #                       192.0.0.4                     100      0 i
+                    m2 = re.match(re_continued_first_path, line2)
+                    assert m2, (line, line2)
+                    path_entry = extract_path_entry(line2)
+                    path_entry.update(m.groupdict())
+                    network_entry = {
+                        'network': path_entry.pop('network'),
+                        'paths': collections.OrderedDict(),
+                    }
+                    finalize_network_entry(network_entry)
+                    rd_entry['networks'][str(network_entry['network'])] = network_entry
+                    finalize_path_entry(path_entry)
+                    network_entry['paths'][str(path_entry['nexthop'])] = path_entry
+                    continue
+
+                # * i                   192.0.0.4                     100      0 i
+                m = re.match(re_more_path, line)
+                if m:
+                    path_entry = extract_path_entry(line)
+                    path_entry.pop('network')
+                    finalize_path_entry(path_entry)
+                    network_entry['paths'][str(path_entry['nexthop'])] = path_entry
+                    continue
+
+            # Processed 36 prefixes, 40 paths
+            m = re.match(r'^Processed (?P<prefixes_cnt>\d+) prefixes, (?P<paths_cnt>\d+) paths$', line)
+            if m:
+                result.setdefault('stats', {})
+                result['stats'].update({
+                    'prefixes_cnt': int(m.group('prefixes_cnt')),
+                    'paths_cnt': int(m.group('paths_cnt')),
+                })
+                continue
+
+            logger.debug('Unmatched line: %r', line)
+
+        return result
 
 
 class ShowBgpL2vpnEvpnAdvertised(MetaParser):
@@ -155,6 +352,9 @@ class ShowBgpL2vpnEvpnAdvertised(MetaParser):
             if m:
                 entry = m.groupdict()
                 result['entries'].append(entry)
+                entry.update({
+                    'paths': [],
+                })
                 path_info = None
                 attr_info = None
                 continue
@@ -162,45 +362,49 @@ class ShowBgpL2vpnEvpnAdvertised(MetaParser):
             #  Path info:
             m = re.match(r'^ +Path info:$', line)
             if m:
-                assert 'path_in' not in entry
-                path_info = entry['path_in'] = {}
+                assert 'path_info' not in entry
+                path_info = entry['path_info'] = {}
                 continue
 
             #    neighbor: Local           neighbor router id: 8.8.8.8
             m = re.match(r'^ +neighbor: (?P<neighbor>\S+) +neighbor router id: (?P<neighbor_router_id>\S+)$', line)
             if m:
-                path_info.update(m.groupdict())
+                if attr_info:
+                    attr_info.update(m.groupdict())
+                else:
+                    path_info.update(m.groupdict())
                 continue
 
             #    valid  redistributed  best  import-candidate
-            # TODO many different strings/formats and not necessarily the next line
+            m = re.match(r'^ +(?P<flags>[A-Za-z-]+(?:  [A-Za-z-]+)*)$', line)
+            if m:
+                path_info['flags'] = m.group('flags').split()
 
             # Received Path ID 0, Local Path ID 0, version 193217
             m = re.match(r'^ *Received Path ID (?P<rx_path_id>\d+), Local Path ID (?P<local_path_id>\d+), version (?P<pelem_version>\d+)$', line)
             if m:
-                path_info.update(m.groupdict())
+                path_info = m.groupdict()
+                entry['paths'].append(path_info)
                 continue
 
             #  Attributes after inbound policy was applied:
             m = re.match(r'^ *Attributes after inbound policy was applied:$', line)
             if m:
-                assert 'attr_in' not in entry
-                attr_info = entry['attr_in'] = {}
-                path_info = entry.setdefault('path_in', {})
+                assert 'attr_in' not in path_info
+                attr_info = path_info['attr_in'] = {}
                 continue
 
             #  Attributes after outbound policy was applied:
             m = re.match(r'^ *Attributes after outbound policy was applied:$', line)
             if m:
-                assert 'attr_out' not in entry
-                attr_info = entry['attr_out'] = {}
-                path_info = entry['path_out'] = {}
+                assert 'attr_out' not in path_info
+                attr_info = path_info['attr_out'] = {}
                 continue
 
             #    next hop: 8.8.8.8
             m = re.match(r'^ +next hop: (?P<next_hop>\S+)$', line)
             if m:
-                path_info.update(m.groupdict())
+                attr_info.update(m.groupdict())
                 continue
 
             #    EXTCOMM
