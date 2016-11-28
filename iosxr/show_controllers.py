@@ -53,11 +53,12 @@ class ShowControllersFiaDiagshellL2show(MetaParser):
             # mac=fc:00:00:01:00:9b vlan=2544 GPORT=0x8000048 encap_id=0x2007
             # mac=fc:00:00:01:00:02 vlan=2522 GPORT=0x9800401d Static encap_id=0xffffffff
             # mac=fc:00:00:01:00:9b vlan=2544 GPORT=0x8000048 Trunk=0 encap_id=0x2007
+            # mac=fc:00:00:01:00:0b vlan=2524 GPORT=0xc000000 Trunk=0 Static encap_id=0x3001'
             m = re.match(r'^mac=(?P<mac>[A-Fa-f0-9:]+)'
                          r' +vlan=(?P<vlan>\d+)'
                          r' +GPORT=(?P<gport>\d+|0x[[A-Fa-f0-9]+)'
-                         r'(?P<b_static> +Static)?'
                          r'(?: +Trunk=(?P<trunk>\d+))?'
+                         r'(?P<b_static> +Static)?'
                          r' +encap_id=(?P<encap_id>\d+|0x[[A-Fa-f0-9]+)$', line)
             if m:
                 entry = {
