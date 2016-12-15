@@ -95,4 +95,48 @@ class ShowL2routeEvpnMac(MetaParser):
 
         return result
 
+
+class ShowL2routeEvpnMacIp(MetaParser):
+    '''Parser class for 'show l2route evpn mac-ip all' CLI.'''
+
+    # TODO schema
+
+    def cli(self):
+
+        cmd = 'show l2route evpn mac-ip all'.format()
+
+        out = self.device.execute(cmd)
+
+        result = {
+            'entries': [],
+        }
+
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            # Topo ID  Mac Address    IP Address      Prod   Next Hop(s)
+            # -------- -------------- --------------- ------ ----------------------------------------
+
+            # 0        fc00.0001.0006 192.0.4.3       LOCAL  Bundle-Ether1.0
+            # 0        fc00.0001.0006 192.0.4.3       L2VPN  Bundle-Ether1.0
+            # 0        fc00.0001.0008 192.0.5.3       L2VPN  68101/I/ME
+            m = re.match(r'^(?P<topo_id>\d+)'
+                         r' +(?P<mac>[A-Za-z0-9]+\.[A-Za-z0-9]+\.[A-Za-z0-9]+)'
+                         r' +(?P<ip>\d+\.\d+\.\d+\.\d+|[A-Fa-f0-9:]+)'
+                         r' +(?P<producer>\S+)'
+                         r' +(?:none|(?P<next_hop>\S+))$', line)
+            if m:
+                entry = {
+                    'topo_id': eval(m.group('topo_id')),
+                    'mac': EUI(m.group('mac')),
+                    'ip': ip_address(m.group('ip')),
+                    'producer': m.group('producer'),
+                    'next_hop': m.group('next_hop'),
+                }
+                result['entries'].append(entry)
+                continue
+
+        return result
+
 # vim: ft=python ts=8 sw=4 et
