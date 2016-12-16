@@ -145,6 +145,82 @@ class ShowOspf(ShowOspfSchema, MetaParser):
 
         return result
 
+    def yang(self):
+        ''' parsing mechanism: yang
+
+        Function yang() defines the yang type output parsing mechanism which
+        typically contains 3 steps: executing, transforming, returning
+        '''
+
+        ret = {}
+        cmd = '''<native><router><ospf/></router></native>'''
+        output = self.device.get(('subtree', cmd))
+
+        for data in output.data:
+            for native in data:
+                for ospf in native:
+                    process_id = None
+                    nsr = None
+                    vrf = 'default'
+                    ref = None
+                    router_id = None
+                    id_value = 0
+                    default_cost = None
+                    process_id = None
+                    areas = {}
+                    for value in ospf:
+                        # Remove the namespace
+                        text = value.tag[value.tag.find('}')+1:]
+                        if text == 'id':
+                            process_id = value.text
+                            continue
+                        if text == 'nsr':
+                            nsr = value.text
+                            continue
+                        if text == 'vrf':
+                            vrf = value.text
+                            continue
+                        if text == 'auto-cost':
+                            for auto in value:
+                                text = auto.tag[auto.tag.find('}')+1:]
+                                if text == 'reference-bandwidth':
+                                    ref = auto.text
+                            continue
+                        if text == 'router-id':
+                            router_id = value.text
+                            continue
+
+                        # Can have multiple area in one ospf
+                        if text == 'area':
+                            id_value = 0
+                            default_cost = None
+                            for area in value:
+                                text = area.tag[area.tag.find('}')+1:]
+                                if text == 'id':
+                                    id_value = area.text
+                                if text == 'default-cost':
+                                    default_cost = area.text
+                            areas[id_value] = {}
+                            areas[id_value]['default_cost'] = default_cost
+
+
+                    # Let's build it now
+                    if 'process_id' not in ret:
+                        ret['process_id'] = {}
+                    ret['process_id'][process_id] = {}
+                    ret['process_id'][process_id]['vrf'] = {}
+                    ret['process_id'][process_id]['vrf'][vrf] = {}
+                    if router_id is not None:
+                        ret['process_id'][process_id]['vrf'][vrf]['id'] = router_id
+                    if areas != {}:
+                        ret['process_id'][process_id]['vrf'][vrf]['area'] = areas
+                    if ref is not None:
+                        ret['process_id'][process_id]['vrf'][vrf]['reference_bandwidth'] = ref
+                    if nsr is not None:
+                        ret['process_id'][process_id]['vrf'][vrf]['nsr'] = nsr
+
+        return ret
+
 class ShowOspfVrfAll(ShowOspfSchema, MetaParser):
     """ parser class - implements detail parsing mechanisms for cli, xml, and
     yang output.
