@@ -31,7 +31,8 @@ def tcl_invoke_ats_cmd(cmd, *, cast_=None, **kwargs):
 
 
 def tcl_package_require_caas():
-    if os.environ['XBU_SHARED'] not in \
+    if 'XBU_SHARED' in os.environ \
+            and os.environ['XBU_SHARED'] not in \
             tcl.cast_list(tcl.get_var('::auto_path'), item_cast=tclstr):
         tcl.call('lappend', '::auto_path', os.environ['XBU_SHARED'])
     tcl.call('package', 'require', 'cAAs')
