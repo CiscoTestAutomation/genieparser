@@ -109,9 +109,10 @@ class ShowBgpL2vpnEvpn(MetaParser):
 
     # TODO schema
 
-    def __init__(self, rd=None, prefix=None, **kwargs):
+    def __init__(self, rd=None, prefix=None, route_type=None, **kwargs):
         self.rd = rd
         self.prefix = prefix
+        self.route_type = route_type
         super().__init__(**kwargs)
 
     def cli(self):
@@ -125,6 +126,8 @@ class ShowBgpL2vpnEvpn(MetaParser):
         if self.prefix is not None:
             cmd += ' {}'.format(self.prefix)
             is_detail = True
+        if self.route_type is not None:
+            cmd += ' route-type {}'.format(self.route_type)
 
         # XXXJST Workaround Csccon issue that doesn't quote Tcl arguments properly
         cmd = re.escape(cmd)
