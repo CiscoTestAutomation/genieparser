@@ -154,4 +154,92 @@ class ShowL2vpnForwardingBridgeDomainMacAddress(MetaParser):
 
         return result
 
+
+class ShowL2vpnForwardingProtectionMainInterface(MetaParser):
+
+    # TODO schema
+
+    def __init__(self,location=None,**kwargs):
+        assert location is not None
+        self.location = location
+        super().__init__(**kwargs)
+
+    def cli(self):
+
+        cmd = 'show l2vpn forwarding protection main-interface location {location}'.format(
+            location=self.location)
+
+        out = self.device.execute(cmd)
+
+        result = {
+            'entries' : []
+        }
+
+        ## Sample Output
+
+        # Main Interface ID                Instance   State
+        # -------------------------------- ---------- ------------
+        # VFI:ves-vfi-1                    0          FORWARDING
+        # VFI:ves-vfi-1                    1          BLOCKED
+        # VFI:ves-vfi-2                    0          FORWARDING
+        # VFI:ves-vfi-2                    1          FORWARDING
+        # VFI:ves-vfi-3                    0          FORWARDING
+        # VFI:ves-vfi-3                    1          BLOCKED
+        # VFI:ves-vfi-4                    0          FORWARDING
+        # VFI:ves-vfi-4                    1          FORWARDING
+        # PW:40.40.40.40,10001             0          FORWARDING
+        # PW:40.40.40.40,10001             1          BLOCKED
+        # PW:40.40.40.40,10007             0          FORWARDING
+        # PW:40.40.40.40,10007             1          FORWARDING
+        # PW:40.40.40.40,10011             0          FORWARDING
+        # PW:40.40.40.40,10011             1          FORWARDING
+        # PW:40.40.40.40,10017             0          FORWARDING
+
+        title_found = False
+        header_processed = False
+        field_indice = []
+
+        def _retrieve_fields(line,field_indice):
+            res = []
+            for idx,(start,end) in enumerate(field_indice):
+                if idx == len(field_indice) - 1:
+                    res.append(line[start:].strip())
+                else:
+                    res.append(line[start:end].strip())
+            return res
+
+        lines = out.splitlines()
+        for idx,line in enumerate(lines):
+            if idx == len(lines) - 1:
+                break
+            line = line.rstrip()
+            if not header_processed:
+                # 1. check proper title header exist
+                if re.match(r"^Main Interface ID\s+Instance\s+State",line):
+                    title_found = True
+                    continue
+                # 2. get dash header line
+                if title_found and re.match(r"^(-+)( +)(-+)( +)(-+)",line):
+                    match = re.match(r"^(-+)( +)(-+)( +)(-+)",line)
+                    start = 0
+                    for field in match.groups():
+                        if '-' in field:
+                            end = start + len(field)
+                            field_indice.append((start,end))
+                            start = end
+                        else:
+                            start += len(field)
+                            end += len(field)
+                    header_processed = True
+                    continue
+            else:
+                interface,instance_id,state = _retrieve_fields(line,field_indice)
+                result['entries'].append({
+                    'interface' : interface,
+                    'instance_id' : instance_id,
+                    'state' : state,
+                })
+
+        return result
+
 # vim: ft=python ts=8 sw=4 et
