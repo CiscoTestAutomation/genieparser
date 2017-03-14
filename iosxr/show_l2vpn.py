@@ -63,4 +63,95 @@ class ShowL2vpnMacLearning(MetaParser):
 
         return result
 
+
+class ShowL2vpnForwardingBridgeDomainMacAddress(MetaParser):
+
+    # TODO schema
+
+    def __init__(self,location=None,**kwargs) :
+        assert location is not None
+        self.location = location
+        super().__init__(**kwargs)
+
+    def cli(self):
+
+        cmd = 'show l2vpn forwarding bridge-domain mac-address location {location}'.format(
+            location=self.location)
+
+        out = self.device.execute(cmd)
+
+        result = {
+            'entries' : []
+        }
+
+        ## Sample Output
+
+        #  To Resynchronize MAC table from the Network Processors, use the command...
+        #     l2vpn resynchronize forwarding mac-address-table location <r/s/i>
+        #
+        # Mac Address    Type    Learned from/Filtered on    LC learned Resync Age/Last Change Mapped to
+        # -------------- ------- --------------------------- ---------- ---------------------- --------------
+        # 0021.0001.0001 EVPN    BD id: 0                    N/A        N/A                    N/A
+        # 0021.0001.0003 EVPN    BD id: 0                    N/A        N/A                    N/A
+        # 0021.0001.0004 EVPN    BD id: 0                    N/A        N/A                    N/A
+        # 0021.0001.0005 EVPN    BD id: 0                    N/A        N/A                    N/A
+        # 1234.0001.0001 EVPN    BD id: 0                    N/A        N/A                    N/A
+        # 1234.0001.0002 EVPN    BD id: 0                    N/A        N/A                    N/A
+        # 1234.0001.0003 EVPN    BD id: 0                    N/A        N/A                    N/A
+        # 1234.0001.0004 EVPN    BD id: 0                    N/A        N/A                    N/A
+        # 0021.0001.0002 dynamic (40.40.40.40, 10007)        N/A        14 Mar 12:46:04        N/A
+        # 1234.0001.0005 static  (40.40.40.40, 10007)        N/A        N/A                    N/A
+        # 0021.0002.0005 dynamic BE1.2                       N/A        14 Mar 12:46:04        N/A
+        # 1234.0002.0004 static  BE1.2                       N/A        N/A                    N/A
+
+        title_found = False
+        header_processed = False
+        field_indice = []
+
+        def _retrieve_fields(line,field_indice):
+            res = []
+            for idx,(start,end) in enumerate(field_indice):
+                if idx == len(field_indice) - 1:
+                    res.append(line[start:].strip())
+                else:
+                    res.append(line[start:end].strip())
+            return res
+
+        lines = out.splitlines()
+        for idx,line in enumerate(lines):
+            if idx == len(lines) - 1:
+                break
+            line = line.rstrip()
+            if not header_processed:
+                # 1. check proper title header exist
+                if re.match(r"^Mac Address\s+Type\s+Learned from/Filtered on\s+LC learned\s+Resync Age/Last Change\s+Mapped to",line):
+                    title_found = True
+                    continue
+                # 2. get dash header line
+                if title_found and re.match(r"^(-+)( +)(-+)( +)(-+)( +)(-+)( +)(-+)( +)(-+)",line):
+                    match = re.match(r"^(-+)( +)(-+)( +)(-+)( +)(-+)( +)(-+)( +)(-+)",line)
+                    start = 0
+                    for field in match.groups():
+                        if '-' in field:
+                            end = start + len(field)
+                            field_indice.append((start,end))
+                            start = end
+                        else:
+                            start += len(field)
+                            end += len(field)
+                    header_processed = True
+                    continue
+            else:
+                mac,mac_type,learned_from,lc_learned,resync_age,mapped_to = _retrieve_fields(line,field_indice)
+                result['entries'].append({
+                    'mac' : mac,
+                    'mac_type' : mac_type,
+                    'learned_from' : learned_from,
+                    'lc_learned' : lc_learned,
+                    'resync_age' : resync_age,
+                    'mapped_to' : mapped_to,
+                })
+
+        return result
+
 # vim: ft=python ts=8 sw=4 et
