@@ -80,15 +80,19 @@ class ShowEvpnEviMac(MetaParser):
 
     # TODO schema
 
-    def __init__(self, mac=None, **kwargs):
+    def __init__(self, mac=None, private=False, **kwargs):
         self.mac = mac
+        self.private = private
         super().__init__(**kwargs)
 
     def cli(self):
 
         cmd = 'show evpn evi mac'.format()
+
         if self.mac:
             cmd += ' {mac}'.format(self.mac)
+        if self.private:
+            cmd += ' private'.format()
 
         out = self.device.execute(cmd)
 
@@ -96,6 +100,7 @@ class ShowEvpnEviMac(MetaParser):
             'entries': [],
         }
 
+        entry = None
         for line in out.splitlines():
             line = line.rstrip()
 
@@ -153,6 +158,128 @@ class ShowEvpnEviMac(MetaParser):
                     pass
                 result['entries'].append(entry)
                 continue
+
+            if entry and self.private:
+                #EVI        MAC address    IP address                               Nexthop                                 Label
+                #---------- -------------- ---------------------------------------- --------------------------------------- --------
+                #1          fc00.0001.0002 ::                                       Bundle-Ether1.0                         28100
+                #   Ethernet Tag                            : 0
+                #   Multi-paths Resolved                    : False
+                #   Static                                  : No
+                #   Local Ethernet Segment                  : 0001.2222.2222.2200.000a
+                #   Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
+                #   Local Sequence Number                   : 0
+                #   Remote Sequence Number                  : 0
+                #   Encapsulation                           : N/A
+                #   ESI Port Key                            : 1
+                #   Source                                  : Local
+                #   Multi-paths Local Label                 : 0
+                #   SOO Nexthop                             : ::
+                #   BP IFH                                  : 0x152
+                #   MAC State                               : Local
+                #
+                #   Object: EVPN MAC
+                #   Base info: version=0xdbdb0008, flags=0x4100, type=8, reserved=0
+                #   EVPN MAC event history  [Num events: 3]
+                #   ----------------------------------------------------------------------------
+                #     Time                Event                         Flags      Flags
+                #     ====                =====                         =====      =====
+                #     Dec  7 01:46:49.088 Create                        00000000, 00000000 -  -
+                #     Dec  7 01:46:49.088 Advertise to BGP              00204110, 00000000 -  -
+                #     Dec  7 01:46:49.088 Ignore BGP update             00000000, 00000000 -  -
+                #   ----------------------------------------------------------------------------
+                #65535      02a0.0964.e800 ::                                       Local                                   0
+                #   Ethernet Tag                            : 0
+                #   Multi-paths Resolved                    : False
+                #   Static                                  : No
+                #   Local Ethernet Segment                  : 0000.0000.0000.0000.0000
+                #   Remote Ethernet Segment                 : 0000.0000.0000.0000.0000
+                #   Local Sequence Number                   : 0
+                #   Remote Sequence Number                  : 0
+                #   Encapsulation                           : N/A
+                #   ESI Port Key                            : 0
+                #   Source                                  : Local
+                #   Multi-paths Local Label                 : 0
+                #   SOO Nexthop                             : ::
+                #   BP IFH                                  : 0x0
+                #   MAC State                               : Local
+                #
+                #   Object: EVPN MAC
+                #   Base info: version=0xdbdb0008, flags=0xc100, type=8, reserved=0
+                #   EVPN MAC event history  [Num events: 13]
+                #   ----------------------------------------------------------------------------
+                #     Time                Event                         Flags      Flags
+                #     ====                =====                         =====      =====
+                #     Dec  7 01:41:11.168 Create                        00000000, 00000000 -  -
+                #     Dec  7 01:41:11.168 MAC advertise rejected        00000000, 00000000 -  -
+                #     Dec  7 01:41:11.168 Withdraw from BGP;filtered    0000c000, 00000000 -  -
+                #     Dec  7 01:41:11.168 Modify Redundant              00000000, 00000000 -  -
+                #     Dec  7 01:45:25.632 Replay EVI to BGP             00000000, 00000000 -  -
+                #     Dec  7 01:45:25.632 MAC advertise rejected        00000000, 00000000 -  -
+                #     Dec  7 01:45:25.632 Withdraw from BGP;filtered    0000c100, 00000000 -  -
+                #     Dec  7 01:45:25.632 Replay EVI to BGP             00000000, 00000000 -  -
+                #     Dec  7 01:45:25.632 MAC advertise rejected        00000000, 00000000 -  -
+                #     Dec  7 01:45:25.632 Withdraw from BGP             0040c110, 00000000 -  -
+                #     Dec  7 01:46:04.032 Replay EVI to BGP             00000000, 00000000 -  -
+                #     Dec  7 01:46:04.032 MAC advertise rejected        00000000, 00000000 -  -
+                #     Dec  7 01:46:04.032 Withdraw from BGP             0040c110, 00000000 -  -
+                #   ----------------------------------------------------------------------------
+
+                m = re.match(r'^ +Ethernet Tag *: +(?P<eth_tag>[0-9]+)$|'
+                             r'^ +Multi-paths Resolved *: +(?P<multipath_resolved>(True|False))$|'
+                             r'^ +Static *: +(?P<is_static>(Yes|No))$|'
+                             r'^ +Local Ethernet Segment *: +(?P<local_esi>[A-Za-z0-9]{4}\.[A-Za-z0-9]{4}\.[A-Za-z0-9]{4}\.[A-Za-z0-9]{4}\.[A-Za-z0-9]{4})$|'
+                             r'^ +Remote Ethernet Segment *: +(?P<remote_esi>[A-Za-z0-9]{4}\.[A-Za-z0-9]{4}\.[A-Za-z0-9]{4}\.[A-Za-z0-9]{4}\.[A-Za-z0-9]{4})$|'
+                             r'^ +Local Sequence Number *: +(?P<local_seq_no>[0-9]+)$|'
+                             r'^ +Remote Sequence Number *: +(?P<remote_seq_no>[0-9]+)$|'
+                             r'^ +Encapsulation *: +(?P<encapsulation>\S+)$|'
+                             r'^ +Local Encapsulation *: +(?P<encapsulation_local>\S+)$|'
+                             r'^ +Remote Encapsulation *: +(?P<encapsulation_remote>\S+)$|'
+                             r'^ +ESI Port Key *: +(?P<esi_port_key>[0-9]+)$|'
+                             r'^ +Source *: +(?P<source>\S+)$|'
+                             r'^ +Multi-paths Local Label *: +(?P<multipath_label>[0-9]+)$|'
+                             r'^ +SOO Nexthop *: +(?P<remote_soo>\S+)$|'
+                             r'^ +BP XCID *: +(?P<bp_xcid>0x[A-fa-f0-9]+)$|'
+                             r'^ +BP IFH *: +(?P<bp_ifh>0x[A-fa-f0-9]+)$|'
+                             r'^ +MAC State *: +(?P<mac_state>\S+)$', line)
+
+                if m:
+                    if m.lastgroup != None:
+                        if m.lastgroup == 'eth_tag':
+                            entry[m.lastgroup] = int(m.group(m.lastgroup))
+                        elif m.lastgroup == 'multipath_resolved':
+                            if m.group(m.lastgroup) == 'True':
+                                entry[m.lastgroup] = True
+                            elif m.group(m.lastgroup) == 'False':
+                                entry[m.lastgroup] = False
+                        elif m.lastgroup == 'is_static':
+                            if m.group(m.lastgroup) == 'Yes':
+                                entry['is_static'] = True
+                            elif m.group(m.lastgroup) == 'No':
+                                entry['is_static'] = False
+                        elif m.lastgroup == 'local_seq_no':
+                            entry[m.lastgroup] = int(m.group(m.lastgroup))
+                        elif m.lastgroup == 'remote_seq_no':
+                            entry[m.lastgroup] = int(m.group(m.lastgroup))
+                        elif m.lastgroup == 'esi_port_key':
+                            entry[m.lastgroup] = int(m.group(m.lastgroup))
+                        elif m.lastgroup == 'source':
+                            if m.group(m.lastgroup) == 'Local':
+                                entry['is_local'] = True
+                                entry['is_remote'] = False
+                            elif m.group(m.lastgroup) == 'Remote':
+                                entry['is_remote'] = True
+                                entry['is_local'] = False
+                        elif m.lastgroup == 'multipath_label':
+                            entry[m.lastgroup] = int(m.group(m.lastgroup))
+                        elif m.lastgroup == 'remote_soo':
+                            try:
+                                entry[m.lastgroup] = ip_address(m.group(m.lastgroup))
+                            except (TypeError, ValueError):
+                                pass
+                        else:
+                            entry[m.lastgroup] = m.group(m.lastgroup)
+                    continue
 
         return result
 
