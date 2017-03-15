@@ -162,9 +162,10 @@ class ShowEvpnEthernetSegment(MetaParser):
 
     # TODO schema
 
-    def __init__(self, detail=False, private=False, **kwargs):
+    def __init__(self, detail=False, private=False, carving=False, **kwargs):
         self.detail = detail
         self.private = private
+        self.carving = carving
         super().__init__(**kwargs)
 
     def cli(self):
@@ -172,6 +173,9 @@ class ShowEvpnEthernetSegment(MetaParser):
         '''
 
         cmd = 'show evpn ethernet-segment'
+        if self.carving:
+            cmd += ' carving'
+
         if self.private:
             cmd += ' private'
         elif self.detail:
@@ -183,5 +187,170 @@ class ShowEvpnEthernetSegment(MetaParser):
 
         return kl
 
+class ShowEvpnInternalLabelDetail(MetaParser):
+
+    # TODO schema
+
+    def __init__(self,**kwargs):
+        super().__init__(**kwargs)
+
+    def cli(self):
+        '''parsing mechanism: cli
+        '''
+        cmd = 'show evpn internal-label detail'
+
+        out = self.device.execute(cmd)
+
+        res = {
+            'entries': [],
+        }
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            # 5     0012.1200.0000.0000.0002                0        24114
+            m = re.match(r'^\s*(?P<evi>\d+)\s+'
+                          '(?P<esi>[\d.]+)\s+'
+                          '(?P<eth_tag>\d+)\s+'
+                          '(?P<internal_label>\w+)$',line)
+
+            if m:
+                # create new record
+                record = { 'evi' : m.group('evi'),
+                           'esi' : m.group('esi'),
+                           'eth_tag' : m.group('eth_tag'),
+                           'internal_label' : m.group('internal_label'),
+                           'pathlists' : {
+                                'mac' : [],
+                                'es_ead' : [],
+                                'evi_ead' : [],
+                                'summary' : []
+                            }
+                         }
+
+                res['entries'].append(record)
+
+            # Multi-paths resolved: TRUE
+            m = re.match(r'^\s+Multi-paths resolved: '
+                          '(?P<mp_resolved>\w+)$',line)
+
+            if m:
+                res['entries'][-1]['mp_resolved'] = m.group('mp_resolved')
+
+
+            # Multi-paths resolved: TRUE (Remote single-active)
+            m = re.match(r'^\s+Multi-paths resolved: '
+                          '(?P<mp_resolved>\w+) '
+                          '\((?P<mp_single_active>.+)\)$',line)
+
+            if m:
+                res['entries'][-1]['mp_resolved'] = m.group('mp_resolved')
+                res['entries'][-1]['mp_single_active'] = m.group('mp_single_active')
+
+            # MAC     20.20.20.20                              24212
+            m = re.match(r'^\s+MAC\s+'
+                          '(?P<nexthop>[\d.]+)\s+'
+                          '(?P<label>\d+)$',line)
+
+            if m:
+                mac_flag = True
+                es_ead_flag = False
+                evi_ead_flag = False
+                summary_flag = False
+
+                res['entries'][-1]['pathlists']['mac'].append(
+                    {'nexthop' : m.group('nexthop'),
+                     'label' : m.group('label')}
+                )
+
+            # EAD/ES  10.10.10.10                              0
+            m = re.match(r'^\s+EAD/ES\s+'
+                          '(?P<nexthop>[\d.]+)\s+'
+                          '(?P<label>\d+)$',line)
+
+            if m:
+                mac_flag = False
+                es_ead_flag = True
+                evi_ead_flag = False
+                summary_flag = False
+
+                res['entries'][-1]['pathlists']['es_ead'].append(
+                    {'nexthop' : m.group('nexthop'),
+                     'label' : m.group('label')}
+                )
+
+            # EAD/EVI 10.10.10.10                              24012
+            m = re.match(r'^\s+EAD/EVI\s+'
+                          '(?P<nexthop>[\d.]+)\s+'
+                          '(?P<label>\d+)$',line)
+
+            if m:
+                mac_flag = False
+                es_ead_flag = False
+                evi_ead_flag = True
+                summary_flag = False
+
+                res['entries'][-1]['pathlists']['evi_ead'].append(
+                    {'nexthop' : m.group('nexthop'),
+                     'label' : m.group('label')}
+                )
+
+            # Summary 20.20.20.20                              24212
+            m = re.match(r'^\s+Summary\s+'
+                          '(?P<nexthop>[\d.]+)\s+'
+                          '(?P<label>\d+)$',line)
+
+            if m:
+                mac_flag = False
+                es_ead_flag = False
+                evi_ead_flag = False
+                summary_flag = True
+
+                res['entries'][-1]['pathlists']['summary'].append(
+                    {'nexthop' : m.group('nexthop'),
+                     'label' : m.group('label')}
+                )
+
+            #         20.20.20.20                              0
+            m = re.match(r'^\s+'
+                         '(?P<nexthop>[\d.]+)\s+'
+                         '(?P<label>\d+)$',line)
+
+            if m:
+               if mac_flag:
+                   res['entries'][-1]['pathlists']['mac'].append(
+                       {'nexthop' : m.group('nexthop'),
+                        'label' : m.group('label')}
+                   )
+               elif es_ead_flag:
+                   res['entries'][-1]['pathlists']['es_ead'].append(
+                       {'nexthop' : m.group('nexthop'),
+                        'label' : m.group('label')}
+                   )
+               elif evi_ead_flag:
+                   res['entries'][-1]['pathlists']['evi_ead'].append(
+                       {'nexthop' : m.group('nexthop'),
+                        'label' : m.group('label')}
+                   )
+               elif summary_flag:
+                   res['entries'][-1]['pathlists']['summary'].append(
+                       {'nexthop' : m.group('nexthop'),
+                        'label' : m.group('label')}
+                   )
+
+            #         10.10.10.10 (B)                          24012
+            m = re.match(r'^\s+'
+                         '(?P<nexthop>[\d.]+)\s+'
+                         '\((?P<flag>\w+)\)\s+'
+                         '(?P<label>\d+)$',line)
+
+            if m:
+               res['entries'][-1]['pathlists']['summary'].append(
+                   {'nexthop' : m.group('nexthop'),
+                    'label' : m.group('label'),
+                    'flag' : m.group('flag')}
+               )
+
+        return res
 
 # vim: ft=python ts=8 sw=4 et
