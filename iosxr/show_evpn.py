@@ -337,7 +337,7 @@ class ShowEvpnInternalLabelDetail(MetaParser):
 
             # 5     0012.1200.0000.0000.0002                0        24114
             m = re.match(r'^\s*(?P<evi>\d+)\s+'
-                          '(?P<esi>[\d.]+)\s+'
+                          '(?P<esi>[\w.]+)\s+'
                           '(?P<eth_tag>\d+)\s+'
                           '(?P<internal_label>\w+)$',line)
 
