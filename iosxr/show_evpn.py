@@ -296,6 +296,7 @@ class ShowEvpnEviMac(MetaParser):
                             next_hop_copy = entry['next_hop']
                             entry.update(copy_entry)
                             entry['next_hop'] = next_hop_copy
+                            continue
 
         return result
 
