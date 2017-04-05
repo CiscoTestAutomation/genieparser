@@ -281,6 +281,22 @@ class ShowEvpnEviMac(MetaParser):
                             entry[m.lastgroup] = m.group(m.lastgroup)
                     continue
 
+        # Search through the result entries and populate the duplicate macs
+        # with our private data
+        if self.private:
+            for entry in result['entries']:
+                if 'eth_tag' not in entry:
+                    evi_entry = entry['evi']
+                    mac_entry = entry['mac']
+                    for copy_entry in result['entries']:
+                        if 'eth_tag' in copy_entry and copy_entry['evi'] == evi_entry \
+                                                   and copy_entry['mac'] == mac_entry:
+                            # Need to copy entry['next'hop'] to set the correct
+                            # value again after the update
+                            next_hop_copy = entry['next_hop']
+                            entry.update(copy_entry)
+                            entry['next_hop'] = next_hop_copy
+
         return result
 
 
