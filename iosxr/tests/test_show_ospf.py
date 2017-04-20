@@ -3,7 +3,6 @@ import unittest
 from unittest.mock import Mock
 
 from ats.topology import Device
-from xbu_shared.genie.ops.ops.base import Base
 from xbu_shared.parser.iosxr.show_ospf import ShowOspfNeighborDetail, \
     ShowOspf, ShowOspfDatabase, ShowOspfInterface, \
     ShowOspfNeighborDetailVrfAll, ShowOspfVrfAll, \
