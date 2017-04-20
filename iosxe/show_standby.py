@@ -439,6 +439,22 @@ class ShowStandbyAll(ShowStandbyAllSchema):
 
 
     def yang(self):
-        pass
+        ret = {}
+        cmd = '''<native><interface><GigabitEthernet/></interface></native>'''
+        output = self.device.get(('subtree', cmd))
+
+        for data in output.data:
+            for native in data:
+                for interface in native:
+                    gig_number = None
+                    interface_name = None
+                    for gigabitethernet in interface:
+                        # Remove the namespace
+                        text = gigabitethernet.tag[gigabitethernet.tag.find('}')+1:]
+                        if text == 'name':
+                            gig_number = gigabitethernet.text
+                            interface_name = 'Gigabitethernet' + str(gig_number)
+                            continue
+
 
 # vim: ft=python et sw=4
