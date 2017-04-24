@@ -26,7 +26,7 @@ class test_show_standby_internal(unittest.TestCase):
     
     golden_parsed_output = {
     'standby_internal': {
-        'hsrp_common_process_state': 'running',
+        'hsrp_common_process_state': 'not running',
         'hsrp_ha_state': 'capable',
         'hsrp_ipv4_process_state': 'not running',
         'hsrp_ipv6_process_state': 'not running',
@@ -60,26 +60,26 @@ class test_show_standby_internal(unittest.TestCase):
                   'ip': '192.168.2.254'}}}}
 
     golden_output = {'execute.return_value': '''
-    HSRP common process running
-      MsgQ size 0, max 0
-    HSRP IPv4 process not running
-    HSRP IPv6 process not running
-    HSRP Timer wheel running
-    HSRP HA capable, v3 to v4 transform disabled
+        HSRP common process not running
+          MsgQ size 0, max 0
+        HSRP IPv4 process not running
+        HSRP IPv6 process not running
+        HSRP Timer wheel running
+        HSRP HA capable, v3 to v4 transform disabled
 
-    HSRP virtual IP Hash Table (global)
-    103 192.168.1.254                    Gi1/0/1    Grp 0
-    106 192.168.2.254                    Gi1/0/2    Grp 10
+        HSRP virtual IP Hash Table (global)
+        103 192.168.1.254                    Gi1/0/1    Grp 0
+        106 192.168.2.254                    Gi1/0/2    Grp 10
 
-    HSRP MAC Address Table
-    169 Gi1/0/1 0000.0c07.ac05
-        Gi1/0/1 Grp 5
-    166 Gi2/0/3 0000.0c07.ac0a
-        Gi2/0/3 Grp 10
-    172 Gi2/0/3 0000.0c07.ac00
-        Gi2/0/3 Grp 0
-    173 Gi2/0/3 0000.0c07.ac01
-        Gi2/0/3 Grp 1
+        HSRP MAC Address Table
+        169 Gi1/0/1 0000.0c07.ac05
+            Gi1/0/1 Grp 5
+        166 Gi2/0/3 0000.0c07.ac0a
+            Gi2/0/3 Grp 10
+        172 Gi2/0/3 0000.0c07.ac00
+            Gi2/0/3 Grp 0
+        173 Gi2/0/3 0000.0c07.ac01
+            Gi2/0/3 Grp 1
     '''}
 
     def test_golden(self):
@@ -116,7 +116,7 @@ class test_show_standby_all(unittest.TestCase):
                         'active_router': 'local',
                         'active_virtual_mac_address': '0000.0c9f.f000',
                         'authentication_text': '5',
-                        'default_group_name': 'hsrp-Gi1/0/1-0',
+                        'group_name': 'hsrp-Gi1/0/1-0',
                         'default_priority': 100,
                         'hellotime': 5,
                         'holdtime': 20,
@@ -143,7 +143,7 @@ class test_show_standby_all(unittest.TestCase):
                         'active_virtual_mac_address': 'unknown',
                         'authentication_text': 'cisco123',
                         'configured_priority': 110,
-                        'default_group_name': 'hsrp-Gi1/0/2-10',
+                        'group_name': 'hsrp-Gi1/0/2-10',
                         'hellotime': 3,
                         'holdtime': 10,
                         'local_virtual_mac_address': '0000.0c07.ac0a',

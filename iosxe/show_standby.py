@@ -33,8 +33,8 @@ class ShowStandbyInternalSchema(MetaParser):
 
     schema = {'standby_internal':
                     {'hsrp_common_process_state': str,
-                     'msgQ_size': int,
-                     'msgQ_max_size': int,
+                     Optional('msgQ_size'): int,
+                     Optional('msgQ_max_size'): int,
                      'hsrp_ipv4_process_state': str,
                      'hsrp_ipv6_process_state': str,
                      'hsrp_timer_wheel_state': str,
@@ -70,7 +70,7 @@ class ShowStandbyInternal(ShowStandbyInternalSchema):
             
             # HSRP common process running
             p1 = re.compile(r'\s*HSRP +common +process'
-                             ' +(?P<hsrp_common_process_state>[a-zA-Z]+)$')
+                             ' +(?P<hsrp_common_process_state>[a-zA-Z\s]+)$')
             m = p1.match(line)
             if m:
                 if 'standby_internal' not in standby_internal_dict:
@@ -179,7 +179,6 @@ class ShowStandbyInternal(ShowStandbyInternalSchema):
             m = p8_1.match(line)
             if m:
                 interface = m.groupdict()['interface'].lower()
-                #import pdb ; pdb.set_trace()
                 if interface == last_interface:
                     stby_internal['mac_address_table'][hsrp_number]['group']\
                          = int(m.groupdict()['group'])
@@ -209,8 +208,8 @@ class ShowStandbyAllSchema(MetaParser):
                                      'active_mac_in_use': bool,
                                      'local_virtual_mac_address': str,
                                      'local_virtual_mac_default': str,
-                                     'hellotime': int,
-                                     'holdtime': int,
+                                     Optional('hellotime'): int,
+                                     Optional('holdtime'): int,
                                      Optional('next_hello_time'): float,
                                      Optional('authentication_text'): str,
                                      Optional('preempt'): bool,
@@ -222,7 +221,7 @@ class ShowStandbyAllSchema(MetaParser):
                                      Optional('priority'): int,
                                      Optional('default_priority'): int,
                                      Optional('configured_priority'): int,
-                                     'default_group_name': str,
+                                     Optional('group_name'): str,
                                     },
                                  },
                              },
@@ -427,12 +426,22 @@ class ShowStandbyAll(ShowStandbyAllSchema):
 
             # Group name is "hsrp-Gi1/0/1-0" (default)
             p16 = re.compile(r'\s*Group +name +is'
-                              ' +\"(?P<default_group_name>[a-zA-Z0-9\/\-]+)\"'
+                              ' +\"(?P<group_name>[a-zA-Z0-9\/\-]+)\"'
                               ' +\(default\)$')
             m = p16.match(line)
             if m:
-                intf_key['default_group_name'] = \
-                    m.groupdict()['default_group_name']
+                intf_key['group_name'] = \
+                    m.groupdict()['group_name']
+                continue
+            
+            # Group name is "gandalf" (cfgd)
+            p16 = re.compile(r'\s*Group +name +is'
+                              ' +\"(?P<group_name>[a-zA-Z0-9\/\-]+)\"'
+                              ' +\(cfgd\)$')
+            m = p16.match(line)
+            if m:
+                intf_key['group_name'] = \
+                    m.groupdict()['group_name']
                 continue
 
         return standby_all_dict
