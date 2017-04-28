@@ -1,0 +1,26 @@
+# Python compiled files
+*.pyc
+*.pyo
+__pycache__/
+
+# Developer files
+.project
+.pydevproject
+
+# Swap files (VI)
+*.swp
+
+# backup files
+*.bak
+
+# rope project files 
+*.ropeproject
+# temp files
+*~
+
+# coverage.py artifacts
+htmlcov/
+.coverage
+
+# Pycharm files
+.idea
