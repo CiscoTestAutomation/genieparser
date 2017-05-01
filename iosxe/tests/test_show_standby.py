@@ -152,7 +152,28 @@ class test_show_standby_all(unittest.TestCase):
                         'priority': 110,
                         'standby_router': 'unknown',
                         'state': 'disabled',
-                        'virtual_ip_address': 'unknown'}}}}}}
+                        'virtual_ip_address': 'unknown'},
+                    'GigabitEthernet3': {
+                        'active_mac_in_use': False,
+                        'active_router': '10.1.2.1',
+                        'active_router_detail': 'expires '
+                                                'in '
+                                                '0.816 '
+                                                'sec',
+                        'active_router_priority': 120,
+                        'active_virtual_mac_address': '0050.568e.3a40',
+                        'configured_priority': 110,
+                        'group_name': 'hsrp-Gi3-10',
+                        'hellotime': 3,
+                        'holdtime': 10,
+                        'local_virtual_mac_address': '0000.0c07.ac0a',
+                        'local_virtual_mac_default': 'v1',
+                        'next_hello_time': 2.096,
+                        'preempt': True,
+                        'priority': 110,
+                        'standby_router': 'local',
+                        'state': 'standby',
+                        'virtual_ip_address': '10.1.2.254'}}}}}}
 
     golden_output = {'execute.return_value': '''
         GigabitEthernet1/0/1 - Group 0 (version 2)
@@ -182,6 +203,19 @@ class test_show_standby_all(unittest.TestCase):
           Standby router is unknown
           Priority 110 (configured 110)
           Group name is "hsrp-Gi1/0/2-10" (default)
+        GigabitEthernet3 - Group 10
+          State is Standby
+            1 state change, last state change 00:00:08
+          Virtual IP address is 10.1.2.254
+          Active virtual MAC address is 0050.568e.3a40 (MAC Not In Use)
+            Local virtual MAC address is 0000.0c07.ac0a (v1 default)
+          Hello time 3 sec, hold time 10 sec
+            Next hello sent in 2.096 secs
+          Preemption enabled
+          Active router is 10.1.2.1, priority 120 (expires in 0.816 sec)
+          Standby router is local
+          Priority 110 (configured 110)
+          Group name is "hsrp-Gi3-10" (default)
         '''}
 
     def test_golden(self):

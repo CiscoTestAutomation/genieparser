@@ -217,6 +217,8 @@ class ShowStandbyAllSchema(MetaParser):
                                      Optional('preempt_reload_delay'): int,
                                      Optional('preempt_sync_delay'): int,
                                      'active_router': str,
+                                     Optional('active_router_priority'): int,
+                                     Optional('active_router_detail'): str,
                                      'standby_router': str,
                                      Optional('priority'): int,
                                      Optional('default_priority'): int,
@@ -393,6 +395,20 @@ class ShowStandbyAll(ShowStandbyAllSchema):
             m = p12.match(line)
             if m:
                 intf_key['active_router'] = m.groupdict()['active_router']
+                continue
+
+            # Active router is 10.1.2.1, priority 120 (expires in 0.816 sec)
+            p12_1 = re.compile(r'\s*Active +router +is'
+                              ' +(?P<active_router>[a-zA-Z0-9\.\s]+),'
+                              ' +priority +(?P<ar_priority>[0-9]+)'
+                              ' +\((?P<ar_detail>[a-zA-Z0-9\.\s]+)\)$')
+            m = p12_1.match(line)
+            if m:
+                intf_key['active_router'] = m.groupdict()['active_router']
+                intf_key['active_router_priority'] = \
+                    int(m.groupdict()['ar_priority'])
+                intf_key['active_router_detail'] = \
+                    m.groupdict()['ar_detail']
                 continue
 
             # Standby router is unknown 
