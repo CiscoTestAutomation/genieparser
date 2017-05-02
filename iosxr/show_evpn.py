@@ -80,14 +80,18 @@ class ShowEvpnEviMac(MetaParser):
 
     # TODO schema
 
-    def __init__(self, mac=None, private=False, **kwargs):
+    def __init__(self, mac=None, vpn_id=None, private=False, **kwargs):
         self.mac = mac
         self.private = private
+        self.vpn_id = vpn_id
         super().__init__(**kwargs)
 
     def cli(self):
 
-        cmd = 'show evpn evi mac'.format()
+        if self.vpn_id is not None:
+            cmd = 'show evpn evi vpn-id {vpn_id} mac'.format(vpn_id=self.vpn_id)
+        else:
+            cmd = 'show evpn evi mac'
 
         if self.mac:
             cmd += ' {mac}'.format(self.mac)
