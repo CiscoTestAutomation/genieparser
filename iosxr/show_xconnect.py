@@ -7,7 +7,7 @@ show xsconnect parser class
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
 
-from xbu_shared.parser.base import *
+from parser.base import *
 
 """
     TODO: bpetrovi - Aug 2, 2016

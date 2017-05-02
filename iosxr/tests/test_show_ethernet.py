@@ -11,7 +11,7 @@ from genie.ops.base import Context
 
 from metaparser.util.exceptions import SchemaEmptyParserError
 
-from xbu_shared.parser.iosxr.show_ethernet import ShowEthernetTrunkDetail, \
+from parser.iosxr.show_ethernet import ShowEthernetTrunkDetail, \
                                                   ShowEthernetTags
 
 

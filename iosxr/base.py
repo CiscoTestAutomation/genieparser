@@ -4,7 +4,7 @@ __all__ = (
 
 from ats import tcl
 from ats.tcl import tclobj, tclstr
-from xbu_shared.parser import CaasMetaParser
+from parser import CaasMetaParser
 
 class IosxrCaasMetaParser(CaasMetaParser):
 

@@ -11,7 +11,7 @@ import re
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
 
-from xbu_shared.parser.base import *
+from parser.base import *
 
 re_8bit_u = r'(?:' + r'|'.join([
     r'[0-9]',

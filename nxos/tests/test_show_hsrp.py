@@ -8,7 +8,7 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Parser
-from xbu_shared.parser.nxos.show_hsrp import ShowHsrpSummary, ShowHsrpAll
+from parser.nxos.show_hsrp import ShowHsrpSummary, ShowHsrpAll
 
 # Metaparser
 from metaparser.util.exceptions import SchemaEmptyParserError

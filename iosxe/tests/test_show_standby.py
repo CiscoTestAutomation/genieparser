@@ -8,7 +8,7 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Parser
-from xbu_shared.parser.iosxe.show_standby import ShowStandbyInternal,\
+from parser.iosxe.show_standby import ShowStandbyInternal,\
                                                  ShowStandbyAll
 
 # Metaparser

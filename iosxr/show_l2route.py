@@ -11,7 +11,7 @@ from ipaddress import ip_address
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
 
-from xbu_shared.parser.base import *
+from parser.base import *
 
 
 class ShowL2routeTopology(MetaParser):

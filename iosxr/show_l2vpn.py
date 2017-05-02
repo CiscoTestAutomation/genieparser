@@ -11,7 +11,7 @@ from ipaddress import ip_address
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
 
-from xbu_shared.parser.base import *
+from parser.base import *
 
 
 class ShowL2vpnMacLearning(MetaParser):
@@ -68,15 +68,20 @@ class ShowL2vpnForwardingBridgeDomainMacAddress(MetaParser):
 
     # TODO schema
 
-    def __init__(self,location=None,**kwargs) :
+    def __init__(self,location=None,bridge_domain=None,**kwargs) :
         assert location is not None
         self.location = location
+        self.bridge_domain = bridge_domain
         super().__init__(**kwargs)
 
     def cli(self):
 
-        cmd = 'show l2vpn forwarding bridge-domain mac-address location {location}'.format(
-            location=self.location)
+        if self.bridge_domain is None:
+            cmd = 'show l2vpn forwarding bridge-domain mac-address location {location}'.format(
+                location=self.location)
+        else:
+            cmd = 'show l2vpn forwarding bridge-domain {bridge_domain} mac-address location {location}'.format(
+                bridge_domain=self.bridge_domain,location=self.location)
 
         out = self.device.execute(cmd)
 

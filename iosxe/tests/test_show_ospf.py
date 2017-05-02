@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 from ats.topology import Device
 from xbu_shared.genie.ops.ops.base import Base
-from xbu_shared.parser.iosxe.show_ospf import ShowIpOspfNeighborDetail,\
+from parser.iosxe.show_ospf import ShowIpOspfNeighborDetail,\
                                               ShowIpOspf, \
                                               ShowIpOspfDatabase, \
                                               ShowIpOspfInterface

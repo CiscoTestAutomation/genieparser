@@ -23,7 +23,7 @@ from genie.ops.base import Context
 
 from metaparser.util.exceptions import SchemaEmptyParserError
 
-from xbu_shared.parser.iosxe.show_interface import ShowInterfacesSwitchport,\
+from parser.iosxe.show_interface import ShowInterfacesSwitchport,\
                                                    ShowIpInterfaceBriefPipeVlan
 
 

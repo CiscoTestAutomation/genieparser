@@ -6,7 +6,7 @@ from ats.topology import Device
 
 from metaparser.util.exceptions import SchemaEmptyParserError
 
-from xbu_shared.parser.nxos.show_vlan import ShowVlan, \
+from parser.nxos.show_vlan import ShowVlan, \
                                              ShowVlanInternalInfo, \
                                              ShowVlanFilter, \
                                              ShowVlanAccessMap

@@ -23,7 +23,7 @@ import re
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
 
-from xbu_shared.parser.base import *
+from parser.base import *
 
 def regexp(expression):
     def match(value):

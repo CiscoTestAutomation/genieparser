@@ -12,7 +12,7 @@ from ipaddress import ip_address, ip_network
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
 
-from xbu_shared.parser.base import *
+from parser.base import *
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

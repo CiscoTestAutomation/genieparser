@@ -11,7 +11,7 @@ from netaddr import EUI
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
 
-from xbu_shared.parser.base import *
+from parser.base import *
 
 logger = logging.getLogger(__name__)
 

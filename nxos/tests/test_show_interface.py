@@ -6,7 +6,7 @@ from ats.topology import Device
 
 from metaparser.util.exceptions import SchemaEmptyParserError
 
-from xbu_shared.parser.nxos.show_interface import ShowIpInterfaceBrief, \
+from parser.nxos.show_interface import ShowIpInterfaceBrief, \
                                                   ShowIpInterfaceBriefPipeVlan, \
                                                   ShowInterfaceSwitchport
 
