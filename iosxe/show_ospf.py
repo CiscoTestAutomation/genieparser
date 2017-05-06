@@ -319,7 +319,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema, MetaParser):
         entry = None
         for line in out.splitlines():
             line = line.rstrip()
-            p1 = re.compile(r'^\s*Neighbor\s+(?P<neighbor>\S+),\s*interface\s+address\s+(?P<interface_address>\S+)$')
+            p1 = re.compile(r'^\s*Neighbor\s+(?P<neighbor>\S+),\s*interface\s+address\s+(?P<interface_address>\S+)(,)?(\s)?(interface-id unknown)?$')
             m = p1.match(line)
             if m:
                 interface_address = m.groupdict()['interface_address']
@@ -381,25 +381,25 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema, MetaParser):
 class ShowIpOspfInterfaceSchema(MetaParser):
     schema = {Optional('intfs_all'): Or(list, KeyedList({})),
               Optional('intfs_up'): Or(list, KeyedList({})),
-			  Optional('intfs_down'): Or(list, KeyedList({})),
+              Optional('intfs_down'): Or(list, KeyedList({})),
               'intf':
                 {Any():
                      {'intf_state': str,
                       Optional('prot_state'): Or(str, KeyedList({})),
                       'addr': str,
                       'mask': str,
-					  'area': str,
-					  'pid': str,
-					  'rid': str,
+                      'area': str,
+                      'pid': str,
+                      'rid': str,
                       'ntype': str,
                       'cost': str,
                       Optional('hello_timer'): str,
                       Optional('dead_timer'): str,
                       Optional('retransmit_timer'): str,
                       Optional('wait_timer'): str,
-					  Optional('tdelay'): Or(str, KeyedList({})),
-					  Optional('ospf_state'): Or(str, KeyedList({})),
-					  Optional('pri'): Or(str, KeyedList({}))}
+                      Optional('tdelay'): Or(str, KeyedList({})),
+                      Optional('ospf_state'): Or(str, KeyedList({})),
+                      Optional('pri'): Or(str, KeyedList({}))}
                 },
             }
 
@@ -431,7 +431,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema,MetaParser):
         entry = None
         for line in out.splitlines():
             line = line.rstrip()
-            p1 = re.compile(r'^\s*(?P<intf>\S+)\s+is\s+(?P<intf_state>up|down),\s*line\s+protocol\s+is\s+(?P<prot_state>up|down)$')
+            p1 = re.compile(r'^\s*(?P<intf>\S+)\s+is\s+(?P<intf_state>up|down),\s*line\s+protocol\s+is\s+(?P<prot_state>up|down)?(\s)?([a-z\(\)]+)$')
             m = p1.match(line)
 
             if m:
@@ -470,7 +470,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema,MetaParser):
                 else:
                     intfs_down.append(intf)
 
-            p2 = re.compile(r'^\s*Internet +Address +(?P<ip_addr>[0-9\.]+)/(?P<mask>[0-9]+), +Area +(?P<area>[0-9]+)')
+            p2 = re.compile(r'^\s*Internet +Address +(?P<ip_addr>[0-9\.]+)/(?P<mask>[0-9]+), +(Interface ID (?P<intf_id>[0-9]+))?(, )?Area +(?P<area>[0-9]+)')
             m = p2.match(line)
             if m:
                 addr = m.groupdict()['ip_addr']
