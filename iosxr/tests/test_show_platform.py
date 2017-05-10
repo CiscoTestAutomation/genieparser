@@ -11,7 +11,7 @@ from parser.iosxr.show_platform import ShowVersion, ShowSdrDetail,\
                                 ShowPlatform, ShowPlatformVm,\
                                 ShowInstallActiveSummary, ShowInventory,\
                                 ShowRedundancySummary, AdminShowDiagChassis,\
-                                ShowRedundancy
+                                ShowRedundancy, Dir
 
 # Metaparser
 from metaparser.util.exceptions import SchemaEmptyParserError
@@ -516,7 +516,6 @@ class test_show_platform(unittest.TestCase):
         self.device = Mock(**self.golden_output5)
         show_platform_obj5 = ShowPlatform(device=self.device)
         parsed_output5 = show_platform_obj5.parse()
-        import pdb ;  pdb.set_trace()
         self.assertEqual(parsed_output5,self.golden_parsed_output5)
 
     def test_show_platform_empty(self):
@@ -974,7 +973,75 @@ class test_show_redundancy(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = show_redundancy_obj.parse()
 
+# ====================
+#  Unit test for 'dir'       
+# ====================
+
+class test_dir(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'dir': {
+            'dir_name': '/misc/scratch',
+            'total_bytes': '1012660 kbytes',
+            'total_free_bytes': '939092 kbytes'}}
+
+    golden_output1 = {'execute.return_value': '''
+        Directory of /misc/scratch
+           15 lrwxrwxrwx 1    12 May 10  2017 config -> /misc/config
+           20 -rw-r--r-- 1   773 May 10  2017 cvac.log
+        16353 drwxr-xr-x 2  4096 May 10 14:02 nvgen_traces
+         8179 drwxr-xr-x 9  4096 May 10 13:41 ztp
+         8177 drwx------ 2  4096 May 10  2017 clihistory
+           11 drwx------ 2 16384 May 10  2017 lost+found
+           14 -rw-r--r-- 1 10429 May 10  2017 pnet_cfg.log
+           18 -rw-r--r-- 1  2458 May 10 13:15 status_file
+           12 drwxr-xr-x 2  4096 May 10  2017 core
+           13 -rw-r--r-- 1  1438 May 10  2017 envoke_log
+         8178 drwxr-xr-x 2  4096 May 10  2017 kim
+
+        1012660 kbytes total (939092 kbytes free)
+        '''}
+
+    golden_parsed_output2 = {
+        'dir': {
+            'dir_name': 'disk0a:/usr',
+            'total_bytes': '2562719744 bytes',
+            'total_free_bytes': '1918621184 bytes'}}
+
+    golden_output2 = {'execute.return_value': '''
+        Directory of disk0a:/usr
+
+        9867        -rwx  8909        Thu Jan 15 15:29:26 2015  start
+
+        2562719744 bytes total (1918621184 bytes free)
+        '''}
+
+    def test_dir_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        dir_obj1 = Dir(device=self.device)
+        parsed_output1 = dir_obj1.parse()
+        self.assertEqual(parsed_output1,self.golden_parsed_output1)
+
+    def test_dir_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        dir_obj2 = Dir(device=self.device)
+        parsed_output2 = dir_obj2.parse()
+        self.assertEqual(parsed_output2,self.golden_parsed_output2)
+
+    def test_dir_empty(self):
+        self.device = Mock(**self.empty_output)
+        dir_obj = Dir(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = dir_obj.parse()
+
+
 if __name__ == '__main__':
     unittest.main()
+
 
 # vim: ft=python et sw=4

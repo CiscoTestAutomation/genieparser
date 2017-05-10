@@ -962,4 +962,56 @@ class ShowRedundancy(ShowRedundancySchema):
 
         return redundancy_dict
 
+# ================
+# Parser for 'dir'
+# ================
+
+class DirSchema(MetaParser):
+
+    schema = {
+        'dir': {
+            'dir_name': str,
+            'total_bytes': str,
+            'total_free_bytes': str,
+            },
+        }
+
+class Dir(DirSchema):
+
+    def cli(self):
+        cmd = 'dir'.format()
+        out = self.device.execute(cmd)
+        
+        # Init vars
+        dir_dict = {}
+        
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            # Directory of /misc/scratch
+            # Directory of disk0a:/usr
+            p1 = re.compile(r'\s*Directory +of'
+                             ' +(?P<dir_name>[a-zA-Z0-9\:\/]+)$')
+            m = p1.match(line)
+            if m:
+                if 'dir' not in dir_dict:
+                    dir_dict['dir'] = {}
+                    dir_dict['dir']['dir_name'] = str(m.groupdict()['dir_name'])
+                continue
+
+            # 1012660 kbytes total (939092 kbytes free)
+            # 2562719744 bytes total (1918621184 bytes free)
+            p2 = re.compile(r'\s*(?P<total_bytes>[0-9]+ +(kbytes|bytes))'
+                             ' +total +\((?P<total_free_bytes>[0-9]+'
+                             ' +(kbytes|bytes)) +free\)$')
+            m = p2.match(line)
+            if m:
+                dir_dict['dir']['total_bytes'] = \
+                        str(m.groupdict()['total_bytes'])
+                dir_dict['dir']['total_free_bytes'] = \
+                    str(m.groupdict()['total_free_bytes'])
+                continue
+        
+        return dir_dict
+
 # vim: ft=python et sw=4
