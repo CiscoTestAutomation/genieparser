@@ -362,7 +362,8 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema, MetaParser):
                 continue
 
 
-        ospf_neigh_dict['intf_list'] = intf_list
+        if intf_list:
+            ospf_neigh_dict['intf_list'] = intf_list
 
         return ospf_neigh_dict
 
@@ -431,7 +432,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema,MetaParser):
         entry = None
         for line in out.splitlines():
             line = line.rstrip()
-            p1 = re.compile(r'^\s*(?P<intf>\S+)\s+is\s+(?P<intf_state>up|down),\s*line\s+protocol\s+is\s+(?P<prot_state>up|down)?(\s)?([a-z\(\)]+)$')
+            p1 = re.compile(r'^\s*(?P<intf>\S+) +is +(?P<intf_state>[a-zA-Z]+), *line +protocol +is +(?P<prot_state>[a-zA-Z0-9\-]+)?(\s)?([a-z\(\)]+)?$')
             m = p1.match(line)
 
             if m:
