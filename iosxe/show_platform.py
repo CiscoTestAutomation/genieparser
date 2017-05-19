@@ -380,10 +380,8 @@ class ShowVersion(ShowVersionSchema):
                 continue
 
         # table2 for C3850
-        tmp2 = parsergen.oper_fill_tabular(device=self.device,
-                                              show_command="show version",
-                                              right_justified=True,
-                                              header_fields=
+        tmp2 = parsergen.oper_fill_tabular(right_justified=True,
+                                           header_fields=
                                                   [ "Switch",
                                                     "Ports",
                                                     "Model             ",
@@ -399,16 +397,15 @@ class ShowVersion(ShowVersionSchema):
                                                     'mode'],
                                               index=[0,],
                                               table_terminal_pattern=r"^\n",
-                                              )
+                                              device_output=out,
+                                              device_os='iosxe')
+
         if tmp2.entries:
             res2 = tmp2
             # switch_number
-
         # license table for Cat3850
-        tmp = parsergen.oper_fill_tabular(device=self.device,
-                                              show_command="show version",
-                                              right_justified=True,
-                                              header_fields=
+        tmp = parsergen.oper_fill_tabular(right_justified=True,
+                                          header_fields=
                                                   [ "Current            ",
                                                     "Type            ",
                                                     "Next reboot  "],
@@ -417,7 +414,9 @@ class ShowVersion(ShowVersionSchema):
                                                     "license_type",
                                                     "next_reload_license_level"],
                                               table_terminal_pattern=r"^\n",
-                                              )
+                                              device_output=out,
+                                              device_os='iosxe')
+
         if tmp.entries:
             res = tmp
             for key in res.entries.keys():
@@ -1103,9 +1102,7 @@ class ShowPlatform(ShowPlatformSchema):
                     continue
 
         # table1 for C3850
-        tmp = parsergen.oper_fill_tabular(device=self.device,
-                                              show_command="show platform",
-                                              right_justified=True,
+        tmp = parsergen.oper_fill_tabular(right_justified=True,
                                               header_fields=
                                                   [ "Switch",
                                                     "Ports",
@@ -1124,15 +1121,14 @@ class ShowPlatform(ShowPlatformSchema):
                                                     "sw_ver"],
                                               index=[0, 2],
                                               table_terminal_pattern=r"^[Mac|Switch|\n]",
-                                              )
-        
+                                              device_output=out,
+                                              device_os='iosxe')
+
         if tmp.entries:
             res = tmp
 
         # table1 for ASR1K
-        tmp = parsergen.oper_fill_tabular(device=self.device,
-                                              show_command="show platform",
-                                              right_justified=True,
+        tmp = parsergen.oper_fill_tabular(right_justified=True,
                                               header_fields=
                                                   [ "Slot     ",
                                                     "Type               ",
@@ -1145,15 +1141,14 @@ class ShowPlatform(ShowPlatformSchema):
                                                     "insert_time"],
                                               index=[0, 1],
                                               table_terminal_pattern=r"^\n",
-                                              )
+                                              device_output=out,
+                                              device_os='iosxe')
 
         if tmp.entries:
             res = tmp
 
         # table2 for C3850
-        tmp2 = parsergen.oper_fill_tabular(device=self.device,
-                                              show_command="show platform",
-                                              right_justified=True,
+        tmp2 = parsergen.oper_fill_tabular(right_justified=True,
                                               header_fields=
                                                   [ "Switch#",
                                                     "Role    ",
@@ -1165,15 +1160,14 @@ class ShowPlatform(ShowPlatformSchema):
                                                     "priority",
                                                     "state", ],
                                               index=[0, ],
-                                              )
+                                              device_output=out,
+                                              device_os='iosxe')
 
         if tmp2.entries:
             res2 = tmp2
 
         # table2 for ASR1K
-        tmp2 = parsergen.oper_fill_tabular(device=self.device,
-                                              show_command="show platform",
-                                              right_justified=True,
+        tmp2 = parsergen.oper_fill_tabular(right_justified=True,
                                               header_fields=
                                                   [ "Slot     ",
                                                     "CPLD Version       ",
@@ -1183,7 +1177,9 @@ class ShowPlatform(ShowPlatformSchema):
                                                     "cpld_ver",
                                                     "fw_ver", ],
                                               index=[0, ],
-                                              )
+                                              device_output=out,
+                                              device_os='iosxe')
+
         if tmp2.entries:
             res2 = tmp2
 
@@ -1246,6 +1242,7 @@ class ShowPlatform(ShowPlatformSchema):
                             platform_dict['slot'][n]['other'] = {}
                         if d not in platform_dict['slot'][n]['other']:
                             platform_dict['slot'][n]['other'][d] = {}
+                        import pdb; pdb.set_trace()
                         for k, v in res.entries[n][d].items():
                             platform_dict['slot'][n]['other'][d][k] = v
                         if n in res2.entries:

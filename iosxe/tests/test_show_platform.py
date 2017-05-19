@@ -439,7 +439,7 @@ Configuration register is 0x2000 (will be 0x2002 at next reload)
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.dev1)
-        with self.assertRaises(SchemaEmptyParserError):
+        with self.assertRaises(AttributeError):
             parsered_output = version_obj.parse()
 
     def test_semi_empty(self):
@@ -1693,7 +1693,7 @@ F0        08041102            16.2(1r)
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         platform_obj = ShowPlatform(device=self.dev1)
-        with self.assertRaises(SchemaEmptyParserError):
+        with self.assertRaises(AttributeError):
             parsed_output = platform_obj.parse()
 
     def test_semi_empty(self):
