@@ -1242,7 +1242,6 @@ class ShowPlatform(ShowPlatformSchema):
                             platform_dict['slot'][n]['other'] = {}
                         if d not in platform_dict['slot'][n]['other']:
                             platform_dict['slot'][n]['other'][d] = {}
-                        import pdb; pdb.set_trace()
                         for k, v in res.entries[n][d].items():
                             platform_dict['slot'][n]['other'][d][k] = v
                         if n in res2.entries:
