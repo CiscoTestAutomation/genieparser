@@ -8,8 +8,8 @@ from unittest.mock import Mock
 from ats.topology import Device
 # Metaparser
 from metaparser.util.exceptions import SchemaEmptyParserError
-# nxos show_bgp
-from parser.nxos.show_bgp import ShowRoutingVrfAll
+# nxos show_routing
+from parser.nxos.show_routing import ShowRoutingVrfAll
 
 
 class TestShowRoutingVrfAll(unittest.TestCase):
