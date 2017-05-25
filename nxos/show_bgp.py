@@ -326,7 +326,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                     parsed_dict['vrf'][vrf_name]['address_family'] = {}
 
                 address_family = str(m.groupdict()['address_family']).lower()
-                address_family = address_family.replace(" ", "_")
+                
                 vrf = str(m.groupdict()['vrf'])
 
                 if address_family not in parsed_dict['vrf'][vrf_name]\
@@ -648,19 +648,20 @@ class ShowBgpPeerPolicySchema(MetaParser):
     schema = {
         'peer_policy': 
             {Any(): 
-                {'send_community': bool,
-                 'send_ext_community': bool,
-                 'route_reflector_client': bool,
-                 'route_map_name_in': str,
-                 'route_map_name_out': str,
-                 'maximum_prefix_max_prefix_no': int,
-                 'default_originate': bool,
-                 'default_originate_route_map': str,
-                 'soft_reconfiguration': bool,
-                 'site_of_origin': bool,
-                 'allowas_in': bool,
-                 'as_override': bool,
-                 'inherited_vrf_default': str,
+                {Optional('send_community'): bool,
+                 Optional('send_ext_community'): bool,
+                 Optional('route_reflector_client'): bool,
+                 Optional('route_map_name_in'): str,
+                 Optional('route_map_name_out'): str,
+                 Optional('maximum_prefix_max_prefix_no'): int,
+                 Optional('default_originate'): bool,
+                 Optional('default_originate_route_map'): str,
+                 Optional('soft_reconfiguration'): bool,
+                 Optional('site_of_origin'): bool,
+                 Optional('allowas_in'): bool,
+                 Optional('as_override'): bool,
+                 Optional('inherited_vrf_default'): str,
+                 Optional('next_hop_self'): bool,
                 },
             },
         }
@@ -811,6 +812,13 @@ class ShowBgpPeerPolicy(ShowBgpPeerPolicySchema):
                     if m:
                         sub_dict['inherited_vrf_default'] = \
                             str(m.groupdict()['vrf_default'])
+                        continue
+
+                    # Nexthop Self
+                    r13 = re.compile(r'^\s*Nexthop +Self$')
+                    m = r13.match(line)
+                    if m:
+                        sub_dict['next_hop_self'] = True
                         continue
 
         # Return parsed output
@@ -1023,6 +1031,15 @@ class ShowBgpVrfAllAllSchema(MetaParser):
                     {Any(): 
                         {'bgp_table_version': int,
                          'local_router_id': str,
+                         Optional('route_distinguisher'): str,
+                         Optional('default_vrf'): str,
+                         Optional('aggregate_address_ipv4_address'): str,
+                         Optional('aggregate_address_ipv4_mask'): str,
+                         Optional('aggregate_address_as_set'): bool,
+                         Optional('aggregate_address_summary_only'): bool,
+                         Optional('v6_aggregate_address_ipv6_address'): str,
+                         Optional('v6_aggregate_address_as_set'): bool,
+                         Optional('v6_aggregate_address_summary_only'): bool,
                          'prefixes': 
                             {Any(): 
                                 {'next_hop': 
@@ -1067,7 +1084,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 # Get values
                 vrf = str(m.groupdict()['vrf_name'])
                 address_family = str(m.groupdict()['address_family']).lower()
-                address_family = address_family.replace(" ", "_")
+                
 
                 if 'vrf' not in parsed_dict:
                     parsed_dict['vrf'] = {}
@@ -1146,6 +1163,26 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                     nh_dict['localpref'] = localpref
                     nh_dict['weight'] = weight
                     nh_dict['origin_codes'] = origin_codes
+
+                # Check if aggregate_address_ipv4_address
+                if '>a' in status_codes+path_type:
+                    address, mask = prefix.split("/")
+                    if ':' in prefix:
+                        af_dict[address_family]\
+                            ['v6_aggregate_address_ipv6_address'] = prefix
+                        af_dict[address_family]\
+                            ['v6_aggregate_address_as_set'] = True
+                        af_dict[address_family]\
+                            ['v6_aggregate_address_summary_only'] = True
+                    else:
+                        af_dict[address_family]\
+                            ['aggregate_address_ipv4_address'] = address
+                        af_dict[address_family]\
+                            ['aggregate_address_ipv4_mask'] = mask
+                        af_dict[address_family]\
+                            ['aggregate_address_as_set'] = True
+                        af_dict[address_family]\
+                            ['aggregate_address_summary_only'] = True
                     continue
 
             #                     0.0.0.0                  100      32768 i
@@ -1174,6 +1211,19 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                     nh_dict['weight'] = weight
                     nh_dict['origin_codes'] = origin_codes
                     continue
+
+            # Network            Next Hop            Metric     LocPrf     Weight Path
+            # Route Distinguisher: 100:100     (VRF VRF1)
+            p5 = re.compile(r'^\s*Route +Distinguisher *:'
+                              ' +(?P<route_distinguisher>(\S+))'
+                              ' +\(VRF +(?P<default_vrf>(\S+))\)$')
+            m = p5.match(line)
+            if m:
+                af_dict[address_family]['route_distinguisher'] = \
+                    str(m.groupdict()['route_distinguisher'])
+                af_dict[address_family]['default_vrf'] = \
+                    str(m.groupdict()['default_vrf'])
+                continue
 
         return parsed_dict
 
@@ -1305,9 +1355,9 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
     
     '''Parser for show bgp vrf <WORD> all neighbors'''
 
-    def cli(self):
-        #cmd  = 'show bgp vrf {vrf} all neighbors'.format(vrf=vrf)
-        cmd = 'show bgp vrf all all neighbors'
+    def cli(self, vrf):
+        cmd  = 'show bgp vrf {vrf} all neighbors'.format(vrf=vrf)
+        #cmd = 'show bgp vrf all all neighbors'
         out = self.device.execute(cmd)
         
         # Init vars
@@ -1365,8 +1415,8 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
             # BGP state = Shut (Admin), down for 5w0d
             p4 = re.compile(r'^\s*BGP +state +='
                              ' +(?P<session_state>[a-zA-Z\(\)\s]+), +(up|down)'
-                             ' +for +(?P<up_time>[a-zA-Z0-9]+)'
-                             '(?: *, +retry +in +(?P<retry_time>[0-9\.]+))?$')
+                             ' +for +(?P<up_time>[a-zA-Z0-9\:\.]+)'
+                             '(?: *, +retry +in +(?P<retry_time>[0-9\.\:]+))?$')
             m = p4.match(line)
             if m:
                 parsed_dict['neighbor'][neighbor_id]['session_state'] = \
@@ -1800,7 +1850,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 if 'address_family' not in  parsed_dict['neighbor'][neighbor_id]:
                     parsed_dict['neighbor'][neighbor_id]['address_family'] = {}
                 address_family = str(m.groupdict()['af']).lower()
-                address_family = address_family.replace(" ", "_")
+                
                 if address_family not in parsed_dict['neighbor'][neighbor_id]\
                     ['address_family']:
                     parsed_dict['neighbor'][neighbor_id]['address_family']\
@@ -1981,8 +2031,9 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                     [neighbor_id]['address_family'][address_family]:
                     parsed_dict['neighbor'][neighbor_id]['address_family']\
                         [address_family]['inherited_peer_policy_names'] = {}
-                if policy_name not in parsed_dict['neighbor'][neighbor_id]['address_family']\
-                    [address_family]['inherited_peer_policy_names']:
+                if policy_name not in parsed_dict['neighbor'][neighbor_id]\
+                    ['address_family'][address_family]\
+                        ['inherited_peer_policy_names']:
                     parsed_dict['neighbor'][neighbor_id]['address_family']\
                         [address_family]['inherited_peer_policy_names']\
                         [policy_name] = {}
@@ -2115,7 +2166,7 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
                 if 'address_family' not in nh_dict['vrf'][vrf]:
                     nh_dict['vrf'][vrf]['address_family'] = {}
                 af = str(m.groupdict()['af']).lower()
-                af = af.replace(" ", "_")
+
                 if af not in nh_dict['vrf'][vrf]['address_family']:
                     nh_dict['vrf'][vrf]['address_family'][af] = {}
                     af_dict = nh_dict['vrf'][vrf]['address_family'][af]
@@ -2286,7 +2337,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                 if 'address_family' not in sum_dict['vrf'][vrf]:
                     sum_dict['vrf'][vrf]['address_family'] = {}
                 address_family = str(m.groupdict()['address_family']).lower()
-                address_family = address_family.replace(" ", "_")
+                
                 if address_family not in sum_dict['vrf'][vrf]['address_family']:
                     sum_dict['vrf'][vrf]['address_family'][address_family] = {}
                     af_dict = sum_dict['vrf'][vrf]['address_family']\
@@ -2421,43 +2472,44 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
 # ==================================================
 
 class ShowBgpVrfAllAllDampeningParametersSchema(MetaParser):
-    """ Schema class - Initialize the data structure.
-    """
-    schema = {'vrf':
-              {Any():
-               {'address_family':
-                {Any():
-                 {Optional('dampening'): str,
-                  Optional('dampening_route_map'): str,
-                  Optional('dampening_half_life_time'): str,
-                  Optional('dampening_reuse_time'): str,
-                  Optional('dampening_suppress_time'): str,
-                  Optional('dampening_max_suppress_time'): str,
-                  Optional('dampening_max_suppress_penalty'): str,
-                  Optional('route_distinguisher'):
-                   {Optional(Any()):
-                    {Optional('dampening'): str,
-                     Optional('rd_vrf'): str,
-                     Optional('dampening_route_map'): str,
-                     Optional('dampening_half_life_time'): str,
-                     Optional('dampening_reuse_time'): str,
-                     Optional('dampening_suppress_time'): str,
-                     Optional('dampening_max_suppress_time'): str,
-                     Optional('dampening_max_suppress_penalty'): str,
-             }}, }}, }}, }
+    
+    '''Schema for 'show bgp vrf all dampening parameters'''
+    
+    schema = {
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {Optional('dampening'): str,
+                        Optional('dampening_route_map'): str,
+                        Optional('dampening_half_life_time'): str,
+                        Optional('dampening_reuse_time'): str,
+                        Optional('dampening_suppress_time'): str,
+                        Optional('dampening_max_suppress_time'): str,
+                        Optional('dampening_max_suppress_penalty'): str,
+                        Optional('route_distinguisher'):
+                            {Optional(Any()):
+                                {Optional('dampening'): str,
+                                Optional('rd_vrf'): str,
+                                Optional('dampening_route_map'): str,
+                                Optional('dampening_half_life_time'): str,
+                                Optional('dampening_reuse_time'): str,
+                                Optional('dampening_suppress_time'): str,
+                                Optional('dampening_max_suppress_time'): str,
+                                Optional('dampening_max_suppress_penalty'): str,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
 
-
-class ShowBgpVrfAllAllDampeningParameters(
-               ShowBgpVrfAllAllDampeningParametersSchema):
-    """ Parser class - Parse out the data and create hierarchical structure
-                       for cli, xml, and yang output.
-    """
+class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSchema):
+    
+    '''Parser for 'show bgp vrf all dampening parameters'''
+    
     def cli(self):
-        ''' parsing mechanism: cli
-
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
-        '''
         cmd = 'show bgp vrf all all dampening parameters'
         out = self.device.execute(cmd)
         bgp_dict = {}
