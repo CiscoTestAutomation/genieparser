@@ -455,7 +455,7 @@ class test_show_bgp_peer_template(unittest.TestCase):
         'peer_template':
             {'PEER':
                 {'bfd_live_detection': True,
-                'connected_check': 'disabled',
+                'disable_connected_check': True,
                 'description': 'DESC',
                 'holdtime': 26,
                 'inherit_template': 'PEER-SESSION',
@@ -933,6 +933,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'retry_time': '0.000000',
                 'router_id': '0.0.0.0',
                 'session_state': 'Idle',
+                'shutdown': False,
                 'up_time': '02:19:37'}}}
 
     golden_output1 = {'execute.return_value': '''
@@ -1077,6 +1078,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'retry_time': 'None',
                 'router_id': '2.2.2.2',
                 'session_state': 'Established',
+                'shutdown': False,
                 'up_time': '02:20:02',
                 'update_source': 'loopback0'},
             '2.2.2.25':
@@ -1125,6 +1127,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'retry_time': '0.000000',
                 'router_id': '0.0.0.0',
                 'session_state': 'Idle',
+                'shutdown': False,
                 'up_time': '02:20:08'},
             '2.2.2.5':
                 {'address_family':
@@ -1195,17 +1198,19 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'reset_reason': 'no '
                                         'error'}},
                 'bgp_version': 4,
-                'conn_check': 'disabled',
+                'disable_connected_check': True,
                 'description': 'PEER-SESSION',
-                'inherit_template': 'PEER-SESSION',
+                'inherit_peer_session': 'PEER-SESSION',
                 'link': 'ebgp',
                 'local_as': '333',
                 'peer_index': 2,
-                'peer_num_hops': '255',
+                'ebgp_multihop': True,
+                'ebgp_multihop_max_hop': 255,
                 'remote_as': '200',
                 'retry_time': 'None',
                 'router_id': '0.0.0.0',
                 'session_state': 'Shut (Admin)',
+                'shutdown': True,
                 'tcp_md5_auth': 'enabled',
                 'tcp_md5_auth_config': 'TCP MD5 authentication '
                                        'is enabled',

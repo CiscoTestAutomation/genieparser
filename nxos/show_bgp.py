@@ -841,7 +841,7 @@ class ShowBgpPeerTemplateSchema(MetaParser):
                 Optional('inherit_template'): str,
                 Optional('description'): str,
                 Optional('update_source'): str,
-                Optional('connected_check'): str,
+                Optional('disable_connected_check'): bool,
                 Optional('bfd_live_detection'): bool,
                 Optional('num_hops_bgp_peer'): int,
                 Optional('tcp_md5_auth'): str,
@@ -939,12 +939,10 @@ class ShowBgpPeerTemplate(ShowBgpPeerTemplateSchema):
                         continue
 
                     # Connected check is disabled
-                    p5 = re.compile(r'^\s*Connected +check +is'
-                                     ' +(?P<connected_check>(\S+))$')
+                    p5 = re.compile(r'^\s*Connected check is disabled$')
                     m = p5.match(line)
                     if m:
-                        sub_dict['connected_check'] = \
-                            str(m.groupdict()['connected_check'])
+                        sub_dict['disable_connected_check'] = True
                         continue
 
                     # BFD live-detection is configured
@@ -1260,6 +1258,7 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                  'bgp_version': int,
                  'router_id': str,
                  'session_state': str,
+                 'shutdown': bool,
                  'up_time': str,
                  Optional('retry_time'): str,
                  Optional('update_source'): str,
@@ -1274,9 +1273,10 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                      Optional('hold_time'): str,
                      Optional('last_written'): str,
                      Optional('keepalive_timer'): str,},
-                 Optional('conn_check'): str,
-                 Optional('inherit_template'): str,
-                 Optional('peer_num_hops'): str,
+                 Optional('disable_connected_check'): bool,
+                 Optional('inherit_peer_session'): str,
+                 Optional('ebgp_multihop_max_hop'): int,
+                 Optional('ebgp_multihop'): bool,
                  Optional('tcp_md5_auth'): str,
                  Optional('tcp_md5_auth_config'): str,
                  Optional('received_messages'): int,
@@ -1438,7 +1438,12 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                         str(m.groupdict()['up_time'])
                 parsed_dict['neighbor'][neighbor_id]['retry_time'] = \
                         str(m.groupdict()['retry_time'])
-                continue
+                session_state = str(m.groupdict()['session_state'])
+                if 'Shut' in session_state or 'shut' in session_state:
+                    parsed_dict['neighbor'][neighbor_id]['shutdown'] = True
+                else:
+                    parsed_dict['neighbor'][neighbor_id]['shutdown'] = False
+                    continue
 
             # Using loopback0 as update source for this peer
             p5 = re.compile(r'^\s*Using +(?P<update_source>[a-zA-Z0-9]+)'
@@ -1514,26 +1519,26 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                             ' +session-template +(?P<template>[a-zA-Z\-\_]+)$')
             m = p10.match(line)
             if m:
-                parsed_dict['neighbor'][neighbor_id]['inherit_template'] = \
+                parsed_dict['neighbor'][neighbor_id]['inherit_peer_session'] = \
                     str(m.groupdict()['template'])
                 continue
 
             # Connected check is disabled
-            p11 = re.compile(r'^\s*Connected +check +is'
-                              ' +(?P<conn_check>[a-zA-Z\s]+)$')
+            p11 = re.compile(r'^\s*Connected check is disabled$')
             m = p11.match(line)
             if m:
-                parsed_dict['neighbor'][neighbor_id]['conn_check'] = \
-                    str(m.groupdict()['conn_check'])
+                parsed_dict['neighbor'][neighbor_id]\
+                    ['disable_connected_check'] = True
                 continue
 
             # External BGP peer might be upto 255 hops away
             p12 = re.compile(r'^\s*External +BGP +peer +might +be +upto'
-                             ' +(?P<peer_num_hops>[0-9]+) +hops +away$')
+                             ' +(?P<ebgp_multihop_max_hop>[0-9]+) +hops +away$')
             m = p12.match(line)
             if m:
-                parsed_dict['neighbor'][neighbor_id]['peer_num_hops'] = \
-                    str(m.groupdict()['peer_num_hops'])
+                parsed_dict['neighbor'][neighbor_id]['ebgp_multihop_max_hop'] = \
+                    int(m.groupdict()['ebgp_multihop_max_hop'])
+                parsed_dict['neighbor'][neighbor_id]['ebgp_multihop'] = True
                 continue
 
             # TCP MD5 authentication is enabled
