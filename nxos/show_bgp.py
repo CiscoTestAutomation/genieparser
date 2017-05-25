@@ -488,7 +488,7 @@ class ShowBgpPeerSession(ShowBgpPeerSessionSchema):
     def cli(self):
         
         # Execute 'show running' command to collect peer-sessions
-        cmd = 'show running-confing | inc peer-session'
+        cmd = 'show running-config | inc peer-session'
         out = self.device.execute(cmd)
         
         # Init vars
@@ -675,7 +675,7 @@ class ShowBgpPeerPolicy(ShowBgpPeerPolicySchema):
     def cli(self):
         
         # Execute 'show running' command to collect peer-sessions
-        cmd = 'show running-confing | inc peer-policy'
+        cmd = 'show running-config | inc peer-policy'
         out = self.device.execute(cmd)
         
         # Init vars
