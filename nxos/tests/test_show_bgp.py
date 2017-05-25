@@ -454,7 +454,7 @@ class test_show_bgp_peer_template(unittest.TestCase):
     golden_parsed_output = {
         'peer_template':
             {'PEER':
-                {'bfd_live_detection': 'configured',
+                {'bfd_live_detection': True,
                 'connected_check': 'disabled',
                 'description': 'DESC',
                 'holdtime': 26,
@@ -996,7 +996,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                             'total_entries': 2},
                         'routing_table_version': 10,
                         'send_community': True}},
-                'bfd_live_detection': 'configured',
+                'bfd_live_detection': True,
                 'bgp_negotiated_capabilities':
                     {'dynamic_capability': 'advertised '
                                            '(mp, '
@@ -1155,7 +1155,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'routing_table_version': 0,
                         'send_community': True,
                         'soft_configuration': True}},
-                'bfd_live_detection': 'configured',
+                'bfd_live_detection': True,
                 'bgp_negotiated_keepalive_timers':
                     {'hold_time': '45',
                     'keepalive_interval': '15',
@@ -1207,6 +1207,8 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'router_id': '0.0.0.0',
                 'session_state': 'Shut (Admin)',
                 'tcp_md5_auth': 'enabled',
+                'tcp_md5_auth_config': 'TCP MD5 authentication '
+                                       'is enabled',
                 'up_time': '02:20:09',
                 'update_source': 'loopback0'}}}
 

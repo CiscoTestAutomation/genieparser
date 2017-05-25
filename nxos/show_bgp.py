@@ -336,7 +336,8 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                     continue
 
             #     Table Id                   : 10
-            p26 = re.compile(r'^\s*Table +Id *: +(?P<table_id>\w+)$')
+            #     Table Id                   : 0x80000001
+            p26 = re.compile(r'^\s*Table +Id *: +(?P<table_id>(\S+))$')
             m = p26.match(line)
             if m:
                 parsed_dict['vrf'][vrf_name]['address_family'][address_family]\
@@ -841,7 +842,7 @@ class ShowBgpPeerTemplateSchema(MetaParser):
                 Optional('description'): str,
                 Optional('update_source'): str,
                 Optional('connected_check'): str,
-                Optional('bfd_live_detection'): str,
+                Optional('bfd_live_detection'): bool,
                 Optional('num_hops_bgp_peer'): int,
                 Optional('tcp_md5_auth'): str,
                 Optional('nbr_transport_connection_mode'): str,
@@ -947,12 +948,10 @@ class ShowBgpPeerTemplate(ShowBgpPeerTemplateSchema):
                         continue
 
                     # BFD live-detection is configured
-                    p6 = re.compile(r'^\s*BFD +live-detection +is'
-                                     ' +(?P<bfd_live_detection>(\S+))$')
+                    p6 = re.compile(r'^\s*BFD live-detection is configured$')
                     m = p6.match(line)
                     if m:
-                        sub_dict['bfd_live_detection'] = \
-                            str(m.groupdict()['bfd_live_detection'])
+                        sub_dict['bfd_live_detection'] = True
                         continue
 
                     # External BGP peer might be upto 255 hops away
@@ -1264,7 +1263,7 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                  'up_time': str,
                  Optional('retry_time'): str,
                  Optional('update_source'): str,
-                 Optional('bfd_live_detection'): str,
+                 Optional('bfd_live_detection'): bool,
                  Optional('nbr_local_as_cmd'): str,
                  Optional('last_read'): str,
                  Optional('holdtime'): str,
@@ -1279,6 +1278,7 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                  Optional('inherit_template'): str,
                  Optional('peer_num_hops'): str,
                  Optional('tcp_md5_auth'): str,
+                 Optional('tcp_md5_auth_config'): str,
                  Optional('received_messages'): int,
                  Optional('received_notifications'): int,
                  Optional('received_bytes_queue'): int,
@@ -1371,7 +1371,6 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
 
     def cli(self, vrf):
         cmd  = 'show bgp vrf {vrf} all neighbors'.format(vrf=vrf)
-        #cmd = 'show bgp vrf all all neighbors'
         out = self.device.execute(cmd)
         
         # Init vars
@@ -1451,12 +1450,11 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 continue
 
             # BFD live-detection is configured
-            p6 = re.compile(r'^\s*BFD +live-detection +is'
-                             ' +(?P<bfd_live_detection>[a-zA-Z\s]+)$')
+            p6 = re.compile(r'^\s*BFD live-detection is configured$')
             m = p6.match(line)
             if m:
                 parsed_dict['neighbor'][neighbor_id]['bfd_live_detection'] = \
-                        str(m.groupdict()['bfd_live_detection'])
+                    True
                 continue
 
             # Neighbor local-as command not active
@@ -1545,6 +1543,8 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
             if m:
                 parsed_dict['neighbor'][neighbor_id]['tcp_md5_auth'] = \
                     str(m.groupdict()['tcp_md5_auth'])
+                parsed_dict['neighbor'][neighbor_id]['tcp_md5_auth_config'] = \
+                    str(line).strip()
                 continue
             
             # Only passive connection setup allowed
