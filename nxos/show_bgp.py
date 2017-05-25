@@ -1040,15 +1040,15 @@ class ShowBgpVrfAllAllSchema(MetaParser):
                          Optional('v6_aggregate_address_ipv6_address'): str,
                          Optional('v6_aggregate_address_as_set'): bool,
                          Optional('v6_aggregate_address_summary_only'): bool,
-                         'prefixes': 
+                         Optional('prefixes'):
                             {Any(): 
                                 {'next_hop': 
                                     {Any(): 
                                         {Optional('status_codes'): str,
                                          Optional('path_type'): str,
                                          'metric': str,
-                                         'localpref': int,
-                                         'weight': int,
+                                         'localpref': str,
+                                         'weight': str,
                                          'origin_codes': str,
                                         },
                                     },
@@ -1071,6 +1071,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
         # Init vars
         parsed_dict = {}
         af_dict = {}
+        data_on_nextline = False
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -1097,9 +1098,10 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                     continue
 
             # BGP table version is 35, local router ID is 11.11.11.11
+            # BGP table version is 381, Local Router ID is 1.1.1.2
             p2 = re.compile(r'^\s*BGP +table +version +is'
-                             ' +(?P<bgp_table_version>[0-9]+), +local +router'
-                             ' +ID +is +(?P<local_router_id>[0-9\.]+)$')
+                             ' +(?P<bgp_table_version>[0-9]+), +(L|l)ocal'
+                             ' +(R|r)outer +ID +is +(?P<local_router_id>[0-9\.]+)$')
             m = p2.match(line)
             if m:
                 af_dict[address_family]['bgp_table_version'] = \
@@ -1107,6 +1109,8 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 af_dict[address_family]['local_router_id'] = \
                     str(m.groupdict()['local_router_id'])
                 continue
+
+
 
             # Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
             # Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist
@@ -1117,13 +1121,14 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
             # *>i33.33.33.33/32   3.3.3.3         0        100          0 ?
             # l34.34.34.0/24      0.0.0.0                  100      32768 i
             # *>i2001::33/128     ::ffff:3.3.3.3  0        100          0 ?
+            # *>l[2]:[0]:[0]:[48]:[0000.1986.6d99]:[0]:[0.0.0.0]/216
             p3 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>)+)?'
                              '(?P<path_type>(i|e|c|l|a|r))'
-                             '(?P<prefix>[0-9\.\:\/]+)'
-                             ' *(?P<next_hop>[a-zA-Z0-9\.\:]+)'
-                             '(?: +(?P<metric>[a-zA-Z0-9\s\(\)]+))?'
-                             ' +(?P<localpref>[0-9]+) +(?P<weight>[0-9]+)'
-                             ' +(?P<origin_codes>(i|e|\?|\|))$')
+                             '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]]+)'
+                             '(?: *(?P<next_hop>[a-zA-Z0-9\.\:]+))?'
+                             '(?: +(?P<metric>[0-9]+))?'
+                             '(?: +(?P<localpref>[0-9]+) +(?P<weight>[0-9]+))?'
+                             '(?: +(?P<origin_codes>(i|e|\?|\|)))?$')
             m = p3.match(line)
             if m:
                 # Get keys
@@ -1132,8 +1137,8 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 prefix = str(m.groupdict()['prefix'])
                 next_hop = str(m.groupdict()['next_hop'])
                 metric = str(m.groupdict()['metric']).strip()
-                localpref = int(m.groupdict()['localpref'])
-                weight = int(m.groupdict()['weight'])
+                localpref = str(m.groupdict()['localpref'])
+                weight = str(m.groupdict()['weight'])
                 origin_codes = str(m.groupdict()['origin_codes'])
 
                 # Check prefixes top level key exists
@@ -1149,6 +1154,11 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                     [prefix]:
                     af_dict[address_family]['prefixes'][prefix]\
                         ['next_hop'] = {}
+
+                # Check if current prefix details are on next line
+                if next_hop == 'None':
+                    data_on_nextline = True
+                    continue
 
                 # Check if next_hop exists
                 if next_hop not in af_dict[address_family]['prefixes']\
@@ -1195,8 +1205,8 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 # Get keys
                 next_hop = str(m.groupdict()['next_hop'])
                 metric = str(m.groupdict()['metric']).strip()
-                localpref = int(m.groupdict()['localpref'])
-                weight = int(m.groupdict()['weight'])
+                localpref = str(m.groupdict()['localpref'])
+                weight = str(m.groupdict()['weight'])
                 origin_codes = str(m.groupdict()['origin_codes'])
 
                 # Check if next_hop exists
@@ -1210,7 +1220,11 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                     nh_dict['localpref'] = localpref
                     nh_dict['weight'] = weight
                     nh_dict['origin_codes'] = origin_codes
-                    continue
+                    if data_on_nextline:
+                        nh_dict['status_codes'] = status_codes
+                        nh_dict['path_type'] = path_type
+                        data_on_nextline = False
+                        continue
 
             # Network            Next Hop            Metric     LocPrf     Weight Path
             # Route Distinguisher: 100:100     (VRF VRF1)
