@@ -67,7 +67,7 @@ class test_show_bgp_process_vrf_all(unittest.TestCase):
                                 {'route_map': 'test-map'},
                              'static': 
                                 {'route_map': 'genie_redistribution'}},
-                        'table_id': 10,
+                        'table_id': '10',
                         'table_state': 'up'},
                     'ipv6_unicast': {
                         'aggregate_label': '492288',
@@ -86,7 +86,7 @@ class test_show_bgp_process_vrf_all(unittest.TestCase):
                                 {'route_map': 'genie_redistribution'},
                              'static': 
                                 {'route_map': 'genie_redistribution'}},
-                        'table_id': 80000010,
+                        'table_id': '0x80000010',
                         'table_state': 'up'}},
                 'cluster_id': '0.0.0.0',
                 'conf_router_id': '0.0.0.0',
@@ -108,7 +108,7 @@ class test_show_bgp_process_vrf_all(unittest.TestCase):
                                 'networks': 0,
                                 'paths': 0,
                                 'routes': 0}},
-                         'table_id': 1,
+                         'table_id': '1',
                          'table_state': 'up'},
                     'ipv6_label_unicast': 
                         {'peers': 
@@ -118,7 +118,7 @@ class test_show_bgp_process_vrf_all(unittest.TestCase):
                                  'networks': 0,
                                  'paths': 0,
                                  'routes': 0}},
-                         'table_id': 80000001,
+                         'table_id': '80000001',
                          'table_state': 'up'},
                     'ipv6_unicast': 
                         {'peers': 
@@ -128,7 +128,7 @@ class test_show_bgp_process_vrf_all(unittest.TestCase):
                                 'networks': 0,
                                 'paths': 0,
                                 'routes': 0}},
-                         'table_id': 80000001,
+                         'table_id': '80000001',
                          'table_state': 'up'},
                     'vpnv4_unicast': 
                         {'peers': 
@@ -138,7 +138,7 @@ class test_show_bgp_process_vrf_all(unittest.TestCase):
                                  'networks': 0,
                                  'paths': 5,
                                  'routes': 5}},
-                         'table_id': 1,
+                         'table_id': '1',
                          'table_state': 'up'},
                     'vpnv6_unicast': 
                         {'peers': 
@@ -148,7 +148,7 @@ class test_show_bgp_process_vrf_all(unittest.TestCase):
                                  'networks': 0,
                                  'paths': 4,
                                  'routes': 4}},
-                         'table_id': 80000001,
+                         'table_id': '80000001',
                          'table_state': 'up'}},
                  'cluster_id': '0.0.0.0',
                  'conf_router_id': '1.1.1.1',
@@ -213,7 +213,7 @@ class test_show_bgp_process_vrf_all(unittest.TestCase):
             Aggregate label: 492287
 
             Information for address family IPv6 Unicast in VRF VRF1
-            Table Id                   : 80000010
+            Table Id                   : 0x80000010
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
             0          0               4          4          1          1         

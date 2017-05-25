@@ -44,22 +44,22 @@ class ShowBgpProcessVrfAllSchema(MetaParser):
         'bgp_paths_per_hwm_attr': int,
         'bgp_as_path_entries': int,
         'bytes_used_as_path_entries': int,
-        'vrf': 
+        Optional('vrf'): 
         {Any(): 
             {'vrf_id': str,
              'vrf_state': str,
-             'router_id': str,
-             'conf_router_id': str,
-             'confed_id': int,
-             'cluster_id': str,
+             Optional('router_id'): str,
+             Optional('conf_router_id'): str,
+             Optional('confed_id'): int,
+             Optional('cluster_id'): str,
              'num_conf_peers': int,
              'num_pending_conf_peers': int,
              'num_established_peers': int,
-             'vrf_rd': str,
-             'address_family': 
+             Optional('vrf_rd'): str,
+             Optional('address_family'): 
                 {Any(): 
-                    {'table_id': int,
-                     'table_state': str,
+                    {Optional('table_id'): str,
+                     Optional('table_state'): str,
                      'peers': 
                         {Any(): 
                             {'active_peers': int,
@@ -336,11 +336,11 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                     continue
 
             #     Table Id                   : 10
-            p26 = re.compile(r'^\s*Table +Id *: +(?P<table_id>[0-9]+)$')
+            p26 = re.compile(r'^\s*Table +Id *: +(?P<table_id>\w+)$')
             m = p26.match(line)
             if m:
                 parsed_dict['vrf'][vrf_name]['address_family'][address_family]\
-                    ['table_id'] = int(m.groupdict()['table_id'])
+                    ['table_id'] = m.groupdict()['table_id']
                 continue
             
             #     Table state                : UP
