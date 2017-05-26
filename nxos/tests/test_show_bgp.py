@@ -1009,7 +1009,6 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                                            'gr)',
                     'dynamic_capability_old': 'advertised '
                                               'received',
-                    'four_octets_asn': 'disabled',
                     'graceful_restart': 'advertised '
                                         'received',
                     'route_refresh': 'advertised '
@@ -1079,6 +1078,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'router_id': '2.2.2.2',
                 'session_state': 'Established',
                 'shutdown': False,
+                'suppress_four_byte_as_capability': True,
                 'up_time': '02:20:02',
                 'update_source': 'loopback0'},
             '2.2.2.25':
@@ -1132,7 +1132,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
             '2.2.2.5':
                 {'address_family':
                     {'ipv4 unicast':
-                        {'as_override': 'enabled',
+                        {'as_override': True,
                         'as_override_count': 9,
                         'bgp_table_version': 2,
                         'inherited_peer_policy_names':

@@ -1260,6 +1260,7 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                  'session_state': str,
                  'shutdown': bool,
                  'up_time': str,
+                 Optional('suppress_four_byte_as_capability'): bool,
                  Optional('retry_time'): str,
                  Optional('update_source'): str,
                  Optional('bfd_live_detection'): bool,
@@ -1316,7 +1317,6 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                  Optional('bgp_negotiated_capabilities'): 
                     {Optional('route_refresh'): str,
                      Optional('route_refresh_old'): str,
-                     Optional('four_octets_asn'): str,
                      Optional('vpnv4_unicast'): str,
                      Optional('vpnv6_unicast'): str,
                      Optional('graceful_restart'): str,
@@ -1343,18 +1343,19 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                          Optional('soft_configuration'): bool,
                          Optional('next_hop_self'): bool,
                          Optional('as_override_count'): int,
-                         Optional('as_override'): str,
+                         Optional('as_override'): bool,
                          Optional('maximum_prefix_max_prefix_no'): int,
                          Optional('route_map_name_in'): str,
                          Optional('route_map_name_out'): str,
                          Optional('nbr_af_default_originate'): bool,
                          Optional('nbr_af_default_originate_route_map'): str,
+                         Optional('route_reflector_client'): bool,
                          Optional('path'): 
                             {'total_entries': int,
                              'memory_usage': int,
                              'accepted_paths': int,
                             },
-                         Optional('inherited_peer_policy_names'):
+                         Optional('inherited_peer_policy'):
                             {Any():
                                 {'inherit_peer_seq': int,
                                 },
@@ -1716,13 +1717,11 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 continue
 
             # 4-Byte AS capability: disabled
-            p22 = re.compile(r'^\s*4-Byte +AS +capability *:'
-                              ' +(?P<four_octets_asn>[a-zA-Z\s]+)$')
+            p22 = re.compile(r'^\s*4-Byte AS capability: disabled$')
             m = p22.match(line)
             if m:
                 parsed_dict['neighbor'][neighbor_id]\
-                    ['bgp_negotiated_capabilities']['four_octets_asn'] = \
-                        str(m.groupdict()['four_octets_asn'])
+                    ['suppress_four_byte_as_capability'] = True
                 continue
 
             # Address family VPNv4 Unicast: advertised received
@@ -2015,13 +2014,11 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 continue
 
             # ASN override is enabled
-            p45 = re.compile(r'^\s*ASN +override +is'
-                              ' +(?P<as_override>[a-zA-Z\s]+)$')
+            p45 = re.compile(r'^\s*ASN override is enabled$')
             m = p45.match(line)
             if m:
                 parsed_dict['neighbor'][neighbor_id]['address_family']\
-                    [address_family]['as_override'] = \
-                        str(m.groupdict()['as_override'])
+                    [address_family]['as_override'] = True
                 continue
 
             # Default information originate, default not sent
@@ -2046,18 +2043,18 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
             if m:
                 policy_name = str(m.groupdict()['policy_name'])
                 inherit_peer_seq = int(m.groupdict()['inherit_peer_seq'])
-                if 'inherited_peer_policy_names' not in parsed_dict['neighbor']\
+                if 'inherited_peer_policy' not in parsed_dict['neighbor']\
                     [neighbor_id]['address_family'][address_family]:
                     parsed_dict['neighbor'][neighbor_id]['address_family']\
-                        [address_family]['inherited_peer_policy_names'] = {}
+                        [address_family]['inherited_peer_policy'] = {}
                 if policy_name not in parsed_dict['neighbor'][neighbor_id]\
                     ['address_family'][address_family]\
-                        ['inherited_peer_policy_names']:
+                        ['inherited_peer_policy']:
                     parsed_dict['neighbor'][neighbor_id]['address_family']\
-                        [address_family]['inherited_peer_policy_names']\
+                        [address_family]['inherited_peer_policy']\
                         [policy_name] = {}
                     parsed_dict['neighbor'][neighbor_id]['address_family']\
-                        [address_family]['inherited_peer_policy_names']\
+                        [address_family]['inherited_peer_policy']\
                         [policy_name]['inherit_peer_seq'] = inherit_peer_seq
                     continue
 
@@ -2118,6 +2115,14 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                         ['bgp_session_transport']['transport'] = {}
                 parsed_dict['neighbor'][neighbor_id]['bgp_session_transport']\
                     ['transport']['fd'] = str(m.groupdict()['fd'])
+                continue
+
+            # Route reflector client
+            p52 = re.compile(r'^\s*Route reflector client$')
+            m = p52.match(line)
+            if m:
+                parsed_dict['neighbor'][neighbor_id]['address_family']\
+                    [address_family]['route_reflector_client'] = True
                 continue
 
         return parsed_dict
