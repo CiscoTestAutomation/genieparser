@@ -1285,7 +1285,7 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                  Optional('received_bytes_queue'): int,
                  Optional('sent_messages'): int,
                  Optional('sent_notifications'): int,
-                 Optional('esnt_bytes_queue'): int,
+                 Optional('sent_bytes_queue'): int,
                  Optional('bgp_session_transport'):
                     {Optional('connection'): 
                         {Optional('mode'): str,
@@ -1333,7 +1333,6 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                      Optional('restart_time_advertised_by_peer_seconds'): int,
                      Optional('stale_time_advertised_by_peer_seconds'): int,
                     },
-                 
                  Optional('address_family'): 
                     {Any(): 
                         {Optional('bgp_table_version'): int,
@@ -1351,13 +1350,13 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                          Optional('nbr_af_default_originate_route_map'): str,
                          Optional('route_reflector_client'): bool,
                          Optional('path'): 
-                            {'total_entries': int,
-                             'memory_usage': int,
-                             'accepted_paths': int,
+                            {Optional('total_entries'): int,
+                             Optional('memory_usage'): int,
+                             Optional('accepted_paths'): int,
                             },
-                         Optional('inherited_peer_policy'):
+                         Optional('inherit_peer_policy'):
                             {Any():
-                                {'inherit_peer_seq': int,
+                                {Optional('inherit_peer_seq'): int,
                                 },
                             },
                         },
@@ -1572,33 +1571,33 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 continue
 
             # Received 92717 messages, 3 notifications, 0 bytes in queue
-            p15 = re.compile(r'^\s*Received +(?P<messages>[0-9]+)'
-                              '+messages, +(?P<notifications>[0-9]+)'
-                              ' +notifications, +(?P<bytes>[0-9]+)'
+            p15 = re.compile(r'^\s*Received +(?P<received_messages>[0-9]+)'
+                              ' +messages, +(?P<received_notifications>[0-9]+)'
+                              ' +notifications, +(?P<received_bytes>[0-9]+)'
                               ' +bytes +in +queue$')
             m = p15.match(line)
             if m:
                 parsed_dict['neighbor'][neighbor_id]['received_messages'] = \
-                    int(m.groupdict()['messages'])
+                    int(m.groupdict()['received_messages'])
                 parsed_dict['neighbor'][neighbor_id]['received_notifications'] = \
-                    int(m.groupdict()['notifications'])
+                    int(m.groupdict()['received_notifications'])
                 parsed_dict['neighbor'][neighbor_id]['received_bytes_queue'] = \
-                    int(m.groupdict()['bytes'])
+                    int(m.groupdict()['received_bytes'])
                 continue
 
             # Sent 92730 messages, 5 notifications, 0 bytes in queue
             p16 = re.compile(r'^\s*Sent +(?P<sent_messages>[0-9]+)'
-                              '+messages, +(?P<notifications>[0-9]+)'
+                              ' +messages, +(?P<sent_notifications>[0-9]+)'
                               ' +notifications, +(?P<sent_bytes_queue>[0-9]+)'
                               ' +bytes +in +queue$')
             m = p16.match(line)
             if m:
                 parsed_dict['neighbor'][neighbor_id]['sent_messages'] = \
-                    int(m.groupdict()['messages'])
+                    int(m.groupdict()['sent_messages'])
                 parsed_dict['neighbor'][neighbor_id]['sent_notifications'] = \
-                    int(m.groupdict()['notifications'])
+                    int(m.groupdict()['sent_notifications'])
                 parsed_dict['neighbor'][neighbor_id]['sent_bytes_queue'] = \
-                    int(m.groupdict()['bytes'])
+                    int(m.groupdict()['sent_bytes_queue'])
                 continue
 
             # Connections established 9, dropped 8
@@ -2043,18 +2042,18 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
             if m:
                 policy_name = str(m.groupdict()['policy_name'])
                 inherit_peer_seq = int(m.groupdict()['inherit_peer_seq'])
-                if 'inherited_peer_policy' not in parsed_dict['neighbor']\
+                if 'inherit_peer_policy' not in parsed_dict['neighbor']\
                     [neighbor_id]['address_family'][address_family]:
                     parsed_dict['neighbor'][neighbor_id]['address_family']\
-                        [address_family]['inherited_peer_policy'] = {}
+                        [address_family]['inherit_peer_policy'] = {}
                 if policy_name not in parsed_dict['neighbor'][neighbor_id]\
                     ['address_family'][address_family]\
-                        ['inherited_peer_policy']:
+                        ['inherit_peer_policy']:
                     parsed_dict['neighbor'][neighbor_id]['address_family']\
-                        [address_family]['inherited_peer_policy']\
+                        [address_family]['inherit_peer_policy']\
                         [policy_name] = {}
                     parsed_dict['neighbor'][neighbor_id]['address_family']\
-                        [address_family]['inherited_peer_policy']\
+                        [address_family]['inherit_peer_policy']\
                         [policy_name]['inherit_peer_seq'] = inherit_peer_seq
                     continue
 

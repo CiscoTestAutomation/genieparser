@@ -290,14 +290,14 @@ class test_show_bgp_process_vrf_all(unittest.TestCase):
                 None
         '''}
 
-    def test_show_version_golden1(self):
+    def test_show_bgp_process_vrf_all_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpProcessVrfAll(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-    def test_show_version_empty(self):
+    def test_show_bgp_process_vrf_all_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpProcessVrfAll(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
@@ -929,9 +929,15 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'link': 'unknown',
                 'local_as': 'None',
                 'peer_index': 1,
+                'received_bytes_queue': 0,
+                'received_messages': 0,
+                'received_notifications': 0,
                 'remote_as': '0',
                 'retry_time': '0.000000',
                 'router_id': '0.0.0.0',
+                'sent_bytes_queue': 0,
+                'sent_messages': 0,
+                'sent_notifications': 0,
                 'session_state': 'Idle',
                 'shutdown': False,
                 'up_time': '02:19:37'}}}
@@ -1073,9 +1079,15 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'local_as': 'None',
                 'nbr_local_as_cmd': 'not active',
                 'peer_index': 1,
+                'received_bytes_queue': 0,
+                'received_messages': 261,
+                'received_notifications': 0,
                 'remote_as': '100',
                 'retry_time': 'None',
                 'router_id': '2.2.2.2',
+                'sent_bytes_queue': 0,
+                'sent_messages': 263,
+                'sent_notifications': 0,
                 'session_state': 'Established',
                 'shutdown': False,
                 'suppress_four_byte_as_capability': True,
@@ -1123,9 +1135,15 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'link': 'unknown',
                 'local_as': 'None',
                 'peer_index': 3,
+                'received_bytes_queue': 0,
+                'received_messages': 0,
+                'received_notifications': 0,
                 'remote_as': '0',
                 'retry_time': '0.000000',
                 'router_id': '0.0.0.0',
+                'sent_bytes_queue': 0,
+                'sent_messages': 0,
+                'sent_notifications': 0,
                 'session_state': 'Idle',
                 'shutdown': False,
                 'up_time': '02:20:08'},
@@ -1135,7 +1153,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         {'as_override': True,
                         'as_override_count': 9,
                         'bgp_table_version': 2,
-                        'inherited_peer_policy_names':
+                        'inherit_peer_policy':
                             {'PEER-POLICY':
                                 {'inherit_peer_seq': 10},
                             'PEER-POLICY2':
@@ -1206,9 +1224,15 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'peer_index': 2,
                 'ebgp_multihop': True,
                 'ebgp_multihop_max_hop': 255,
+                'received_bytes_queue': 0,
+                'received_messages': 0,
+                'received_notifications': 0,
                 'remote_as': '200',
                 'retry_time': 'None',
                 'router_id': '0.0.0.0',
+                'sent_bytes_queue': 0,
+                'sent_messages': 0,
+                'sent_notifications': 0,
                 'session_state': 'Shut (Admin)',
                 'shutdown': True,
                 'tcp_md5_auth': 'enabled',
