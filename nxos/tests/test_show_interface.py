@@ -8,7 +8,8 @@ from metaparser.util.exceptions import SchemaEmptyParserError
 
 from parser.nxos.show_interface import ShowIpInterfaceBrief, \
                                                   ShowIpInterfaceBriefPipeVlan, \
-                                                  ShowInterfaceSwitchport
+                                                  ShowInterfaceSwitchport, \
+                                                  ShowInterfaceBrief
 
 
 class test_show_ip_interface_brief(unittest.TestCase):
@@ -208,6 +209,100 @@ Name: port-channel30
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         intf_obj = ShowInterfaceSwitchport(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = intf_obj.parse()
+
+class test_show_interface_brief(unittest.TestCase):
+    device = Device(name='aDevice')
+    device1 = Device(name='bDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {'interface': 
+                              {'ethernet': 
+                                {'Eth1/1': {'mode': 'routed',
+                                            'port_ch': '--',
+                                            'reason': 'none                      ',
+                                            'speed': '1000(D)',
+                                            'status': 'up',
+                                            'type': 'eth',
+                                            'vlan': '--'},
+                                 'Eth1/3': {'mode': 'access',
+                                            'port_ch': '--',
+                                            'reason': 'Administratively '
+                                                      'down     ',
+                                            'speed': 'auto(D)',
+                                            'status': 'down',
+                                            'type': 'eth',
+                                            'vlan': '1'},
+                                 'Eth1/6': {'mode': 'access',
+                                            'port_ch': '--',
+                                            'reason': 'Link not '
+                                                      'connected        ',
+                                            'speed': 'auto(D)',
+                                            'status': 'down',
+                                            'type': 'eth',
+                                            'vlan': '1'}},
+                              'loopback': 
+                                {'Lo0': 
+                                  {'description': '--',
+                                   'status': 'up'}},
+                              'port': 
+                                {'mgmt0': 
+                                  {'ip_address': '172.25.143.76',
+                                   'mtu': '1500',
+                                   'speed': '1000',
+                                   'status': 'up',
+                                   'vrf': '--'}},
+                              'port_channel': 
+                                {'Po8': 
+                                  {'mode': 'access',
+                                   'protocol': 'none',
+                                   'reason': 'No operational '
+                                             'members     ',
+                                   'speed': 'auto(I) ',
+                                   'status': 'down',
+                                   'type': 'eth',
+                                   'vlan': '1'}}}}
+
+
+    golden_output = {'execute.return_value': '''
+pinxdt-n9kv-3# show interface brief 
+
+--------------------------------------------------------------------------------
+Port   VRF          Status IP Address                              Speed    MTU
+--------------------------------------------------------------------------------
+mgmt0  --           up     172.25.143.76                           1000     1500
+
+--------------------------------------------------------------------------------
+Ethernet      VLAN    Type Mode   Status  Reason                   Speed     Port
+Interface                                                                    Ch #
+--------------------------------------------------------------------------------
+Eth1/1        --      eth  routed up      none                       1000(D) --
+Eth1/3        1       eth  access down    Administratively down      auto(D) --
+Eth1/6        1       eth  access down    Link not connected         auto(D) --
+
+
+--------------------------------------------------------------------------------
+Port-channel VLAN    Type Mode   Status  Reason                    Speed   Protocol
+Interface                                                                  
+--------------------------------------------------------------------------------
+Po8          1       eth  access down    No operational members      auto(I)  none
+
+--------------------------------------------------------------------------------
+Interface     Status     Description
+--------------------------------------------------------------------------------
+Lo0           up         --
+
+'''}
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        intf_obj = ShowInterfaceBrief(device=self.device)
+        parsed_output = intf_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        intf_obj = ShowInterfaceBrief(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
 

@@ -66,4 +66,56 @@ class ShowVrf(ShowVrfSchema):
 
         return vrf_dict
 
+class ShowVrfInterfaceSchema(MetaParser):
+
+    '''Schema for show vrf interface'''
+
+    schema = {
+            'vrf_interface':
+                {Any():
+                    {'vrf_name': str,
+                     'vrf_id': str,
+                     'site_of_origin': str},
+                },
+            }
+
+class ShowVrfInterface(ShowVrfInterfaceSchema):
+
+    '''Parser for show vrf Interface'''
+
+    def cli(self):
+        cmd = 'show vrf interface'
+        out = self.device.execute(cmd)
+        
+        # Init vars
+        vrf_interface_dict = {}
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            p1 = re.compile(r'^\s*Interface +VRF-Name +VRF-ID +Site-of-Origin$')
+            m = p1.match(line)
+            if m:
+                continue
+
+            p2 = re.compile(r'^\s*(?P<intf_name>[a-zA-Z0-9\/]+)'
+                ' +(?P<vrf_name>[a-zA-Z0-9\-]+) +(?P<vrf_id>[0-9]+)'
+                ' +(?P<site_of_origin>[a-zA-Z0-9\-]+)?$')
+            m = p2.match(line)
+            if m:
+                interface = m.groupdict()['intf_name']
+                if 'vrf_interface' not in vrf_interface_dict:
+                    vrf_interface_dict['vrf_interface'] = {}
+                if interface not in vrf_interface_dict['vrf_interface']:
+                    vrf_interface_dict['vrf_interface'][interface] = {}
+                vrf_interface_dict['vrf_interface'][interface]['vrf_name'] = \
+                    m.groupdict()['vrf_name']
+                vrf_interface_dict['vrf_interface'][interface]['vrf_id'] = \
+                    m.groupdict()['vrf_id']
+                vrf_interface_dict['vrf_interface'][interface]['site_of_origin'] = \
+                    m.groupdict()['site_of_origin']
+                continue
+
+        return vrf_interface_dict
+
 # vim: ft=python et sw=4
