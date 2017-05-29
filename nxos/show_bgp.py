@@ -2296,27 +2296,9 @@ class ShowBgpVrfAllAllSummarySchema(MetaParser):
     schema = {
         'vrf':
             {Any():
-                {'address_family':
+                {Optional('neighbor'):
                     {Any():
-                        {Optional('route_identifier'): str,
-                         Optional('local_as'): int,
-                         Optional('bgp_table_version'): int,
-                         Optional('capable_peers'): int,
-                         Optional('config_peers'): int,
-                         Optional('prefixes'):
-                            {'total_entries': int,
-                             'memory_usage': int,},
-                         Optional('path'):
-                            {'total_entries': int,
-                             'memory_usage': int,},
-                         Optional('attribute_entries'): str,
-                         Optional('as_path_entries'): str,
-                         Optional('community_entries'): str,
-                         Optional('clusterlist_entries'): str,
-                         Optional('dampening'): str,
-                         Optional('history_paths'): str,
-                         Optional('dampened_paths'): str,
-                         Optional('neighbor'):
+                        {'address_family':
                             {Any():
                                 {'v': int,
                                 'as': int,
@@ -2326,7 +2308,27 @@ class ShowBgpVrfAllAllSummarySchema(MetaParser):
                                 'inq': int,
                                 'outq': int,
                                 'up_down': str,
-                                'state': str,
+                                'state_pfxrcd': str,
+                                Optional('route_identifier'): str,
+                                Optional('local_as'): int,
+                                Optional('bgp_table_version'): int,
+                                Optional('config_peers'): int,
+                                Optional('capable_peers'): int,
+                                Optional('prefixes'):
+                                    {'total_entries': int,
+                                    'memory_usage': int,
+                                },
+                                Optional('path'):
+                                    {'total_entries': int,
+                                    'memory_usage': int,
+                                },
+                                Optional('attribute_entries'): str,
+                                Optional('as_path_entries'): str,
+                                Optional('community_entries'): str,
+                                Optional('clusterlist_entries'): str,
+                                Optional('dampening'): bool,
+                                Optional('history_paths'): int,
+                                Optional('dampened_paths'): int,
                                 },
                             },
                         },
@@ -2355,19 +2357,12 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                              ' +(?P<address_family>[a-zA-Z0-9\s]+)$')
             m = p1.match(line)
             if m:
+                address_family = str(m.groupdict()['address_family']).lower()
+                vrf = str(m.groupdict()['vrf_name'])
                 if 'vrf' not in sum_dict:
                     sum_dict['vrf'] = {}
-                vrf = str(m.groupdict()['vrf_name'])
                 if vrf not in sum_dict['vrf']:
                     sum_dict['vrf'][vrf] = {}
-                if 'address_family' not in sum_dict['vrf'][vrf]:
-                    sum_dict['vrf'][vrf]['address_family'] = {}
-                address_family = str(m.groupdict()['address_family']).lower()
-                
-                if address_family not in sum_dict['vrf'][vrf]['address_family']:
-                    sum_dict['vrf'][vrf]['address_family'][address_family] = {}
-                    af_dict = sum_dict['vrf'][vrf]['address_family']\
-                        [address_family]
                 continue
 
             # BGP router identifier 4.4.4.4, local AS number 100
@@ -2376,10 +2371,8 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                              ' +number +(?P<local_as>[0-9]+)$')
             m = p2.match(line)
             if m:
-                af_dict['route_identifier'] = \
-                    str(m.groupdict()['route_identifier'])
-                af_dict['local_as'] = \
-                    int(m.groupdict()['local_as'])
+                route_identifier = str(m.groupdict()['route_identifier'])
+                local_as = int(m.groupdict()['local_as'])
                 continue
 
             # BGP table version is 40, IPv4 Unicast config peers 1, capable peers 0
@@ -2390,12 +2383,9 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                              ' +peers +(?P<capable_peers>[0-9]+)$')
             m = p3.match(line)
             if m:
-                af_dict['bgp_table_version'] = \
-                    int(m.groupdict()['bgp_table_version'])
-                af_dict['config_peers'] = \
-                    int(m.groupdict()['config_peers'])
-                af_dict['capable_peers'] = \
-                    int(m.groupdict()['capable_peers'])
+                bgp_table_version = int(m.groupdict()['bgp_table_version'])
+                config_peers = int(m.groupdict()['config_peers'])
+                capable_peers = int(m.groupdict()['capable_peers'])
                 continue
 
             # 5 network entries and 5 paths using 620 bytes of memory
@@ -2404,18 +2394,9 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                              ' +(?P<bytes>[0-9]+) +bytes +of +memory$')
             m = p4.match(line)
             if m:
-                if 'prefixes' not in af_dict:
-                    af_dict['prefixes'] = {}
-                af_dict['prefixes']['total_entries'] = \
-                    int(m.groupdict()['networks'])
-                af_dict['prefixes']['memory_usage'] = \
-                    int(m.groupdict()['bytes'])
-                if 'path' not in af_dict:
-                    af_dict['path'] = {}
-                af_dict['path']['total_entries'] = \
-                    int(m.groupdict()['paths'])
-                af_dict['path']['memory_usage'] = \
-                    int(m.groupdict()['bytes'])
+                num_prefix_entries = int(m.groupdict()['networks'])
+                memory_usage = int(m.groupdict()['bytes'])
+                num_path_entries = int(m.groupdict()['paths'])
                 continue
 
             # BGP attribute entries [3/384], BGP AS path entries [0/0]
@@ -2424,10 +2405,8 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                              ' +entries +(?P<as_path_entries>(\S+))$')
             m = p5.match(line)
             if m:
-                af_dict['attribute_entries'] = \
-                    str(m.groupdict()['attribute_entries'])
-                af_dict['as_path_entries'] = \
-                    str(m.groupdict()['as_path_entries'])
+                attribute_entries = str(m.groupdict()['attribute_entries'])
+                as_path_entries = str(m.groupdict()['as_path_entries'])
                 continue
 
             # BGP community entries [0/0], BGP clusterlist entries [1/4]
@@ -2436,10 +2415,8 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                              ' +entries +(?P<clusterlist_entries>(\S+))$')
             m = p6.match(line)
             if m:
-                af_dict['community_entries'] = \
-                    str(m.groupdict()['community_entries'])
-                af_dict['clusterlist_entries'] = \
-                    str(m.groupdict()['clusterlist_entries'])
+                community_entries = str(m.groupdict()['community_entries'])
+                clusterlist_entries = str(m.groupdict()['clusterlist_entries'])
                 continue
 
             # Dampening configured, 0 history paths, 0 dampened paths
@@ -2448,11 +2425,9 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                              ' +(?P<dampened_paths>[0-9]+) +dampened +paths$')
             m = p7.match(line)
             if m:
-                af_dict['dampening'] = str(m.groupdict()['dampening'])
-                af_dict['history_paths'] = \
-                    str(m.groupdict()['history_paths'])
-                af_dict['dampened_paths'] = \
-                    str(m.groupdict()['dampened_paths'])
+                dampening = True
+                history_paths = int(m.groupdict()['history_paths'])
+                dampened_paths = int(m.groupdict()['dampened_paths'])
                 continue
 
             # Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
@@ -2462,32 +2437,46 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                              ' +(?P<msg_sent>[0-9]+) +(?P<tbl_ver>[0-9]+)'
                              ' +(?P<inq>[0-9]+) +(?P<outq>[0-9]+)'
                              ' +(?P<up_down>[a-zA-Z0-9]+)'
-                             ' +(?P<state>(\S+))$')
+                             ' +(?P<state>[a-zA-Z0-9\(\)\s]+)$')
             m = p8.match(line)
             if m:
-                if 'neighbor' not in af_dict:
-                    af_dict['neighbor'] = {}
+                # Add neighbor to dictionary
                 neighbor = str(m.groupdict()['neighbor'])
-                if neighbor not in af_dict['neighbor']:
-                    af_dict['neighbor'][neighbor] = {}
-                    af_dict['neighbor'][neighbor]['v'] = \
-                        int(m.groupdict()['v'])
-                    af_dict['neighbor'][neighbor]['as'] = \
-                        int(m.groupdict()['as'])
-                    af_dict['neighbor'][neighbor]['msg_rcvd'] = \
-                        int(m.groupdict()['msg_rcvd'])
-                    af_dict['neighbor'][neighbor]['msg_sent'] = \
-                        int(m.groupdict()['msg_sent'])
-                    af_dict['neighbor'][neighbor]['tbl_ver'] = \
-                        int(m.groupdict()['tbl_ver'])
-                    af_dict['neighbor'][neighbor]['inq'] = \
-                        int(m.groupdict()['inq'])
-                    af_dict['neighbor'][neighbor]['outq'] = \
-                        int(m.groupdict()['outq'])
-                    af_dict['neighbor'][neighbor]['up_down'] = \
-                        str(m.groupdict()['up_down'])
-                    af_dict['neighbor'][neighbor]['state'] = \
-                        str(m.groupdict()['state'])
+                if 'neighbor' not in sum_dict['vrf'][vrf]:
+                    sum_dict['vrf'][vrf]['neighbor'] = {}
+                if neighbor not in sum_dict['vrf'][vrf]['neighbor']:
+                    sum_dict['vrf'][vrf]['neighbor'][neighbor] = {}
+                    nbr_dict = sum_dict['vrf'][vrf]['neighbor'][neighbor]
+
+                # Add address family to this neighbor
+                if 'address_family' not in nbr_dict:
+                    nbr_dict['address_family'] = {}
+                if address_family not in nbr_dict['address_family']:
+                    nbr_dict['address_family'][address_family] = {}
+                    nbr_af_dict = nbr_dict['address_family'][address_family]
+
+                # Add keys for this address_family
+                nbr_af_dict['v'] = int(m.groupdict()['v'])
+                nbr_af_dict['as'] = int(m.groupdict()['as'])
+                nbr_af_dict['msg_rcvd'] = int(m.groupdict()['msg_rcvd'])
+                nbr_af_dict['msg_sent'] = int(m.groupdict()['msg_sent'])
+                nbr_af_dict['tbl_ver'] = int(m.groupdict()['tbl_ver'])
+                nbr_af_dict['inq'] = int(m.groupdict()['inq'])
+                nbr_af_dict['outq'] = int(m.groupdict()['outq'])
+                nbr_af_dict['up_down'] = str(m.groupdict()['up_down'])
+                nbr_af_dict['state_pfxrcd'] = str(m.groupdict()['state'])
+                nbr_af_dict['route_identifier'] = route_identifier
+                nbr_af_dict['local_as'] = local_as
+                nbr_af_dict['bgp_table_version'] = bgp_table_version
+                nbr_af_dict['config_peers'] = config_peers
+                nbr_af_dict['capable_peers'] = capable_peers
+                nbr_af_dict['attribute_entries'] = attribute_entries
+                nbr_af_dict['as_path_entries'] = as_path_entries
+                nbr_af_dict['community_entries'] = community_entries
+                nbr_af_dict['clusterlist_entries'] = clusterlist_entries
+                nbr_af_dict['dampening'] = dampening
+                nbr_af_dict['history_paths'] = history_paths
+                nbr_af_dict['dampened_paths'] = dampened_paths
                 continue
 
         return sum_dict

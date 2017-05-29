@@ -2449,115 +2449,104 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
     golden_parsed_output = {
         'vrf':
             {'VRF1':
-                {'address_family':
-                    {'ipv4 unicast':
-                        {'as_path_entries': '[0/0]',
-                        'attribute_entries': '[3/384]',
-                        'bgp_table_version': 40,
-                        'capable_peers': 0,
-                        'clusterlist_entries': '[1/4]',
-                        'community_entries': '[0/0]',
-                        'config_peers': 1,
-                        'dampened_paths': '0',
-                        'dampening': 'configured',
-                        'history_paths': '0',
-                        'local_as': 100,
-                        'neighbor':
-                            {'2.2.2.10':
+                {'neighbor':
+                    {'2.2.2.10':
+                        {'address_family':
+                            {'ipv4 unicast':
                                 {'as': 0,
+                                'as_path_entries': '[0/0]',
+                                'attribute_entries': '[3/384]',
+                                'bgp_table_version': 40,
+                                'capable_peers': 0,
+                                'clusterlist_entries': '[1/4]',
+                                'community_entries': '[0/0]',
+                                'config_peers': 1,
+                                'dampened_paths': 0,
+                                'dampening': True,
+                                'history_paths': 0,
                                 'inq': 0,
+                                'local_as': 100,
                                 'msg_rcvd': 0,
                                 'msg_sent': 0,
                                 'outq': 0,
-                                'state': 'Idle',
+                                'route_identifier': '4.4.4.4',
+                                'state_pfxrcd': 'Idle',
                                 'tbl_ver': 0,
                                 'up_down': '5w6d',
-                                'v': 4}},
-                        'path':
-                            {'memory_usage': 620,
-                            'total_entries': 5},
-                        'prefixes':
-                            {'memory_usage': 620,
-                            'total_entries': 5},
-                        'route_identifier': '4.4.4.4'},
-                    'ipv6 unicast': {}}},
+                                'v': 4}}}}},
             'default':
-                {'address_family':
-                    {'ipv4 unicast':
-                        {'as_path_entries': '[0/0]',
-                        'attribute_entries': '[0/0]',
-                        'bgp_table_version': 2,
-                        'capable_peers': 0,
-                        'clusterlist_entries': '[1/4]',
-                        'community_entries': '[0/0]',
-                        'config_peers': 1,
-                        'dampened_paths': '0',
-                        'dampening': 'configured',
-                        'history_paths': '0',
-                        'local_as': 100,
-                        'path':
-                            {'memory_usage': 0,
-                            'total_entries': 0},
-                        'prefixes':
-                            {'memory_usage': 0,
-                            'total_entries': 0},
-                        'route_identifier': '1.1.1.1'},
-                    'ipv6 label unicast': {},
-                    'ipv6 unicast': {},
-                    'vpnv4 unicast':
-                        {'as_path_entries': '[0/0]',
-                        'attribute_entries': '[1/128]',
-                        'bgp_table_version': 53,
-                        'capable_peers': 1,
-                        'clusterlist_entries': '[1/4]',
-                        'community_entries': '[0/0]',
-                        'config_peers': 1,
-                        'local_as': 100,
-                        'neighbor':
-                            {'2.2.2.2':
+                {'neighbor':
+                    {'2.2.2.2':
+                        {'address_family':
+                            {'vpnv4 unicast':
                                 {'as': 100,
-                               'inq': 0,
-                               'msg_rcvd': 108554,
-                               'msg_sent': 108566,
-                               'outq': 0,
-                               'state': '1',
-                               'tbl_ver': 53,
-                               'up_down': '5w6d',
-                               'v': 4}},
-                        'path':
-                            {'memory_usage': 620,
-                            'total_entries': 5},
-                        'prefixes':
-                            {'memory_usage': 620,
-                            'total_entries': 5},
-                        'route_identifier': '1.1.1.1'},
-                    'vpnv6 unicast':
-                        {'as_path_entries': '[0/0]',
-                        'attribute_entries': '[1/128]',
-                        'bgp_table_version': 45,
-                        'capable_peers': 1,
-                        'clusterlist_entries': '[1/4]',
-                        'community_entries': '[0/0]',
-                        'config_peers': 1,
-                        'local_as': 100,
-                        'neighbor':
-                            {'2.2.2.2':
+                                'as_path_entries': '[0/0]',
+                                'attribute_entries': '[1/128]',
+                                'bgp_table_version': 53,
+                                'capable_peers': 1,
+                                'clusterlist_entries': '[1/4]',
+                                'community_entries': '[0/0]',
+                                'config_peers': 1,
+                                'dampened_paths': 0,
+                                'dampening': True,
+                                'history_paths': 0,
+                                'inq': 0,
+                                'local_as': 100,
+                                'msg_rcvd': 108554,
+                                'msg_sent': 108566,
+                                'outq': 0,
+                                'route_identifier': '1.1.1.1',
+                                'state_pfxrcd': '1',
+                                'tbl_ver': 53,
+                                'up_down': '5w6d',
+                                'v': 4},
+                            'vpnv6 unicast':
                                 {'as': 100,
-                               'inq': 0,
-                               'msg_rcvd': 108554,
-                               'msg_sent': 108566,
-                               'outq': 0,
-                               'state': '1',
-                               'tbl_ver': 45,
-                               'up_down': '5w6d',
-                               'v': 4}},
-                        'path':
-                            {'memory_usage': 544,
-                            'total_entries': 4},
-                        'prefixes':
-                            {'memory_usage': 544,
-                            'total_entries': 4},
-                        'route_identifier': '1.1.1.1'}}}}}
+                                'as_path_entries': '[0/0]',
+                                'attribute_entries': '[1/128]',
+                                'bgp_table_version': 45,
+                                'capable_peers': 1,
+                                'clusterlist_entries': '[1/4]',
+                                'community_entries': '[0/0]',
+                                'config_peers': 1,
+                                'dampened_paths': 0,
+                                'dampening': True,
+                                'history_paths': 0,
+                                'inq': 0,
+                                'local_as': 100,
+                                'msg_rcvd': 108554,
+                                'msg_sent': 108566,
+                                'outq': 0,
+                                'route_identifier': '1.1.1.1',
+                                'state_pfxrcd': '1',
+                                'tbl_ver': 45,
+                                'up_down': '5w6d',
+                                'v': 4}}},
+                    '2.2.2.5':
+                        {'address_family':
+                            {'ipv4 unicast':
+                                {'as': 200,
+                                'as_path_entries': '[0/0]',
+                                'attribute_entries': '[0/0]',
+                                'bgp_table_version': 2,
+                                'capable_peers': 0,
+                                'clusterlist_entries': '[1/4]',
+                                'community_entries': '[0/0]',
+                                'config_peers': 1,
+                                'dampened_paths': 0,
+                                'dampening': True,
+                                'history_paths': 0,
+                                'inq': 0,
+                                'local_as': 100,
+                                'msg_rcvd': 0,
+                                'msg_sent': 0,
+                                'outq': 0,
+                                'route_identifier': '1.1.1.1',
+                                'state_pfxrcd': 'Shut '
+                                '(Admin)',
+                                'tbl_ver': 0,
+                                'up_down': '5w6d',
+                                'v': 4}}}}}}}
 
     golden_output = {'execute.return_value': '''
         BGP summary information for VRF VRF1, address family IPv4 Unicast
