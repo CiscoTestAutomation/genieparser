@@ -244,7 +244,7 @@ class TestShowRouteMap(unittest.TestCase):
                                'PERMIT_ALL_RM': {'match_clause': {},
                                                  'permit_deny': 'permit',
                                                  'sequence': '20',
-                                                 'set_clause': {}},
+                                                 'set_clause': {'weight': '30'}},
                                'PERMIT_ROUTE_IPV4_RM': {'match_clause':
                                                           {'ip_address_prefix_list': 'PERMIT_ROUTE_IPV4'},
                                                         'permit_deny': 'permit',
@@ -306,6 +306,7 @@ route-map PASS-ALL, permit, sequence 10
 route-map PERMIT_ALL_RM, permit, sequence 20 
   Match clauses:
   Set clauses:
+    weight 30
 route-map PERMIT_ROUTE_IPV4_RM, permit, sequence 10 
   Match clauses:
     ip address prefix-lists: PERMIT_ROUTE_IPV4 

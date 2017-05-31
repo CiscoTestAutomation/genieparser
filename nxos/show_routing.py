@@ -202,6 +202,7 @@ class ShowRouteMapSchema(MetaParser):
                          Optional('ipv6_address_prefix_list'): str,
                          Optional('ipv6_route_source_prefix_list'): str,
                          Optional('as-path'): str,
+                         Optional('weight'): str,
                          Optional('extcommunity'): str},
                  'permit_deny': str,
                  'sequence': str}
@@ -346,6 +347,13 @@ class ShowRouteMap(ShowRouteMapSchema):
             if m:
                 route_map_dict['route_map'][route_map]['set_clause']\
                   ['extcommunity'] = m.groupdict()['extcommunity']
+                continue
+
+            p12 = re.compile(r'^\s*weight +(?P<weight>[0-9]+)$')
+            m = p12.match(line)
+            if m:
+                route_map_dict['route_map'][route_map]['set_clause']\
+                  ['weight'] = m.groupdict()['weight']
                 continue
 
         return route_map_dict
