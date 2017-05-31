@@ -1599,14 +1599,94 @@ Switch#   Role        Priority      State
                                                     'fw_ver': '16.2(1r)',
                                                     'subslot': {
                                                         '0': {
-                                                            'SPA-5X1GE-V2': {
+                                                            'SPA-1XCHSTM1/OC3': {
                                                                 'subslot': '0',
+                                                                'name': 'SPA-1XCHSTM1/OC3',
+                                                                'state': 'ok',
+                                                                'insert_time': '2d00h',
+                                                            }
+                                                        },
+                                                        '1': {
+                                                            'SPA-2XT3/E3': {
+                                                                'subslot': '1',
+                                                                'name': 'SPA-2XT3/E3',
+                                                                'state': 'ok',
+                                                                'insert_time': '2d00h',
+                                                            }
+                                                        },
+                                                        '2': {
+                                                            'SPA-1XOC48POS/RPR': {
+                                                                'subslot': '2',
+                                                                'name': 'SPA-1XOC48POS/RPR',
+                                                                'state': 'ok',
+                                                                'insert_time': '2d00h',
+                                                            }
+                                                        },
+                                                        '3': {
+                                                            'SPA-5X1GE-V2': {
+                                                                'subslot': '3',
                                                                 'name': 'SPA-5X1GE-V2',
                                                                 'state': 'ok',
-                                                                'insert_time': '00:32:07',
+                                                                'insert_time': '2d00h',
                                                             }
                                                         }
                                                     }
+                                                }
+                                            }
+                                        },
+                                        '1': {
+                                            'lc': {
+                                                'ASR1000-2T+20X1GE': {
+                                                    'slot': '1',
+                                                    'name': 'ASR1000-2T+20X1GE',
+                                                    'state': 'ok',
+                                                    'insert_time': '2d00h',
+                                                    'cpld_ver': '14011701',
+                                                    'fw_ver': '16.3(2r)',
+                                                    'subslot': {
+                                                        '0': {
+                                                            'BUILT-IN-2T+20X1GE': {
+                                                                'subslot': '0',
+                                                                'name': 'BUILT-IN-2T+20X1GE',
+                                                                'state': 'ok',
+                                                                'insert_time': '2d00h',
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        '2': {
+                                            'lc': {
+                                                'ASR1000-6TGE': {
+                                                    'slot': '2',
+                                                    'name': 'ASR1000-6TGE',
+                                                    'state': 'ok',
+                                                    'insert_time': '2d00h',
+                                                    'cpld_ver': '14011701',
+                                                    'fw_ver': '16.3(2r)',
+                                                    'subslot': {
+                                                        '0': {
+                                                            'BUILT-IN-6TGE': {
+                                                                'subslot': '0',
+                                                                'name': 'BUILT-IN-6TGE',
+                                                                'state': 'ok',
+                                                                'insert_time': '2d00h',
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                       '4': {
+                                            'other': {
+                                                '': {
+                                                    'slot': '4',
+                                                    'name': '',
+                                                    'state': 'unknown',
+                                                    'insert_time': '2d00h',
+                                                    'cpld_ver': 'N/A',
+                                                    'fw_ver': 'N/A',
                                                 }
                                             }
                                         },
@@ -1675,7 +1755,15 @@ Chassis type: ASR1006
 Slot      Type                State                 Insert time (ago) 
 --------- ------------------- --------------------- ----------------- 
 0         ASR1000-SIP40       ok                    00:33:53      
- 0/0      SPA-5X1GE-V2        ok                    00:32:07      
+ 0/0      SPA-1XCHSTM1/OC3    ok                    2d00h         
+ 0/1      SPA-2XT3/E3         ok                    2d00h         
+ 0/2      SPA-1XOC48POS/RPR   ok                    2d00h         
+ 0/3      SPA-5X1GE-V2        ok                    2d00h        
+1         ASR1000-2T+20X1GE   ok                    2d00h         
+ 1/0      BUILT-IN-2T+20X1GE  ok                    2d00h         
+2         ASR1000-6TGE        ok                    2d00h         
+ 2/0      BUILT-IN-6TGE       ok                    2d00h         
+4                             unknown               2d00h         
 R0        ASR1000-RP2         ok, active            00:33:53      
 R1        ASR1000-RP2         ok, standby           00:33:53      
 F0        ASR1000-ESP20       ok, active            00:33:53      
@@ -1685,6 +1773,9 @@ P1        ASR1006-PWR-AC      ps, fail              00:33:17
 Slot      CPLD Version        Firmware Version                        
 --------- ------------------- --------------------------------------- 
 0         00200800            16.2(1r)                            
+1         14011701            16.3(2r)                            
+2         14011701            16.3(2r)                            
+4         N/A                 N/A      
 R0        10021901            16.2(1r)                            
 R1        14111801            16.2(1r)                            
 F0        08041102            16.2(1r)        
