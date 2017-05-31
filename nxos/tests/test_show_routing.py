@@ -9,7 +9,7 @@ from ats.topology import Device
 # Metaparser
 from metaparser.util.exceptions import SchemaEmptyParserError
 # nxos show_routing
-from parser.nxos.show_routing import ShowRoutingVrfAll
+from parser.nxos.show_routing import ShowRoutingVrfAll, ShowRouteMap
 
 
 class TestShowRoutingVrfAll(unittest.TestCase):
@@ -183,6 +183,150 @@ class TestShowRoutingVrfAll(unittest.TestCase):
         bgp_obj = ShowRoutingVrfAll(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = bgp_obj.parse()
+
+class TestShowRouteMap(unittest.TestCase):
+    ''' unittest for "show routing vrf all bgp"
+        "show routing vrf all"
+    '''
+    device = Device(name='aDevice')
+    device1 = Device(name='bDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {'route_map':
+                              {'ADD_RT_400_400': {'match_clause': {},
+                                                  'permit_deny': 'permit',
+                                                  'sequence': '10',
+                                                  'set_clause': 
+                                                    {'extcommunity': 'RT:400:400 '
+                                                                     'additive'}},
+                               'ALLOW_ASPATH_RM': {'match_clause':
+                                                    {'as-path': 'ALLOW_ASPATH'},
+                                                   'permit_deny': 'permit',
+                                                   'sequence': '10',
+                                                   'set_clause': {}},
+                               'DENY_ALL_RM': {'match_clause': {},
+                                               'permit_deny': 'deny',
+                                               'sequence': '20',
+                                               'set_clause': {}},
+                               'DENY_ROUTE_IPV4_RM': {'match_clause':
+                                                        {'ip_address_prefix_list': 'DENY_ROUTE_IPV4'},
+                                                      'permit_deny': 'permit',
+                                                      'sequence': '10',
+                                                      'set_clause': {}},
+                               'DENY_ROUTE_IPV6_RM': {'match_clause':
+                                                        {'ipv6_address_prefix_list': 'DENY_ROUTE_IPV6'},
+                                                      'permit_deny': 'permit',
+                                                      'sequence': '10',
+                                                      'set_clause': {}},
+                               'INJECTED_IPV4': {'match_clause':
+                                                    {'ip_address_prefix_list': 'ROUTE_IPV4',
+                                                     'ip_route_source_prefix_list': 'ROUTE_SOURCE_IPV4'},
+                                                 'permit_deny': 'permit',
+                                                 'sequence': '5',
+                                                 'set_clause': {}},
+                               'INJECTED_IPV6': {'match_clause':
+                                                   {'ipv6_address_prefix_list': 'ROUTE_IPV6',
+                                                    'ipv6_route_source_prefix_list': 'ROUTE_SOURCE_IPV6'},
+                                                 'permit_deny': 'permit',
+                                                 'sequence': '5',
+                                                 'set_clause': {}},
+                               'ORIGINATE_IPV4': {'match_clause':
+                                                    {'community': '400:400 '
+                                                                  'additive'},
+                                                  'permit_deny': 'permit',
+                                                  'sequence': '10',
+                                                  'set_clause': {}},
+                               'ORIGINATE_IPV6': {'match_clause':
+                                                    {'community': '600:600 '
+                                                                  'additive'},
+                                                  'permit_deny': 'permit',
+                                                  'sequence': '10',
+                                                  'set_clause': {}},
+                               'PERMIT_ALL_RM': {'match_clause': {},
+                                                 'permit_deny': 'permit',
+                                                 'sequence': '20',
+                                                 'set_clause': {}},
+                               'PERMIT_ROUTE_IPV4_RM': {'match_clause':
+                                                          {'ip_address_prefix_list': 'PERMIT_ROUTE_IPV4'},
+                                                        'permit_deny': 'permit',
+                                                        'sequence': '10',
+                                                        'set_clause': {}},
+               'PERMIT_ROUTE_IPV6_RM': {'match_clause':
+                                          {'ipv6_address_prefix_list': 'PERMIT_ROUTE_IPV6'},
+                                        'permit_deny': 'permit',
+                                        'sequence': '10',
+                                        'set_clause': {}}}}
+
+    golden_output = {'execute.return_value': '''
+pinxdt-n9kv-3# show route-map 
+route-map ADD_RT_400_400, permit, sequence 10 
+  Match clauses:
+  Set clauses:
+    extcommunity RT:400:400 additive 
+route-map ALLOW_ASPATH_RM, permit, sequence 10 
+  Match clauses:
+    as-path (as-path filter): ALLOW_ASPATH 
+  Set clauses:
+route-map BLOCK-ALL, deny, sequence 10 
+  Match clauses:
+  Set clauses:
+route-map DENY_ALL_RM, deny, sequence 20 
+  Match clauses:
+  Set clauses:
+route-map DENY_ROUTE_IPV4_RM, permit, sequence 10 
+  Match clauses:
+    ip address prefix-lists: DENY_ROUTE_IPV4 
+  Set clauses:
+route-map DENY_ROUTE_IPV6_RM, permit, sequence 10 
+  Match clauses:
+    ipv6 address prefix-lists: DENY_ROUTE_IPV6 
+  Set clauses:
+route-map INJECTED_IPV4, permit, sequence 5 
+  Match clauses:
+    ip address prefix-lists: ROUTE_IPV4 
+    ip route-source prefix-lists: ROUTE_SOURCE_IPV4 
+  Set clauses:
+route-map INJECTED_IPV6, permit, sequence 5 
+  Match clauses:
+    ipv6 address prefix-lists: ROUTE_IPV6 
+    ipv6 route-source prefix-lists: ROUTE_SOURCE_IPV6 
+  Set clauses:
+route-map ORIGINATE_IPV4, permit, sequence 10 
+  Match clauses:
+  Set clauses:
+    ip address (prefix-list): ORIGINATED_ROUTES_IPV4 
+    community 400:400 additive 
+route-map ORIGINATE_IPV6, permit, sequence 10 
+  Match clauses:
+  Set clauses:
+    ipv6 address (prefix-list): ORIGINATED_ROUTES_IPV6 
+    community 600:600 additive 
+route-map PASS-ALL, permit, sequence 10 
+  Match clauses:
+  Set clauses:
+route-map PERMIT_ALL_RM, permit, sequence 20 
+  Match clauses:
+  Set clauses:
+route-map PERMIT_ROUTE_IPV4_RM, permit, sequence 10 
+  Match clauses:
+    ip address prefix-lists: PERMIT_ROUTE_IPV4 
+  Set clauses:
+route-map PERMIT_ROUTE_IPV6_RM, permit, sequence 10 
+  Match clauses:
+    ipv6 address prefix-lists: PERMIT_ROUTE_IPV6 
+  Set clauses:
+'''}
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        route_map_obj = ShowRouteMap(device=self.device)
+        parsed_output = route_map_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        route_map_obj = ShowRouteMap(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = route_map_obj.parse()
 
 
 if __name__ == '__main__':

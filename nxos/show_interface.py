@@ -266,15 +266,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
 
 class ShowInterfaceBriefSchema(MetaParser):
     schema = {'interface':
-                {'port':
-                    {Any():
-                        {'vrf': str,
-                         'status': str,
-                         'ip_address': str,
-                         'speed': str,
-                         'mtu': str}
-                    },
-                'ethernet':
+                {'ethernet':
                     {Any():
                         {'vlan': str,
                          'type': str,
@@ -284,20 +276,28 @@ class ShowInterfaceBriefSchema(MetaParser):
                          'reason': str,
                          'port_ch': str}
                     },
-                'port_channel':
+                Optional('port'):
                     {Any():
-                        {'vlan': str,
-                         'type': str,
-                         'mode': str,
-                         'status': str,
-                         'speed': str,
-                         'reason': str,
-                         'protocol': str}
+                        {Optional('vrf'): str,
+                         Optional('status'): str,
+                         Optional('ip_address'): str,
+                         Optional('speed'): str,
+                         Optional('mtu'): str}
                     },
-                'loopback':
+                Optional('port_channel'):
                     {Any():
-                        {'status': str,
-                         'description': str}
+                        {Optional('vlan'): str,
+                         Optional('type'): str,
+                         Optional('mode'): str,
+                         Optional('status'): str,
+                         Optional('speed'): str,
+                         Optional('reason'): str,
+                         Optional('protocol'): str}
+                    },
+                Optional('loopback'):
+                    {Any():
+                        {Optional('status'): str,
+                         Optional('description'): str}
                     },
                 }
             }

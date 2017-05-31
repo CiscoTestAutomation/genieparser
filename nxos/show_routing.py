@@ -180,3 +180,172 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                 continue
 
         return bgp_dict
+
+class ShowRouteMapSchema(MetaParser):
+    """ Schema class - Initialize the data structure.
+    """
+
+    schema = {'route_map':
+              {Any():
+                {'match_clause':
+                        {Optional('ip_address_prefix_list'): str,
+                         Optional('ip_route_source_prefix_list'): str,
+                         Optional('community'): str,
+                         Optional('ipv6_address_prefix_list'): str,
+                         Optional('ipv6_route_source_prefix_list'): str,
+                         Optional('as-path'): str,
+                         Optional('extcommunity'): str},
+                 'set_clause':
+                        {Optional('ip_address_prefix_list'): str,
+                         Optional('ip_route_source_prefix_list'): str,
+                         Optional('community'): str,
+                         Optional('ipv6_address_prefix_list'): str,
+                         Optional('ipv6_route_source_prefix_list'): str,
+                         Optional('as-path'): str,
+                         Optional('extcommunity'): str},
+                 'permit_deny': str,
+                 'sequence': str}
+              },
+            }
+
+class ShowRouteMap(ShowRouteMapSchema):
+    """ Parser class - Parse out the data and create hierarchical structure
+                       for cli, xml, and yang output.
+    """
+    def cli(self):
+        ''' parsing mechanism: cli
+
+        Function cli() defines the cli type output parsing mechanism which
+        typically contains 3 steps: executing, transforming, returning
+        '''
+        cmd = 'show route-map'
+        out = self.device.execute(cmd)
+        route_map_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            p1 = re.compile(r'^\s*route-map +(?P<name>[A-Z0-9\_]+),'
+              ' +(?P<permit_deny>[a-zA-Z]+), +sequence +(?P<sequence>[0-9]+)$')
+            m = p1.match(line)
+            if m:
+                route_map = m.groupdict()['name']
+                permit_deny = m.groupdict()['permit_deny']
+                sequence = m.groupdict()['sequence']
+                if 'route_map' not in route_map_dict:
+                    route_map_dict['route_map'] = {}
+                if route_map not in route_map_dict['route_map']:
+                    route_map_dict['route_map'][route_map] = {}
+                route_map_dict['route_map'][route_map]['permit_deny'] = \
+                  m.groupdict()['permit_deny']
+                route_map_dict['route_map'][route_map]['sequence'] = \
+                  m.groupdict()['sequence']
+                continue
+
+            p2 = re.compile(r'^\s*Match clauses:$')
+            m = p2.match(line)
+            if m:
+                if 'match_clause' not in route_map_dict['route_map'][route_map]:
+                    route_map_dict['route_map'][route_map]['match_clause'] = {}
+                continue
+
+            p3 = re.compile(r'^\s*(?P<ip_type>[a-z0-9]+) +address'
+              ' +prefix-lists: +(?P<prefix_list>[A-Z0-9\_]+)$')
+            m = p3.match(line)
+            if m:
+                ip_type = m.groupdict()['ip_type']
+                if ip_type == 'ip':
+                    route_map_dict['route_map'][route_map]['match_clause']\
+                      ['ip_address_prefix_list'] = m.groupdict()['prefix_list']
+                else:
+                    route_map_dict['route_map'][route_map]['match_clause']\
+                      ['ipv6_address_prefix_list'] = m.groupdict()['prefix_list']
+                continue
+
+            p4 = re.compile(r'^\s*(?P<ip_type>[a-z0-9]+) +route-source'
+              ' +prefix-lists: +(?P<prefix_list>[A-Z0-9\_]+)$')
+            m = p4.match(line)
+            if m:
+                ip_type = m.groupdict()['ip_type']
+                if ip_type == 'ip':
+                    route_map_dict['route_map'][route_map]['match_clause']\
+                      ['ip_route_source_prefix_list'] = \
+                        m.groupdict()['prefix_list']
+                else:
+                    route_map_dict['route_map'][route_map]['match_clause']\
+                      ['ipv6_route_source_prefix_list'] = \
+                        m.groupdict()['prefix_list']
+                continue
+
+            p5 = re.compile(r'^\s*as-path \(as-path filter\):'
+              ' +(?P<as_path>[A-Z\_]+)$')
+            m = p5.match(line)
+            if m:
+                route_map_dict['route_map'][route_map]['match_clause']\
+                  ['as-path'] = m.groupdict()['as_path']
+                continue
+
+            p6 = re.compile(r'^\s*community +(?P<community>[a-z0-9\:\s]+)$')
+            m = p6.match(line)
+            if m:
+                route_map_dict['route_map'][route_map]['match_clause']\
+                  ['community'] = m.groupdict()['community']
+                continue
+
+            p7 = re.compile(r'^\s*Set clauses:$')
+            m = p7.match(line)
+            if m:
+                if 'set_clause' not in route_map_dict['route_map'][route_map]:
+                    route_map_dict['route_map'][route_map]['set_clause'] = {}
+                continue
+
+            p8 = re.compile(r'^\s*(?P<ip_type>[a-z0-9]+) +address'
+              ' +(prefix-list): +(?P<prefix_list>[A-Z0-9\_]+)$')
+            m = p8.match(line)
+            if m:
+                ip_type = m.groupdict()['ip_type']
+                if ip_type == 'ip':
+                    route_map_dict['route_map'][route_map]['set_clause']\
+                      ['ip_address_prefix_list'] = m.groupdict()['prefix_list']
+                else:
+                    route_map_dict['route_map'][route_map]['set_clause']\
+                      ['ipv6_address_prefix_list'] = m.groupdict()['prefix_list']
+                continue
+
+            p9 = re.compile(r'^\s*(?P<ip_type>[a-z0-9]+) +route-source'
+              ' +(prefix-list): +(?P<prefix_list>[A-Z0-9\_]+)$')
+            m = p9.match(line)
+            if m:
+                ip_type = m.groupdict()['ip_type']
+                if ip_type == 'ip':
+                    route_map_dict['route_map'][route_map]['set_clause']\
+                      ['ip_route_source_prefix_list'] = \
+                        m.groupdict()['prefix_list']
+                else:
+                    route_map_dict['route_map'][route_map]['set_clause']\
+                      ['ipv6_route_source_prefix_list'] = \
+                        m.groupdict()['prefix_list']
+                continue
+
+            p10 = re.compile(r'^\s*as-path +(?P<as_path>[A-Z\_]+)$')
+            m = p10.match(line)
+            if m:
+                route_map_dict['route_map'][route_map]['set_clause']\
+                  ['as-path'] = m.groupdict()['as_path']
+                continue
+
+            p11 = re.compile(r'^\s*community +(?P<community>[a-z0-9\:\s]+)$')
+            m = p11.match(line)
+            if m:
+                route_map_dict['route_map'][route_map]['set_clause']\
+                  ['community'] = m.groupdict()['community']
+                continue
+
+            p12 = re.compile(r'^\s*extcommunity +(?P<extcommunity>[A-Za-z0-9\:\s]+)$')
+            m = p12.match(line)
+            if m:
+                route_map_dict['route_map'][route_map]['set_clause']\
+                  ['extcommunity'] = m.groupdict()['extcommunity']
+                continue
+
+        return route_map_dict
