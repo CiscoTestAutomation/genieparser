@@ -15,27 +15,43 @@ from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
 class ShowRoutingVrfAllSchema(MetaParser):
     """ Schema class - Initialize the data structure.
     """
-    schema = {'vrf':
-              {Any():
-               {'ip/mask':
-                {Any():
-                 {'ubest_num': str,
-                  'mbest_num': str,
-                  Optional('attach'): str,
-                  Optional('best_route'):
-                  {Optional(Any()):
-                   {Optional('nexthop'):
-                    {Optional(Any()):
-                     {Optional('protocol'):
-                      {Optional(Any()):
-                       {Optional('route_table'): str,
-                        Optional('uptime'): str,
-                        Optional('interface'): str,
-                        Optional('preference'): str,
-                        Optional('metric'): str,
-                        Optional('protocol_id'): str,
-                        Optional('attibute'): str,
-                        Optional('tag'): str, }}, }}, }}, }}, }}, }
+    schema = {
+        'vrf':
+            {Any():
+                {Optional('bgp_distance_extern_as'): int,
+                Optional('bgp_distance_internal_as'): int,
+                Optional('bgp_distance_local'): int,
+                'ip/mask':
+                    {Any():
+                        {'ubest_num': str,
+                        'mbest_num': str,
+                        Optional('attach'): str,
+                        Optional('best_route'):
+                        {Optional(Any()):
+                            {Optional('nexthop'):
+                                {Optional(Any()):
+                                    {Optional('protocol'):
+                                        {Optional(Any()):
+                                            {Optional('route_table'): str,
+                                            Optional('uptime'): str,
+                                            Optional('interface'): str,
+                                            Optional('preference'): str,
+                                            
+                                            Optional('metric'): str,
+                                            Optional('protocol_id'): str,
+                                            Optional('attribute'): str,
+                                            Optional('tag'): str, 
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        },
+                    },
+                },
+            },
+        }
 
 
 class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
@@ -92,7 +108,7 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                              '\[(?P<preference>\d+)/(?P<metric>\d+)\], +'
                              '(?P<up_time>.*), +'
                              '(?:(?P<protocol>\w+)-(?P<process>\d+), +'
-                             '(?P<attibute>\w+), +tag +(?P<tag>.*)'
+                             '(?P<attribute>\w+), +tag +(?P<tag>.*)'
                              '|(?P<prot>\w+))$')
             m = p3.match(line)
             if m:
@@ -143,9 +159,20 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                 if process:
                     sub_dict[protocol]['protocol_id'] = process
 
-                attibute = m.groupdict()['attibute']
-                if attibute:
-                    sub_dict[protocol]['attibute'] = attibute
+                attribute = m.groupdict()['attribute']
+                if attribute:
+                    sub_dict[protocol]['attribute'] = attribute
+                
+                # Set extra values for BGP Ops
+                if attribute == 'external' and protocol == 'bgp':
+                    bgp_dict['vrf'][vrf]['bgp_distance_extern_as'] = \
+                        int(preference)
+                elif attribute == 'internal' and protocol == 'bgp':
+                    bgp_dict['vrf'][vrf]['bgp_distance_internal_as'] = \
+                        int(preference)
+                elif attribute == 'discard' and protocol == 'bgp':
+                    bgp_dict['vrf'][vrf]['bgp_distance_local'] = \
+                        int(preference)
 
                 tag = m.groupdict()['tag']
                 if tag:
