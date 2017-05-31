@@ -1196,7 +1196,7 @@ class ShowPlatform(ShowPlatformSchema):
                     slot = m.groupdict()['slot']
                     subslot = m.groupdict()['subslot']
                 for d in sorted(res.entries[n].keys()):
-                    if ('WS-C' in d) or ('RP' in d):
+                    if ('WS-C' in d) or ('ASR1000-RP' in d):
                         if 'rp' not in platform_dict['slot'][n]:
                             platform_dict['slot'][n]['rp'] = {}
                         if d not in platform_dict['slot'][n]['rp']:
@@ -1213,16 +1213,17 @@ class ShowPlatform(ShowPlatformSchema):
                             if ('slot' in k) and ('*' in v):
                                 v = v.replace('*', '')
                             platform_dict['slot'][n]['rp'][d][k] = v
-                    elif 'SIP' in d:
+                    elif (('ASR1000-SIP' in d) or ('ASR1000-2T' in d) or ('ASR1000-6T' in d)) and (not subslot):
                         if 'lc' not in platform_dict['slot'][n]:
                             platform_dict['slot'][n]['lc'] = {}
                         if d not in platform_dict['slot'][n]['lc']:
                             platform_dict['slot'][n]['lc'][d] = {}
                         for k, v in res.entries[n][d].items():
                             platform_dict['slot'][n]['lc'][d][k] = v
-                        for k, v in res2.entries[n].items():
-                            platform_dict['slot'][n]['lc'][d][k] = v
-                            mod = d
+                        if n in res2.entries:
+                            for k, v in res2.entries[n].items():
+                                platform_dict['slot'][n]['lc'][d][k] = v
+                        mod = d
                     elif subslot:
                         if 'subslot' not in platform_dict['slot'][slot]['lc'][mod]:
                             platform_dict['slot'][slot]['lc'][mod]['subslot'] = {}
@@ -1236,7 +1237,7 @@ class ShowPlatform(ShowPlatformSchema):
                             else:
                                 platform_dict['slot'][slot]['lc'][mod]['subslot'][subslot][d][k] = v
                         del platform_dict['slot'][slot + '/' + subslot]
-                        slot = subslot = mod = ''
+                        slot = subslot = ''
                     else:
                         if 'other' not in platform_dict['slot'][n]:
                             platform_dict['slot'][n]['other'] = {}
