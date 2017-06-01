@@ -1388,7 +1388,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
 
             # BGP neighbor is 2.2.2.2,  remote AS 100, ibgp link,  Peer index 1
             # BGP neighbor is 2.2.2.5,  remote AS 200, local AS 333, ebgp link,  Peer index 2
-            p1 = re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor_id>[0-9a-z\.:]+),'
+            p1 = re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor_id>[a-zA-Z0-9\.\:]+),'
                              ' +remote +AS +(?P<remote_as>[0-9]+),'
                              '(?: +local +AS +(?P<local_as>[0-9]+),)?'
                              ' +(?P<link>[a-zA-Z]+) +link, +Peer +index'
@@ -1397,7 +1397,6 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
             if m:
                 if 'neighbor' not in parsed_dict:
                     parsed_dict['neighbor'] = {}
-
                 neighbor_id = str(m.groupdict()['neighbor_id'])
                 if neighbor_id not in parsed_dict['neighbor']:
                     parsed_dict['neighbor'][neighbor_id] = {}
