@@ -7,7 +7,12 @@ import xmltodict
 from ats import tcl
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
-from cnetconf import testmodel
+try:
+    import iptools
+    from cnetconf import testmodel
+except ImportError:
+    pass
+
 
 class ShowVersion(MetaParser):
     """ parser class - implements detail parsing mechanisms for cli, xml, and 
