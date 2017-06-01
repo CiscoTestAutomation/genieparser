@@ -34,8 +34,7 @@ class ShowBgpProcessVrfAllSchema(MetaParser):
 
     schema = {
         'bgp_pid': int,
-        'bgp_protocol_status': str,
-        'bgp_protocol_status_reason': str,
+        'bgp_protocol_started_reason': str,
         'bgp_tag': str,
         'bgp_protocol_state': str,
         'bgp_memory_state': str,
@@ -109,13 +108,11 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                 continue
 
             # BGP Protocol Started, reason:  : configuration
-            p2 = re.compile(r'^\s*BGP +Protocol +(?P<protocol_status>[a-zA-Z]+),'
-                             ' +reason: *: +(?P<reason>[a-zA-Z\s]+)$')
+            p2 = re.compile(r'^\s*BGP Protocol Started, +reason: *:'
+                             ' +(?P<reason>[a-zA-Z\s]+)$')
             m = p2.match(line)
             if m:
-                parsed_dict['bgp_protocol_status'] = \
-                    str(m.groupdict()['protocol_status']).lower()
-                parsed_dict['bgp_protocol_status_reason'] = \
+                parsed_dict['bgp_protocol_started_reason'] = \
                     str(m.groupdict()['reason']).lower()
                 continue
 
