@@ -739,7 +739,7 @@ class ShowModuleSchema(MetaParser):
                          'mac_address': str,
                          'serial_number': str,
                          'online_diag_status': str,
-                         Optional('world_wide_name'): str}
+                         Optional('slot/world_wide_name'): str}
                       },
                     },
                    'lc':
@@ -753,7 +753,7 @@ class ShowModuleSchema(MetaParser):
                          'mac_address': str,
                          'serial_number': str,
                          'online_diag_status': str,
-                         Optional('world_wide_name'): str}
+                         Optional('slot/world_wide_name'): str}
                       },
                     }
                   },
@@ -856,7 +856,7 @@ class ShowModule(ShowModuleSchema):
                     module_dict['xbar'][header_number]['status'] = m.groupdict()['status'].strip()
                 continue
 
-            p4 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<software>[A-Z0-9\(\)\.]+) +(?P<hardware>[0-9\.]+)( +)?(?P<world_wide_name>[\-]+)?$')
+            p4 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<software>[A-Z0-9\(\)\.]+) +(?P<hardware>[0-9\.]+)( +)?(?P<world_wide_name>[A-Z\-]+)?$')
             m = p4.match(line)
             if m:
                 header_number = m.groupdict()['number']
@@ -872,14 +872,14 @@ class ShowModule(ShowModuleSchema):
                         module_dict['slot']['lc'][header_number][lc_name]['hardware'] = m.groupdict()['hardware'].strip()
                     if world_wide_name:
                         if header_number in rp_list:
-                            module_dict['slot']['rp'][header_number][rp_name]['world_wide_name'] = m.groupdict()['world_wide_name'].strip()
+                            module_dict['slot']['rp'][header_number][rp_name]['slot/world_wide_name'] = m.groupdict()['world_wide_name'].strip()
                         else:
-                            module_dict['slot']['lc'][header_number][lc_name]['world_wide_name'] = m.groupdict()['world_wide_name'].strip()
+                            module_dict['slot']['lc'][header_number][lc_name]['slot/world_wide_name'] = m.groupdict()['world_wide_name'].strip()
                 elif table_header is 'xbar':
                     module_dict['xbar'][header_number]['software'] = m.groupdict()['software'].strip()
                     module_dict['xbar'][header_number]['hardware'] = m.groupdict()['hardware'].strip()
                     if world_wide_name:
-                        module_dict['xbar'][header_number]['world_wide_name'] = m.groupdict()['world_wide_name']
+                        module_dict['xbar'][header_number]['slot/world_wide_name'] = m.groupdict()['world_wide_name']
                 continue
 
             p5 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<mac_address>[a-zA-Z0-9\.\-\s]+) +(?P<serial_number>[A-Z0-9]+)$')
