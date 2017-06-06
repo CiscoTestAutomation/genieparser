@@ -994,13 +994,13 @@ class ShowVdcDetailSchema(MetaParser):
                   'ha_policy': str,
                   'dual_sup_ha_policy': str,
                   'boot_order': str,
-                  'cpu_share': str,
-                  'cpu_share_percentage': str,
+                  Optional('cpu_share'): str,
+                  Optional('cpu_share_percentage'): str,
                   'create_time': str,
                   'reload_count': str,
-                  'uptime': str,
+                  Optional('uptime'): str,
                   'restart_count': str,
-                  'restart_time': str,
+                  Optional('restart_time'): str,
                   'type': str,
                   'supported_linecards': str}
                 },
@@ -1043,7 +1043,7 @@ class ShowVdcDetail(ShowVdcDetailSchema):
                     vdc_dict['vdc'][identity] = {}
                 continue
 
-            p2 = re.compile(r'^\s*vdc +name: +(?P<name>[a-zA-Z0-9]+)$')
+            p2 = re.compile(r'^\s*vdc +name: +(?P<name>[a-zA-Z0-9\-]+)$')
             m = p2.match(line)
             if m:
                 vdc_dict['vdc'][identity]['name'] = m.groupdict()['name']
@@ -1129,7 +1129,7 @@ class ShowVdcDetail(ShowVdcDetailSchema):
                 vdc_dict['vdc'][identity]['type'] = m.groupdict()['type']
                 continue
 
-            p16 = re.compile(r'^\s*vdc +supported +linecards: +(?P<linecards>[a-z0-9]+)$')
+            p16 = re.compile(r'^\s*vdc +supported +linecards: +(?P<linecards>[a-zA-Z0-9]+)$')
             m = p16.match(line)
             if m:
                 if 'vdc' not in vdc_dict:
