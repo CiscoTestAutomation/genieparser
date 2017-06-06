@@ -1220,8 +1220,6 @@ class ShowVdcMembershipStatus(ShowVdcMembershipStatusSchema):
             p1 = re.compile(r'^\s*Flags : b - breakout port$')
             m = p1.match(line)
             if m:
-                if 'virtual_device' not in member_status_vdc_dict:
-                    member_status_vdc_dict['virtual_device'] = {}
                 continue
 
             p2 = re.compile(r'^\s*vdc_id: +(?P<id>[0-9]+) +vdc_name: +(?P<name>[a-zA-Z0-9]+) +interfaces:$')
@@ -1229,6 +1227,8 @@ class ShowVdcMembershipStatus(ShowVdcMembershipStatusSchema):
             if m:
                 identity = m.groupdict()['id']
                 vdc_name = m.groupdict()['name']
+                if 'virtual_device' not in member_status_vdc_dict:
+                    member_status_vdc_dict['virtual_device'] = {}
                 if identity not in member_status_vdc_dict['virtual_device']:
                     member_status_vdc_dict['virtual_device'][identity] = {}
                 if 'membership' not in member_status_vdc_dict['virtual_device'][identity]:
