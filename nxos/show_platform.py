@@ -742,31 +742,31 @@ class ShowModuleSchema(MetaParser):
                          Optional('slot/world_wide_name'): str}
                       },
                     },
-                   'lc':
-                    {Any():
-                      {Any():
-                        {'ports': str,
-                         'model': str,
-                         'status': str,
-                         'software': str,
-                         'hardware': str,
-                         'mac_address': str,
-                         'serial_number': str,
-                         'online_diag_status': str,
+                   Optional('lc'):
+                    {Optional(Any()):
+                      {Optional(Any()):
+                        {Optional('ports'): str,
+                         Optional('model'): str,
+                         Optional('status'): str,
+                         Optional('software'): str,
+                         Optional('hardware'): str,
+                         Optional('mac_address'): str,
+                         Optional('serial_number'): str,
+                         Optional('online_diag_status'): str,
                          Optional('slot/world_wide_name'): str}
                       },
                     }
                   },
-              'xbar':
-                  {Any():
-                      {'ports': str,
-                       'module_type': str,
-                       'model': str,
-                       'status': str,
-                       'software': str,
-                       'hardware': str,
-                       'mac_address': str,
-                       'serial_number': str}
+              Optional('xbar'):
+                  {Optional(Any()):
+                      {Optional('ports'): str,
+                       Optional('module_type'): str,
+                       Optional('model'): str,
+                       Optional('status'): str,
+                       Optional('software'): str,
+                       Optional('hardware'): str,
+                       Optional('mac_address'): str,
+                       Optional('serial_number'): str}
                   },
               }
 
@@ -911,6 +911,16 @@ class ShowModule(ShowModuleSchema):
                     lc_name = map_dic[header_number]
                     module_dict['slot']['lc'][header_number][lc_name]['online_diag_status'] = m.groupdict()['online_diag_status'].strip()
                 continue
+
+        # The case of n9k virtual device where no module was showing "supervisor" in the module type
+        if 'slot' in module_dict:
+            if 'rp' not in module_dict['slot'].keys():
+                for key in module_dict['slot']['lc'].keys():
+                    rp_key = key
+                    break
+                module_dict['slot']['rp'] = {}
+                module_dict['slot']['rp'][rp_key] = module_dict['slot']['lc'][rp_key]
+                del module_dict['slot']['lc'][rp_key]
 
         return module_dict
 
