@@ -739,34 +739,34 @@ class ShowModuleSchema(MetaParser):
                          'mac_address': str,
                          'serial_number': str,
                          'online_diag_status': str,
-                         Optional('world_wide_name'): str}
+                         Optional('slot/world_wide_name'): str}
                       },
                     },
-                   'lc':
-                    {Any():
-                      {Any():
-                        {'ports': str,
-                         'model': str,
-                         'status': str,
-                         'software': str,
-                         'hardware': str,
-                         'mac_address': str,
-                         'serial_number': str,
-                         'online_diag_status': str,
-                         Optional('world_wide_name'): str}
+                   Optional('lc'):
+                    {Optional(Any()):
+                      {Optional(Any()):
+                        {Optional('ports'): str,
+                         Optional('model'): str,
+                         Optional('status'): str,
+                         Optional('software'): str,
+                         Optional('hardware'): str,
+                         Optional('mac_address'): str,
+                         Optional('serial_number'): str,
+                         Optional('online_diag_status'): str,
+                         Optional('slot/world_wide_name'): str}
                       },
                     }
                   },
-              'xbar':
-                  {Any():
-                      {'ports': str,
-                       'module_type': str,
-                       'model': str,
-                       'status': str,
-                       'software': str,
-                       'hardware': str,
-                       'mac_address': str,
-                       'serial_number': str}
+              Optional('xbar'):
+                  {Optional(Any()):
+                      {Optional('ports'): str,
+                       Optional('module_type'): str,
+                       Optional('model'): str,
+                       Optional('status'): str,
+                       Optional('software'): str,
+                       Optional('hardware'): str,
+                       Optional('mac_address'): str,
+                       Optional('serial_number'): str}
                   },
               }
 
@@ -856,7 +856,7 @@ class ShowModule(ShowModuleSchema):
                     module_dict['xbar'][header_number]['status'] = m.groupdict()['status'].strip()
                 continue
 
-            p4 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<software>[A-Z0-9\(\)\.]+) +(?P<hardware>[0-9\.]+)( +)?(?P<world_wide_name>[\-]+)?$')
+            p4 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<software>[A-Z0-9\(\)\.]+) +(?P<hardware>[0-9\.]+)( +)?(?P<world_wide_name>[A-Z\-]+)?$')
             m = p4.match(line)
             if m:
                 header_number = m.groupdict()['number']
@@ -872,14 +872,14 @@ class ShowModule(ShowModuleSchema):
                         module_dict['slot']['lc'][header_number][lc_name]['hardware'] = m.groupdict()['hardware'].strip()
                     if world_wide_name:
                         if header_number in rp_list:
-                            module_dict['slot']['rp'][header_number][rp_name]['world_wide_name'] = m.groupdict()['world_wide_name'].strip()
+                            module_dict['slot']['rp'][header_number][rp_name]['slot/world_wide_name'] = m.groupdict()['world_wide_name'].strip()
                         else:
-                            module_dict['slot']['lc'][header_number][lc_name]['world_wide_name'] = m.groupdict()['world_wide_name'].strip()
+                            module_dict['slot']['lc'][header_number][lc_name]['slot/world_wide_name'] = m.groupdict()['world_wide_name'].strip()
                 elif table_header is 'xbar':
                     module_dict['xbar'][header_number]['software'] = m.groupdict()['software'].strip()
                     module_dict['xbar'][header_number]['hardware'] = m.groupdict()['hardware'].strip()
                     if world_wide_name:
-                        module_dict['xbar'][header_number]['world_wide_name'] = m.groupdict()['world_wide_name']
+                        module_dict['xbar'][header_number]['slot/world_wide_name'] = m.groupdict()['world_wide_name']
                 continue
 
             p5 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<mac_address>[a-zA-Z0-9\.\-\s]+) +(?P<serial_number>[A-Z0-9]+)$')
@@ -911,6 +911,16 @@ class ShowModule(ShowModuleSchema):
                     lc_name = map_dic[header_number]
                     module_dict['slot']['lc'][header_number][lc_name]['online_diag_status'] = m.groupdict()['online_diag_status'].strip()
                 continue
+
+        # The case of n9k virtual device where no module was showing "supervisor" in the module type
+        if 'slot' in module_dict:
+            if 'rp' not in module_dict['slot'].keys():
+                for key in module_dict['slot']['lc'].keys():
+                    rp_key = key
+                    break
+                module_dict['slot']['rp'] = {}
+                module_dict['slot']['rp'][rp_key] = module_dict['slot']['lc'][rp_key]
+                del module_dict['slot']['lc'][rp_key]
 
         return module_dict
 
@@ -994,13 +1004,13 @@ class ShowVdcDetailSchema(MetaParser):
                   'ha_policy': str,
                   'dual_sup_ha_policy': str,
                   'boot_order': str,
-                  'cpu_share': str,
-                  'cpu_share_percentage': str,
+                  Optional('cpu_share'): str,
+                  Optional('cpu_share_percentage'): str,
                   'create_time': str,
                   'reload_count': str,
-                  'uptime': str,
+                  Optional('uptime'): str,
                   'restart_count': str,
-                  'restart_time': str,
+                  Optional('restart_time'): str,
                   'type': str,
                   'supported_linecards': str}
                 },
@@ -1043,7 +1053,7 @@ class ShowVdcDetail(ShowVdcDetailSchema):
                     vdc_dict['vdc'][identity] = {}
                 continue
 
-            p2 = re.compile(r'^\s*vdc +name: +(?P<name>[a-zA-Z0-9]+)$')
+            p2 = re.compile(r'^\s*vdc +name: +(?P<name>[a-zA-Z0-9\-]+)$')
             m = p2.match(line)
             if m:
                 vdc_dict['vdc'][identity]['name'] = m.groupdict()['name']
@@ -1129,7 +1139,7 @@ class ShowVdcDetail(ShowVdcDetailSchema):
                 vdc_dict['vdc'][identity]['type'] = m.groupdict()['type']
                 continue
 
-            p16 = re.compile(r'^\s*vdc +supported +linecards: +(?P<linecards>[a-z0-9]+)$')
+            p16 = re.compile(r'^\s*vdc +supported +linecards: +(?P<linecards>[a-zA-Z0-9]+)$')
             m = p16.match(line)
             if m:
                 if 'vdc' not in vdc_dict:
@@ -1220,8 +1230,6 @@ class ShowVdcMembershipStatus(ShowVdcMembershipStatusSchema):
             p1 = re.compile(r'^\s*Flags : b - breakout port$')
             m = p1.match(line)
             if m:
-                if 'virtual_device' not in member_status_vdc_dict:
-                    member_status_vdc_dict['virtual_device'] = {}
                 continue
 
             p2 = re.compile(r'^\s*vdc_id: +(?P<id>[0-9]+) +vdc_name: +(?P<name>[a-zA-Z0-9]+) +interfaces:$')
@@ -1229,6 +1237,8 @@ class ShowVdcMembershipStatus(ShowVdcMembershipStatusSchema):
             if m:
                 identity = m.groupdict()['id']
                 vdc_name = m.groupdict()['name']
+                if 'virtual_device' not in member_status_vdc_dict:
+                    member_status_vdc_dict['virtual_device'] = {}
                 if identity not in member_status_vdc_dict['virtual_device']:
                     member_status_vdc_dict['virtual_device'][identity] = {}
                 if 'membership' not in member_status_vdc_dict['virtual_device'][identity]:
