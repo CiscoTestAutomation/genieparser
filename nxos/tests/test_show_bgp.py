@@ -635,7 +635,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                         'v6_aggregate_address_summary_only': True}}},
             'default':
                 {'address_family':
-                    {'vpnv4 unicast':
+                    {'vpnv4 unicast RD 100:100':
                         {'aggregate_address_as_set': True,
                         'aggregate_address_ipv4_address': '11.0.0.0',
                         'aggregate_address_ipv4_mask': '8',
@@ -690,7 +690,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'status_codes': 'None',
                                         'weight': '32768'}}}},
                         'route_distinguisher': '100:100'},
-                    'vpnv6 unicast':
+                    'vpnv6 unicast RD 100:100':
                         {'bgp_table_version': 41,
                         'default_vrf': 'VRF1',
                         'local_router_id': '1.1.1.1',
@@ -1125,9 +1125,9 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'path_type': 'r',
                                         'status_codes': '*>',
                                         'weight': '32768'}}}}},
-                    'vpnv4 unicast':
+                    'vpnv4 unicast RD 1:100':
                         {'bgp_table_version': 23,
-                        'default_vrf': 'vpn2',
+                        'default_vrf': 'vpn1',
                         'local_router_id': '21.0.101.1',
                         'prefixes':
                             {'1.1.1.0/24':
@@ -1184,8 +1184,50 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'path_type': 'i',
                                         'status_codes': '*>',
                                         'weight': '0'}}}},
-                        'route_distinguisher': '2:100'},
-                    'vpnv6 unicast':
+                        'route_distinguisher': '1:100'},
+                    'vpnv4 unicast RD 2:100':
+                        {'bgp_table_version': 23,
+                        'default_vrf': 'vpn2',
+                        'local_router_id': '21.0.101.1',
+                        'prefixes':
+                            {'1.3.1.0/24':
+                                {'next_hop':
+                                    {'0.0.0.0':
+                                        {'localprf': '100',
+                                        'metric': '4444',
+                                        'origin_codes': '?',
+                                        'path_type': 'r',
+                                        'status_codes': '*>',
+                                        'weight': '32768'}}},
+                            '1.3.2.0/24':
+                                {'next_hop':
+                                    {'0.0.0.0':
+                                        {'localprf': '100',
+                                        'metric': '4444',
+                                        'origin_codes': '?',
+                                        'path_type': 'r',
+                                        'status_codes': '*>',
+                                        'weight': '32768'}}},
+                            '104.0.0.0/8':
+                                {'next_hop':
+                                    {'0.0.0.0':
+                                        {'localprf': '100',
+                                        'metric': '4444',
+                                        'origin_codes': '?',
+                                        'path_type': 'r',
+                                        'status_codes': '*>',
+                                        'weight': '32768'}}},
+                            '204.0.0.0/8':
+                                {'next_hop':
+                                    {'0.0.0.0':
+                                        {'localprf': '100',
+                                        'metric': '4444',
+                                        'origin_codes': '?',
+                                        'path_type': 'r',
+                                        'status_codes': '*>',
+                                        'weight': '32768'}}}},
+                        'route_distinguisher': '2:100'},                        
+                    'vpnv6 unicast RD 2:100':
                         {'bgp_table_version': 7,
                         'default_vrf': 'vpn2',
                         'local_router_id': '21.0.101.1',
@@ -1199,7 +1241,23 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'path_type': 'r',
                                         'status_codes': '*>',
                                         'weight': '32768'}}}},
-                                        'route_distinguisher': '2:100'}}},
+                                        'route_distinguisher': '2:100'},
+                    'vpnv6 unicast RD 1:100':
+                        {'bgp_table_version': 7,
+                        'default_vrf': 'vpn1',
+                        'local_router_id': '21.0.101.1',
+                        'prefixes':
+                            {'2001:11::1/128':
+                                {'next_hop':
+                                    {'0::':
+                                        {'localprf': '100',
+                                        'metric': '0',
+                                        'origin_codes': '?',
+                                        'path_type': 'r',
+                                        'status_codes': '*>',
+                                        'weight': '32768'}}}},
+                                        'route_distinguisher': '1:100'},
+                    }},
             'vpn1':
                 {'address_family':
                     {'ipv4 multicast':
@@ -3685,10 +3743,7 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                 {'neighbor':
                     {'2.2.2.10':
                         {'address_family':
-                            {'ipv4 label unicast':
-                                {'bgp_table_version': 28,
-                                'local_router_id': '21.0.101.1'},
-                            'ipv4 multicast':
+                            {'ipv4 multicast':
                                 {'advertised':
                                     {'1.1.1.0/24':
                                         {'next_hop':
@@ -3736,9 +3791,6 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'status_codes': '*>',
                                                 'weight': '32768'}}}},
                                 'bgp_table_version': 19,
-                                'local_router_id': '21.0.101.1'},
-                            'ipv4 mvpn':
-                                {'bgp_table_version': 2,
                                 'local_router_id': '21.0.101.1'},
                             'ipv4 unicast':
                                 {'advertised':
@@ -3789,28 +3841,71 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'weight': '32768'}}}},
                                 'bgp_table_version': 25,
                                 'local_router_id': '21.0.101.1'},
-                            'ipv6 multicast':
-                                {'bgp_table_version': 2,
-                                'local_router_id': '21.0.101.1'},
-                            'ipv6 mvpn':
-                                {'bgp_table_version': 2,
-                                'local_router_id': '21.0.101.1'},
-                            'ipv6 unicast':
-                                {'bgp_table_version': 7,
-                                'local_router_id': '21.0.101.1'},
-                            'link-state':
-                                {'bgp_table_version': 2,
-                                'local_router_id': '21.0.101.1'},
-                            'vpnv4 unicast':
-                                {'bgp_table_version': 23,
+                            'vpnv4 unicast RD 1:100': {
+                                'bgp_table_version': 23,
+                                'default_vrf': 'vpn1',
+                                'local_router_id': '21.0.101.1',
+                                'route_distinguisher': '1:100',
+                                'advertised': {
+                                    '1.1.1.0/24':{
+                                        'next_hop': {
+                                            '0.0.0.0': {
+                                                'localprf': '100',
+                                                'metric': '3333',
+                                                'origin_codes': '?',
+                                                'path_type': 'r',
+                                                'status_codes': '*>',
+                                                'weight': '32768',
+                                            }
+                                        }
+                                    },
+                                    '1.2.1.0/24':{
+                                        'next_hop': {
+                                            '0.0.0.0': {
+                                                'localprf': '100',
+                                                'metric': '3333',
+                                                'origin_codes': '?',
+                                                'path_type': 'r',
+                                                'status_codes': '*>',
+                                                'weight': '32768',
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            'vpnv4 unicast RD 2:100': {
+                                'bgp_table_version': 23,
                                 'default_vrf': 'vpn2',
                                 'local_router_id': '21.0.101.1',
-                                'route_distinguisher': '2:100'},
-                            'vpnv6 unicast':
-                                {'bgp_table_version': 7,
-                                'default_vrf': 'vpn2',
-                                'local_router_id': '21.0.101.1',
-                                'route_distinguisher': '2:100'}}}}}}}
+                                'route_distinguisher': '2:100',
+                                'advertised': {
+                                    '1.1.1.0/24':{
+                                        'next_hop': {
+                                            '0.0.0.0': {
+                                                'localprf': '100',
+                                                'metric': '3333',
+                                                'origin_codes': '?',
+                                                'path_type': 'r',
+                                                'status_codes': '*>',
+                                                'weight': '32768',
+                                            }
+                                        }
+                                    },
+                                    '1.2.1.0/24':{
+                                        'next_hop': {
+                                            '0.0.0.0': {
+                                                'localprf': '100',
+                                                'metric': '3333',
+                                                'origin_codes': '?',
+                                                'path_type': 'r',
+                                                'status_codes': '*>',
+                                                'weight': '32768',
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                        }}}}}}
 
     golden_output = {'execute.return_value': '''
         pinxdt-n9kv-2# show bgp vrf default all neighbors 2.2.2.10 advertised-routes 
@@ -3869,8 +3964,12 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
 
            Network            Next Hop            Metric     LocPrf     Weight Path
         Route Distinguisher: 1:100    (VRF vpn1)
+        *>r1.1.1.0/24         0.0.0.0               3333        100      32768 ?
+        *>r1.2.1.0/24         0.0.0.0               3333        100      32768 ?
 
         Route Distinguisher: 2:100    (VRF vpn2)
+        *>r1.1.1.0/24         0.0.0.0               3333        100      32768 ?
+        *>r1.2.1.0/24         0.0.0.0               3333        100      32768 ?
 
 
         Peer 2.2.2.10 routes for address family VPNv6 Unicast:
@@ -3952,7 +4051,7 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                     {'21.0.0.2':
                         {'address_family':
                             {'ipv4 label unicast':
-                                {'bgp_table_version': 2,
+                                {'bgp_table_version': 28,
                                 'local_router_id': '21.0.101.1',
                                 'routes':
                                     {'104.0.0.0/8':
@@ -4013,9 +4112,6 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': '0'}}}}},
-                            'ipv4 mvpn':
-                                {'bgp_table_version': 2,
-                                'local_router_id': '21.0.101.1'},
                             'ipv4 unicast':
                                 {'bgp_table_version': 25,
                                 'local_router_id': '21.0.101.1',
@@ -4047,16 +4143,7 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': '0'}}}}},
-                            'ipv6 multicast':
-                                {'bgp_table_version': 2,
-                                'local_router_id': '21.0.101.1'},
-                            'ipv6 mvpn':
-                                {'bgp_table_version': 2,
-                                'local_router_id': '21.0.101.1'},
-                            'ipv6 unicast':
-                                {'bgp_table_version': 7,
-                                'local_router_id': '21.0.101.1'},
-                            'vpnv4 unicast':
+                            'vpnv4 unicast RD 2:100':
                                 {'bgp_table_version': 23,
                                 'default_vrf': 'vpn2',
                                 'local_router_id': '21.0.101.1',
@@ -4071,11 +4158,22 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': '0'}}}}},
-                            'vpnv6 unicast':
-                                {'bgp_table_version': 7,
-                                'default_vrf': 'vpn2',
+                            'vpnv4 unicast RD 1:100':
+                                {'bgp_table_version': 23,
+                                'default_vrf': 'vpn1',
                                 'local_router_id': '21.0.101.1',
-                                'route_distinguisher': '2:100'}}}}}}}
+                                'route_distinguisher': '1:100',
+                                'routes':
+                                    {'4.0.0.0/8':
+                                        {'next_hop':
+                                            {'21.0.0.2':
+                                                {'localprf': '100',
+                                                'metric': '0',
+                                                'origin_codes': '?',
+                                                'path_type': 'i',
+                                                'status_codes': '*>',
+                                                'weight': '0'}}}}},
+                            }}}}}}
 
     golden_output = {'execute.return_value': '''
         pinxdt-n9kv-2# show bgp vrf default all neighbors 21.0.0.2 routes 
@@ -4133,7 +4231,7 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
         *>i4.0.0.0/8          21.0.0.2                 0        100          0 ?
 
         Route Distinguisher: 2:100    (VRF vpn2)
-
+        *>i4.0.0.0/8          21.0.0.2                 0        100          0 ?
 
         Peer 21.0.0.2 routes for address family VPNv6 Unicast:
         BGP table version is 7, Local Router ID is 21.0.101.1
@@ -4210,42 +4308,124 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        'vrf':
-            {'default':
-                {'neighbor':
-                    {'21.0.0.2':
-                        {'address_family':
-                            {'ipv4 multicast':
-                                {'bgp_table_version': 19,
+        'vrf': {
+            'default': {
+                'neighbor': {
+                    '21.0.0.2': {
+                        'address_family': {
+                            'ipv4 multicast': {
+                                'bgp_table_version': 19,
                                 'local_router_id': '21.0.101.1',
-                                'received_routes':
-                                    {'104.0.0.0/8':
-                                        {'next_hop':
-                                            {'21.0.0.2':
-                                                {'localprf': '100',
+                                'received_routes': {
+                                    '104.0.0.0/8': {
+                                        'next_hop': {
+                                            '21.0.0.2': {
+                                                'localprf': '100',
                                                 'metric': '0',
                                                 'origin_codes': '?',
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
-                                                'weight': '0'}}},
-                                    '204.0.0.0/8':
-                                        {'next_hop':
-                                            {'21.0.0.2':
-                                                {'localprf': '100',
+                                                'weight': '0',
+                                            }
+                                        }
+                                    },
+                                    '204.0.0.0/8': {
+                                        'next_hop': {
+                                            '21.0.0.2': {
+                                                'localprf': '100',
                                                 'metric': '0',
                                                 'origin_codes': '?',
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
-                                                'weight': '0'}}},
-                                    '4.0.0.0/8':
-                                        {'next_hop':
-                                            {'21.0.0.2':
-                                                {'localprf': '100',
+                                                'weight': '0',
+                                            }
+                                        }
+                                    },
+                                    '4.0.0.0/8': {
+                                        'next_hop': {
+                                            '21.0.0.2': {
+                                                'localprf': '100',
                                                 'metric': '0',
                                                 'origin_codes': '?',
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
-                                                'weight': '0'}}}}}}}}}}}
+                                                'weight': '0',
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            'vpnv4 unicast RD 1:100': {
+                                'bgp_table_version': 23,
+                                'local_router_id': '21.0.101.1',
+                                'route_distinguisher': '1:100',
+                                'default_vrf': 'vpn1',
+                                'received_routes': {
+                                    '1.1.1.0/24': {
+                                        'next_hop': {
+                                            '0.0.0.0': {
+                                                'localprf': '100',
+                                                'metric': '3333',
+                                                'origin_codes': '?',
+                                                'path_type': 'r',
+                                                'status_codes': '*>',
+                                                'weight': '32768',
+                                            }
+                                        }
+                                    },
+                                    '1.2.1.0/24': {
+                                        'next_hop': {
+                                            '0.0.0.0': {
+                                                'localprf': '100',
+                                                'metric': '3333',
+                                                'origin_codes': '?',
+                                                'path_type': 'r',
+                                                'status_codes': '*>',
+                                                'weight': '32768',
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            'vpnv4 unicast RD 2:100': {
+                                'bgp_table_version': 23,
+                                'local_router_id': '21.0.101.1',
+                                'route_distinguisher': '2:100',
+                                'default_vrf': 'vpn2',
+                                'received_routes': {
+                                    '1.1.1.0/24': {
+                                        'next_hop': {
+                                            '0.0.0.0': {
+                                                'localprf': '100',
+                                                'metric': '3333',
+                                                'origin_codes': '?',
+                                                'path_type': 'r',
+                                                'status_codes': '*>',
+                                                'weight': '32768',
+                                            }
+                                        }
+                                    },
+                                    '1.2.1.0/24': {
+                                        'next_hop': {
+                                            '0.0.0.0': {
+                                                'localprf': '100',
+                                                'metric': '3333',
+                                                'origin_codes': '?',
+                                                'path_type': 'r',
+                                                'status_codes': '*>',
+                                                'weight': '32768',
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     golden_output = {'execute.return_value': '''
         pinxdt-n9kv-2# show bgp vrf default all neighbors 21.0.0.2 received-routes 
@@ -4270,6 +4450,21 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
         Inbound soft reconfiguration for IPv6 Multicast not performed on 21.0.0.2
 
         Inbound soft reconfiguration for VPNv4 Unicast not performed on 21.0.0.2
+
+        Peer 21.0.0.2 routes for address family VPNv4 Unicast:
+        BGP table version is 23, Local Router ID is 21.0.101.1
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        Route Distinguisher: 1:100    (VRF vpn1)
+        *>r1.1.1.0/24         0.0.0.0               3333        100      32768 ?
+        *>r1.2.1.0/24         0.0.0.0               3333        100      32768 ?
+
+        Route Distinguisher: 2:100    (VRF vpn2)
+        *>r1.1.1.0/24         0.0.0.0               3333        100      32768 ?
+        *>r1.2.1.0/24         0.0.0.0               3333        100      32768 ?     
 
         Inbound soft reconfiguration for VPNv6 Unicast not performed on 21.0.0.2
 
