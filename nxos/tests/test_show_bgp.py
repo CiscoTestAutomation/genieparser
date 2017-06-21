@@ -2,6 +2,7 @@
 # Python
 import unittest
 from unittest.mock import Mock
+import xml.etree.ElementTree as ET
 
 # ATS
 from ats.topology import Device
@@ -26,9 +27,9 @@ from parser.nxos.show_bgp import ShowBgpProcessVrfAll, ShowBgpPeerSession,\
 #  Unit test for 'show bgp process vrf all'
 # =========================================
 
-class test_show_bgp_process_vrf_all(unittest.TestCase):
+class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
 
-    '''Unit test for show bgp process vrf all'''
+    '''Unit test for show bgp process vrf all - CLI'''
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -292,13 +293,35 @@ class test_show_bgp_process_vrf_all(unittest.TestCase):
                 None
         '''}
 
-    golden_parsed_xml_output = {
+    def test_show_bgp_process_vrf_all_golden_cli(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpProcessVrfAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_show_bgp_process_vrf_all_empty_cli(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpProcessVrfAll(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
+class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
+
+    '''Unit test for show bgp process vrf all - XML'''
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
         'bgp_as_path_entries': 0,
         'bgp_asformat': 'asplain',
         'bgp_isolate_mode': 'No',
         'bgp_memory_state': 'OK',
         'bgp_mmode': 'Initialized',
         'bgp_paths_per_hwm_attr': 3,
+        'bgp_performance_mode': 'No',
         'bgp_pid': 29663,
         'bgp_protocol_started_reason': 'configuration',
         'bgp_protocol_state': 'Running',
@@ -525,11 +548,14 @@ class test_show_bgp_process_vrf_all(unittest.TestCase):
                         'table_state': 'UP'},
                     'ipv4 unicast':
                         {'aggregate_label': '492287',
-                        'export_rt_list': "['100:1', "
-                                          "'400:400']",
+                        'export_default_map': 'PERMIT_ALL_RM',
+                        'export_default_prefix_count': 2,
+                        'export_default_prefix_limit': 1000,
+                        'export_rt_list': '100:1 400:400',
+                        'import_default_map': 'PERMIT_ALL_RM',
                         'import_default_prefix_count': 3,
                         'import_default_prefix_limit': 1000,
-                        'import_rt_list': "['100:1']",
+                        'import_rt_list': '100:1',
                         'label_mode': 'per-vrf',
                         'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -564,11 +590,14 @@ class test_show_bgp_process_vrf_all(unittest.TestCase):
                         'table_id': '80000004',
                         'table_state': 'UP'},
                     'ipv6 unicast':
-                        {'export_rt_list': "['1:100', "
-                                           "'600:600']",
+                        {'export_default_map': 'PERMIT_ALL_RM',
+                        'export_default_prefix_count': 0,
+                        'export_default_prefix_limit': 1000,
+                        'export_rt_list': '1:100 600:600',
+                        'import_default_map': 'PERMIT_ALL_RM',
                         'import_default_prefix_count': 0,
                         'import_default_prefix_limit': 1000,
-                        'import_rt_list': "['1:100']",
+                        'import_rt_list': '1:100',
                         'label_mode': 'per-vrf',
                         'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -599,7 +628,7 @@ class test_show_bgp_process_vrf_all(unittest.TestCase):
             'vpn2':
                 {'address_family':
                     {'ipv4 unicast':
-                        {'import_rt_list': "['400:400']",
+                        {'import_rt_list': '400:400',
                         'label_mode': 'per-vrf',
                         'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -615,7 +644,7 @@ class test_show_bgp_process_vrf_all(unittest.TestCase):
                         'table_id': '5',
                         'table_state': 'UP'},
                     'ipv6 unicast':
-                        {'import_rt_list': "['600:600']",
+                        {'import_rt_list': '600:600',
                         'label_mode': 'per-vrf',
                         'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -641,7 +670,7 @@ class test_show_bgp_process_vrf_all(unittest.TestCase):
                 'vrf_rd': '2:100',
                 'vrf_state': 'UP'}}}
 
-    golden_xml_output = {'execute.return_value': '''
+    golden_output = {'execute.return_value': '''
         <processid>29663</processid>
         <protocolstartedreason>configuration</protocolstartedreason>
         <protocoltag>333</protocoltag>
@@ -1115,25 +1144,858 @@ class test_show_bgp_process_vrf_all(unittest.TestCase):
         </TABLE_vrf>
         '''}
 
-    def test_show_bgp_process_vrf_all_golden(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output)
-        obj = ShowBgpProcessVrfAll(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+    class etree_holder():
+        def __init__(self):
+            self.data = ET.fromstring('''<?xml version="1.0" encoding="ISO-8859-1"?>
+                <nf:rpc-reply xmlns="http://www.cisco.com/nxos:1.0:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+                 <nf:data>
+                  <show>
+                   <bgp>
+                    <__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
+                     <process>
+                      <__XML__OPT_Cmd_show_bgp_process_cmd_vrf>
+                       <__XML__OPT_Cmd_show_bgp_process_cmd___readonly__>
+                        <__readonly__>
+                         <processid>23800</processid>
+                         <protocolstartedreason>configuration</protocolstartedreason>
+                         <protocoltag>333</protocoltag>
+                         <protocolstate>Running</protocolstate>
+                         <isolatemode>No</isolatemode>
+                         <mmode>Initialized</mmode>
+                         <memorystate>OK</memorystate>
+                         <forwardingstatesaved>false</forwardingstatesaved>
+                         <asformat>asplain</asformat>
+                         <srgbmin>10000</srgbmin>
+                         <srgbmax>25000</srgbmax>
+                         <attributeentries>5</attributeentries>
+                         <hwmattributeentries>5</hwmattributeentries>
+                         <bytesused>560</bytesused>
+                         <entriespendingdelete>0</entriespendingdelete>
+                         <hwmentriespendingdelete>0</hwmentriespendingdelete>
+                         <pathsperattribute>3</pathsperattribute>
+                         <aspathentries>0</aspathentries>
+                         <aspathbytes>0</aspathbytes>
+                         <TABLE_vrf>
+                          <ROW_vrf>
+                           <vrf-name-out>ac</vrf-name-out>
+                           <vrf-id>4</vrf-id>
+                           <vrf-state>UP</vrf-state>
+                           <vrf-delete-pending>false</vrf-delete-pending>
+                           <vrf-router-id>0.0.0.0</vrf-router-id>
+                           <vrf-cfgd-id>0.0.0.0</vrf-cfgd-id>
+                           <vrf-confed-id>0</vrf-confed-id>
+                           <vrf-cluster-id>0.0.0.0</vrf-cluster-id>
+                           <vrf-peers>0</vrf-peers>
+                           <vrf-pending-peers>0</vrf-pending-peers>
+                           <vrf-est-peers>0</vrf-est-peers>
+                           <TABLE_af>
+                            <ROW_af>
+                             <af-id>0</af-id>
+                             <af-name>IPv4 Unicast</af-name>
+                             <af-table-id>4</af-table-id>
+                             <af-state>UP</af-state>
+                             <af-num-peers>0</af-num-peers>
+                             <af-num-active-peers>0</af-num-active-peers>
+                             <af-peer-routes>0</af-peer-routes>
+                             <af-peer-paths>0</af-peer-paths>
+                             <af-peer-networks>0</af-peer-networks>
+                             <af-peer-aggregates>0</af-peer-aggregates>
+                             <af-rr>false</af-rr>
+                             <default-information-enabled>false</default-information-enabled>
+                             <nexthop-trigger-delay-critical>3000</nexthop-trigger-delay-critical>
+                             <nexthop-trigger-delay-non-critical>10000</nexthop-trigger-delay-non-critical>
+                            </ROW_af>
+                            <ROW_af>
+                             <af-id>2</af-id>
+                             <af-name>IPv6 Unicast</af-name>
+                             <af-table-id>80000004</af-table-id>
+                             <af-state>UP</af-state>
+                             <af-num-peers>0</af-num-peers>
+                             <af-num-active-peers>0</af-num-active-peers>
+                             <af-peer-routes>0</af-peer-routes>
+                             <af-peer-paths>0</af-peer-paths>
+                             <af-peer-networks>0</af-peer-networks>
+                             <af-peer-aggregates>0</af-peer-aggregates>
+                             <af-rr>false</af-rr>
+                             <default-information-enabled>false</default-information-enabled>
+                             <nexthop-trigger-delay-critical>3000</nexthop-trigger-delay-critical>
+                             <nexthop-trigger-delay-non-critical>10000</nexthop-trigger-delay-non-critical>
+                            </ROW_af>
+                           </TABLE_af>
+                          </ROW_vrf>
+                          <ROW_vrf>
+                           <vrf-name-out>default</vrf-name-out>
+                           <vrf-id>1</vrf-id>
+                           <vrf-state>UP</vrf-state>
+                           <vrf-delete-pending>false</vrf-delete-pending>
+                           <vrf-router-id>3.3.3.3</vrf-router-id>
+                           <vrf-cfgd-id>0.0.0.0</vrf-cfgd-id>
+                           <vrf-confed-id>0</vrf-confed-id>
+                           <vrf-cluster-id>0.0.0.0</vrf-cluster-id>
+                           <vrf-peers>6</vrf-peers>
+                           <vrf-pending-peers>0</vrf-pending-peers>
+                           <vrf-est-peers>0</vrf-est-peers>
+                           <TABLE_af>
+                            <ROW_af>
+                             <af-id>0</af-id>
+                             <af-name>IPv4 Unicast</af-name>
+                             <af-table-id>1</af-table-id>
+                             <af-state>UP</af-state>
+                             <af-num-peers>5</af-num-peers>
+                             <af-num-active-peers>0</af-num-active-peers>
+                             <af-peer-routes>3</af-peer-routes>
+                             <af-peer-paths>5</af-peer-paths>
+                             <af-peer-networks>0</af-peer-networks>
+                             <af-peer-aggregates>0</af-peer-aggregates>
+                             <TABLE_redist>
+                              <ROW_redist>
+                               <protocol>static</protocol>
+                               <route-map>ADD_RT_400_400</route-map>
+                              </ROW_redist>
+                             </TABLE_redist>
+                             <af-label-mode>per-prefix</af-label-mode>
+                             <af-rr>true</af-rr>
+                             <default-information-enabled>false</default-information-enabled>
+                             <nexthop-trigger-delay-critical>3000</nexthop-trigger-delay-critical>
+                             <nexthop-trigger-delay-non-critical>10000</nexthop-trigger-delay-non-critical>
+                            </ROW_af>
+                            <ROW_af>
+                             <af-id>1</af-id>
+                             <af-name>IPv4 Multicast</af-name>
+                             <af-table-id>1</af-table-id>
+                             <af-state>UP</af-state>
+                             <af-num-peers>3</af-num-peers>
+                             <af-num-active-peers>0</af-num-active-peers>
+                             <af-peer-routes>3</af-peer-routes>
+                             <af-peer-paths>3</af-peer-paths>
+                             <af-peer-networks>0</af-peer-networks>
+                             <af-peer-aggregates>0</af-peer-aggregates>
+                             <TABLE_redist>
+                              <ROW_redist>
+                               <protocol>static</protocol>
+                               <route-map>PERMIT_ALL_RM</route-map>
+                              </ROW_redist>
+                             </TABLE_redist>
+                             <af-rr>true</af-rr>
+                             <default-information-enabled>false</default-information-enabled>
+                             <nexthop-trigger-delay-critical>3000</nexthop-trigger-delay-critical>
+                             <nexthop-trigger-delay-non-critical>10000</nexthop-trigger-delay-non-critical>
+                            </ROW_af>
+                            <ROW_af>
+                             <af-id>2</af-id>
+                             <af-name>IPv6 Unicast</af-name>
+                             <af-table-id>80000001</af-table-id>
+                             <af-state>UP</af-state>
+                             <af-num-peers>4</af-num-peers>
+                             <af-num-active-peers>0</af-num-active-peers>
+                             <af-peer-routes>3</af-peer-routes>
+                             <af-peer-paths>5</af-peer-paths>
+                             <af-peer-networks>0</af-peer-networks>
+                             <af-peer-aggregates>0</af-peer-aggregates>
+                             <TABLE_redist>
+                              <ROW_redist>
+                               <protocol>static</protocol>
+                               <route-map>PERMIT_ALL_RM</route-map>
+                              </ROW_redist>
+                             </TABLE_redist>
+                             <af-rr>true</af-rr>
+                             <default-information-enabled>false</default-information-enabled>
+                             <nexthop-trigger-delay-critical>3000</nexthop-trigger-delay-critical>
+                             <nexthop-trigger-delay-non-critical>10000</nexthop-trigger-delay-non-critical>
+                            </ROW_af>
+                            <ROW_af>
+                             <af-id>3</af-id>
+                             <af-name>IPv6 Multicast</af-name>
+                             <af-table-id>80000001</af-table-id>
+                             <af-state>UP</af-state>
+                             <af-num-peers>4</af-num-peers>
+                             <af-num-active-peers>0</af-num-active-peers>
+                             <af-peer-routes>3</af-peer-routes>
+                             <af-peer-paths>3</af-peer-paths>
+                             <af-peer-networks>0</af-peer-networks>
+                             <af-peer-aggregates>0</af-peer-aggregates>
+                             <TABLE_redist>
+                              <ROW_redist>
+                               <protocol>static</protocol>
+                               <route-map>PERMIT_ALL_RM</route-map>
+                              </ROW_redist>
+                             </TABLE_redist>
+                             <af-rr>true</af-rr>
+                             <default-information-enabled>false</default-information-enabled>
+                             <nexthop-trigger-delay-critical>3000</nexthop-trigger-delay-critical>
+                             <nexthop-trigger-delay-non-critical>10000</nexthop-trigger-delay-non-critical>
+                            </ROW_af>
+                            <ROW_af>
+                             <af-id>4</af-id>
+                             <af-name>VPNv4 Unicast</af-name>
+                             <af-table-id>1</af-table-id>
+                             <af-state>UP</af-state>
+                             <af-num-peers>3</af-num-peers>
+                             <af-num-active-peers>0</af-num-active-peers>
+                             <af-peer-routes>5</af-peer-routes>
+                             <af-peer-paths>7</af-peer-paths>
+                             <af-peer-networks>0</af-peer-networks>
+                             <af-peer-aggregates>0</af-peer-aggregates>
+                             <af-rr>true</af-rr>
+                             <default-information-enabled>false</default-information-enabled>
+                             <nexthop-trigger-delay-critical>3000</nexthop-trigger-delay-critical>
+                             <nexthop-trigger-delay-non-critical>10000</nexthop-trigger-delay-non-critical>
+                            </ROW_af>
+                            <ROW_af>
+                             <af-id>5</af-id>
+                             <af-name>VPNv6 Unicast</af-name>
+                             <af-table-id>80000001</af-table-id>
+                             <af-state>UP</af-state>
+                             <af-num-peers>3</af-num-peers>
+                             <af-num-active-peers>0</af-num-active-peers>
+                             <af-peer-routes>5</af-peer-routes>
+                             <af-peer-paths>7</af-peer-paths>
+                             <af-peer-networks>0</af-peer-networks>
+                             <af-peer-aggregates>0</af-peer-aggregates>
+                             <af-rr>true</af-rr>
+                             <default-information-enabled>false</default-information-enabled>
+                             <nexthop-trigger-delay-critical>3000</nexthop-trigger-delay-critical>
+                             <nexthop-trigger-delay-non-critical>10000</nexthop-trigger-delay-non-critical>
+                            </ROW_af>
+                            <ROW_af>
+                             <af-id>11</af-id>
+                             <af-name>IPv4 Label Unicast</af-name>
+                             <af-table-id>1</af-table-id>
+                             <af-state>UP</af-state>
+                             <af-num-peers>0</af-num-peers>
+                             <af-num-active-peers>0</af-num-active-peers>
+                             <af-peer-routes>3</af-peer-routes>
+                             <af-peer-paths>5</af-peer-paths>
+                             <af-peer-networks>0</af-peer-networks>
+                             <af-peer-aggregates>0</af-peer-aggregates>
+                             <af-rr>false</af-rr>
+                             <default-information-enabled>false</default-information-enabled>
+                             <nexthop-trigger-delay-critical>3000</nexthop-trigger-delay-critical>
+                             <nexthop-trigger-delay-non-critical>10000</nexthop-trigger-delay-non-critical>
+                            </ROW_af>
+                            <ROW_af>
+                             <af-id>13</af-id>
+                             <af-name>Link-State</af-name>
+                             <af-table-id>1</af-table-id>
+                             <af-state>UP</af-state>
+                             <af-num-peers>4</af-num-peers>
+                             <af-num-active-peers>0</af-num-active-peers>
+                             <af-peer-routes>0</af-peer-routes>
+                             <af-peer-paths>0</af-peer-paths>
+                             <af-peer-networks>0</af-peer-networks>
+                             <af-peer-aggregates>0</af-peer-aggregates>
+                             <af-rr>true</af-rr>
+                             <default-information-enabled>false</default-information-enabled>
+                             <nexthop-trigger-delay-critical>3000</nexthop-trigger-delay-critical>
+                             <nexthop-trigger-delay-non-critical>10000</nexthop-trigger-delay-non-critical>
+                            </ROW_af>
+                           </TABLE_af>
+                          </ROW_vrf>
+                          <ROW_vrf>
+                           <vrf-name-out>management</vrf-name-out>
+                           <vrf-id>2</vrf-id>
+                           <vrf-state>UP</vrf-state>
+                           <vrf-delete-pending>false</vrf-delete-pending>
+                           <vrf-router-id>0.0.0.0</vrf-router-id>
+                           <vrf-cfgd-id>0.0.0.0</vrf-cfgd-id>
+                           <vrf-confed-id>0</vrf-confed-id>
+                           <vrf-cluster-id>0.0.0.0</vrf-cluster-id>
+                           <vrf-peers>1</vrf-peers>
+                           <vrf-pending-peers>0</vrf-pending-peers>
+                           <vrf-est-peers>0</vrf-est-peers>
+                          </ROW_vrf>
+                          <ROW_vrf>
+                           <vrf-name-out>vpn1</vrf-name-out>
+                           <vrf-id>5</vrf-id>
+                           <vrf-state>UP</vrf-state>
+                           <vrf-delete-pending>false</vrf-delete-pending>
+                           <vrf-router-id>0.0.0.0</vrf-router-id>
+                           <vrf-cfgd-id>0.0.0.0</vrf-cfgd-id>
+                           <vrf-confed-id>0</vrf-confed-id>
+                           <vrf-cluster-id>0.0.0.0</vrf-cluster-id>
+                           <vrf-peers>0</vrf-peers>
+                           <vrf-pending-peers>0</vrf-pending-peers>
+                           <vrf-est-peers>0</vrf-est-peers>
+                           <vrf-rd>1:100</vrf-rd>
+                           <TABLE_af>
+                            <ROW_af>
+                             <af-id>0</af-id>
+                             <af-name>IPv4 Unicast</af-name>
+                             <af-table-id>5</af-table-id>
+                             <af-state>UP</af-state>
+                             <af-num-peers>0</af-num-peers>
+                             <af-num-active-peers>0</af-num-active-peers>
+                             <af-peer-routes>3</af-peer-routes>
+                             <af-peer-paths>5</af-peer-paths>
+                             <af-peer-networks>0</af-peer-networks>
+                             <af-peer-aggregates>0</af-peer-aggregates>
+                             <TABLE_redist>
+                              <ROW_redist>
+                               <protocol>static</protocol>
+                               <route-map>PERMIT_ALL_RM</route-map>
+                              </ROW_redist>
+                             </TABLE_redist>
+                             <af-import-rmap>PERMIT_ALL_RM</af-import-rmap>
+                             <af-export-rmap>PERMIT_ALL_RM</af-export-rmap>
+                             <TABLE_evpn_export_rt>
+                              <ROW_evpn_export_rt>
+                               <evpn-export-rt>100:1</evpn-export-rt>
+                              </ROW_evpn_export_rt>
+                              <ROW_evpn_export_rt>
+                               <evpn-export-rt>400:400</evpn-export-rt>
+                              </ROW_evpn_export_rt>
+                             </TABLE_evpn_export_rt>
+                             <TABLE_evpn_import_rt>
+                              <ROW_evpn_import_rt>
+                               <evpn-import-rt>100:1</evpn-import-rt>
+                              </ROW_evpn_import_rt>
+                             </TABLE_evpn_import_rt>
+                             <af-label-mode>per-vrf</af-label-mode>
+                             <af-aggregate-label>492287</af-aggregate-label>
+                             <importdefault_prefixlimit>1000</importdefault_prefixlimit>
+                             <importdefault_prefixcount>3</importdefault_prefixcount>
+                             <importdefault_map>PERMIT_ALL_RM</importdefault_map>
+                             <exportdefault_prefixlimit>1000</exportdefault_prefixlimit>
+                             <exportdefault_prefixcount>2</exportdefault_prefixcount>
+                             <exportdefault_map>PERMIT_ALL_RM</exportdefault_map>
+                             <af-rr>false</af-rr>
+                             <default-information-enabled>false</default-information-enabled>
+                             <nexthop-trigger-delay-critical>3000</nexthop-trigger-delay-critical>
+                             <nexthop-trigger-delay-non-critical>10000</nexthop-trigger-delay-non-critical>
+                            </ROW_af>
+                            <ROW_af>
+                             <af-id>1</af-id>
+                             <af-name>IPv4 Multicast</af-name>
+                             <af-table-id>5</af-table-id>
+                             <af-state>UP</af-state>
+                             <af-num-peers>0</af-num-peers>
+                             <af-num-active-peers>0</af-num-active-peers>
+                             <af-peer-routes>2</af-peer-routes>
+                             <af-peer-paths>2</af-peer-paths>
+                             <af-peer-networks>0</af-peer-networks>
+                             <af-peer-aggregates>0</af-peer-aggregates>
+                             <TABLE_redist>
+                              <ROW_redist>
+                               <protocol>static</protocol>
+                               <route-map>PERMIT_ALL_RM</route-map>
+                              </ROW_redist>
+                             </TABLE_redist>
+                             <af-rr>false</af-rr>
+                             <default-information-enabled>false</default-information-enabled>
+                             <nexthop-trigger-delay-critical>3000</nexthop-trigger-delay-critical>
+                             <nexthop-trigger-delay-non-critical>10000</nexthop-trigger-delay-non-critical>
+                            </ROW_af>
+                            <ROW_af>
+                             <af-id>2</af-id>
+                             <af-name>IPv6 Unicast</af-name>
+                             <af-table-id>80000005</af-table-id>
+                             <af-state>UP</af-state>
+                             <af-num-peers>0</af-num-peers>
+                             <af-num-active-peers>0</af-num-active-peers>
+                             <af-peer-routes>3</af-peer-routes>
+                             <af-peer-paths>5</af-peer-paths>
+                             <af-peer-networks>0</af-peer-networks>
+                             <af-peer-aggregates>0</af-peer-aggregates>
+                             <TABLE_redist>
+                              <ROW_redist>
+                               <protocol>static</protocol>
+                               <route-map>PERMIT_ALL_RM</route-map>
+                              </ROW_redist>
+                             </TABLE_redist>
+                             <af-import-rmap>PERMIT_ALL_RM</af-import-rmap>
+                             <af-export-rmap>PERMIT_ALL_RM</af-export-rmap>
+                             <TABLE_evpn_export_rt>
+                              <ROW_evpn_export_rt>
+                               <evpn-export-rt>1:100</evpn-export-rt>
+                              </ROW_evpn_export_rt>
+                              <ROW_evpn_export_rt>
+                               <evpn-export-rt>600:600</evpn-export-rt>
+                              </ROW_evpn_export_rt>
+                             </TABLE_evpn_export_rt>
+                             <TABLE_evpn_import_rt>
+                              <ROW_evpn_import_rt>
+                               <evpn-import-rt>1:100</evpn-import-rt>
+                              </ROW_evpn_import_rt>
+                             </TABLE_evpn_import_rt>
+                             <af-label-mode>per-vrf</af-label-mode>
+                             <af-aggregate-label>492288</af-aggregate-label>
+                             <importdefault_prefixlimit>1000</importdefault_prefixlimit>
+                             <importdefault_prefixcount>3</importdefault_prefixcount>
+                             <importdefault_map>PERMIT_ALL_RM</importdefault_map>
+                             <exportdefault_prefixlimit>1000</exportdefault_prefixlimit>
+                             <exportdefault_prefixcount>2</exportdefault_prefixcount>
+                             <exportdefault_map>PERMIT_ALL_RM</exportdefault_map>
+                             <af-rr>false</af-rr>
+                             <default-information-enabled>false</default-information-enabled>
+                             <nexthop-trigger-delay-critical>3000</nexthop-trigger-delay-critical>
+                             <nexthop-trigger-delay-non-critical>10000</nexthop-trigger-delay-non-critical>
+                            </ROW_af>
+                            <ROW_af>
+                             <af-id>3</af-id>
+                             <af-name>IPv6 Multicast</af-name>
+                             <af-table-id>80000005</af-table-id>
+                             <af-state>UP</af-state>
+                             <af-num-peers>0</af-num-peers>
+                             <af-num-active-peers>0</af-num-active-peers>
+                             <af-peer-routes>2</af-peer-routes>
+                             <af-peer-paths>2</af-peer-paths>
+                             <af-peer-networks>0</af-peer-networks>
+                             <af-peer-aggregates>0</af-peer-aggregates>
+                             <TABLE_redist>
+                              <ROW_redist>
+                               <protocol>static</protocol>
+                               <route-map>PERMIT_ALL_RM</route-map>
+                              </ROW_redist>
+                             </TABLE_redist>
+                             <af-rr>false</af-rr>
+                             <default-information-enabled>false</default-information-enabled>
+                             <nexthop-trigger-delay-critical>3000</nexthop-trigger-delay-critical>
+                             <nexthop-trigger-delay-non-critical>10000</nexthop-trigger-delay-non-critical>
+                            </ROW_af>
+                           </TABLE_af>
+                          </ROW_vrf>
+                          <ROW_vrf>
+                           <vrf-name-out>vpn2</vrf-name-out>
+                           <vrf-id>6</vrf-id>
+                           <vrf-state>UP</vrf-state>
+                           <vrf-delete-pending>false</vrf-delete-pending>
+                           <vrf-router-id>0.0.0.0</vrf-router-id>
+                           <vrf-cfgd-id>0.0.0.0</vrf-cfgd-id>
+                           <vrf-confed-id>0</vrf-confed-id>
+                           <vrf-cluster-id>0.0.0.0</vrf-cluster-id>
+                           <vrf-peers>0</vrf-peers>
+                           <vrf-pending-peers>0</vrf-pending-peers>
+                           <vrf-est-peers>0</vrf-est-peers>
+                           <vrf-rd>2:100</vrf-rd>
+                           <TABLE_af>
+                            <ROW_af>
+                             <af-id>0</af-id>
+                             <af-name>IPv4 Unicast</af-name>
+                             <af-table-id>6</af-table-id>
+                             <af-state>UP</af-state>
+                             <af-num-peers>0</af-num-peers>
+                             <af-num-active-peers>0</af-num-active-peers>
+                             <af-peer-routes>2</af-peer-routes>
+                             <af-peer-paths>2</af-peer-paths>
+                             <af-peer-networks>0</af-peer-networks>
+                             <af-peer-aggregates>0</af-peer-aggregates>
+                             <TABLE_evpn_import_rt>
+                              <ROW_evpn_import_rt>
+                               <evpn-import-rt>400:400</evpn-import-rt>
+                              </ROW_evpn_import_rt>
+                             </TABLE_evpn_import_rt>
+                             <af-label-mode>per-vrf</af-label-mode>
+                             <af-rr>false</af-rr>
+                             <default-information-enabled>false</default-information-enabled>
+                             <nexthop-trigger-delay-critical>3000</nexthop-trigger-delay-critical>
+                             <nexthop-trigger-delay-non-critical>10000</nexthop-trigger-delay-non-critical>
+                            </ROW_af>
+                            <ROW_af>
+                             <af-id>2</af-id>
+                             <af-name>IPv6 Unicast</af-name>
+                             <af-table-id>80000006</af-table-id>
+                             <af-state>UP</af-state>
+                             <af-num-peers>0</af-num-peers>
+                             <af-num-active-peers>0</af-num-active-peers>
+                             <af-peer-routes>2</af-peer-routes>
+                             <af-peer-paths>2</af-peer-paths>
+                             <af-peer-networks>0</af-peer-networks>
+                             <af-peer-aggregates>0</af-peer-aggregates>
+                             <TABLE_evpn_import_rt>
+                              <ROW_evpn_import_rt>
+                               <evpn-import-rt>600:600</evpn-import-rt>
+                              </ROW_evpn_import_rt>
+                             </TABLE_evpn_import_rt>
+                             <af-label-mode>per-vrf</af-label-mode>
+                             <af-rr>false</af-rr>
+                             <default-information-enabled>false</default-information-enabled>
+                             <nexthop-trigger-delay-critical>3000</nexthop-trigger-delay-critical>
+                             <nexthop-trigger-delay-non-critical>10000</nexthop-trigger-delay-non-critical>
+                            </ROW_af>
+                           </TABLE_af>
+                          </ROW_vrf>
+                         </TABLE_vrf>
+                        </__readonly__>
+                       </__XML__OPT_Cmd_show_bgp_process_cmd___readonly__>
+                      </__XML__OPT_Cmd_show_bgp_process_cmd_vrf>
+                     </process>
+                    </__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
+                   </bgp>
+                  </show>
+                 </nf:data>
+                </nf:rpc-reply>
+                ''')
+
+    etree_output = {'get.return_value': etree_holder()}
+
+    etree_parsed_output = {
+        'bgp_as_path_entries': 0,
+        'bgp_asformat': 'asplain',
+        'bgp_isolate_mode': 'No',
+        'bgp_memory_state': 'OK',
+        'bgp_mmode': 'Initialized',
+        'bgp_paths_per_hwm_attr': 3,
+        'bgp_performance_mode': 'No',
+        'bgp_pid': 23800,
+        'bgp_protocol_started_reason': 'configuration',
+        'bgp_protocol_state': 'Running',
+        'bgp_tag': '333',
+        'bytes_used': 560,
+        'bytes_used_as_path_entries': 0,
+        'entries_pending_delete': 0,
+        'hwm_attr_entries': 5,
+        'hwm_entries_pending_delete': 0,
+        'num_attr_entries': 5,
+        'segment_routing_global_block': '10000-25000',
+        'vrf': 
+            {'ac': 
+                {'address_family': 
+                    {'ipv4 unicast': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers':
+                            {0:
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'route_reflector': False,
+                        'table_id': '4',
+                        'table_state': 'UP'},
+                    'ipv6 unicast':
+                        {'next_hop_trigger_delay':
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers':
+                            {0:
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'route_reflector': False,
+                        'table_id': '80000004',
+                        'table_state': 'UP'}},
+                'cluster_id': '0.0.0.0',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 0,
+                'num_conf_peers': 0,
+                'num_established_peers': 0,
+                'num_pending_conf_peers': 0,
+                'router_id': '0.0.0.0',
+                'vrf_id': '4',
+                'vrf_state': 'UP'},
+             'default':
+                {'address_family':
+                    {'ipv4 label unicast':
+                        {'next_hop_trigger_delay':
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers':
+                            {0:
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 5,
+                                'routes': 3}},
+                        'route_reflector': False,
+                        'table_id': '1',
+                        'table_state': 'UP'},
+                    'ipv4 multicast':
+                        {'next_hop_trigger_delay':
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers':
+                            {3:
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 3,
+                                'routes': 3}},
+                        'redistribution':
+                            {'static':
+                                {'route_map': 'PERMIT_ALL_RM'}},
+                        'route_reflector': True,
+                        'table_id': '1',
+                        'table_state': 'UP'},
+                    'ipv4 unicast':
+                        {'label_mode': 'per-prefix',
+                        'next_hop_trigger_delay':
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers':
+                            {5:
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 5,
+                                'routes': 3}},
+                        'redistribution':
+                            {'static':
+                                {'route_map': 'ADD_RT_400_400'}},
+                        'route_reflector': True,
+                        'table_id': '1',
+                        'table_state': 'UP'},
+                    'ipv6 multicast':
+                        {'next_hop_trigger_delay':
+                            {'critical': 3000,
+                                              'non_critical': 10000},
+                        'peers':
+                            {4:
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 3,
+                                'routes': 3}},
+                        'redistribution':
+                            {'static':
+                                {'route_map': 'PERMIT_ALL_RM'}},
+                        'route_reflector': True,
+                        'table_id': '80000001',
+                        'table_state': 'UP'},
+                    'ipv6 unicast':
+                        {'next_hop_trigger_delay':
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers':
+                            {4:
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 5,
+                                'routes': 3}},
+                        'redistribution':
+                            {'static':
+                                {'route_map': 'PERMIT_ALL_RM'}},
+                        'route_reflector': True,
+                        'table_id': '80000001',
+                        'table_state': 'UP'},
+                    'link-state':
+                        {'next_hop_trigger_delay':
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers':
+                            {4:
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'route_reflector': True,
+                        'table_id': '1',
+                        'table_state': 'UP'},
+                    'vpnv4 unicast':
+                        {'next_hop_trigger_delay':
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers':
+                            {3:
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 7,
+                                'routes': 5}},
+                        'route_reflector': True,
+                        'table_id': '1',
+                        'table_state': 'UP'},
+                    'vpnv6 unicast':
+                        {'next_hop_trigger_delay':
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers':
+                            {3:
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 7,
+                                'routes': 5}},
+                        'route_reflector': True,
+                        'table_id': '80000001',
+                        'table_state': 'UP'}},
+                'cluster_id': '0.0.0.0',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 0,
+                'num_conf_peers': 6,
+                'num_established_peers': 0,
+                'num_pending_conf_peers': 0,
+                'router_id': '3.3.3.3',
+                'vrf_id': '1',
+                'vrf_state': 'UP'},
+             'management':
+                {'cluster_id': '0.0.0.0',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 0,
+                'num_conf_peers': 1,
+                'num_established_peers': 0,
+                'num_pending_conf_peers': 0,
+                'router_id': '0.0.0.0',
+                'vrf_id': '2',
+                'vrf_state': 'UP'},
+             'vpn1':
+                {'address_family':
+                    {'ipv4 multicast':
+                        {'next_hop_trigger_delay':
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers':
+                            {0:
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 2,
+                                'routes': 2}},
+                        'redistribution':
+                            {'static':
+                                {'route_map': 'PERMIT_ALL_RM'}},
+                        'route_reflector': False,
+                        'table_id': '5',
+                        'table_state': 'UP'},
+                    'ipv4 unicast':
+                        {'aggregate_label': '492287',
+                        'export_default_map': 'PERMIT_ALL_RM',
+                        'export_default_prefix_count': 2,
+                        'export_default_prefix_limit': 1000,
+                        'export_rt_list': ' '
+                                          '100:1 '
+                                          '400:400',
+                        'import_default_map': 'PERMIT_ALL_RM',
+                        'import_default_prefix_count': 3,
+                        'import_default_prefix_limit': 1000,
+                        'import_rt_list': ' '
+                                          '100:1',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay':
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers':
+                            {0:
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 5,
+                                'routes': 3}},
+                        'redistribution':
+                            {'static':
+                                {'route_map': 'PERMIT_ALL_RM'}},
+                        'route_reflector': False,
+                        'table_id': '5',
+                        'table_state': 'UP'},
+                    'ipv6 multicast':
+                        {'next_hop_trigger_delay':
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers':
+                            {0:
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 2,
+                                'routes': 2}},
+                        'redistribution':
+                            {'static':
+                                {'route_map': 'PERMIT_ALL_RM'}},
+                        'route_reflector': False,
+                        'table_id': '80000005',
+                        'table_state': 'UP'},
+                    'ipv6 unicast':
+                        {'aggregate_label': '492288',
+                        'export_default_map': 'PERMIT_ALL_RM',
+                        'export_default_prefix_count': 2,
+                        'export_default_prefix_limit': 1000,
+                        'export_rt_list': ' '
+                                          '1:100 '
+                                          '600:600',
+                        'import_default_map': 'PERMIT_ALL_RM',
+                        'import_default_prefix_count': 3,
+                        'import_default_prefix_limit': 1000,
+                        'import_rt_list': ' '
+                                          '1:100',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay': {'critical': 3000,
+                                             'non_critical': 10000},
+                        'peers': {0: {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 5,
+                                'routes': 3}},
+                        'redistribution':
+                            {'static':
+                                {'route_map': 'PERMIT_ALL_RM'}},
+                        'route_reflector': False,
+                        'table_id': '80000005',
+                        'table_state': 'UP'}},
+                'cluster_id': '0.0.0.0',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 0,
+                'num_conf_peers': 0,
+                'num_established_peers': 0,
+                'num_pending_conf_peers': 0,
+                'router_id': '0.0.0.0',
+                'vrf_id': '5',
+                'vrf_rd': '1:100',
+                'vrf_state': 'UP'},
+             'vpn2':
+                {'address_family':
+                    {'ipv4 unicast':
+                        {'import_rt_list': ' '
+                                           '400:400',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay':
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers':
+                            {0:
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 2,
+                                'routes': 2}},
+                        'route_reflector': False,
+                        'table_id': '6',
+                        'table_state': 'UP'},
+                    'ipv6 unicast':
+                        {'import_rt_list': ' '
+                                           '600:600',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay':
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers':
+                            {0:
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 2,
+                                'routes': 2}},
+                        'route_reflector': False,
+                        'table_id': '80000006',
+                        'table_state': 'UP'}},
+                'cluster_id': '0.0.0.0',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 0,
+                'num_conf_peers': 0,
+                'num_established_peers': 0,
+                'num_pending_conf_peers': 0,
+                'router_id': '0.0.0.0',
+                'vrf_id': '6',
+                'vrf_rd': '2:100',
+                'vrf_state': 'UP'}}}
 
     def test_show_bgp_process_vrf_all_golden_xml(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_xml_output)
+        self.device = Mock(**self.golden_output)
         obj = ShowBgpProcessVrfAll(device=self.device, context='xml')
-        parsed_xml_output = obj.parse()
-        self.assertEqual(parsed_xml_output,self.golden_parsed_xml_output)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
-    def test_show_bgp_process_vrf_all_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowBgpProcessVrfAll(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
+    def test_show_bgp_process_vrf_all_golden_xml_etree(self):
+        self.maxDiff = None
+        self.device = Mock(**self.etree_output)
+        obj = ShowBgpProcessVrfAll(device=self.device, context='xml')
+        parsed_output = obj.parse(parser='etree')
+        self.assertEqual(parsed_output,self.etree_parsed_output)
 
 # =============================================
 #  Unit test for 'show bgp peer-session <WORD>'
