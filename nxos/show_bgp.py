@@ -2,6 +2,7 @@
 
 NXOS parsers for the following show commands:
     * 'show bgp process vrf all'
+    * 'show bgp process vrf all | xml'
     * 'show bgp peer-session <WORD>'
     * 'show bgp peer-policy <WORD>'
     * 'show bgp peer-template <WORD>'
@@ -17,6 +18,7 @@ NXOS parsers for the following show commands:
 
 # Python
 import re
+import xml.etree.ElementTree as ET
 
 # Metaparser
 from metaparser import MetaParser
@@ -35,9 +37,14 @@ class ShowBgpProcessVrfAllSchema(MetaParser):
     schema = {
         'bgp_pid': int,
         'bgp_protocol_started_reason': str,
+        Optional('bgp_performance_mode'): str,
         'bgp_tag': str,
         'bgp_protocol_state': str,
+        Optional('bgp_isolate_mode'): str,
+        Optional('bgp_mmode'): str,
         'bgp_memory_state': str,
+        Optional('bgp_asformat'): str,
+        Optional('segment_routing_global_block'): str,
         'num_attr_entries': int,
         'hwm_attr_entries': int,
         'bytes_used': int,
@@ -47,52 +54,62 @@ class ShowBgpProcessVrfAllSchema(MetaParser):
         'bgp_as_path_entries': int,
         'bytes_used_as_path_entries': int,
         Optional('vrf'): 
-        {Any(): 
-            {'vrf_id': str,
-             'vrf_state': str,
-             Optional('router_id'): str,
-             Optional('conf_router_id'): str,
-             Optional('confed_id'): int,
-             Optional('cluster_id'): str,
-             'num_conf_peers': int,
-             'num_pending_conf_peers': int,
-             'num_established_peers': int,
-             Optional('vrf_rd'): str,
-             Optional('address_family'): 
-                {Any(): 
-                    {Optional('table_id'): str,
-                     Optional('table_state'): str,
-                     'peers': 
-                        {Any(): 
-                            {'active_peers': int,
-                             'routes': int,
-                             'paths': int,
-                             'networks': int,
-                             'aggregates': int,
+            {Any(): 
+                {'vrf_id': str,
+                 'vrf_state': str,
+                 Optional('router_id'): str,
+                 Optional('conf_router_id'): str,
+                 Optional('confed_id'): int,
+                 Optional('cluster_id'): str,
+                 'num_conf_peers': int,
+                 'num_pending_conf_peers': int,
+                 'num_established_peers': int,
+                 Optional('vrf_rd'): str,
+                 Optional('address_family'): 
+                    {Any(): 
+                        {Optional('table_id'): str,
+                         Optional('table_state'): str,
+                         'peers': 
+                            {Any(): 
+                                {'active_peers': int,
+                                 'routes': int,
+                                 'paths': int,
+                                 'networks': int,
+                                 'aggregates': int,
+                                },
                             },
-                        },
-                     Optional('redistribution'): 
-                        {Any(): 
-                            {Optional('route_map'): str,
+                         Optional('redistribution'): 
+                            {Any(): 
+                                {Optional('route_map'): str,
+                                },
                             },
+                         Optional('export_rt_list'): str,
+                         Optional('import_rt_list'): str,
+                         Optional('label_mode'): str,
+                         Optional('aggregate_label'): str,
+                         Optional('route_reflector'): bool,
+                         Optional('next_hop_trigger_delay'):
+                            {'critical': int,
+                             'non_critical': int,
+                            },
+                        Optional('import_default_map'): str,
+                        Optional('import_default_prefix_limit'): int,
+                        Optional('import_default_prefix_count'): int,
+                        Optional('export_default_map'): str,
+                        Optional('export_default_prefix_limit'): int,
+                        Optional('export_default_prefix_count'): int,
                         },
-                     Optional('export_rt_list'): str,
-                     Optional('import_rt_list'): str,
-                     Optional('label_mode'): str,
-                     Optional('aggregate_label'): str,
                     },
                 },
             },
-        },
-    }
+        }
 
 class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
 
     '''Parser for show bgp process vrf all'''
 
     def cli(self):
-        cmd = 'show bgp process vrf all'
-        out = self.device.execute(cmd)
+        out = self.device.execute('show bgp process vrf all')
         
         # Init vars
         parsed_dict = {}
@@ -116,6 +133,15 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                     str(m.groupdict()['reason']).lower()
                 continue
 
+            # BGP Performance Mode:          : No
+            p2_1 = re.compile(r'^\s*BGP +Performance +Mode *:'
+                               ' +(?P<performance_mode>[a-zA-Z\s]+)$')
+            m = p2_1.match(line)
+            if m:
+                parsed_dict['bgp_performance_mode'] = \
+                    str(m.groupdict()['performance_mode'])
+                continue
+
             # BGP Protocol Tag               : 100
             p3 = re.compile(r'^\s*BGP +Protocol +Tag *:'
                              ' +(?P<bgp_tag>[a-zA-Z0-9]+)$')
@@ -133,6 +159,23 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                     str(m.groupdict()['protocol_state']).lower()
                 continue
 
+            # BGP Isolate Mode               : No
+            p4_1 = re.compile(r'^\s*BGP +Isolate +Mode *:'
+                               ' +(?P<isolate_mode>[a-zA-Z\s]+)$')
+            m = p4_1.match(line)
+            if m:
+                parsed_dict['bgp_isolate_mode'] = \
+                    str(m.groupdict()['isolate_mode'])
+                continue
+
+            # BGP MMODE                      : Initialized
+            p4_3 = re.compile(r'^\s*BGP +MMODE *:'
+                               ' +(?P<mmode>[a-zA-Z\s]+)$')
+            m = p4_3.match(line)
+            if m:
+                parsed_dict['bgp_mmode'] = str(m.groupdict()['mmode'])
+                continue
+
             # BGP Memory State               : OK
             p5 = re.compile(r'^\s*BGP +Memory +State *:'
                              ' +(?P<memory_state>[a-zA-Z]+)$')
@@ -140,6 +183,23 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
             if m:
                 parsed_dict['bgp_memory_state'] = \
                     str(m.groupdict()['memory_state']).lower()
+                continue
+
+            # BGP asformat                   : asplain
+            p5_1 = re.compile(r'^\s*BGP +asformat *:'
+                               ' +(?P<asformat>[a-zA-Z\s]+)$')
+            m = p5_1.match(line)
+            if m:
+                parsed_dict['bgp_asformat'] = str(m.groupdict()['asformat'])
+                continue
+
+            # Segment Routing Global Block   : 10000-25000
+            p5_2 = re.compile(r'^\s*Segment +Routing +Global +Block *:'
+                               ' +(?P<segment>[0-9\-]+)$')
+            m = p5_2.match(line)
+            if m:
+                parsed_dict['segment_routing_global_block'] = \
+                    str(m.groupdict()['segment'])
                 continue
 
             # BGP attributes information
@@ -340,8 +400,13 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
             p26 = re.compile(r'^\s*Table +Id *: +(?P<table_id>(\S+))$')
             m = p26.match(line)
             if m:
-                parsed_dict['vrf'][vrf_name]['address_family'][address_family]\
-                    ['table_id'] = m.groupdict()['table_id']
+                table_id = str(m.groupdict()['table_id'])
+                if '0x' in table_id:
+                    parsed_dict['vrf'][vrf_name]['address_family']\
+                        [address_family]['table_id'] = table_id
+                else:
+                    parsed_dict['vrf'][vrf_name]['address_family']\
+                        [address_family]['table_id'] = '0x' + table_id
                 continue
             
             #     Table state                : UP
@@ -446,9 +511,350 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                     ['aggregate_label'] = str(m.groupdict()['aggregate_label'])
                 continue
 
+            # Import default limit       : 1000
+            p34 = re.compile(r'^\s*Import +default +limit *:'
+                              ' +(?P<import_default_prefix_limit>[0-9]+)$')
+            m = p34.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family'][address_family]\
+                    ['import_default_prefix_limit'] = \
+                        int(m.groupdict()['import_default_prefix_limit'])
+                continue
+
+            # Import default prefix count : 3
+            p35 = re.compile(r'^\s*Import +default +prefix +count *:'
+                              ' +(?P<import_default_prefix_count>[0-9]+)$')
+            m = p35.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family'][address_family]\
+                    ['import_default_prefix_count'] = \
+                        int(m.groupdict()['import_default_prefix_count'])
+
+            # Import default map         : PERMIT_ALL_RM
+            p36 = re.compile(r'^\s*Import +default +map *:'
+                              ' +(?P<import_default_map>[a-zA-Z0-9\_\-]+)$')
+            m = p36.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family'][address_family]\
+                    ['import_default_map'] = \
+                        str(m.groupdict()['import_default_map'])
+
+            # Export default limit       : 1000
+            p37 = re.compile(r'^\s*Export +default +limit *:'
+                              ' +(?P<export_default_prefix_limit>[0-9]+)$')
+            m = p37.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family'][address_family]\
+                    ['export_default_prefix_limit'] = \
+                        int(m.groupdict()['export_default_prefix_limit'])
+
+            # Export default prefix count : 2
+            p38 = re.compile(r'^\s*Export +default +prefix +count *:'
+                              ' +(?P<export_default_prefix_count>[0-9]+)$')
+            m = p38.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family'][address_family]\
+                    ['export_default_prefix_count'] = \
+                        int(m.groupdict()['export_default_prefix_count'])
+
+            # Export default map         : PERMIT_ALL_RM
+            p39 = re.compile(r'^\s*Export +default +map *:'
+                              ' +(?P<export_default_map>[a-zA-Z0-9\_\-]+)$')
+            m = p39.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family'][address_family]\
+                    ['export_default_map'] = \
+                        str(m.groupdict()['export_default_map'])
+
+            # Nexthop trigger-delay
+            p40 = re.compile(r'^\s*Nexthop +trigger-delay$')
+            m = p40.match(line)
+            if m:
+                if 'next_hop_trigger_delay' not in parsed_dict['vrf'][vrf_name]\
+                    ['address_family'][address_family]:
+                    parsed_dict['vrf'][vrf_name]['address_family']\
+                        [address_family]['next_hop_trigger_delay'] = {}
+
+            # critical 3000 ms
+            p41 = re.compile(r'^\s*critical +(?P<critical>[0-9]+) +ms$')
+            m = p41.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family']\
+                    [address_family]['next_hop_trigger_delay']['critical'] = \
+                    int(m.groupdict()['critical'])
+
+            # non-critical 3000 ms
+            p42 = re.compile(r'^\s*non-critical +(?P<non_critical>[0-9]+) +ms$')
+            m = p42.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family']\
+                    [address_family]['next_hop_trigger_delay']['non_critical'] = \
+                        int(m.groupdict()['non_critical'])
+
         return parsed_dict
 
+    def xml(self):
+        out = self.device.execute('show bgp process vrf all | xml')
 
+        etree_dict = {}
+        # Remove junk characters returned by the device
+        out = out.replace("]]>]]>", "")
+        output = ET.fromstring(out)
+
+        for item in output:
+            for data in item:
+                for show in data:
+                    for bgp in show:
+                        for __XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf in bgp:
+                            for process in __XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf:
+                                for __XML__OPT_Cmd_show_bgp_process_cmd_vrf in process:
+                                    for __XML__OPT_Cmd_show_bgp_process_cmd___readonly__ in __XML__OPT_Cmd_show_bgp_process_cmd_vrf:
+                                        for key in __XML__OPT_Cmd_show_bgp_process_cmd___readonly__:
+                                            # Get key text
+                                            text = key.tag[key.tag.find('}')+1:]
+                                            # bgp_pid
+                                            if text == 'processid':
+                                                etree_dict['bgp_pid'] = int(key.text)
+                                            # bgp_protocol_started_reason
+                                            if text == 'protocolstartedreason':
+                                                etree_dict['bgp_protocol_started_reason'] = key.text
+                                            # bgp_tag
+                                            if text == 'protocoltag':
+                                                etree_dict['bgp_tag'] = key.text
+                                            # bgp_protocol_state
+                                            if text == 'protocolstate':
+                                                etree_dict['bgp_protocol_state'] = str(key.text).lower()
+                                            # bgp_isolate_mode
+                                            if text == 'isolatemode':
+                                                etree_dict['bgp_isolate_mode'] = key.text
+                                            # bgp_mmode
+                                            if text == 'mmode':
+                                                etree_dict['bgp_mmode'] = key.text
+                                            # bgp_memory_state
+                                            if text == 'memorystate':
+                                                etree_dict['bgp_memory_state'] = str(key.text).lower()
+                                            # bgp_performance_mode
+                                            if text == 'forwardingstatesaved':
+                                                state = key.text
+                                                if state == 'false':
+                                                    etree_dict['bgp_performance_mode'] = 'No'
+                                                else:
+                                                    etree_dict['bgp_performance_mode'] = 'Yes'
+                                            # bgp_asformat
+                                            if text == 'asformat':
+                                                etree_dict['bgp_asformat'] = key.text
+                                            if text == 'srgbmin':
+                                                srgbin = key.text
+                                            if text == 'srgbmax':
+                                                srgmax = key.text
+                                                try:
+                                                    etree_dict['segment_routing_global_block'] = srgbin + '-' + srgmax
+                                                except:
+                                                    pass
+                                            # num_attr_entries
+                                            if text == 'attributeentries':
+                                                etree_dict['num_attr_entries'] = int(key.text)
+                                            # hwm_attr_entries
+                                            if text == 'hwmattributeentries':
+                                                etree_dict['hwm_attr_entries'] = int(key.text)
+                                            # bytes_used
+                                            if text == 'bytesused':
+                                                etree_dict['bytes_used'] = int(key.text)
+                                            # entries_pending_delete
+                                            if text == 'entriespendingdelete':
+                                                etree_dict['entries_pending_delete'] = int(key.text)
+                                            # hwm_entries_pending_delete
+                                            if text == 'hwmentriespendingdelete':
+                                                etree_dict['hwm_entries_pending_delete'] = int(key.text)
+                                            # bgp_paths_per_hwm_attr
+                                            if text == 'pathsperattribute':
+                                                etree_dict['bgp_paths_per_hwm_attr'] = int(key.text)
+                                            # bgp_as_path_entries
+                                            if text == 'aspathentries':
+                                                etree_dict['bgp_as_path_entries'] = int(key.text)
+                                            # bytes_used_as_path_entries
+                                            if text == 'aspathbytes':
+                                                etree_dict['bytes_used_as_path_entries'] = int(key.text)
+                                            
+                                            if text == 'TABLE_vrf':
+                                                for table_vrf in key:
+                                                    for row_vrf in table_vrf:
+                                                        vrf_tag = row_vrf.tag[row_vrf.tag.find('}')+1:]
+
+                                                        # vrf
+                                                        #   vrf_name
+                                                        if vrf_tag == 'vrf-name-out':
+                                                            vrf_name = row_vrf.text
+                                                            if 'vrf' not in etree_dict:
+                                                                etree_dict['vrf'] = {}
+                                                            if vrf_name not in etree_dict['vrf']:
+                                                                etree_dict['vrf'][vrf_name] = {}
+                                                                vrf_dict = etree_dict['vrf'][vrf_name]
+                                                        # vrf_id
+                                                        if vrf_tag == 'vrf-id':
+                                                            vrf_dict['vrf_id'] = row_vrf.text
+                                                        # vrf_state
+                                                        if vrf_tag == 'vrf-state':
+                                                            vrf_dict['vrf_state'] = row_vrf.text
+                                                        # router_id
+                                                        if vrf_tag == 'vrf-router-id':
+                                                            vrf_dict['router_id'] = row_vrf.text
+                                                        # conf_router_id
+                                                        if vrf_tag == 'vrf-cfgd-id':
+                                                            vrf_dict['conf_router_id'] = row_vrf.text
+                                                        # confed_id
+                                                        if vrf_tag == 'vrf-confed-id':
+                                                            vrf_dict['confed_id'] = int(row_vrf.text)
+                                                        # cluster_id
+                                                        if vrf_tag == 'vrf-cluster-id':
+                                                           vrf_dict['cluster_id'] = row_vrf.text
+                                                        # num_conf_peers
+                                                        if vrf_tag == 'vrf-peers':
+                                                            vrf_dict['num_conf_peers'] = int(row_vrf.text)
+                                                        # num_pending_conf_peers
+                                                        if vrf_tag == 'vrf-pending-peers':
+                                                            vrf_dict['num_pending_conf_peers'] = int(row_vrf.text)
+                                                        # num_established_peers
+                                                        if vrf_tag == 'vrf-est-peers':
+                                                            vrf_dict['num_established_peers'] = int(row_vrf.text)
+                                                        # vrf_rd
+                                                        if vrf_tag == 'vrf-rd':
+                                                            vrf_dict['vrf_rd'] = row_vrf.text
+
+                                                        if vrf_tag == 'TABLE_af':
+                                                            for table_af in row_vrf:
+                                                                for row_af in table_af:
+                                                                    af_tag = row_af.tag[row_af.tag.find('}')+1:]
+
+                                                                    # address_family
+                                                                    #   address_family_name
+                                                                    if af_tag == 'af-name':
+                                                                        address_family_name = str(row_af.text).lower()
+                                                                        if 'address_family' not in etree_dict['vrf'][vrf_name]:
+                                                                            etree_dict['vrf'][vrf_name]['address_family'] = {}
+                                                                        if address_family_name not in etree_dict['vrf'][vrf_name]['address_family']:
+                                                                            etree_dict['vrf'][vrf_name]['address_family'][address_family_name] = {}
+                                                                            af_dict = etree_dict['vrf'][vrf_name]['address_family'][address_family_name]
+                                                                        # Initialize empty lists
+                                                                        export_rt_list = ''
+                                                                        import_rt_list = ''
+                                                                    # table_id
+                                                                    if af_tag == 'af-table-id':
+                                                                        table_id = str(row_af.text)
+                                                                        if '0x' in table_id:
+                                                                            af_dict['table_id'] = table_id
+                                                                        else:
+                                                                            af_dict['table_id'] = '0x' + table_id
+                                                                    # table_state
+                                                                    if af_tag == 'af-state':
+                                                                        af_dict['table_state'] = str(row_af.text).lower()
+                                                                    # peers
+                                                                    if af_tag == 'af-num-peers':
+                                                                        peers = int(row_af.text)
+                                                                        if 'peers' not in af_dict:
+                                                                            af_dict['peers'] = {}
+                                                                        if peers not in af_dict['peers']:
+                                                                            af_dict['peers'][peers] = {}
+                                                                    # active_peers
+                                                                    if af_tag == 'af-num-active-peers':
+                                                                        af_dict['peers'][peers]['active_peers'] = int(row_af.text)
+                                                                    # routes
+                                                                    if af_tag == 'af-peer-routes':
+                                                                        af_dict['peers'][peers]['routes'] = int(row_af.text)
+                                                                    # paths
+                                                                    if af_tag == 'af-peer-paths':
+                                                                        af_dict['peers'][peers]['paths'] = int(row_af.text)
+                                                                    # networks
+                                                                    if af_tag == 'af-peer-networks':
+                                                                        af_dict['peers'][peers]['networks'] = int(row_af.text)
+                                                                    # aggregates
+                                                                    if af_tag == 'af-peer-aggregates':
+                                                                        af_dict['peers'][peers]['aggregates'] = int(row_af.text)
+                                                                    # route_reflector
+                                                                    if af_tag == 'af-rr':
+                                                                        if row_af.text == 'false':
+                                                                            af_dict['route_reflector'] = False
+                                                                        elif row_af.text == 'true':
+                                                                            af_dict['route_reflector'] = True
+                                                                    # next_hop_trigger_delay
+                                                                    #   critical
+                                                                    if af_tag == 'nexthop-trigger-delay-critical':
+                                                                        if 'next_hop_trigger_delay' not in af_dict:
+                                                                            af_dict['next_hop_trigger_delay'] = {}
+                                                                        af_dict['next_hop_trigger_delay']['critical'] = int(row_af.text)
+                                                                    # next_hop_trigger_delay
+                                                                    #   non_critical
+                                                                    if af_tag == 'nexthop-trigger-delay-non-critical':
+                                                                        af_dict['next_hop_trigger_delay']['non_critical'] = int(row_af.text)
+                                                                    # aggregate_label
+                                                                    if af_tag == 'af-aggregate-label':
+                                                                        af_dict['aggregate_label'] = row_af.text
+                                                                    # label_mode
+                                                                    if af_tag == 'af-label-mode':
+                                                                        af_dict['label_mode'] = row_af.text
+                                                                    # import_default_map
+                                                                    if af_tag == 'importdefault_map':
+                                                                        af_dict['import_default_map'] = row_af.text
+                                                                    # import_default_prefix_limit
+                                                                    if af_tag == 'importdefault_prefixlimit':
+                                                                        af_dict['import_default_prefix_limit'] = int(row_af.text)
+                                                                    # import_default_prefix_count
+                                                                    if af_tag == 'importdefault_prefixcount':
+                                                                        af_dict['import_default_prefix_count'] = int(row_af.text)
+                                                                    # export_default_map
+                                                                    if af_tag == 'exportdefault_map':
+                                                                        af_dict['export_default_map'] = row_af.text
+                                                                    # export_default_prefix_limit
+                                                                    if af_tag == 'exportdefault_prefixlimit':
+                                                                        af_dict['export_default_prefix_limit'] = int(row_af.text)
+                                                                    # export_default_prefix_count
+                                                                    if af_tag == 'exportdefault_prefixcount':
+                                                                        af_dict['export_default_prefix_count'] = int(row_af.text)
+
+                                                                    # TABLE_redist
+                                                                    #   ROW_redist
+                                                                    if af_tag == 'TABLE_redist':
+                                                                        for table_redist in row_af:
+                                                                            for row_redist in table_redist:
+                                                                                row_redist_tag = row_redist.tag[row_redist.tag.find('}')+1:]
+                                                                                # protocol
+                                                                                if row_redist_tag == 'protocol':
+                                                                                    protocol = row_redist.text
+                                                                                    if 'redistribution' not in af_dict:
+                                                                                        af_dict['redistribution'] = {}
+                                                                                    if protocol not in af_dict['redistribution']:
+                                                                                        af_dict['redistribution'][protocol] = {}
+                                                                                # route_map
+                                                                                if row_redist_tag == 'route-map':
+                                                                                    af_dict['redistribution'][protocol]['route_map'] = row_redist.text
+
+                                                                    # TABLE_evpn_export_rt
+                                                                    #   ROW_evpn_export_rt
+                                                                    if af_tag == 'TABLE_evpn_export_rt':
+                                                                        for table_evpn_export in row_af:
+                                                                            for row_export in table_evpn_export:
+                                                                                row_export_tag = row_export.tag[row_export.tag.find('}')+1:]
+                                                                                # export_rt_list
+                                                                                if row_export_tag == 'evpn-export-rt':
+                                                                                    export_rt_list = str(export_rt_list + ' ' + row_export.text).strip()
+                                                                                    af_dict['export_rt_list'] = export_rt_list
+                                                                    # TABLE_evpn_import_rt
+                                                                    #   ROW_evpn_import_rt
+                                                                    if af_tag == 'TABLE_evpn_import_rt':
+                                                                        for table_evpn_import in row_af:
+                                                                            for row_import in table_evpn_import:
+                                                                                row_import_tag = row_import.tag[row_import.tag.find('}')+1:]
+                                                                                # export_rt_list
+                                                                                if row_import_tag == 'evpn-import-rt':
+                                                                                    import_rt_list = str(import_rt_list + ' ' + row_import.text).strip()
+                                                                                    af_dict['import_rt_list'] = import_rt_list
+
+                                                                    # parsed all tags
+                                                                    continue
+                                                                                    
+        return etree_dict
+
+        
 # =========================================
 # Parser for 'show bgp peer-session <WORD>'
 # =========================================
@@ -460,21 +866,21 @@ class ShowBgpPeerSessionSchema(MetaParser):
     schema = {
         'peer_session': 
             {Any(): 
-                {'shutdown': bool,
-                 'update_source': str,
-                 'description': str,
-                 'password': bool,
-                 'ebgp_multihop_enable': bool,
-                 'ebgp_multihop_limit': int,
-                 'disable_connectivity_check': bool,
-                 'suppress_capabilities': bool,
-                 'transport_connection_mode': str,
-                 'holdtime': int,
-                 'keepalive': int,
-                 'remote_as': bool,
-                 'local_as': bool,
-                 'bfd': bool,
-                 'inherited_vrf_default': str,
+                {Optional('shutdown'): bool,
+                 Optional('update_source'): str,
+                 Optional('description'): str,
+                 Optional('password'): bool,
+                 Optional('ebgp_multihop_enable'): bool,
+                 Optional('ebgp_multihop_limit'): int,
+                 Optional('disable_connectivity_check'): bool,
+                 Optional('suppress_capabilities'): bool,
+                 Optional('transport_connection_mode'): str,
+                 Optional('holdtime'): int,
+                 Optional('keepalive'): int,
+                 Optional('remote_as'): bool,
+                 Optional('local_as'): bool,
+                 Optional('bfd'): bool,
+                 Optional('inherited_vrf_default'): str,
                 },
             },
         }
@@ -2885,7 +3291,7 @@ class ShowBgpVrfAllNeighborsRoutesSchema(MetaParser):
 
 class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
     
-    '''Parser for show bgp vrf all all neighbors 21.0.0.2 routes'''
+    '''Parser for show bgp vrf <WORD> all neighbors <WORD> routes'''
 
     def cli(self, vrf, neighbor):
         cmd  = 'show bgp vrf {vrf} all neighbors {neighbor} routes'.format(vrf=vrf, neighbor=neighbor)
