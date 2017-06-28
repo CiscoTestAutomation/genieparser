@@ -400,8 +400,13 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
             p26 = re.compile(r'^\s*Table +Id *: +(?P<table_id>(\S+))$')
             m = p26.match(line)
             if m:
-                parsed_dict['vrf'][vrf_name]['address_family'][address_family]\
-                    ['table_id'] = m.groupdict()['table_id']
+                table_id = str(m.groupdict()['table_id'])
+                if '0x' in table_id:
+                    parsed_dict['vrf'][vrf_name]['address_family']\
+                        [address_family]['table_id'] = table_id
+                else:
+                    parsed_dict['vrf'][vrf_name]['address_family']\
+                        [address_family]['table_id'] = '0x' + table_id
                 continue
             
             #     Table state                : UP
@@ -561,12 +566,38 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                     ['export_default_map'] = \
                         str(m.groupdict()['export_default_map'])
 
+            # Nexthop trigger-delay
+            p40 = re.compile(r'^\s*Nexthop +trigger-delay$')
+            m = p40.match(line)
+            if m:
+                if 'next_hop_trigger_delay' not in parsed_dict['vrf'][vrf_name]\
+                    ['address_family'][address_family]:
+                    parsed_dict['vrf'][vrf_name]['address_family']\
+                        [address_family]['next_hop_trigger_delay'] = {}
+
+            # critical 3000 ms
+            p41 = re.compile(r'^\s*critical +(?P<critical>[0-9]+) +ms$')
+            m = p41.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family']\
+                    [address_family]['next_hop_trigger_delay']['critical'] = \
+                    int(m.groupdict()['critical'])
+
+            # non-critical 3000 ms
+            p42 = re.compile(r'^\s*non-critical +(?P<non_critical>[0-9]+) +ms$')
+            m = p42.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family']\
+                    [address_family]['next_hop_trigger_delay']['non_critical'] = \
+                        int(m.groupdict()['non_critical'])
+
         return parsed_dict
 
     def xml(self):
         out = self.device.execute('show bgp process vrf all | xml')
 
         etree_dict = {}
+        # Remove junk characters returned by the device
         out = out.replace("]]>]]>", "")
         output = ET.fromstring(out)
 
@@ -592,7 +623,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                                                 etree_dict['bgp_tag'] = key.text
                                             # bgp_protocol_state
                                             if text == 'protocolstate':
-                                                etree_dict['bgp_protocol_state'] = key.text
+                                                etree_dict['bgp_protocol_state'] = str(key.text).lower()
                                             # bgp_isolate_mode
                                             if text == 'isolatemode':
                                                 etree_dict['bgp_isolate_mode'] = key.text
@@ -601,7 +632,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                                                 etree_dict['bgp_mmode'] = key.text
                                             # bgp_memory_state
                                             if text == 'memorystate':
-                                                etree_dict['bgp_memory_state'] = key.text
+                                                etree_dict['bgp_memory_state'] = str(key.text).lower()
                                             # bgp_performance_mode
                                             if text == 'forwardingstatesaved':
                                                 state = key.text
@@ -709,10 +740,14 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                                                                         import_rt_list = ''
                                                                     # table_id
                                                                     if af_tag == 'af-table-id':
-                                                                        af_dict['table_id'] = row_af.text
+                                                                        table_id = str(row_af.text)
+                                                                        if '0x' in table_id:
+                                                                            af_dict['table_id'] = table_id
+                                                                        else:
+                                                                            af_dict['table_id'] = '0x' + table_id
                                                                     # table_state
                                                                     if af_tag == 'af-state':
-                                                                        af_dict['table_state'] = row_af.text
+                                                                        af_dict['table_state'] = str(row_af.text).lower()
                                                                     # peers
                                                                     if af_tag == 'af-num-peers':
                                                                         peers = int(row_af.text)
