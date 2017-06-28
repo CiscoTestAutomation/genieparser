@@ -37,11 +37,15 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
 
     golden_parsed_output = {
         'bgp_as_path_entries': 0,
+        'bgp_asformat': 'asplain',
+        'bgp_isolate_mode': 'No',
         'bgp_memory_state': 'ok',
+        'bgp_mmode': 'Initialized',
         'bgp_paths_per_hwm_attr': 1,
+        'bgp_performance_mode': 'No',
         'bgp_pid': 29474,
-        'bgp_protocol_state': 'running',
         'bgp_protocol_started_reason': 'configuration',
+        'bgp_protocol_state': 'running',
         'bgp_tag': '100',
         'bytes_used': 368,
         'bytes_used_as_path_entries': 0,
@@ -49,6 +53,7 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
         'hwm_attr_entries': 5,
         'hwm_entries_pending_delete': 0,
         'num_attr_entries': 4,
+        'segment_routing_global_block': '10000-25000',
         'vrf': 
             {'VRF1': {
                 'address_family': 
@@ -71,13 +76,17 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                                 {'route_map': 'test-map'},
                              'static': 
                                 {'route_map': 'genie_redistribution'}},
-                        'table_id': '10',
+                        'table_id': '0x10',
                         'table_state': 'up'},
                     'ipv6 unicast': {
                         'aggregate_label': '492288',
                         'export_rt_list': '100:100',
                         'import_rt_list': '100:100',
                         'label_mode': 'per-prefix',
+                        'next_hop_trigger_delay':
+                            {'critical': 3000,
+                             'non_critical': 10000,
+                            },
                         'peers': 
                             {0: 
                                 {'active_peers': 0,
@@ -112,7 +121,7 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                                 'networks': 0,
                                 'paths': 0,
                                 'routes': 0}},
-                         'table_id': '1',
+                         'table_id': '0x1',
                          'table_state': 'up'},
                     'ipv6 label unicast': 
                         {'peers': 
@@ -122,7 +131,7 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                                  'networks': 0,
                                  'paths': 0,
                                  'routes': 0}},
-                         'table_id': '80000001',
+                         'table_id': '0x80000001',
                          'table_state': 'up'},
                     'ipv6 unicast': 
                         {'peers': 
@@ -132,7 +141,7 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                                 'networks': 0,
                                 'paths': 0,
                                 'routes': 0}},
-                         'table_id': '80000001',
+                         'table_id': '0x80000001',
                          'table_state': 'up'},
                     'vpnv4 unicast': 
                         {'peers': 
@@ -142,7 +151,7 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                                  'networks': 0,
                                  'paths': 5,
                                  'routes': 5}},
-                         'table_id': '1',
+                         'table_id': '0x1',
                          'table_state': 'up'},
                     'vpnv6 unicast': 
                         {'peers': 
@@ -152,7 +161,7 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                                  'networks': 0,
                                  'paths': 4,
                                  'routes': 4}},
-                         'table_id': '80000001',
+                         'table_id': '0x80000001',
                          'table_state': 'up'}},
                  'cluster_id': '0.0.0.0',
                  'conf_router_id': '1.1.1.1',
@@ -170,8 +179,13 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
         BGP Process ID                 : 29474
         BGP Protocol Started, reason:  : configuration
         BGP Protocol Tag               : 100
+        BGP Performance Mode           : No
         BGP Protocol State             : Running
+        BGP Isolate Mode               : No
+        BGP MMODE                      : Initialized
         BGP Memory State               : OK
+        BGP asformat                   : asplain
+        Segment Routing Global Block   : 10000-25000
 
         BGP attributes information
         Number of attribute entries    : 4
@@ -230,6 +244,10 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
             Import RT list: 100:100
             Label mode: per-prefix
             Aggregate label: 492288
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
 
         BGP Information for VRF default
         VRF Id                         : 1
@@ -319,13 +337,13 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
         'bgp_as_path_entries': 0,
         'bgp_asformat': 'asplain',
         'bgp_isolate_mode': 'No',
-        'bgp_memory_state': 'OK',
+        'bgp_memory_state': 'ok',
         'bgp_mmode': 'Initialized',
         'bgp_paths_per_hwm_attr': 3,
         'bgp_performance_mode': 'No',
         'bgp_pid': 23800,
         'bgp_protocol_started_reason': 'configuration',
-        'bgp_protocol_state': 'Running',
+        'bgp_protocol_state': 'running',
         'bgp_tag': '333',
         'bytes_used': 560,
         'bytes_used_as_path_entries': 0,
@@ -349,8 +367,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                                 'paths': 0,
                                 'routes': 0}},
                         'route_reflector': False,
-                        'table_id': '4',
-                        'table_state': 'UP'},
+                        'table_id': '0x4',
+                        'table_state': 'up'},
                     'ipv6 unicast':
                         {'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -363,8 +381,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                                 'paths': 0,
                                 'routes': 0}},
                         'route_reflector': False,
-                        'table_id': '80000004',
-                        'table_state': 'UP'}},
+                        'table_id': '0x80000004',
+                        'table_state': 'up'}},
                 'cluster_id': '0.0.0.0',
                 'conf_router_id': '0.0.0.0',
                 'confed_id': 0,
@@ -374,7 +392,7 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                 'router_id': '0.0.0.0',
                 'vrf_id': '4',
                 'vrf_state': 'UP'},
-             'default':
+            'default':
                 {'address_family':
                     {'ipv4 label unicast':
                         {'next_hop_trigger_delay':
@@ -388,8 +406,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                                 'paths': 5,
                                 'routes': 3}},
                         'route_reflector': False,
-                        'table_id': '1',
-                        'table_state': 'UP'},
+                        'table_id': '0x1',
+                        'table_state': 'up'},
                     'ipv4 multicast':
                         {'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -405,8 +423,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                             {'static':
                                 {'route_map': 'PERMIT_ALL_RM'}},
                         'route_reflector': True,
-                        'table_id': '1',
-                        'table_state': 'UP'},
+                        'table_id': '0x1',
+                        'table_state': 'up'},
                     'ipv4 unicast':
                         {'label_mode': 'per-prefix',
                         'next_hop_trigger_delay':
@@ -423,8 +441,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                             {'static':
                                 {'route_map': 'ADD_RT_400_400'}},
                         'route_reflector': True,
-                        'table_id': '1',
-                        'table_state': 'UP'},
+                        'table_id': '0x1',
+                        'table_state': 'up'},
                     'ipv6 multicast':
                         {'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -440,8 +458,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                             {'static':
                                 {'route_map': 'PERMIT_ALL_RM'}},
                         'route_reflector': True,
-                        'table_id': '80000001',
-                        'table_state': 'UP'},
+                        'table_id': '0x80000001',
+                        'table_state': 'up'},
                     'ipv6 unicast':
                         {'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -457,8 +475,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                             {'static':
                                 {'route_map': 'PERMIT_ALL_RM'}},
                         'route_reflector': True,
-                        'table_id': '80000001',
-                        'table_state': 'UP'},
+                        'table_id': '0x80000001',
+                        'table_state': 'up'},
                     'link-state':
                         {'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -471,8 +489,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                                 'paths': 0,
                                 'routes': 0}},
                         'route_reflector': True,
-                        'table_id': '1',
-                        'table_state': 'UP'},
+                        'table_id': '0x1',
+                        'table_state': 'up'},
                     'vpnv4 unicast':
                         {'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -485,8 +503,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                                 'paths': 7,
                                 'routes': 5}},
                         'route_reflector': True,
-                        'table_id': '1',
-                        'table_state': 'UP'},
+                        'table_id': '0x1',
+                        'table_state': 'up'},
                     'vpnv6 unicast':
                         {'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -499,8 +517,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                                 'paths': 7,
                                 'routes': 5}},
                         'route_reflector': True,
-                        'table_id': '80000001',
-                        'table_state': 'UP'}},
+                        'table_id': '0x80000001',
+                        'table_state': 'up'}},
                 'cluster_id': '0.0.0.0',
                 'conf_router_id': '0.0.0.0',
                 'confed_id': 0,
@@ -510,7 +528,7 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                 'router_id': '3.3.3.3',
                 'vrf_id': '1',
                 'vrf_state': 'UP'},
-             'management':
+            'management':
                 {'cluster_id': '0.0.0.0',
                 'conf_router_id': '0.0.0.0',
                 'confed_id': 0,
@@ -520,7 +538,7 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                 'router_id': '0.0.0.0',
                 'vrf_id': '2',
                 'vrf_state': 'UP'},
-             'vpn1':
+            'vpn1':
                 {'address_family':
                     {'ipv4 multicast':
                         {'next_hop_trigger_delay':
@@ -537,8 +555,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                             {'static':
                                 {'route_map': 'PERMIT_ALL_RM'}},
                         'route_reflector': False,
-                        'table_id': '5',
-                        'table_state': 'UP'},
+                        'table_id': '0x5',
+                        'table_state': 'up'},
                     'ipv4 unicast':
                         {'aggregate_label': '492287',
                         'export_default_map': 'PERMIT_ALL_RM',
@@ -564,8 +582,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                             {'static':
                                 {'route_map': 'PERMIT_ALL_RM'}},
                         'route_reflector': False,
-                        'table_id': '5',
-                        'table_state': 'UP'},
+                        'table_id': '0x5',
+                        'table_state': 'up'},
                     'ipv6 multicast':
                         {'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -581,8 +599,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                             {'static':
                                 {'route_map': 'PERMIT_ALL_RM'}},
                         'route_reflector': False,
-                        'table_id': '80000005',
-                        'table_state': 'UP'},
+                        'table_id': '0x80000005',
+                        'table_state': 'up'},
                     'ipv6 unicast':
                         {'aggregate_label': '492288',
                         'export_default_map': 'PERMIT_ALL_RM',
@@ -605,8 +623,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                             {'static':
                                 {'route_map': 'PERMIT_ALL_RM'}},
                         'route_reflector': False,
-                        'table_id': '80000005',
-                        'table_state': 'UP'}},
+                        'table_id': '0x80000005',
+                        'table_state': 'up'}},
                 'cluster_id': '0.0.0.0',
                 'conf_router_id': '0.0.0.0',
                 'confed_id': 0,
@@ -617,7 +635,7 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                 'vrf_id': '5',
                 'vrf_rd': '1:100',
                 'vrf_state': 'UP'},
-             'vpn2':
+            'vpn2':
                 {'address_family':
                     {'ipv4 unicast':
                         {'import_rt_list': '400:400',
@@ -633,8 +651,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                                 'paths': 2,
                                 'routes': 2}},
                         'route_reflector': False,
-                        'table_id': '6',
-                        'table_state': 'UP'},
+                        'table_id': '0x6',
+                        'table_state': 'up'},
                     'ipv6 unicast':
                         {'import_rt_list': '600:600',
                         'label_mode': 'per-vrf',
@@ -649,8 +667,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                                 'paths': 2,
                                 'routes': 2}},
                         'route_reflector': False,
-                        'table_id': '80000006',
-                        'table_state': 'UP'}},
+                        'table_id': '0x80000006',
+                        'table_state': 'up'}},
                 'cluster_id': '0.0.0.0',
                 'conf_router_id': '0.0.0.0',
                 'confed_id': 0,
