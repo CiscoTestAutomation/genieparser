@@ -37,21 +37,21 @@ class test_show_checkpoint_summary(unittest.TestCase):
                  'description': 'Created by Feature Manager.'},}}
 
     golden_output = {'execute.return_value': '''
-1) bgp-Wed_May_31_12_56_56_2017:
-Created by admin
-Created at Wed, 12:56:56 31 May 2017
-Size is 26,154 bytes
-User Checkpoint Summary
---------------------------------------------------------------------------------
-Description: None
+        1) bgp-Wed_May_31_12_56_56_2017:
+        Created by admin
+        Created at Wed, 12:56:56 31 May 2017
+        Size is 26,154 bytes
+        User Checkpoint Summary
+        -----------------------------------------------------
+        Description: None
 
-2) system-fm-bfd:
-Created by admin
-Created at Mon, 12:41:58 29 May 2017
-Size is 26,154 bytes
-System Checkpoint Summary
---------------------------------------------------------------------------------
-Description: Created by Feature Manager.
+        2) system-fm-bfd:
+        Created by admin
+        Created at Mon, 12:41:58 29 May 2017
+        Size is 26,154 bytes
+        System Checkpoint Summary
+        -----------------------------------------------------
+        Description: Created by Feature Manager.
 
         '''}
 

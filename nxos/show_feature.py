@@ -43,8 +43,8 @@ class ShowFeature(ShowFeatureSchema):
 
         for line in (out1 + out2).splitlines():
             line = line.strip()
-            # 1) feature1:
-            p1 = re.compile(r'^(?P<name>[a-z0-9\-_]+) +(?P<inst>\d+) '
+            # 1) bash-shell             1          disabled
+            p1 = re.compile(r'^(?P<name>[\w\-]+) +(?P<inst>\d+) '
                              '+(?P<state>\w+)\(?(?P<run>not-running)?\)?$')
             m = p1.match(line)
             if m:

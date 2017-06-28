@@ -38,7 +38,7 @@ class ShowCheckpointSummary(ShowCheckpointSummarySchema):
         for line in out.splitlines():
             line = line.strip()
             # 1) checkpoint1:
-            p1 = re.compile(r'^\d+\) +(?P<id>.*):$')
+            p1 = re.compile(r'^\d+\) +(?P<id>[\s\w\.\-]+):$')
             m = p1.match(line)
             if m:
                 if 'checkpoint' not in ck_dict:
@@ -50,14 +50,14 @@ class ShowCheckpointSummary(ShowCheckpointSummarySchema):
                 continue
 
             # Created by admin
-            p2 = re.compile(r'^Created +by +(?P<user>.*)$')
+            p2 = re.compile(r'^Created +by +(?P<user>[\s\w\.\-\:]+)$')
             m = p2.match(line)
             if m:
                 ck_dict['checkpoint'][id]['created_by'] = m.groupdict()['user']
                 continue
 
-            # Created at Tue, 22:13:49 20 Nov 2012
-            p3 = re.compile(r'^Created +at +(?P<time>.*)$')
+            # Created at Tue, 22:13:49 20 Nov 2017
+            p3 = re.compile(r'^Created +at +(?P<time>[\s\w\.\-\:\,]+)$')
             m = p3.match(line)
             if m:
                 ck_dict['checkpoint'][id]['created_time'] = \
@@ -73,7 +73,7 @@ class ShowCheckpointSummary(ShowCheckpointSummarySchema):
                 continue
 
             # Description: Created by Feature Manager.
-            p5 = re.compile(r'^Description: +(?P<desc>.*)$')
+            p5 = re.compile(r'^Description: +(?P<desc>[\s\w\.\-\:]+)$')
             m = p5.match(line)
             if m:
                 ck_dict['checkpoint'][id]['description'] = \
