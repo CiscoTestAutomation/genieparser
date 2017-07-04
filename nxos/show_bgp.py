@@ -1485,20 +1485,11 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                              ' +(?P<address_family>[a-zA-Z0-9\s]+)$')
             m = p1.match(line)
             if m:
+                route_distinguisher = default_vrf = ''
                 # Get values
                 vrf = str(m.groupdict()['vrf_name'])
                 address_family = str(m.groupdict()['address_family']).lower()
-                
-
-                if 'vrf' not in parsed_dict:
-                    parsed_dict['vrf'] = {}
-                if vrf not in parsed_dict['vrf']:
-                    parsed_dict['vrf'][vrf] = {}
-                    parsed_dict['vrf'][vrf]['address_family'] = {}
-                    af_dict = parsed_dict['vrf'][vrf]['address_family']
-                if address_family not in af_dict:
-                    af_dict[address_family]  = {}
-                    continue
+                continue
 
             # BGP table version is 35, local router ID is 11.11.11.11
             # BGP table version is 381, Local Router ID is 1.1.1.2
@@ -1507,13 +1498,9 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                              ' +(R|r)outer +ID +is +(?P<local_router_id>[0-9\.]+)$')
             m = p2.match(line)
             if m:
-                af_dict[address_family]['bgp_table_version'] = \
-                    int(m.groupdict()['bgp_table_version'])
-                af_dict[address_family]['local_router_id'] = \
-                    str(m.groupdict()['local_router_id'])
+                bgp_table_version = int(m.groupdict()['bgp_table_version'])
+                local_router_id = str(m.groupdict()['local_router_id'])
                 continue
-
-
 
             # Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
             # Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist
@@ -1535,6 +1522,23 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                              '(?: +(?P<origin_codes>(i|e|\?|\|)))?$')
             m = p3.match(line)
             if m:
+                if 'vrf' not in parsed_dict:
+                    parsed_dict['vrf'] = {}
+                if vrf not in parsed_dict['vrf']:
+                    parsed_dict['vrf'][vrf] = {}
+                    parsed_dict['vrf'][vrf]['address_family'] = {}
+                    af_dict = parsed_dict['vrf'][vrf]['address_family']
+                if address_family not in af_dict:
+                    af_dict[address_family] = {}
+
+                if 'RD' in address_family:
+                    af_dict[address_family]['route_distinguisher'] = route_distinguisher
+                    af_dict[address_family]['default_vrf'] = default_vrf
+
+                af_dict[address_family]['bgp_table_version'] = bgp_table_version
+                af_dict[address_family]['local_router_id'] = local_router_id
+
+
                 # Get keys
                 status_codes = str(m.groupdict()['status_codes'])
                 path_type = str(m.groupdict()['path_type'])
@@ -1640,10 +1644,15 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                               ' +\(VRF +(?P<default_vrf>(\S+))\)$')
             m = p5.match(line)
             if m:
-                af_dict[address_family]['route_distinguisher'] = \
-                    str(m.groupdict()['route_distinguisher'])
-                af_dict[address_family]['default_vrf'] = \
-                    str(m.groupdict()['default_vrf'])
+                route_distinguisher = str(m.groupdict()['route_distinguisher'])
+                default_vrf = str(m.groupdict()['default_vrf'])
+                if 'RD' in address_family:
+                    p = re.compile(r'(?P<afname>.+\s.+) RD')
+                    m = p.match(address_family)
+                    if m:
+                        address_family = m.groupdict()['afname'] + ' RD ' + route_distinguisher
+                else:
+                    address_family = address_family + ' RD ' + route_distinguisher
                 continue
 
         return parsed_dict
@@ -3102,6 +3111,8 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
         route_dict = {}
         data_on_nextline =  False
 
+        bgp_table_version = local_router_id = ''
+
         for line in out.splitlines():
             line = line.rstrip()
 
@@ -3125,13 +3136,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                     route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
                         ['address_family'] = {}
                 address_family = str(m.groupdict()['address_family']).lower()
-                if address_family not in route_dict['vrf'][vrf]['neighbor']\
-                    [neighbor_id]['address_family']:
-                    route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][address_family] = {}
-                    af_dict = route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][address_family] = {}
-                    continue
+                continue
 
             # BGP table version is 25, Local Router ID is 21.0.101.1
             p2 = re.compile(r'^\s*BGP +table +version +is'
@@ -3139,10 +3144,8 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                              ' +ID +is +(?P<local_router_id>(\S+))$')
             m = p2.match(line)
             if m:
-                af_dict['bgp_table_version'] = \
-                    int(m.groupdict()['bgp_table_version'])
-                af_dict['local_router_id'] = \
-                    str(m.groupdict()['local_router_id'])
+                bgp_table_version = int(m.groupdict()['bgp_table_version'])
+                local_router_id = str(m.groupdict()['local_router_id'])
                 continue
 
             # Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
@@ -3161,6 +3164,20 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                              '(?: +(?P<origin_codes>(i|e|\?|\&|\|)))?$')
             m = p3.match(line)
             if m:
+                if address_family not in route_dict['vrf'][vrf]['neighbor']\
+                    [neighbor_id]['address_family']:
+                    route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
+                        ['address_family'][address_family] = {}
+                    af_dict = route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
+                        ['address_family'][address_family] = {}
+
+                if 'RD' in address_family:
+                    af_dict['route_distinguisher'] = route_distinguisher
+                    af_dict['default_vrf'] = default_vrf
+
+                af_dict['bgp_table_version'] = bgp_table_version
+                af_dict['local_router_id'] = local_router_id
+
                 # Get keys
                 status_codes = str(m.groupdict()['status_codes'])
                 path_type = str(m.groupdict()['path_type'])
@@ -3236,10 +3253,15 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                               ' +\(VRF +(?P<default_vrf>(\S+))\)$')
             m = p5.match(line)
             if m:
-                af_dict['route_distinguisher'] = \
-                    str(m.groupdict()['route_distinguisher'])
-                af_dict['default_vrf'] = \
-                    str(m.groupdict()['default_vrf'])
+                route_distinguisher = str(m.groupdict()['route_distinguisher'])
+                default_vrf = str(m.groupdict()['default_vrf'])
+                if 'RD' in address_family:
+                    p = re.compile(r'(?P<afname>.+\s.+) RD')
+                    m = p.match(address_family)
+                    if m:
+                        address_family = m.groupdict()['afname'] + ' RD ' + route_distinguisher
+                else:
+                    address_family = address_family + ' RD ' + route_distinguisher
                 continue
 
         return route_dict
@@ -3301,6 +3323,8 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
         route_dict = {}
         data_on_nextline =  False
 
+        bgp_table_version = local_router_id = ''
+
         for line in out.splitlines():
             line = line.rstrip()
 
@@ -3324,13 +3348,7 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
                     route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
                         ['address_family'] = {}
                 address_family = str(m.groupdict()['address_family']).lower()
-                if address_family not in route_dict['vrf'][vrf]['neighbor']\
-                    [neighbor_id]['address_family']:
-                    route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][address_family] = {}
-                    af_dict = route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][address_family] = {}
-                    continue
+                continue
 
             # BGP table version is 25, Local Router ID is 21.0.101.1
             p2 = re.compile(r'^\s*BGP +table +version +is'
@@ -3338,10 +3356,8 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
                              ' +ID +is +(?P<local_router_id>(\S+))$')
             m = p2.match(line)
             if m:
-                af_dict['bgp_table_version'] = \
-                    int(m.groupdict()['bgp_table_version'])
-                af_dict['local_router_id'] = \
-                    str(m.groupdict()['local_router_id'])
+                bgp_table_version = int(m.groupdict()['bgp_table_version'])
+                local_router_id = str(m.groupdict()['local_router_id'])
                 continue
 
             # Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
@@ -3360,6 +3376,20 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
                              '(?: +(?P<origin_codes>(i|e|\?|\&|\|)))?$')
             m = p3.match(line)
             if m:
+                if address_family not in route_dict['vrf'][vrf]['neighbor']\
+                    [neighbor_id]['address_family']:
+                    route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
+                        ['address_family'][address_family] = {}
+                    af_dict = route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
+                        ['address_family'][address_family] = {}
+
+                if 'RD' in address_family:
+                    af_dict['route_distinguisher'] = route_distinguisher
+                    af_dict['default_vrf'] = default_vrf
+
+                af_dict['bgp_table_version'] = bgp_table_version
+                af_dict['local_router_id'] = local_router_id
+
                 # Get keys
                 status_codes = str(m.groupdict()['status_codes'])
                 path_type = str(m.groupdict()['path_type'])
@@ -3435,9 +3465,15 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
                               ' +\(VRF +(?P<default_vrf>(\S+))\)$')
             m = p5.match(line)
             if m:
-                af_dict['route_distinguisher'] = \
-                    str(m.groupdict()['route_distinguisher'])
-                af_dict['default_vrf'] = \
+                route_distinguisher = str(m.groupdict()['route_distinguisher'])
+                default_vrf = str(m.groupdict()['default_vrf'])
+                if 'RD' in address_family:
+                    p = re.compile(r'(?P<afname>.+\s.+) RD')
+                    m = p.match(address_family)
+                    if m:
+                        address_family = m.groupdict()['afname'] + ' RD ' + route_distinguisher
+                else:
+                    address_family = address_family + ' RD ' + route_distinguisher
                     str(m.groupdict()['default_vrf'])
                 continue
 
@@ -3500,6 +3536,8 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
         route_dict = {}
         data_on_nextline =  False
 
+        bgp_table_version = local_router_id = ''
+
         for line in out.splitlines():
             line = line.rstrip()
 
@@ -3523,13 +3561,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
                     route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
                         ['address_family'] = {}
                 address_family = str(m.groupdict()['address_family']).lower()
-                if address_family not in route_dict['vrf'][vrf]['neighbor']\
-                    [neighbor_id]['address_family']:
-                    route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][address_family] = {}
-                    af_dict = route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][address_family] = {}
-                    continue
+                continue
 
             # BGP table version is 25, Local Router ID is 21.0.101.1
             p2 = re.compile(r'^\s*BGP +table +version +is'
@@ -3537,10 +3569,8 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
                              ' +ID +is +(?P<local_router_id>(\S+))$')
             m = p2.match(line)
             if m:
-                af_dict['bgp_table_version'] = \
-                    int(m.groupdict()['bgp_table_version'])
-                af_dict['local_router_id'] = \
-                    str(m.groupdict()['local_router_id'])
+                bgp_table_version = int(m.groupdict()['bgp_table_version'])
+                local_router_id = str(m.groupdict()['local_router_id'])
                 continue
 
             # Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
@@ -3559,6 +3589,20 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
                              '(?: +(?P<origin_codes>(i|e|\?|\&|\|)))?$')
             m = p3.match(line)
             if m:
+                if address_family not in route_dict['vrf'][vrf]['neighbor']\
+                    [neighbor_id]['address_family']:
+                    route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
+                        ['address_family'][address_family] = {}
+                    af_dict = route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
+                        ['address_family'][address_family] = {}
+
+                if 'RD' in address_family:
+                    af_dict['route_distinguisher'] = route_distinguisher
+                    af_dict['default_vrf'] = default_vrf
+
+                af_dict['bgp_table_version'] = bgp_table_version
+                af_dict['local_router_id'] = local_router_id
+
                 # Get keys
                 status_codes = str(m.groupdict()['status_codes'])
                 path_type = str(m.groupdict()['path_type'])
@@ -3634,10 +3678,15 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
                               ' +\(VRF +(?P<default_vrf>(\S+))\)$')
             m = p5.match(line)
             if m:
-                af_dict['route_distinguisher'] = \
-                    str(m.groupdict()['route_distinguisher'])
-                af_dict['default_vrf'] = \
-                    str(m.groupdict()['default_vrf'])
+                route_distinguisher = str(m.groupdict()['route_distinguisher'])
+                default_vrf = str(m.groupdict()['default_vrf'])
+                if 'RD' in address_family:
+                    p = re.compile(r'(?P<afname>.+\s.+) RD')
+                    m = p.match(address_family)
+                    if m:
+                        address_family = m.groupdict()['afname'] + ' RD ' + route_distinguisher
+                else:
+                    address_family = address_family + ' RD ' + route_distinguisher
                 continue
 
         return route_dict
