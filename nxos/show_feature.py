@@ -32,16 +32,12 @@ class ShowFeatureSchema(MetaParser):
 
 class ShowFeature(ShowFeatureSchema):
     '''Parser for show feature'''
-    '''Parser for show feature-set'''
 
-    def cli(self):
-        cmd = 'show feature'
-        out1 = self.device.execute(cmd)
-        cmd = 'show feature-set'
-        out2 = self.device.execute(cmd)
+    def cli(self, cmd='show feature'):
+        out = self.device.execute(cmd)
         f_dict = {}
 
-        for line in (out1 + out2).splitlines():
+        for line in out.splitlines():
             line = line.strip()
             # 1) bash-shell             1          disabled
             p1 = re.compile(r'^(?P<name>[\w\-]+) +(?P<inst>\d+) '
@@ -69,3 +65,15 @@ class ShowFeature(ShowFeatureSchema):
                     f_dict['feature'][name]['instance'][inst]['running'] = 'no'
                 continue
         return f_dict
+
+
+
+class ShowFeatureSet(ShowFeature):
+    '''Parser for show feature-set'''
+    pass
+
+    def cli(self):
+        cmd = 'show feature-set'
+        return ShowFeature.cli(self, cmd)
+
+# vim: ft=python et sw=4

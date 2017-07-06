@@ -7,7 +7,7 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Parser
-from parser.nxos.show_feature import ShowFeature
+from parser.nxos.show_feature import ShowFeature, ShowFeatureSet
 
 # Metaparser
 from metaparser.util.exceptions import SchemaEmptyParserError
@@ -72,6 +72,18 @@ class test_show_feature(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+    def test_show_feature_set_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowFeatureSet(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_feature_set_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowFeatureSet(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
 if __name__ == '__main__':
     unittest.main()
