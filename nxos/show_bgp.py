@@ -67,6 +67,10 @@ class ShowBgpProcessVrfAllSchema(MetaParser):
                  'num_pending_conf_peers': int,
                  'num_established_peers': int,
                  Optional('vrf_rd'): str,
+                 Optional('graceful_restart'): bool,
+                 Optional('graceful_restart_helper_only'): bool,
+                 Optional('graceful_restart_restart_time'): int,
+                 Optional('graceful_restart_stalepath_time'): int,
                  Optional('address_family'): 
                     {Any(): 
                         {Optional('table_id'): str,
@@ -874,10 +878,17 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                 map_dict['vrf'] = {}
             if vrf not in map_dict['vrf']:
                 map_dict['vrf'][vrf] = {}
-            for key in yang_dict['vrf'][vrf]:
-                # router_id
-                if key == 'router_id':
-                    map_dict['vrf'][vrf][key] = yang_dict['vrf'][vrf][key]
+            for vrf_attr_key in yang_dict['vrf'][vrf]:
+                # Set router_id
+                if vrf_attr_key == 'router_id':
+                    map_dict['vrf'][vrf][vrf_attr_key] = yang_dict['vrf'][vrf][vrf_attr_key]
+                if vrf_attr_key == 'neighbor':
+                    for nbr in yang_dict['vrf'][vrf]['neighbor']:
+                        for key in yang_dict['vrf'][vrf]['neighbor'][nbr]:
+                            # Set cluster_id
+                            if key == 'route_reflector_cluster_id':
+                                cluster_id = '0.0.0' + str(yang_dict['vrf'][vrf]['neighbor'][nbr]['route_reflector_cluster_id'])
+                                map_dict['vrf'][vrf]['cluster_id'] = cluster_id
 
         # Return to caller
         return map_dict
@@ -1779,6 +1790,11 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                  Optional('sent_messages'): int,
                  Optional('sent_notifications'): int,
                  Optional('sent_bytes_queue'): int,
+                 Optional('enabled'): bool,
+                 Optional('graceful_restart'): bool,
+                 Optional('graceful_restart_helper_only'): bool,
+                 Optional('graceful_restart_restart_time'): int,
+                 Optional('graceful_restart_stalepath_time'): int,
                  Optional('bgp_session_transport'):
                     {Optional('connection'): 
                         {Optional('mode'): str,
@@ -1843,6 +1859,10 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                          Optional('nbr_af_default_originate'): bool,
                          Optional('nbr_af_default_originate_route_map'): str,
                          Optional('route_reflector_client'): bool,
+                         Optional('enabled'): bool,
+                         Optional('graceful_restart'): bool,
+                         Optional('ipv4_unicast_send_default_route'): bool,
+                         Optional('ipv6_unicast_send_default_route'): bool,
                          Optional('path'): 
                             {Optional('total_entries'): int,
                              Optional('memory_usage'): int,
@@ -2636,7 +2656,10 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                     if neighbor not in map_dict['neighbor']:
                         map_dict['neighbor'][neighbor] = {}
                     for key in yang_dict['vrf'][vrf_name]['neighbor'][neighbor]:
-                        map_dict['neighbor'][neighbor][key] = yang_dict['vrf'][vrf_name]['neighbor'][neighbor][key]
+                        if key == 'ebgp_multihop':
+                            map_dict['neighbor'][neighbor]['link'] = 'ebgp'
+                        map_dict['neighbor'][neighbor][key] = \
+                            yang_dict['vrf'][vrf_name]['neighbor'][neighbor][key]
                         continue
 
         # Return to caller

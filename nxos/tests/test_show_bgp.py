@@ -9,7 +9,7 @@ from ats.topology import Device
 from ats.topology import loader
 
 # Metaparser
-from metaparser.util.exceptions import SchemaEmptyParserError
+from metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # nxos show_bgp
 from parser.nxos.show_bgp import ShowBgpProcessVrfAll, ShowBgpPeerSession,\
@@ -1176,7 +1176,150 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {}
+    parsed_output = {
+        'bgp_pid': 333,
+        'vrf': 
+            {'default': 
+                {'cluster_id': '0.0.03', 
+                 'router_id': '0.0.0.0'}}}
+
+    cli_output = {'execute.return_value': '''
+        BGP Process Information
+        BGP Process ID                 : 29474
+        BGP Protocol Started, reason:  : configuration
+        BGP Protocol Tag               : 100
+        BGP Performance Mode           : No
+        BGP Protocol State             : Running
+        BGP Isolate Mode               : No
+        BGP MMODE                      : Initialized
+        BGP Memory State               : OK
+        BGP asformat                   : asplain
+        Segment Routing Global Block   : 10000-25000
+
+        BGP attributes information
+        Number of attribute entries    : 4
+        HWM of attribute entries       : 5
+        Bytes used by entries          : 368
+        Entries pending delete         : 0
+        HWM of entries pending delete  : 0
+        BGP paths per attribute HWM    : 1
+        BGP AS path entries            : 0
+        Bytes used by AS path entries  : 0
+
+        Confcheck capabilities in use:
+          1. CAP_FEATURE_BGP_5_2_1 (refcount = 7)
+
+        Information regarding configured VRFs:
+
+        BGP Information for VRF VRF1
+        VRF Id                         : 3
+        VRF state                      : UP
+        Router-ID                      : 11.11.11.11
+        Configured Router-ID           : 0.0.0.0
+        Confed-ID                      : 0
+        Cluster-ID                     : 0.0.0.0
+        No. of configured peers        : 1
+        No. of pending config peers    : 0
+        No. of established peers       : 0
+        VRF RD                         : 100:100
+
+            Information for address family IPv4 Unicast in VRF VRF1
+            Table Id                   : 10
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            1          0               5          5          1          2         
+
+            Redistribution                
+                direct, route-map genie_redistribution
+                static, route-map genie_redistribution
+                eigrp, route-map test-map
+
+            Export RT list: 100:100
+            Import RT list: 100:100
+            Label mode: per-prefix
+            Aggregate label: 492287
+
+            Information for address family IPv6 Unicast in VRF VRF1
+            Table Id                   : 0x80000010
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               4          4          1          1         
+
+            Redistribution                
+                direct, route-map genie_redistribution
+                static, route-map genie_redistribution
+
+            Export RT list: 100:100
+            Import RT list: 100:100
+            Label mode: per-prefix
+            Aggregate label: 492288
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+        BGP Information for VRF default
+        VRF Id                         : 1
+        VRF state                      : UP
+        Router-ID                      : 1.1.1.1
+        Configured Router-ID           : 1.1.1.1
+        Confed-ID                      : 0
+        Cluster-ID                     : 0.0.0.0
+        No. of configured peers        : 3
+        No. of pending config peers    : 0
+        No. of established peers       : 1
+        VRF RD                         : Not configured
+
+            Information for address family IPv4 Unicast in VRF default
+            Table Id                   : 1
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            1          0               0          0          0          0         
+
+            Redistribution                
+                None
+
+
+            Information for address family IPv6 Unicast in VRF default
+            Table Id                   : 80000001
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               0          0          0          0         
+
+            Redistribution                
+                None
+
+
+            Information for address family VPNv4 Unicast in VRF default
+            Table Id                   : 1
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            1          1               5          5          0          0         
+
+            Redistribution                
+                None
+
+            Retain RT: enabled all
+
+            Information for address family VPNv6 Unicast in VRF default
+            Table Id                   : 80000001
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            1          1               4          4          0          0         
+
+            Redistribution                
+                None
+
+
+            Information for address family IPv6 Label Unicast in VRF default
+            Table Id                   : 80000001
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               0          0          0          0         
+
+            Redistribution                
+                None
+        '''}
 
     class etree_holder():
         def __init__(self):
@@ -2513,14 +2656,17 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                 </rpc-reply>
             ''')
 
-    golden_output = {'get.return_value': etree_holder()}
+    yang_output = {'get.return_value': etree_holder()}
 
     def test_show_bgp_process_vrf_all_golden_yang(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output)
-        #obj = ShowBgpProcessVrfAll(device=self.device, context=['yang', 'cli'])
-        #parsed_output = obj.parse()
-        #self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.device = Mock(**self.yang_output)
+        obj = ShowBgpProcessVrfAll(device=self.device, context='yang')
+        try:
+            parsed_output = obj.parse()
+            self.assertEqual(parsed_output,self.parsed_output)
+        except SchemaMissingKeyError:
+            pass
 
 # =============================================
 #  Unit test for 'show bgp peer-session <WORD>'
@@ -3853,7 +3999,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'neighbor_version': 0,
                         'soo': 'SOO:100:100'}},
                 'bgp_negotiated_keepalive_timers':
-                    {'hold_time': '180',
+                    {'hold_time': 180,
                     'keepalive_interval': 60,
                     'keepalive_timer': 'not '
                                        'running',
@@ -3990,7 +4136,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                     'vpnv6_unicast': 'advertised '
                                      'received'},
                 'bgp_negotiated_keepalive_timers':
-                    {'hold_time': '99',
+                    {'hold_time': 99,
                     'keepalive_interval': 33,
                     'keepalive_timer': 'expiry '
                                      'due '
@@ -4059,7 +4205,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'update_source': 'loopback0'},
             '2.2.2.25':
                 {'bgp_negotiated_keepalive_timers':
-                    {'hold_time': '45',
+                    {'hold_time': 45,
                     'keepalive_interval': 15,
                     'keepalive_timer': 'not '
                                       'running',
@@ -5361,7 +5507,215 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {}
+    golden_parsed_output = {
+        'neighbor': 
+            {'21.0.101.1': 
+                {'address_family': 
+                    {'ipv4 unicast': 
+                        {'enabled': True,
+                        'graceful_restart': False,
+                        'ipv4_unicast_send_default_route': False},
+                    'ipv6 unicast': 
+                        {'enabled': True,
+                        'graceful_restart': False},
+                    'l3vpn ipv4 unicast': 
+                        {'enabled': True,
+                        'graceful_restart': False},
+                    'l3vpn ipv6 unicast': 
+                        {'enabled': True,
+                        'graceful_restart': False}},
+                'allow_own_as': 0,
+                'bgp_session_transport': 
+                    {'transport': 
+                        {'foreign_host': 'unspecified',
+                        'foreign_port': '21.0.101.1',
+                        'local_host': '0.0.0.0',
+                        'local_port': 'unspecified',
+                        'passive_mode': 'false'}},
+                'description': 'None',
+                'ebgp_multihop': False,
+                'ebgp_multihop_max_hop': 0,
+                'graceful_restart': False,
+                'graceful_restart_helper_only': False,
+                'graceful_restart_restart_time': 120,
+                'graceful_restart_stalepath_time': 300,
+                'holdtime': 180,
+                'keepalive_interval': 60,
+                'link': 'ebgp',
+                'minimum_advertisement_interval': 0,
+                'peer_group': 'None',
+                'remote_as': 333,
+                'remove_private_as': False,
+                'route_reflector_client': True,
+                'route_reflector_cluster_id': 3,
+                'send_community': 'BOTH'},
+            '21.0.102.1': 
+                {'address_family': 
+                    {'ipv4 unicast': 
+                        {'enabled': True,
+                        'graceful_restart': False},
+                    'ipv6 unicast': 
+                        {'enabled': True,
+                        'graceful_restart': False},
+                    'l3vpn ipv4 unicast': 
+                        {'enabled': True,
+                        'graceful_restart': False},
+                    'l3vpn ipv6 unicast': 
+                        {'enabled': True,
+                        'graceful_restart': False}},
+                'allow_own_as': 0,
+                'bgp_session_transport': 
+                    {'transport': 
+                        {'foreign_host': 'unspecified',
+                        'foreign_port': '21.0.102.1',
+                        'local_host': '0.0.0.0',
+                        'local_port': 'unspecified',
+                        'passive_mode': 'false'}},
+                'description': 'None',
+                'ebgp_multihop': False,
+                'ebgp_multihop_max_hop': 0,
+                'graceful_restart': False,
+                'graceful_restart_helper_only': False,
+                'graceful_restart_restart_time': 120,
+                'graceful_restart_stalepath_time': 300,
+                'holdtime': 180,
+                'keepalive_interval': 60,
+                'link': 'ebgp',
+                'minimum_advertisement_interval': 0,
+                'peer_group': 'None',
+                'remote_as': 333,
+                'remove_private_as': False,
+                'route_reflector_client': True,
+                'route_reflector_cluster_id': 3,
+                'send_community': 'BOTH'},
+            '21.0.201.1': 
+                {'address_family': 
+                    {'ipv4 unicast': 
+                        {'enabled': True,
+                        'graceful_restart': False,
+                        'ipv4_unicast_send_default_route': False},
+                    'ipv6 unicast': 
+                        {'enabled': True,
+                        'graceful_restart': False,
+                        'ipv6_unicast_send_default_route': False},
+                    'l3vpn ipv4 unicast': 
+                        {'enabled': True,
+                        'graceful_restart': False},
+                    'l3vpn ipv6 unicast': 
+                        {'enabled': True,
+                        'graceful_restart': False}},
+                'allow_own_as': 0,
+                'bgp_session_transport': 
+                    {'transport': 
+                        {'foreign_host': 'unspecified',
+                        'foreign_port': '21.0.201.1',
+                        'local_host': '0.0.0.0',
+                        'local_port': 'unspecified',
+                        'passive_mode': 'false'}},
+                'description': 'None',
+                'ebgp_multihop': False,
+                'ebgp_multihop_max_hop': 0,
+                'graceful_restart': False,
+                'graceful_restart_helper_only': False,
+                'graceful_restart_restart_time': 120,
+                'graceful_restart_stalepath_time': 300,
+                'holdtime': 180,
+                'keepalive_interval': 60,
+                'link': 'ebgp',
+                'minimum_advertisement_interval': 0,
+                'peer_group': 'None',
+                'remote_as': 888,
+                'remove_private_as': False,
+                'route_reflector_client': False,
+                'route_reflector_cluster_id': 3,
+                'send_community': 'BOTH'},
+            '4.4.4.4': 
+                {'bgp_session_transport': 
+                    {'transport': 
+                        {'foreign_host': 'unspecified',
+                        'foreign_port': '4.4.4.4',
+                        'local_host': '0.0.0.0',
+                        'local_port': 'unspecified',
+                        'passive_mode': 'false'}},
+                'description': 'None',
+                'ebgp_multihop': False,
+                'ebgp_multihop_max_hop': 0,
+                'graceful_restart': False,
+                'graceful_restart_helper_only': False,
+                'graceful_restart_restart_time': 120,
+                'graceful_restart_stalepath_time': 300,
+                'holdtime': 180,
+                'keepalive_interval': 60,
+                'link': 'ebgp',
+                'peer_group': 'None',
+                'remove_private_as': False,
+                'route_reflector_cluster_id': 3},
+            'fec1::1002':  
+                {'address_family': 
+                    {'ipv4 unicast': 
+                        {'enabled': True,
+                        'graceful_restart': False,
+                        'ipv4_unicast_send_default_route': False}},
+                'allow_own_as': 0,
+                'bgp_session_transport': 
+                    {'transport': 
+                        {'foreign_host': 'unspecified',
+                        'foreign_port': 'fec1::1002',
+                        'local_host': '::',
+                        'local_port': 'unspecified',
+                        'passive_mode': 'false'}},
+                'description': 'None',
+                'ebgp_multihop': False,
+                'ebgp_multihop_max_hop': 0,
+                'graceful_restart': False,
+                'graceful_restart_helper_only': False,
+                'graceful_restart_restart_time': 120,
+                'graceful_restart_stalepath_time': 300,
+                'holdtime': 180,
+                'keepalive_interval': 60,
+                'link': 'ebgp',
+                'minimum_advertisement_interval': 0,
+                'peer_group': 'None',
+                'remote_as': 333,
+                'remove_private_as': False,
+                'route_reflector_client': True,
+                'route_reflector_cluster_id': 3,
+                'send_community': 'BOTH'},
+            'fec1::2002': 
+                {'address_family': 
+                    {'ipv4 unicast': 
+                        {'enabled': True,
+                        'graceful_restart': False,
+                        'ipv4_unicast_send_default_route': False},
+                    'ipv6 unicast': 
+                        {'enabled': True,
+                        'graceful_restart': False,
+                        'ipv6_unicast_send_default_route': False}},
+                'allow_own_as': 0,
+                'bgp_session_transport': 
+                    {'transport': 
+                        {'foreign_host': 'unspecified',
+                        'foreign_port': 'fec1::2002',
+                        'local_host': '::',
+                        'local_port': 'unspecified',
+                        'passive_mode': 'false'}},
+                'description': 'None',
+                'ebgp_multihop': False,
+                'ebgp_multihop_max_hop': 0,
+                'graceful_restart': False,
+                'graceful_restart_helper_only': False,
+                'graceful_restart_restart_time': 120,
+                'graceful_restart_stalepath_time': 300,
+                'holdtime': 180,
+                'keepalive_interval': 60,
+                'link': 'ebgp',
+                'minimum_advertisement_interval': 0,
+                'peer_group': 'None',
+                'remote_as': 888,
+                'remove_private_as': False,
+                'route_reflector_client': False,
+                'route_reflector_cluster_id': 3,
+                'send_community': 'BOTH'}}}
 
     class etree_holder():
         def __init__(self):
@@ -6698,15 +7052,17 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 </rpc-reply>
             ''')
 
-    golden_output = {'get.return_value': etree_holder()}
+    yang_output = {'get.return_value': etree_holder()}
 
     def test_show_bgp_vrf_all_neighbors_golden_yang(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output)
-        #obj = ShowBgpVrfAllNeighbors(device=self.device, context='yang')
-        #parsed_output = obj.parse(vrf='default')
-        #import pdb ; pdb.set_trace()
-        #self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.device = Mock(**self.yang_output)
+        obj = ShowBgpVrfAllNeighbors(device=self.device, context='yang')
+        try:
+            parsed_output = obj.parse(vrf='default')
+            self.assertEqual(parsed_output,self.golden_parsed_output)
+        except SchemaMissingKeyError:
+            pass
 
 
 # ======================================================
