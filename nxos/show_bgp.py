@@ -26,7 +26,7 @@ from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
 
 # Parser
-from parser.yang.yang_bgp import BgpYangOpenconfig
+from parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
 
 # =====================================
 # Parser for 'show bgp process vrf all'
@@ -861,7 +861,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpYangOpenconfig.yang(self)
+        yang_dict = BgpOpenconfigYang.yang(self)
 
         # Map keys from yang_dict to map_dict
 
@@ -880,7 +880,6 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                     map_dict['vrf'][vrf][key] = yang_dict['vrf'][vrf][key]
 
         # Return to caller
-        import pdb ; pdb.set_trace()
         return map_dict
 
 
@@ -1078,7 +1077,7 @@ class ShowBgpPeerSession(ShowBgpPeerSessionSchema):
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpYangOpenconfig.yang(self)
+        yang_dict = BgpOpenconfigYang.yang(self)
 
         # Return to caller
         return map_dict
@@ -1277,7 +1276,7 @@ class ShowBgpPeerPolicy(ShowBgpPeerPolicySchema):
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpYangOpenconfig.yang(self)
+        yang_dict = BgpOpenconfigYang.yang(self)
 
         # Return to caller
         return map_dict
@@ -1475,7 +1474,7 @@ class ShowBgpPeerTemplate(ShowBgpPeerTemplateSchema):
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpYangOpenconfig.yang(self)
+        yang_dict = BgpOpenconfigYang.yang(self)
 
         # Return to caller
         return map_dict
@@ -1725,7 +1724,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpYangOpenconfig.yang(self)
+        yang_dict = BgpOpenconfigYang.yang(self)
 
         # Return to caller
         return map_dict
@@ -1742,7 +1741,7 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
     schema = {
         'neighbor':
             {Any(): 
-                {'remote_as': str,
+                {'remote_as': int,
                  Optional('local_as'): str,
                  'link': str,
                  'peer_index': int,
@@ -1759,8 +1758,8 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                  Optional('bfd_live_detection'): bool,
                  Optional('nbr_local_as_cmd'): str,
                  Optional('last_read'): str,
-                 Optional('holdtime'): str,
-                 Optional('keepalive_interval'): str,
+                 Optional('holdtime'): int,
+                 Optional('keepalive_interval'): int,
                  Optional('bgp_negotiated_keepalive_timers'): 
                     {Optional('last_read'): str,
                      Optional('keepalive_interval'): int,
@@ -1888,8 +1887,10 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 neighbor_id = str(m.groupdict()['neighbor_id'])
                 if neighbor_id not in parsed_dict['neighbor']:
                     parsed_dict['neighbor'][neighbor_id] = {}
-                    parsed_dict['neighbor'][neighbor_id]['remote_as'] = \
-                        str(m.groupdict()['remote_as'])
+                    remote_as = m.groupdict()['remote_as']
+                    if remote_as != None:
+                        parsed_dict['neighbor'][neighbor_id]['remote_as'] = \
+                            int(m.groupdict()['remote_as'])
                     parsed_dict['neighbor'][neighbor_id]['local_as'] = \
                         str(m.groupdict()['local_as'])
                     parsed_dict['neighbor'][neighbor_id]['link'] = \
@@ -1983,10 +1984,10 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                         str(m.groupdict()['last_read'])
                 parsed_dict['neighbor'][neighbor_id]\
                     ['bgp_negotiated_keepalive_timers']['keepalive_interval'] = \
-                        str(m.groupdict()['keepalive_interval'])
+                        int(m.groupdict()['keepalive_interval'])
                 parsed_dict['neighbor'][neighbor_id]\
                     ['bgp_negotiated_keepalive_timers']['hold_time'] = \
-                        str(m.groupdict()['holdtime'])
+                        int(m.groupdict()['holdtime'])
                 continue
 
             # Last written 00:00:02, keepalive timer expiry due 00:00:30
@@ -2625,7 +2626,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpYangOpenconfig.yang(self)
+        yang_dict = BgpOpenconfigYang.yang(self)
 
         for vrf_name in yang_dict['vrf']:
             if vrf_name == vrf:
@@ -2639,7 +2640,6 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                         continue
 
         # Return to caller
-        #import pprint ; import pdb ; pdb.set_trace()
         return map_dict
 
 
@@ -2803,7 +2803,7 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpYangOpenconfig.yang(self)
+        yang_dict = BgpOpenconfigYang.yang(self)
 
         # Return to caller
         return map_dict
@@ -3029,7 +3029,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpYangOpenconfig.yang(self)
+        yang_dict = BgpOpenconfigYang.yang(self)
 
         # Return to caller
         return map_dict
@@ -3178,7 +3178,7 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpYangOpenconfig.yang(self)
+        yang_dict = BgpOpenconfigYang.yang(self)
 
         # Return to caller
         return map_dict
@@ -3400,7 +3400,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpYangOpenconfig.yang(self)
+        yang_dict = BgpOpenconfigYang.yang(self)
 
         # Return to caller
         return map_dict
@@ -3623,7 +3623,7 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpYangOpenconfig.yang(self)
+        yang_dict = BgpOpenconfigYang.yang(self)
 
         # Return to caller
         return map_dict
@@ -3845,7 +3845,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpYangOpenconfig.yang(self)
+        yang_dict = BgpOpenconfigYang.yang(self)
 
         # Return to caller
         return map_dict
