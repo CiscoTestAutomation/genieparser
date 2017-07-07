@@ -4,9 +4,15 @@ Example parser class
 
 '''
 
-from cnetconf import testmodel
+try:
+    from cnetconf import testmodel
+except:
+    pass
 from collections import defaultdict
-import iptools
+try:
+    import iptools
+except:
+    pass
 import logging
 import os
 import pprint
