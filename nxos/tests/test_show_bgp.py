@@ -4700,45 +4700,50 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                             {'ipv4 multicast':
                                 {'advertised':
                                     {'1.1.1.0/24':
-                                        {'next_hop':
-                                            {'0.0.0.0':
-                                                {'localprf': '100',
+                                        {'index':
+                                            {1:
+                                                {'next_hop': '0.0.0.0',
+                                                'localprf': '100',
                                                 'metric': '3333',
                                                 'origin_codes': '?',
                                                 'path_type': 'r',
                                                 'status_codes': '*>',
                                                 'weight': '32768'}}},
                                     '1.2.1.0/24':
-                                        {'next_hop':
-                                            {'0.0.0.0':
-                                                {'localprf': '100',
+                                        {'index':
+                                            {1:
+                                                {'next_hop': '0.0.0.0',
+                                                'localprf': '100',
                                                 'metric': '3333',
                                                 'origin_codes': '?',
                                                 'path_type': 'r',
                                                 'status_codes': '*>',
                                                 'weight': '32768'}}},
                                     '102.0.0.0/8':
-                                        {'next_hop':
-                                            {'0.0.0.0':
-                                                {'localprf': '100',
+                                        {'index':
+                                            {1:
+                                                {'next_hop': '0.0.0.0',
+                                                'localprf': '100',
                                                 'metric': '3333',
                                                 'origin_codes': '?',
                                                 'path_type': 'r',
                                                 'status_codes': '*>',
                                                 'weight': '32768'}}},
                                     '2.0.0.0/8':
-                                        {'next_hop':
-                                            {'0.0.0.0':
-                                                {'localprf': '100',
+                                        {'index':
+                                            {1:
+                                                {'next_hop': '0.0.0.0',
+                                                'localprf': '100',
                                                 'metric': '3333',
                                                 'origin_codes': '?',
                                                 'path_type': 'r',
                                                 'status_codes': '*>',
                                                 'weight': '32768'}}},
                                     '202.0.0.0/8':
-                                        {'next_hop':
-                                            {'0.0.0.0':
-                                                {'localprf': '100',
+                                        {'index':
+                                            {1:
+                                                {'next_hop': '0.0.0.0',
+                                                'localprf': '100',
                                                 'metric': '3333',
                                                 'origin_codes': '?',
                                                 'path_type': 'r',
@@ -4749,45 +4754,50 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                             'ipv4 unicast':
                                 {'advertised':
                                     {'1.1.1.0/24':
-                                        {'next_hop':
-                                            {'0.0.0.0':
-                                                {'localprf': '100',
+                                        {'index':
+                                            {1:
+                                                {'next_hop': '0.0.0.0',
+                                                'localprf': '100',
                                                 'metric': 'None',
                                                 'origin_codes': 'i',
                                                 'path_type': 'l',
                                                 'status_codes': '*>',
                                                 'weight': '32768'}}},
                                     '1.3.1.0/24':
-                                        {'next_hop':
-                                            {'0.0.0.0':
-                                                {'localprf': '100',
+                                        {'index':
+                                            {1:
+                                                {'next_hop': '0.0.0.0',
+                                                'localprf': '100',
                                                 'metric': '4444',
                                                 'origin_codes': '?',
                                                 'path_type': 'r',
                                                 'status_codes': '*>',
                                                 'weight': '32768'}}},
                                     '1.3.2.0/24':
-                                        {'next_hop':
-                                            {'0.0.0.0':
-                                                {'localprf': '100',
+                                        {'index':
+                                            {1:
+                                                {'next_hop': '0.0.0.0',
+                                                'localprf': '100',
                                                 'metric': '4444',
                                                 'origin_codes': '?',
                                                 'path_type': 'r',
                                                 'status_codes': '*>',
                                                 'weight': '32768'}}},
                                     '104.0.0.0/8':
-                                        {'next_hop':
-                                            {'0.0.0.0':
-                                                {'localprf': '100',
+                                        {'index':
+                                            {1:
+                                                {'next_hop': '0.0.0.0',
+                                                'localprf': '100',
                                                 'metric': '4444',
                                                 'origin_codes': '?',
                                                 'path_type': 'r',
                                                 'status_codes': '*>',
                                                 'weight': '32768'}}},
                                     '204.0.0.0/8':
-                                        {'next_hop':
-                                            {'0.0.0.0':
-                                                {'localprf': '100',
+                                        {'index':
+                                            {1:
+                                                {'next_hop': '0.0.0.0',
+                                                'localprf': '100',
                                                 'metric': '4444',
                                                 'origin_codes': '?',
                                                 'path_type': 'r',
@@ -4802,8 +4812,9 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                 'route_distinguisher': '1:100',
                                 'advertised': {
                                     '1.1.1.0/24':{
-                                        'next_hop': {
-                                            '0.0.0.0': {
+                                        'index': {
+                                            1: {
+                                                'next_hop': '0.0.0.0',
                                                 'localprf': '100',
                                                 'metric': '3333',
                                                 'origin_codes': '?',
@@ -4814,8 +4825,9 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                         }
                                     },
                                     '1.2.1.0/24':{
-                                        'next_hop': {
-                                            '0.0.0.0': {
+                                        'index': {
+                                            1: {
+                                                'next_hop': '0.0.0.0',
                                                 'localprf': '100',
                                                 'metric': '3333',
                                                 'origin_codes': '?',
@@ -4834,8 +4846,9 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                 'route_distinguisher': '2:100',
                                 'advertised': {
                                     '1.1.1.0/24':{
-                                        'next_hop': {
-                                            '0.0.0.0': {
+                                        'index': {
+                                            1: {
+                                                'next_hop': '0.0.0.0',
                                                 'localprf': '100',
                                                 'metric': '3333',
                                                 'origin_codes': '?',
@@ -4846,8 +4859,9 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                         }
                                     },
                                     '1.2.1.0/24':{
-                                        'next_hop': {
-                                            '0.0.0.0': {
+                                        'index': {
+                                            1: {
+                                                'next_hop': '0.0.0.0',
                                                 'localprf': '100',
                                                 'metric': '3333',
                                                 'origin_codes': '?',
@@ -5009,27 +5023,30 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                 'local_router_id': '21.0.101.1',
                                 'routes':
                                     {'104.0.0.0/8':
-                                        {'next_hop':
-                                            {'21.0.0.2':
-                                                {'localprf': '100',
+                                        {'index':
+                                            {1:
+                                                {'next_hop': '21.0.0.2',
+                                                'localprf': '100',
                                                 'metric': '0',
                                                 'origin_codes': '?',
                                                 'path_type': 'i',
                                                 'status_codes': '* ',
                                                 'weight': '0'}}},
                                     '204.0.0.0/8':
-                                        {'next_hop':
-                                            {'21.0.0.2':
-                                                {'localprf': '100',
+                                        {'index':
+                                            {1:
+                                                {'next_hop': '21.0.0.2',
+                                                'localprf': '100',
                                                 'metric': '0',
                                                 'origin_codes': '?',
                                                 'path_type': 'i',
                                                 'status_codes': '* ',
                                                 'weight': '0'}}},
                                             '4.0.0.0/8':
-                                                {'next_hop':
-                                                    {'21.0.0.2':
-                                                        {'localprf': '100',
+                                                {'index':
+                                                    {1:
+                                                        {'next_hop': '21.0.0.2',
+                                                        'localprf': '100',
                                                         'metric': '0',
                                                         'origin_codes': '?',
                                                         'path_type': 'i',
@@ -5040,27 +5057,30 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                 'local_router_id': '21.0.101.1',
                                 'routes':
                                     {'104.0.0.0/8':
-                                        {'next_hop':
-                                            {'21.0.0.2':
-                                                {'localprf': '100',
+                                        {'index':
+                                            {1:
+                                                {'next_hop': '21.0.0.2',
+                                                'localprf': '100',
                                                 'metric': '0',
                                                 'origin_codes': '?',
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': '0'}}},
                                     '204.0.0.0/8':
-                                        {'next_hop':
-                                            {'21.0.0.2':
-                                                {'localprf': '100',
+                                        {'index':
+                                            {1:
+                                                {'next_hop': '21.0.0.2',
+                                                'localprf': '100',
                                                 'metric': '0',
                                                 'origin_codes': '?',
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': '0'}}},
                                     '4.0.0.0/8':
-                                        {'next_hop':
-                                            {'21.0.0.2':
-                                                {'localprf': '100',
+                                        {'index':
+                                            {1:
+                                                {'next_hop': '21.0.0.2',
+                                                'localprf': '100',
                                                 'metric': '0',
                                                 'origin_codes': '?',
                                                 'path_type': 'i',
@@ -5071,27 +5091,30 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                 'local_router_id': '21.0.101.1',
                                 'routes':
                                     {'104.0.0.0/8':
-                                        {'next_hop':
-                                            {'21.0.0.2':
-                                                {'localprf': '100',
+                                        {'index':
+                                            {1:
+                                                {'next_hop': '21.0.0.2',
+                                                'localprf': '100',
                                                 'metric': '0',
                                                 'origin_codes': '?',
                                                 'path_type': 'i',
                                                 'status_codes': '* ',
                                                 'weight': '0'}}},
                                     '204.0.0.0/8':
-                                        {'next_hop':
-                                            {'21.0.0.2':
-                                                {'localprf': '100',
+                                        {'index':
+                                            {1:
+                                                {'next_hop': '21.0.0.2',
+                                                'localprf': '100',
                                                 'metric': '0',
                                                 'origin_codes': '?',
                                                 'path_type': 'i',
                                                 'status_codes': '* ',
                                                 'weight': '0'}}},
                                     '4.0.0.0/8':
-                                        {'next_hop':
-                                            {'21.0.0.2':
-                                                {'localprf': '100',
+                                        {'index':
+                                            {1:
+                                                {'next_hop': '21.0.0.2',
+                                                'localprf': '100',
                                                 'metric': '0',
                                                 'origin_codes': '?',
                                                 'path_type': 'i',
@@ -5104,9 +5127,10 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                 'route_distinguisher': '2:100',
                                 'routes':
                                     {'4.0.0.0/8':
-                                        {'next_hop':
-                                            {'21.0.0.2':
-                                                {'localprf': '100',
+                                        {'index':
+                                            {1:
+                                                {'next_hop': '21.0.0.2',
+                                                'localprf': '100',
                                                 'metric': '0',
                                                 'origin_codes': '?',
                                                 'path_type': 'i',
@@ -5119,9 +5143,10 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                 'route_distinguisher': '1:100',
                                 'routes':
                                     {'4.0.0.0/8':
-                                        {'next_hop':
-                                            {'21.0.0.2':
-                                                {'localprf': '100',
+                                        {'index':
+                                            {1:
+                                                {'next_hop': '21.0.0.2',
+                                                'localprf': '100',
                                                 'metric': '0',
                                                 'origin_codes': '?',
                                                 'path_type': 'i',
@@ -5272,8 +5297,9 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                 'local_router_id': '21.0.101.1',
                                 'received_routes': {
                                     '104.0.0.0/8': {
-                                        'next_hop': {
-                                            '21.0.0.2': {
+                                        'index': {
+                                            1: {
+                                                'next_hop': '21.0.0.2',
                                                 'localprf': '100',
                                                 'metric': '0',
                                                 'origin_codes': '?',
@@ -5284,8 +5310,9 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                         }
                                     },
                                     '204.0.0.0/8': {
-                                        'next_hop': {
-                                            '21.0.0.2': {
+                                        'index': {
+                                            1: {
+                                                'next_hop': '21.0.0.2',
                                                 'localprf': '100',
                                                 'metric': '0',
                                                 'origin_codes': '?',
@@ -5296,8 +5323,9 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                         }
                                     },
                                     '4.0.0.0/8': {
-                                        'next_hop': {
-                                            '21.0.0.2': {
+                                        'index': {
+                                            1: {
+                                                'next_hop': '21.0.0.2',
                                                 'localprf': '100',
                                                 'metric': '0',
                                                 'origin_codes': '?',
@@ -5316,8 +5344,9 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                 'default_vrf': 'vpn1',
                                 'received_routes': {
                                     '1.1.1.0/24': {
-                                        'next_hop': {
-                                            '0.0.0.0': {
+                                        'index': {
+                                            1: {
+                                                'next_hop': '0.0.0.0',
                                                 'localprf': '100',
                                                 'metric': '3333',
                                                 'origin_codes': '?',
@@ -5328,8 +5357,9 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                         }
                                     },
                                     '1.2.1.0/24': {
-                                        'next_hop': {
-                                            '0.0.0.0': {
+                                        'index': {
+                                            1: {
+                                                'next_hop': '0.0.0.0',
                                                 'localprf': '100',
                                                 'metric': '3333',
                                                 'origin_codes': '?',
@@ -5348,8 +5378,9 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                 'default_vrf': 'vpn2',
                                 'received_routes': {
                                     '1.1.1.0/24': {
-                                        'next_hop': {
-                                            '0.0.0.0': {
+                                        'index': {
+                                            1: {
+                                                'next_hop': '0.0.0.0',
                                                 'localprf': '100',
                                                 'metric': '3333',
                                                 'origin_codes': '?',
@@ -5360,8 +5391,9 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                         }
                                     },
                                     '1.2.1.0/24': {
-                                        'next_hop': {
-                                            '0.0.0.0': {
+                                        'index': {
+                                            1: {
+                                                'next_hop': '0.0.0.0',
                                                 'localprf': '100',
                                                 'metric': '3333',
                                                 'origin_codes': '?',

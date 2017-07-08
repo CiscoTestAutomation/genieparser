@@ -3090,9 +3090,10 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutesSchema(MetaParser):
                                  Optional('default_vrf'): str,
                                  Optional('advertised'): 
                                     {Optional(Any()):
-                                        {Optional('next_hop'):
+                                        {Optional('index'):
                                             {Optional(Any()):
-                                                {Optional('status_codes'): str,
+                                                {Optional('next_hop'): str,
+                                                 Optional('status_codes'): str,
                                                  Optional('path_type'): str,
                                                  Optional('metric'): str,
                                                  Optional('localprf'): str,
@@ -3124,6 +3125,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
         # Init vars
         route_dict = {}
         data_on_nextline =  False
+        index = 1
 
         bgp_table_version = local_router_id = ''
 
@@ -3210,19 +3212,20 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                 if prefix not in af_dict['advertised']:
                     af_dict['advertised'][prefix] = {}
                 
-                # Check if next_hop top level key exists
-                if 'next_hop' not in af_dict['advertised'][prefix]:
-                    af_dict['advertised'][prefix]['next_hop'] = {}
+                # Check if index top level key exists
+                if 'index' not in af_dict['advertised'][prefix]:
+                    af_dict['advertised'][prefix]['index'] = {}
 
                 # Check if current prefix details are on next line
                 if next_hop == 'None':
                     data_on_nextline = True
                     continue
 
-                # Check if next_hop exists
-                if next_hop not in af_dict['advertised'][prefix]['next_hop']:
-                    af_dict['advertised'][prefix]['next_hop'][next_hop] = {}
-                    nh_dict = af_dict['advertised'][prefix]['next_hop'][next_hop]
+                # Check if index exists
+                if index not in af_dict['advertised'][prefix]['index']:
+                    af_dict['advertised'][prefix]['index'][index] = {}
+                    nh_dict = af_dict['advertised'][prefix]['index'][index]
+                    nh_dict['next_hop'] = next_hop
                     nh_dict['status_codes'] = status_codes
                     nh_dict['path_type'] = path_type
                     nh_dict['metric'] = metric
@@ -3245,10 +3248,11 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                 weight = str(m.groupdict()['weight'])
                 origin_codes = str(m.groupdict()['origin_codes'])
 
-                # Check if next_hop exists
-                if next_hop not in af_dict['advertised'][prefix]['next_hop']:
-                    af_dict['advertised'][prefix]['next_hop'][next_hop] = {}
-                    nh_dict = af_dict['advertised'][prefix]['next_hop'][next_hop]
+                # Check if index exists
+                if index not in af_dict['advertised'][prefix]['index']:
+                    af_dict['advertised'][prefix]['index'][index] = {}
+                    nh_dict = af_dict['advertised'][prefix]['index'][index]
+                    nh_dict['next_hop'] = next_hop
                     nh_dict['metric'] = metric
                     nh_dict['localprf'] = localprf
                     nh_dict['weight'] = weight
@@ -3302,9 +3306,10 @@ class ShowBgpVrfAllNeighborsRoutesSchema(MetaParser):
                                  Optional('default_vrf'): str,
                                  Optional('routes'): 
                                     {Optional(Any()):
-                                        {Optional('next_hop'):
+                                        {Optional('index'):
                                             {Optional(Any()):
-                                                {Optional('status_codes'): str,
+                                                {Optional('next_hop'): str,
+                                                 Optional('status_codes'): str,
                                                  Optional('path_type'): str,
                                                  Optional('metric'): str,
                                                  Optional('localprf'): str,
@@ -3336,6 +3341,7 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
         # Init vars
         route_dict = {}
         data_on_nextline =  False
+        index = 1
 
         bgp_table_version = local_router_id = ''
 
@@ -3422,19 +3428,20 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
                 if prefix not in af_dict['routes']:
                     af_dict['routes'][prefix] = {}
                 
-                # Check if next_hop top level key exists
-                if 'next_hop' not in af_dict['routes'][prefix]:
-                    af_dict['routes'][prefix]['next_hop'] = {}
+                # Check if index top level key exists
+                if 'index' not in af_dict['routes'][prefix]:
+                    af_dict['routes'][prefix]['index'] = {}
 
                 # Check if current prefix details are on next line
                 if next_hop == 'None':
                     data_on_nextline = True
                     continue
 
-                # Check if next_hop exists
-                if next_hop not in af_dict['routes'][prefix]['next_hop']:
-                    af_dict['routes'][prefix]['next_hop'][next_hop] = {}
-                    nh_dict = af_dict['routes'][prefix]['next_hop'][next_hop]
+                # Check if index exists
+                if index not in af_dict['routes'][prefix]['index']:
+                    af_dict['routes'][prefix]['index'][index] = {}
+                    nh_dict = af_dict['routes'][prefix]['index'][index]
+                    nh_dict['next_hop'] = next_hop
                     nh_dict['status_codes'] = status_codes
                     nh_dict['path_type'] = path_type
                     nh_dict['metric'] = metric
@@ -3457,10 +3464,11 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
                 weight = str(m.groupdict()['weight'])
                 origin_codes = str(m.groupdict()['origin_codes'])
 
-                # Check if next_hop exists
-                if next_hop not in af_dict['routes'][prefix]['next_hop']:
-                    af_dict['routes'][prefix]['next_hop'][next_hop] = {}
-                    nh_dict = af_dict['routes'][prefix]['next_hop'][next_hop]
+                # Check if index exists
+                if index not in af_dict['routes'][prefix]['index']:
+                    af_dict['routes'][prefix]['index'][index] = {}
+                    nh_dict = af_dict['routes'][prefix]['index'][index]
+                    nh_dict['next_hop'] = next_hop
                     nh_dict['metric'] = metric
                     nh_dict['localprf'] = localprf
                     nh_dict['weight'] = weight
@@ -3515,9 +3523,10 @@ class ShowBgpVrfAllNeighborsReceivedRoutesSchema(MetaParser):
                                  Optional('default_vrf'): str,
                                  Optional('received_routes'): 
                                     {Optional(Any()):
-                                        {Optional('next_hop'):
+                                        {Optional('index'):
                                             {Optional(Any()):
-                                                {Optional('status_codes'): str,
+                                                {Optional('next_hop'): str,
+                                                 Optional('status_codes'): str,
                                                  Optional('path_type'): str,
                                                  Optional('metric'): str,
                                                  Optional('localprf'): str,
@@ -3549,6 +3558,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
         # Init vars
         route_dict = {}
         data_on_nextline =  False
+        index = 1
 
         bgp_table_version = local_router_id = ''
 
@@ -3635,19 +3645,20 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
                 if prefix not in af_dict['received_routes']:
                     af_dict['received_routes'][prefix] = {}
                 
-                # Check if next_hop top level key exists
-                if 'next_hop' not in af_dict['received_routes'][prefix]:
-                    af_dict['received_routes'][prefix]['next_hop'] = {}
+                # Check if index top level key exists
+                if 'index' not in af_dict['received_routes'][prefix]:
+                    af_dict['received_routes'][prefix]['index'] = {}
 
                 # Check if current prefix details are on next line
                 if next_hop == 'None':
                     data_on_nextline = True
                     continue
 
-                # Check if next_hop exists
-                if next_hop not in af_dict['received_routes'][prefix]['next_hop']:
-                    af_dict['received_routes'][prefix]['next_hop'][next_hop] = {}
-                    nh_dict = af_dict['received_routes'][prefix]['next_hop'][next_hop]
+                # Check if index exists
+                if index not in af_dict['received_routes'][prefix]['index']:
+                    af_dict['received_routes'][prefix]['index'][index] = {}
+                    nh_dict = af_dict['received_routes'][prefix]['index'][index]
+                    nh_dict['next_hop'] = next_hop
                     nh_dict['status_codes'] = status_codes
                     nh_dict['path_type'] = path_type
                     nh_dict['metric'] = metric
@@ -3670,10 +3681,11 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
                 weight = str(m.groupdict()['weight'])
                 origin_codes = str(m.groupdict()['origin_codes'])
 
-                # Check if next_hop exists
-                if next_hop not in af_dict['received_routes'][prefix]['next_hop']:
-                    af_dict['received_routes'][prefix]['next_hop'][next_hop] = {}
-                    nh_dict = af_dict['received_routes'][prefix]['next_hop'][next_hop]
+                # Check if index exists
+                if index not in af_dict['received_routes'][prefix]['index']:
+                    af_dict['received_routes'][prefix]['index'][index] = {}
+                    nh_dict = af_dict['received_routes'][prefix]['index'][index]
+                    nh_dict['next_hop'] = next_hop
                     nh_dict['metric'] = metric
                     nh_dict['localprf'] = localprf
                     nh_dict['weight'] = weight
