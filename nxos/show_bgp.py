@@ -1445,9 +1445,10 @@ class ShowBgpVrfAllAllSchema(MetaParser):
                          Optional('v6_aggregate_address_summary_only'): bool,
                          Optional('prefixes'):
                             {Any(): 
-                                {'next_hop': 
+                                {'index': 
                                     {Any(): 
-                                        {Optional('status_codes'): str,
+                                        {'next_hop': str,
+                                         Optional('status_codes'): str,
                                          Optional('path_type'): str,
                                          'metric': str,
                                          'localprf': str,
@@ -1475,7 +1476,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
         parsed_dict = {}
         af_dict = {}
         data_on_nextline = False
-
+        index = 1
         for line in out.splitlines():
             line = line.rstrip()
 
@@ -1555,29 +1556,35 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 
                 if last_prefix != 'None':
                     prefix = last_prefix
+                    # if network is L2VPN EVPN, index = 0
+                    if next_hop != 'None':
+                        index = 1
+                    else:
+                        index = 0
 
                 # Check if the prefix exists
                 if prefix not in af_dict[address_family]['prefixes']:
                     af_dict[address_family]['prefixes'][prefix] = {}
                 
-                # Check if next_hop top level key exists
-                if 'next_hop' not in af_dict[address_family]['prefixes']\
+                # Check if index top level key exists
+                if 'index' not in af_dict[address_family]['prefixes']\
                     [prefix]:
                     af_dict[address_family]['prefixes'][prefix]\
-                        ['next_hop'] = {}
+                        ['index'] = {}
 
                 # Check if current prefix details are on next line
                 if next_hop == 'None':
                     data_on_nextline = True
                     continue
 
-                # Check if next_hop exists
-                if next_hop not in af_dict[address_family]['prefixes']\
-                    [prefix]['next_hop']:
+                # Check if index exists
+                if index not in af_dict[address_family]['prefixes']\
+                    [prefix]['index']:
                     af_dict[address_family]['prefixes'][prefix]\
-                        ['next_hop'][next_hop] = {}
+                        ['index'][index] = {}
                     nh_dict = af_dict[address_family]['prefixes']\
-                        [prefix]['next_hop'][next_hop]
+                        [prefix]['index'][index]
+                    nh_dict['next_hop'] = next_hop
                     nh_dict['status_codes'] = status_codes
                     nh_dict['path_type'] = path_type
                     nh_dict['metric'] = metric
@@ -1605,6 +1612,9 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                         af_dict[address_family]\
                             ['aggregate_address_summary_only'] = True
                     continue
+                else:
+                    # increment for multiple next-hops 
+                    index += 1
 
             #                     0.0.0.0                  100      32768 i
             p4 = re.compile(r'^\s*(?P<next_hop>[a-zA-Z0-9\.\:]+)'
@@ -1620,13 +1630,17 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 weight = str(m.groupdict()['weight'])
                 origin_codes = str(m.groupdict()['origin_codes'])
 
-                # Check if next_hop exists
-                if next_hop not in af_dict[address_family]['prefixes']\
-                    [prefix]['next_hop']:
+                # increment for L2VPN EVPN prefix
+                index += 1
+
+                # Check if index exists
+                if index not in af_dict[address_family]['prefixes']\
+                    [prefix]['index']:
                     af_dict[address_family]['prefixes'][prefix]\
-                        ['next_hop'][next_hop] = {}
+                        ['index'][index] = {}
                     nh_dict = af_dict[address_family]['prefixes']\
-                        [prefix]['next_hop'][next_hop]
+                        [prefix]['index'][index]
+                    nh_dict['next_hop'] = next_hop
                     nh_dict['metric'] = metric
                     nh_dict['localprf'] = localprf
                     nh_dict['weight'] = weight
