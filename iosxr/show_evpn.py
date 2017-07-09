@@ -310,7 +310,8 @@ class ShowEvpnEthernetSegment(MetaParser):
 
     # TODO schema
 
-    def __init__(self, detail=False, private=False, carving=False, **kwargs):
+    def __init__(self, detail=False, private=False, carving=False, esi=None, **kwargs):
+        self.esi = esi
         self.detail = detail
         self.private = private
         self.carving = carving
@@ -321,6 +322,10 @@ class ShowEvpnEthernetSegment(MetaParser):
         '''
 
         cmd = 'show evpn ethernet-segment'
+
+        if self.esi:
+            cmd += ' esi {esi}'.format(esi=self.esi)
+
         if self.carving:
             cmd += ' carving'
 
@@ -334,6 +339,7 @@ class ShowEvpnEthernetSegment(MetaParser):
             device=self.device, exec=cmd)
 
         return kl
+
 
 class ShowEvpnInternalLabelDetail(MetaParser):
 
