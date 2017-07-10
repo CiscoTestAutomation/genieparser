@@ -75,6 +75,13 @@ class ShowBgpProcessVrfAllSchema(MetaParser):
                     {Any(): 
                         {Optional('table_id'): str,
                          Optional('table_state'): str,
+                         Optional('enabled'): bool,
+                         Optional('graceful_restart'): bool,
+                         Optional('advertise_inactive_routes'): bool,
+                         Optional('ebgp_max_paths'): int,
+                         Optional('ibgp_max_paths'): int,
+                         Optional('total_paths'): int,
+                         Optional('total_prefixes'): int,
                          'peers': 
                             {Any(): 
                                 {'active_peers': int,
@@ -881,6 +888,9 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
             for vrf_attr_key in yang_dict['vrf'][vrf]:
                 # Set router_id
                 if vrf_attr_key == 'router_id':
+                    map_dict['vrf'][vrf][vrf_attr_key] = yang_dict['vrf'][vrf][vrf_attr_key]
+                # Set address_family
+                if vrf_attr_key == 'address_family':
                     map_dict['vrf'][vrf][vrf_attr_key] = yang_dict['vrf'][vrf][vrf_attr_key]
                 if vrf_attr_key == 'neighbor':
                     for nbr in yang_dict['vrf'][vrf]['neighbor']:

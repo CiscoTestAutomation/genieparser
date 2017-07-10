@@ -1180,7 +1180,38 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
         'bgp_pid': 333,
         'vrf': 
             {'default': 
-                {'cluster_id': '0.0.03', 
+                {'address_family': 
+                    {'ipv4 labeled unicast': 
+                        {'advertise_inactive_routes': False,
+                        'ebgp_max_paths': 1,
+                        'enabled': True,
+                        'graceful_restart': False,
+                        'ibgp_max_paths': 1},
+                    'ipv4 unicast': 
+                        {'advertise_inactive_routes': False,
+                        'ebgp_max_paths': 1,
+                        'enabled': True,
+                        'graceful_restart': False,
+                        'ibgp_max_paths': 1},
+                    'ipv6 unicast': 
+                        {'advertise_inactive_routes': False,
+                        'ebgp_max_paths': 1,
+                        'enabled': True,
+                        'graceful_restart': False,
+                        'ibgp_max_paths': 1},
+                    'l3vpn ipv4 unicast': 
+                        {'advertise_inactive_routes': False,
+                        'ebgp_max_paths': 1,
+                        'enabled': True,
+                        'graceful_restart': False,
+                        'ibgp_max_paths': 1},
+                    'l3vpn ipv6 unicast': 
+                        {'advertise_inactive_routes': False,
+                        'ebgp_max_paths': 1,
+                        'enabled': True,
+                        'graceful_restart': False,
+                        'ibgp_max_paths': 1}},
+                'cluster_id': '0.0.03', 
                  'router_id': '0.0.0.0'}}}
 
     cli_output = {'execute.return_value': '''
