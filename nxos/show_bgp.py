@@ -872,7 +872,8 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpOpenconfigYang.yang(self)
+        bgpOC = BgpOpenconfigYang(self.device)
+        yang_dict = bgpOC.yang()
 
         # Map keys from yang_dict to map_dict
 
@@ -1098,7 +1099,8 @@ class ShowBgpPeerSession(ShowBgpPeerSessionSchema):
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpOpenconfigYang.yang(self)
+        bgpOC = BgpOpenconfigYang(self.device)
+        yang_dict = bgpOC.yang()
 
         # Return to caller
         return map_dict
@@ -1297,7 +1299,8 @@ class ShowBgpPeerPolicy(ShowBgpPeerPolicySchema):
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpOpenconfigYang.yang(self)
+        bgpOC = BgpOpenconfigYang(self.device)
+        yang_dict = bgpOC.yang()
 
         # Return to caller
         return map_dict
@@ -1495,7 +1498,8 @@ class ShowBgpPeerTemplate(ShowBgpPeerTemplateSchema):
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpOpenconfigYang.yang(self)
+        bgpOC = BgpOpenconfigYang(self.device)
+        yang_dict = bgpOC.yang()
 
         # Return to caller
         return map_dict
@@ -1745,7 +1749,8 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpOpenconfigYang.yang(self)
+        bgpOC = BgpOpenconfigYang(self.device)
+        yang_dict = bgpOC.yang()
 
         # Return to caller
         return map_dict
@@ -2656,7 +2661,8 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpOpenconfigYang.yang(self)
+        bgpOC = BgpOpenconfigYang(self.device)
+        yang_dict = bgpOC.yang()
 
         for vrf_name in yang_dict['vrf']:
             if vrf_name == vrf:
@@ -2836,7 +2842,8 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpOpenconfigYang.yang(self)
+        bgpOC = BgpOpenconfigYang(self.device)
+        yang_dict = bgpOC.yang()
 
         # Return to caller
         return map_dict
@@ -3062,7 +3069,8 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpOpenconfigYang.yang(self)
+        bgpOC = BgpOpenconfigYang(self.device)
+        yang_dict = bgpOC.yang()
 
         # Return to caller
         return map_dict
@@ -3211,7 +3219,8 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpOpenconfigYang.yang(self)
+        bgpOC = BgpOpenconfigYang(self.device)
+        yang_dict = bgpOC.yang()
 
         # Return to caller
         return map_dict
@@ -3433,7 +3442,8 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpOpenconfigYang.yang(self)
+        bgpOC = BgpOpenconfigYang(self.device)
+        yang_dict = bgpOC.yang()
 
         # Return to caller
         return map_dict
@@ -3656,7 +3666,8 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpOpenconfigYang.yang(self)
+        bgpOC = BgpOpenconfigYang(self.device)
+        yang_dict = bgpOC.yang()
 
         # Return to caller
         return map_dict
@@ -3878,7 +3889,8 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
-        yang_dict = BgpOpenconfigYang.yang(self)
+        bgpOC = BgpOpenconfigYang(self.device)
+        yang_dict = bgpOC.yang()
 
         # Return to caller
         return map_dict
