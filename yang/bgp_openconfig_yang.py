@@ -108,7 +108,7 @@ class BgpOpenconfigYangSchema(MetaParser):
 
 class BgpOpenconfigYang(BgpOpenconfigYangSchema):
 
-    def yang(self):
+    def yang(self, **kwargs):
         parsed_dict = {}
         cmd = '''
         <rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -119,6 +119,7 @@ class BgpOpenconfigYang(BgpOpenconfigYangSchema):
           </get>
         </rpc>
         '''
+
         output = self.device.get(('subtree', cmd))
 
         for data in output.data:

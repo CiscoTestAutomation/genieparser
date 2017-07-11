@@ -25,6 +25,8 @@ from metaparser import MetaParser
 from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
 
+# Parser
+from parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
 
 # =====================================
 # Parser for 'show bgp process vrf all'
@@ -65,10 +67,21 @@ class ShowBgpProcessVrfAllSchema(MetaParser):
                  'num_pending_conf_peers': int,
                  'num_established_peers': int,
                  Optional('vrf_rd'): str,
+                 Optional('graceful_restart'): bool,
+                 Optional('graceful_restart_helper_only'): bool,
+                 Optional('graceful_restart_restart_time'): int,
+                 Optional('graceful_restart_stalepath_time'): int,
                  Optional('address_family'): 
                     {Any(): 
                         {Optional('table_id'): str,
                          Optional('table_state'): str,
+                         Optional('enabled'): bool,
+                         Optional('graceful_restart'): bool,
+                         Optional('advertise_inactive_routes'): bool,
+                         Optional('ebgp_max_paths'): int,
+                         Optional('ibgp_max_paths'): int,
+                         Optional('total_paths'): int,
+                         Optional('total_prefixes'): int,
                          'peers': 
                             {Any(): 
                                 {'active_peers': int,
@@ -854,7 +867,44 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                                                                                     
         return etree_dict
 
-        
+    def yang(self):
+        # Initialize empty dictionary
+        map_dict = {}
+
+        # Execute YANG 'get' operational state RPC and parse the XML
+        bgpOC = BgpOpenconfigYang(self.device)
+        yang_dict = bgpOC.yang()
+
+        # Map keys from yang_dict to map_dict
+
+        # bgp_pid
+        map_dict['bgp_pid'] = yang_dict['bgp_pid']
+
+        # vrf
+        for vrf in yang_dict['vrf']:
+            if 'vrf' not in map_dict:
+                map_dict['vrf'] = {}
+            if vrf not in map_dict['vrf']:
+                map_dict['vrf'][vrf] = {}
+            for vrf_attr_key in yang_dict['vrf'][vrf]:
+                # Set router_id
+                if vrf_attr_key == 'router_id':
+                    map_dict['vrf'][vrf][vrf_attr_key] = yang_dict['vrf'][vrf][vrf_attr_key]
+                # Set address_family
+                if vrf_attr_key == 'address_family':
+                    map_dict['vrf'][vrf][vrf_attr_key] = yang_dict['vrf'][vrf][vrf_attr_key]
+                if vrf_attr_key == 'neighbor':
+                    for nbr in yang_dict['vrf'][vrf]['neighbor']:
+                        for key in yang_dict['vrf'][vrf]['neighbor'][nbr]:
+                            # Set cluster_id
+                            if key == 'route_reflector_cluster_id':
+                                cluster_id = '0.0.0' + str(yang_dict['vrf'][vrf]['neighbor'][nbr]['route_reflector_cluster_id'])
+                                map_dict['vrf'][vrf]['cluster_id'] = cluster_id
+
+        # Return to caller
+        return map_dict
+
+
 # =========================================
 # Parser for 'show bgp peer-session <WORD>'
 # =========================================
@@ -1419,6 +1469,7 @@ class ShowBgpPeerTemplate(ShowBgpPeerTemplateSchema):
         # Return parsed output
         return parsed_dict
 
+
 # =================================
 # Parser for 'show bgp vrf all all'
 # =================================
@@ -1669,7 +1720,7 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
     schema = {
         'neighbor':
             {Any(): 
-                {'remote_as': str,
+                {'remote_as': int,
                  Optional('local_as'): str,
                  'link': str,
                  'peer_index': int,
@@ -1679,20 +1730,22 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                  'session_state': str,
                  'shutdown': bool,
                  'up_time': str,
+                 Optional('peer_group'): str,
                  Optional('suppress_four_byte_as_capability'): bool,
                  Optional('retry_time'): str,
                  Optional('update_source'): str,
                  Optional('bfd_live_detection'): bool,
                  Optional('nbr_local_as_cmd'): str,
                  Optional('last_read'): str,
-                 Optional('holdtime'): str,
-                 Optional('keepalive_interval'): str,
+                 Optional('holdtime'): int,
+                 Optional('keepalive_interval'): int,
                  Optional('bgp_negotiated_keepalive_timers'): 
                     {Optional('last_read'): str,
-                     Optional('keepalive_interval'): str,
-                     Optional('hold_time'): str,
+                     Optional('keepalive_interval'): int,
+                     Optional('hold_time'): int,
                      Optional('last_written'): str,
-                     Optional('keepalive_timer'): str,},
+                     Optional('keepalive_timer'): str,
+                     Optional('minimum_advertisement_interval'): int,},
                  Optional('disable_connected_check'): bool,
                  Optional('inherit_peer_session'): str,
                  Optional('ebgp_multihop_max_hop'): int,
@@ -1705,6 +1758,11 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                  Optional('sent_messages'): int,
                  Optional('sent_notifications'): int,
                  Optional('sent_bytes_queue'): int,
+                 Optional('enabled'): bool,
+                 Optional('graceful_restart'): bool,
+                 Optional('graceful_restart_helper_only'): bool,
+                 Optional('graceful_restart_restart_time'): int,
+                 Optional('graceful_restart_stalepath_time'): int,
                  Optional('bgp_session_transport'):
                     {Optional('connection'): 
                         {Optional('mode'): str,
@@ -1721,6 +1779,7 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                          Optional('foreign_port'): str,
                          Optional('foreign_host'): str,
                          Optional('fd'): str,
+                         Optional('passive_mode'): str,
                         },
                     },
                  Optional('bgp_neighbor_counters'):
@@ -1768,6 +1827,10 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                          Optional('nbr_af_default_originate'): bool,
                          Optional('nbr_af_default_originate_route_map'): str,
                          Optional('route_reflector_client'): bool,
+                         Optional('enabled'): bool,
+                         Optional('graceful_restart'): bool,
+                         Optional('ipv4_unicast_send_default_route'): bool,
+                         Optional('ipv6_unicast_send_default_route'): bool,
                          Optional('path'): 
                             {Optional('total_entries'): int,
                              Optional('memory_usage'): int,
@@ -1812,8 +1875,10 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 neighbor_id = str(m.groupdict()['neighbor_id'])
                 if neighbor_id not in parsed_dict['neighbor']:
                     parsed_dict['neighbor'][neighbor_id] = {}
-                    parsed_dict['neighbor'][neighbor_id]['remote_as'] = \
-                        str(m.groupdict()['remote_as'])
+                    remote_as = m.groupdict()['remote_as']
+                    if remote_as != None:
+                        parsed_dict['neighbor'][neighbor_id]['remote_as'] = \
+                            int(m.groupdict()['remote_as'])
                     parsed_dict['neighbor'][neighbor_id]['local_as'] = \
                         str(m.groupdict()['local_as'])
                     parsed_dict['neighbor'][neighbor_id]['link'] = \
@@ -1907,10 +1972,10 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                         str(m.groupdict()['last_read'])
                 parsed_dict['neighbor'][neighbor_id]\
                     ['bgp_negotiated_keepalive_timers']['keepalive_interval'] = \
-                        str(m.groupdict()['keepalive_interval'])
+                        int(m.groupdict()['keepalive_interval'])
                 parsed_dict['neighbor'][neighbor_id]\
                     ['bgp_negotiated_keepalive_timers']['hold_time'] = \
-                        str(m.groupdict()['holdtime'])
+                        int(m.groupdict()['holdtime'])
                 continue
 
             # Last written 00:00:02, keepalive timer expiry due 00:00:30
@@ -2543,6 +2608,31 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 continue
 
         return parsed_dict
+
+    def yang(self, vrf):
+        # Initialize empty dictionary
+        map_dict = {}
+
+        # Execute YANG 'get' operational state RPC and parse the XML
+        bgpOC = BgpOpenconfigYang(self.device)
+        yang_dict = bgpOC.yang()
+
+        for vrf_name in yang_dict['vrf']:
+            if vrf_name == vrf:
+                for neighbor in yang_dict['vrf'][vrf_name]['neighbor']:
+                    if 'neighbor' not in map_dict:
+                        map_dict['neighbor'] = {}
+                    if neighbor not in map_dict['neighbor']:
+                        map_dict['neighbor'][neighbor] = {}
+                    for key in yang_dict['vrf'][vrf_name]['neighbor'][neighbor]:
+                        if key == 'ebgp_multihop':
+                            map_dict['neighbor'][neighbor]['link'] = 'ebgp'
+                        map_dict['neighbor'][neighbor][key] = \
+                            yang_dict['vrf'][vrf_name]['neighbor'][neighbor][key]
+                        continue
+
+        # Return to caller
+        return map_dict
 
 
 # ==================================================
@@ -4998,5 +5088,6 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         continue
 
         return bgp_dict
+
 
 # vim: ft=python et sw=4
