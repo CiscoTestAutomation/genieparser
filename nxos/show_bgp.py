@@ -1476,7 +1476,6 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
         parsed_dict = {}
         af_dict = {}
         data_on_nextline = False
-        index = 1
         for line in out.splitlines():
             line = line.rstrip()
 
@@ -1578,19 +1577,22 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                     continue
 
                 # Check if index exists
-                if index not in af_dict[address_family]['prefixes']\
-                    [prefix]['index']:
-                    af_dict[address_family]['prefixes'][prefix]\
-                        ['index'][index] = {}
-                    nh_dict = af_dict[address_family]['prefixes']\
-                        [prefix]['index'][index]
-                    nh_dict['next_hop'] = next_hop
-                    nh_dict['status_codes'] = status_codes
-                    nh_dict['path_type'] = path_type
-                    nh_dict['metric'] = metric
-                    nh_dict['localprf'] = localprf
-                    nh_dict['weight'] = weight
-                    nh_dict['origin_codes'] = origin_codes
+                try:
+                    if index not in af_dict[address_family]['prefixes']\
+                        [prefix]['index']:
+                        af_dict[address_family]['prefixes'][prefix]\
+                            ['index'][index] = {}
+                        nh_dict = af_dict[address_family]['prefixes']\
+                            [prefix]['index'][index]
+                        nh_dict['next_hop'] = next_hop
+                        nh_dict['status_codes'] = status_codes
+                        nh_dict['path_type'] = path_type
+                        nh_dict['metric'] = metric
+                        nh_dict['localprf'] = localprf
+                        nh_dict['weight'] = weight
+                        nh_dict['origin_codes'] = origin_codes
+                except:
+                    pass
 
                 # Check if aggregate_address_ipv4_address
                 if '>a' in status_codes+path_type:
@@ -1631,7 +1633,10 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 origin_codes = str(m.groupdict()['origin_codes'])
 
                 # increment for L2VPN EVPN prefix
-                index += 1
+                try:
+                    index += 1
+                except:
+                    pass
 
                 # Check if index exists
                 if index not in af_dict[address_family]['prefixes']\
