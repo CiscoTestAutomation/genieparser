@@ -74,6 +74,6 @@ class ShowFeatureSet(ShowFeature):
 
     def cli(self):
         cmd = 'show feature-set'
-        return ShowFeature.cli(self, cmd)
+        return super().cli(cmd)
 
 # vim: ft=python et sw=4
