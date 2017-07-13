@@ -165,7 +165,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
 
             # BGP Protocol State             : Running
             p4 = re.compile(r'^\s*BGP +Protocol +State *:'
-                             ' +(?P<protocol_state>[a-zA-Z]+)$')
+                             ' +(?P<protocol_state>[a-zA-Z\(\)\s]+)$')
             m = p4.match(line)
             if m:
                 parsed_dict['bgp_protocol_state'] = \
