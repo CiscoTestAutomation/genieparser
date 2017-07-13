@@ -36,7 +36,7 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {
+    golden_parsed_output1 = {
         'bgp_as_path_entries': 0,
         'bgp_asformat': 'asplain',
         'bgp_isolate_mode': 'No',
@@ -175,12 +175,12 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                  'vrf_rd': 'not configured',
                  'vrf_state': 'up'}}}
 
-    golden_output = {'execute.return_value': '''
+    golden_output1 = {'execute.return_value': '''
         BGP Process Information
         BGP Process ID                 : 29474
         BGP Protocol Started, reason:  : configuration
         BGP Protocol Tag               : 100
-        BGP Performance Mode           : No
+        BGP Performance Mode:          : No
         BGP Protocol State             : Running
         BGP Isolate Mode               : No
         BGP MMODE                      : Initialized
@@ -313,12 +313,775 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 None
         '''}
 
-    def test_show_bgp_process_vrf_all_golden_cli(self):
+    golden_parsed_output2 = {
+        'bgp_as_path_entries': 0,
+        'bgp_asformat': 'asplain',
+        'bgp_isolate_mode': 'Yes',
+        'bgp_memory_state': 'ok',
+        'bgp_mmode': 'Initialized',
+        'bgp_paths_per_hwm_attr': 3,
+        'bgp_performance_mode': 'No',
+        'bgp_pid': 26549,
+        'bgp_protocol_started_reason': 'configuration',
+        'bgp_protocol_state': 'running (isolate)',
+        'bgp_tag': '333',
+        'bytes_used': 784,
+        'bytes_used_as_path_entries': 0,
+        'entries_pending_delete': 0,
+        'hwm_attr_entries': 8,
+        'hwm_entries_pending_delete': 0,
+        'num_attr_entries': 7,
+        'segment_routing_global_block': '10000-25000',
+        'vrf': 
+            {'VRF1': 
+                {'cluster_id': '0.0.0.0',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 0,
+                'num_conf_peers': 2,
+                'num_established_peers': 0,
+                'num_pending_conf_peers': 0,
+                'router_id': '0.0.0.0',
+                'vrf_id': '3',
+                'vrf_rd': 'not configured',
+                'vrf_state': 'up'},
+            'ac': 
+                {'address_family': 
+                    {'ipv4 unicast': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {1: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'table_id': '0x4',
+                        'table_state': 'up'},
+                    'ipv6 unicast': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'table_id': '0x80000004',
+                        'table_state': 'up'}},
+                'cluster_id': '0.0.0.0',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 0,
+                'num_conf_peers': 1,
+                'num_established_peers': 0,
+                'num_pending_conf_peers': 0,
+                'router_id': '0.0.0.0',
+                'vrf_id': '4',
+                'vrf_rd': 'not configured',
+                'vrf_state': 'up'},
+            'default': 
+                {'address_family': 
+                    {'ipv4 label unicast': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 7,
+                                'routes': 4}},
+                        'table_id': '0x1',
+                        'table_state': 'up'},
+                    'ipv4 multicast': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {3: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 3,
+                                'routes': 3}},
+                        'redistribution': 
+                            {'static': 
+                                {'route_map': 'PERMIT_ALL_RM'}},
+                        'route_reflector': True,
+                        'table_id': '0x1',
+                        'table_state': 'up'},
+                    'ipv4 unicast': 
+                        {'label_mode': 'per-prefix',
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {5: 
+                                {'active_peers': 0,
+                                'aggregates': 1,
+                                'networks': 1,
+                                'paths': 7,
+                                'routes': 4}},
+                        'redistribution': 
+                            {'static': 
+                                {'route_map': 'ADD_RT_400_400'}},
+                        'route_reflector': True,
+                        'table_id': '0x1',
+                        'table_state': 'up'},
+                    'ipv6 multicast': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {4: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 3,
+                                'routes': 3}},
+                        'redistribution': 
+                            {'static': 
+                                {'route_map': 'PERMIT_ALL_RM'}},
+                        'route_reflector': True,
+                        'table_id': '0x80000001',
+                        'table_state': 'up'},
+                    'ipv6 unicast': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {4: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 5,
+                                'routes': 3}},
+                        'redistribution': 
+                            {'static': 
+                                {'route_map': 'PERMIT_ALL_RM'}},
+                        'route_reflector': True,
+                        'table_id': '0x80000001',
+                        'table_state': 'up'},
+                    'link-state': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {4: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'route_reflector': True,
+                        'table_id': '0x1',
+                        'table_state': 'up'},
+                    'vpnv4 unicast': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 4,
+                            'non_critical': 5},
+                        'peers': 
+                            {3: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 7,
+                                'routes': 5}},
+                        'route_reflector': True,
+                        'table_id': '0x1',
+                        'table_state': 'up'},
+                    'vpnv6 unicast': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {3: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 7,
+                                'routes': 5}},
+                        'route_reflector': True,
+                        'table_id': '0x80000001',
+                        'table_state': 'up'}},
+                'cluster_id': '0.0.0.3',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 0,
+                'num_conf_peers': 6,
+                'num_established_peers': 0,
+                'num_pending_conf_peers': 0,
+                'router_id': '3.3.3.3',
+                'vrf_id': '1',
+                'vrf_rd': 'not configured',
+                'vrf_state': 'up'},
+            'management': 
+                {'cluster_id': '0.0.0.0',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 0,
+                'num_conf_peers': 1,
+                'num_established_peers': 0,
+                'num_pending_conf_peers': 0,
+                'router_id': '0.0.0.0',
+                'vrf_id': '2',
+                'vrf_rd': 'not configured',
+                'vrf_state': 'up'},
+            'vpn1': 
+                {'address_family': 
+                    {'ipv4 multicast': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 2,
+                                'routes': 2}},
+                        'redistribution': 
+                            {'static': {'route_map': 'PERMIT_ALL_RM'}},
+                        'table_id': '0x5',
+                        'table_state': 'up'},
+                    'ipv4 unicast': 
+                        {'aggregate_label': '492287',
+                        'export_default_map': 'PERMIT_ALL_RM',
+                        'export_default_prefix_count': 2,
+                        'export_default_prefix_limit': 1000,
+                        'export_rt_list': '100:1 '
+                                          '400:400',
+                        'import_default_map': 'PERMIT_ALL_RM',
+                        'import_default_prefix_count': 3,
+                        'import_default_prefix_limit': 1000,
+                        'import_rt_list': '100:1',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {2: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 5,
+                                'routes': 3}},
+                        'redistribution': 
+                            {'static': {'route_map': 'PERMIT_ALL_RM'}},
+                        'table_id': '0x5',
+                        'table_state': 'up'},
+                    'ipv6 multicast': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 2,
+                                'routes': 2}},
+                        'redistribution': 
+                            {'static': {'route_map': 'PERMIT_ALL_RM'}},
+                        'table_id': '0x80000005',
+                        'table_state': 'up'},
+                    'ipv6 unicast': 
+                        {'aggregate_label': '492288',
+                        'export_default_map': 'PERMIT_ALL_RM',
+                        'export_default_prefix_count': 2,
+                        'export_default_prefix_limit': 1000,
+                        'export_rt_list': '1:100 '
+                                          '600:600',
+                        'import_default_map': 'PERMIT_ALL_RM',
+                        'import_default_prefix_count': 3,
+                        'import_default_prefix_limit': 1000,
+                        'import_rt_list': '1:100',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {2: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 5,
+                                'routes': 3}},
+                        'redistribution': 
+                            {'static': {'route_map': 'PERMIT_ALL_RM'}},
+                        'table_id': '0x80000005',
+                        'table_state': 'up'}},
+                'cluster_id': '0.0.0.0',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 0,
+                'num_conf_peers': 2,
+                'num_established_peers': 0,
+                'num_pending_conf_peers': 0,
+                'router_id': '33.33.33.33',
+                'vrf_id': '5',
+                'vrf_rd': '1:100',
+                'vrf_state': 'up'},
+            'vpn2': 
+                {'address_family': 
+                    {'ipv4 unicast': 
+                        {'import_rt_list': '400:400',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 2,
+                                'routes': 2}},
+                        'table_id': '0x6',
+                        'table_state': 'up'},
+                    'ipv6 unicast': 
+                        {'import_rt_list': '600:600',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 2,
+                                'routes': 2}},
+                        'table_id': '0x80000006',
+                        'table_state': 'up'}},
+                'cluster_id': '0.0.0.0',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 0,
+                'num_conf_peers': 0,
+                'num_established_peers': 0,
+                'num_pending_conf_peers': 0,
+                'router_id': '0.0.0.0',
+                'vrf_id': '6',
+                'vrf_rd': '2:100',
+                'vrf_state': 'up'}}}
+
+    golden_output2 = {'execute.return_value': '''
+        BGP Process Information
+        BGP Process ID                 : 26549
+        BGP Protocol Started, reason:  : configuration
+        BGP Performance Mode:          : No
+        BGP Protocol Tag               : 333
+        BGP Protocol State             : Running (Isolate)
+        BGP Isolate Mode               : Yes
+        BGP MMODE                      : Initialized
+        BGP Memory State               : OK
+        BGP asformat                   : asplain
+        Segment Routing Global Block   : 10000-25000
+
+        BGP attributes information
+        Number of attribute entries    : 7
+        HWM of attribute entries       : 8
+        Bytes used by entries          : 784
+        Entries pending delete         : 0
+        HWM of entries pending delete  : 0
+        BGP paths per attribute HWM    : 3
+        BGP AS path entries            : 0
+        Bytes used by AS path entries  : 0
+
+        Confcheck capabilities in use:
+          1. CAP_FEATURE_BGP_5_2_1 (refcount = 2)
+
+        Information regarding configured VRFs:
+
+        BGP Information for VRF VRF1
+        VRF Id                         : 3
+        VRF state                      : UP
+        Router-ID                      : 0.0.0.0
+        Configured Router-ID           : 0.0.0.0
+        Confed-ID                      : 0
+        Cluster-ID                     : 0.0.0.0
+        No. of configured peers        : 2
+        No. of pending config peers    : 0
+        No. of established peers       : 0
+        VRF RD                         : Not configured
+
+        BGP Information for VRF ac
+        VRF Id                         : 4
+        VRF state                      : UP
+        Router-ID                      : 0.0.0.0
+        Configured Router-ID           : 0.0.0.0
+        Confed-ID                      : 0
+        Cluster-ID                     : 0.0.0.0
+        No. of configured peers        : 1
+        No. of pending config peers    : 0
+        No. of established peers       : 0
+        VRF RD                         : Not configured
+
+            Information for address family IPv4 Unicast in VRF ac
+            Table Id                   : 0x4
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            1          0               0          0          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family IPv6 Unicast in VRF ac
+            Table Id                   : 0x80000004
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               0          0          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+        BGP Information for VRF default
+        VRF Id                         : 1
+        VRF state                      : UP
+        Router-ID                      : 3.3.3.3
+        Configured Router-ID           : 0.0.0.0
+        Confed-ID                      : 0
+        Cluster-ID                     : 0.0.0.3
+        No. of configured peers        : 6
+        No. of pending config peers    : 0
+        No. of established peers       : 0
+        VRF RD                         : Not configured
+
+            Information for address family IPv4 Unicast in VRF default
+            Table Id                   : 0x1
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            5          0               4          7          1          1         
+
+            Redistribution                
+                static, route-map ADD_RT_400_400
+
+            Wait for IGP convergence is not configured
+            Label mode: per-prefix
+            Is a Route-reflector
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family IPv4 Multicast in VRF default
+            Table Id                   : 0x1
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            3          0               3          3          0          0         
+
+            Redistribution                
+                static, route-map PERMIT_ALL_RM
+
+            Wait for IGP convergence is not configured
+            Is a Route-reflector
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family IPv6 Unicast in VRF default
+            Table Id                   : 0x80000001
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            4          0               3          5          0          0         
+
+            Redistribution                
+                static, route-map PERMIT_ALL_RM
+
+            Wait for IGP convergence is not configured
+            Is a Route-reflector
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family IPv6 Multicast in VRF default
+            Table Id                   : 0x80000001
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            4          0               3          3          0          0         
+
+            Redistribution                
+                static, route-map PERMIT_ALL_RM
+
+            Wait for IGP convergence is not configured
+            Is a Route-reflector
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family VPNv4 Unicast in VRF default
+            Table Id                   : 0x1
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            3          0               5          7          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+            Is a Route-reflector
+
+
+            Nexthop trigger-delay
+                critical 4 ms
+                non-critical 5 ms
+
+            Information for address family VPNv6 Unicast in VRF default
+            Table Id                   : 0x80000001
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            3          0               5          7          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+            Is a Route-reflector
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family IPv4 Label Unicast in VRF default
+            Table Id                   : 0x1
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               4          7          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family Link-State in VRF default
+            Table Id                   : 0x1
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            4          0               0          0          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+            Is a Route-reflector
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+        BGP Information for VRF management
+        VRF Id                         : 2
+        VRF state                      : UP
+        Router-ID                      : 0.0.0.0
+        Configured Router-ID           : 0.0.0.0
+        Confed-ID                      : 0
+        Cluster-ID                     : 0.0.0.0
+        No. of configured peers        : 1
+        No. of pending config peers    : 0
+        No. of established peers       : 0
+        VRF RD                         : Not configured
+
+        BGP Information for VRF vpn1
+        VRF Id                         : 5
+        VRF state                      : UP
+        Router-ID                      : 33.33.33.33
+        Configured Router-ID           : 0.0.0.0
+        Confed-ID                      : 0
+        Cluster-ID                     : 0.0.0.0
+        No. of configured peers        : 2
+        No. of pending config peers    : 0
+        No. of established peers       : 0
+        VRF RD                         : 1:100
+        VRF EVPN RD                    : 1:100
+
+            Information for address family IPv4 Unicast in VRF vpn1
+            Table Id                   : 0x5
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            2          0               3          5          0          0         
+
+            Redistribution                
+                static, route-map PERMIT_ALL_RM
+
+            Wait for IGP convergence is not configured
+            Import route-map PERMIT_ALL_RM
+            Export route-map PERMIT_ALL_RM
+            Export RT list:
+                100:1
+                400:400
+            Import RT list:
+                100:1
+            Label mode: per-vrf
+            Aggregate label: 492287
+            Import default limit       : 1000
+            Import default prefix count : 3
+            Import default map         : PERMIT_ALL_RM
+            Export default limit       : 1000
+            Export default prefix count : 2
+            Export default map         : PERMIT_ALL_RM
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family IPv4 Multicast in VRF vpn1
+            Table Id                   : 0x5
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               2          2          0          0         
+
+            Redistribution                
+                static, route-map PERMIT_ALL_RM
+
+            Wait for IGP convergence is not configured
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family IPv6 Unicast in VRF vpn1
+            Table Id                   : 0x80000005
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            2          0               3          5          0          0         
+
+            Redistribution                
+                static, route-map PERMIT_ALL_RM
+
+            Wait for IGP convergence is not configured
+            Import route-map PERMIT_ALL_RM
+            Export route-map PERMIT_ALL_RM
+            Export RT list:
+                1:100
+                600:600
+            Import RT list:
+                1:100
+            Label mode: per-vrf
+            Aggregate label: 492288
+            Import default limit       : 1000
+            Import default prefix count : 3
+            Import default map         : PERMIT_ALL_RM
+            Export default limit       : 1000
+            Export default prefix count : 2
+            Export default map         : PERMIT_ALL_RM
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family IPv6 Multicast in VRF vpn1
+            Table Id                   : 0x80000005
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               2          2          0          0         
+
+            Redistribution                
+                static, route-map PERMIT_ALL_RM
+
+            Wait for IGP convergence is not configured
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+        BGP Information for VRF vpn2
+        VRF Id                         : 6
+        VRF state                      : UP
+        Router-ID                      : 0.0.0.0
+        Configured Router-ID           : 0.0.0.0
+        Confed-ID                      : 0
+        Cluster-ID                     : 0.0.0.0
+        No. of configured peers        : 0
+        No. of pending config peers    : 0
+        No. of established peers       : 0
+        VRF RD                         : 2:100
+        VRF EVPN RD                    : 2:100
+
+            Information for address family IPv4 Unicast in VRF vpn2
+            Table Id                   : 0x6
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               2          2          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+            Import RT list:
+                400:400
+            Label mode: per-vrf
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family IPv6 Unicast in VRF vpn2
+            Table Id                   : 0x80000006
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               2          2          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+            Import RT list:
+                600:600
+            Label mode: per-vrf
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+        '''}
+
+    def test_show_bgp_process_vrf_all_golden1_cli(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output)
+        self.device = Mock(**self.golden_output1)
         obj = ShowBgpProcessVrfAll(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output,self.golden_parsed_output1)
+
+    def test_show_bgp_process_vrf_all_golden2_cli(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowBgpProcessVrfAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
     def test_show_bgp_process_vrf_all_empty_cli(self):
         self.device = Mock(**self.empty_output)
@@ -367,7 +1130,6 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                                 'networks': 0,
                                 'paths': 0,
                                 'routes': 0}},
-                        'route_reflector': False,
                         'table_id': '0x4',
                         'table_state': 'up'},
                     'ipv6 unicast':
@@ -381,7 +1143,6 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                                 'networks': 0,
                                 'paths': 0,
                                 'routes': 0}},
-                        'route_reflector': False,
                         'table_id': '0x80000004',
                         'table_state': 'up'}},
                 'cluster_id': '0.0.0.0',
@@ -392,7 +1153,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                 'num_pending_conf_peers': 0,
                 'router_id': '0.0.0.0',
                 'vrf_id': '4',
-                'vrf_state': 'UP'},
+                'vrf_rd': 'not configured',
+                'vrf_state': 'up'},
             'default':
                 {'address_family':
                     {'ipv4 label unicast':
@@ -406,7 +1168,6 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                                 'networks': 0,
                                 'paths': 5,
                                 'routes': 3}},
-                        'route_reflector': False,
                         'table_id': '0x1',
                         'table_state': 'up'},
                     'ipv4 multicast':
@@ -528,7 +1289,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                 'num_pending_conf_peers': 0,
                 'router_id': '3.3.3.3',
                 'vrf_id': '1',
-                'vrf_state': 'UP'},
+                'vrf_rd': 'not configured',
+                'vrf_state': 'up'},
             'management':
                 {'cluster_id': '0.0.0.0',
                 'conf_router_id': '0.0.0.0',
@@ -538,7 +1300,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                 'num_pending_conf_peers': 0,
                 'router_id': '0.0.0.0',
                 'vrf_id': '2',
-                'vrf_state': 'UP'},
+                'vrf_rd': 'not configured',
+                'vrf_state': 'up'},
             'vpn1':
                 {'address_family':
                     {'ipv4 multicast':
@@ -555,7 +1318,6 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                         'redistribution':
                             {'static':
                                 {'route_map': 'PERMIT_ALL_RM'}},
-                        'route_reflector': False,
                         'table_id': '0x5',
                         'table_state': 'up'},
                     'ipv4 unicast':
@@ -582,7 +1344,6 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                         'redistribution':
                             {'static':
                                 {'route_map': 'PERMIT_ALL_RM'}},
-                        'route_reflector': False,
                         'table_id': '0x5',
                         'table_state': 'up'},
                     'ipv6 multicast':
@@ -599,7 +1360,6 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                         'redistribution':
                             {'static':
                                 {'route_map': 'PERMIT_ALL_RM'}},
-                        'route_reflector': False,
                         'table_id': '0x80000005',
                         'table_state': 'up'},
                     'ipv6 unicast':
@@ -623,7 +1383,6 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                         'redistribution':
                             {'static':
                                 {'route_map': 'PERMIT_ALL_RM'}},
-                        'route_reflector': False,
                         'table_id': '0x80000005',
                         'table_state': 'up'}},
                 'cluster_id': '0.0.0.0',
@@ -635,7 +1394,7 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                 'router_id': '0.0.0.0',
                 'vrf_id': '5',
                 'vrf_rd': '1:100',
-                'vrf_state': 'UP'},
+                'vrf_state': 'up'},
             'vpn2':
                 {'address_family':
                     {'ipv4 unicast':
@@ -651,7 +1410,6 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                                 'networks': 0,
                                 'paths': 2,
                                 'routes': 2}},
-                        'route_reflector': False,
                         'table_id': '0x6',
                         'table_state': 'up'},
                     'ipv6 unicast':
@@ -667,7 +1425,6 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                                 'networks': 0,
                                 'paths': 2,
                                 'routes': 2}},
-                        'route_reflector': False,
                         'table_id': '0x80000006',
                         'table_state': 'up'}},
                 'cluster_id': '0.0.0.0',
@@ -679,7 +1436,7 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                 'router_id': '0.0.0.0',
                 'vrf_id': '6',
                 'vrf_rd': '2:100',
-                'vrf_state': 'UP'}}}
+                'vrf_state': 'up'}}}
 
     golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
         <nf:rpc-reply xmlns="http://www.cisco.com/nxos:1.0:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
