@@ -36,7 +36,7 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {
+    golden_parsed_output1 = {
         'bgp_as_path_entries': 0,
         'bgp_asformat': 'asplain',
         'bgp_isolate_mode': 'No',
@@ -175,12 +175,12 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                  'vrf_rd': 'not configured',
                  'vrf_state': 'up'}}}
 
-    golden_output = {'execute.return_value': '''
+    golden_output1 = {'execute.return_value': '''
         BGP Process Information
         BGP Process ID                 : 29474
         BGP Protocol Started, reason:  : configuration
         BGP Protocol Tag               : 100
-        BGP Performance Mode           : No
+        BGP Performance Mode:          : No
         BGP Protocol State             : Running
         BGP Isolate Mode               : No
         BGP MMODE                      : Initialized
@@ -313,12 +313,12 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 None
         '''}
 
-    def test_show_bgp_process_vrf_all_golden_cli(self):
+    def test_show_bgp_process_vrf_all_golden1_cli(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output)
+        self.device = Mock(**self.golden_output1)
         obj = ShowBgpProcessVrfAll(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output,self.golden_parsed_output1)
 
     def test_show_bgp_process_vrf_all_empty_cli(self):
         self.device = Mock(**self.empty_output)
@@ -367,7 +367,6 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                                 'networks': 0,
                                 'paths': 0,
                                 'routes': 0}},
-                        'route_reflector': False,
                         'table_id': '0x4',
                         'table_state': 'up'},
                     'ipv6 unicast':
@@ -381,7 +380,6 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                                 'networks': 0,
                                 'paths': 0,
                                 'routes': 0}},
-                        'route_reflector': False,
                         'table_id': '0x80000004',
                         'table_state': 'up'}},
                 'cluster_id': '0.0.0.0',
@@ -392,7 +390,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                 'num_pending_conf_peers': 0,
                 'router_id': '0.0.0.0',
                 'vrf_id': '4',
-                'vrf_state': 'UP'},
+                'vrf_rd': 'not configured',
+                'vrf_state': 'up'},
             'default':
                 {'address_family':
                     {'ipv4 label unicast':
@@ -406,7 +405,6 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                                 'networks': 0,
                                 'paths': 5,
                                 'routes': 3}},
-                        'route_reflector': False,
                         'table_id': '0x1',
                         'table_state': 'up'},
                     'ipv4 multicast':
@@ -528,7 +526,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                 'num_pending_conf_peers': 0,
                 'router_id': '3.3.3.3',
                 'vrf_id': '1',
-                'vrf_state': 'UP'},
+                'vrf_rd': 'not configured',
+                'vrf_state': 'up'},
             'management':
                 {'cluster_id': '0.0.0.0',
                 'conf_router_id': '0.0.0.0',
@@ -538,7 +537,8 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                 'num_pending_conf_peers': 0,
                 'router_id': '0.0.0.0',
                 'vrf_id': '2',
-                'vrf_state': 'UP'},
+                'vrf_rd': 'not configured',
+                'vrf_state': 'up'},
             'vpn1':
                 {'address_family':
                     {'ipv4 multicast':
@@ -555,7 +555,6 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                         'redistribution':
                             {'static':
                                 {'route_map': 'PERMIT_ALL_RM'}},
-                        'route_reflector': False,
                         'table_id': '0x5',
                         'table_state': 'up'},
                     'ipv4 unicast':
@@ -582,7 +581,6 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                         'redistribution':
                             {'static':
                                 {'route_map': 'PERMIT_ALL_RM'}},
-                        'route_reflector': False,
                         'table_id': '0x5',
                         'table_state': 'up'},
                     'ipv6 multicast':
@@ -599,7 +597,6 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                         'redistribution':
                             {'static':
                                 {'route_map': 'PERMIT_ALL_RM'}},
-                        'route_reflector': False,
                         'table_id': '0x80000005',
                         'table_state': 'up'},
                     'ipv6 unicast':
@@ -623,7 +620,6 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                         'redistribution':
                             {'static':
                                 {'route_map': 'PERMIT_ALL_RM'}},
-                        'route_reflector': False,
                         'table_id': '0x80000005',
                         'table_state': 'up'}},
                 'cluster_id': '0.0.0.0',
@@ -635,7 +631,7 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                 'router_id': '0.0.0.0',
                 'vrf_id': '5',
                 'vrf_rd': '1:100',
-                'vrf_state': 'UP'},
+                'vrf_state': 'up'},
             'vpn2':
                 {'address_family':
                     {'ipv4 unicast':
@@ -651,7 +647,6 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                                 'networks': 0,
                                 'paths': 2,
                                 'routes': 2}},
-                        'route_reflector': False,
                         'table_id': '0x6',
                         'table_state': 'up'},
                     'ipv6 unicast':
@@ -667,7 +662,6 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                                 'networks': 0,
                                 'paths': 2,
                                 'routes': 2}},
-                        'route_reflector': False,
                         'table_id': '0x80000006',
                         'table_state': 'up'}},
                 'cluster_id': '0.0.0.0',
@@ -679,7 +673,7 @@ class test_show_bgp_process_vrf_all_xml(unittest.TestCase):
                 'router_id': '0.0.0.0',
                 'vrf_id': '6',
                 'vrf_rd': '2:100',
-                'vrf_state': 'UP'}}}
+                'vrf_state': 'up'}}}
 
     golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
         <nf:rpc-reply xmlns="http://www.cisco.com/nxos:1.0:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">

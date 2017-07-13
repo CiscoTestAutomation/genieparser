@@ -147,7 +147,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                 continue
 
             # BGP Performance Mode:          : No
-            p2_1 = re.compile(r'^\s*BGP +Performance +Mode *:'
+            p2_1 = re.compile(r'^\s*BGP +Performance +Mode: *:'
                                ' +(?P<performance_mode>[a-zA-Z\s]+)$')
             m = p2_1.match(line)
             if m:
@@ -391,7 +391,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
 
             #     Information for address family IPv4 Unicast in VRF VRF1
             p25 = re.compile(r'^\s*Information +for +address +family'
-                               ' +(?P<address_family>[a-zA-Z0-9\s]+)'
+                               ' +(?P<address_family>[a-zA-Z0-9\s\-]+)'
                                ' +in +VRF +(?P<vrf>[a-zA-Z0-9]+)$')
             m = p25.match(line)
             if m:
@@ -406,6 +406,9 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                     ['address_family'] and vrf == vrf_name:
                     parsed_dict['vrf'][vrf_name]['address_family']\
                         [address_family] = {}
+                    # Init export/import RT variables
+                    export_rt_found = False ; export_rt_values = ''
+                    import_rt_found = False ; import_rt_values = ''
                     continue
 
             #     Table Id                   : 10
@@ -470,7 +473,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
             #         static, route-map genie_redistribution
             #         eigrp, route-map test-map
             p29 = re.compile(r'^\s*(?P<name>[a-zA-Z]+),'
-                              ' +route-map +(?P<route_map>[a-zA-Z\-\_]+)$')
+                              ' +route-map +(?P<route_map>[a-zA-Z0-9\-\_]+)$')
             m = p29.match(line)
             if m:
                 if 'redistribution' not in parsed_dict['vrf'][vrf_name]\
@@ -491,21 +494,48 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
             
             #     Export RT list: 100:100
             p30 = re.compile(r'^\s*Export +RT +list *:'
-                              ' +(?P<export_rt_list>[0-9\:]+)$')
+                              '(?: +(?P<export_rt_list>[0-9\:]+))?$')
             m = p30.match(line)
             if m:
-                parsed_dict['vrf'][vrf_name]['address_family'][address_family]\
-                    ['export_rt_list'] = str(m.groupdict()['export_rt_list'])
+                export_rt_found = True
+                import_rt_found = False
+                if m.groupdict()['export_rt_list'] != None:
+                    parsed_dict['vrf'][vrf_name]['address_family']\
+                        [address_family]['export_rt_list'] = \
+                            str(m.groupdict()['export_rt_list'])
                 continue
+
+            # Export RT list:
+            #   100:1
+            #   400:400
+            p30_1 = re.compile(r'^\s*(?P<export_rt_list>(\d+)\:(\d+))$')
+            m = p30_1.match(line)
+            if m and export_rt_found:
+                export_rt_values = export_rt_values + ' ' + str(m.groupdict()['export_rt_list'])
+                parsed_dict['vrf'][vrf_name]['address_family']\
+                        [address_family]['export_rt_list'] = export_rt_values.strip()
 
             #     Import RT list: 100:100
             p31 = re.compile(r'^\s*Import +RT +list *:'
-                              ' +(?P<import_rt_list>[0-9\:]+)$')
+                              '(?: +(?P<import_rt_list>[0-9\:]+))?$')
             m = p31.match(line)
             if m:
-                parsed_dict['vrf'][vrf_name]['address_family'][address_family]\
-                    ['import_rt_list'] = str(m.groupdict()['import_rt_list'])
+                import_rt_found = True
+                export_rt_found = False
+                if m.groupdict()['import_rt_list'] != None:
+                    parsed_dict['vrf'][vrf_name]['address_family']\
+                        [address_family]['import_rt_list'] = \
+                            str(m.groupdict()['import_rt_list'])
                 continue
+
+            # Import RT list:
+            #   100:1
+            p31_1 = re.compile(r'^\s*(?P<import_rt_list>(\d+)\:(\d+))$')
+            m = p31_1.match(line)
+            if m and import_rt_found:
+                import_rt_values = import_rt_values + ' ' + str(m.groupdict()['import_rt_list'])
+                parsed_dict['vrf'][vrf_name]['address_family']\
+                        [address_family]['import_rt_list'] = import_rt_values.strip()
 
             #     Label mode: per-prefix
             p32 = re.compile(r'^\s*Label +mode *: +(?P<label_mode>[a-zA-Z\-]+)$')
@@ -513,6 +543,14 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
             if m:
                 parsed_dict['vrf'][vrf_name]['address_family'][address_family]\
                     ['label_mode'] = str(m.groupdict()['label_mode'])
+                continue
+
+            #     Is a Route-reflector
+            p32_1 = re.compile(r'^\s*Is +a +Route\-reflector$')
+            m = p32_1.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family'][address_family]\
+                    ['route_reflector'] = True
                 continue
 
             #     Aggregate label: 492287
@@ -648,8 +686,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                                                 etree_dict['bgp_memory_state'] = str(key.text).lower()
                                             # bgp_performance_mode
                                             if text == 'forwardingstatesaved':
-                                                state = key.text
-                                                if state == 'false':
+                                                if key.text == 'false':
                                                     etree_dict['bgp_performance_mode'] = 'No'
                                                 else:
                                                     etree_dict['bgp_performance_mode'] = 'Yes'
@@ -708,7 +745,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                                                             vrf_dict['vrf_id'] = row_vrf.text
                                                         # vrf_state
                                                         if vrf_tag == 'vrf-state':
-                                                            vrf_dict['vrf_state'] = row_vrf.text
+                                                            vrf_dict['vrf_state'] = str(row_vrf.text).lower()
                                                         # router_id
                                                         if vrf_tag == 'vrf-router-id':
                                                             vrf_dict['router_id'] = row_vrf.text
@@ -730,6 +767,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                                                         # num_established_peers
                                                         if vrf_tag == 'vrf-est-peers':
                                                             vrf_dict['num_established_peers'] = int(row_vrf.text)
+                                                            vrf_dict['vrf_rd'] = 'not configured'
                                                         # vrf_rd
                                                         if vrf_tag == 'vrf-rd':
                                                             vrf_dict['vrf_rd'] = row_vrf.text
@@ -785,9 +823,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                                                                         af_dict['peers'][peers]['aggregates'] = int(row_af.text)
                                                                     # route_reflector
                                                                     if af_tag == 'af-rr':
-                                                                        if row_af.text == 'false':
-                                                                            af_dict['route_reflector'] = False
-                                                                        elif row_af.text == 'true':
+                                                                        if row_af.text == 'true':
                                                                             af_dict['route_reflector'] = True
                                                                     # next_hop_trigger_delay
                                                                     #   critical
