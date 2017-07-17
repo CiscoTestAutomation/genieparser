@@ -835,6 +835,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
         out = self.device.execute('show bgp instance all {vrf_type} all process detail'.format(vrf_type=vrf_type))
 
         ret_dict = {}
+        vrf = None
         # seperate message logging pool and bmp pool
         flag = None
 
@@ -842,8 +843,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             line = line.strip()
 
             #BGP instance 0: 'default'
-            p1 = re.compile(r'^BGP *instance *'
-                             '(?P<num>\w+): +\'(?P<instance>\w+)\'$')
+            p1 = re.compile(r'^\s*BGP +instance +(?P<num>\S+): +\'(?P<instance>\S+)\'$')
             m = p1.match(line)
             if m:
                 instance = m.groupdict()['instance']
@@ -852,6 +852,8 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                     ret_dict['instance'] = {}
                 if instance not in ret_dict['instance']:
                     ret_dict['instance'][instance] = {}
+
+                # Initialize default values
                 vrf = 'default'
                 continue
 
@@ -865,14 +867,15 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                     ret_dict['instance'][instance]['vrf'][vrf] = {}
                     continue
 
-            #BGP is operating in STANDALONE mode
+            # Create vrf list if default VRF
             if vrf == 'default':
                 if 'vrf' not in ret_dict['instance'][instance]:
                     ret_dict['instance'][instance]['vrf'] = {}
                 if vrf not in ret_dict['instance'][instance]['vrf']:
                     ret_dict['instance'][instance]['vrf'][vrf] = {}
                     continue
-
+            
+            #BGP is operating in STANDALONE mode
             p2 = re.compile(r'BGP *is *operating *in *'
                              '(?P<operation_mode>\w+) *mode$')
             m = p2.match(line)
