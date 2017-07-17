@@ -176,7 +176,7 @@ class ShowBgpInstanceAfGroupConfiguration(ShowBgpInstanceAfGroupConfigurationSch
 
         ret_dict = {}
 
-        cmd = 'show run formal | af-group'
+        cmd = 'show run formal | i af-group'
         conf = self.device.execute(cmd)
 
         for line1 in conf.splitlines():
@@ -430,7 +430,7 @@ class ShowBgpInstanceSessionGroupConfigurationSchema(MetaParser):
             {Any():
                 {'peer_session':
                     {Any():
-                        {'remote_as': int,
+                        {Optional('remote_as'): int,
                          Optional('remote_as_inherit'): str,
                          Optional('description'): str,
                          Optional('description_inherit'): str,
