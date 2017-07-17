@@ -1766,6 +1766,8 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                      Optional('four_octets_asn'): str,
                                      Optional('vpnv4_unicast'): str,
                                      Optional('vpnv6_unicast'): str,
+                                     Optional('ipv4_unicast'): str,
+                                     Optional('ipv6_unicast'): str,
                                      Optional('graceful_restart'): str,
                                      Optional('enhanced_refresh'): str,
                                      Optional('multisession'): str,
@@ -2206,7 +2208,6 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
             p27_1= re.compile(r'^(?P<name>[a-zA-Z0-9\s\-]+): *(?P<adv>(Y|y)es|(N|n)o) *(?P<rcvd>(Y|y)es|(N|n)o+)$')
             m = p27_1.match(line)
             if m:
-                # import pdb; pdb.set_trace()
                 name = m.groupdict()['name'].lower()
                 adv = 'advertised' if m.groupdict()['adv'].lower() == 'yes' else ''
                 rcvd = 'received' if m.groupdict()['rcvd'].lower() == 'yes' else ''
@@ -2221,6 +2222,10 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                     name = 'vpnv4_unicast'
                 if 'vpnv6' in name:
                     name = 'vpnv6_unicast'
+                if 'ipv4' in name:
+                    name = 'ipv4_unicast'
+                if 'ipv6' in name:
+                    name = 'ipv6_unicast'
                 if 'restart' in name:
                     name = 'graceful_restart'
                 if 'multi' in name:
@@ -2533,7 +2538,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
 
             # Local host: 10.1.5.1, Local port: 179, IF Handle: 0x00000060
-            p52 = re.compile(r'^Local *host: *(?P<local_host>[0-9\.]+), *Local *port: *(?P<local_port>[0-9]+), *IF *Handle: *(?P<if_handle>[a-z0-9]+)$')
+            p52 = re.compile(r'^Local *host: *(?P<local_host>[\w\.\:]+), *Local *port: *(?P<local_port>[0-9]+), *IF *Handle: *(?P<if_handle>[a-z0-9]+)$')
             m = p52.match(line)
             if m:
                 if 'bgp_session_transport' not in sub_dict:
@@ -2551,7 +2556,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
 
             # Foreign host: 10.1.5.5, Foreign port: 11052
-            p53 = re.compile(r'^Foreign *host: *(?P<foreign_host>[0-9\.]+), *Foreign *port: *(?P<foreign_port>[0-9]+)$')
+            p53 = re.compile(r'^Foreign *host: *(?P<foreign_host>[\w\.\:]+), *Foreign *port: *(?P<foreign_port>[0-9]+)$')
             m = p53.match(line)
             if m:
                 if 'bgp_session_transport' not in sub_dict:
