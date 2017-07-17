@@ -15,11 +15,16 @@ IOSXR parsers for the following show commands:
     * 'show bgp instance all all all neighbors <WORD> advertised-routes'
     * 'show bgp instance all vrf all neighbors <WORD> advertised-routes'
 
+    * 'show bgp sessions'
+    * 'show bgp vrf-db vrf all'
+    * 'show bgp l2vpn evpn'
+    * 'show bgp l2vpn evpn advertised'
+
 TODO:
-    * 'show bgp instance all all all summary' - BM
-    * 'show bgp instance all vrf all summary' - BM
-    * 'show bgp instance all all all <PREFIX>' - BM
-    * 'show bgp instance all vrf all <PREFIX>' - BM
+    * 'show bgp instance all all all summary'
+    * 'show bgp instance all vrf all summary'
+    * 'show bgp instance all all all <PREFIX>'
+    * 'show bgp instance all vrf all <PREFIX>'
 '''
 
 # Python
@@ -3337,7 +3342,54 @@ class ShowBgpInstanceNeighborsRoutesSchema(MetaParser):
         * 'show bgp instance all vrf all neighbors <WORD> routes'
     '''
 
-    schema = {}
+    schema = {
+        'instance':
+            {Any():
+                {'vrf':
+                    {Any():
+                        {'address_family':
+                            {Any():
+                                {'route_identifier': str,
+                                 'local_as': int,
+                                 Optional('state'): str,
+                                 Optional('vrf_id'): str,
+                                 Optional('generic_scan_interval'): int,
+                                 'non_stop_routing': bool,
+                                 'table_state': str,
+                                 'table_id': str,
+                                 'rd_version': int,
+                                 'tbl_ver': int,
+                                 'nsr_initial_initsync_version': str,
+                                 'nsr_issu_sync_group_versions': str,
+                                 Optional('processed_prefixes'): int,
+                                 Optional('processed_paths'): int,
+                                 Optional('scan_interval'): int,
+                                 Optional('route_distinguisher'): str,
+                                 Optional('default_vrf'): str,
+                                 Optional('routes'):
+                                     {Optional('prefix'):
+                                        {Any():
+                                            {Optional('index'):
+                                                {Any():
+                                                    {Optional('status_codes'): str,
+                                                    Optional('next_hop'): str,
+                                                    Optional('metric'): str,
+                                                    Optional('locprf'): str,
+                                                    Optional('weight'): str,
+                                                    Optional('path'): str,
+                                                    Optional('origin_codes'): str
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
 
 class ShowBgpInstanceNeighborsRoutes(ShowBgpInstanceNeighborsRoutesSchema):
     

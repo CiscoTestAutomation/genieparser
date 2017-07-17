@@ -88,26 +88,23 @@ class test_show_placement_program_all(unittest.TestCase):
                         'jid': '1156',
                         'standby': 'NONE',
                         'standby_state': 'NOT_SPAWNED'}}}
-            }
+            },
         }
     
-        
-
     golden_output = {'execute.return_value': '''
-            
-            Display program related information. This is the program information corresponding to this LR as
-            perceived by the placement daemon.
-            ------------------------------------------------------------------------------------------------------------------------------------------
-                               Process Information
-            ------------------------------------------------------------------------------------------------------------------------------------------
-            Program                                 Group               jid  Active         Active-state             Standby        Standby-state  
-            ------------------------------------------------------------------------------------------------------------------------------------------
-            rcp_fs                                  central-services    1168 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED    
-            ospf(1)                                 v4-routing          1018 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED    
-            bgp(default)                            v4-routing          1018 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED
-            statsd_manager_g                        netmgmt             1141 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED    
-            pim                                     mcast-routing       1158 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED    
-            ipv6_local                              v6-routing          1156 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED    
+        Display program related information. This is the program information corresponding to this LR as
+        perceived by the placement daemon.
+        ------------------------------------------------------------------------------------------------------------------------------------------
+                           Process Information
+        ------------------------------------------------------------------------------------------------------------------------------------------
+        Program                                 Group               jid  Active         Active-state             Standby        Standby-state  
+        ------------------------------------------------------------------------------------------------------------------------------------------
+        rcp_fs                                  central-services    1168 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED    
+        ospf(1)                                 v4-routing          1018 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED    
+        bgp(default)                            v4-routing          1018 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED
+        statsd_manager_g                        netmgmt             1141 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED    
+        pim                                     mcast-routing       1158 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED    
+        ipv6_local                              v6-routing          1156 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED    
       '''}
 
 
@@ -164,26 +161,24 @@ class test_show_bgp_instance_af_group_configuration(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''
+        Fri Jul 14 16:30:21.081 EDT
+        Building configuration...    
+        router bgp 100 af-group af_group address-family ipv4 unicast 
 
-    Fri Jul 14 16:30:21.081 EDT
-    Building configuration...    
-    router bgp 100 af-group af_group address-family ipv4 unicast 
-
-        Wed Jul 12 15:42:07.027 EDT
-    af-group af_group address-family IPv4 Unicast
-      default-originate policy allpass            []
-      maximum-prefix 429 75 35                    []
-      next-hop-self                               []
-      policy allpass in                           []
-      policy allpass out                          []
-      route-reflector-client                      []
-      send-community-ebgp                         []
-      send-extended-community-ebgp                []
-      site-of-origin 100:1                        []
-      soft-reconfiguration inbound always         []
-      allowas-in 10                               []
-      as-override                                 []
-
+            Wed Jul 12 15:42:07.027 EDT
+        af-group af_group address-family IPv4 Unicast
+          default-originate policy allpass            []
+          maximum-prefix 429 75 35                    []
+          next-hop-self                               []
+          policy allpass in                           []
+          policy allpass out                          []
+          route-reflector-client                      []
+          send-community-ebgp                         []
+          send-extended-community-ebgp                []
+          site-of-origin 100:1                        []
+          soft-reconfiguration inbound always         []
+          allowas-in 10                               []
+          as-override                                 []
         '''}
 
     def test_empty(self):
@@ -761,8 +756,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
         Total Path-elems:     40              4400          
         Imported Paths:       25              2200          
         Total RDs:            4               320           
-
-            '''}
+    '''}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -1341,25 +1335,24 @@ class test_show_bgp_instance_all_vrf_all_neighbors_advertised_routes(unittest.Te
 
     golden_output = {'execute.return_value': '''
     
-     Neighbor not found
+        Neighbor not found
 
-    BGP instance 0: 'default'
-    =========================
+        BGP instance 0: 'default'
+        =========================
 
-    VRF: VRF1
-    ---------
+        VRF: VRF1
+        ---------
 
-    VRF: VRF2
-    ---------
-    Network            Next Hop        From            AS Path
-    Route Distinguisher: 200:2 (default for vrf VRF2)
-    46.1.1.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
-    46.1.4.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
-    46.1.5.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
-    46.2.2.0/24        20.1.5.1        2.2.2.2         100 400 33299 51178 47751 {27016}e
+        VRF: VRF2
+        ---------
+        Network            Next Hop        From            AS Path
+        Route Distinguisher: 200:2 (default for vrf VRF2)
+        46.1.1.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
+        46.1.4.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
+        46.1.5.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
+        46.2.2.0/24        20.1.5.1        2.2.2.2         100 400 33299 51178 47751 {27016}e
 
-    Processed 4 prefixes, 4 paths
-
+        Processed 4 prefixes, 4 paths
         '''}
 
     def test_empty(self):
@@ -1464,7 +1457,7 @@ class test_show_bgp_instance_all_all_all_neighbors_advertised_routes(unittest.Te
 
     golden_output = {'execute.return_value': '''
 
-         BGP instance 0: 'default'
+        BGP instance 0: 'default'
         =========================
 
         Address Family: VPNv4 Unicast
@@ -1807,8 +1800,6 @@ class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.Test
         * i646:22:22:1::/64   4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
 
         Processed 10 prefixes, 10 paths
-
-
         '''}
 
     def test_empty(self):
@@ -1915,7 +1906,6 @@ class test_show_bgp_instance_all_vrf_all_neighbors_routes(unittest.TestCase):
     *> 15.1.2.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
     
     Processed 2 prefixes, 2 paths
-
         '''}
 
     def test_empty(self):
@@ -2081,13 +2071,13 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
                                    "table_id": "0x0",
                                    "table_state": "Active",
                                    "generic_scan_interval": 60
-                              }
-                         }
+                                }
+                            }
+                        }
                     }
-               }
-          }
-     }
-    }
+                }
+            }
+        }
 
     golden_output = {'execute.return_value': '''
         BGP instance 0: 'default'
@@ -2144,8 +2134,6 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
         
 
         Processed 3 prefixes, 3 paths
-
-
         '''}
 
     def test_empty(self):
