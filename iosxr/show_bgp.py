@@ -8,8 +8,8 @@ IOSXR parsers for the following show commands:
     * 'show bgo instance all vrf all process detail'
     * 'show bgp instance all all all neighbors detail'
     * 'show bgp instance all vrf all neighbors detail'
-    * 'show bgp instance all all all neighbors <WORD> routes' - ZL
-    * 'show bgp instance all vrf all neighbors <WORD> routes' - ZL
+    * 'show bgp instance all all all neighbors <WORD> routes'
+    * 'show bgp instance all vrf all neighbors <WORD> routes'
     * 'show bgp instance all all all neighbors <WORD> receieved-routes'
     * 'show bgp instance all vrf all neighbors <WORD> receieved-routes'
     * 'show bgp instance all all all neighbors <WORD> advertised-routes'
@@ -3319,6 +3319,33 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
                 continue
 
         return ret_dict
+
+
+# ==================================================================
+# Parser for:
+# 'show bgp instance all all all neighbors <WORD> routes'
+# 'show bgp instance all vrf all neighbors <WORD> routes'
+# ==================================================================
+
+class ShowBgpInstanceNeighborsRoutesSchema(MetaParser):
+
+    ''' Schema for:
+        * 'show bgp instance all all all neighbors <WORD> routes'
+        * 'show bgp instance all vrf all neighbors <WORD> routes'
+    '''
+
+    schema = {}
+
+class ShowBgpInstanceNeighborsRoutes(ShowBgpInstanceNeighborsRoutesSchema):
+    
+    ''' Parser for:
+        * 'show bgp instance all all all neighbors <WORD> routes'
+        * 'show bgp instance all vrf all neighbors <WORD> routes'
+    '''
+
+    def cli(self, neighbor, vrf):
+        return ShowBgpInstanceNeighborsReceivedRoutes.cli(
+            self, neighbor=neighbor, vrf=vrf, route_type='routes')
 
 
 ################################################################################
