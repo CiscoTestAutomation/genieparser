@@ -705,7 +705,7 @@ class ShowBgpInstanceProcessDetailSchema(MetaParser):
     schema = {
         'instance':
             {Any():
-                {'vrf':
+                {Optional('vrf'):
                     {Any():
                         {'operation_mode': str,
                          'router_id': str,
@@ -765,10 +765,10 @@ class ShowBgpInstanceProcessDetailSchema(MetaParser):
                                 'free': int
                                 }
                             },
-                        'address_family':
+                        Optional('address_family'):
                             {Any():
                                 {'dampening': bool,
-                                 'client_reflection': bool,
+                                 Optional('client_reflection'): bool,
                                  'dynamic_med': bool,
                                  'dynamic_med_int': str,
                                  'dynamic_med_timer': str,
@@ -794,7 +794,7 @@ class ShowBgpInstanceProcessDetailSchema(MetaParser):
                                  'soft_reconfig_entries': str,
                                  'table_bit_field_size': str,
                                  'chunk_elememt_size': str,
-                                 'thread':
+                                 Optional('thread'):
                                     {Any():
                                         {'triggers':
                                             {Any():
@@ -840,7 +840,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
         out = self.device.execute('show bgp instance all {vrf_type} all process detail'.format(vrf_type=vrf_type))
 
         ret_dict = {}
-        vrf = None
+        vrf = 'default' if vrf_type == 'all' else None
         # seperate message logging pool and bmp pool
         flag = None
 
@@ -858,11 +858,15 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                 if instance not in ret_dict['instance']:
                     ret_dict['instance'][instance] = {}
 
-                # Initialize default values
-                vrf = 'default'
+                # Create vrf list if default VRF
+                if vrf == 'default':
+                    if 'vrf' not in ret_dict['instance'][instance]:
+                        ret_dict['instance'][instance]['vrf'] = {}
+                    if vrf not in ret_dict['instance'][instance]['vrf']:
+                        ret_dict['instance'][instance]['vrf'][vrf] = {}
                 continue
 
-            p1_1 = re.compile(r'^VRF:(?P<vrf>[a-zA-Z0-9\s]+)$')
+            p1_1 = re.compile(r'^VRF: *(?P<vrf>[\w\.\:\-]+)$')
             m = p1_1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -870,15 +874,9 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                     ret_dict['instance'][instance]['vrf'] = {}
                 if vrf not in ret_dict['instance'][instance]['vrf']:
                     ret_dict['instance'][instance]['vrf'][vrf] = {}
-                    continue
-
-            # Create vrf list if default VRF
-            if vrf == 'default':
-                if 'vrf' not in ret_dict['instance'][instance]:
-                    ret_dict['instance'][instance]['vrf'] = {}
-                if vrf not in ret_dict['instance'][instance]['vrf']:
-                    ret_dict['instance'][instance]['vrf'][vrf] = {}
-                    continue
+                # seperate message logging pool and bmp pool
+                flag = None
+                continue
             
             #BGP is operating in STANDALONE mode
             p2 = re.compile(r'BGP *is *operating *in *'
@@ -924,8 +922,10 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                 continue
 
             # Default Cluster ID: 1.1.1.1
+            # Default Cluster ID: 10 (manually configured)
             p6 = re.compile(r'^Default *Cluster *ID: *'
-                             '(?P<cluster_id>[\w\.\:]+)$')
+                             '(?P<cluster_id>[\w\.\:]+) *'
+                             '(\([\w\s\:\.\,]+\))?$')
             m = p6.match(line)
             if m:
                 cluster_id = m.groupdict()['cluster_id']
