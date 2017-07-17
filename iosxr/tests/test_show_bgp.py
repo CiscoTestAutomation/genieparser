@@ -274,9 +274,9 @@ class test_show_bgp_instance_session_group_configuration(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-# ===========================================================
-# Unit test for 'show bgp instance all vrf all process detail
-# ===========================================================
+# ============================================================
+# Unit test for 'show bgp instance all vrf all process detail'
+# ============================================================
 class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
     
     device = Device(name='aDevice')
@@ -778,9 +778,9 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-# ===========================================================
-# Unit test for 'show bgp instance all all all process detail
-# ===========================================================
+# ============================================================
+# Unit test for 'show bgp instance all all all process detail'
+# ============================================================
 class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
     
     device = Device(name='aDevice')
@@ -1515,9 +1515,9 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-# =============================================================
-# Unit test for 'show bgp instance all all all neighbors detail
-# =============================================================
+# ==============================================================
+# Unit test for 'show bgp instance all all all neighbors detail'
+# ==============================================================
 
 class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
 
@@ -2013,9 +2013,9 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-# =============================================================
-# Unit test for 'show bgp instance all vrf all neighbors detail
-# =============================================================
+# ==============================================================
+# Unit test for 'show bgp instance all vrf all neighbors detail'
+# ==============================================================
 
 class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
 
@@ -2811,7 +2811,6 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
         parsed_output = bgp_instance_neighbors_detail_obj.parse(vrf_type='vrf')
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
-
 
 
 # ================================================================================
