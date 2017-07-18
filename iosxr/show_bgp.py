@@ -836,14 +836,17 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
     def cli(self, vrf_type):
 
         if not vrf_type in ['all', 'vrf']:
-            raise Exception("Varia")
+            raise Exception("Variable 'vrf_type' can only be 'all' or 'vrf'")
 
         out = self.device.execute('show bgp instance all {vrf_type} all process detail'.format(vrf_type=vrf_type))
 
         ret_dict = {}
-        vrf = 'default' if vrf_type == 'all' else None
         # seperate message logging pool and bmp pool
         flag = None
+        if vrf_type == 'all':
+            vrf = 'default'
+        else:
+            vrf = None
 
         for line in out.splitlines():
             line = line.strip()
@@ -860,17 +863,18 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                     ret_dict['instance'][instance] = {}
 
                 # Create vrf list if default VRF
-                if vrf == 'default':
+                if vrf_type == 'all':
                     if 'vrf' not in ret_dict['instance'][instance]:
                         ret_dict['instance'][instance]['vrf'] = {}
                     if vrf not in ret_dict['instance'][instance]['vrf']:
                         ret_dict['instance'][instance]['vrf'][vrf] = {}
-                continue
+                        continue
 
-            p1_1 = re.compile(r'^VRF: *(?P<vrf>[\w\.\:\-]+)$')
+            # VRF: a
+            p1_1 = re.compile(r'^\s*VRF: +(?P<vrf>[a-zA-Z0-9]+)$')
             m = p1_1.match(line)
             if m:
-                vrf = m.groupdict()['vrf']
+                vrf = str(m.groupdict()['vrf'])
                 if 'vrf' not in ret_dict['instance'][instance]:
                     ret_dict['instance'][instance]['vrf'] = {}
                 if vrf not in ret_dict['instance'][instance]['vrf']:
@@ -886,8 +890,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             if m:
                 operation_mode = m.groupdict()['operation_mode']
 
-                ret_dict['instance'][instance]['vrf'][vrf]\
-                    ['operation_mode'] = operation_mode
+                ret_dict['instance'][instance]['vrf'][vrf]['operation_mode'] = operation_mode
                 continue
 
             #Autonomous System number format: ASPLAIN
