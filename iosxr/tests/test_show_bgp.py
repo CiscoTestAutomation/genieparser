@@ -3156,9 +3156,9 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                         "transport": {
                                              "local_host": "1.1.1.1",
                                              "if_handle": "0x00000000",
-                                             "foreign_port": 179,
+                                             "foreign_port": "179",
                                              "foreign_host": "2.2.2.2",
-                                             "local_port": 46663
+                                             "local_port": "46663"
                                         }
                                    },
                                    "last_ka_error_ka_not_sent": "00:00:00",
@@ -3294,9 +3294,9 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                         "transport": {
                                              "local_host": "1.1.1.1",
                                              "if_handle": "0x00000000",
-                                             "foreign_port": 179,
+                                             "foreign_port": "179",
                                              "foreign_host": "3.3.3.3",
-                                             "local_port": 54707
+                                             "local_port": "54707",
                                         }
                                    },
                                    "last_ka_error_ka_not_sent": "00:00:00",
@@ -3784,10 +3784,10 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                     },
                                     "transport": {
                                         "foreign_host": "10.1.5.5",
-                                        "local_port": 179,
+                                        "local_port": "179",
                                         "if_handle": "0x00000060",
                                         "local_host": "10.1.5.1",
-                                        "foreign_port": 11052
+                                        "foreign_port": "11052",
                                     }
                                 },
                                 "inbound_message": "3",

@@ -2408,9 +2408,9 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 m = m or m1
                 name = m.groupdict()['name'].lower() + 's'
                 sub_dict['bgp_neighbor_counters']['messages']['sent'][name] = \
-                    m.groupdict()['sent']
+                    int(m.groupdict()['sent'])
                 sub_dict['bgp_neighbor_counters']['messages']['received'][name] = \
-                    m.groupdict()['received']
+                    int(m.groupdict()['received'])
                 continue
 
 
@@ -2674,7 +2674,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                     sub_dict['bgp_session_transport']['transport'] = {}
 
                 local_host = m.groupdict()['local_host']
-                local_port = int(m.groupdict()['local_port'])
+                local_port = str(m.groupdict()['local_port'])
                 if_handle = m.groupdict()['if_handle']
 
                 sub_dict['bgp_session_transport']['transport']['local_host'] = local_host
@@ -2692,7 +2692,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                     sub_dict['bgp_session_transport']['transport'] = {}
 
                 foreign_host = m.groupdict()['foreign_host']
-                foreign_port = int(m.groupdict()['foreign_port'])
+                foreign_port = str(m.groupdict()['foreign_port'])
 
                 sub_dict['bgp_session_transport']['transport']['foreign_host'] = foreign_host
                 sub_dict['bgp_session_transport']['transport']['foreign_port'] = foreign_port
