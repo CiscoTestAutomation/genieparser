@@ -111,16 +111,13 @@ class BgpOpenconfigYang(BgpOpenconfigYangSchema):
     def yang(self, **kwargs):
         parsed_dict = {}
         cmd = '''
-        <rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
-          <get>
-            <filter>
-              <bgp xmlns="http://openconfig.net/yang/bgp"/>
-            </filter>
-          </get>
-        </rpc>
+            <bgp xmlns="http://openconfig.net/yang/bgp">
+            </bgp>
         '''
 
-        output = self.device.get(('subtree', cmd))
+        reply = self.device.get(('subtree', cmd))
+        # output = reply.data_xml ; # string
+        output = reply.data_ele
 
         for data in output.data:
             for bgp in data:

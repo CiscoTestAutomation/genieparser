@@ -191,8 +191,7 @@ class ShowBgpInstanceAfGroupConfiguration(ShowBgpInstanceAfGroupConfigurationSch
                 else:
                     instance_name = 'default'
 
-                cmd = 'show bgp instance {} af-group {} configuration'\
-                    .format(instance_name, pp_name)
+                cmd = 'show bgp instance {instance_name} af-group {pp_name} configuration'.format(instance_name=instance_name, pp_name=pp_name)
                 out = self.device.execute(cmd)
         
                 # instance instance_name
@@ -480,7 +479,9 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
         for line1 in conf.splitlines():
             line1 = line1.strip()
 
-            pp1 = re.compile(r'\s*router bgp \d+ (instance )?(?P<instance_name>.+)? ?session-group (?P<ps_name>\S+) ?$')
+            # router bgp <bgp_id> neighbor <neighbor_id> use session-group <nbr_inherit_peer_session>
+            # router bgp 100 session-group SG 
+            pp1 = re.compile(r'\s*router +bgp +(?P<instance_name>[a-zA-Z0-9]+)(?: +neighbor +(?P<neighbor_id>[0-9\.\:]+) +use)? +session-group +(?P<ps_name>[a-zA-Z0-9]+)$')
             mm1 = pp1.match(line1)
             if mm1:
                 ps_name = mm1.groupdict()['ps_name']
@@ -489,7 +490,7 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
                 else:
                     instance_name = 'default'                
 
-                cmd = 'show bgp instance {} session-group {} configuration'.format(instance_name, ps_name)
+                cmd = 'show bgp instance {instance_name} session-group {ps_name} configuration'.format(instance_name=ps_name, ps_name=ps_name)
                 out = self.device.execute(cmd)
         
                 ret_dict = {}
@@ -707,59 +708,59 @@ class ShowBgpInstanceProcessDetailSchema(MetaParser):
             {Any():
                 {Optional('vrf'):
                     {Any():
-                        {'operation_mode': str,
-                         'router_id': str,
-                         'as_system_number_format': str,
-                         'as_number': int,
-                         'default_cluster_id': str,
-                         'active_cluster_id': str,
-                         'fast_external_fallover': bool,
-                         'platform_rlimit_max': int,
-                         'max_limit_for_bmp_buffer_size': int,
-                         'default_value_for_bmp_buffer_size': int,
-                         'current_limit_for_bmp_buffer_size': int,
-                         'current_utilization_of_bmp_buffer_limit': int,
-                         'neighbor_logging': bool,
-                         'enforce_first_as_enabled': bool,
-                         'default_local_preference': int,
-                         'default_keepalive': int,
-                         'non_stop_routing': bool,
-                         'update_delay': int,
-                         'generic_scan_interval': int,
-                         'bgp_speaker_process': int,
-                         'node': str,
-                         'restart_count': int,
+                        {Optional('operation_mode'): str,
+                         Optional('router_id'): str,
+                         Optional('as_system_number_format'): str,
+                         Optional('as_number'): int,
+                         Optional('default_cluster_id'): str,
+                         Optional('active_cluster_id'): str,
+                         Optional('fast_external_fallover'): bool,
+                         Optional('platform_rlimit_max'): int,
+                         Optional('max_limit_for_bmp_buffer_size'): int,
+                         Optional('default_value_for_bmp_buffer_size'): int,
+                         Optional('current_limit_for_bmp_buffer_size'): int,
+                         Optional('current_utilization_of_bmp_buffer_limit'): int,
+                         Optional('neighbor_logging'): bool,
+                         Optional('enforce_first_as_enabled'): bool,
+                         Optional('default_local_preference'): int,
+                         Optional('default_keepalive'): int,
+                         Optional('non_stop_routing'): bool,
+                         Optional('update_delay'): int,
+                         Optional('generic_scan_interval'): int,
+                         Optional('bgp_speaker_process'): int,
+                         Optional('node'): str,
+                         Optional('restart_count'): int,
                          Optional('sent_updates'): int,
                          Optional('received_updates'): int,
                          Optional('sent_notifications'): int,
                          Optional('received_notifications'): int,
                          Optional('enforce_first_as'): bool,
-                         'vrf_info':
+                         Optional('vrf_info'):
                             {Any():
                                 {'total': int,
                                 'nbrs_estab': int,
                                 'cfg': int
                                 },
                             },
-                        'att':
+                        Optional('att'):
                             {Any():
                                 {'number': int,
                                 'memory_used': int
                                 }
                             },
-                        'pool':
+                        Optional('pool'):
                             {Any():
                                 {'alloc': int,
                                 'free': int
                                 }
                             },
-                        'message_logging_pool_summary':
+                        Optional('message_logging_pool_summary'):
                             {Any():
                                 {'alloc': int,
                                 'free': int
                                 }
                             },
-                        'bmp_pool_summary':
+                        Optional('bmp_pool_summary'):
                             {Any():
                                 {'alloc': int,
                                 'free': int
@@ -781,7 +782,7 @@ class ShowBgpInstanceProcessDetailSchema(MetaParser):
                                  'main_table_version': str,
                                  'table_version_synced_to_rib': str,
                                  'table_version_acked_by_rib': str,
-                                 'rib_has_not_converged': str,
+                                 Optional('rib_has_not_converged'): str,
                                  'rib_table_prefix_limit_reached': str,
                                  'rib_table_prefix_limit_ver': str,
                                  'permanent_network': str,
@@ -835,7 +836,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
     def cli(self, vrf_type):
 
         if not vrf_type in ['all', 'vrf']:
-            raise Exception('something')
+            raise Exception("Varia")
 
         out = self.device.execute('show bgp instance all {vrf_type} all process detail'.format(vrf_type=vrf_type))
 
@@ -1301,8 +1302,8 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             m = p29_1.match(line)
             if m:
                 af = m.groupdict()['af'].lower()
-                current_vrf = m.groupdict()['current_vrf'].lower()
-                table_state = m.groupdict()['table_state']
+                current_vrf = str(m.groupdict()['current_vrf']).lower()
+                table_state = str(m.groupdict()['table_state'])
 
                 if 'address_family' not in ret_dict['instance'][instance]\
                     ['vrf'][vrf]:
@@ -1685,6 +1686,22 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
         return ret_dict
 
 
+    def yang(self, vrf_type):
+
+        if not vrf_type in ['all', 'vrf']:
+            raise Exception("Variable 'vrf_type' can only be 'all' or 'vrf'")
+
+        map_dict = {}
+
+        # Execute YANG 'get' operational state RPC and parse the XML
+        bgpOC = BgpOpenconfigYang(self.device)
+        yang_dict = bgpOC.yang()
+
+        # Map keys from yang_dict to map_dict
+
+        # Return to caller
+        return map_dict
+
 # ================================================
 # Parser for:
 # 'show bgp instance all all all neighbors detail'
@@ -1701,7 +1718,7 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
     schema = {
         'instance':
             {Any():
-                {'vrf': 
+                {Optional('vrf'):
                     {Any():
                         {'neighbor':
                             {Any():
@@ -1760,8 +1777,8 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                  Optional('tcp_initial_sync_phase_two'): str,
                                  Optional('tcp_initial_sync_done'): str, 
                                  Optional('enforcing_first_as'): str,
-                                 'multiprotocol_capability': str,
-                                 'bgp_negotiated_capabilities':
+                                 Optional('multiprotocol_capability'): str,
+                                 Optional('bgp_negotiated_capabilities'):
                                     {Optional('route_refresh'): str,
                                      Optional('four_octets_asn'): str,
                                      Optional('vpnv4_unicast'): str,
@@ -1879,11 +1896,6 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
 
         out = self.device.execute('show bgp instance all {vrf_type} all neighbors detail'.format(vrf_type=vrf_type))
 
-        if vrf_type == 'all':
-            default_vrf = 'default'
-        else:
-            default_vrf = None
-        
         # Init variables
         ret_dict = {}
 
@@ -1906,14 +1918,11 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
 
             # BGP neighbor is 2.2.2.2
-            # BGP neighbor is 10.1.5.5, vrf VRF1
-            p2 =  re.compile(r'^\s*BGP *neighbor *is *(?P<neighbor>[a-zA-Z0-9\.\:]+)(?:, *vrf *(?P<vrf>[a-zA-Z0-9]+))?$')
+            p2 =  re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
             m = p2.match(line)
             if m:
                 neighbor = str(m.groupdict()['neighbor'])
-                vrf = m.groupdict()['vrf']
-                if vrf is None:
-                    vrf = default_vrf
+                vrf = 'default'
                 # Set vrf
                 if 'vrf' not in ret_dict['instance'][instance]:
                     ret_dict['instance'][instance]['vrf'] = {}
@@ -1925,7 +1934,26 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 if neighbor not in ret_dict['instance'][instance]['vrf'][vrf]['neighbor']:
                     ret_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor] = {}
                     sub_dict = ret_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]
-                continue
+                    continue
+
+            # BGP neighbor is 10.1.5.5, vrf VRF1
+            p2_1 =  re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor>[a-zA-Z0-9\.\:]+), +vrf +(?P<vrf>[a-zA-Z0-9]+)$')
+            m = p2_1.match(line)
+            if m:
+                neighbor = str(m.groupdict()['neighbor'])
+                vrf = str(m.groupdict()['vrf'])
+                # Set vrf
+                if 'vrf' not in ret_dict['instance'][instance]:
+                    ret_dict['instance'][instance]['vrf'] = {}
+                if vrf not in ret_dict['instance'][instance]['vrf']:
+                    ret_dict['instance'][instance]['vrf'][vrf] = {}
+                # Set neighbor
+                if 'neighbor' not in ret_dict['instance'][instance]['vrf'][vrf]:
+                    ret_dict['instance'][instance]['vrf'][vrf]['neighbor'] = {}
+                if neighbor not in ret_dict['instance'][instance]['vrf'][vrf]['neighbor']:
+                    ret_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor] = {}
+                    sub_dict = ret_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]
+                    continue
             
             # Remote AS 200, local AS 100, external link
             p3 = re.compile(r'^Remote *AS *(?P<remote_as>[0-9]+), *local *AS *(?P<local_as>[0-9]+), *(?P<link_state>[a-zA-Z\s]+)$')
@@ -2700,6 +2728,22 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
 
         return ret_dict
 
+    def yang(self, vrf_type):
+
+        if not vrf_type in ['all', 'vrf']:
+            raise Exception("Variable 'vrf_type' can only be 'all' or 'vrf'")
+
+        map_dict = {}
+
+        # Execute YANG 'get' operational state RPC and parse the XML
+        bgpOC = BgpOpenconfigYang(self.device)
+        yang_dict = bgpOC.yang()
+
+        # Map keys from yang_dict to map_dict
+
+        # Return to caller
+        return map_dict
+
 
 # ==================================================================
 # Parser for:
@@ -2867,7 +2911,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
             p6 = re.compile(r'^BGP *table *state: *(?P<table_state>[a-zA-Z]+)$')
             m = p6.match(line)
             if m:
-                table_state = m.groupdict()['table_state']
+                table_state = str(m.groupdict()['table_state'])
                 continue
 
             # Table ID: 0x0   RD version: 0

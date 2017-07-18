@@ -211,7 +211,7 @@ class test_show_bgp_instance_session_group_configuration(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
         "instance": {
-            "default": {
+            "100": {
                 "peer_session": {
                     "SG": {
                         "remote_as": 333,
