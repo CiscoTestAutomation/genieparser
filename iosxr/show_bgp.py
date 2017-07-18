@@ -39,6 +39,9 @@ from metaparser import MetaParser
 from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
 
+# Parser
+from parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
+
 # Logger
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -496,7 +499,7 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
                 else:
                     instance_name = 'default'                
 
-                cmd = 'show bgp instance {instance_name} session-group {ps_name} configuration'.format(instance_name=ps_name, ps_name=ps_name)
+                cmd = 'show bgp instance {instance_name} session-group {ps_name} configuration'.format(instance_name=instance_name, ps_name=ps_name)
                 out = self.device.execute(cmd)
         
                 ret_dict = {}
@@ -741,69 +744,81 @@ class ShowBgpInstanceProcessDetailSchema(MetaParser):
                          Optional('sent_notifications'): int,
                          Optional('received_notifications'): int,
                          Optional('enforce_first_as'): bool,
+                         Optional('graceful_restart'): bool,
+                         Optional('graceful_restart_helper_only'): bool,
+                         Optional('graceful_restart_restart_time'): int,
+                         Optional('graceful_restart_stalepath_time'): int,
+                         Optional('log_neighbor_changes'): bool,
                          Optional('vrf_info'):
                             {Any():
-                                {'total': int,
-                                'nbrs_estab': int,
-                                'cfg': int
+                                {Optional('total'): int,
+                                Optional('nbrs_estab'): int,
+                                Optional('cfg'): int
                                 },
                             },
                         Optional('att'):
                             {Any():
-                                {'number': int,
-                                'memory_used': int
+                                {Optional('number'): int,
+                                Optional('memory_used'): int
                                 }
                             },
                         Optional('pool'):
                             {Any():
-                                {'alloc': int,
-                                'free': int
+                                {Optional('alloc'): int,
+                                Optional('free'): int
                                 }
                             },
                         Optional('message_logging_pool_summary'):
                             {Any():
-                                {'alloc': int,
-                                'free': int
+                                {Optional('alloc'): int,
+                                Optional('free'): int
                                 }
                             },
                         Optional('bmp_pool_summary'):
                             {Any():
-                                {'alloc': int,
-                                'free': int
+                                {Optional('alloc'): int,
+                                Optional('free'): int
                                 }
                             },
                         Optional('address_family'):
                             {Any():
-                                {'dampening': bool,
+                                {Optional('dampening'): bool,
                                  Optional('client_reflection'): bool,
-                                 'dynamic_med': bool,
-                                 'dynamic_med_int': str,
-                                 'dynamic_med_timer': str,
-                                 'dynamic_med_periodic_timer': str,
-                                 'scan_interval': str,
-                                 'total_prefixes_scanned': str,
-                                 'prefix_scanned_per_segment': str,
-                                 'num_of_scan_segments': str,
-                                 'nexthop_resolution_minimum_prefix_length': str,
-                                 'main_table_version': str,
-                                 'table_version_synced_to_rib': str,
-                                 'table_version_acked_by_rib': str,
+                                 Optional('dynamic_med'): bool,
+                                 Optional('dynamic_med_int'): str,
+                                 Optional('dynamic_med_timer'): str,
+                                 Optional('dynamic_med_periodic_timer'): str,
+                                 Optional('scan_interval'): str,
+                                 Optional('total_prefixes_scanned'): str,
+                                 Optional('prefix_scanned_per_segment'): str,
+                                 Optional('num_of_scan_segments'): str,
+                                 Optional('nexthop_resolution_minimum_prefix_length'): str,
+                                 Optional('main_table_version'): str,
+                                 Optional('table_version_synced_to_rib'): str,
+                                 Optional('table_version_acked_by_rib'): str,
                                  Optional('rib_has_not_converged'): str,
-                                 'rib_table_prefix_limit_reached': str,
-                                 'rib_table_prefix_limit_ver': str,
-                                 'permanent_network': str,
+                                 Optional('rib_table_prefix_limit_reached'): str,
+                                 Optional('rib_table_prefix_limit_ver'): str,
+                                 Optional('permanent_network'): str,
                                  Optional('current_vrf'): str,
                                  Optional('table_state'): str,
-                                 'state': str,
-                                 'bgp_table_version': str,
-                                 'attribute_download': str,
-                                 'label_retention_timer_value': str,
-                                 'soft_reconfig_entries': str,
-                                 'table_bit_field_size': str,
-                                 'chunk_elememt_size': str,
+                                 Optional('state'): str,
+                                 Optional('bgp_table_version'): str,
+                                 Optional('attribute_download'): str,
+                                 Optional('label_retention_timer_value'): str,
+                                 Optional('soft_reconfig_entries'): str,
+                                 Optional('table_bit_field_size'): str,
+                                 Optional('chunk_elememt_size'): str,
+                                 Optional('enabled'): bool,
+                                 Optional('graceful_restart'): bool,
+                                 Optional('advertise_inactive_routes'): bool,
+                                 Optional('ebgp_max_paths'): int,
+                                 Optional('ibgp_max_paths'): int,
+                                 Optional('total_paths'): int,
+                                 Optional('total_prefixes'): int,
                                  Optional('thread'):
                                     {Any():
-                                        {'triggers':
+                                        {Optional('triggers'):
                                             {Any():
                                                 {Optional('ver'): int,
                                                 Optional('tbl_ver'): int,
@@ -812,16 +827,16 @@ class ShowBgpInstanceProcessDetailSchema(MetaParser):
                                             },
                                         }
                                     },
-                                'remote_local':
+                                Optional('remote_local'):
                                     {Any():
-                                        {'allocated': int,
-                                         'freed': int
+                                        {Optional('allocated'): int,
+                                         Optional('freed'): int
                                         },
                                     },
-                                'prefixes_path':
+                                Optional('prefixes_path'):
                                     {Any():
-                                        {'number': int,
-                                         'mem_used': int
+                                        {Optional('number'): int,
+                                         Optional('mem_used'): int
                                         },
                                     },
                                 }
@@ -1700,6 +1715,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
         if not vrf_type in ['all', 'vrf']:
             raise Exception("Variable 'vrf_type' can only be 'all' or 'vrf'")
 
+        # Init vars
         map_dict = {}
 
         # Execute YANG 'get' operational state RPC and parse the XML
@@ -1707,6 +1723,54 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
         yang_dict = bgpOC.yang()
 
         # Map keys from yang_dict to map_dict
+
+        # Add default instance
+        if 'instance' not in map_dict:
+            map_dict['instance'] = {}
+        if 'default' not in map_dict['instance']:
+            map_dict['instance']['default'] = {}
+
+        # vrf
+        for vrf in yang_dict['vrf']:
+            if 'vrf' not in map_dict['instance']['default']:
+                map_dict['instance']['default']['vrf'] = {}
+            if vrf not in map_dict['instance']['default']['vrf']:
+                map_dict['instance']['default']['vrf'][vrf] = {}
+                sub_dict = map_dict['instance']['default']['vrf'][vrf]
+            # as_number
+            sub_dict['as_number'] = yang_dict['bgp_pid']
+            # router_id
+            sub_dict['router_id'] = \
+                yang_dict['vrf'][vrf]['router_id']
+            # graceful_restart
+            if 'graceful_restart' in yang_dict['vrf'][vrf]:
+                sub_dict['graceful_restart'] = \
+                    yang_dict['vrf'][vrf]['graceful_restart']
+            # graceful_restart_helper_only
+            if 'graceful_restart_helper_only' in yang_dict['vrf'][vrf]:
+                sub_dict['graceful_restart_helper_only'] = \
+                    yang_dict['vrf'][vrf]['graceful_restart_helper_only']
+            # graceful_restart_restart_time
+            if 'graceful_restart_restart_time' in yang_dict['vrf'][vrf]:
+                sub_dict['graceful_restart_restart_time'] = \
+                    yang_dict['vrf'][vrf]['graceful_restart_restart_time']
+            # graceful_restart_stalepath_time
+            if 'graceful_restart_stalepath_time' in yang_dict['vrf'][vrf]:
+                sub_dict['graceful_restart_stalepath_time'] = \
+                    yang_dict['vrf'][vrf]['graceful_restart_stalepath_time']
+            # log_neighbor_changes
+            if 'log_neighbor_changes' in yang_dict['vrf'][vrf]:
+                sub_dict['log_neighbor_changes'] = \
+                    yang_dict['vrf'][vrf]['log_neighbor_changes']
+            # address_family
+            if 'address_family' in yang_dict['vrf'][vrf]:
+                for af in yang_dict['vrf'][vrf]['address_family']:
+                    if 'address_family' not in sub_dict:
+                        sub_dict['address_family'] = {}
+                    if af not in sub_dict['address_family']:
+                        sub_dict['address_family'][af] = {}
+                    sub_dict['address_family'][af] = \
+                        yang_dict['vrf'][vrf]['address_family'][af]
 
         # Return to caller
         return map_dict
@@ -1731,57 +1795,75 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                     {Any():
                         {'neighbor':
                             {Any():
-                                {'remote_as': int,
-                                 'local_as_as_no': int,
+                                {Optional('description'): str,
+                                 Optional('remove_private_as'): bool,
+                                 Optional('peer_group'): str,
+                                 Optional('send_community'): str,
+                                 Optional('input_queue'): int,
+                                 Optional('output_queue'): int,
+                                 Optional('nbr_ebgp_multihop'): bool,
+                                 Optional('nbr_ebgp_multihop_max_hop'): int,
+                                 Optional('graceful_restart'): bool,
+                                 Optional('graceful_restart_helper_only'): bool,
+                                 Optional('graceful_restart_restart_time'): int,
+                                 Optional('graceful_restart_stalepath_time'): int,
+                                 Optional('allow_own_as'): int,
+                                 Optional('holdtime'): int,
+                                 Optional('keepalive_interval'): int,
+                                 Optional('minimum_advertisement_interval'): int,
+                                 Optional('route_reflector_client'): bool,
+                                 Optional('route_reflector_cluster_id'): int,
+                                 Optional('remote_as'): int,
+                                 Optional('local_as_as_no'): int,
                                  Optional('local_as_no_prepend'): bool,
                                  Optional('local_as_replace_as'): bool,
                                  Optional('local_as_dual_as'): bool,
-                                 'link_state': str,
-                                 'router_id': str,
+                                 Optional('link_state'): str,
+                                 Optional('router_id'): str,
                                  Optional('session_state'): str,
                                  Optional('up_time'): str,
-                                 'nsr_state': str,
-                                 'last_read': str,
-                                 'last_read_before_reset': str,
+                                 Optional('nsr_state'): str,
+                                 Optional('last_read'): str,
+                                 Optional('last_read_before_reset'): str,
                                  Optional('ebgp_multihop'): bool,
                                  Optional('ebgp_multihop_max_hop'): int,
                                  Optional('shutdown'): bool,
                                  Optional('suppress_four_byte_as_capability'): bool,
                                  Optional('description'): str,
                                  Optional('remove_private_as'): bool,
-                                 'bgp_negotiated_keepalive_timers':
-                                    {'hold_time': int,
-                                    'keepalive_interval': int
+                                 Optional('bgp_negotiated_keepalive_timers'):
+                                    {Optional('hold_time'): int,
+                                    Optional('keepalive_interval'): int
                                     },
-                                 'configured_hold_time': int,
-                                 'keepalive': int,
-                                 'min_acceptable_hold_time': int,
-                                 'last_write': str,
-                                 'attempted': int,
-                                 'written': int,
-                                 'second_last_write': str,
-                                 'second_attempted': int,
-                                 'second_written': int,
-                                 'last_write_before_reset': str,
-                                 'last_write_attempted': int,
-                                 'last_write_written': int,
-                                 'second_last_write_before_reset': str,
-                                 'second_last_write_before_attempted': int,
-                                 'second_last_write_before_written': int,
-                                 'last_write_pulse_rcvd': str,
-                                 'last_full_not_set_pulse_count': int,
+                                 Optional('configured_hold_time'): int,
+                                 Optional('keepalive'): int,
+                                 Optional('min_acceptable_hold_time'): int,
+                                 Optional('last_write'): str,
+                                 Optional('attempted'): int,
+                                 Optional('written'): int,
+                                 Optional('second_last_write'): str,
+                                 Optional('second_attempted'): int,
+                                 Optional('second_written'): int,
+                                 Optional('last_write_before_reset'): str,
+                                 Optional('last_write_attempted'): int,
+                                 Optional('last_write_written'): int,
+                                 Optional('second_last_write_before_reset'): str,
+                                 Optional('second_last_write_before_attempted'): int,
+                                 Optional('second_last_write_before_written'): int,
+                                 Optional('last_write_pulse_rcvd'): str,
+                                 Optional('last_full_not_set_pulse_count'): int,
                                  Optional('last_write_pulse_rcvd_before_reset'): str,
                                  Optional('socket_status'): str,
-                                 'last_write_thread_event_before_reset': str,
-                                 'last_write_thread_event_second_last': str,
-                                 'last_ka_expiry_before_reset': str,
-                                 'last_ka_expiry_before_second_last': str,
-                                 'last_ka_error_before_reset': str,
-                                 'last_ka_error_ka_not_sent': str,
-                                 'last_ka_start_before_reset': str,
-                                 'last_ka_start_before_second_last': str,
-                                 'precedence': str,
-                                 'non_stop_routing': str,
+                                 Optional('last_write_thread_event_before_reset'): str,
+                                 Optional('last_write_thread_event_second_last'): str,
+                                 Optional('last_ka_expiry_before_reset'): str,
+                                 Optional('last_ka_expiry_before_second_last'): str,
+                                 Optional('last_ka_error_before_reset'): str,
+                                 Optional('last_ka_error_ka_not_sent'): str,
+                                 Optional('last_ka_start_before_reset'): str,
+                                 Optional('last_ka_start_before_second_last'): str,
+                                 Optional('precedence'): str,
+                                 Optional('non_stop_routing'): str,
                                  Optional('tcp_initial_sync'): str,
                                  Optional('tcp_initial_sync_phase_two'): str,
                                  Optional('tcp_initial_sync_done'): str, 
@@ -1799,59 +1881,66 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                      Optional('multisession'): str,
                                      Optional('stateful_switchover'): str
                                     },
-                                 'message_stats_input_queue': int,
-                                 'message_stats_output_queue': int,
-                                 'bgp_neighbor_counters':
-                                    {'messages':
-                                         {'sent':
-                                            {'opens': str,
-                                             'updates': str,
-                                             'notifications': str,
-                                             'keepalives': str,
-                                             Optional('route_refreshes'): str
+                                 Optional('message_stats_input_queue'): int,
+                                 Optional('message_stats_output_queue'): int,
+                                 Optional('bgp_neighbor_counters'):
+                                    {Optional('messages'):
+                                         {Optional('sent'):
+                                            {Optional('opens'): int,
+                                             Optional('updates'): int,
+                                             Optional('notifications'): int,
+                                             Optional('keepalives'): int,
+                                             Optional('route_refreshes'): int,
                                             },
-                                         'received':
-                                            {'opens': str,
-                                             'updates': str,
-                                             'notifications': str,
-                                             'keepalives': str,
-                                             Optional('route_refreshes'): str
+                                         Optional('received'):
+                                            {Optional('opens'): int,
+                                             Optional('updates'): int,
+                                             Optional('notifications'): int,
+                                             Optional('keepalives'): int,
+                                             Optional('route_refreshes'): int,
                                             },
                                         },
                                     },
-                                 'minimum_time_between_adv_runs': int,
-                                 'inbound_message': str,
-                                 'outbound_message': str,
-                                 'address_family':
+                                 Optional('minimum_time_between_adv_runs'): int,
+                                 Optional('inbound_message'): str,
+                                 Optional('outbound_message'): str,
+                                 Optional('address_family'):
                                     {Any():
-                                        {'neighbor_version': int,
-                                         'update_group': str,
-                                         'filter_group': str,
-                                         'refresh_request_status': str,
-                                         'route_refresh_request_received': int,
-                                         'route_refresh_request_sent': int,
+                                        {Optional('enabled'): bool,
+                                         Optional('graceful_restart'): bool,
+                                         Optional('ipv4_unicast_send_default_route'): bool,
+                                         Optional('ipv6_unicast_send_default_route'): bool,
+                                         Optional('prefixes_received'): int,
+                                         Optional('prefixes_sent'): int,
+                                         Optional('active'): bool,
+                                         Optional('neighbor_version'): int,
+                                         Optional('update_group'): str,
+                                         Optional('filter_group'): str,
+                                         Optional('refresh_request_status'): str,
+                                         Optional('route_refresh_request_received'): int,
+                                         Optional('route_refresh_request_sent'): int,
                                          Optional('policy_for_incoming_adv'): str,
                                          Optional('policy_for_outgoing_adv'): str,
-                                         'accepted_prefixes': int,
-                                         'best_paths': int,
-                                         'exact_no_prefixes_denied': int,
+                                         Optional('accepted_prefixes'): int,
+                                         Optional('best_paths'): int,
+                                         Optional('exact_no_prefixes_denied'): int,
                                          Optional('cummulative_no_prefixes_denied'): int,
                                          Optional('cummulative_no_no_policy'): int,
                                          Optional('cummulative_no_failed_rt_match'): int,
                                          Optional('cummulative_no_by_orf_policy'): int,
                                          Optional('cummulative_no_by_policy'): int,
-                                         'prefix_advertised': int,
-                                         'prefix_suppressed': int,
-                                         'prefix_withdrawn': int,
-                                         'maximum_prefixes_allowed': int,
-                                         'maximum_prefix_threshold': str,
-                                         'maximum_prefix_restart': int,
-                                         'maximum_prefix_warning_only': bool,
-                                         'eor_status': str,
-                                         'last_ack_version': int,
-                                         'last_synced_ack_version': int,
-                                         'outstanding_version_objects_current': int,
-                                         'outstanding_version_objects_max': int,
+                                         Optional('prefix_advertised'): int,
+                                         Optional('prefix_suppressed'): int,
+                                         Optional('prefix_withdrawn'): int,
+                                         Optional('maximum_prefixes_allowed'): int,
+                                         Optional('maximum_prefix_threshold'): str,
+                                         Optional('maximum_prefix_restart'): int,
+                                         Optional('maximum_prefix_warning_only'): bool,
+                                         Optional('eor_status'): str,
+                                         Optional('last_ack_version'): int,
+                                         Optional('last_synced_ack_version'): int,
+                                         Optional('outstanding_version_objects_current'): int,
+                                         Optional('outstanding_version_objects_max'): int,
                                          Optional('additional_paths_operation'): str,
                                          Optional('additional_routes_local_label'): str,
                                          Optional('allowas_in'): bool,
@@ -1865,22 +1954,23 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                          Optional('soo'): str
                                          },
                                     },
-                                 'bgp_session_transport':
-                                     {'connection':
-                                        {'state': str,
+                                 Optional('bgp_session_transport'):
+                                     {Optional('connection'):
+                                        {Optional('state'): str,
                                          Optional('mode'): str,
-                                         'last_reset': str,
+                                         Optional('last_reset'): str,
                                          Optional('reset_reason'): str,                                                     
                                          Optional('connections_established'): int,
                                          Optional('connections_dropped'): int
                                         },
-                                    'transport':
-                                        {'local_host': str,
-                                         'local_port': int,
-                                         'if_handle': str,
-                                         'foreign_host': str,
-                                         'foreign_port': int,
-                                         Optional('mss'): str
+                                    Optional('transport'):
+                                        {Optional('local_host'): str,
+                                         Optional('local_port'): str,
+                                         Optional('if_handle'): str,
+                                         Optional('foreign_host'): str,
+                                         Optional('foreign_port'): str,
+                                         Optional('mss'): str,
+                                         Optional('passive_mode'): str
                                         },
                                     },
                                 },
@@ -2749,6 +2839,30 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         yang_dict = bgpOC.yang()
 
         # Map keys from yang_dict to map_dict
+
+        # Add default instance
+        if 'instance' not in map_dict:
+            map_dict['instance'] = {}
+        if 'default' not in map_dict['instance']:
+            map_dict['instance']['default'] = {}
+
+        # vrf
+        for vrf in yang_dict['vrf']:
+            if 'vrf' not in map_dict['instance']['default']:
+                map_dict['instance']['default']['vrf'] = {}
+            if vrf not in map_dict['instance']['default']['vrf']:
+                map_dict['instance']['default']['vrf'][vrf] = {}
+                sub_dict = map_dict['instance']['default']['vrf'][vrf]
+
+            # neighbor
+            for neighbor in yang_dict['vrf'][vrf]['neighbor']:
+                if 'neighbor' not in sub_dict:
+                    sub_dict['neighbor'] = {}
+                if neighbor not in sub_dict['neighbor']:
+                    sub_dict['neighbor'][neighbor] = {}
+                # Set all keys
+                sub_dict['neighbor'][neighbor] = \
+                    yang_dict['vrf'][vrf]['neighbor'][neighbor]
 
         # Return to caller
         return map_dict

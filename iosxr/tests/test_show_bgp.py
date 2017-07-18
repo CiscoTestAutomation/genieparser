@@ -3187,16 +3187,16 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                    "bgp_neighbor_counters": {
                                         "messages": {
                                              "sent": {
-                                                  "keepalives": "43",
-                                                  "opens": "1",
-                                                  "updates": "4",
-                                                  "notifications": "0"
+                                                  "keepalives": 43,
+                                                  "opens": 1,
+                                                  "updates": 4,
+                                                  "notifications": 0,
                                              },
                                              "received": {
-                                                  "keepalives": "44",
-                                                  "opens": "1",
-                                                  "updates": "6",
-                                                  "notifications": "0"
+                                                  "keepalives": 44,
+                                                  "opens": 1,
+                                                  "updates": 6,
+                                                  "notifications": 0,
                                              }
                                         }
                                    },
@@ -3325,16 +3325,16 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                    "bgp_neighbor_counters": {
                                         "messages": {
                                              "sent": {
-                                                  "keepalives": "40",
-                                                  "opens": "1",
-                                                  "updates": "4",
-                                                  "notifications": "0"
+                                                  "keepalives": 40,
+                                                  "opens": 1,
+                                                  "updates": 4,
+                                                  "notifications": 0,
                                              },
                                              "received": {
-                                                  "keepalives": "41",
-                                                  "opens": "1",
-                                                  "updates": "6",
-                                                  "notifications": "0"
+                                                  "keepalives": 41,
+                                                  "opens": 1,
+                                                  "updates": 6,
+                                                  "notifications": 0,
                                              }
                                         }
                                    },
@@ -3664,10 +3664,10 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                     },
                                     "transport": {
                                         "foreign_host": "2001:db8:1:5::5",
-                                        "local_port": 179,
+                                        "local_port": "179",
                                         "if_handle": "0x00000060",
                                         "local_host": "2001:db8:1:5::1",
-                                        "foreign_port": 11014
+                                        "foreign_port": "11014",
                                     }
                                 },
                                 "inbound_message": "3",
@@ -3746,16 +3746,16 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "bgp_neighbor_counters": {
                                     "messages": {
                                         "received": {
-                                            "opens": "1",
-                                            "keepalives": "54",
-                                            "notifications": "0",
-                                            "updates": "1"
+                                            "opens": 1,
+                                            "keepalives": 54,
+                                            "notifications": 0,
+                                            "updates": 1,
                                         },
                                         "sent": {
-                                            "opens": "1",
-                                            "keepalives": "55",
-                                            "notifications": "0",
-                                            "updates": "3"
+                                            "opens": 1,
+                                            "keepalives": 55,
+                                            "notifications": 0,
+                                            "updates": 3,
                                         }
                                     }
                                 }
@@ -3866,16 +3866,16 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "bgp_neighbor_counters": {
                                     "messages": {
                                         "received": {
-                                            "opens": "1",
-                                            "keepalives": "54",
-                                            "notifications": "0",
-                                            "updates": "1"
+                                            "opens": 1,
+                                            "keepalives": 54,
+                                            "notifications": 0,
+                                            "updates": 1,
                                         },
                                         "sent": {
-                                            "opens": "1",
-                                            "keepalives": "55",
-                                            "notifications": "0",
-                                            "updates": "2"
+                                            "opens": 1,
+                                            "keepalives": 55,
+                                            "notifications": 0,
+                                            "updates": 2,
                                         }
                                     }
                                 }
@@ -3908,10 +3908,10 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                     },
                                     "transport": {
                                         "foreign_host": "2001:db8:20:1:5::5",
-                                        "local_port": 179,
+                                        "local_port": "179",
                                         "if_handle": "0x00000080",
                                         "local_host": "2001:db8:20:1:5::1",
-                                        "foreign_port": 11013
+                                        "foreign_port": "11013",
                                     }
                                 },
                                 "inbound_message": "3",
@@ -3986,16 +3986,16 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "bgp_neighbor_counters": {
                                     "messages": {
                                         "received": {
-                                            "opens": "1",
-                                            "keepalives": "49",
-                                            "notifications": "0",
-                                            "updates": "1"
+                                            "opens": 1,
+                                            "keepalives": 49,
+                                            "notifications": 0,
+                                            "updates": 1,
                                         },
                                         "sent": {
-                                            "opens": "1",
-                                            "keepalives": "49",
-                                            "notifications": "0",
-                                            "updates": "3"
+                                            "opens": 1,
+                                            "keepalives": 49,
+                                            "notifications": 0,
+                                            "updates": 3,
                                         }
                                     }
                                 }
@@ -4024,10 +4024,10 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                     },
                                     "transport": {
                                         "foreign_host": "20.1.5.5",
-                                        "local_port": 179,
+                                        "local_port": "179",
                                         "if_handle": "0x00000080",
                                         "local_host": "20.1.5.1",
-                                        "foreign_port": 11099
+                                        "foreign_port": "11099",
                                     }
                                 },
                                 "inbound_message": "3",
@@ -4102,16 +4102,16 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "bgp_neighbor_counters": {
                                     "messages": {
                                          "received": {
-                                              "opens": "1",
-                                              "keepalives": "49",
-                                              "notifications": "0",
-                                              "updates": "1"
+                                              "opens": 1,
+                                              "keepalives": 49,
+                                              "notifications": 0,
+                                              "updates": 1,
                                          },
                                          "sent": {
-                                              "opens": "1",
-                                              "keepalives": "50",
-                                              "notifications": "0",
-                                              "updates": "2"
+                                              "opens": 1,
+                                              "keepalives": 50,
+                                              "notifications": 0,
+                                              "updates": 2,
                                          }
                                     }
                                 }
