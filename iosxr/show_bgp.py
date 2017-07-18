@@ -81,19 +81,25 @@ class ShowPlacementProgramAll(ShowPlacementProgramAllSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            p1 = re.compile(r'^(?P<program>[a-z0-9\_]+)(\((?P<inst>\w+)\))? *'
-                             '(?P<group>[a-z0-9\-]+)'
-                             ' *(?P<jid>[0-9]+) *(?P<active>[A-Z0-9\/]+) *'
-                             '(?P<active_state>[A-Z]+)'
-                             ' *(?P<standby>[A-Z]+) *(?P<standby_state>[A-Z\_]+)$')
+            # schema_server                           central-services    1177 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+            # rcp_fs                                  central-services    1168 0/0/CPU0       RUNNING                  NONE           NOT_SPAWNED
+            # bgp(test)                               Group_10_bgp2       1052 0/RSP1/CPU0    RUNNING                  0/RSP0/CPU0    RUNNING
+            p1 = re.compile(r'^\s*(?P<program>[a-zA_Z0-9\_\-]+)'
+                             '(?:\((?P<instance>\S+)\))?'
+                             ' +(?P<group>\S+)'
+                             ' +(?P<jid>\S+)'
+                             ' +(?P<active_rp>\S+)'
+                             ' +(?P<active_state>\S+)'
+                             ' +(?P<standby_rp>\S+)'
+                             ' +(?P<standby_state>\S+)$')
             m = p1.match(line)
             if m:
                 program = str(m.groupdict()['program'])
-                inst = m.groupdict()['inst'] or 'default'
+                instance = m.groupdict()['instance'] or 'default'
                 group = str(m.groupdict()['group'])
                 jid = str(m.groupdict()['jid'])
-                active = str(m.groupdict()['active'])
-                standby = str(m.groupdict()['standby'])
+                active = str(m.groupdict()['active_rp'])
+                standby = str(m.groupdict()['standby_rp'])
                 standby_state = str(m.groupdict()['standby_state'])
                 active_state = str(m.groupdict()['active_state'])
 
@@ -104,15 +110,15 @@ class ShowPlacementProgramAll(ShowPlacementProgramAllSchema):
 
                 if 'instance' not in ret_dict['program'][program]:
                     ret_dict['program'][program]['instance'] = {}
-                if inst not in ret_dict['program'][program]['instance']:
-                    ret_dict['program'][program]['instance'][inst] = {}
+                if instance not in ret_dict['program'][program]['instance']:
+                    ret_dict['program'][program]['instance'][instance] = {}
 
-                ret_dict['program'][program]['instance'][inst]['group'] = group
-                ret_dict['program'][program]['instance'][inst]['jid'] = jid
-                ret_dict['program'][program]['instance'][inst]['active'] = active
-                ret_dict['program'][program]['instance'][inst]['standby'] = standby
-                ret_dict['program'][program]['instance'][inst]['standby_state'] = standby_state
-                ret_dict['program'][program]['instance'][inst]['active_state'] = active_state
+                ret_dict['program'][program]['instance'][instance]['group'] = group
+                ret_dict['program'][program]['instance'][instance]['jid'] = jid
+                ret_dict['program'][program]['instance'][instance]['active'] = active
+                ret_dict['program'][program]['instance'][instance]['standby'] = standby
+                ret_dict['program'][program]['instance'][instance]['standby_state'] = standby_state
+                ret_dict['program'][program]['instance'][instance]['active_state'] = active_state
 
                 continue
     
