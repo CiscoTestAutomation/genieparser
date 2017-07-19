@@ -33,7 +33,7 @@ class ShowHsrpSummarySchema(MetaParser):
 
     schema = {'hsrp_summary':
                     {'nsf': str,
-                     'nsf_time': int,
+                     Optional('nsf_time'): int,
                      'global_hsrp_bfd': str,
                      'total_groups': int,
                      'v1_ipv4': int,
