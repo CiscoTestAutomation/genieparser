@@ -321,8 +321,8 @@ class ShowHsrpAll(ShowHsrpAllSchema):
             # Active router is unknown
             # Active router is 192.168.1.1, priority 110 expires in 2.662000 sec(s)
             p7 = re.compile(r'\s*Active +router +is'
-                             ' +(?P<active_router>[\w\.\:]+) *,? *'
-                             '(priority *(?P<active_priority>\d+) expires *'
+                             ' +(?P<active_router>[\w\.\:]+)'
+                             '( *, *priority *(?P<active_priority>\d+) expires *'
                              'in *(?P<expire>[\w\.]+) *sec\(s\))?$')
             m = p7.match(line)
             if m:
@@ -338,8 +338,8 @@ class ShowHsrpAll(ShowHsrpAllSchema):
             # Standby router is unknown
             # Standby router is 192.168.1.2 , priority 90 expires in 2.426000 sec(s)
             p8 = re.compile(r'\s*Standby +router +is'
-                             ' +(?P<standby_router>[\w\.\:]+) *,? *'
-                             '(priority *(?P<standby_priority>\d+) expires *'
+                             ' +(?P<standby_router>[\w\.\:]+)'
+                             '( *, *priority *(?P<standby_priority>\d+) expires *'
                              'in *(?P<expire>[\w\.]+) *sec\(s\))?$')
             m = p8.match(line)
             if m:
