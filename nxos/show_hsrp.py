@@ -206,6 +206,10 @@ class ShowHsrpAllSchema(MetaParser):
                                      'num_state_changes': int,
                                      'last_state_change': str,
                                      'ip_redundancy_name': str,
+                                     Optional('active_priority'): int,
+                                     Optional('standby_priority'): int,
+                                     Optional('active_expire'): float,
+                                     Optional('standby_expire'): float,
                                     },
                                  },
                              },
@@ -315,19 +319,37 @@ class ShowHsrpAll(ShowHsrpAllSchema):
                 continue
 
             # Active router is unknown
+            # Active router is 192.168.1.1, priority 110 expires in 2.662000 sec(s)
             p7 = re.compile(r'\s*Active +router +is'
-                             ' +(?P<active_router>[a-zA-Z\s]+)$')
+                             ' +(?P<active_router>[\w\.\:]+) *,? *'
+                             '(priority *(?P<active_priority>\d+) expires *'
+                             'in *(?P<expire>[\w\.]+) *sec\(s\))?$')
             m = p7.match(line)
             if m:
                 intf_key['active_router'] = m.groupdict()['active_router']
+                if m.groupdict()['active_priority']:
+                    intf_key['active_priority'] = \
+                        int(m.groupdict()['active_priority'])
+                if m.groupdict()['expire']:
+                    intf_key['active_expire'] = \
+                        float(m.groupdict()['expire'])
                 continue
 
-            # Standby router is unknown 
+            # Standby router is unknown
+            # Standby router is 192.168.1.2 , priority 90 expires in 2.426000 sec(s)
             p8 = re.compile(r'\s*Standby +router +is'
-                             ' +(?P<standby_router>[a-zA-Z\s]+)$')
+                             ' +(?P<standby_router>[\w\.\:]+) *,? *'
+                             '(priority *(?P<standby_priority>\d+) expires *'
+                             'in *(?P<expire>[\w\.]+) *sec\(s\))?$')
             m = p8.match(line)
             if m:
                 intf_key['standby_router'] = m.groupdict()['standby_router']
+                if m.groupdict()['standby_priority']:
+                    intf_key['standby_priority'] = \
+                        int(m.groupdict()['standby_priority'])
+                if m.groupdict()['expire']:
+                    intf_key['standby_expire'] = \
+                        float(m.groupdict()['expire'])
                 continue
 
             # Authentication text "cisco123"
@@ -350,9 +372,10 @@ class ShowHsrpAll(ShowHsrpAllSchema):
                 continue
 
             # 0 state changes, last state change never
+            # 4 state changes, last state change 01:42:05
             p11 = re.compile(r'\s*(?P<num_state_changes>[0-9]+) +state'
                               ' +changes, +last +state +change'
-                              ' +(?P<last_state_change>[a-zA-Z0-9]+)$')
+                              ' +(?P<last_state_change>[\w\.\:]+)$')
             m = p11.match(line)
             if m:
                 intf_key['num_state_changes'] = \
