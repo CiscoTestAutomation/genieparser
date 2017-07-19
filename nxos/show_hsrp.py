@@ -68,9 +68,10 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
         for line in out.splitlines():
             line = line.rstrip()
             
-            # Extended-hold (NSF) enabled, 10 seconds 
-            p1 = re.compile(r'\s*Extended-hold +\(NSF\) +(?P<nsf>[a-zA-Z]+),'
-                             ' +(?P<nsf_time>[0-9]+) seconds$')
+            # Extended-hold (NSF) enabled, 10 seconds
+            # Extended-hold (NSF) disabled
+            p1 = re.compile(r'\s*Extended-hold +\(NSF\) +(?P<nsf>[a-zA-Z]+)'
+                             '(, +(?P<nsf_time>[0-9]+) seconds)?$')
             m = p1.match(line)
             if m:
                 if 'hsrp_summary' not in hsrp_summary_dict:
