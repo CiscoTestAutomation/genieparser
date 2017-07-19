@@ -79,7 +79,8 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
                     hsrp_summary = hsrp_summary_dict['hsrp_summary']
 
                 hsrp_summary['nsf'] = m.groupdict()['nsf']
-                hsrp_summary['nsf_time'] = int(m.groupdict()['nsf_time'])
+                if m.groupdict()['nsf_time']:
+                    hsrp_summary['nsf_time'] = int(m.groupdict()['nsf_time'])
                 continue
 
             # Global HSRP-BFD enabled
