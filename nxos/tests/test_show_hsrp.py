@@ -199,13 +199,63 @@ class test_show_hsrp_all(unittest.TestCase):
       IP redundancy name is hsrp-Eth4/1-10 (default)
       '''}
 
+
+
+    golden_parsed_output_1 = {
+    'hsrp_all': {
+        'group': {
+            0: {
+                'interface': {
+                    'Ethernet1/3': {
+                        'active_router': 'local',
+                        'address_family': 'ipv4',
+                        'authentication_text': 'cisco123',
+                        'configured_priority': 110,
+                        'hellotime': 1,
+                        'holdtime': 3,
+                        'ip_redundancy_name': 'hsrp-Eth1/3-0',
+                        'last_state_change': '01:42:05',
+                        'local_state': 'active',
+                        'lower_fwd_threshold': 0,
+                        'num_state_changes': 4,
+                        'preempt': True,
+                        'priority': 110,
+                        'standby_router': '192.168.1.2',
+                        'standby_priority': 90,
+                        'standby_expire': 2.426,
+                        'upper_fwd_threshold': 110,
+                        'version': 2,
+                        'virtual_ip_address': '192.168.1.254',
+                        'virtual_mac_addr': '0000.0c9f.f000'}}},}}}
+
+    golden_output_1 = {'execute.return_value': '''
+      Ethernet1/3 - Group 0 (HSRP-V2) (IPv4)
+      Local state is Active, priority 110 (Cfged 110), may preempt
+        Forwarding threshold(for vPC), lower: 0 upper: 110 
+      Hellotime 1 sec, holdtime 3 sec
+      Next hello sent in 0.810000 sec(s)
+      Virtual IP address is 192.168.1.254 (Cfged)
+      Active router is local
+      Standby router is 192.168.1.2 , priority 90 expires in 2.426000 sec(s)
+      Authentication MD5, key-string "cisco123"
+      Virtual mac address is 0000.0c9f.f000 (Default MAC)
+      4 state changes, last state change 01:42:05
+      IP redundancy name is hsrp-Eth1/3-0 (default)
+      '''}
+
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         hsrp_all_obj = ShowHsrpAll(device=self.device)
         parsed_output = hsrp_all_obj.parse()
-        #import pprint ; pprint.pprint(parsed_output)
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        hsrp_all_obj = ShowHsrpAll(device=self.device)
+        parsed_output = hsrp_all_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
