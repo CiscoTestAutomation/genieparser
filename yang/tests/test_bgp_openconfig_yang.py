@@ -71,7 +71,7 @@ class test_yang_bgp_iosxr(unittest.TestCase):
                         'input_queue': 0,
                         'output_queue': 0,
                         'remote_as': 100,
-                        'session_state': 'IDLE'},
+                        'session_state': 'idle'},
                     '3.3.3.3': 
                         {'address_family': 
                             {'idx:l3vpn-ipv4-unicast': 
@@ -103,7 +103,7 @@ class test_yang_bgp_iosxr(unittest.TestCase):
                         'input_queue': 0,
                         'output_queue': 0,
                         'remote_as': 100,
-                        'session_state': 'IDLE'}},
+                        'session_state': 'idle'}},
                 'router_id': '1.1.1.1'}}}
 
     class etree_holder():

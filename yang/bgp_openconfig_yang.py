@@ -357,7 +357,7 @@ class BgpOpenconfigYang(BgpOpenconfigYangSchema):
                                                     nbr_state_dict['output_queue'] = int(queue_key.text)
                                         # session-state
                                         if state_key_name == 'session-state':
-                                            nbr_state_dict['session_state'] = str(state_key.text)
+                                            nbr_state_dict['session_state'] = str(state_key.text).lower()
                                         # messages
                                         if state_key_name == 'messages':
                                             if 'bgp_neighbor_counters' not in nbr_state_dict:
