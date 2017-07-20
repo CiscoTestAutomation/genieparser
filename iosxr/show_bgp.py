@@ -1822,6 +1822,7 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                  Optional('router_id'): str,
                                  Optional('session_state'): str,
                                  Optional('up_time'): str,
+                                 Optional('session_state_reason'): str,
                                  Optional('nsr_state'): str,
                                  Optional('last_read'): str,
                                  Optional('last_read_before_reset'): str,
@@ -2089,12 +2090,13 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
 
             # BGP state = Idle (No route to multi-hop neighbor)
-            p5_1 = re.compile(r'^\s*BGP +state += +(?P<session_state>[a-zA-Z0-9]+)')
-            m = p5.match(line)
+            p5_1 = re.compile(r'^\s*BGP +state += +(?P<session_state>[a-zA-Z0-9]+)(?:(?P<reason>.*))')
+            m = p5_1.match(line)
             if m:
                 session_state = str(m.groupdict()['session_state'])
-
                 sub_dict['session_state'] = session_state
+                if m.groupdict()['reason']:
+                    sub_dict['session_state_reason'] =  str(m.groupdict()['reason'])
                 continue
 
             # NSR State: None
