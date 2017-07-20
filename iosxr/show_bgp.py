@@ -2082,7 +2082,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                              '(?:, +up +for +(?P<up_time>[\w\:]+))?$')
             m = p5.match(line)
             if m:
-                session_state = str(m.groupdict()['session_state'])
+                session_state = str(m.groupdict()['session_state']).lower()
 
                 sub_dict['session_state'] = session_state
                 if m.groupdict()['up_time']:
@@ -2093,7 +2093,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
             p5_1 = re.compile(r'^\s*BGP +state += +(?P<session_state>[a-zA-Z0-9]+)(?:(?P<reason>.*))')
             m = p5_1.match(line)
             if m:
-                session_state = str(m.groupdict()['session_state'])
+                session_state = str(m.groupdict()['session_state']).lower()
                 sub_dict['session_state'] = session_state
                 if m.groupdict()['reason']:
                     sub_dict['session_state_reason'] =  str(m.groupdict()['reason'])

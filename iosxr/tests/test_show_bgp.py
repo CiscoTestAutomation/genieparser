@@ -3279,7 +3279,7 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                    "second_last_write_before_reset": "00:00:00",
                                    "last_ka_start_before_reset": "00:00:00",
                                    "last_read_before_reset": "00:00:00",
-                                   "session_state": "Established",
+                                   "session_state": "established",
                                    "up_time": "00:42:33",
                               },
                               "3.3.3.3": {
@@ -3419,7 +3419,7 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                    "second_last_write_before_reset": "00:00:00",
                                    "last_ka_start_before_reset": "00:00:00",
                                    "last_read_before_reset": "00:00:00",
-                                   "session_state": "Established",
+                                   "session_state": "established",
                                    "up_time": "00:39:07",
                                 }
                             }
@@ -3747,7 +3747,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "tcp_initial_sync_done": "---",
                                 "last_read": "00:00:42",
                                 "last_ka_expiry_before_reset": "00:00:00",
-                                "session_state": "Established",
+                                "session_state": "established",
                                 "up_time": "00:53:45",
                                 "bgp_neighbor_counters": {
                                     "messages": {
@@ -3869,7 +3869,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "tcp_initial_sync_done": "---",
                                 "last_read": "00:00:51",
                                 "last_ka_expiry_before_reset": "00:00:00",
-                                "session_state": "Established",
+                                "session_state": "established",
                                 "up_time": "00:53:54",
                                 "bgp_neighbor_counters": {
                                     "messages": {
@@ -3991,7 +3991,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "tcp_initial_sync_done": "---",
                                 "last_read": "00:00:46",
                                 "last_ka_expiry_before_reset": "00:00:00",
-                                "session_state": "Established",
+                                "session_state": "established",
                                 "up_time": "00:48:49",
                                 "bgp_neighbor_counters": {
                                     "messages": {
@@ -4109,7 +4109,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "tcp_initial_sync_done": "---",
                                 "last_read": "00:00:51",
                                 "last_ka_expiry_before_reset": "00:00:00",
-                                "session_state": "Established",
+                                "session_state": "established",
                                 "up_time": "00:48:54",
                                 "bgp_neighbor_counters": {
                                     "messages": {
