@@ -2077,15 +2077,24 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
 
             # BGP state = Established, up for 00:53:54
-            p5 = re.compile(r'^BGP +state += +(?P<session_state>\w+),'
-                             ' +up + for +(?P<up_time>[\w\:]+)$')
+            p5 = re.compile(r'^\s*BGP +state += +(?P<session_state>[a-zA-Z0-9]+)'
+                             '(?:, +up +for +(?P<up_time>[\w\:]+))?$')
             m = p5.match(line)
             if m:
                 session_state = str(m.groupdict()['session_state'])
-                up_time = str(m.groupdict()['up_time'])
 
                 sub_dict['session_state'] = session_state
-                sub_dict['up_time'] = up_time
+                if m.groupdict()['up_time']:
+                    sub_dict['up_time'] = str(m.groupdict()['up_time'])
+                continue
+
+            # BGP state = Idle (No route to multi-hop neighbor)
+            p5_1 = re.compile(r'^\s*BGP +state += +(?P<session_state>[a-zA-Z0-9]+)')
+            m = p5.match(line)
+            if m:
+                session_state = str(m.groupdict()['session_state'])
+
+                sub_dict['session_state'] = session_state
                 continue
 
             # NSR State: None
