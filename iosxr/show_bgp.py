@@ -14,6 +14,8 @@ IOSXR parsers for the following show commands:
     * 'show bgp instance all vrf all neighbors <WORD> receieved-routes'
     * 'show bgp instance all all all neighbors <WORD> advertised-routes'
     * 'show bgp instance all vrf all neighbors <WORD> advertised-routes'
+    * 'show bgp instance all all all summary'
+    * 'show bgp instance all vrf all summary'
 
     * 'show bgp sessions'
     * 'show bgp vrf-db vrf all'
@@ -21,8 +23,6 @@ IOSXR parsers for the following show commands:
     * 'show bgp l2vpn evpn advertised'
 
 TODO:
-    * 'show bgp instance all all all summary'
-    * 'show bgp instance all vrf all summary'
     * 'show bgp instance all all all <PREFIX>'
     * 'show bgp instance all vrf all <PREFIX>'
 '''
@@ -128,9 +128,9 @@ class ShowPlacementProgramAll(ShowPlacementProgramAllSchema):
         return ret_dict
 
 
-# =================================================
-# Parser for 'show bgp session group configuration'
-# =================================================
+# ===================================================================
+# Parser for 'show bgp instance <WORD> af-group <WORD> configuration'
+# ===================================================================
 
 class ShowBgpInstanceAfGroupConfigurationSchema(MetaParser):
     
@@ -425,9 +425,9 @@ class ShowBgpInstanceAfGroupConfiguration(ShowBgpInstanceAfGroupConfigurationSch
         return ret_dict
 
 
-# =================================================
-# Parser for 'show bgp af-group configuration'
-# =================================================
+# ========================================================================
+# Parser for 'show bgp instance <WORD> session-group <WORD> configuration'
+# ========================================================================
 
 class ShowBgpInstanceSessionGroupConfigurationSchema(MetaParser):
 
@@ -482,45 +482,46 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
 
         ret_dict = {}
 
-        cmd = 'show run formal | i session'
+        cmd = 'show run formal | i session-group'
         conf = self.device.execute(cmd)
 
         for line1 in conf.splitlines():
             line1 = line1.strip()
 
-            # router bgp <bgp_id> neighbor <neighbor_id> use session-group <nbr_inherit_peer_session>
-            # router bgp 100 session-group SG 
-            pp1 = re.compile(r'\s*router +bgp +(?P<instance_name>[a-zA-Z0-9]+)(?: +neighbor +(?P<neighbor_id>[0-9\.\:]+) +use)? +session-group +(?P<ps_name>[a-zA-Z0-9]+)$')
+            # router bgp 100 session-group SG
+            # router bgp 333 instance test session-group abcd
+            # router bgp 333 instance test neighbor 1.1.1.1 use session-group LALALALLA
+            pp1 = re.compile(r'\s*router +bgp +(?P<bgp_id>\d+)(?: +instance +(?P<instance_name>[a-zA-Z0-9]+))?(?: +neighbor +(?P<neighbor_id>[0-9\.\:]+) +use)? +session-group +(?P<ps_name>[a-zA-Z0-9]+)')
             mm1 = pp1.match(line1)
             if mm1:
-                ps_name = mm1.groupdict()['ps_name']
+                ps_name = str(mm1.groupdict()['ps_name'])
                 if mm1.groupdict()['instance_name'] is not None:
-                    instance_name = mm1.groupdict()['instance_name']
+                    instance_name = str(mm1.groupdict()['instance_name'])
                 else:
-                    instance_name = 'default'                
+                    instance_name = 'default'
 
-                cmd = 'show bgp instance {instance_name} session-group {ps_name} configuration'.format(instance_name=instance_name, ps_name=ps_name)
-                out = self.device.execute(cmd)
-        
-                ret_dict = {}
                 # use for send_community key value tracker
                 send_community = []
-        
+
                 # instance instance_name
                 if 'instance' not in ret_dict:
                     ret_dict['instance'] = {}
                 if instance_name not in ret_dict['instance']:
                     ret_dict['instance'][instance_name] = {}
-        
+
                 # peer_session ps_name
                 if 'peer_session' not in ret_dict['instance'][instance_name]:
                     ret_dict['instance'][instance_name]['peer_session'] = {}
                 if ps_name not in ret_dict['instance'][instance_name]['peer_session']:
                     ret_dict['instance'][instance_name]['peer_session'][ps_name] = {}
-        
+
+                # Execute command with instance and session-group name
+                cmd = 'show bgp instance {instance_name} session-group {ps_name} configuration'.format(instance_name=instance_name, ps_name=ps_name)
+                out = self.device.execute(cmd)
+
                 for line in out.splitlines():
                     line = line.strip()
-                        
+
                     # remote-as 333                              []
                     p2 = re.compile(r'^remote\-as +(?P<as>\d+)? +'
                                      '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
@@ -528,13 +529,12 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
                     if m:
                         ret_dict['instance'][instance_name]['peer_session'][ps_name]\
                             ['remote_as'] = int(m.groupdict()['as'])
-        
                         if m.groupdict()['inherit']:
                             ret_dict['instance'][instance_name]['peer_session']\
                                 [ps_name]['remote_as_inheritl'] \
                                     = m.groupdict()['inherit']
-                        continue
-        
+                            continue
+
                     # description SG_group                       []
                     p3 = re.compile(r'^description +(?P<descr>[\w\,\.\:\-\s]+) +'
                                      '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
@@ -547,7 +547,7 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
                                 [ps_name]['description_inherit'] \
                                     = m.groupdict()['inherit']
                         continue
-        
+
                     # ebgp-multihop 254                         []
                     p4 = re.compile(r'^ebgp\-multihop +(?P<num>\d+)? *'
                                      '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
@@ -564,7 +564,7 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
                                 [ps_name]['ebgp_multihop_inherit'] \
                                     = m.groupdict()['inherit']
                         continue
-        
+
                     # local-as 200 no-prepend replace-as dual-as []
                     p5 = re.compile(r'^local\-as +(?P<as>\d+) +(?P<v1>no\-prepend)? +'
                                      '(?P<v2>replace\-as)? *(?P<v3>dual\-as)? *'
@@ -588,7 +588,7 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
                             ret_dict['instance'][instance_name]['peer_session']\
                                 [ps_name]['local_as_inherit'] = m.groupdict()['inherit']
                         continue
-        
+
                     # password encrypted 094F471A1A0A464058      []
                     p6 = re.compile(r'^password +encrypted +(?P<psw>\w+) +'
                                      '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
@@ -601,7 +601,7 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
                             ret_dict['instance'][instance_name]['peer_session'][ps_name]\
                                 ['password_text_inherit'] = m.groupdict()['inherit']
                         continue
-        
+
                     # shutdown                                   []
                     p7 = re.compile(r'^shutdown +'
                                      '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
@@ -614,7 +614,7 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
                             ret_dict['instance'][instance_name]['peer_session']\
                                 [ps_name]['shutdown_inherit'] = m.groupdict()['inherit']
                         continue
-        
+
                     # timers 10 30 3                             []
                     p8 = re.compile(r'^timers +(?P<keep>\d+) +'
                                      '(?P<hold>\d+) +(?P<mim>\d+)? *'
@@ -635,7 +635,7 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
                             ret_dict['instance'][instance_name]['peer_session'][ps_name]\
                                 ['timers_inherit'] = m.groupdict()['inherit']
                         continue
-        
+
                     # update-source Loopback0                    []
                     p9 = re.compile(r'^update\-source +(?P<intf>[\w\.\/]+) +'
                                      '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
@@ -647,7 +647,7 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
                             ret_dict['instance'][instance_name]['peer_session'][ps_name]\
                                 ['update_source_inherit'] = m.groupdict()['inherit']
                         continue
-        
+
                     # suppress-4byteas                        []
                     p10 = re.compile(r'^suppress\-4byteas +'
                                      '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
@@ -659,7 +659,7 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
                             ret_dict['instance'][instance_name]['peer_session'][ps_name]\
                                 ['suppress_4byteas_inherit'] = m.groupdict()['inherit']
                         continue
-        
+
                     # session-open-mode active-only              []
                     p11 = re.compile(r'^session\-open\-mode +(?P<mode>[\w\-]+) +'
                                      '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
@@ -671,7 +671,7 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
                             ret_dict['instance'][instance_name]['peer_session'][ps_name]\
                                 ['transport_connection_mode_inherit'] = m.groupdict()['inherit']
                         continue
-        
+
                     # bfd fast-detect                            []
                     p12 = re.compile(r'^bfd fast-detect +'
                                      '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
@@ -683,7 +683,7 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
                             ret_dict['instance'][instance_name]['peer_session'][ps_name]\
                                 ['fall_over_bfd_inherit'] = m.groupdict()['inherit']
                         continue
-        
+
                     # ignore-connected                           []
                     p13 = re.compile(r'^ignore\-connected *'
                                      '\[(?P<inherit>[\w\-\.\:\s]+)?\]$')
@@ -694,7 +694,7 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
                         if m.groupdict()['inherit']:
                             ret_dict['instance'][instance_name]['peer_session'][ps_name]\
                                 ['disable_connected_check_inherit'] = m.groupdict()['inherit']
-                        continue
+                            continue
 
         return ret_dict
 
@@ -1774,6 +1774,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
 
         # Return to caller
         return map_dict
+
 
 # ================================================
 # Parser for:
@@ -2879,11 +2880,11 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         return map_dict
 
 
-# ==================================================================
+# ================================================================
 # Parser for:
 # 'show bgp instance all all all neighbors <WORD> received-routes'
 # 'show bgp instance all vrf all neighbors <WORD> received-routes'
-# ==================================================================
+# ================================================================
 
 class ShowBgpInstanceNeighborsReceivedRoutesSchema(MetaParser):
     
@@ -3512,11 +3513,11 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
         return ret_dict
 
 
-# ==================================================================
+# =======================================================
 # Parser for:
 # 'show bgp instance all all all neighbors <WORD> routes'
 # 'show bgp instance all vrf all neighbors <WORD> routes'
-# ==================================================================
+# =======================================================
 
 class ShowBgpInstanceNeighborsRoutesSchema(MetaParser):
 
@@ -3584,6 +3585,352 @@ class ShowBgpInstanceNeighborsRoutes(ShowBgpInstanceNeighborsRoutesSchema):
     def cli(self, neighbor, vrf):
         return ShowBgpInstanceNeighborsReceivedRoutes.cli(
             self, neighbor=neighbor, vrf=vrf, route_type='routes')
+
+
+# =======================================
+# Parser for:
+# 'show bgp instance all all all summary'
+# 'show bgp instance all vrf all summary'
+# =======================================
+
+class ShowBgpInstanceSummarySchema(MetaParser):
+
+    ''' Schema for:
+        * 'show bgp instance all all all summary'
+        * 'show bgp instance all vrf all summary'
+    '''
+
+    schema = {'instance':
+                {Any():
+                    {'vrf':
+                        {Any():
+                            {'address_family':
+                                {Any():
+                                    {Optional('route_distinguisher'): str,
+                                     'bgp_table_version': int,
+                                     'local_as': int,
+                                     Optional('bgp_vrf'): str,
+                                     Optional('router_id'): str,
+                                     Optional('non_stop_routing'): str,
+                                     Optional('table_state'): str,
+                                     Optional('table_id'): str,
+                                     Optional('rd_version'): int,
+                                     Optional('generic_scan_interval'): int,
+                                     'nsr_initial_initsync_version': int,
+                                     'nsr_initial_init_ver_status': str,
+                                     'nsr_issu_sync_group_versions': str,
+                                     Optional('scan_interval'): int,
+                                     'operation_mode': str,
+                                     Optional('vrf_id'): str,
+                                     Optional('instance_number'): str,
+                                     Optional('vrf_state'): str,
+                                    'process':
+                                        {Any():
+                                            {'rcvtblver': int,
+                                            'brib_rib': int,
+                                            'labelver': int,
+                                            'importver': int,
+                                            'sendtblver': int,
+                                            'standbyver': int,
+                                            },
+                                        },
+                                    },
+                                },
+                            'neighbor':
+                                {Any():        
+                                    {'remote_as': int,
+                                    'address_family':
+                                        {Any():
+                                            {'tbl_ver': int,
+                                            'spk': int,   
+                                            'msg_rcvd': int,
+                                            'msg_sent': int,
+                                            'input_queue': int,
+                                            'output_queue': int,
+                                            'up_down': str,
+                                            'state_pfxrcd': int,
+                                            Optional('route_distinguisher'): str,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            }
+
+class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
+
+    ''' Parser for:
+        * 'show bgp instance all all all summary'
+        * 'show bgp instance all vrf all summary'
+    '''
+
+    def cli(self, vrf):
+
+        assert vrf in ['all', 'vrf']
+        cmd = 'show bgp instance all {vrf} all summary'.format(vrf=vrf)
+        out = self.device.execute(cmd)
+
+        bgp_instance_summary_dict = {}
+
+        if vrf == 'all':
+            vrf = 'default'
+            af_default = None
+        elif vrf == 'vrf':
+            vrf = None
+            af_default = 'default'
+
+        # init the route_distinguisher when all all all command
+        route_distinguisher = None
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            # BGP instance 0: 'default' 
+            p1 = re.compile(r'^\s*BGP *instance *(?P<instance_number>[0-9]+):'
+                             ' *(?P<instance>[a-zA-Z\']+)$')
+            m = p1.match(line)
+            if m:
+                instance = m.groupdict()['instance']
+                instance = instance.replace("'","")
+                instance_number = str(m.groupdict()['instance_number'])
+                if 'instance' not in bgp_instance_summary_dict:
+                    bgp_instance_summary_dict['instance'] = {}
+                if instance not in bgp_instance_summary_dict['instance']:
+                    bgp_instance_summary_dict['instance'][instance] = {}
+                # VRF is default - init dictionary here
+                if vrf == 'default':
+                    if 'vrf' not in bgp_instance_summary_dict['instance'][instance]:
+                        bgp_instance_summary_dict['instance'][instance]['vrf'] = {}
+                    if vrf not in bgp_instance_summary_dict['instance'][instance]['vrf']:
+                        bgp_instance_summary_dict['instance'][instance]['vrf'][vrf] = {}
+                        continue
+
+            # VRF: VRF1
+            p2 = re.compile(r'^\s*VRF: *(?P<vrf>[a-zA-Z0-9]+)$')
+            m = p2.match(line)
+            if m:
+                vrf = m.groupdict()['vrf'].lower()
+                if 'vrf' not in bgp_instance_summary_dict['instance'][instance]:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'] = {}
+                if vrf not in bgp_instance_summary_dict['instance'][instance]['vrf']:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'][vrf] = {}
+                # Address family is default - init ipv4 unicast dictionary here
+                if af_default == 'default':
+                    address_family = 'ipv4 unicast'
+                    if 'address_family' not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]:
+                        bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'] = {}
+                    if address_family not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family']:
+                        bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family] = {}
+                        continue
+            
+            # Address Family: VPNv4 Unicast
+            p3 = re.compile(r'^\s*Address *Family:'
+                            ' *(?P<address_family>[a-zA-Z0-9\s]+)$')
+            m = p3.match(line)
+            if m:
+                address_family = m.groupdict()['address_family'].lower()
+                if 'address_family' not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'] = {}
+                if address_family not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family']:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family] = {}
+                continue
+
+            # BGP VRF VRF1, state: Active
+            p4 = re.compile(r'^\s*BGP *VRF *(?P<bgp_vrf>[A-Z0-9]+), *state:'
+                             ' *(?P<vrf_state>[a-zA-Z]+)$')
+            m = p4.match(line)
+            if m:
+                bgp_vrf = m.groupdict()['bgp_vrf'].lower()
+                vrf_state = m.groupdict()['vrf_state'].lower()
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['bgp_vrf'] = bgp_vrf
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['vrf_state'] = vrf_state
+                continue
+
+            # BGP Route Distinguisher: 200:1
+            p5 = re.compile(r'^\s*BGP *Route *Distinguisher:'
+                             ' *(?P<route_distinguisher>[0-9\:]+)$')
+            m = p5.match(line)
+            if m:
+                route_distinguisher = str(m.groupdict()['route_distinguisher'])
+                new_address_family = address_family + ' RD ' + route_distinguisher
+                if new_address_family not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family']:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][new_address_family] = {}
+                # Map older address_family to new_address_family        
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][new_address_family] = bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]
+                
+                # delete older address_family key
+                del bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]
+                # Reset address_family
+                address_family = new_address_family
+
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['route_distinguisher'] = route_distinguisher
+                continue
+
+            # VRF ID: 0x60000001
+            p6 = re.compile(r'^\s*VRF *ID: *(?P<vrf_id>[a-z0-9]+)$')
+            m = p6.match(line)
+            if m:
+                vrf_id = str(m.groupdict()['vrf_id'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['vrf_id'] = vrf_id
+                continue 
+
+            # BGP router identifier 11.11.11.11, local AS number 100
+            p7 = re.compile(r'^\s*BGP *router *identifier'
+                            ' *(?P<router_id>[0-9\.]+)\, *local *AS *number'
+                            ' *(?P<local_as>[0-9]+)$')
+            m = p7.match(line)
+            if m:
+                router_id = str(m.groupdict()['router_id'])
+                local_as = int(m.groupdict()['local_as'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['router_id'] = router_id
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['local_as'] = local_as
+                continue
+
+            # BGP generic scan interval 60 secs
+            p8 = re.compile(r'^\s*BGP *generic *scan *interval'
+                             ' *(?P<generic_scan_interval>[0-9]+) *secs$')
+            m = p8.match(line)
+            if m:
+                generic_scan_interval = int(m.groupdict()['generic_scan_interval'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['generic_scan_interval'] = generic_scan_interval
+                continue
+
+            # Non-stop routing is enabled
+            p9 = re.compile(r'^\s*Non-stop *routing *is'
+                             ' *(?P<non_stop_routing>[A-Za-z]+)$')
+            m = p9.match(line)
+            if m:
+                non_stop_routing = str(m.groupdict()['non_stop_routing'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['non_stop_routing'] = non_stop_routing
+                continue
+
+            # BGP table state: Active
+            p10 = re.compile(r'^\s*BGP *table *state:'
+                              ' *(?P<table_state>[a-zA-Z]+)$')
+            m = p10.match(line)
+            if m:
+                table_state = str(m.groupdict()['table_state'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['table_state'] = table_state
+                continue
+
+            # Table ID: 0x0   RD version: 0
+            p11 = re.compile(r'^\s*Table *ID: *(?P<table_id>[a-z0-9]+)'
+                              ' *RD *version: (?P<rd_version>[0-9]+)$')
+            m = p11.match(line)
+            if m:
+                table_id = str(m.groupdict()['table_id'])
+                rd_version = int(m.groupdict()['rd_version'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['table_id'] = table_id
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['rd_version'] = rd_version
+                continue
+
+            # BGP main routing table version 63
+            p12 = re.compile(r'^\s*BGP *main *routing *table *version'
+                              ' *(?P<bgp_table_version>[0-9]+)$')
+            m = p12.match(line)
+            if m:
+                bgp_table_version = int(m.groupdict()['bgp_table_version'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['bgp_table_version'] =  bgp_table_version       
+                continue
+
+            # BGP NSR Initial initsync version 11 (Reached)
+            p13 = re.compile(r'^\s*BGP *NSR *Initial *initsync *version'
+                              ' *(?P<nsr_initial_initsync_version>[0-9]+)'
+                              ' *\((?P<nsr_initial_init_ver_status>[a-zA-Z]+)\)$')
+            m = p13.match(line)
+            if m:
+                nsr_initial_initsync_version = int(m.groupdict()['nsr_initial_initsync_version'])
+                nsr_initial_init_ver_status = str(m.groupdict()['nsr_initial_init_ver_status'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['nsr_initial_initsync_version'] = nsr_initial_initsync_version
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['nsr_initial_init_ver_status'] = nsr_initial_init_ver_status
+                continue
+
+            # BGP NSR/ISSU Sync-Group versions 0/0
+            p14 = re.compile(r'^\s*BGP *NSR/ISSU *Sync-Group *versions'
+                              ' *(?P<nsr_issu_sync_group_versions>[0-9\/]+)$')
+            m = p14.match(line)
+            if m:
+                nsr_issu_sync_group_versions = str(m.groupdict()['nsr_issu_sync_group_versions'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['nsr_issu_sync_group_versions'] = nsr_issu_sync_group_versions
+                continue
+
+            # BGP scan interval 60 secs
+            p15 = re.compile(r'^\s*BGP *generic *scan *interval *(?P<scan_interval>[0-9]+) *secs$')
+            m = p15.match(line)
+            if m:
+                scan_interval = int(m.groupdict()['scan_interval'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['scan_interval'] = scan_interval
+                continue
+
+            # BGP is operating in STANDALONE mode.
+            p16 = re.compile(r'^\s*BGP *is *operating *in *(?P<operation_mode>[a-zA-Z\s]+) *mode.$')
+            m = p16.match(line)
+            if m:
+                operation_mode = str(m.groupdict()['operation_mode'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['operation_mode'] = operation_mode
+                continue
+
+            # Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+            # Speaker              63         63         63         63          63           0
+            p17 = re.compile(r'^\s*(?P<process>[a-zA-Z]+) *(?P<rcvtblver>[0-9]+)'
+                              ' *(?P<brib_rib>[0-9]+) *(?P<labelver>[0-9]+)'
+                              ' *(?P<importver>[0-9]+) *(?P<sendtblver>[0-9]+)'
+                              ' *(?P<standbyver>[0-9]+)$')
+            m = p17.match(line)
+            if m:
+                process = str(m.groupdict()['process'])
+                if 'process' not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['process'] = {}
+                if process not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['process']:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['process'][process] = {}
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['process'][process]['rcvtblver'] =  int(m.groupdict()['rcvtblver'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['process'][process]['brib_rib'] =  int(m.groupdict()['brib_rib'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['process'][process]['labelver'] =  int(m.groupdict()['labelver'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['process'][process]['importver'] =  int(m.groupdict()['importver'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['process'][process]['sendtblver'] =  int(m.groupdict()['sendtblver'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['process'][process]['standbyver'] =  int(m.groupdict()['standbyver'])
+                continue 
+
+
+
+            # Neighbor        Spk    AS msg_rcvd msg_sent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+            # 10.1.5.5          0   200      60      62       63    0    0 00:57:32          0
+            p17 = re.compile(r'^\s*(?P<neighbor>[0-9\.]+) *(?P<spk>[0-9]+)'
+                              ' *(?P<remote_as>[0-9]+) *(?P<msg_rcvd>[0-9]+)'
+                              ' *(?P<msg_sent>[0-9]+)'
+                              ' *(?P<tbl_ver>[0-9]+) *(?P<input_queue>[0-9]+)'
+                              ' *(?P<output_queue>[0-9]+) *(?P<up_down>[0-9\:]+)'
+                              ' *(?P<state_pfxrcd>[0-9]+)$')
+            m = p17.match(line)
+            if m:
+                neighbor = str(m.groupdict()['neighbor'])
+                if 'neighbor' not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'] = {}
+                if neighbor not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor']:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor] = {}
+
+                if 'address_family' not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'] = {}
+                if address_family not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family']:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family] = {}
+
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['remote_as'] = int(m.groupdict()['remote_as'])
+                if route_distinguisher is not None:
+                        bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['route_distinguisher'] =  route_distinguisher
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['spk'] = int(m.groupdict()['spk'])                
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['msg_rcvd'] = int(m.groupdict()['msg_rcvd'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['msg_sent'] = int(m.groupdict()['msg_sent'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['tbl_ver'] = int(m.groupdict()['tbl_ver'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['input_queue'] = int(m.groupdict()['input_queue'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['output_queue'] = int(m.groupdict()['output_queue'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['up_down'] =  str(m.groupdict()['up_down'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['state_pfxrcd'] = int(m.groupdict()['state_pfxrcd'])
+                continue
+                
+        return bgp_instance_summary_dict
 
 
 ################################################################################

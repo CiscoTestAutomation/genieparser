@@ -19,7 +19,8 @@ from parser.iosxr.show_bgp import ShowPlacementProgramAll,\
                                   ShowBgpInstanceNeighborsDetail,\
                                   ShowBgpInstanceNeighborsAdvertisedRoutes,\
                                   ShowBgpInstanceNeighborsReceivedRoutes,\
-                                  ShowBgpInstanceNeighborsRoutes
+                                  ShowBgpInstanceNeighborsRoutes,\
+                                  ShowBgpInstanceSummary
 
 
 # ==========================================
@@ -566,9 +567,9 @@ class test_show_placement_program_all(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output1)
 
 
-# ========================================================
-# Unit test for 'show bgp instance af-group configuration'
-# ========================================================
+# ======================================================================
+# Unit test for 'show bgp instance <WORD> af-group <WORD> configuration'
+# ======================================================================
 
 class test_show_bgp_instance_af_group_configuration(unittest.TestCase):
     
@@ -642,17 +643,18 @@ class test_show_bgp_instance_af_group_configuration(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-# =============================================================
-# Unit test for 'show bgp instance session group configuration'
-# =============================================================
+# ===========================================================================
+# Unit test for 'show bgp instance <WORD> session-group <WORD> configuration'
+# ===========================================================================
 
 class test_show_bgp_instance_session_group_configuration(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
+    
     golden_parsed_output = {
         "instance": {
-            "100": {
+            "default": {
                 "peer_session": {
                     "SG": {
                         "remote_as": 333,
@@ -672,12 +674,7 @@ class test_show_bgp_instance_session_group_configuration(unittest.TestCase):
                         "local_as_as_no": 200,
                         "description": "SG_group",
                         "update_source": 'loopback0',
-                        "disable_connected_check": True
-                    }
-                }
-            }
-        }
-    }
+                        "disable_connected_check": True}}}}}
 
     golden_output = {'execute.return_value': '''
         Fri Jul 14 17:50:40.461 EDT
@@ -700,6 +697,75 @@ class test_show_bgp_instance_session_group_configuration(unittest.TestCase):
          ignore-connected                           []
         '''}
 
+    golden_parsed_output1 = {
+        'instance': 
+            {'default': 
+                {'peer_session': 
+                    {'SG': 
+                        {'description': 'LALALALLA',
+                        'ebgp_multihop_enable': True,
+                        'ebgp_multihop_max_hop': 255,
+                        'fall_over_bfd': True,
+                        'local_as_as_no': 10,
+                        'local_no_prepend': True}}},
+            'test': 
+                {'peer_session': 
+                    {'LALALALLA': 
+                        {'description': 'LALALALLA',
+                        'ebgp_multihop_enable': True,
+                        'ebgp_multihop_max_hop': 255,
+                        'fall_over_bfd': True,
+                        'local_as_as_no': 10,
+                        'local_no_prepend': True},
+                    'abcd': 
+                        {'description': 'LALALALLA',
+                        'ebgp_multihop_enable': True,
+                        'ebgp_multihop_max_hop': 255,
+                        'fall_over_bfd': True,
+                        'local_as_as_no': 10,
+                        'local_no_prepend': True},
+                    'efddd': 
+                        {'description': 'LALALALLA',
+                        'ebgp_multihop_enable': True,
+                        'ebgp_multihop_max_hop': 255,
+                        'fall_over_bfd': True,
+                        'local_as_as_no': 10,
+                        'local_no_prepend': True}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        router bgp 333 instance test session-group abcd
+        router bgp 333 instance test session-group abcd bfd fast-detect
+        router bgp 333 instance test session-group abcd description LALALALLA
+        router bgp 333 instance test session-group efddd
+        router bgp 333 instance test session-group efddd bfd fast-detect
+        router bgp 333 instance test session-group efddd ebgp-multihop 255
+        router bgp 333 instance test session-group efddd local-as 10 no-prepend
+        router bgp 333 instance test neighbor 1.1.1.1 use session-group LALALALLA
+        router bgp 100 session-group SG
+        router bgp 100 session-group SG description SG
+
+        RP/0/RSP1/CPU0:PE1#show bgp instance default session-group SG configuration
+        Thu Jul 20 09:02:18.537 PDT
+        session-group SG
+         description SG  []
+
+        RP/0/RSP1/CPU0:PE1#show bgp instance test session-group abcd configuration 
+        Thu Jul 20 09:02:48.738 PDT
+        session-group abcd
+         description LALALALLA []
+         bfd fast-detect       []
+
+        RP/0/RSP1/CPU0:PE1#show bgp instance test session-group efddd configuration 
+        Thu Jul 20 09:03:10.702 PDT
+        session-group efddd
+         ebgp-multihop 255      []
+         local-as 10 no-prepend []
+         bfd fast-detect        []
+        
+        RP/0/RSP1/CPU0:PE1#show bgp instance test session-group LALALALLA configuration 
+        Thu Jul 20 09:03:41.151 PDT
+        '''}
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         obj = ShowBgpInstanceSessionGroupConfiguration(device=self.device1)
@@ -713,6 +779,13 @@ class test_show_bgp_instance_session_group_configuration(unittest.TestCase):
         parsed_output = obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowBgpInstanceSessionGroupConfiguration(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output1)
 
 
 # ============================================================
@@ -5318,6 +5391,333 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
         obj = ShowBgpInstanceNeighborsRoutes(device=self.device)
         parsed_output = obj.parse(neighbor='3.3.3.3', vrf='all')
         self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+# =====================================================
+# Unit test for 'show bgp instance all all all summary'
+# =====================================================
+
+class test_show_bgp_instance_all_all_all_summary(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    device0 = Device(name='bDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {"instance": {
+        "default": {
+            "vrf": {
+                "default": {
+                    "neighbor": {
+                        "2.2.2.2": {
+                            "remote_as": 100,
+                            "address_family": {
+                                "vpnv4 unicast": {
+                                    "msg_rcvd": 59,
+                                    "output_queue": 0,
+                                    "state_pfxrcd": 10,
+                                    "spk": 0,
+                                    "up_down": "00:50:38",
+                                    "tbl_ver": 43,
+                                    "msg_sent": 56,
+                                    "input_queue": 0},
+                                "vpnv6 unicast": {
+                                    "msg_rcvd": 59,
+                                    "output_queue": 0,
+                                    "state_pfxrcd": 10,
+                                    "spk": 0,
+                                    "up_down": "00:50:38",
+                                    "tbl_ver": 43,
+                                    "msg_sent": 56,
+                                    "input_queue": 0}}},
+                        "3.3.3.3": {
+                            "remote_as": 100,
+                            "address_family": {
+                                "vpnv4 unicast": {
+                                    "msg_rcvd": 68,
+                                    "output_queue": 0,
+                                    "state_pfxrcd": 10,
+                                    "spk": 0,
+                                    "up_down": "00:47:11",
+                                    "tbl_ver": 43,
+                                    "msg_sent": 58,
+                                    "input_queue": 0},
+                                "vpnv6 unicast": {
+                                    "msg_rcvd": 68,
+                                    "output_queue": 0,
+                                    "state_pfxrcd": 10,
+                                    "spk": 0,
+                                    "up_down": "00:47:11",
+                                    "tbl_ver": 43,
+                                    "msg_sent": 58,
+                                    "input_queue": 0}}}},
+                    "address_family": {
+                        "vpnv4 unicast": {
+                            "non_stop_routing": "enabled",
+                            "table_id": "0x0",
+                            "nsr_initial_init_ver_status": "Reached",
+                            "operation_mode": "STANDALONE ",
+                            "bgp_table_version": 43,
+                            "router_id": "1.1.1.1",
+                            "nsr_issu_sync_group_versions": "0/0",
+                            "local_as": 100,
+                            "nsr_initial_initsync_version": 11,
+                            "process": {
+                                "Speaker": {
+                                    "rcvtblver": 43,
+                                    "labelver": 43,
+                                    "sendtblver": 43,
+                                    "brib_rib": 43,
+                                    "standbyver": 0,
+                                    "importver": 43}},
+                            "generic_scan_interval": 60,
+                            "table_state": "Active",
+                            "rd_version": 0},
+                        "vpnv6 unicast": {
+                            "non_stop_routing": "enabled",
+                            "table_id": "0x0",
+                            "nsr_initial_init_ver_status": "Reached",
+                            "operation_mode": "STANDALONE ",
+                            "bgp_table_version": 43,
+                            "router_id": "1.1.1.1",
+                            "nsr_issu_sync_group_versions": "0/0",
+                            "local_as": 100,
+                            "nsr_initial_initsync_version": 11,
+                            "process": {
+                                "Speaker": {
+                                    "rcvtblver": 43,
+                                    "labelver": 43,
+                                    "sendtblver": 43,
+                                    "brib_rib": 43,
+                                    "standbyver": 0,
+                                    "importver": 43}},
+                            "generic_scan_interval": 60,
+                            "table_state": "Active",
+                            "rd_version": 0}}}}}}}
+
+    golden_output = {'execute.return_value': '''
+    
+        BGP instance 0: 'default'
+        =========================
+
+        Address Family: VPNv4 Unicast
+        -----------------------------
+
+        BGP router identifier 1.1.1.1, local AS number 100
+        BGP generic scan interval 60 secs
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0x0   RD version: 0
+        BGP main routing table version 43
+        BGP NSR Initial initsync version 11 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+        BGP scan interval 60 secs
+
+        BGP is operating in STANDALONE mode.
+
+
+        Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+        Speaker              43         43         43         43          43           0
+
+        Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+        2.2.2.2           0   100      59      56       43    0    0 00:50:38         10
+        3.3.3.3           0   100      68      58       43    0    0 00:47:11         10
+
+
+        Address Family: VPNv6 Unicast
+        -----------------------------
+
+        BGP router identifier 1.1.1.1, local AS number 100
+        BGP generic scan interval 60 secs
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0x0   RD version: 0
+        BGP main routing table version 43
+        BGP NSR Initial initsync version 11 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+        BGP scan interval 60 secs
+
+        BGP is operating in STANDALONE mode.
+
+
+        Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+        Speaker              43         43         43         43          43           0
+
+        Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+        2.2.2.2           0   100      59      56       43    0    0 00:50:38         10
+        3.3.3.3           0   100      68      58       43    0    0 00:47:11         10
+        '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        bgp_instance_summary_obj = ShowBgpInstanceSummary(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = bgp_instance_summary_obj.parse(vrf='all')
+
+    def test_golden(self):
+       self.maxDiff = None
+       self.device = Mock(**self.golden_output)
+       bgp_instance_summary_obj = ShowBgpInstanceSummary(device=self.device)
+       parsed_output = bgp_instance_summary_obj.parse(vrf='all')
+       self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+# =====================================================
+# Unit test for 'show bgp instance all vrf all summary'
+# =====================================================
+
+class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    device0 = Device(name='bDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "instance": {
+            "default": {
+                "vrf": {
+                    "vrf2": {
+                        "neighbor": {
+                            "20.1.5.5": {
+                                "remote_as": 200,
+                                "address_family": {
+                                    "ipv4 unicast RD 200:2": {
+                                        "tbl_ver": 63,
+                                        "msg_rcvd": 58,
+                                        "msg_sent": 62,
+                                        "route_distinguisher": "200:2",
+                                        "spk": 0,
+                                        "up_down": "00:01:12",
+                                        "state_pfxrcd": 5,
+                                        "output_queue": 0,
+                                        "input_queue": 0}}}},
+                        "address_family": {
+                            "ipv4 unicast RD 200:2": {
+                                "local_as": 100,
+                                "operation_mode": "STANDALONE ",
+                                "table_id": "0xe0000011",
+                                "vrf_state": "active",
+                                "route_distinguisher": "200:2",
+                                "bgp_table_version": 63,
+                                "nsr_initial_initsync_version": 11,
+                                "table_state": "Active",
+                                "vrf_id": "0x60000002",
+                                "router_id": "11.11.11.11",
+                                "bgp_vrf": "vrf2",
+                                "non_stop_routing": "enabled",
+                                "nsr_issu_sync_group_versions": "0/0",
+                                "nsr_initial_init_ver_status": "Reached",
+                                "process": {
+                                    "Speaker": {
+                                        "importver": 63,
+                                        "labelver": 63,
+                                        "standbyver": 0,
+                                        "rcvtblver": 63,
+                                        "brib_rib": 63,
+                                        "sendtblver": 63}},
+                                "rd_version": 63}}},
+                    "vrf1": {
+                        "neighbor": {
+                            "10.1.5.5": {
+                                "remote_as": 200,
+                                "address_family": {
+                                    "ipv4 unicast RD 200:1": {
+                                        "tbl_ver": 63,
+                                        "msg_rcvd": 60,
+                                        "msg_sent": 62,
+                                        "route_distinguisher": "200:1",
+                                        "spk": 0,
+                                        "up_down": "00:57:32",
+                                        "state_pfxrcd": 0,
+                                        "output_queue": 0,
+                                        "input_queue": 0}}}},
+                        "address_family": {
+                            "ipv4 unicast RD 200:1": {
+                                "local_as": 100,
+                                "operation_mode": "STANDALONE ",
+                                "table_id": "0xe0000010",
+                                "vrf_state": "active",
+                                "route_distinguisher": "200:1",
+                                "bgp_table_version": 63,
+                                "nsr_initial_initsync_version": 11,
+                                "table_state": "Active",
+                                "vrf_id": "0x60000001",
+                                "router_id": "11.11.11.11",
+                                "bgp_vrf": "vrf1",
+                                "non_stop_routing": "enabled",
+                                "nsr_issu_sync_group_versions": "0/0",
+                                "nsr_initial_init_ver_status": "Reached",
+                                "process": {
+                                    "Speaker": {
+                                        "importver": 63,
+                                        "labelver": 63,
+                                        "standbyver": 0,
+                                        "rcvtblver": 63,
+                                        "brib_rib": 63,
+                                        "sendtblver": 63}},
+                                "rd_version": 63}}}}}}}
+
+    golden_output = {'execute.return_value': '''
+        BGP instance 0: 'default'
+        =========================
+
+        VRF: VRF1
+        ---------
+        BGP VRF VRF1, state: Active
+        BGP Route Distinguisher: 200:1
+        VRF ID: 0x60000001
+        BGP router identifier 11.11.11.11, local AS number 100
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0000010   RD version: 63
+        BGP main routing table version 63
+        BGP NSR Initial initsync version 11 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+
+        BGP is operating in STANDALONE mode.
+
+
+        Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+        Speaker              63         63         63         63          63           0
+
+        Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+        10.1.5.5          0   200      60      62       63    0    0 00:57:32          0
+
+
+        VRF: VRF2
+        ---------
+        BGP VRF VRF2, state: Active
+        BGP Route Distinguisher: 200:2
+        VRF ID: 0x60000002
+        BGP router identifier 11.11.11.11, local AS number 100
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0000011   RD version: 63
+        BGP main routing table version 63
+        BGP NSR Initial initsync version 11 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+
+        BGP is operating in STANDALONE mode.
+
+
+        Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+        Speaker              63         63         63         63          63           0
+
+        Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+        20.1.5.5          0   200      58      62       63    0    0 00:01:12          5
+        '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        bgp_instance_summary_obj = ShowBgpInstanceSummary(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = bgp_instance_summary_obj.parse(vrf='vrf')
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        bgp_instance_summary_obj = ShowBgpInstanceSummary(device=self.device)
+        parsed_output = bgp_instance_summary_obj.parse(vrf='vrf')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
