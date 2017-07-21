@@ -5404,96 +5404,97 @@ class test_show_bgp_instance_all_all_all_summary(unittest.TestCase):
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
     
-    golden_parsed_output = {"instance": {
-        "default": {
-            "vrf": {
-                "default": {
-                    "neighbor": {
-                        "2.2.2.2": {
-                            "remote_as": 100,
-                            "address_family": {
-                                "vpnv4 unicast": {
-                                    "msg_rcvd": 59,
-                                    "output_queue": 0,
-                                    "state_pfxrcd": 10,
-                                    "spk": 0,
-                                    "up_down": "00:50:38",
-                                    "tbl_ver": 43,
-                                    "msg_sent": 56,
-                                    "input_queue": 0},
-                                "vpnv6 unicast": {
-                                    "msg_rcvd": 59,
-                                    "output_queue": 0,
-                                    "state_pfxrcd": 10,
-                                    "spk": 0,
-                                    "up_down": "00:50:38",
-                                    "tbl_ver": 43,
-                                    "msg_sent": 56,
-                                    "input_queue": 0}}},
-                        "3.3.3.3": {
-                            "remote_as": 100,
-                            "address_family": {
-                                "vpnv4 unicast": {
-                                    "msg_rcvd": 68,
-                                    "output_queue": 0,
-                                    "state_pfxrcd": 10,
-                                    "spk": 0,
-                                    "up_down": "00:47:11",
-                                    "tbl_ver": 43,
-                                    "msg_sent": 58,
-                                    "input_queue": 0},
-                                "vpnv6 unicast": {
-                                    "msg_rcvd": 68,
-                                    "output_queue": 0,
-                                    "state_pfxrcd": 10,
-                                    "spk": 0,
-                                    "up_down": "00:47:11",
-                                    "tbl_ver": 43,
-                                    "msg_sent": 58,
-                                    "input_queue": 0}}}},
-                    "address_family": {
-                        "vpnv4 unicast": {
-                            "non_stop_routing": "enabled",
-                            "table_id": "0x0",
-                            "nsr_initial_init_ver_status": "Reached",
-                            "operation_mode": "STANDALONE ",
-                            "bgp_table_version": 43,
-                            "router_id": "1.1.1.1",
-                            "nsr_issu_sync_group_versions": "0/0",
-                            "local_as": 100,
-                            "nsr_initial_initsync_version": 11,
-                            "process": {
-                                "Speaker": {
-                                    "rcvtblver": 43,
-                                    "labelver": 43,
-                                    "sendtblver": 43,
-                                    "brib_rib": 43,
-                                    "standbyver": 0,
-                                    "importver": 43}},
-                            "generic_scan_interval": 60,
-                            "table_state": "Active",
-                            "rd_version": 0},
-                        "vpnv6 unicast": {
-                            "non_stop_routing": "enabled",
-                            "table_id": "0x0",
-                            "nsr_initial_init_ver_status": "Reached",
-                            "operation_mode": "STANDALONE ",
-                            "bgp_table_version": 43,
-                            "router_id": "1.1.1.1",
-                            "nsr_issu_sync_group_versions": "0/0",
-                            "local_as": 100,
-                            "nsr_initial_initsync_version": 11,
-                            "process": {
-                                "Speaker": {
-                                    "rcvtblver": 43,
-                                    "labelver": 43,
-                                    "sendtblver": 43,
-                                    "brib_rib": 43,
-                                    "standbyver": 0,
-                                    "importver": 43}},
-                            "generic_scan_interval": 60,
-                            "table_state": "Active",
-                            "rd_version": 0}}}}}}}
+    golden_parsed_output = {
+        "instance": {
+            "default": {
+                "vrf": {
+                    "default": {
+                        "neighbor": {
+                            "2.2.2.2": {
+                                "remote_as": 100,
+                                "address_family": {
+                                    "vpnv4 unicast": {
+                                        "msg_rcvd": 59,
+                                        "output_queue": 0,
+                                        "state_pfxrcd": '10',
+                                        "spk": 0,
+                                        "up_down": "00:50:38",
+                                        "tbl_ver": 43,
+                                        "msg_sent": 56,
+                                        "input_queue": 0},
+                                    "vpnv6 unicast": {
+                                        "msg_rcvd": 59,
+                                        "output_queue": 0,
+                                        "state_pfxrcd": '10',
+                                        "spk": 0,
+                                        "up_down": "00:50:38",
+                                        "tbl_ver": 43,
+                                        "msg_sent": 56,
+                                        "input_queue": 0}}},
+                            "3.3.3.3": {
+                                "remote_as": 100,
+                                "address_family": {
+                                    "vpnv4 unicast": {
+                                        "msg_rcvd": 68,
+                                        "output_queue": 0,
+                                        "state_pfxrcd": '10',
+                                        "spk": 0,
+                                        "up_down": "00:47:11",
+                                        "tbl_ver": 43,
+                                        "msg_sent": 58,
+                                        "input_queue": 0},
+                                    "vpnv6 unicast": {
+                                        "msg_rcvd": 68,
+                                        "output_queue": 0,
+                                        "state_pfxrcd": '10',
+                                        "spk": 0,
+                                        "up_down": "00:47:11",
+                                        "tbl_ver": 43,
+                                        "msg_sent": 58,
+                                        "input_queue": 0}}}},
+                        "address_family": {
+                            "vpnv4 unicast": {
+                                "non_stop_routing": "enabled",
+                                "table_id": "0x0",
+                                "nsr_initial_init_ver_status": "Reached",
+                                "operation_mode": "STANDALONE ",
+                                "bgp_table_version": 43,
+                                "router_id": "1.1.1.1",
+                                "nsr_issu_sync_group_versions": "0/0",
+                                "local_as": 100,
+                                "nsr_initial_initsync_version": 11,
+                                "process": {
+                                    "Speaker": {
+                                        "rcvtblver": 43,
+                                        "labelver": 43,
+                                        "sendtblver": 43,
+                                        "brib_rib": 43,
+                                        "standbyver": 0,
+                                        "importver": 43}},
+                                "generic_scan_interval": 60,
+                                "table_state": "Active",
+                                "rd_version": 0},
+                            "vpnv6 unicast": {
+                                "non_stop_routing": "enabled",
+                                "table_id": "0x0",
+                                "nsr_initial_init_ver_status": "Reached",
+                                "operation_mode": "STANDALONE ",
+                                "bgp_table_version": 43,
+                                "router_id": "1.1.1.1",
+                                "nsr_issu_sync_group_versions": "0/0",
+                                "local_as": 100,
+                                "nsr_initial_initsync_version": 11,
+                                "process": {
+                                    "Speaker": {
+                                        "rcvtblver": 43,
+                                        "labelver": 43,
+                                        "sendtblver": 43,
+                                        "brib_rib": 43,
+                                        "standbyver": 0,
+                                        "importver": 43}},
+                                "generic_scan_interval": 60,
+                                "table_state": "Active",
+                                "rd_version": 0}}}}}}}
 
     golden_output = {'execute.return_value': '''
     
@@ -5552,13 +5553,13 @@ class test_show_bgp_instance_all_all_all_summary(unittest.TestCase):
         self.device1 = Mock(**self.empty_output)
         bgp_instance_summary_obj = ShowBgpInstanceSummary(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = bgp_instance_summary_obj.parse(vrf='all')
+            parsed_output = bgp_instance_summary_obj.parse(vrf_type='all')
 
     def test_golden(self):
        self.maxDiff = None
        self.device = Mock(**self.golden_output)
        bgp_instance_summary_obj = ShowBgpInstanceSummary(device=self.device)
-       parsed_output = bgp_instance_summary_obj.parse(vrf='all')
+       parsed_output = bgp_instance_summary_obj.parse(vrf_type='all')
        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -5588,7 +5589,7 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
                                         "route_distinguisher": "200:2",
                                         "spk": 0,
                                         "up_down": "00:01:12",
-                                        "state_pfxrcd": 5,
+                                        "state_pfxrcd": '5',
                                         "output_queue": 0,
                                         "input_queue": 0}}}},
                         "address_family": {
@@ -5628,7 +5629,7 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
                                         "route_distinguisher": "200:1",
                                         "spk": 0,
                                         "up_down": "00:57:32",
-                                        "state_pfxrcd": 0,
+                                        "state_pfxrcd": '0',
                                         "output_queue": 0,
                                         "input_queue": 0}}}},
                         "address_family": {
@@ -5711,13 +5712,13 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
         self.device1 = Mock(**self.empty_output)
         bgp_instance_summary_obj = ShowBgpInstanceSummary(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = bgp_instance_summary_obj.parse(vrf='vrf')
+            parsed_output = bgp_instance_summary_obj.parse(vrf_type='vrf')
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         bgp_instance_summary_obj = ShowBgpInstanceSummary(device=self.device)
-        parsed_output = bgp_instance_summary_obj.parse(vrf='vrf')
+        parsed_output = bgp_instance_summary_obj.parse(vrf_type='vrf')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
