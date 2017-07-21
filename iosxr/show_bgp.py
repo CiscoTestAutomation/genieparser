@@ -3600,57 +3600,53 @@ class ShowBgpInstanceSummarySchema(MetaParser):
         * 'show bgp instance all vrf all summary'
     '''
 
-    schema = {'instance':
-                {Any():
-                    {'vrf':
-                        {Any():
-                            {'address_family':
-                                {Any():
-                                    {Optional('route_distinguisher'): str,
-                                     'bgp_table_version': int,
-                                     'local_as': int,
-                                     Optional('bgp_vrf'): str,
-                                     Optional('router_id'): str,
-                                     Optional('non_stop_routing'): str,
-                                     Optional('table_state'): str,
-                                     Optional('table_id'): str,
-                                     Optional('rd_version'): int,
-                                     Optional('generic_scan_interval'): int,
-                                     'nsr_initial_initsync_version': int,
-                                     'nsr_initial_init_ver_status': str,
-                                     'nsr_issu_sync_group_versions': str,
-                                     Optional('scan_interval'): int,
-                                     'operation_mode': str,
-                                     Optional('vrf_id'): str,
-                                     Optional('instance_number'): str,
-                                     Optional('vrf_state'): str,
-                                    'process':
-                                        {Any():
-                                            {'rcvtblver': int,
-                                            'brib_rib': int,
-                                            'labelver': int,
-                                            'importver': int,
-                                            'sendtblver': int,
-                                            'standbyver': int,
-                                            },
-                                        },
-                                    },
-                                },
-                            'neighbor':
-                                {Any():        
-                                    {'remote_as': int,
-                                    'address_family':
-                                        {Any():
-                                            {'tbl_ver': int,
-                                            'spk': int,   
-                                            'msg_rcvd': int,
-                                            'msg_sent': int,
-                                            'input_queue': int,
-                                            'output_queue': int,
-                                            'up_down': str,
-                                            'state_pfxrcd': int,
-                                            Optional('route_distinguisher'): str,
-                                            },
+    schema = {
+        'instance':
+            {Any():
+                {Optional('vrf'):
+                    {Any():
+                        {Optional('address_family'):
+                            {Any():
+                                {Optional('route_distinguisher'): str,
+                                Optional('bgp_table_version'): int,
+                                Optional('local_as'): int,
+                                Optional('bgp_vrf'): str,
+                                Optional('router_id'): str,
+                                Optional('non_stop_routing'): str,
+                                Optional('table_state'): str,
+                                Optional('table_id'): str,
+                                Optional('rd_version'): int,
+                                Optional('generic_scan_interval'): int,
+                                Optional('nsr_initial_initsync_version'): int,
+                                Optional('nsr_initial_init_ver_status'): str,
+                                Optional('nsr_issu_sync_group_versions'): str,
+                                Optional('scan_interval'): int,
+                                Optional('operation_mode'): str,
+                                Optional('vrf_id'): str,
+                                Optional('instance_number'): str,
+                                Optional('vrf_state'): str,
+                                Optional('process'):
+                                    {Any():
+                                        {'rcvtblver': int,
+                                        'brib_rib': int,
+                                        'labelver': int,
+                                        'importver': int,
+                                        'sendtblver': int,
+                                        'standbyver': int}}}},
+                        Optional('neighbor'):
+                            {Any():        
+                                {'remote_as': int,
+                                'address_family':
+                                    {Any():
+                                        {'tbl_ver': int,
+                                        'spk': int,   
+                                        'msg_rcvd': int,
+                                        'msg_sent': int,
+                                        'input_queue': int,
+                                        'output_queue': int,
+                                        'up_down': str,
+                                        'state_pfxrcd': str,
+                                        Optional('route_distinguisher'): str,
                                         },
                                     },
                                 },
@@ -3658,7 +3654,8 @@ class ShowBgpInstanceSummarySchema(MetaParser):
                         },
                     },
                 },
-            }
+            },
+        }
 
 class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
 
@@ -3667,18 +3664,18 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
         * 'show bgp instance all vrf all summary'
     '''
 
-    def cli(self, vrf):
+    def cli(self, vrf_type):
 
-        assert vrf in ['all', 'vrf']
-        cmd = 'show bgp instance all {vrf} all summary'.format(vrf=vrf)
+        assert vrf_type in ['all', 'vrf']
+        cmd = 'show bgp instance all {vrf_type} all summary'.format(vrf_type=vrf_type)
         out = self.device.execute(cmd)
 
         bgp_instance_summary_dict = {}
 
-        if vrf == 'all':
+        if vrf_type == 'all':
             vrf = 'default'
             af_default = None
-        elif vrf == 'vrf':
+        elif vrf_type == 'vrf':
             vrf = None
             af_default = 'default'
 
@@ -3898,12 +3895,13 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
 
             # Neighbor        Spk    AS msg_rcvd msg_sent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
             # 10.1.5.5          0   200      60      62       63    0    0 00:57:32          0
+            # 2.2.2.2           0   100       0       0        0    0    0 00:00:00 Idle
             p17 = re.compile(r'^\s*(?P<neighbor>[0-9\.]+) *(?P<spk>[0-9]+)'
                               ' *(?P<remote_as>[0-9]+) *(?P<msg_rcvd>[0-9]+)'
                               ' *(?P<msg_sent>[0-9]+)'
                               ' *(?P<tbl_ver>[0-9]+) *(?P<input_queue>[0-9]+)'
                               ' *(?P<output_queue>[0-9]+) *(?P<up_down>[0-9\:]+)'
-                              ' *(?P<state_pfxrcd>[0-9]+)$')
+                              ' *(?P<state_pfxrcd>\S+)$')
             m = p17.match(line)
             if m:
                 neighbor = str(m.groupdict()['neighbor'])
@@ -3927,7 +3925,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['input_queue'] = int(m.groupdict()['input_queue'])
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['output_queue'] = int(m.groupdict()['output_queue'])
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['up_down'] =  str(m.groupdict()['up_down'])
-                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['state_pfxrcd'] = int(m.groupdict()['state_pfxrcd'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['state_pfxrcd'] = str(m.groupdict()['state_pfxrcd'])
                 continue
                 
         return bgp_instance_summary_dict
