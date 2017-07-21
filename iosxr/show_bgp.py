@@ -16,15 +16,13 @@ IOSXR parsers for the following show commands:
     * 'show bgp instance all vrf all neighbors <WORD> advertised-routes'
     * 'show bgp instance all all all summary'
     * 'show bgp instance all vrf all summary'
+    * 'show bgp instance all all all'
+    * 'show bgp instance all vrf all'
 
     * 'show bgp sessions'
     * 'show bgp vrf-db vrf all'
     * 'show bgp l2vpn evpn'
     * 'show bgp l2vpn evpn advertised'
-
-TODO:
-    * 'show bgp instance all all all <PREFIX>'
-    * 'show bgp instance all vrf all <PREFIX>'
 '''
 
 # Python
@@ -3929,6 +3927,411 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                 continue
                 
         return bgp_instance_summary_dict
+
+
+# ===============================
+# Parser for:
+# 'show bgp instance all all all'
+# 'show bgp instance all vrf all'
+# ===============================
+
+class ShowBgpInstanceAllAllSchema(MetaParser):
+
+    ''' Schema for:
+        * 'show bgp instance all all all'
+        * 'show bgp instance all vrf all'
+    '''
+
+    schema = {
+        'instance':
+            {Any():
+                {'vrf':
+                    {Any():
+                        {'address_family':
+                            {Any():
+                                {Optional('route_identifier'): str,
+                                 Optional('vrf_id'): str,
+                                 Optional('instance_number'): str,
+                                 Optional('local_as'): int,
+                                 Optional('vrf_state'): str,
+                                 Optional('bgp_vrf'): str,
+                                 Optional('generic_scan_interval'): str,
+                                 Optional('non_stop_routing'): bool,
+                                 Optional('table_state'): str,
+                                 Optional('table_id'): str,
+                                 Optional('rd_version'): int,
+                                 Optional('bgp_table_version'): int,
+                                 Optional('nsr_initial_initsync_version'): str,
+                                 Optional('nsr_issu_sync_group_versions'): str,
+                                 Optional('processed_prefix'): int,
+                                 Optional('processed_paths'): int,
+                                 Optional('scan_interval'): int,
+                                 Optional('default_vrf'): str,
+                                 Optional('route_distinguisher'): str,
+                                 Optional('prefix'):
+                                    {Any():
+                                        {'index': 
+                                            {Any(): 
+                                                {'next_hop': str,
+                                                Optional('status_codes'): str,
+                                                Optional('metric'): str,
+                                                Optional('locprf'): str,
+                                                Optional('weight'): str,
+                                                Optional('path'): str,
+                                                Optional('origin_codes'): str
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
+
+    ''' Parser for:
+        * 'show bgp instance all all all'
+        * 'show bgp instance all vrf all'
+    '''
+
+    def cli(self, vrf_type):
+
+        assert vrf_type in ['all', 'vrf']
+        cmd = 'show bgp instance all {vrf} all'.format(vrf_type=vrf_type)
+        out = self.device.execute(cmd)
+
+        bgp_instance_all_all_dict = {}
+
+        if vrf_type == 'all':
+            vrf = 'default'
+            af_default = None
+        elif vrf_type == 'vrf':
+            vrf = None
+            af_default = 'default'
+
+        # init the route_distinguisher when all all all command
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            # BGP instance 0: 'default'
+            p1 = re.compile(r'^\s*BGP *instance *(?P<instance_number>[0-9]+):'
+                             ' *(?P<instance>[a-zA-Z\']+)$')
+            m = p1.match(line)
+            if m:
+                instance = m.groupdict()['instance']
+                instance = instance.replace("'","")
+                instance_number = str(m.groupdict()['instance_number'])
+                if 'instance' not in bgp_instance_all_all_dict:
+                    bgp_instance_all_all_dict['instance'] = {}
+                if instance not in bgp_instance_all_all_dict['instance']:
+                    bgp_instance_all_all_dict['instance'][instance] = {}
+                # VRF is default - init dictionary here
+                if vrf == 'default':
+                    if 'vrf' not in bgp_instance_all_all_dict['instance'][instance]:
+                        bgp_instance_all_all_dict['instance'][instance]['vrf'] = {}
+                    if vrf not in bgp_instance_all_all_dict['instance'][instance]['vrf']:
+                        bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf] = {}
+                        continue
+
+            # VRF: VRF1
+            p2 = re.compile(r'^\s*VRF: *(?P<vrf>[a-zA-Z0-9]+)$')
+            m = p2.match(line)
+            if m:
+                vrf = m.groupdict()['vrf'].lower()
+                if 'vrf' not in bgp_instance_all_all_dict['instance'][instance]:
+                    bgp_instance_all_all_dict['instance'][instance]['vrf'] = {}
+                if vrf not in bgp_instance_all_all_dict['instance'][instance]['vrf']:
+                    bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf] = {}
+                # Address family is default - init ipv4 unicast dictionary here
+                if af_default == 'default':
+                    address_family = 'ipv4 unicast'
+                    original_address_family = address_family
+                    if 'address_family' not in bgp_instance_all_all_dict['instance']\
+                                                        [instance]['vrf'][vrf]:
+                        bgp_instance_all_all_dict['instance'][instance]['vrf']\
+                                                    [vrf]['address_family'] = {}
+                    if address_family not in bgp_instance_all_all_dict['instance']\
+                                    [instance]['vrf'][vrf]['address_family']:
+                        bgp_instance_all_all_dict['instance'][instance]['vrf']\
+                                    [vrf]['address_family'][address_family] = {}
+                        continue
+
+                   
+            # Address Family: VPNv4 Unicast
+            p3 = re.compile(r'^\s*Address *Family: *(?P<address_family>[a-zA-Z0-9\s]+)$')
+            m = p3.match(line)
+            if m:
+                address_family = m.groupdict()['address_family'].lower()
+                original_address_family = address_family
+                if 'address_family' not in bgp_instance_all_all_dict['instance']\
+                                                        [instance]['vrf'][vrf]:
+                    bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
+                                                        ['address_family'] = {}
+                if address_family not in bgp_instance_all_all_dict['instance']\
+                                    [instance]['vrf'][vrf]['address_family']:
+                    bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
+                                        ['address_family'][address_family] = {}
+                bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
+                ['address_family'][address_family]['instance_number'] = instance_number
+                continue
+
+            # BGP VRF VRF1, state: Active
+            p4 = re.compile(r'^\s*BGP *VRF *(?P<bgp_vrf>[A-Z0-9]+), *state:'
+                             ' *(?P<vrf_state>[a-zA-Z]+)$')
+            m = p4.match(line)
+            if m:
+                bgp_vrf = m.groupdict()['bgp_vrf'].lower()
+                vrf_state = m.groupdict()['vrf_state'].lower()
+                bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
+                    ['address_family'][address_family]['bgp_vrf'] = bgp_vrf
+                bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
+                ['address_family'][address_family]['vrf_state'] = vrf_state
+                continue
+
+            # VRF ID: 0x60000001    
+            p5 = re.compile(r'^\s*VRF *ID: *(?P<vrf_id>[a-zA-Z0-9]+)$')
+            m = p5.match(line)
+            if m:
+                vrf_id = m.groupdict()['vrf_id']
+
+                bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
+                    ['address_family'][address_family]['vrf_id'] = vrf_id
+                continue
+
+            # BGP router identifier 1.1.1.1, local AS number 100
+            p6 = re.compile(r'^\s*BGP *router *identifier *(?P<route_identifier>[0-9\.]+),'
+                            ' *local *AS *number *(?P<local_as>[0-9]+)$')
+            m = p6.match(line)
+            if m:
+                route_identifier = m.groupdict()['route_identifier']
+                local_as = int(m.groupdict()['local_as'])
+                bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                    [address_family]['route_identifier'] = route_identifier
+                bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                    [address_family]['local_as'] = local_as
+                continue 
+
+            # BGP generic scan interval 60 secs 
+            p7 =  re.compile(r'^\s*BGP *generic *scan *interval *(?P<generic_scan_interval>[0-9]+) *secs$')
+            m = p7.match(line)
+            if m:
+                generic_scan_interval = m.groupdict()['generic_scan_interval']
+                bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                [address_family]['generic_scan_interval'] = generic_scan_interval
+                continue          
+
+            # Non-stop routing is enabled
+            p8 = re.compile(r'^\s*(?P<non_stop_routing>(Non-stop routing is enabled))$')
+            m = p8.match(line)
+            if m:
+                non_stop_routing = True
+                bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                [address_family]['non_stop_routing'] = non_stop_routing
+                continue
+
+            # BGP table state: Active
+            p9 = re.compile(r'^\s*BGP *table *state: *(?P<table_state>[a-zA-Z]+)$')
+            m = p9.match(line)
+            if m:
+                table_state = m.groupdict()['table_state']
+                bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                    [address_family]['table_state'] = table_state
+                continue
+
+            # Table ID: 0x0   RD version: 0
+            p10 = re.compile(r'^\s*Table *ID: *(?P<table_id>[a-z0-9]+) *RD *version:'
+                            ' *(?P<rd_version>[0-9]+)$')
+            m = p10.match(line)
+            if m:
+                table_id = m.groupdict()['table_id']
+                rd_version = int(m.groupdict()['rd_version'])
+                bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
+                ['address_family'][address_family]['table_id'] = table_id
+                bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
+                ['address_family'][address_family]['rd_version'] = rd_version
+                continue
+
+            # BGP main routing table version 43
+            p11 = re.compile(r'^\s*BGP *main *routing *table *version *(?P<bgp_table_version>[0-9]+)$')
+            m = p11.match(line)
+            if m:
+                bgp_table_version = int(m.groupdict()['bgp_table_version'])
+                bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
+                ['address_family'][address_family]['bgp_table_version'] = bgp_table_version
+                continue
+
+            # BGP NSR Initial initsync version 11 (Reached)
+            p12 = re.compile(r'^\s*BGP *NSR *Initial *initsync *version'
+                ' *(?P<nsr_initial_initsync_version>[a-zA-Z0-9\s\(\)]+)$')
+            m = p12.match(line)
+            if m:
+                nsr_initial_initsync_version = m.groupdict()['nsr_initial_initsync_version']
+                bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                [address_family]['nsr_initial_initsync_version'] = nsr_initial_initsync_version
+                continue
+
+            # BGP NSR/ISSU Sync-Group versions 0/0
+            p13 = re.compile(r'^\s*BGP *NSR/ISSU *Sync-Group *versions *(?P<nsr_issu_sync_group_versions>[0-9\/\s]+)$')
+            m = p13.match(line)
+            if m:
+                nsr_issu_sync_group_versions = m.groupdict()['nsr_issu_sync_group_versions']
+                bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                [address_family]['nsr_issu_sync_group_versions'] = nsr_issu_sync_group_versions
+                continue
+
+            # BGP scan interval 60 secs
+            p14 = re.compile(r'^\s*BGP *scan *interval *(?P<scan_interval>[0-9\s]+) *secs$')
+            m = p14.match(line)
+            if m:
+               scan_interval = int(m.groupdict()['scan_interval'])
+               bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+               [address_family]['scan_interval'] = int(scan_interval)
+               continue
+
+            # Route Distinguisher: 200:1 (default for vrf VRF1)
+            p15 = re.compile(r'^\s*Route +Distinguisher: *(?P<route_distinguisher>[0-9\:]+)'
+                '(?: +\(default +for +vrf +(?P<default_vrf>[a-zA-Z0-9]+)\))?$')
+            m = p15.match(line)
+            if m:
+                route_distinguisher = str(m.groupdict()['route_distinguisher'])
+                address_family = original_address_family + ' RD ' + route_distinguisher
+                default_vrf = str(m.groupdict()['default_vrf']).lower()   
+                if 'address_family' not in bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]:
+                    bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family'] = {}
+                if address_family not in bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']:
+                    bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family] = {}
+                try:
+                    bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
+                    ['address_family'][address_family]['default_vrf'] = default_vrf
+                    bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
+                    ['address_family'][address_family]['route_distinguisher'] = route_distinguisher
+                except:
+                    pass
+
+            # prefix key
+            p16 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+) *'
+                              '(?P<prefix>(?P<ip>[\w\.\:]+)/(?P<mask>\d+))? +'
+                              '(?P<next_hop>[\w\.\:]+) +(?P<number>[\d\s\{\}]+)'
+                              '(?: *(?P<origin_codes>(i|e|\?)))?$')
+            m = p16.match(line)
+            if m:
+
+                status_codes = str(m.groupdict()['status_codes'])
+                status_codes = status_codes.replace(" ", "")
+                next_hop = m.groupdict()['next_hop']
+                prefix = m.groupdict()['prefix']
+
+                if prefix:
+                    index = 1
+                    last_prefix = prefix
+            
+                else:
+                    prefix = last_prefix
+                    index = index + 1
+                
+                if 'prefix' not in bgp_instance_all_all_dict['instance'][instance]\
+                ['vrf'][vrf]['address_family'][address_family]:
+                    bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
+                    ['address_family'][address_family]['prefix'] = {}
+
+                if last_prefix not in bgp_instance_all_all_dict['instance'][instance]\
+                ['vrf'][vrf]['address_family'][address_family]['prefix']:
+                    bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
+                    ['address_family'][address_family]['prefix'][last_prefix] = {}
+
+                if 'index' not in bgp_instance_all_all_dict['instance'][instance]\
+                ['vrf'][vrf]['address_family'][address_family]['prefix'][last_prefix]:
+                    bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
+                    ['address_family'][address_family]['prefix'][last_prefix]['index'] = {}
+
+                if index not in bgp_instance_all_all_dict['instance'][instance]\
+                ['vrf'][vrf]['address_family'][address_family]['prefix'][last_prefix]['index']:
+                    bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
+                    ['address_family'][address_family]['prefix'][last_prefix]['index'][index] = {}
+
+                    bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
+                    ['address_family'][address_family]['prefix'][last_prefix]['index'][index]['next_hop'] = next_hop
+                    bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
+                    ['address_family'][address_family]['prefix'][last_prefix]['index'][index]['status_codes'] = status_codes
+
+                    group_num = m.groupdict()['number']
+
+                    m1 = re.compile(r'^(?P<metric>[0-9]+)  +'
+                                 '(?P<locprf>[0-9]+)  +'
+                                 '(?P<weight>[0-9]+) '
+                                 '(?P<path>[0-9\{\}\s]+)$').match(group_num)
+
+                    m2 = re.compile(r'^(?P<value>[0-9]+)'
+                                 '(?P<space>\s{2,20})'
+                                 '(?P<weight>[0-9]+) '
+                                 '(?P<path>[0-9\{\}\s]+)$').match(group_num)
+
+                    m3 = re.compile(r'^(?P<weight>[0-9]+) '
+                                 '(?P<path>((\d+\s)|(\{\d+\}\s))+)$')\
+                               .match(group_num)
+
+                    if m1:
+                        bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                        [address_family]['prefix'][last_prefix]['index'][index]['metric'] = m1.groupdict()['metric']
+                        bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                        [address_family]['prefix'][last_prefix]['index'][index]['locprf'] = m1.groupdict()['locprf']
+                        bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                        [address_family]['prefix'][last_prefix]['index'][index]['weight'] = m1.groupdict()['weight']
+                        bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                        [address_family]['prefix'][last_prefix]['index'][index]['path'] = m1.groupdict()['path'].strip()
+                    elif m2:
+                        if len(m2.groupdict()['space']) > 8:
+                            bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                            [address_family]['prefix'][last_prefix]['index'][index]['metric'] = m2.groupdict()['value']
+                        else:
+                            bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                            [address_family]['prefix'][last_prefix]['index'][index]['locprf'] = m2.groupdict()['value']
+
+                        bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                        [address_family]['prefix'][last_prefix]['index'][index]['weight'] = m2.groupdict()['weight']
+                        bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                        [address_family]['prefix'][last_prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
+                    elif m3:
+                        bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                        [address_family]['prefix'][last_prefix]['index'][index]['weight'] = m3.groupdict()['weight']
+                        bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                        [address_family]['prefix'][last_prefix]['index'][index]['path'] = m3.groupdict()['path'].strip()
+
+                    if m.groupdict()['origin_codes']:
+                        bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                        [address_family]['prefix'][last_prefix]['index'][index]['origin_codes'] = m.groupdict()['origin_codes']
+                    continue
+
+            p17 = re.compile(r'(?P<path>[\d\s]+)'
+                            ' *(?P<origin_codes>(i|e|\?))?$')
+            m = p17.match(line)
+            if m:
+                if 'path' in bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                [address_family]['prefix'][last_prefix]['index'][index]:
+                    bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                    [address_family]['prefix'][last_prefix]['index'][index]['path'] += ' ' + m.groupdict()['path'].strip()
+
+                if m.groupdict()['origin_codes']:
+                    bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family']\
+                    [address_family]['prefix'][last_prefix]['index'][index]['origin_codes'] = m.groupdict()['origin_codes']
+                continue
+
+            # Processed 40 prefixes, 50 paths
+            p18 = re.compile(r'^\s*Processed +(?P<processed_prefix>[0-9]+) +prefixes, +(?P<processed_paths>[0-9]+) +paths$')
+            m = p18.match(line)
+            if m:
+                processed_prefix = int(m.groupdict()['processed_prefix'])
+                processed_paths = int(m.groupdict()['processed_paths'])
+                bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['processed_prefix'] = processed_prefix
+                bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['processed_paths'] = processed_paths
+                continue
+
+        return bgp_instance_all_all_dict 
 
 
 ################################################################################
