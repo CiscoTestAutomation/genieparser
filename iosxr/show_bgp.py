@@ -2003,7 +2003,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
 
             # BGP instance 0: 'default'
             p1 = re.compile(r'^BGP +instance +(?P<instance_number>[0-9]+): +'
-                             '(?P<instance>[a-zA-Z\']+)$')
+                             '(?P<instance>[a-zA-Z0-9\-\_\']+)$')
             m = p1.match(line)
             if m:
                 instance = str(m.groupdict()['instance'])
@@ -2970,7 +2970,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
             line = line.strip()
 
             # BGP instance 0: 'default'
-            p1 = re.compile(r'^BGP *instance *(?P<instance_number>[0-9]+): *(?P<instance>[a-zA-Z\']+)$')
+            p1 = re.compile(r'^BGP *instance *(?P<instance_number>[0-9]+): *(?P<instance>[a-zA-Z0-9\-\_\']+)$')
             m = p1.match(line)
             if m:
                 instance = m.groupdict()['instance']
@@ -3383,9 +3383,8 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
         for line in out.splitlines():
             line = line.strip()
 
-            #BGP instance 0: 'default'
-            
-            p1 = re.compile(r'^BGP *instance *(?P<instance_number>[0-9]+): *(?P<instance>[a-zA-Z\']+)$')
+            # BGP instance 0: 'default'
+            p1 = re.compile(r'^BGP *instance *(?P<instance_number>[0-9]+): *(?P<instance>[a-zA-Z0-9\-\_\']+)$')
             m = p1.match(line)
             if m:
                 instance = m.groupdict()['instance']
@@ -3685,7 +3684,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
 
             # BGP instance 0: 'default' 
             p1 = re.compile(r'^\s*BGP *instance *(?P<instance_number>[0-9]+):'
-                             ' *(?P<instance>[a-zA-Z\']+)$')
+                             ' *(?P<instance>[a-zA-Z0-9\-\_\']+)$')
             m = p1.match(line)
             if m:
                 instance = m.groupdict()['instance']
@@ -3945,9 +3944,9 @@ class ShowBgpInstanceAllAllSchema(MetaParser):
     schema = {
         'instance':
             {Any():
-                {'vrf':
+                {Optional('vrf'):
                     {Any():
-                        {'address_family':
+                        {Optional('address_family'):
                             {Any():
                                 {Optional('route_identifier'): str,
                                  Optional('vrf_id'): str,
@@ -3970,7 +3969,7 @@ class ShowBgpInstanceAllAllSchema(MetaParser):
                                  Optional('route_distinguisher'): str,
                                  Optional('prefix'):
                                     {Any():
-                                        {'index': 
+                                        {Optional('index'): 
                                             {Any(): 
                                                 {'next_hop': str,
                                                 Optional('status_codes'): str,
@@ -4020,7 +4019,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
 
             # BGP instance 0: 'default'
             p1 = re.compile(r'^\s*BGP *instance *(?P<instance_number>[0-9]+):'
-                             ' *(?P<instance>[a-zA-Z\']+)$')
+                             ' *(?P<instance>[a-zA-Z0-9\-\_\']+)$')
             m = p1.match(line)
             if m:
                 instance = m.groupdict()['instance']
