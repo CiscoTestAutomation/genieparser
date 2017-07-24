@@ -4001,7 +4001,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
     def cli(self, vrf_type):
 
         assert vrf_type in ['all', 'vrf']
-        cmd = 'show bgp instance all {vrf} all'.format(vrf_type=vrf_type)
+        cmd = 'show bgp instance all {vrf_type} all'.format(vrf_type=vrf_type)
         out = self.device.execute(cmd)
 
         bgp_instance_all_all_dict = {}

@@ -20,7 +20,8 @@ from parser.iosxr.show_bgp import ShowPlacementProgramAll,\
                                   ShowBgpInstanceNeighborsAdvertisedRoutes,\
                                   ShowBgpInstanceNeighborsReceivedRoutes,\
                                   ShowBgpInstanceNeighborsRoutes,\
-                                  ShowBgpInstanceSummary
+                                  ShowBgpInstanceSummary,\
+                                  ShowBgpInstanceAllAll
 
 
 # ==========================================
@@ -5719,6 +5720,1376 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         bgp_instance_summary_obj = ShowBgpInstanceSummary(device=self.device)
         parsed_output = bgp_instance_summary_obj.parse(vrf_type='vrf')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+# =============================================
+# Unit test for 'show bgp instance all all all'
+# =============================================
+
+class test_show_bgp_instance_all_all_all(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    device0 = Device(name='bDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'default': 
+                        {'address_family': 
+                            {'vpnv4 unicast': 
+                                {'bgp_table_version': 43,
+                                'generic_scan_interval': '60',
+                                'instance_number': '0',
+                                'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_initsync_version': '11 '
+                                                                '(Reached)',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'rd_version': 0,
+                                'route_identifier': '1.1.1.1',
+                                'scan_interval': 60,
+                                'table_id': '0x0',
+                                'table_state': 'Active'},
+                            'vpnv4 unicast RD 200:1': 
+                                {'default_vrf': 'vrf1',
+                                'prefix': 
+                                    {'15.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                '33299 '
+                                                '51178 '
+                                                '47751 '
+                                                '{27016}',
+                                                'status_codes': '*>',
+                                                'weight': '0'}}},
+                                    '15.1.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>',
+                                                'weight': '0'}}},
+                                    '46.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '46.1.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '46.1.3.0/24': 
+                                        {'index': 
+                                            {1: {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}}},
+                                'route_distinguisher': '200:1'},
+                            'vpnv4 unicast RD 200:2': {
+                                'default_vrf': 'vrf2',
+                                'prefix': 
+                                    {'15.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>',
+                                                'weight': '0'}}},
+                                    '15.1.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>',
+                                                'weight': '0'}}},
+                                    '15.1.5.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>',
+                                                'weight': '0'}}},
+                                    '46.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '46.1.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                '33299 '
+                                                '51178 '
+                                                '47751 '
+                                                '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '46.1.3.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '46.1.4.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '46.1.5.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}}},
+                                'route_distinguisher': '200:2'},
+                            'vpnv4 unicast RD 300:1': 
+                                {'default_vrf': 'none',
+                                'prefix': 
+                                    {'46.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'},
+                                            2: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}},
+                                    '46.1.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'},
+                                            2: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}},
+                                    '46.1.3.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'},
+                                            2: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}}},
+                                'route_distinguisher': '300:1'},
+                            'vpnv4 unicast RD 400:1': 
+                                {'default_vrf': 'none',
+                                'prefix': 
+                                    {'46.2.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'},
+                                            2: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}},
+                                    '46.2.3.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'},
+                                            2: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}}},
+                                'processed_paths': 50,
+                                'processed_prefix': 40,
+                                'route_distinguisher': '400:1'},
+                            'vpnv6 unicast': 
+                                {'bgp_table_version': 43,
+                                'generic_scan_interval': '60',
+                                'instance_number': '0',
+                                'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_initsync_version': '11 '
+                                                                '(Reached)',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'rd_version': 0,
+                                'route_identifier': '1.1.1.1',
+                                'scan_interval': 60,
+                                'table_id': '0x0',
+                                'table_state': 'Active'},
+                            'vpnv6 unicast RD 200:1': 
+                                {'default_vrf': 'vrf1',
+                                'prefix': 
+                                    {'46.2.3.0/24': 
+                                        {'index': 
+                                            {3: 
+                                                {'next_hop': '2219',
+                                                 'origin_codes': 'e',
+                                                 'path': '200 '
+                                                         '33299 '
+                                                         '51178 '
+                                                         '47751 '
+                                                         '{27016}',
+                                                 'status_codes': '',
+                                                 'weight': '0'},
+                                             4: {'next_hop': '2219',
+                                                 'origin_codes': 'e',
+                                                 'path': '200 '
+                                                         '33299 '
+                                                         '51178 '
+                                                         '47751 '
+                                                         '{27016}',
+                                                 'status_codes': '',
+                                                 'weight': '0'}}},
+                                    '646:11:11:1::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                '33299 '
+                                                '51178 '
+                                                '47751 '
+                                                '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '646:11:11:2::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '646:11:11::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '646:22:22:4::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '646:22:22::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}}},
+                                'route_distinguisher': '200:1'},
+                            'vpnv6 unicast RD 200:2': 
+                                {'default_vrf': 'vrf2',
+                                'prefix': 
+                                    {'646:11:11:1::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '646:11:11:2::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '646:11:11::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '646:22:22:1::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '646:22:22:2::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '646:22:22:4::/64': 
+                                        {'index': 
+                                            {2: 
+                                                {'next_hop': '2219',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '',
+                                                'weight': '0'},
+                                            3: 
+                                                {'next_hop': '2219',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '',
+                                                'weight': '0'}}},
+                                    '646:22:22::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}}},
+                                'route_distinguisher': '200:2'},
+                            'vpnv6 unicast RD 300:1': 
+                                {'default_vrf': 'none',
+                                'prefix': 
+                                    {'646:11:11:1::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'},
+                                            2: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}},
+                                    '646:11:11::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'},
+                                            2: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}}},
+                                'route_distinguisher': '300:1'},
+                            'vpnv6 unicast RD 400:1': 
+                                {'default_vrf': 'none',
+                                'prefix': 
+                                    {'646:22:22:1::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'},
+                                            2: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}},
+                                    '646:22:22::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'},
+                                            2: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}}},
+                                'processed_paths': 50,
+                                'processed_prefix': 40,
+                                'route_distinguisher': '400:1'}}}}}}}
+
+    golden_output = {'execute.return_value': '''
+    
+        BGP instance 0: 'default'
+        =========================
+
+        Address Family: VPNv4 Unicast
+        -----------------------------
+
+        BGP router identifier 1.1.1.1, local AS number 100
+        BGP generic scan interval 60 secs
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0x0   RD version: 0
+        BGP main routing table version 43
+        BGP NSR Initial initsync version 11 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+        BGP scan interval 60 secs
+
+        Status codes: s suppressed, d damped, h history, * valid, > best
+                      i - internal, r RIB-failure, S stale, N Nexthop-discard
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+           Network            Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 200:1 (default for vrf VRF1)
+        *> 15.1.1.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 15.1.2.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *>i46.1.1.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i46.1.2.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i46.1.3.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        Route Distinguisher: 200:2 (default for vrf VRF2)
+        *> 15.1.1.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 15.1.2.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 15.1.5.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *>i46.1.1.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i46.1.2.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i46.1.3.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i46.1.4.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i46.1.5.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        Route Distinguisher: 300:1
+        *>i46.1.1.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        * i                   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i46.1.2.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        * i                   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i46.1.3.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        * i                   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        Route Distinguisher: 400:1
+        *>i46.2.2.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        * i                   4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i46.2.3.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        * i                   4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        
+        Processed 40 prefixes, 50 paths
+
+        Address Family: VPNv6 Unicast
+        -----------------------------
+
+        BGP router identifier 1.1.1.1, local AS number 100
+        BGP generic scan interval 60 secs
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0x0   RD version: 0
+        BGP main routing table version 43
+        BGP NSR Initial initsync version 11 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+        BGP scan interval 60 secs
+
+        Status codes: s suppressed, d damped, h history, * valid, > best
+                      i - internal, r RIB-failure, S stale, N Nexthop-discard
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+           Network            Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 200:1 (default for vrf VRF1)
+
+
+
+        *> 615:11:11:3::/64   2001:db8:20:1:5::5
+                                                    2219             0 200 33299 51178 47751 {27016} e
+        *> 615:11:11:4::/64   2001:db8:20:1:5::5
+                                                    2219             0 200 33299 51178 47751 {27016} e
+        *>i646:11:11::/64     4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i646:11:11:1::/64   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i646:11:11:2::/64   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i646:22:22::/64     4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i646:22:22:4::/64   4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        Route Distinguisher: 200:2 (default for vrf VRF2)
+        *> 615:11:11::/64     2001:db8:20:1:5::5
+                                                    2219             0 200 33299 51178 47751 {27016} e
+        *> 615:11:11:1::/64   2001:db8:20:1:5::5
+                                                    2219             0 200 33299 51178 47751 {27016} e
+        *>i646:11:11::/64     4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i646:11:11:1::/64   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i646:11:11:2::/64   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i646:22:22::/64     4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i646:22:22:1::/64   4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i646:22:22:2::/64   4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        Route Distinguisher: 300:1
+        *>i646:11:11::/64     4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        * i                   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i646:11:11:1::/64   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        * i                   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        Route Distinguisher: 400:1
+        *>i646:22:22::/64     4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        * i                   4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i646:22:22:1::/64   4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        * i                   4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+    
+        Processed 40 prefixes, 50 paths
+
+        '''}
+    
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        bgp_instance_all_all_obj = ShowBgpInstanceAllAll(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = bgp_instance_all_all_obj.parse(vrf_type='all')
+
+    def test_golden_all(self):
+       self.maxDiff = None
+       self.device = Mock(**self.golden_output)
+       bgp_instance_all_all_obj = ShowBgpInstanceAllAll(device=self.device)
+       parsed_output = bgp_instance_all_all_obj.parse(vrf_type='all')
+       self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+# =============================================
+# Unit test for 'show bgp instance all vrf all'
+# =============================================
+
+class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    device0 = Device(name='bDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'vrf1': 
+                        {'address_family': 
+                            {'ipv4 unicast': 
+                                {'bgp_table_version': 43,
+                                'bgp_vrf': 'vrf1',
+                                'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_initsync_version': '11 '
+                                '(Reached)',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'rd_version': 43,
+                                'route_identifier': '11.11.11.11',
+                                'table_id': '0xe0000010',
+                                'table_state': 'Active',
+                                'vrf_id': '0x60000001',
+                                'vrf_state': 'active'},
+                            'ipv4 unicast RD 200:1': 
+                                {'default_vrf': 'vrf1',
+                                'prefix': 
+                                    {'15.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>',
+                                                'weight': '0'}}},
+                                    '15.1.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>',
+                                                'weight': '0'}}},
+                                    '15.1.3.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>',
+                                                'weight': '0'}}},
+                                    '15.1.4.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>',
+                                                'weight': '0'}}},
+                                    '15.1.5.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>',
+                                                'weight': '0'}}},
+                                    '46.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '46.1.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '46.1.3.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '46.1.4.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '46.1.5.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '46.2.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '46.2.3.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '46.2.4.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '46.2.5.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}},
+                                    '46.2.6.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                '33299 '
+                                                '51178 '
+                                                '47751 '
+                                                '{27016}',
+                                                'status_codes': '*>i',
+                                                'weight': '0'}}}},
+                                'processed_paths': 15,
+                                'processed_prefix': 15,
+                                'route_distinguisher': '200:1'}}},
+                    'vrf2': 
+                        {'address_family': 
+                            {'ipv4 unicast': 
+                                {'bgp_table_version': 43,
+                                'bgp_vrf': 'vrf2',
+                                'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_initsync_version': '11 '
+                                '(Reached)',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'rd_version': 43,
+                                'route_identifier': '11.11.11.11',
+                                'table_id': '0xe0000011',
+                                'table_state': 'Active',
+                                'vrf_id': '0x60000002',
+                                'vrf_state': 'active'},
+                            'ipv4 unicast RD 200:2': 
+                                {'default_vrf': 'vrf2',
+                                'prefix': 
+                                    {'15.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>',
+                                                'weight': '0'}}},
+                                    '15.1.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>',
+                                                'weight': '0'}}},
+                                    '15.1.3.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>',
+                                                'weight': '0'}}},
+                                    '15.1.4.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>',
+                                                'weight': '0'}}},
+                                    '15.1.5.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>',
+                                                'weight': '0'}}},
+                                '46.1.1.0/24': 
+                                    {'index': 
+                                        {1: 
+                                            {'locprf': '100',
+                                            'metric': '2219',
+                                            'next_hop': '4.4.4.4',
+                                            'origin_codes': 'e',
+                                            'path': '300 '
+                                                    '33299 '
+                                                    '51178 '
+                                                    '47751 '
+                                                    '{27016}',
+                                            'status_codes': '*>i',
+                                            'weight': '0'}}},
+                                '46.1.2.0/24': 
+                                    {'index': 
+                                        {1: 
+                                            {'locprf': '100',
+                                            'metric': '2219',
+                                            'next_hop': '4.4.4.4',
+                                            'origin_codes': 'e',
+                                            'path': '300 '
+                                                    '33299 '
+                                                    '51178 '
+                                                    '47751 '
+                                                    '{27016}',
+                                            'status_codes': '*>i',
+                                            'weight': '0'}}},
+                                '46.1.3.0/24': 
+                                    {'index': 
+                                        {1: 
+                                            {'locprf': '100',
+                                            'metric': '2219',
+                                            'next_hop': '4.4.4.4',
+                                            'origin_codes': 'e',
+                                            'path': '300 '
+                                                    '33299 '
+                                                    '51178 '
+                                                    '47751 '
+                                                    '{27016}',
+                                            'status_codes': '*>i',
+                                            'weight': '0'}}},
+                                '46.1.4.0/24': 
+                                    {'index': 
+                                        {1: 
+                                            {'locprf': '100',
+                                            'metric': '2219',
+                                            'next_hop': '4.4.4.4',
+                                            'origin_codes': 'e',
+                                            'path': '300 '
+                                                    '33299 '
+                                                    '51178 '
+                                                    '47751 '
+                                                    '{27016}',
+                                            'status_codes': '*>i',
+                                            'weight': '0'}}},
+                                '46.1.5.0/24': 
+                                    {'index': 
+                                        {1: 
+                                            {'locprf': '100',
+                                            'metric': '2219',
+                                            'next_hop': '4.4.4.4',
+                                            'origin_codes': 'e',
+                                            'path': '300 '
+                                                    '33299 '
+                                                    '51178 '
+                                                    '47751 '
+                                                    '{27016}',
+                                            'status_codes': '*>i',
+                                            'weight': '0'}}},
+                                '46.2.2.0/24': 
+                                    {'index': 
+                                        {1: 
+                                            {'locprf': '100',
+                                            'metric': '2219',
+                                            'next_hop': '4.4.4.4',
+                                            'origin_codes': 'e',
+                                            'path': '400 '
+                                                    '33299 '
+                                                    '51178 '
+                                                    '47751 '
+                                                    '{27016}',
+                                            'status_codes': '*>i',
+                                            'weight': '0'}}},
+                                '46.2.3.0/24': 
+                                    {'index': 
+                                        {1: 
+                                            {'locprf': '100',
+                                            'metric': '2219',
+                                            'next_hop': '4.4.4.4',
+                                            'origin_codes': 'e',
+                                            'path': '400 '
+                                                    '33299 '
+                                                    '51178 '
+                                                    '47751 '
+                                                    '{27016}',
+                                            'status_codes': '*>i',
+                                            'weight': '0'}}},
+                                '46.2.4.0/24': 
+                                    {'index': 
+                                        {1: 
+                                            {'locprf': '100',
+                                            'metric': '2219',
+                                            'next_hop': '4.4.4.4',
+                                            'origin_codes': 'e',
+                                            'path': '400 '
+                                                    '33299 '
+                                                    '51178 '
+                                                    '47751 '
+                                                    '{27016}',
+                                            'status_codes': '*>i',
+                                            'weight': '0'}}},
+                                '46.2.5.0/24': 
+                                    {'index': 
+                                        {1: 
+                                            {'locprf': '100',
+                                            'metric': '2219',
+                                            'next_hop': '4.4.4.4',
+                                            'origin_codes': 'e',
+                                            'path': '400 '
+                                                    '33299 '
+                                                    '51178 '
+                                                    '47751 '
+                                                    '{27016}',
+                                            'status_codes': '*>i',
+                                            'weight': '0'}}},
+                                '46.2.6.0/24': 
+                                    {'index': 
+                                        {1: 
+                                            {'locprf': '100',
+                                            'metric': '2219',
+                                            'next_hop': '4.4.4.4',
+                                            'origin_codes': 'e',
+                                            'path': '400 '
+                                                    '33299 '
+                                                    '51178 '
+                                                    '47751 '
+                                                    '{27016}',
+                                            'status_codes': '*>i',
+                                            'weight': '0'}}}},
+                            'processed_paths': 15,
+                            'processed_prefix': 15,
+                            'route_distinguisher': '200:2'}}}}}}}
+
+    golden_output = {'execute.return_value': '''
+        BGP instance 0: 'default'
+        =========================
+
+        VRF: VRF1
+        ---------
+        BGP VRF VRF1, state: Active
+        BGP Route Distinguisher: 200:1
+        VRF ID: 0x60000001
+        BGP router identifier 11.11.11.11, local AS number 100
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0000010   RD version: 43
+        BGP main routing table version 43
+        BGP NSR Initial initsync version 11 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+
+        Status codes: s suppressed, d damped, h history, * valid, > best
+                      i - internal, r RIB-failure, S stale, N Nexthop-discard
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+           Network            Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 200:1 (default for vrf VRF1)
+        *> 15.1.1.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 15.1.2.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 15.1.3.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 15.1.4.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 15.1.5.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *>i46.1.1.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i46.1.2.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i46.1.3.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i46.1.4.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i46.1.5.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i46.2.2.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i46.2.3.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i46.2.4.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i46.2.5.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i46.2.6.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+
+        Processed 15 prefixes, 15 paths
+
+        VRF: VRF2
+        ---------
+        BGP VRF VRF2, state: Active
+        BGP Route Distinguisher: 200:2
+        VRF ID: 0x60000002
+        BGP router identifier 11.11.11.11, local AS number 100
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0000011   RD version: 43
+        BGP main routing table version 43
+        BGP NSR Initial initsync version 11 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+
+        Status codes: s suppressed, d damped, h history, * valid, > best
+                      i - internal, r RIB-failure, S stale, N Nexthop-discard
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+           Network            Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 200:2 (default for vrf VRF2)
+        *> 15.1.1.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 15.1.2.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 15.1.3.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 15.1.4.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 15.1.5.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *>i46.1.1.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i46.1.2.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i46.1.3.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i46.1.4.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i46.1.5.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
+        *>i46.2.2.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i46.2.3.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i46.2.4.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i46.2.5.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+        *>i46.2.6.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
+
+        Processed 15 prefixes, 15 paths
+        '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        bgp_instance_all_all_obj = ShowBgpInstanceAllAll(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = bgp_instance_all_all_obj.parse(vrf_type='vrf')
+
+    def test_golden_vrf(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        bgp_instance_all_all_obj = ShowBgpInstanceAllAll(device=self.device)
+        parsed_output = bgp_instance_all_all_obj.parse(vrf_type='vrf')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
