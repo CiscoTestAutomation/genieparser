@@ -189,12 +189,15 @@ class ShowBgpInstanceAfGroupConfiguration(ShowBgpInstanceAfGroupConfigurationSch
         for line1 in conf.splitlines():
             line1 = line1.strip()
 
-            pp1 = re.compile(r'\s*router bgp \d+ (instance )?(?P<instance_name>.+)? ?af-group (?P<pp_name>.+) address-family ipv4 unicast ?$')
+            # router bgp 100 af-group af_group address-family ipv4 unicast
+            pp1 = re.compile(r'\s*router +bgp +(?P<bgp_id>\d+)'
+                              '(?: +instance +(?P<instance_name>[a-zA-Z0-9]+))?'
+                              ' +af-group +(?P<pp_name>[a-zA-Z0-9\-\_]+)')
             mm1 = pp1.match(line1)
             if mm1:
                 pp_name = mm1.groupdict()['pp_name']
                 if mm1.groupdict()['instance_name'] is not None:
-                    instance_name = mm1.groupdict()['instance_name']
+                    instance_name = str(mm1.groupdict()['instance_name']).strip()
                 else:
                     instance_name = 'default'
 
@@ -489,12 +492,15 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
             # router bgp 100 session-group SG
             # router bgp 333 instance test session-group abcd
             # router bgp 333 instance test neighbor 1.1.1.1 use session-group LALALALLA
-            pp1 = re.compile(r'\s*router +bgp +(?P<bgp_id>\d+)(?: +instance +(?P<instance_name>[a-zA-Z0-9]+))?(?: +neighbor +(?P<neighbor_id>[0-9\.\:]+) +use)? +session-group +(?P<ps_name>[a-zA-Z0-9]+)')
+            pp1 = re.compile(r'\s*router +bgp +(?P<bgp_id>\d+)'
+                              '(?: +instance +(?P<instance_name>[a-zA-Z0-9]+))?'
+                              '(?: +neighbor +(?P<neighbor_id>[0-9\.\:]+) +use)?'
+                              ' +session-group +(?P<ps_name>[a-zA-Z0-9\-\_]+)')
             mm1 = pp1.match(line1)
             if mm1:
                 ps_name = str(mm1.groupdict()['ps_name'])
                 if mm1.groupdict()['instance_name'] is not None:
-                    instance_name = str(mm1.groupdict()['instance_name'])
+                    instance_name = str(mm1.groupdict()['instance_name']).strip()
                 else:
                     instance_name = 'default'
 
