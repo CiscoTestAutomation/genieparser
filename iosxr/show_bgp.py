@@ -2886,22 +2886,22 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
 
 # ================================================================
 # Parser for:
-# 'show bgp instance all all all neighbors <WORD> received-routes'
-# 'show bgp instance all vrf all neighbors <WORD> received-routes'
+# 'show bgp instance all all all neighbors <WORD> received routes'
+# 'show bgp instance all vrf all neighbors <WORD> received routes'
 # ================================================================
 
 class ShowBgpInstanceNeighborsReceivedRoutesSchema(MetaParser):
     
     ''' Schema for:
-        * 'show bgp instance all all all neighbors <WORD> received-routes'
-        * 'show bgp instance all vrf all neighbors <WORD> received-routes'
+        * 'show bgp instance all all all neighbors <WORD> received routes'
+        * 'show bgp instance all vrf all neighbors <WORD> received routes'
     '''
 
     schema = {'instance':
                 {Any():
-                    {'vrf':
+                    {Optional('vrf'):
                         {Any():
-                            {'address_family':
+                            {Optional('address_family'):
                                 {Any():
                                     {'route_identifier': str,
                                      'local_as': int,
@@ -2948,13 +2948,13 @@ class ShowBgpInstanceNeighborsReceivedRoutesSchema(MetaParser):
 class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRoutesSchema):
 
     ''' Parser for:
-        * 'show bgp instance all all all neighbors <WORD> received-routes'
-        * 'show bgp instance all vrf all neighbors <WORD> received-routes'
+        * 'show bgp instance all all all neighbors <WORD> received routes'
+        * 'show bgp instance all vrf all neighbors <WORD> received routes'
     '''
 
-    def cli(self, neighbor, vrf, route_type='received-routes'):
+    def cli(self, neighbor, vrf, route_type='received routes'):
         assert vrf in ['all', 'vrf']
-        assert route_type in ['received-routes', 'routes']
+        assert route_type in ['received routes', 'routes']
         cmd = 'show bgp instance all {vrf} all neighbors {neighbor} {route}'\
               .format(neighbor=neighbor, vrf=vrf, route=route_type)
         out = self.device.execute(cmd)
@@ -3532,9 +3532,9 @@ class ShowBgpInstanceNeighborsRoutesSchema(MetaParser):
     schema = {
         'instance':
             {Any():
-                {'vrf':
+                {Optional('vrf'):
                     {Any():
-                        {'address_family':
+                        {Optional('address_family'):
                             {Any():
                                 {'route_identifier': str,
                                  'local_as': int,
@@ -3667,10 +3667,11 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
         * 'show bgp instance all vrf all summary'
     '''
 
-    def cli(self, vrf_type):
+    def cli(self, vrf_type, af_type=''):
 
         assert vrf_type in ['all', 'vrf']
-        cmd = 'show bgp instance all {vrf_type} all summary'.format(vrf_type=vrf_type)
+        assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
+        cmd = 'show bgp instance all {vrf_type} all {af_type} summary'.format(vrf_type=vrf_type, af_type=af_type)
         out = self.device.execute(cmd)
 
         bgp_instance_summary_dict = {}
