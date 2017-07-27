@@ -7,10 +7,10 @@ from ats.topology import Device
 from metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from parser.nxos.show_interface import ShowInterface, ShowIpInterfaceVrfAll, ShowVrfAllInterface
+from parser.nxos.show_interface import ShowInterface, ShowIpInterfaceVrfAll, ShowVrfAllInterface, ShowIpInterfaceSwitchport 
 
 #############################################################################
-# Parser For Show Interface
+# unitest For Show Interface
 #############################################################################
 
 class test_show_interface(unittest.TestCase):
@@ -1380,6 +1380,102 @@ class test_show_vrf_all_interface(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         vrf_all_interface_obj = ShowVrfAllInterface(device=self.device)
         parsed_output = vrf_all_interface_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+#############################################################################
+# unitest For Show Ip Interface Switchport
+#############################################################################
+
+
+class test_show_ip_interface_switchport(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    device0 = Device(name='bDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {'Ethernet2/2': {'access_vlan': 1,
+                 'access_vlan_mode': 'default',
+                 'admin_priv_vlan_primary_host_assoc': 'none',
+                 'admin_priv_vlan_primary_mapping': 'none',
+                 'admin_priv_vlan_secondary_host_assoc': 'none',
+                 'admin_priv_vlan_secondary_mapping': 'none',
+                 'admin_priv_vlan_trunk_encapsulation': 'dot1q',
+                 'admin_priv_vlan_trunk_native_vlan': 'none',
+                 'admin_priv_vlan_trunk_normal_vlans': 'none',
+                 'admin_priv_vlan_trunk_private_vlans': 'none',
+                 'native_vlan': 1,
+                 'native_vlan_mode': 'default',
+                 'operational_private_vlan': 'none',
+                 'switchport_mode': 'trunk',
+                 'switchport_monitor': 'Not enabled',
+                 'switchport_status': 'Enabled',
+                 'trunk_vlans': '100,300'},
+ 'Ethernet2/3': {'access_vlan': 100,
+                 'access_vlan_mode': 'Vlan not created',
+                 'admin_priv_vlan_primary_host_assoc': 'none',
+                 'admin_priv_vlan_primary_mapping': 'none',
+                 'admin_priv_vlan_secondary_host_assoc': 'none',
+                 'admin_priv_vlan_secondary_mapping': 'none',
+                 'admin_priv_vlan_trunk_encapsulation': 'dot1q',
+                 'admin_priv_vlan_trunk_native_vlan': 'none',
+                 'admin_priv_vlan_trunk_normal_vlans': 'none',
+                 'admin_priv_vlan_trunk_private_vlans': 'none',
+                 'native_vlan': 1,
+                 'native_vlan_mode': 'default',
+                 'operational_private_vlan': 'none',
+                 'switchport_mode': 'access',
+                 'switchport_monitor': 'Not enabled',
+                 'switchport_status': 'Enabled',
+                 'trunk_vlans': '1-4094'}}
+
+
+    golden_output = {'execute.return_value': '''
+    Name: Ethernet2/2
+      Switchport: Enabled
+      Switchport Monitor: Not enabled 
+      Operational Mode: trunk
+      Access Mode VLAN: 1 (default)
+      Trunking Native Mode VLAN: 1 (default)
+      Trunking VLANs Allowed: 100,300
+      Administrative private-vlan primary host-association: none
+      Administrative private-vlan secondary host-association: none
+      Administrative private-vlan primary mapping: none
+      Administrative private-vlan secondary mapping: none
+      Administrative private-vlan trunk native VLAN: none
+      Administrative private-vlan trunk encapsulation: dot1q
+      Administrative private-vlan trunk normal VLANs: none
+      Administrative private-vlan trunk private VLANs: none
+      Operational private-vlan: none
+    Name: Ethernet2/3
+      Switchport: Enabled
+      Switchport Monitor: Not enabled 
+      Operational Mode: access
+      Access Mode VLAN: 100 (Vlan not created)
+      Trunking Native Mode VLAN: 1 (default)
+      Trunking VLANs Allowed: 1-4094
+      Administrative private-vlan primary host-association: none
+      Administrative private-vlan secondary host-association: none
+      Administrative private-vlan primary mapping: none
+      Administrative private-vlan secondary mapping: none
+      Administrative private-vlan trunk native VLAN: none
+      Administrative private-vlan trunk encapsulation: dot1q
+      Administrative private-vlan trunk normal VLANs: none
+      Administrative private-vlan trunk private VLANs: none
+      Operational private-vlan: none  
+      '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        ip_interface_switchport_obj = ShowIpInterfaceSwitchport(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = ip_interface_switchport_obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        ip_interface_switchport_obj = ShowIpInterfaceSwitchport(device=self.device)
+        parsed_output = ip_interface_switchport_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
 

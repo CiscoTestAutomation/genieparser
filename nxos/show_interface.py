@@ -1673,6 +1673,259 @@ class ShowVrfAllInterface(ShowVrfAllInterfaceSchema):
 
         return vrf_all_interface_dict
 
+#############################################################################
+# Parser For Show Ip Interface Switchport
+#############################################################################
+
+
+class ShowIpInterfaceSwitchportSchema(MetaParser):
+
+    schema = {
+        Any():
+            {'switchport_status': str,
+             'switchport_monitor': str,
+             'switchport_mode': str,
+             'access_vlan': int,
+             'access_vlan_mode': str,
+             'native_vlan': int,
+             'native_vlan_mode': str,
+             'trunk_vlans': str,
+             'admin_priv_vlan_primary_host_assoc': str,
+             'admin_priv_vlan_secondary_host_assoc': str,
+             'admin_priv_vlan_primary_mapping': str,
+             'admin_priv_vlan_secondary_mapping': str,
+             'admin_priv_vlan_trunk_native_vlan': str,
+             'admin_priv_vlan_trunk_encapsulation': str,
+             'admin_priv_vlan_trunk_normal_vlans': str,
+             'admin_priv_vlan_trunk_private_vlans': str,
+             'operational_private_vlan': str
+            },
+        }
+                    
+
+class ShowIpInterfaceSwitchport(ShowIpInterfaceSwitchportSchema):
+
+    def cli(self):
+        out = self.device.execute('show ip interface switchport')
+
+        ip_interface_switchport_dict = {}
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            #Name: Ethernet2/2
+            p1 = re.compile(r'^\s*Name: *(?P<interface>[a-zA-Z0-9\/]+)$')
+            m = p1.match(line)
+            if m:
+                interface = m.groupdict()['interface']
+
+                if interface not in ip_interface_switchport_dict:
+                    ip_interface_switchport_dict[interface] = {}
+                    continue
+
+            #Switchport: Enabled
+            p2 = re.compile(r'^\s*Switchport: *(?P<switchport_status>[a-zA-Z\s]+)$')
+            m = p2.match(line)
+            if m:    
+                switchport_status = m.groupdict()['switchport_status']
+
+                ip_interface_switchport_dict[interface]['switchport_status'] = switchport_status  
+                continue
+
+            #Switchport Monitor: Not enabled
+            p3 = re.compile(r'^\s*Switchport *Monitor: *(?P<switchport_monitor>[a-zA-Z\s]+)$')
+            m = p3.match(line)
+            if m:
+                switchport_monitor = m.groupdict()['switchport_monitor']
+
+                ip_interface_switchport_dict[interface]['switchport_monitor'] = switchport_monitor
+                continue
+
+            #Operational Mode: trunk
+            p4 = re.compile(r'^\s*Operational *Mode: *(?P<switchport_mode>[a-z]+)$')
+            m = p4.match(line)
+            if m:
+                switchport_mode = m.groupdict()['switchport_mode']
+                if switchport_status == 'Enabled' and switchport_mode == 'trunk':
+                    operation_mode = 'trunk' 
+
+                    ip_interface_switchport_dict[interface]['switchport_mode'] = switchport_mode 
+                    continue
+
+            p4_1 = re.compile(r'^\s*Operational *Mode: *(?P<switchport_mode>[a-z]+)$')
+            m = p4_1.match(line)
+            if m:
+                switchport_mode = m.groupdict()['switchport_mode']
+                if switchport_status == 'Enabled' and switchport_mode == 'access':
+                    operation_mode = 'access' 
+
+                    ip_interface_switchport_dict[interface]['switchport_mode'] = switchport_mode 
+                    continue
+
+            p4_2 = re.compile(r'^\s*Operational *Mode: *(?P<switchport_mode>[a-z]+)$')
+            m = p4_2.match(line)
+            if m:
+                switchport_mode = m.groupdict()['switchport_mode']
+                if switchport_status == 'Disabled' and switchport_mode == 'access':
+                    operation_mode = 'Disabled' 
+
+                    ip_interface_switchport_dict[interface]['switchport_mode'] = switchport_mode 
+                    continue
+
+            p4_3 = re.compile(r'^\s*Operational *Mode: *(?P<switchport_mode>[a-z]+)$')
+            m = p4_3.match(line)
+            if m:
+                switchport_mode = m.groupdict()['switchport_mode']
+                if switchport_status == 'Disabled' and switchport_mode == 'access':
+                    operation_mode = 'Disabled' 
+
+                    ip_interface_switchport_dict[interface]['switchport_mode'] = switchport_mode 
+                    continue
+
+            #Access Mode VLAN: 1 (default)
+            p5 = re.compile(r'^\s*Access *Mode *VLAN: *(?P<access_vlan>[0-9]+)'
+                             ' *\((?P<access_vlan_mode>[a-zA-Z\s]+)\)$')
+            m = p5.match(line)
+            if m:
+                access_vlan = int(m.groupdict()['access_vlan'])
+                access_vlan_mode = m.groupdict()['access_vlan_mode']
+
+                ip_interface_switchport_dict[interface]\
+                ['access_vlan'] = access_vlan
+                ip_interface_switchport_dict[interface]\
+                ['access_vlan_mode'] = access_vlan_mode
+                continue
+
+            #Trunking Native Mode VLAN: 1 (default)
+            p6 = re.compile(r'^\s*Trunking *Native *Mode *VLAN:'
+                             ' *(?P<native_vlan>[0-9]+)'
+                             ' *\((?P<native_vlan_mode>[a-z]+)\)$')
+            m = p6.match(line)
+            if m:
+                native_vlan = int(m.groupdict()['native_vlan'])
+                native_vlan_mode = m.groupdict()['native_vlan_mode']
+
+                ip_interface_switchport_dict[interface]\
+                ['native_vlan'] = native_vlan
+                ip_interface_switchport_dict[interface]\
+                ['native_vlan_mode'] = native_vlan_mode
+                continue
+
+            #Trunking VLANs Allowed: 100,300
+            p7 = re.compile(r'^\s*Trunking *VLANs *Allowed: *(?P<trunk_vlans>[0-9\,\-]+)$')
+            m = p7.match(line)
+            if m:
+                trunk_vlans = m.groupdict()['trunk_vlans']
+
+                ip_interface_switchport_dict[interface]['trunk_vlans'] = trunk_vlans
+                continue
+
+            #Administrative private-vlan primary host-association: none
+            p8 = re.compile(r'^\s*Administrative *private-vlan *primary'
+                             ' *host-association:'
+                             ' *(?P<admin_priv_vlan_primary_host_assoc>[a-z]+)$')
+            m = p8.match(line)
+            if m:
+                admin_priv_vlan_primary_host_assoc = m.groupdict()['admin_priv_vlan_primary_host_assoc']
+
+                ip_interface_switchport_dict[interface]['admin_priv_vlan_primary_host_assoc'] = admin_priv_vlan_primary_host_assoc
+                continue
+
+            #Administrative private-vlan secondary host-association: none
+            p9 = re.compile(r'^\s*Administrative *private-vlan *secondary'
+                             ' *host-association:'
+                             ' *(?P<admin_priv_vlan_secondary_host_assoc>[a-z]+)$')
+            m = p9.match(line)
+            if m:
+                admin_priv_vlan_secondary_host_assoc\
+                 = m.groupdict()['admin_priv_vlan_secondary_host_assoc']
+
+                ip_interface_switchport_dict[interface]\
+                ['admin_priv_vlan_secondary_host_assoc'] = admin_priv_vlan_secondary_host_assoc
+                continue
+
+            #Administrative private-vlan primary mapping: none
+            p10 = re.compile(r'^\s*Administrative *private-vlan *primary'
+                             ' *mapping:'
+                             ' *(?P<admin_priv_vlan_primary_mapping>[a-z]+)$')
+            m = p10.match(line)
+            if m:
+                admin_priv_vlan_primary_mapping\
+                 = m.groupdict()['admin_priv_vlan_primary_mapping']
+
+                ip_interface_switchport_dict[interface]\
+                ['admin_priv_vlan_primary_mapping']\
+                 = admin_priv_vlan_primary_mapping
+                continue
+
+            #Administrative private-vlan secondary mapping: none
+            p11 = re.compile(r'^\s*Administrative *private-vlan *secondary'
+                             ' *mapping:'
+                             ' *(?P<admin_priv_vlan_secondary_mapping>[a-z]+)$')
+            m = p11.match(line)
+            if m:
+                admin_priv_vlan_secondary_mapping = m.groupdict()['admin_priv_vlan_secondary_mapping']
+
+                ip_interface_switchport_dict[interface]['admin_priv_vlan_secondary_mapping'] = admin_priv_vlan_secondary_mapping
+                continue
+
+            #Administrative private-vlan trunk native VLAN: none
+            p12 = re.compile(r'^\s*Administrative *private-vlan *trunk *native'
+                             ' *VLAN:'
+                             ' *(?P<admin_priv_vlan_trunk_native_vlan>[a-z]+)$')
+            m = p12.match(line)
+            if m:
+                admin_priv_vlan_trunk_native_vlan = m.groupdict()['admin_priv_vlan_trunk_native_vlan']
+
+                ip_interface_switchport_dict[interface]['admin_priv_vlan_trunk_native_vlan'] = admin_priv_vlan_trunk_native_vlan
+                continue
+
+            #Administrative private-vlan trunk encapsulation: dot1q
+            p13 = re.compile(r'^\s*Administrative *private-vlan *trunk'
+                             ' *encapsulation:'
+                             ' *(?P<admin_priv_vlan_trunk_encapsulation>[a-z0-9]+)$')
+            m = p13.match(line)
+            if m:
+                admin_priv_vlan_trunk_encapsulation = m.groupdict()['admin_priv_vlan_trunk_encapsulation']
+
+                ip_interface_switchport_dict[interface]['admin_priv_vlan_trunk_encapsulation'] = admin_priv_vlan_trunk_encapsulation
+                continue
+
+            #Administrative private-vlan trunk normal VLANs: none
+            p14 = re.compile(r'^\s*Administrative *private-vlan *trunk'
+                             ' *normal VLANs:'
+                             ' *(?P<admin_priv_vlan_trunk_normal_vlans>[a-z]+)$')
+            m = p14.match(line)
+            if m:
+                admin_priv_vlan_trunk_normal_vlans = m.groupdict()['admin_priv_vlan_trunk_normal_vlans']
+
+                ip_interface_switchport_dict[interface]['admin_priv_vlan_trunk_normal_vlans'] = admin_priv_vlan_trunk_normal_vlans
+                continue
+
+            #Administrative private-vlan trunk private VLANs: none
+            p15 = re.compile(r'^\s*Administrative *private-vlan *trunk'
+                             ' *private VLANs:'
+                             ' *(?P<admin_priv_vlan_trunk_private_vlans>[a-z]+)$')
+            m = p15.match(line)
+            if m:
+                admin_priv_vlan_trunk_private_vlans = m.groupdict()['admin_priv_vlan_trunk_private_vlans']
+
+                ip_interface_switchport_dict[interface]['admin_priv_vlan_trunk_private_vlans'] = admin_priv_vlan_trunk_private_vlans
+                continue
+
+            #Operational private-vlan: none
+            p16 = re.compile(r'^\s*Operational *private-vlan:'
+                             ' *(?P<operational_private_vlan>[a-z]+)$')
+            m = p16.match(line)
+            if m:
+                operational_private_vlan = m.groupdict()['operational_private_vlan']
+
+                ip_interface_switchport_dict[interface]['operational_private_vlan'] = operational_private_vlan
+                continue
+
+        return ip_interface_switchport_dict
+
+
 
 
 
