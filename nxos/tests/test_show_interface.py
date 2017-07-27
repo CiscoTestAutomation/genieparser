@@ -7,7 +7,11 @@ from ats.topology import Device
 from metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from parser.nxos.show_interface import ShowInterface
+from parser.nxos.show_interface import ShowInterface, ShowIpInterfaceVrfAll, ShowVrfAllInterface
+
+#############################################################################
+# Parser For Show Interface
+#############################################################################
 
 class test_show_interface(unittest.TestCase):
     device = Device(name='aDevice')
@@ -358,6 +362,1024 @@ class test_show_interface(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         interface_obj = ShowInterface(device=self.device)
         parsed_output = interface_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+#############################################################################
+# Parser For Show Ip Interface Vrf All
+#############################################################################
+
+class test_show_ip_interface_vrf_all(unittest.TestCase):
+    
+  device = Device(name='aDevice')
+  device0 = Device(name='bDevice')
+  empty_output = {'execute.return_value': ''}
+    
+  golden_parsed_output = {'Ethernet2/1': {'broadcast_address': '255.255.255.255',
+                 'broadcast_bytes': '0/0/0/0/0',
+                 'broadcast_packets': '0/0/0/0/0',
+                 'directed_broadcast': 'disabled',
+                 'icmp_port_unreachable': 'enabled',
+                 'icmp_redirects': 'disabled',
+                 'icmp_unreachable': 'disabled',
+                 'int_software_stats': '(sent/received/forwarded/originated/consumed)',
+                 'int_stat_last_reset': 'never',
+                 'interface_status': 'protocol-up/link-up/admin-up',
+                 'iod': 36,
+                 'ip_forwarding': 'disabled',
+                 'ipv4': {'10.2.2.2/24': {'ip_subnet': '10.2.2.0',
+                                          'ipv4': '10.2.2.2',
+                                          'prefix_length': '24',
+                                          'secondary': True},
+                          '10.3.3.3/24': {'ip_subnet': '10.3.3.0',
+                                          'ipv4': '10.3.3.3',
+                                          'prefix_length': '24',
+                                          'route_tag': 0,
+                                          'secondary': True},
+                          '10.4.4.4/24': {'ip_subnet': '10.4.4.0',
+                                          'ipv4': '10.4.4.4',
+                                          'prefix_length': '24'}},
+                 'labeled_bytes': '0/0/0/0/0',
+                 'labeled_packets': '0/0/0/0/0',
+                 'load_sharing': 'none',
+                 'local_proxy_arp': 'disabled',
+                 'mtu': 1600,
+                 'multicast_bytes': '0/0/0/0/0',
+                 'multicast_groups': 'none',
+                 'multicast_packets': '0/0/0/0/0',
+                 'multicast_routing': 'disabled',
+                 'proxy_arp': 'disabled',
+                 'route_preference': 0,
+                 'unicast_bytes': '0/0/0/0/0',
+                 'unicast_packets': '0/0/0/0/0',
+                 'unicast_reverse_path': 'none',
+                 'vrf': 'VRF1',
+                 'wccp_redirect_exclude': 'disabled',
+                 'wccp_redirect_inbound': 'disabled',
+                 'wccp_redirect_outbound': 'disabled'}}
+
+    
+  golden_output = {'execute.return_value': '''
+        IP Interface Status for VRF "default"
+
+        IP Interface Status for VRF "management"
+
+        IP Interface Status for VRF "VRF1"
+        Ethernet2/1, Interface status: protocol-up/link-up/admin-up, iod: 36,
+          IP address: 10.4.4.4, IP subnet: 10.4.4.0/24
+          IP address: 10.2.2.2, IP subnet: 10.2.2.0/24 secondary
+          IP address: 10.3.3.3, IP subnet: 10.3.3.0/24 secondary
+          IP broadcast address: 255.255.255.255
+          IP multicast groups locally joined: none
+          IP MTU: 1600 bytes (using link MTU)
+          IP primary address route-preference: 0, tag: 0
+          IP proxy ARP : disabled
+          IP Local Proxy ARP : disabled
+          IP multicast routing: disabled
+          IP icmp redirects: disabled
+          IP directed-broadcast: disabled 
+          IP Forwarding: disabled 
+          IP icmp unreachables (except port): disabled
+          IP icmp port-unreachable: enabled
+          IP unicast reverse path forwarding: none
+          IP load sharing: none 
+          IP interface statistics last reset: never
+          IP interface software stats: (sent/received/forwarded/originated/consumed)
+            Unicast packets    : 0/0/0/0/0
+            Unicast bytes      : 0/0/0/0/0
+            Multicast packets  : 0/0/0/0/0
+            Multicast bytes    : 0/0/0/0/0
+            Broadcast packets  : 0/0/0/0/0
+            Broadcast bytes    : 0/0/0/0/0
+            Labeled packets    : 0/0/0/0/0
+            Labeled bytes      : 0/0/0/0/0
+          WCCP Redirect outbound: disabled
+          WCCP Redirect inbound: disabled
+          WCCP Redirect exclude: disabled
+      '''}
+
+
+  def test_empty(self):
+      self.device1 = Mock(**self.empty_output)
+      ip_interface_vrf_all_obj = ShowIpInterfaceVrfAll(device=self.device1)
+      with self.assertRaises(SchemaEmptyParserError):
+          parsed_output = ip_interface_vrf_all_obj.parse()
+
+  def test_golden(self):
+      self.device = Mock(**self.golden_output)
+      ip_interface_vrf_all_obj = ShowIpInterfaceVrfAll(device=self.device)
+      parsed_output = ip_interface_vrf_all_obj.parse()
+      self.maxDiff = None
+      self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+#############################################################################
+# Parser For Show Vrf All Interface
+#############################################################################
+
+class test_show_vrf_all_interface(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    device0 = Device(name='bDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {
+          "Ethernet3/3": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/4": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/25": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/46": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Null0": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/11": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/39": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/19": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/31": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/12": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/8": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/42": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/34": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/24": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/9": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/40": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/23": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/37": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/26": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/32": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/16": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/45": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/45": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/35": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/12": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/9": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/37": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/22": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/17": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/35": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/5": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/10": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/13": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/27": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/29": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/20": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/14": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/35": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/21": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/18": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/28": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/25": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/19": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/6": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/15": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/12": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/23": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/2": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/41": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/47": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/44": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/33": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/3": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/48": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/37": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/1": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/15": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/20": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/43": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/27": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/7": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/44": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/14": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/33": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/30": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/21": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/45": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/7": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/38": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/10": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/25": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/39": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/41": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/42": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/28": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/46": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/26": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/1.20": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/36": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/27": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/11": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/23": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/26": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/5": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/22": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/11": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/7": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/17": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/32": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/4": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/28": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/14": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/16": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/24": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/43": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "mgmt0": {
+               "site_of_origin": "--",
+               "vrf": "management",
+               "vrf_id": "2"
+          },
+          "Ethernet4/31": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/2": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/30": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/38": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/36": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/18": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/40": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/36": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/8": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/24": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/19": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/30": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/1.10": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/21": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/18": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/13": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/43": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/6": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/4": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/31": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/38": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/29": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/9": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/44": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/40": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/42": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/22": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/41": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/32": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/48": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/47": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/33": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/5": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/16": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/47": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/1": {
+               "site_of_origin": "--",
+               "vrf": "VRF1",
+               "vrf_id": "3"
+          },
+          "Ethernet4/34": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/1": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/48": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/6": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/8": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/17": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/39": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/15": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/13": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/29": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/46": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet3/34": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet2/10": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          },
+          "Ethernet4/20": {
+               "site_of_origin": "--",
+               "vrf": "default",
+               "vrf_id": "1"
+          }
+     }
+
+
+
+    golden_output = {'execute.return_value': '''
+       
+    Interface                 VRF-Name                        VRF-ID  Site-of-Origin
+    Ethernet2/1               VRF1                                 3  --
+    Null0                     default                              1  --
+    Ethernet2/1.10            default                              1  --
+    Ethernet2/1.20            default                              1  --
+    Ethernet2/4               default                              1  --
+    Ethernet2/5               default                              1  --
+    Ethernet2/6               default                              1  --
+    Ethernet2/7               default                              1  --
+    Ethernet2/8               default                              1  --
+    Ethernet2/9               default                              1  --
+    Ethernet2/10              default                              1  --
+    Ethernet2/11              default                              1  --
+    Ethernet2/12              default                              1  --
+    Ethernet2/13              default                              1  --
+    Ethernet2/14              default                              1  --
+    Ethernet2/15              default                              1  --
+    Ethernet2/16              default                              1  --
+    Ethernet2/17              default                              1  --
+    Ethernet2/18              default                              1  --
+    Ethernet2/19              default                              1  --
+    Ethernet2/20              default                              1  --
+    Ethernet2/21              default                              1  --
+    Ethernet2/22              default                              1  --
+    Ethernet2/23              default                              1  --
+    Ethernet2/24              default                              1  --
+    Ethernet2/25              default                              1  --
+    Ethernet2/26              default                              1  --
+    Ethernet2/27              default                              1  --
+    Ethernet2/28              default                              1  --
+    Ethernet2/29              default                              1  --
+    Ethernet2/30              default                              1  --
+    Ethernet2/31              default                              1  --
+    Ethernet2/32              default                              1  --
+    Ethernet2/33              default                              1  --
+    Ethernet2/34              default                              1  --
+    Ethernet2/35              default                              1  --
+    Ethernet2/36              default                              1  --
+    Ethernet2/37              default                              1  --
+    Ethernet2/38              default                              1  --
+    Ethernet2/39              default                              1  --
+    Ethernet2/40              default                              1  --
+    Ethernet2/41              default                              1  --
+    Ethernet2/42              default                              1  --
+    Ethernet2/43              default                              1  --
+    Ethernet2/44              default                              1  --
+    Ethernet2/45              default                              1  --
+    Ethernet2/46              default                              1  --
+    Ethernet2/47              default                              1  --
+    Ethernet2/48              default                              1  --
+    Ethernet3/1               default                              1  --
+    Ethernet3/2               default                              1  --
+    Ethernet3/3               default                              1  --
+    Ethernet3/4               default                              1  --
+    Ethernet3/5               default                              1  --
+    Ethernet3/6               default                              1  --
+    Ethernet3/7               default                              1  --
+    Ethernet3/8               default                              1  --
+    Ethernet3/9               default                              1  --
+    Ethernet3/10              default                              1  --
+    Ethernet3/11              default                              1  --
+    Ethernet3/12              default                              1  --
+    Ethernet3/13              default                              1  --
+    Ethernet3/14              default                              1  --
+    Ethernet3/15              default                              1  --
+    Ethernet3/16              default                              1  --
+    Ethernet3/17              default                              1  --
+    Ethernet3/18              default                              1  --
+    Ethernet3/19              default                              1  --
+    Ethernet3/20              default                              1  --
+    Ethernet3/21              default                              1  --
+    Ethernet3/22              default                              1  --
+    Ethernet3/23              default                              1  --
+    Ethernet3/24              default                              1  --
+    Ethernet3/25              default                              1  --
+    Ethernet3/26              default                              1  --
+    Ethernet3/27              default                              1  --
+    Ethernet3/28              default                              1  --
+    Ethernet3/29              default                              1  --
+    Ethernet3/30              default                              1  --
+    Ethernet3/31              default                              1  --
+    Ethernet3/32              default                              1  --
+    Ethernet3/33              default                              1  --
+    Ethernet3/34              default                              1  --
+    Ethernet3/35              default                              1  --
+    Ethernet3/36              default                              1  --
+    Ethernet3/37              default                              1  --
+    Ethernet3/38              default                              1  --
+    Ethernet3/39              default                              1  --
+    Ethernet3/40              default                              1  --
+    Ethernet3/41              default                              1  --
+    Ethernet3/42              default                              1  --
+    Ethernet3/43              default                              1  --
+    Ethernet3/44              default                              1  --
+    Ethernet3/45              default                              1  --
+    Ethernet3/46              default                              1  --
+    Ethernet3/47              default                              1  --
+    Ethernet3/48              default                              1  --
+    Ethernet4/1               default                              1  --
+    Ethernet4/2               default                              1  --
+    Ethernet4/3               default                              1  --
+    Ethernet4/4               default                              1  --
+    Ethernet4/5               default                              1  --
+    Ethernet4/6               default                              1  --
+    Ethernet4/7               default                              1  --
+    Ethernet4/8               default                              1  --
+    Ethernet4/9               default                              1  --
+    Ethernet4/10              default                              1  --
+    Ethernet4/11              default                              1  --
+    Ethernet4/12              default                              1  --
+    Ethernet4/13              default                              1  --
+    Ethernet4/14              default                              1  --
+    Ethernet4/15              default                              1  --
+    Ethernet4/16              default                              1  --
+    Ethernet4/17              default                              1  --
+    Ethernet4/18              default                              1  --
+    Ethernet4/19              default                              1  --
+    Ethernet4/20              default                              1  --
+    Ethernet4/21              default                              1  --
+    Ethernet4/22              default                              1  --
+    Ethernet4/23              default                              1  --
+    Ethernet4/24              default                              1  --
+    Ethernet4/25              default                              1  --
+    Ethernet4/26              default                              1  --
+    Ethernet4/27              default                              1  --
+    Ethernet4/28              default                              1  --
+    Ethernet4/29              default                              1  --
+    Ethernet4/30              default                              1  --
+    Ethernet4/31              default                              1  --
+    Ethernet4/32              default                              1  --
+    Ethernet4/33              default                              1  --
+    Ethernet4/34              default                              1  --
+    Ethernet4/35              default                              1  --
+    Ethernet4/36              default                              1  --
+    Ethernet4/37              default                              1  --
+    Ethernet4/38              default                              1  --
+    Ethernet4/39              default                              1  --
+    Ethernet4/40              default                              1  --
+    Ethernet4/41              default                              1  --
+    Ethernet4/42              default                              1  --
+    Ethernet4/43              default                              1  --
+    Ethernet4/44              default                              1  --
+    Ethernet4/45              default                              1  --
+    Ethernet4/46              default                              1  --
+    Ethernet4/47              default                              1  --
+    Ethernet4/48              default                              1  --
+    mgmt0                     management                           2  --
+
+        '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        vrf_all_interface_obj = ShowVrfAllInterface(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = vrf_all_interface_obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        vrf_all_interface_obj = ShowVrfAllInterface(device=self.device)
+        parsed_output = vrf_all_interface_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
