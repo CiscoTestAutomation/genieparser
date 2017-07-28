@@ -26,7 +26,7 @@ from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
 
 # Parser
-from parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
+#from parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
 
 # =====================================
 # Parser for 'show bgp process vrf all'
