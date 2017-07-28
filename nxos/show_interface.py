@@ -1926,7 +1926,342 @@ class ShowIpInterfaceSwitchport(ShowIpInterfaceSwitchportSchema):
         return ip_interface_switchport_dict
 
 
+#############################################################################
+# Parser For Show Ipv6 Interface Vrf All
+#############################################################################
 
+class ShowIpv6InterfaceVrfAllSchema(MetaParser):
+
+    schema = {
+        Any():
+            {'vrf': str,
+             'interface_status': str,
+             'iod': int,
+             Optional('ipv6'):
+                {Any():
+                    {Optional('ipv6'): str,
+                     Optional('prefix_length'): str,
+                     Optional('anycast'): bool,
+                     Optional('status'): str,
+                     },
+                },
+            'ipv6_enabled': bool,
+            'ipv6_subnet': str,
+            'ipv6_link_local': str,
+            'link_local_state': str,
+            'll_state': str,
+            'ipv6_virtual_add': str,
+            'ipv6_multicast_routing': str,
+            'ipv6_report_link_local': str,
+            'ipv6_forwarding_feature': str,
+            'ipv6_multicast_groups': list,
+            'ipv6_multicast_entries': str,
+            'ipv6_mtu': int,
+            'ipv6_unicast_rev_path_forwarding': str,
+            'ipv6_load_sharing': str,
+            'ipv6_last_reset': str,
+            'ipv6_rp_traffic_statistics': str,
+            'unicast_packets': str,
+            'unicast_bytes': str,
+            'multicast_packets': str,
+            'multicast_bytes': str
+            },
+        }
+
+
+class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
+
+    def cli(self):
+        out = self.device.execute('show ipv6 interface')
+
+        # Init variables
+        ipv6_interface_dict = {}
+        ipv6_addresses = None
+        anycast_addresses = None
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            #IPv6 Interface Status for VRF "VRF1"
+            p1 = re.compile(r'^\s*IPv6 *Interface *Status *for *VRF'
+                             ' *(?P<vrf>[a-zA-Z0-9\"]+)$')
+            m = p1.match(line)
+            if m:
+                vrf = m.groupdict()['vrf']
+                vrf = vrf.replace('"',"")
+                continue
+
+            #Ethernet2/1, Interface status: protocol-up/link-up/admin-up, iod: 36
+            p2 = re.compile(r'^\s*(?:(?P<interface>[a-zA-Z0-9\/]+)), Interface'
+                             ' *status: *(?P<interface_status>[a-z\-\/]+),'
+                             ' *iod: *(?P<iod>[0-9]+)$')
+            m = p2.match(line)
+            if m:
+
+                interface = str(m.groupdict()['interface'])
+                interface_status = m.groupdict()['interface_status']
+                iod = int(m.groupdict()['iod'])
+
+                if interface not in ipv6_interface_dict:
+                    ipv6_interface_dict[interface] = {}
+                ipv6_interface_dict[interface]['iod'] = iod
+                ipv6_interface_dict[interface]['interface_status'] = interface_status  
+                ipv6_interface_dict[interface]['vrf'] = vrf
+                ipv6_interface_dict[interface]['ipv6_enabled'] = True
+
+                # init multicast groups list to empty for this interface
+                ipv6_multicast_groups = []
+                continue
+
+            # IPv6 address:
+            p3_1 = re.compile(r'^\s*IPv6 address:$')
+            m = p3_1.match(line)
+            if m:
+                ipv6_addresses = True
+                anycast_addresses = False
+                continue
+
+            # Anycast configured addresses:
+            p3_2 = re.compile(r'^\s*Anycast configured addresses:$')
+            m = p3_2.match(line)
+            if m:
+                anycast_addresses = True
+                ipv6_addresses = False
+                continue
+
+            # 2001:db8:1:1::1/64 [VALID]
+            p3_3 = re.compile(r'^\s*(?P<ipv6>[a-z0-9\:]+)'
+                             '\/(?P<prefix_length>[0-9]+)'
+                             ' *\[(?P<status>[a-zA-Z]+)\]$')
+            m = p3_3.match(line)
+            if m:
+                ipv6  = m.groupdict()['ipv6']
+                prefix_length = m.groupdict()['prefix_length']
+                status = m.groupdict()['status'].lower()
+
+                address = ipv6 + '/' + prefix_length
+
+                if 'ipv6' not in ipv6_interface_dict[interface]:
+                    ipv6_interface_dict[interface]['ipv6'] = {}
+                if address not in ipv6_interface_dict[interface]['ipv6']:
+                    ipv6_interface_dict[interface]['ipv6'][address] = {}
+                
+                ipv6_interface_dict[interface]['ipv6'][address]\
+                    ['ipv6'] = ipv6
+                ipv6_interface_dict[interface]['ipv6'][address]\
+                    ['prefix_length'] = prefix_length
+
+                if ipv6_addresses:
+                    ipv6_interface_dict[interface]['ipv6'][address]\
+                        ['status'] = status
+                elif anycast_addresses:
+                    ipv6_interface_dict[interface]['ipv6'][address]\
+                        ['anycast'] = True
+                continue
+
+            #IPv6 subnet:  2001:db8:1:1::/64
+            p4 = re.compile(r'^\s*IPv6 *subnet:'
+                             ' *(?P<ipv6_subnet>[a-z0-9\:\/]+)$')
+            m = p4.match(line)
+            if m:
+                ipv6_subnet = m.groupdict()['ipv6_subnet']
+
+                ipv6_interface_dict[interface]['ipv6_subnet'] = ipv6_subnet
+                continue
+
+            #IPv6 link-local address: fe80::a8aa:bbff:febb:cccc (default) [VALID]
+            p5 = re.compile(r'^\s*IPv6 *link-local *address:'
+                             ' *(?P<ipv6_link_local>[a-z0-9\:\s]+)'
+                             ' *\((?P<link_local_state>[a-z]+)\)'
+                             ' *\[(?P<ll_state>[A-Z]+)\]$')
+            m = p5.match(line)
+            if m:
+                ipv6_link_local = m.groupdict()['ipv6_link_local']
+                link_local_state = m.groupdict()['link_local_state']
+                ll_state = m.groupdict()['ll_state']
+
+                ipv6_interface_dict[interface]['ipv6_link_local'] = ipv6_link_local
+                ipv6_interface_dict[interface]['link_local_state'] = link_local_state
+                ipv6_interface_dict[interface]['ll_state'] = ll_state
+                continue
+
+            #IPv6 virtual addresses configured: none
+            p6 = re.compile(r'^\s*IPv6 *virtual *addresses *configured:'
+                             ' *(?P<ipv6_virtual_add>[a-z]+)$')
+            m = p6.match(line)
+            if m:
+                ipv6_virtual_add = m.groupdict()['ipv6_virtual_add']
+
+                ipv6_interface_dict[interface]['ipv6_virtual_add'] = ipv6_virtual_add
+                continue
+
+            #IPv6 multicast routing: disabled
+            p7 = re.compile(r'^\s*IPv6 *multicast *routing:'
+                             ' *(?P<ipv6_multicast_routing>[a-z]+)$')
+            m = p7.match(line)
+            if m:
+                ipv6_multicast_routing = m.groupdict()['ipv6_multicast_routing']
+
+                ipv6_interface_dict[interface]['ipv6_multicast_routing'] = ipv6_multicast_routing
+                continue
+
+            #IPv6 report link local: disabled
+            p8 = re.compile(r'^\s*IPv6 *report *link *local:'
+                              ' *(?P<ipv6_report_link_local>[a-z]+)$')
+            m = p8.match(line)
+            if m:
+                ipv6_report_link_local = m.groupdict()['ipv6_report_link_local']
+
+                ipv6_interface_dict[interface]['ipv6_report_link_local']\
+                 = ipv6_report_link_local
+                continue
+
+            #IPv6 Forwarding feature: disabled
+            p9 = re.compile(r'^\s*IPv6 *Forwarding *feature:'
+                              ' *(?P<ipv6_forwarding_feature>[a-z]+)$')
+            m = p9.match(line)
+            if m:
+                ipv6_forwarding_feature = m.groupdict()['ipv6_forwarding_feature']
+
+                ipv6_interface_dict[interface]['ipv6_forwarding_feature']\
+                 = ipv6_forwarding_feature
+                continue
+
+            #IPv6 multicast groups locally joined:
+            p10 = re.compile(r'^\s*IPv6 *multicast *groups *locally *joined:$')
+            m = p10.match(line)
+            if m:
+                continue
+
+            # ff02::1:ffbb:cccc  ff02::1:ff00:3  ff02::1:ff00:2  ff02::2   
+            # ff02::1  ff02::1:ff00:1  ff02::1:ffbb:cccc  ff02::1:ff00:0  
+            p11 = re.compile(r'^\s*(?P<ipv6_multicast_group_addresses>[a-z0-9\:\s]+)$')
+            m = p11.match(line)
+            if m:
+                ipv6_multicast_group_addresses = str(m.groupdict()['ipv6_multicast_group_addresses'])
+
+                # Split string of addressed into a list
+                ipv6_multicast_group_addresses = [str(i) for i in ipv6_multicast_group_addresses.split()]
+                
+                # Add to previous created list
+                for address in ipv6_multicast_group_addresses:
+                    ipv6_multicast_groups.append(address)
+
+                ipv6_interface_dict[interface]['ipv6_multicast_groups']\
+                 = ipv6_multicast_groups
+                continue
+
+            #IPv6 multicast (S,G) entries joined: none
+            p12 = re.compile(r'^\s*IPv6 *multicast *\(S\,G\) *entries *joined:'
+                              ' *(?P<ipv6_multicast_entries>[a-z]+)$')
+            m = p12.match(line)
+            if m:
+                ipv6_multicast_entries = m.groupdict()['ipv6_multicast_entries']
+
+                ipv6_interface_dict[interface]['ipv6_multicast_entries']\
+                 = ipv6_multicast_entries
+                continue
+
+            #IPv6 MTU: 1600 (using link MTU)
+            p13 = re.compile(r'^\s*IPv6 *MTU: *(?P<ipv6_mtu>[0-9]+)'
+                              ' *\(using *link *MTU\)$')
+            m = p13.match(line)
+            if m:
+                ipv6_mtu = int(m.groupdict()['ipv6_mtu'])
+
+                ipv6_interface_dict[interface]['ipv6_mtu'] = ipv6_mtu
+                continue
+
+            #IPv6 unicast reverse path forwarding: none
+            p14 = re.compile(r'^\s*IPv6 *unicast *reverse *path *forwarding:'
+                              ' *(?P<ipv6_unicast_rev_path_forwarding>[a-z]+)$')
+            m = p14.match(line)
+            if m:
+                ipv6_unicast_rev_path_forwarding = m.groupdict()\
+                ['ipv6_unicast_rev_path_forwarding']
+
+                ipv6_interface_dict[interface]\
+                ['ipv6_unicast_rev_path_forwarding']\
+                 = ipv6_unicast_rev_path_forwarding
+                continue
+
+            #IPv6 load sharing: none
+            p15 = re.compile(r'^\s*IPv6 *load *sharing:'
+                             ' *(?P<ipv6_load_sharing>[a-z]+)$')
+            m = p15.match(line)
+            if m:
+                ipv6_load_sharing = m.groupdict()['ipv6_load_sharing']
+
+                ipv6_interface_dict[interface]['ipv6_load_sharing']\
+                 = ipv6_load_sharing
+                continue
+
+            #IPv6 interface statistics last reset: never
+            p16 = re.compile(r'^\s*IPv6 *interface *statistics *last *reset:'
+                              ' *(?P<ipv6_last_reset>[a-z]+)$')
+            m = p16.match(line)
+            if m:
+                ipv6_last_reset = m.groupdict()['ipv6_last_reset']
+
+                ipv6_interface_dict[interface]['ipv6_last_reset']\
+                 = ipv6_last_reset
+                continue
+
+            #IPv6 interface RP-traffic statistics: (forwarded/originated/consumed)
+            p17 = re.compile(r'^\s*IPv6 *interface *RP-traffic *statistics:'
+                              ' *(?P<ipv6_rp_traffic_statistics>[a-z\(\)\/]+)$')
+            m = p17.match(line)
+            if m:
+                ipv6_rp_traffic_statistics = m.groupdict()['ipv6_rp_traffic_statistics']
+
+                ipv6_interface_dict[interface]['ipv6_rp_traffic_statistics']\
+                 = ipv6_rp_traffic_statistics
+                continue
+
+            #Unicast packets:      0/0/0
+            p18 = re.compile(r'^\s*Unicast *packets:'
+                              ' *(?P<unicast_packets>[0-9\/]+)$')
+            m = p18.match(line)
+            if m:
+                unicast_packets = m.groupdict()['unicast_packets']
+
+                ipv6_interface_dict[interface]['unicast_packets']\
+                 = unicast_packets
+                continue
+
+            #Unicast bytes:        0/0/0
+            p19 = re.compile(r'^\s*Unicast *bytes:'
+                              ' *(?P<unicast_bytes>[0-9\/]+)$')
+            m = p19.match(line)
+            if m:
+                unicast_bytes = m.groupdict()['unicast_bytes']
+
+                ipv6_interface_dict[interface]['unicast_bytes'] = unicast_bytes
+                continue
+
+            #Multicast packets:    0/12/9
+            p20 = re.compile(r'^\s*Multicast *packets:'
+                              ' *(?P<multicast_packets>[0-9\/]+)$')
+            m = p20.match(line)
+            if m:
+                multicast_packets = m.groupdict()['multicast_packets']
+
+                ipv6_interface_dict[interface]['multicast_packets']\
+                 = multicast_packets
+                continue
+
+            #Multicast bytes:      0/1144/640
+            p21 = re.compile(r'^\s*Multicast *bytes:'
+                              ' *(?P<multicast_bytes>[0-9\/]+)$')
+            m = p21.match(line)
+            if m:
+                multicast_bytes = m.groupdict()['multicast_bytes']
+
+                ipv6_interface_dict[interface]['multicast_bytes']\
+                 = multicast_bytes
+                continue
+
+        return ipv6_interface_dict
 
 
 

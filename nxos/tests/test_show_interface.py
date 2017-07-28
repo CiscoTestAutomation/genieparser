@@ -7,7 +7,7 @@ from ats.topology import Device
 from metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from parser.nxos.show_interface import ShowInterface, ShowIpInterfaceVrfAll, ShowVrfAllInterface, ShowIpInterfaceSwitchport 
+from parser.nxos.show_interface import ShowInterface, ShowIpInterfaceVrfAll, ShowVrfAllInterface, ShowIpInterfaceSwitchport, ShowIpv6InterfaceVrfAll
 
 #############################################################################
 # unitest For Show Interface
@@ -1476,6 +1476,112 @@ class test_show_ip_interface_switchport(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         ip_interface_switchport_obj = ShowIpInterfaceSwitchport(device=self.device)
         parsed_output = ip_interface_switchport_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+#############################################################################
+# unitest For Show Ipv6 Interface Vrf All
+#############################################################################
+
+
+class test_show_ipv6_interface_vrf_all(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    device0 = Device(name='bDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {'Ethernet2/1': {'interface_status': 'protocol-up/link-up/admin-up',
+                 'iod': 36,
+                 'ipv6': {'2001:db8:1:1::1/64': {'ipv6': '2001:db8:1:1::1',
+                                                 'prefix_length': '64',
+                                                 'status': 'valid'},
+                          '2001:db8:2:2::2/64': {'anycast': True,
+                                                 'ipv6': '2001:db8:2:2::2',
+                                                 'prefix_length': '64',
+                                                 'status': 'valid'},
+                          '2001:db8:3:3::3/64': {'ipv6': '2001:db8:3:3::3',
+                                                 'prefix_length': '64',
+                                                 'status': 'valid'},
+                          '2001:db8:4:4:a8aa:bbff:febb:cccc/64': {'ipv6': '2001:db8:4:4:a8aa:bbff:febb:cccc',
+                                                                  'prefix_length': '64',
+                                                                  'status': 'valid'}},
+                 'ipv6_enabled': True,
+                 'ipv6_forwarding_feature': 'disabled',
+                 'ipv6_last_reset': 'never',
+                 'ipv6_link_local': 'fe80::a8aa:bbff:febb:cccc ',
+                 'ipv6_load_sharing': 'none',
+                 'ipv6_mtu': 1600,
+                 'ipv6_multicast_entries': 'none',
+                 'ipv6_multicast_groups': ['ff02::1:ffbb:cccc',
+                                           'ff02::1:ff00:3',
+                                           'ff02::1:ff00:2',
+                                           'ff02::2',
+                                           'ff02::1',
+                                           'ff02::1:ff00:1',
+                                           'ff02::1:ffbb:cccc',
+                                           'ff02::1:ff00:0'],
+                 'ipv6_multicast_routing': 'disabled',
+                 'ipv6_report_link_local': 'disabled',
+                 'ipv6_rp_traffic_statistics': '(forwarded/originated/consumed)',
+                 'ipv6_subnet': '2001:db8:1:1::/64',
+                 'ipv6_unicast_rev_path_forwarding': 'none',
+                 'ipv6_virtual_add': 'none',
+                 'link_local_state': 'default',
+                 'll_state': 'VALID',
+                 'multicast_bytes': '0/1144/640',
+                 'multicast_packets': '0/12/9',
+                 'unicast_bytes': '0/0/0',
+                 'unicast_packets': '0/0/0',
+                 'vrf': 'VRF1'}}
+
+
+    golden_output = {'execute.return_value': '''
+        IPv6 Interface Status for VRF "default"
+
+        IPv6 Interface Status for VRF "management"
+
+        IPv6 Interface Status for VRF "VRF1"
+        Ethernet2/1, Interface status: protocol-up/link-up/admin-up, iod: 36
+          IPv6 address: 
+            2001:db8:1:1::1/64 [VALID]
+            2001:db8:3:3::3/64 [VALID]
+            2001:db8:4:4:a8aa:bbff:febb:cccc/64 [VALID]
+            2001:db8:2:2::2/64 [VALID]
+          IPv6 subnet:  2001:db8:1:1::/64
+          Anycast configured addresses:
+            2001:db8:2:2::2/64 [VALID]
+          IPv6 link-local address: fe80::a8aa:bbff:febb:cccc (default) [VALID]
+          IPv6 virtual addresses configured: none
+          IPv6 multicast routing: disabled
+          IPv6 report link local: disabled
+          IPv6 Forwarding feature: disabled
+          IPv6 multicast groups locally joined:   
+              ff02::1:ffbb:cccc  ff02::1:ff00:3  ff02::1:ff00:2  ff02::2   
+              ff02::1  ff02::1:ff00:1  ff02::1:ffbb:cccc  ff02::1:ff00:0  
+          IPv6 multicast (S,G) entries joined: none
+          IPv6 MTU: 1600 (using link MTU)
+          IPv6 unicast reverse path forwarding: none
+          IPv6 load sharing: none 
+          IPv6 interface statistics last reset: never
+          IPv6 interface RP-traffic statistics: (forwarded/originated/consumed)
+            Unicast packets:      0/0/0
+            Unicast bytes:        0/0/0
+            Multicast packets:    0/12/9
+            Multicast bytes:      0/1144/640
+      '''}
+
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        ipv6_interface_vrf_all_obj = ShowIpv6InterfaceVrfAll(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = ipv6_interface_vrf_all_obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        ipv6_interface_vrf_all_obj = ShowIpv6InterfaceVrfAll(device=self.device)
+        parsed_output = ipv6_interface_vrf_all_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
