@@ -7,7 +7,7 @@ from ats.topology import Device
 from metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from parser.nxos.show_interface import ShowInterface, ShowIpInterfaceVrfAll, ShowVrfAllInterface, ShowIpInterfaceSwitchport, ShowIpv6InterfaceVrfAll
+from parser.nxos.show_interface import  ShowIpInterfaceVrfAll, ShowInterface, ShowVrfAllInterface, ShowInterfaceSwitchport, ShowIpv6InterfaceVrfAll
 
 #############################################################################
 # unitest For Show Interface
@@ -70,7 +70,8 @@ class test_show_interface(unittest.TestCase):
                  'duplex_mode': 'full-duplex',
                  'efficient_ethernet': 'n/a',
                  'enabled': True,
-                 'encapsulations': {'encapsulation': 'ARPA'},
+                 'encapsulations': {'encapsulation': 'arpa'},
+                 'ethertype': '0x8100',
                  'flow_control': {'flow_control_receive': False,
                                   'flow_control_send': False},
                  'interface_reset': 1,
@@ -97,8 +98,12 @@ class test_show_interface(unittest.TestCase):
                     'bandwidth': 768,
                     'delay': 10,
                     'enabled': False,
+                    'encapsulations': {'encapsulation': 'dot1q',
+                                       'first_dot1q': '10'},
+                    'ethertype': '0x8100',
                     'link_state': 'Administratively down',
                     'mac_address': '5254.003b.4af8',
+                    'medium': 'broadcast',
                     'mtu': 1600,
                     'oper_status': 'down,',
                     'parent_interface': 'Ethernet2/1',
@@ -112,8 +117,12 @@ class test_show_interface(unittest.TestCase):
                     'bandwidth': 768,
                     'delay': 10,
                     'enabled': True,
+                    'encapsulations': {'encapsulation': 'dot1q',
+                                       'first_dot1q': '20'},
+                    'ethertype': '0x8100',
                     'link_state': 'None',
                     'mac_address': '5254.003b.4af8',
+                    'medium': 'p2p',
                     'mtu': 1600,
                     'oper_status': 'up,',
                     'parent_interface': 'Ethernet2/1',
@@ -175,7 +184,8 @@ class test_show_interface(unittest.TestCase):
                  'duplex_mode': 'full-duplex',
                  'efficient_ethernet': 'n/a',
                  'enabled': True,
-                 'encapsulations': {'encapsulation': 'ARPA'},
+                 'encapsulations': {'encapsulation': 'arpa'},
+                 'ethertype': '0x8100',
                  'flow_control': {'flow_control_receive': False,
                                   'flow_control_send': False},
                  'interface_reset': 1,
@@ -205,7 +215,8 @@ class test_show_interface(unittest.TestCase):
            'delay': 10,
            'duplex_mode': 'full-duplex',
            'enabled': True,
-           'encapsulations': {'encapsulation': 'ARPA'},
+           'encapsulations': {'encapsulation': 'arpa'},
+           'ethertype': '0x0000',
            'link_state': 'None',
            'mac_address': '5254.00c9.d26e',
            'medium': 'broadcast',
@@ -218,6 +229,7 @@ class test_show_interface(unittest.TestCase):
            'rxload': '1/255',
            'txload': '1/255',
            'types': 'Ethernet'}}
+
 
     golden_output = {'execute.return_value': '''
        
@@ -366,61 +378,92 @@ class test_show_interface(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-#############################################################################
-# Parser For Show Ip Interface Vrf All
-#############################################################################
+# #############################################################################
+# # Unitest For Show Ip Interface Vrf All
+# #############################################################################
 
 class test_show_ip_interface_vrf_all(unittest.TestCase):
     
-  device = Device(name='aDevice')
-  device0 = Device(name='bDevice')
-  empty_output = {'execute.return_value': ''}
-    
-  golden_parsed_output = {'Ethernet2/1': {'broadcast_address': '255.255.255.255',
-                 'broadcast_bytes': '0/0/0/0/0',
-                 'broadcast_packets': '0/0/0/0/0',
-                 'directed_broadcast': 'disabled',
+    device = Device(name='aDevice')
+    device0 = Device(name='bDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {'Ethernet2/1': {'directed_broadcast': 'disabled',
                  'icmp_port_unreachable': 'enabled',
                  'icmp_redirects': 'disabled',
                  'icmp_unreachable': 'disabled',
-                 'int_software_stats': '(sent/received/forwarded/originated/consumed)',
                  'int_stat_last_reset': 'never',
                  'interface_status': 'protocol-up/link-up/admin-up',
                  'iod': 36,
                  'ip_forwarding': 'disabled',
+                 'ip_mtu': 1600,
                  'ipv4': {'10.2.2.2/24': {'ip_subnet': '10.2.2.0',
                                           'ipv4': '10.2.2.2',
                                           'prefix_length': '24',
                                           'secondary': True},
-                          '10.3.3.3/24': {'ip_subnet': '10.3.3.0',
+                          '10.3.3.3/24': {'broadcast_address': '255.255.255.255',
+                                          'ip_subnet': '10.3.3.0',
                                           'ipv4': '10.3.3.3',
                                           'prefix_length': '24',
+                                          'route_preference': 0,
                                           'route_tag': 0,
                                           'secondary': True},
                           '10.4.4.4/24': {'ip_subnet': '10.4.4.0',
                                           'ipv4': '10.4.4.4',
-                                          'prefix_length': '24'}},
-                 'labeled_bytes': '0/0/0/0/0',
-                 'labeled_packets': '0/0/0/0/0',
+                                          'prefix_length': '24'},
+                          'counters': {'broadcast_bytes_consumed': 0,
+                                       'broadcast_bytes_forwarded': 0,
+                                       'broadcast_bytes_originated': 0,
+                                       'broadcast_bytes_received': 0,
+                                       'broadcast_bytes_sent': 0,
+                                       'broadcast_packets_consumed': 0,
+                                       'broadcast_packets_forwarded': 0,
+                                       'broadcast_packets_originated': 0,
+                                       'broadcast_packets_received': 0,
+                                       'broadcast_packets_sent': 0,
+                                       'labeled_bytes_consumed': 0,
+                                       'labeled_bytes_forwarded': 0,
+                                       'labeled_bytes_originated': 0,
+                                       'labeled_bytes_received': 0,
+                                       'labeled_bytes_sent': 0,
+                                       'labeled_packets_consumed': 0,
+                                       'labeled_packets_forwarded': 0,
+                                       'labeled_packets_originated': 0,
+                                       'labeled_packets_received': 0,
+                                       'labeled_packets_sent': 0,
+                                       'multicast_bytes_consumed': 0,
+                                       'multicast_bytes_forwarded': 0,
+                                       'multicast_bytes_originated': 0,
+                                       'multicast_bytes_received': 0,
+                                       'multicast_bytes_sent': 0,
+                                       'multicast_packets_consumed': 0,
+                                       'multicast_packets_forwarded': 0,
+                                       'multicast_packets_originated': 0,
+                                       'multicast_packets_received': 0,
+                                       'multicast_packets_sent': 0,
+                                       'unicast_bytes_consumed': 0,
+                                       'unicast_bytes_forwarded': 0,
+                                       'unicast_bytes_originated': 0,
+                                       'unicast_bytes_received': 0,
+                                       'unicast_bytes_sent': 0,
+                                       'unicast_packets_consumed': 0,
+                                       'unicast_packets_forwarded': 0,
+                                       'unicast_packets_originated': 0,
+                                       'unicast_packets_received': 0,
+                                       'unicast_packets_sent': 0}},
                  'load_sharing': 'none',
                  'local_proxy_arp': 'disabled',
-                 'mtu': 1600,
-                 'multicast_bytes': '0/0/0/0/0',
-                 'multicast_groups': 'none',
-                 'multicast_packets': '0/0/0/0/0',
+                 'multicast_groups_address': 'none',
                  'multicast_routing': 'disabled',
                  'proxy_arp': 'disabled',
-                 'route_preference': 0,
-                 'unicast_bytes': '0/0/0/0/0',
-                 'unicast_packets': '0/0/0/0/0',
                  'unicast_reverse_path': 'none',
                  'vrf': 'VRF1',
                  'wccp_redirect_exclude': 'disabled',
                  'wccp_redirect_inbound': 'disabled',
                  'wccp_redirect_outbound': 'disabled'}}
 
-    
-  golden_output = {'execute.return_value': '''
+
+    golden_output = {'execute.return_value': '''
         IP Interface Status for VRF "default"
 
         IP Interface Status for VRF "management"
@@ -460,23 +503,24 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
       '''}
 
 
-  def test_empty(self):
-      self.device1 = Mock(**self.empty_output)
-      ip_interface_vrf_all_obj = ShowIpInterfaceVrfAll(device=self.device1)
-      with self.assertRaises(SchemaEmptyParserError):
-          parsed_output = ip_interface_vrf_all_obj.parse()
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        ip_interface_vrf_all_obj = ShowIpInterfaceVrfAll(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = ip_interface_vrf_all_obj.parse()
 
-  def test_golden(self):
-      self.device = Mock(**self.golden_output)
-      ip_interface_vrf_all_obj = ShowIpInterfaceVrfAll(device=self.device)
-      parsed_output = ip_interface_vrf_all_obj.parse()
-      self.maxDiff = None
-      self.assertEqual(parsed_output,self.golden_parsed_output)
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        ip_interface_vrf_all_obj = ShowIpInterfaceVrfAll(device=self.device)
+        parsed_output = ip_interface_vrf_all_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-#############################################################################
-# Parser For Show Vrf All Interface
-#############################################################################
+
+# #############################################################################
+# # Unitest For Show Vrf All Interface
+# #############################################################################
 
 class test_show_vrf_all_interface(unittest.TestCase):
     
@@ -1384,12 +1428,12 @@ class test_show_vrf_all_interface(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-#############################################################################
-# unitest For Show Ip Interface Switchport
-#############################################################################
+# #############################################################################
+# # unitest For Show Interface Switchport
+# #############################################################################
 
 
-class test_show_ip_interface_switchport(unittest.TestCase):
+class test_show_interface_switchport(unittest.TestCase):
 
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -1468,21 +1512,21 @@ class test_show_ip_interface_switchport(unittest.TestCase):
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
-        ip_interface_switchport_obj = ShowIpInterfaceSwitchport(device=self.device1)
+        interface_switchport_obj = ShowInterfaceSwitchport(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = ip_interface_switchport_obj.parse()
+            parsed_output = interface_switchport_obj.parse()
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        ip_interface_switchport_obj = ShowIpInterfaceSwitchport(device=self.device)
-        parsed_output = ip_interface_switchport_obj.parse()
+        interface_switchport_obj = ShowInterfaceSwitchport(device=self.device)
+        parsed_output = interface_switchport_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-#############################################################################
-# unitest For Show Ipv6 Interface Vrf All
-#############################################################################
+# #############################################################################
+# # unitest For Show Ipv6 Interface Vrf All
+# #############################################################################
 
 
 class test_show_ipv6_interface_vrf_all(unittest.TestCase):
@@ -1505,11 +1549,25 @@ class test_show_ipv6_interface_vrf_all(unittest.TestCase):
                                                  'status': 'valid'},
                           '2001:db8:4:4:a8aa:bbff:febb:cccc/64': {'ipv6': '2001:db8:4:4:a8aa:bbff:febb:cccc',
                                                                   'prefix_length': '64',
-                                                                  'status': 'valid'}},
+                                                                  'status': 'valid'},
+                          'counters': {'multicast_bytes_consumed': 640,
+                                       'multicast_bytes_forwarded': 0,
+                                       'multicast_bytes_originated': 1144,
+                                       'multicast_packets_consumed': 9,
+                                       'multicast_packets_forwarded': 0,
+                                       'multicast_packets_originated': 12,
+                                       'unicast_bytes_consumed': 0,
+                                       'unicast_bytes_forwarded': 0,
+                                       'unicast_bytes_originated': 0,
+                                       'unicast_packets_consumed': 0,
+                                       'unicast_packets_forwarded': 0,
+                                       'unicast_packets_originated': 0}},
                  'ipv6_enabled': True,
                  'ipv6_forwarding_feature': 'disabled',
                  'ipv6_last_reset': 'never',
                  'ipv6_link_local': 'fe80::a8aa:bbff:febb:cccc ',
+                 'ipv6_link_local_state': 'default',
+                 'ipv6_ll_state': 'valid',
                  'ipv6_load_sharing': 'none',
                  'ipv6_mtu': 1600,
                  'ipv6_multicast_entries': 'none',
@@ -1523,17 +1581,11 @@ class test_show_ipv6_interface_vrf_all(unittest.TestCase):
                                            'ff02::1:ff00:0'],
                  'ipv6_multicast_routing': 'disabled',
                  'ipv6_report_link_local': 'disabled',
-                 'ipv6_rp_traffic_statistics': '(forwarded/originated/consumed)',
                  'ipv6_subnet': '2001:db8:1:1::/64',
                  'ipv6_unicast_rev_path_forwarding': 'none',
                  'ipv6_virtual_add': 'none',
-                 'link_local_state': 'default',
-                 'll_state': 'VALID',
-                 'multicast_bytes': '0/1144/640',
-                 'multicast_packets': '0/12/9',
-                 'unicast_bytes': '0/0/0',
-                 'unicast_packets': '0/0/0',
                  'vrf': 'VRF1'}}
+
 
 
     golden_output = {'execute.return_value': '''
