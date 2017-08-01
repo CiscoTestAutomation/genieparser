@@ -3690,64 +3690,65 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': 'None',
+                                        'localprf': 100,
                                         'origin_codes': 'i',
                                         'path_type': 'a',
                                         'status_codes': '*>',
-                                        'weight': '32768'},
+                                        'weight': 32768},
                                     2:
                                         {'next_hop': '4.4.4.4',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': 'e',
-                                        'weight': '32768'},
+                                        'path_type': 'a',
+                                        'status_codes': '*>',
+                                        'weight': 32768},
                                     3:
                                         {'next_hop': '6.6.6.6',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': 'e',
-                                        'weight': '32768'}}},
+                                        'path_type': 'a',
+                                        'status_codes': '*>',
+                                        'weight': 32768}}},
                                     '11.11.11.11/32':
                                         {'index':
                                             {1:
                                             {'next_hop': '0.0.0.0',
-                                            'localprf': '100',
-                                            'metric': '0',
+                                            'localprf': 100,
+                                            'metric': 0,
                                             'origin_codes': '?',
                                             'path_type': 'r',
                                             'status_codes': '*>',
-                                            'weight': '32768'}}},
+                                            'weight': 32768}}},
                             '123.0.0.0/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': 'None',
+                                        'localprf': 100,
                                         'origin_codes': 'i',
                                         'path_type': 'a',
-                                        'status_codes': 'None',
-                                        'weight': '32768'}}},
+                                        'status_codes': ' ',
+                                        'weight': 32768}}},
                             '33.33.33.33/32':
                                 {'index':
                                     {1:
                                         {'next_hop': '3.3.3.3',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '*>',
-                                        'weight': '0'}}},
+                                        'weight': 0}}},
                             '34.34.34.0/24':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': 'None',
+                                        'localprf': 100,
                                         'origin_codes': 'i',
                                         'path_type': 'l',
-                                        'status_codes': 'None',
-                                        'weight': '32768'}}}}},
+                                        'status_codes': ' ',
+                                        'weight': 32768}}}}},
                     'ipv6 unicast':
                         {'bgp_table_version': 28,
                         'local_router_id': '11.11.11.11',
@@ -3756,42 +3757,40 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                 {'index':
                                     {1:
                                         {'next_hop': '0::',
-                                        'localprf': '100',
-                                        'metric': 'None',
+                                        'localprf': 100,
                                         'origin_codes': 'i',
                                         'path_type': 'a',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '2001:111:222::/64':
                                 {'index':
                                     {1:
                                         {'next_hop': '0::',
-                                        'localprf': '100',
-                                        'metric': 'None',
+                                        'localprf': 100,
                                         'origin_codes': 'i',
                                         'path_type': 'l',
-                                        'status_codes': 'None',
-                                        'weight': '32768'}}},
+                                        'status_codes': ' ',
+                                        'weight': 32768}}},
                             '2001::11/128':
                                 {'index':
                                     {1:
                                         {'next_hop': '0::',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '2001::33/128':
                                 {'index':
                                     {1:
                                         {'next_hop': '::ffff:3.3.3.3',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '*>',
-                                        'weight': '0'}}}},
+                                        'weight': 0}}}},
                         'v6_aggregate_address_as_set': True,
                         'v6_aggregate_address_ipv6_address': '2000::/8',
                         'v6_aggregate_address_summary_only': True}}},
@@ -3810,52 +3809,49 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': 'None',
+                                        'localprf': 100,
                                         'origin_codes': 'i',
                                         'path_type': 'a',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '11.11.11.11/32':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '123.0.0.0/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': 'None',
+                                        'localprf': 100,
                                         'origin_codes': 'i',
                                         'path_type': 'a',
-                                        'status_codes': 'None',
-                                        'weight': '32768'}}},
+                                        'status_codes': ' ',
+                                        'weight': 32768}}},
                             '33.33.33.33/32':
                                 {'index':
                                     {1:
                                         {'next_hop': '3.3.3.3',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '*>',
-                                        'weight': '0'}}},
+                                        'weight': 0}}},
                             '34.34.34.0/24':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': 'None',
+                                        'localprf': 100,
                                         'origin_codes': 'i',
                                         'path_type': 'l',
-                                        'status_codes': 'None',
-                                        'weight': '32768'}}}},
+                                        'status_codes': ' ',
+                                        'weight': 32768}}}},
                         'route_distinguisher': '100:100'},
                     'vpnv6 unicast RD 100:100':
                         {'bgp_table_version': 41,
@@ -3866,42 +3862,40 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                 {'index':
                                     {1:
                                         {'next_hop': '0::',
-                                        'localprf': '100',
-                                        'metric': 'None',
+                                        'localprf': 100,
                                         'origin_codes': 'i',
                                         'path_type': 'a',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '2001:111:222::/64':
                                 {'index':
                                     {1:
                                         {'next_hop': '0::',
-                                        'localprf': '100',
-                                        'metric': 'None',
+                                        'localprf': 100,
                                         'origin_codes': 'i',
                                         'path_type': 'l',
-                                        'status_codes': 'None',
-                                        'weight': '32768'}}},
+                                        'status_codes': ' ',
+                                        'weight': 32768}}},
                             '2001::11/128':
                                 {'index':
                                     {1:
                                         {'next_hop': '0::',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '2001::33/128':
                                 {'index':
                                     {1:
                                         {'next_hop': '::ffff:3.3.3.3',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '*>',
-                                        'weight': '0'}}}},
+                                        'weight': 0}}}},
                         'route_distinguisher': '100:100',
                         'v6_aggregate_address_as_set': True,
                         'v6_aggregate_address_ipv6_address': '2000::/8',
@@ -3976,32 +3970,29 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                 {'index':
                                     {1:
                                         {'next_hop': '1.2.1.1',
-                                        'localprf': '100',
-                                        'metric': '',
+                                        'localprf': 100,
                                         'origin_codes': 'i',
                                         'path_type': 'l',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '[2]:[0]:[0]:[48]:[0000.1986.6d99]:[128]:[2004:ab4:123:20::44]/368':
                                 {'index':
                                     {1:
                                         {'next_hop': '1.2.1.1',
-                                        'localprf': '100',
-                                        'metric': '',
+                                        'localprf': 100,
                                         'origin_codes': 'i',
                                         'path_type': 'l',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '[2]:[0]:[0]:[48]:[0000.1986.6d99]:[32]:[100.100.20.44]/272':
                                 {'index':
                                     {1:
                                         {'next_hop': '1.2.1.1',
-                                        'localprf': '100',
-                                        'metric': '',
+                                        'localprf': 100,
                                         'origin_codes': 'i',
                                         'path_type': 'l',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}}}}}}}}
+                                        'weight': 32768}}}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
         BGP routing table information for VRF default, address family L2VPN EVPN
@@ -4032,102 +4023,101 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': 'None',
+                                        'localprf': 100,
                                         'origin_codes': 'i',
                                         'path_type': 'l',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '1.3.1.0/24':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '1.3.2.0/24':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '104.0.0.0/8':
                                 {'index':
                                     {3:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'},
+                                        'weight': 32768},
                                     2:
                                         {'next_hop': '21.0.0.2',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '* ',
-                                        'weight': '0'},
+                                        'weight': 0},
                                     1:
                                         {'next_hop': 'fec1::112',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '* ',
-                                        'weight': '0'}}},
+                                        'weight': 0}}},
                             '204.0.0.0/8':
                                 {'index':
                                     {3:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'},
+                                        'weight': 32768},
                                     2:
                                         {'next_hop': '21.0.0.2',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '* ',
-                                        'weight': '0'},
+                                        'weight': 0},
                                     1:
                                         {'next_hop': 'fec1::112',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '* ',
-                                        'weight': '0'}}},
+                                        'weight': 0}}},
                             '4.0.0.0/8':
                                 {'index':
                                     {2:
                                         {'next_hop': '21.0.0.2',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '*>',
-                                        'weight': '0'},
+                                        'weight': 0},
                                     1:
                                         {'next_hop': 'fec1::112',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '* ',
-                                        'weight': '0'}}}}},
+                                        'weight': 0}}}}},
                     'ipv4 multicast':
                         {'bgp_table_version': 19,
                         'local_router_id': '21.0.101.1',
@@ -4136,82 +4126,82 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '3333',
+                                        'localprf': 100,
+                                        'metric': 3333,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '1.2.1.0/24':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '3333',
+                                        'localprf': 100,
+                                        'metric': 3333,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '102.0.0.0/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '3333',
+                                        'localprf': 100,
+                                        'metric': 3333,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '104.0.0.0/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '21.0.0.2',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '*>',
-                                        'weight': '0'}}},
+                                        'weight': 0}}},
                             '2.0.0.0/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '3333',
+                                        'localprf': 100,
+                                        'metric': 3333,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '202.0.0.0/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '3333',
+                                        'localprf': 100,
+                                        'metric': 3333,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '204.0.0.0/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '21.0.0.2',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '*>',
-                                        'weight': '0'}}},
+                                        'weight': 0}}},
                             '4.0.0.0/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '21.0.0.2',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '*>',
-                                        'weight': '0'}}}}},
+                                        'weight': 0}}}}},
                     'ipv4 unicast':
                         {'bgp_table_version': 25,
                         'local_router_id': '21.0.101.1',
@@ -4220,110 +4210,108 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': 'None',
+                                        'localprf': 100,
                                         'origin_codes': 'i',
                                         'path_type': 'l',
                                         'status_codes': '*>',
-                                        'weight': '32768'},
+                                        'weight': 32768},
                                     2:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': 'None',
+                                        'localprf': 100,
                                         'origin_codes': 'i',
                                         'path_type': 'i',
                                         'status_codes': '* ',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '1.3.1.0/24':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '1.3.2.0/24':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '104.0.0.0/8':
                                 {'index':
                                     {3:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'},
+                                        'weight': 32768},
                                     2:
                                         {'next_hop': '21.0.0.2',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '* ',
-                                        'weight': '0'},
+                                        'weight': 0},
                                     1:
                                         {'next_hop': 'fec1::112',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '* ',
-                                        'weight': '0'}}},
+                                        'weight': 0}}},
                             '204.0.0.0/8':
                                 {'index':
                                     {3:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'},
+                                        'weight': 32768},
                                     2:
                                         {'next_hop': '21.0.0.2',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '* ',
-                                        'weight': '0'},
+                                        'weight': 0},
                                     1:
                                         {'next_hop': 'fec1::112',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '* ',
-                                        'weight': '0'}}},
+                                        'weight': 0}}},
                             '4.0.0.0/8':
                                 {'index':
                                     {2:
                                         {'next_hop': '21.0.0.2',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '*>',
-                                        'weight': '0'},
+                                        'weight': 0},
                                     1:
                                         {'next_hop': 'fec1::112',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '* ',
-                                        'weight': '0'}}}}},
+                                        'weight': 0}}}}},
                     'ipv6 unicast':
                         {'bgp_table_version': 7,
                         'local_router_id': '21.0.101.1',
@@ -4332,12 +4320,12 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                 {'index':
                                     {1:
                                         {'next_hop': '0::',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}}}},
+                                        'weight': 32768}}}}},
                     'vpnv4 unicast RD 1:100':
                         {'bgp_table_version': 23,
                         'default_vrf': 'vpn1',
@@ -4347,62 +4335,61 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': 'None',
+                                        'localprf': 100,
                                         'origin_codes': 'i',
                                         'path_type': 'l',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '1.3.1.0/24':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '1.3.2.0/24':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '104.0.0.0/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '204.0.0.0/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '4.0.0.0/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '21.0.0.2',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '*>',
-                                        'weight': '0'}}}},
+                                        'weight': 0}}}},
                         'route_distinguisher': '1:100'},
                     'vpnv4 unicast RD 2:100':
                         {'bgp_table_version': 23,
@@ -4413,42 +4400,42 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '1.3.2.0/24':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '104.0.0.0/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '204.0.0.0/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}}},
+                                        'weight': 32768}}}},
                         'route_distinguisher': '2:100'},                        
                     'vpnv6 unicast RD 2:100':
                         {'bgp_table_version': 7,
@@ -4459,13 +4446,13 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                 {'index':
                                     {1:
                                         {'next_hop': '0::',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}}},
-                                        'route_distinguisher': '2:100'},
+                                        'weight': 32768}}}},
+                        'route_distinguisher': '2:100'},
                     'vpnv6 unicast RD 1:100':
                         {'bgp_table_version': 7,
                         'default_vrf': 'vpn1',
@@ -4475,13 +4462,13 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                 {'index':
                                     {1:
                                         {'next_hop': '0::',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}}},
-                                        'route_distinguisher': '1:100'},
+                                        'weight': 32768}}}},
+                        'route_distinguisher': '1:100'},
                     }},
             'vpn1':
                 {'address_family':
@@ -4493,42 +4480,42 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '1.3.2.0/24':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '104.0.0.0/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '204.0.0.0/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}}}},
+                                        'weight': 32768}}}}},
                     'ipv4 unicast':
                         {'bgp_table_version': 19,
                         'local_router_id': '11.11.11.11',
@@ -4537,62 +4524,61 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': 'None',
+                                        'localprf': 100,
                                         'origin_codes': 'i',
                                         'path_type': 'l',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '1.3.1.0/24':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '1.3.2.0/24':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '104.0.0.0/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '204.0.0.0/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '4.0.0.0/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '21.0.0.2',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'i',
                                         'status_codes': '*>',
-                                        'weight': '0'}}}}},
+                                        'weight': 0}}}}},
                     'ipv6 unicast':
                         {'bgp_table_version': 6,
                         'local_router_id': '11.11.11.11',
@@ -4601,12 +4587,12 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                 {'index':
                                     {1:
                                         {'next_hop': '0::',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}}}}}},
+                                        'weight': 32768}}}}}}},
             'vpn2':
                 {'address_family':
                     {'ipv4 unicast':
@@ -4617,42 +4603,42 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '1.3.2.0/24':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '104.0.0.0/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}},
+                                        'weight': 32768}}},
                             '204.0.0.0/8':
                                 {'index':
                                     {1:
                                         {'next_hop': '0.0.0.0',
-                                        'localprf': '100',
-                                        'metric': '4444',
+                                        'localprf': 100,
+                                        'metric': 4444,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}}}},
+                                        'weight': 32768}}}}},
                     'ipv6 unicast':
                         {'bgp_table_version': 3,
                         'local_router_id': '22.22.22.22',
@@ -4661,12 +4647,12 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                 {'index':
                                     {1:
                                         {'next_hop': '0::',
-                                        'localprf': '100',
-                                        'metric': '0',
+                                        'localprf': 100,
+                                        'metric': 0,
                                         'origin_codes': '?',
                                         'path_type': 'r',
                                         'status_codes': '*>',
-                                        'weight': '32768'}}}}}}}}}
+                                        'weight': 32768}}}}}}}}}
 
     golden_output3 = {'execute.return_value': '''
         BGP routing table information for VRF default, address family IPv4 Unicast
@@ -4826,6 +4812,790 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
         pinxdt-n9kv-2# 
         '''}
 
+    golden_parsed_output4 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4 multicast': 
+                        {'bgp_table_version': 175,
+                        'local_router_id': '20.0.0.6',
+                        'prefixes': {'1.2.1.0/24': {'index': {1: {'localprf': 100,
+                                                                 'next_hop': '19.0.101.1',
+                                                                 'origin_codes': 'i',
+                                                                 'path': '2 '
+                                                                         '3 '
+                                                                         '4',
+                                                                 'path_type': 'i',
+                                                                 'status_codes': '*>',
+                                                                 'weight': 0}}},
+                                    '1.2.2.0/24': {'index': {1: {'localprf': 100,
+                                                                 'next_hop': '19.0.101.1',
+                                                                 'origin_codes': 'i',
+                                                                 'path': '2 '
+                                                                         '3 '
+                                                                         '4',
+                                                                 'path_type': 'i',
+                                                                 'status_codes': '*>',
+                                                                 'weight': 0}}},
+                                    '1.4.1.0/24': {'index': {1: {'localprf': 100,
+                                                                 'next_hop': '19.0.102.4',
+                                                                 'origin_codes': 'i',
+                                                                 'path': '2 '
+                                                                         '3 '
+                                                                         '4',
+                                                                 'path_type': 'i',
+                                                                 'status_codes': '*>',
+                                                                 'weight': 0}}},
+                                    '1.4.2.0/24': {'index': {1: {'localprf': 100,
+                                                                 'next_hop': '19.0.102.4',
+                                                                 'origin_codes': 'i',
+                                                                 'path': '2 '
+                                                                         '3 '
+                                                                         '4',
+                                                                 'path_type': 'i',
+                                                                 'status_codes': '*>',
+                                                                 'weight': 0}}},
+                                    '2.1.0.0/24': {'index': {1: {'next_hop': '19.0.102.3',
+                                                                 'origin_codes': 'i',
+                                                                 'path': '888 '
+                                                                         '10 '
+                                                                         '20 '
+                                                                         '30 '
+                                                                         '40 '
+                                                                         '50 '
+                                                                         '60 '
+                                                                         '70 '
+                                                                         '80 '
+                                                                         '90',
+                                                                 'path_type': 'e',
+                                                                 'status_codes': 'd ',
+                                                                 'weight': 0}}},
+                                    '2.1.1.0/24': {'index': {1: {'next_hop': '19.0.102.3',
+                                                                 'origin_codes': 'i',
+                                                                 'path': '888 '
+                                                                         '10 '
+                                                                         '20 '
+                                                                         '30 '
+                                                                         '40 '
+                                                                         '50 '
+                                                                         '60 '
+                                                                         '70 '
+                                                                         '80 '
+                                                                         '90',
+                                                                 'path_type': 'e',
+                                                                 'status_codes': 'd ',
+                                                                 'weight': 0}}}}},
+                    'ipv4 unicast': 
+                        {'bgp_table_version': 174,
+                        'local_router_id': '20.0.0.6',
+                        'prefixes': {'1.1.1.0/24': {'index': {1: {'localprf': 100,
+                                                               'metric': 2222,
+                                                               'next_hop': '19.0.101.1',
+                                                               'origin_codes': 'i',
+                                                               'path': '1 '
+                                                                       '2 '
+                                                                       '3 '
+                                                                       '65000 '
+                                                                       '23',
+                                                               'path_type': 'i',
+                                                               'status_codes': '* ',
+                                                               'weight': 0},
+                                                            2: {'localprf': 100,
+                                                                'next_hop': '19.0.102.4',
+                                                                'origin_codes': 'i',
+                                                                'path': '{62112 '
+                                                                        '33492 '
+                                                                        '4872 '
+                                                                        '41787 '
+                                                                        '13166 '
+                                                                        '50081 '
+                                                                        '21461 '
+                                                                        '58376 '
+                                                                        '29755 '
+                                                                        '1135}',
+                                                                'path_type': 'i',
+                                                                'status_codes': '*>',
+                                                                'weight': 0}}},
+                                    '1.1.2.0/24': {'index': {1: {'localprf': 100,
+                                                               'metric': 2222,
+                                                               'next_hop': '19.0.101.1',
+                                                               'origin_codes': 'i',
+                                                               'path': '1 '
+                                                                       '2 '
+                                                                       '3 '
+                                                                       '65000 '
+                                                                       '23',
+                                                               'path_type': 'i',
+                                                               'status_codes': '* ',
+                                                               'weight': 0},
+                                                            2: {'localprf': 100,
+                                                                'next_hop': '19.0.102.4',
+                                                                'origin_codes': 'i',
+                                                                'path': '{62112 '
+                                                                        '33492 '
+                                                                        '4872 '
+                                                                        '41787 '
+                                                                        '13166 '
+                                                                        '50081 '
+                                                                        '21461 '
+                                                                        '58376 '
+                                                                        '29755 '
+                                                                        '1135}',
+                                                                'path_type': 'i',
+                                                                'status_codes': '*>',
+                                                               'weight': 0}}},
+                                    '1.6.0.0/16': {'index': {1: {'localprf': 100,
+                                                               'next_hop': '19.0.101.1',
+                                                               'origin_codes': 'i',
+                                                               'path': '10 '
+                                                                       '20 '
+                                                                       '30 '
+                                                                       '40 '
+                                                                       '50 '
+                                                                       '60 '
+                                                                       '70 '
+                                                                       '80 '
+                                                                       '90',
+                                                               'path_type': 'i',
+                                                               'status_codes': '*>',
+                                                               'weight': 0}}},
+                                    '2.0.0.0/24': {'index': {1: {'next_hop': '19.0.102.3',
+                                                               'origin_codes': 'i',
+                                                               'path': '888 '
+                                                                       '10 '
+                                                                       '20 '
+                                                                       '30 '
+                                                                       '40 '
+                                                                       '50 '
+                                                                       '60 '
+                                                                       '70 '
+                                                                       '80 '
+                                                                       '90',
+                                                               'path_type': 'e',
+                                                               'status_codes': 'd ',
+                                                               'weight': 0}}},
+                                    '2.0.1.0/24': {'index': {1: {'next_hop': '19.0.102.3',
+                                                               'origin_codes': 'i',
+                                                               'path': '888 '
+                                                                       '10 '
+                                                                       '20 '
+                                                                       '30 '
+                                                                       '40 '
+                                                                       '50 '
+                                                                       '60 '
+                                                                       '70 '
+                                                                       '80 '
+                                                                       '90',
+                                                               'path_type': 'e',
+                                                               'status_codes': 'd ',
+                                                               'weight': 0}}}}},
+                                        'ipv6 multicast': {'bgp_table_version': 6,
+                                                           'local_router_id': '20.0.0.6',
+                                                           'prefixes': {'eeee::/113': {'index': {1: {'localprf': 100,
+                                                                                                     'next_hop': 'fec0::1002',
+                                                                                                     'origin_codes': 'i',
+                                                                                                     'path_type': 'i',
+                                                                                                     'status_codes': '*>',
+                                                                                                     'weight': 0}}},
+                                                                        'eeee::8000/113': {'index': {1: {'localprf': 100,
+                                                                                                         'next_hop': 'fec0::1002',
+                                                                                                         'origin_codes': 'i',
+                                                                                                         'path_type': 'i',
+                                                                                                         'status_codes': '*>',
+                                                                                                         'weight': 0}}}}},
+                                        'ipv6 unicast': {'bgp_table_version': 173,
+                                                         'local_router_id': '20.0.0.6',
+                                                         'prefixes': {'2001::/112': {'index': {1: {'next_hop': 'fec0::2002',
+                                                                                                   'origin_codes': 'i',
+                                                                                                   'path': '888 '
+                                                                                                           '10 '
+                                                                                                           '20 '
+                                                                                                           '30 '
+                                                                                                           '40 '
+                                                                                                           '50 '
+                                                                                                           '60 '
+                                                                                                           '70 '
+                                                                                                           '80 '
+                                                                                                           '90',
+                                                                                                   'path_type': 'e',
+                                                                                                   'status_codes': 'd ',
+                                                                                                   'weight': 0}}},
+                                                                      '2001::1:0/112': {'index': {1: {'next_hop': 'fec0::2002',
+                                                                                                      'origin_codes': 'i',
+                                                                                                      'path': '888 '
+                                                                                                              '10 '
+                                                                                                              '20 '
+                                                                                                              '30 '
+                                                                                                              '40 '
+                                                                                                              '50 '
+                                                                                                              '60 '
+                                                                                                              '70 '
+                                                                                                              '80 '
+                                                                                                              '90',
+                                                                                                      'path_type': 'e',
+                                                                                                      'status_codes': 'd ',
+                                                                                                      'weight': 0}}},
+                                                                      'abcd::/112': {'index': {1: {'localprf': 100,
+                                                                                                   'next_hop': 'fec0::1002',
+                                                                                                   'origin_codes': 'i',
+                                                                                                   'path': '3 '
+                                                                                                           '10 '
+                                                                                                           '20 '
+                                                                                                           '30 '
+                                                                                                           '40 '
+                                                                                                           '50 '
+                                                                                                           '60 '
+                                                                                                           '70 '
+                                                                                                           '80 '
+                                                                                                           '90',
+                                                                                                   'path_type': 'i',
+                                                                                                   'status_codes': '*>',
+                                                                                                   'weight': 0}}},
+                                                                      'dddd::/113': {'index': {1: {'localprf': 100,
+                                                                                                   'metric': 4444,
+                                                                                                   'next_hop': 'fec0::1002',
+                                                                                                   'origin_codes': 'i',
+                                                                                                   'path': '38050 '
+                                                                                                           '9430 '
+                                                                                                           '46344 '
+                                                                                                           '17724 '
+                                                                                                           '54639',
+                                                                                                   'path_type': 'i',
+                                                                                                   'status_codes': '*>',
+                                                                                                   'weight': 0}}},
+                                                                      'dddd::8000/113': {'index': {1: {'localprf': 100,
+                                                                                                       'metric': 4444,
+                                                                                                       'next_hop': 'fec0::1002',
+                                                                                                       'origin_codes': 'i',
+                                                                                                       'path': '38050 '
+                                                                                                               '9430 '
+                                                                                                               '46344 '
+                                                                                                               '17724 '
+                                                                                                               '54639',
+                                                                                                       'path_type': 'i',
+                                                                                                       'status_codes': '*>',
+                                                                                                       'weight': 0}}}}},
+                                        'link-state': {'bgp_table_version': 173,
+                                                       'local_router_id': '20.0.0.6',
+                                                       'prefixes': {'[2]:[77][7,0][39.39.39.39,1,656877351][39.1.1.1,22][19.0.102.3,39.0.1.30]/616': {'index': {1: {'next_hop': '19.0.102.3',
+                                                                                                                                                                    'origin_codes': 'i',
+                                                                                                                                                                    'path': '888 '
+                                                                                                                                                                            '10 '
+                                                                                                                                                                            '20 '
+                                                                                                                                                                            '30 '
+                                                                                                                                                                            '40 '
+                                                                                                                                                                            '50 '
+                                                                                                                                                                            '60 '
+                                                                                                                                                                            '70 '
+                                                                                                                                                                            '80 '
+                                                                                                                                                                            '90',
+                                                                                                                                                                    'path_type': 'e',
+                                                                                                                                                                    'status_codes': 'd ',
+                                                                                                                                                                    'weight': 0}}},
+                                                                    '[2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/616': {'index': {1: {'next_hop': '19.0.102.3',
+                                                                                                                                                                    'origin_codes': 'i',
+                                                                                                                                                                    'path': '888 '
+                                                                                                                                                                            '10 '
+                                                                                                                                                                            '20 '
+                                                                                                                                                                            '30 '
+                                                                                                                                                                            '40 '
+                                                                                                                                                                            '50 '
+                                                                                                                                                                            '60 '
+                                                                                                                                                                            '70 '
+                                                                                                                                                                            '80 '
+                                                                                                                                                                            '90',
+                                                                                                                                                                    'path_type': 'e',
+                                                                                                                                                                    'status_codes': 'd ',
+                                                                                                                                                                    'weight': 0}}},
+                                                                    '[2]:[77][7,0][9.9.9.9,1,151587081][29.1.1.1,22][19.0.101.1,29.0.1.30]/616': {'index': {1: {'localprf': 100,
+                                                                                                                                                                'metric': 4444,
+                                                                                                                                                                'next_hop': '19.0.101.1',
+                                                                                                                                                                'origin_codes': 'i',
+                                                                                                                                                                'path': '3 '
+                                                                                                                                                                        '10 '
+                                                                                                                                                                        '20 '
+                                                                                                                                                                        '30 '
+                                                                                                                                                                        '40 '
+                                                                                                                                                                        '50 '
+                                                                                                                                                                        '60 '
+                                                                                                                                                                        '70 '
+                                                                                                                                                                        '80 '
+                                                                                                                                                                        '90',
+                                                                                                                                                                'path_type': 'i',
+                                                                                                                                                                'status_codes': '*>',
+                                                                                                                                                                'weight': 0}}},
+                                                                    '[2]:[77][7,0][9.9.9.9,2,151587081][29.1.1.1,22][19.0.101.1,29.0.1.31]/616': {'index': {1: {'localprf': 100,
+                                                                                                                                                                'metric': 4444,
+                                                                                                                                                                'next_hop': '19.0.101.1',
+                                                                                                                                                                'origin_codes': 'i',
+                                                                                                                                                                'path': '3 '
+                                                                                                                                                                        '10 '
+                                                                                                                                                                        '20 '
+                                                                                                                                                                        '30 '
+                                                                                                                                                                        '40 '
+                                                                                                                                                                        '50 '
+                                                                                                                                                                        '60 '
+                                                                                                                                                                        '70 '
+                                                                                                                                                                        '80 '
+                                                                                                                                                                        '90',
+                                                                                                                                                                'path_type': 'i',
+                                                                                                                                                                'status_codes': '*>',
+                                                                                                                                                                'weight': 0}}}}},
+                                        'vpnv4 unicast RD 0:0': {'bgp_table_version': 183,
+                                                                 'local_router_id': '20.0.0.6',
+                                                                 'prefixes': {'2.3.1.0/24': {'index': {1: {'next_hop': '19.0.102.3',
+                                                                                                           'origin_codes': 'i',
+                                                                                                           'path': '888 '
+                                                                                                                   '10 '
+                                                                                                                   '20 '
+                                                                                                                   '30 '
+                                                                                                                   '40 '
+                                                                                                                   '50 '
+                                                                                                                   '60 '
+                                                                                                                   '70 '
+                                                                                                                   '80 '
+                                                                                                                   '90',
+                                                                                                           'path_type': 'e',
+                                                                                                           'status_codes': 'd ',
+                                                                                                           'weight': 0}}},
+                                                                              '2.3.2.0/24': {'index': {1: {'next_hop': '19.0.102.3',
+                                                                                                           'origin_codes': 'i',
+                                                                                                           'path': '888 '
+                                                                                                                   '10 '
+                                                                                                                   '20 '
+                                                                                                                   '30 '
+                                                                                                                   '40 '
+                                                                                                                   '50 '
+                                                                                                                   '60 '
+                                                                                                                   '70 '
+                                                                                                                   '80 '
+                                                                                                                   '90',
+                                                                                                           'path_type': 'e',
+                                                                                                           'status_codes': 'd ',
+                                                                                                           'weight': 0}}}},
+                                                                 'route_distinguisher': '0:0'},
+                                        'vpnv4 unicast RD 101:100': {'bgp_table_version': 183,
+                                                                     'local_router_id': '20.0.0.6',
+                                                                     'prefixes': {'1.3.1.0/24': {'index': {1: {'localprf': 100,
+                                                                                                               'next_hop': '19.0.102.4',
+                                                                                                               'origin_codes': 'i',
+                                                                                                               'path': '3 '
+                                                                                                                       '10 '
+                                                                                                                       '20 '
+                                                                                                                       '30 '
+                                                                                                                       '40',
+                                                                                                               'path_type': 'i',
+                                                                                                               'status_codes': '*>',
+                                                                                                               'weight': 0},
+                                                                                                            2: {'localprf': 100,
+                                                                                                                'metric': 4444,
+                                                                                                                'next_hop': '19.0.101.1',
+                                                                                                                'origin_codes': 'i',
+                                                                                                                'path': '3 '
+                                                                                                                        '10 '
+                                                                                                                        '20 '
+                                                                                                                        '4 '
+                                                                                                                        '5 '
+                                                                                                                        '6 '
+                                                                                                                        '3 '
+                                                                                                                        '10 '
+                                                                                                                        '20 '
+                                                                                                                        '4 '
+                                                                                                                        '5 '
+                                                                                                                        '6',
+                                                                                                                'path_type': 'i',
+                                                                                                                'status_codes': '* ',
+                                                                                                               'weight': 0}}},
+                                                                                  '1.3.2.0/24': {'index': {1: {'localprf': 100,
+                                                                                                               'next_hop': '19.0.102.4',
+                                                                                                               'origin_codes': 'i',
+                                                                                                               'path': '3 '
+                                                                                                                       '10 '
+                                                                                                                       '20 '
+                                                                                                                       '30 '
+                                                                                                                       '40',
+                                                                                                               'path_type': 'i',
+                                                                                                               'status_codes': '*>',
+                                                                                                               'weight': 0},
+                                                                                                            2: {'localprf': 100,
+                                                                                                                'metric': 4444,
+                                                                                                                'next_hop': '19.0.101.1',
+                                                                                                                'origin_codes': 'i',
+                                                                                                                'path': '3 '
+                                                                                                                        '10 '
+                                                                                                                        '20 '
+                                                                                                                        '4 '
+                                                                                                                        '5 '
+                                                                                                                        '6 '
+                                                                                                                        '3 '
+                                                                                                                        '10 '
+                                                                                                                        '20 '
+                                                                                                                        '4 '
+                                                                                                                        '5 '
+                                                                                                                        '6',
+                                                                                                                'path_type': 'i',
+                                                                                                                'status_codes': '* ',
+                                                                                                                'weight': 0}}}},
+                                                                     'route_distinguisher': '101:100'},
+                                        'vpnv4 unicast RD 102:100': {'bgp_table_version': 183,
+                                                                     'local_router_id': '20.0.0.6',
+                                                                     'prefixes': {'102.1.1.0/24': {'index': {1: {'localprf': 100,
+                                                                                                                 'next_hop': '19.0.102.4',
+                                                                                                                 'origin_codes': 'i',
+                                                                                                                 'path': '200 '
+                                                                                                                         '300 '
+                                                                                                                         '400 '
+                                                                                                                         '500 '
+                                                                                                                         '600 '
+                                                                                                                         '700',
+                                                                                                                 'path_type': 'i',
+                                                                                                                 'status_codes': '*>',
+                                                                                                                 'weight': 0}}},
+                                                                                  '102.1.2.0/24': {'index': {1: {'localprf': 100,
+                                                                                                                 'next_hop': '19.0.102.4',
+                                                                                                                 'origin_codes': 'i',
+                                                                                                                 'path': '200 '
+                                                                                                                         '300 '
+                                                                                                                         '400 '
+                                                                                                                         '500 '
+                                                                                                                         '600 '
+                                                                                                                         '700',
+                                                                                                                 'path_type': 'i',
+                                                                                                                 'status_codes': '*>',
+                                                                                                                 'weight': 0}}}},
+                                                                     'route_distinguisher': '102:100'},
+                                        'vpnv6 unicast RD 0xbb00010000000000': {'bgp_table_version': 13,
+                                                                                'local_router_id': '20.0.0.6',
+                                                                                'prefixes': {'0:0:80::/41': {'index': {1: {'next_hop': '0',
+                                                                                                                           'origin_codes': 'i',
+                                                                                                                           'path': '10 '
+                                                                                                                                   '20 '
+                                                                                                                                   '30 '
+                                                                                                                                   '40 '
+                                                                                                                                   '50 '
+                                                                                                                                   '60 '
+                                                                                                                                   '70 '
+                                                                                                                                   '80 '
+                                                                                                                                   '90',
+                                                                                                                           'path_type': 'e',
+                                                                                                                           'status_codes': '*>',
+                                                                                                                           'weight': 888}}},
+                                                                                             '0::/41': {'index': {1: {'next_hop': '0',
+                                                                                                                      'origin_codes': 'i',
+                                                                                                                      'path': '10 '
+                                                                                                                              '20 '
+                                                                                                                              '30 '
+                                                                                                                              '40 '
+                                                                                                                              '50 '
+                                                                                                                              '60 '
+                                                                                                                              '70 '
+                                                                                                                              '80 '
+                                                                                                                              '90',
+                                                                                                                      'path_type': 'e',
+                                                                                                                      'status_codes': '*>',
+                                                                                                                      'weight': 888}}}},
+                                                                                'route_distinguisher': '0xbb00010000000000'},
+                                        'vpnv6 unicast RD 100:200': {'bgp_table_version': 13,
+                                                                     'local_router_id': '20.0.0.6',
+                                                                     'prefixes': {'aaaa:1::/113': {'index': {1: {'localprf': 100,
+                                                                                                                 'next_hop': '4444',
+                                                                                                                 'origin_codes': 'i',
+                                                                                                                 'path_type': 'i',
+                                                                                                                 'status_codes': '*>',
+                                                                                                                 'weight': 0}}},
+                                                                                  'aaaa:1::8000/113': {'index': {1: {'localprf': 100,
+                                                                                                                     'next_hop': '4444',
+                                                                                                                     'origin_codes': 'i',
+                                                                                                                     'path_type': 'i',
+                                                                                                                     'status_codes': '*>',
+                                                                                                                     'weight': 0}}}},
+                                                                     'route_distinguisher': '100:200'}}},
+         'vpn1': {'address_family': {'ipv4 unicast': {'bgp_table_version': 9,
+                                                      'local_router_id': '0.0.0.0',
+                                                      'prefixes': {'1.1.1.0/24': {'index': {1: {'localprf': 100,
+                                                                                                'next_hop': '19.0.102.4',
+                                                                                                'origin_codes': 'i',
+                                                                                                'path': '{62112 '
+                                                                                                        '33492 '
+                                                                                                        '4872 '
+                                                                                                        '41787 '
+                                                                                                        '13166 '
+                                                                                                        '50081 '
+                                                                                                        '21461 '
+                                                                                                        '58376 '
+                                                                                                        '29755 '
+                                                                                                        '1135}',
+                                                                                                'path_type': 'i',
+                                                                                                'status_codes': '*>',
+                                                                                                'weight': 0}}},
+                                                                   '1.1.2.0/24': {'index': {1: {'localprf': 100,
+                                                                                                'next_hop': '19.0.102.4',
+                                                                                                'origin_codes': 'i',
+                                                                                                'path': '{62112 '
+                                                                                                        '33492 '
+                                                                                                        '4872 '
+                                                                                                        '41787 '
+                                                                                                        '13166 '
+                                                                                                        '50081 '
+                                                                                                        '21461 '
+                                                                                                        '58376 '
+                                                                                                        '29755 '
+                                                                                                        '1135}',
+                                                                                                'path_type': 'i',
+                                                                                                'status_codes': '*>',
+                                                                                                'weight': 0}}},
+                                                                   '1.6.0.0/16': {'index': {1: {'localprf': 100,
+                                                                                                'next_hop': '19.0.101.1',
+                                                                                                'origin_codes': 'i',
+                                                                                                'path': '10 '
+                                                                                                        '20 '
+                                                                                                        '30 '
+                                                                                                        '40 '
+                                                                                                        '50 '
+                                                                                                        '60 '
+                                                                                                        '70 '
+                                                                                                        '80 '
+                                                                                                        '90',
+                                                                                                'path_type': 'i',
+                                                                                                'status_codes': '*>',
+                                                                                                'weight': 0}}}}}}},
+         'vpn2': {'address_family': {'ipv4 unicast': {'bgp_table_version': 7,
+                                                      'local_router_id': '0.0.0.0',
+                                                      'prefixes': {'1.1.1.0/24': {'index': {1: {'localprf': 100,
+                                                                                                'next_hop': '19.0.102.4',
+                                                                                                'origin_codes': 'i',
+                                                                                                'path': '{62112 '
+                                                                                                        '33492 '
+                                                                                                        '4872 '
+                                                                                                        '41787 '
+                                                                                                        '13166 '
+                                                                                                        '50081 '
+                                                                                                        '21461 '
+                                                                                                        '58376 '
+                                                                                                        '29755 '
+                                                                                                        '1135}',
+                                                                                                'path_type': 'i',
+                                                                                                'status_codes': '*>',
+                                                                                                'weight': 0}}},
+                                                                   '1.1.2.0/24': {'index': {1: {'localprf': 100,
+                                                                                                'next_hop': '19.0.102.4',
+                                                                                                'origin_codes': 'i',
+                                                                                                'path': '{62112 '
+                                                                                                        '33492 '
+                                                                                                        '4872 '
+                                                                                                        '41787 '
+                                                                                                        '13166 '
+                                                                                                        '50081 '
+                                                                                                        '21461 '
+                                                                                                        '58376 '
+                                                                                                        '29755 '
+                                                                                                        '1135}',
+                                                                                                'path_type': 'i',
+                                                                                                'status_codes': '*>',
+                                                                                                'weight': 0}}},
+                                                                   '1.6.0.0/16': {'index': {1: {'localprf': 100,
+                                                                                                'next_hop': '19.0.101.1',
+                                                                                                'origin_codes': 'i',
+                                                                                                'path': '10 '
+                                                                                                        '20 '
+                                                                                                        '30 '
+                                                                                                        '40 '
+                                                                                                        '50 '
+                                                                                                        '60 '
+                                                                                                        '70 '
+                                                                                                        '80 '
+                                                                                                        '90',
+                                                                                                'path_type': 'i',
+                                                                                                'status_codes': '*>',
+                                                                                                'weight': 0}}}}},
+                                     'ipv6 unicast': {'bgp_table_version': 7,
+                                                      'local_router_id': '0.0.0.0',
+                                                      'prefixes': {'abcd::/112': {'index': {1: {'localprf': 100,
+                                                                                                'next_hop': 'fec0::1002',
+                                                                                                'origin_codes': 'i',
+                                                                                                'path': '3 '
+                                                                                                        '10 '
+                                                                                                        '20 '
+                                                                                                        '30 '
+                                                                                                        '40 '
+                                                                                                        '50 '
+                                                                                                        '60 '
+                                                                                                        '70 '
+                                                                                                        '80 '
+                                                                                                        '90',
+                                                                                                'path_type': 'i',
+                                                                                                'status_codes': '*>',
+                                                                                                'weight': 0}}},
+                                                                   'dddd::/113': {'index': {1: {'localprf': 100,
+                                                                                                'metric': 4444,
+                                                                                                'next_hop': 'fec0::1002',
+                                                                                                'origin_codes': 'i',
+                                                                                                'path': '38050 '
+                                                                                                        '9430 '
+                                                                                                        '46344 '
+                                                                                                        '17724 '
+                                                                                                        '54639',
+                                                                                                'path_type': 'i',
+                                                                                                'status_codes': '*>',
+                                                                                                'weight': 0}}},
+                                                                   'dddd::8000/113': {'index': {1: {'localprf': 100,
+                                                                                                    'metric': 4444,
+                                                                                                    'next_hop': 'fec0::1002',
+                                                                                                    'origin_codes': 'i',
+                                                                                                    'path': '38050 '
+                                                                                                            '9430 '
+                                                                                                            '46344 '
+                                                                                                            '17724 '
+                                                                                                            '54639',
+                                                                                                    'path_type': 'i',
+                                                                                                    'status_codes': '*>',
+                                                                                                    'weight': 0}}}}}}}}}
+
+    golden_output4 = {'execute.return_value': '''
+        show bgp vrf all all
+
+        BGP routing table information for VRF default, address family IPv4 Unicast
+        BGP table version is 174, Local Router ID is 20.0.0.6
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        * i1.1.1.0/24         19.0.101.1            2222        100          0 1 2 3 65000 23 i
+        *>i                   19.0.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
+        * i1.1.2.0/24         19.0.101.1            2222        100          0 1 2 3 65000 23 i
+        *>i                   19.0.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
+        *>i1.6.0.0/16         19.0.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
+        d e2.0.0.0/24         19.0.102.3                                     0 888 10 20 30 40 50 60 70 80 90 i
+        d e2.0.1.0/24         19.0.102.3                                     0 888 10 20 30 40 50 60 70 80 90 i
+
+        BGP routing table information for VRF default, address family IPv4 Multicast
+        BGP table version is 175, Local Router ID is 20.0.0.6
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        *>i1.2.1.0/24         19.0.101.1                        100          0 2 3 4 i
+        *>i1.2.2.0/24         19.0.101.1                        100          0 2 3 4 i
+        *>i1.4.1.0/24         19.0.102.4                        100          0 2 3 4 i
+        *>i1.4.2.0/24         19.0.102.4                        100          0 2 3 4 i
+        d e2.1.0.0/24         19.0.102.3                                     0 888 10 20 30 40 50 60 70 80 90 i
+        d e2.1.1.0/24         19.0.102.3                                     0 888 10 20 30 40 50 60 70 80 90 i
+
+        BGP routing table information for VRF default, address family IPv6 Unicast
+        BGP table version is 173, Local Router ID is 20.0.0.6
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        d e2001::/112         fec0::2002                                     0 888 10 20 30 40 50 60 70 80 90 i
+        d e2001::1:0/112      fec0::2002                                     0 888 10 20 30 40 50 60 70 80 90 i
+        *>iabcd::/112         fec0::1002                        100          0 3 10 20 30 40 50 60 70 80 90 i
+        *>idddd::/113         fec0::1002            4444        100          0 38050 9430 46344 17724 54639 i
+        *>idddd::8000/113     fec0::1002            4444        100          0 38050 9430 46344 17724 54639 i
+
+        BGP routing table information for VRF default, address family IPv6 Multicast
+        BGP table version is 6, Local Router ID is 20.0.0.6
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        *>ieeee::/113         fec0::1002                        100          0 i
+        *>ieeee::8000/113     fec0::1002                        100          0 i
+
+        BGP routing table information for VRF default, address family VPNv4 Unicast
+        BGP table version is 183, Local Router ID is 20.0.0.6
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        Route Distinguisher: 0:0
+        d e2.3.1.0/24         19.0.102.3                                     0 888 10 20 30 40 50 60 70 80 90 i
+        d e2.3.2.0/24         19.0.102.3                                     0 888 10 20 30 40 50 60 70 80 90 i
+
+        Route Distinguisher: 101:100
+        *>i1.3.1.0/24         19.0.102.4                        100          0 3 10 20 30 40 i
+        * i                   19.0.101.1            4444        100          0 3 10 20 4 5 6 3 10 20 4 5 6 i
+        *>i1.3.2.0/24         19.0.102.4                        100          0 3 10 20 30 40 i
+        * i                   19.0.101.1            4444        100          0 3 10 20 4 5 6 3 10 20 4 5 6 i
+
+        Route Distinguisher: 102:100
+        *>i102.1.1.0/24       19.0.102.4                        100          0 200 300 400 500 600 700 i
+        *>i102.1.2.0/24       19.0.102.4                        100          0 200 300 400 500 600 700 i
+
+        BGP routing table information for VRF default, address family VPNv6 Unicast
+        BGP table version is 13, Local Router ID is 20.0.0.6
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        Route Distinguisher: 100:200
+        *>iaaaa:1::/113       ::ffff:19.0.101.1
+                                                    4444        100          0 i
+        *>iaaaa:1::8000/113   ::ffff:19.0.101.1
+                                                    4444        100          0 i
+
+        Route Distinguisher: 0xbb00010000000000
+        *>e0::/41             ::ffff:19.0.102.3
+                                                                             0 888 10 20 30 40 50 60 70 80 90 i
+        *>e0:0:80::/41        ::ffff:19.0.102.3
+                                                                             0 888 10 20 30 40 50 60 70 80 90 i
+
+        BGP routing table information for VRF default, address family Link-State
+        BGP table version is 173, Local Router ID is 20.0.0.6
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        *>i[2]:[77][7,0][9.9.9.9,1,151587081][29.1.1.1,22][19.0.101.1,29.0.1.30]/616
+                              19.0.101.1            4444        100          0 3 10 20 30 40 50 60 70 80 90 i
+        d e[2]:[77][7,0][39.39.39.39,1,656877351][39.1.1.1,22][19.0.102.3,39.0.1.30]/616
+                              19.0.102.3                                     0 888 10 20 30 40 50 60 70 80 90 i
+        *>i[2]:[77][7,0][9.9.9.9,2,151587081][29.1.1.1,22][19.0.101.1,29.0.1.31]/616
+                              19.0.101.1            4444        100          0 3 10 20 30 40 50 60 70 80 90 i
+        d e[2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/616
+                              19.0.102.3                                     0 888 10 20 30 40 50 60 70 80 90 i
+
+        BGP routing table information for VRF vpn1, address family IPv4 Unicast
+        BGP table version is 9, Local Router ID is 0.0.0.0
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        *>i1.1.1.0/24         19.0.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
+        *>i1.1.2.0/24         19.0.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
+        *>i1.6.0.0/16         19.0.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
+
+        BGP routing table information for VRF vpn2, address family IPv4 Unicast
+        BGP table version is 7, Local Router ID is 0.0.0.0
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        *>i1.1.1.0/24         19.0.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
+        *>i1.1.2.0/24         19.0.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
+        *>i1.6.0.0/16         19.0.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
+
+        BGP routing table information for VRF vpn2, address family IPv6 Unicast
+        BGP table version is 7, Local Router ID is 0.0.0.0
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        *>iabcd::/112         fec0::1002                        100          0 3 10 20 30 40 50 60 70 80 90 i
+        *>idddd::/113         fec0::1002            4444        100          0 38050 9430 46344 17724 54639 i
+        *>idddd::8000/113     fec0::1002            4444        100          0 38050 9430 46344 17724 54639 i
+        '''}
+
     def test_show_bgp_vrf_all_all_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
@@ -4846,6 +5616,13 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
         obj = ShowBgpVrfAllAll(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output3)
+
+    def test_show_bgp_vrf_all_all_golden4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
+        obj = ShowBgpVrfAllAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output4)
 
     def test_show_bgp_vrf_all_all_empty(self):
         self.device = Mock(**self.empty_output)
