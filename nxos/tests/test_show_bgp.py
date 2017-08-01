@@ -8408,6 +8408,428 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         pinxdt-n9kv-2# 
         '''}
 
+    golden_parsed_output3 = {
+        'vrf': 
+            {'default': 
+                {'neighbor': 
+                    {'19.0.101.1': 
+                        {'address_family': 
+                            {'ipv4 unicast': 
+                                {'as': 333,
+                                'as_path_entries': '[4/144]',
+                                'attribute_entries': '[4/640]',
+                                'bgp_table_version': 174,
+                                'capable_peers': 3,
+                                'clusterlist_entries': '[7/28]',
+                                'community_entries': '[2/96]',
+                                'config_peers': 3,
+                                'dampened_paths': 2,
+                                'dampening': True,
+                                'history_paths': 0,
+                                'inq': 0,
+                                'local_as': 333,
+                                'msg_rcvd': 29,
+                                'msg_sent': 31,
+                                'outq': 0,
+                                'path': {'memory_usage': 1424,
+                                      'total_entries': 5},
+                                'prefixes': {'memory_usage': 1424,
+                                          'total_entries': 5},
+                                'route_identifier': '20.0.0.6',
+                                'state_pfxrcd': '3',
+                                'tbl_ver': 174,
+                                'up_down': '00:20:33',
+                                'v': 4}}},
+                    '19.0.102.3': 
+                        {'address_family': 
+                            {'ipv4 unicast': 
+                                {'as': 888,
+                                'inq': 0,
+                                'msg_rcvd': 841,
+                                'msg_sent': 28,
+                                'outq': 0,
+                                'path': {'memory_usage': 1424,
+                                'total_entries': 5},
+                                'prefixes': {'memory_usage': 1424,
+                                  'total_entries': 5},
+                                'state_pfxrcd': '2',
+                                'tbl_ver': 174,
+                                'up_down': '00:20:33',
+                                'v': 4}}},
+                    '19.0.102.4': 
+                        {'address_family': 
+                            {'ipv4 multicast': 
+                                {'as': 333,
+                                'as_path_entries': '[2/56]',
+                                'attribute_entries': '[3/480]',
+                                'bgp_table_version': 175,
+                                'capable_peers': 3,
+                                'clusterlist_entries': '[7/28]',
+                                'community_entries': '[2/96]',
+                                'config_peers': 3,
+                                'dampened_paths': 2,
+                                'dampening': True,
+                                'history_paths': 0,
+                                'inq': 0,
+                                'local_as': 333,
+                                'msg_rcvd': 27,
+                                'msg_sent': 31,
+                                'outq': 0,
+                                'path': {'memory_usage': 1392,
+                                        'total_entries': 6},
+                                'prefixes': {'memory_usage': 1392,
+                                            'total_entries': 6},
+                                'route_identifier': '20.0.0.6',
+                                'state_pfxrcd': '2',
+                                'tbl_ver': 175,
+                                'up_down': '00:20:33',
+                                'v': 4},
+                            'ipv4 unicast': {'as': 333,
+                                             'inq': 0,
+                                             'msg_rcvd': 27,
+                                             'msg_sent': 31,
+                                             'outq': 0,
+                                             'path': {'memory_usage': 1424,
+                                                      'total_entries': 5},
+                                             'prefixes': {'memory_usage': 1424,
+                                                          'total_entries': 5},
+                                             'state_pfxrcd': '2',
+                                             'tbl_ver': 174,
+                                             'up_down': '00:20:33',
+                                             'v': 4},
+                            'ipv6 multicast': {'as': 333,
+                                               'as_path_entries': '[0/0]',
+                                               'attribute_entries': '[1/160]',
+                                               'bgp_table_version': 6,
+                                               'capable_peers': 2,
+                                               'clusterlist_entries': '[7/28]',
+                                               'community_entries': '[2/96]',
+                                               'config_peers': 5,
+                                               'dampened_paths': 0,
+                                               'dampening': True,
+                                               'history_paths': 0,
+                                               'inq': 0,
+                                               'local_as': 333,
+                                               'msg_rcvd': 27,
+                                               'msg_sent': 31,
+                                               'outq': 0,
+                                               'path': {'memory_usage': 488,
+                                                        'total_entries': 2},
+                                               'prefixes': {'memory_usage': 488,
+                                                            'total_entries': 2},
+                                               'route_identifier': '20.0.0.6',
+                                               'state_pfxrcd': '0 '
+                                                               '(No '
+                                                               'Cap)',
+                                               'tbl_ver': 0,
+                                               'up_down': '00:20:33',
+                                               'v': 4},
+                            'ipv6 unicast': {'as': 333,
+                                             'as_path_entries': '[3/106]',
+                                             'attribute_entries': '[3/480]',
+                                             'bgp_table_version': 173,
+                                             'capable_peers': 2,
+                                             'clusterlist_entries': '[7/28]',
+                                             'community_entries': '[2/96]',
+                                             'config_peers': 5,
+                                             'dampened_paths': 2,
+                                             'dampening': True,
+                                             'history_paths': 0,
+                                             'inq': 0,
+                                             'local_as': 333,
+                                             'msg_rcvd': 27,
+                                             'msg_sent': 31,
+                                             'outq': 0,
+                                             'path': {'memory_usage': 1220,
+                                                      'total_entries': 5},
+                                             'prefixes': {'memory_usage': 1220,
+                                                          'total_entries': 5},
+                                             'route_identifier': '20.0.0.6',
+                                             'state_pfxrcd': '0 '
+                                                             '(No '
+                                                             'Cap)',
+                                             'tbl_ver': 0,
+                                             'up_down': '00:20:33',
+                                             'v': 4},
+                            'vpnv4 unicast': {'as': 333,
+                                              'as_path_entries': '[4/140]',
+                                              'attribute_entries': '[4/640]',
+                                              'bgp_table_version': 183,
+                                              'capable_peers': 3,
+                                              'clusterlist_entries': '[7/28]',
+                                              'community_entries': '[2/96]',
+                                              'config_peers': 3,
+                                              'dampened_paths': 2,
+                                              'dampening': True,
+                                              'history_paths': 0,
+                                              'inq': 0,
+                                              'local_as': 333,
+                                              'msg_rcvd': 27,
+                                              'msg_sent': 31,
+                                              'outq': 0,
+                                              'path': {'memory_usage': 1656,
+                                                       'total_entries': 6},
+                                              'prefixes': {'memory_usage': 1656,
+                                                           'total_entries': 6},
+                                              'route_identifier': '20.0.0.6',
+                                              'state_pfxrcd': '4',
+                                              'tbl_ver': 183,
+                                              'up_down': '00:20:33',
+                                              'v': 4},
+                            'vpnv6 unicast': {'as': 333,
+                                              'as_path_entries': '[1/42]',
+                                              'attribute_entries': '[2/320]',
+                                              'bgp_table_version': 13,
+                                              'capable_peers': 3,
+                                              'clusterlist_entries': '[7/28]',
+                                              'community_entries': '[2/96]',
+                                              'config_peers': 3,
+                                              'dampened_paths': 0,
+                                              'dampening': True,
+                                              'history_paths': 0,
+                                              'inq': 0,
+                                              'local_as': 333,
+                                              'msg_rcvd': 27,
+                                              'msg_sent': 31,
+                                              'outq': 0,
+                                              'path': {'memory_usage': 928,
+                                                       'total_entries': 4},
+                                              'prefixes': {'memory_usage': 928,
+                                                           'total_entries': 4},
+                                              'route_identifier': '20.0.0.6',
+                                              'state_pfxrcd': '0',
+                                              'tbl_ver': 173,
+                                              'up_down': '00:20:33',
+                                              'v': 4}}}}},
+            'vpn1': 
+                {'neighbor': 
+                    {'19.0.103.1': 
+                        {'address_family': 
+                            {'ipv4 multicast': {'as': 333,
+                                            'as_path_entries': '[0/0]',
+                                            'attribute_entries': '[0/0]',
+                                            'bgp_table_version': 2,
+                                            'capable_peers': 0,
+                                            'clusterlist_entries': '[7/28]',
+                                            'community_entries': '[2/96]',
+                                            'config_peers': 1,
+                                            'inq': 0,
+                                            'local_as': 333,
+                                            'msg_rcvd': 0,
+                                            'msg_sent': 0,
+                                            'outq': 0,
+                                            'route_identifier': '0.0.0.0',
+                                            'state_pfxrcd': 'Idle',
+                                            'tbl_ver': 0,
+                                            'up_down': '00:20:35',
+                                            'v': 4},
+                            'ipv4 unicast': {'as': 333,
+                                          'as_path_entries': '[2/80]',
+                                          'attribute_entries': '[2/320]',
+                                          'bgp_table_version': 9,
+                                          'capable_peers': 0,
+                                          'clusterlist_entries': '[7/28]',
+                                          'community_entries': '[2/96]',
+                                          'config_peers': 1,
+                                          'dampened_paths': 2,
+                                          'dampening': True,
+                                          'history_paths': 0,
+                                          'inq': 0,
+                                          'local_as': 333,
+                                          'msg_rcvd': 0,
+                                          'msg_sent': 0,
+                                          'outq': 0,
+                                          'path': {'memory_usage': 300,
+                                                   'total_entries': 3},
+                                          'prefixes': {'memory_usage': 300,
+                                                       'total_entries': 3},
+                                          'route_identifier': '0.0.0.0',
+                                          'state_pfxrcd': 'Idle',
+                                          'tbl_ver': 0,
+                                          'up_down': '00:20:35',
+                                          'v': 4},
+                            'ipv6 multicast': {'as': 333,
+                                            'as_path_entries': '[0/0]',
+                                            'attribute_entries': '[0/0]',
+                                            'bgp_table_version': 2,
+                                            'capable_peers': 0,
+                                            'clusterlist_entries': '[7/28]',
+                                            'community_entries': '[2/96]',
+                                            'config_peers': 1,
+                                            'inq': 0,
+                                            'local_as': 333,
+                                            'msg_rcvd': 0,
+                                            'msg_sent': 0,
+                                            'outq': 0,
+                                            'route_identifier': '0.0.0.0',
+                                            'state_pfxrcd': 'Idle',
+                                            'tbl_ver': 0,
+                                            'up_down': '00:20:35',
+                                            'v': 4},
+                            'ipv6 unicast': {'as': 333,
+                                          'as_path_entries': '[0/0]',
+                                          'attribute_entries': '[0/0]',
+                                          'bgp_table_version': 2,
+                                          'capable_peers': 0,
+                                          'clusterlist_entries': '[7/28]',
+                                          'community_entries': '[2/96]',
+                                          'config_peers': 1,
+                                          'inq': 0,
+                                          'local_as': 333,
+                                          'msg_rcvd': 0,
+                                          'msg_sent': 0,
+                                          'outq': 0,
+                                          'route_identifier': '0.0.0.0',
+                                          'state_pfxrcd': 'Idle',
+                                          'tbl_ver': 0,
+                                          'up_down': '00:20:35',
+                                          'v': 4}}}}}}}
+
+    golden_output3 = {'execute.return_value': '''
+        show bgp vrf all all summary
+
+        BGP summary information for VRF default, address family IPv4 Unicast
+        BGP router identifier 20.0.0.6, local AS number 333
+        BGP table version is 174, IPv4 Unicast config peers 3, capable peers 3
+        5 network entries and 7 paths using 1424 bytes of memory
+        BGP attribute entries [4/640], BGP AS path entries [4/144]
+        BGP community entries [2/96], BGP clusterlist entries [7/28]
+        Dampening configured, 0 history paths, 2 dampened paths
+
+        Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+        19.0.101.1      4   333      29      31      174    0    0 00:20:33 3         
+        19.0.102.3      4   888     841      28      174    0    0 00:20:33 2         
+        19.0.102.4      4   333      27      31      174    0    0 00:20:33 2         
+
+        BGP summary information for VRF default, address family IPv4 Multicast
+        BGP router identifier 20.0.0.6, local AS number 333
+        BGP table version is 175, IPv4 Multicast config peers 3, capable peers 3
+        6 network entries and 6 paths using 1392 bytes of memory
+        BGP attribute entries [3/480], BGP AS path entries [2/56]
+        BGP community entries [2/96], BGP clusterlist entries [7/28]
+        Dampening configured, 0 history paths, 2 dampened paths
+
+        Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+        19.0.101.1      4   333      29      31      175    0    0 00:20:33 2         
+        19.0.102.3      4   888     841      28      175    0    0 00:20:33 2         
+        19.0.102.4      4   333      27      31      175    0    0 00:20:33 2         
+
+        BGP summary information for VRF default, address family IPv6 Unicast
+        BGP router identifier 20.0.0.6, local AS number 333
+        BGP table version is 173, IPv6 Unicast config peers 5, capable peers 2
+        5 network entries and 5 paths using 1220 bytes of memory
+        BGP attribute entries [3/480], BGP AS path entries [3/106]
+        BGP community entries [2/96], BGP clusterlist entries [7/28]
+        Dampening configured, 0 history paths, 2 dampened paths
+
+        Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+        19.0.101.1      4   333      29      31        0    0    0 00:20:33 0 (No Cap)
+        19.0.102.3      4   888     841      28        0    0    0 00:20:33 0 (No Cap)
+        19.0.102.4      4   333      27      31        0    0    0 00:20:33 0 (No Cap)
+        fec0::1002      4   333      26      26      173    0    0 00:20:33 3         
+        fec0::2002      4   888     187      25      173    0    0 00:20:33 2         
+
+        BGP summary information for VRF default, address family IPv6 Multicast
+        BGP router identifier 20.0.0.6, local AS number 333
+        BGP table version is 6, IPv6 Multicast config peers 5, capable peers 2
+        2 network entries and 2 paths using 488 bytes of memory
+        BGP attribute entries [1/160], BGP AS path entries [0/0]
+        BGP community entries [2/96], BGP clusterlist entries [7/28]
+        Dampening configured, 0 history paths, 0 dampened paths
+
+        Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+        19.0.101.1      4   333      29      31        0    0    0 00:20:33 0 (No Cap)
+        19.0.102.3      4   888     841      28        0    0    0 00:20:33 0 (No Cap)
+        19.0.102.4      4   333      27      31        0    0    0 00:20:33 0 (No Cap)
+        fec0::1002      4   333      26      26        6    0    0 00:20:33 2         
+        fec0::2002      4   888     187      25        6    0    0 00:20:33 0         
+
+        BGP summary information for VRF default, address family VPNv4 Unicast
+        BGP router identifier 20.0.0.6, local AS number 333
+        BGP table version is 183, VPNv4 Unicast config peers 3, capable peers 3
+        6 network entries and 8 paths using 1656 bytes of memory
+        BGP attribute entries [4/640], BGP AS path entries [4/140]
+        BGP community entries [2/96], BGP clusterlist entries [7/28]
+        Dampening configured, 0 history paths, 2 dampened paths
+
+        Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+        19.0.101.1      4   333      29      31      183    0    0 00:20:33 2         
+        19.0.102.3      4   888     841      28      183    0    0 00:20:33 2         
+        19.0.102.4      4   333      27      31      183    0    0 00:20:33 4         
+
+        BGP summary information for VRF default, address family VPNv6 Unicast
+        BGP router identifier 20.0.0.6, local AS number 333
+        BGP table version is 13, VPNv6 Unicast config peers 3, capable peers 3
+        4 network entries and 4 paths using 976 bytes of memory
+        BGP attribute entries [2/320], BGP AS path entries [1/42]
+        BGP community entries [2/96], BGP clusterlist entries [7/28]
+        Dampening configured, 0 history paths, 0 dampened paths
+
+        Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+        19.0.101.1      4   333      29      31       13    0    0 00:20:33 2         
+        19.0.102.3      4   888     841      28       13    0    0 00:20:33 2         
+        19.0.102.4      4   333      27      31       13    0    0 00:20:33 0         
+
+        BGP summary information for VRF default, address family Link-State
+        BGP router identifier 20.0.0.6, local AS number 333
+        BGP table version is 173, Link-State config peers 5, capable peers 3
+        4 network entries and 4 paths using 928 bytes of memory
+        BGP attribute entries [2/320], BGP AS path entries [2/84]
+        BGP community entries [2/96], BGP clusterlist entries [7/28]
+        Dampening configured, 0 history paths, 2 dampened paths
+
+        Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+        19.0.101.1      4   333      29      31      173    0    0 00:20:33 2         
+        19.0.102.3      4   888     841      28      173    0    0 00:20:33 2         
+        19.0.102.4      4   333      27      31      173    0    0 00:20:33 0         
+        fec0::1002      4   333      26      26        0    0    0 00:20:33 0 (No Cap)
+        fec0::2002      4   888     187      25        0    0    0 00:20:33 0 (No Cap)
+
+        BGP summary information for VRF vpn1, address family IPv4 Unicast
+        BGP router identifier 0.0.0.0, local AS number 333
+        BGP table version is 9, IPv4 Unicast config peers 1, capable peers 0
+        3 network entries and 3 paths using 300 bytes of memory
+        BGP attribute entries [2/320], BGP AS path entries [2/80]
+        BGP community entries [2/96], BGP clusterlist entries [7/28]
+
+        Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+        19.0.103.1      4   333       0       0        0    0    0 00:20:35 Idle     
+
+        BGP summary information for VRF vpn1, address family IPv4 Multicast
+        BGP router identifier 0.0.0.0, local AS number 333
+        BGP table version is 2, IPv4 Multicast config peers 1, capable peers 0
+        0 network entries and 0 paths using 0 bytes of memory
+        BGP attribute entries [0/0], BGP AS path entries [0/0]
+        BGP community entries [2/96], BGP clusterlist entries [7/28]
+
+        Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+        19.0.103.1      4   333       0       0        0    0    0 00:20:35 Idle     
+
+        BGP summary information for VRF vpn1, address family IPv6 Unicast
+        BGP router identifier 0.0.0.0, local AS number 333
+        BGP table version is 2, IPv6 Unicast config peers 1, capable peers 0
+        0 network entries and 0 paths using 0 bytes of memory
+        BGP attribute entries [0/0], BGP AS path entries [0/0]
+        BGP community entries [2/96], BGP clusterlist entries [7/28]
+
+        Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+        19.0.103.1      4   333       0       0        0    0    0 00:20:35 Idle     
+
+        BGP summary information for VRF vpn1, address family IPv6 Multicast
+        BGP router identifier 0.0.0.0, local AS number 333
+        BGP table version is 2, IPv6 Multicast config peers 1, capable peers 0
+        0 network entries and 0 paths using 0 bytes of memory
+        BGP attribute entries [0/0], BGP AS path entries [0/0]
+        BGP community entries [2/96], BGP clusterlist entries [7/28]
+
+        Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+        19.0.103.1      4   333       0       0        0    0    0 00:20:35 Idle     
+
+        BGP summary information for VRF vpn2, address family IPv4 Unicast
+
+        BGP summary information for VRF vpn2, address family IPv6 Unicast
+        '''}
+
     def test_show_bgp_vrf_all_all_summary_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
@@ -8421,6 +8843,13 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         obj = ShowBgpVrfAllAllSummary(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+    def test_show_bgp_vrf_all_all_summary_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowBgpVrfAllAllSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
 
     def test_show_bgp_vrf_all_all_summary_empty(self):
         self.device = Mock(**self.empty_output)
@@ -9166,18 +9595,18 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
         parsed_output = obj.parse(vrf='default', neighbor='21.0.0.2')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-    def test_show_bgp_vrf_all_neighbors_advertised_routes_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowBgpVrfAllNeighborsAdvertisedRoutes(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf='all', neighbor='21.0.0.2')
-
     def test_show_bgp_vrf_all_neighbors_advertised_routes_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowBgpVrfAllNeighborsAdvertisedRoutes(device=self.device)
         parsed_output = obj.parse(vrf='default', neighbor='19.0.102.3')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+    def test_show_bgp_vrf_all_neighbors_advertised_routes_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpVrfAllNeighborsAdvertisedRoutes(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(vrf='all', neighbor='21.0.0.2')
 
 # ===============================================================
 # Unit test for 'show bgp vrf <WORD> all neighbors <WORD> routes'
@@ -9779,19 +10208,18 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
         parsed_output = obj.parse(vrf='default', neighbor='21.0.0.2')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-
-    def test_show_bgp_vrf_all_neighbors_routes_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowBgpVrfAllNeighborsRoutes(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf='default', neighbor='21.0.0.2')
-
     def test_show_bgp_vrf_all_neighbors_routes_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowBgpVrfAllNeighborsRoutes(device=self.device)
         parsed_output = obj.parse(vrf='default', neighbor='19.0.101.1')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+    def test_show_bgp_vrf_all_neighbors_routes_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpVrfAllNeighborsRoutes(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(vrf='default', neighbor='21.0.0.2')
 
 
 # ========================================================================
@@ -10264,18 +10692,19 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
         parsed_output = obj.parse(vrf='default', neighbor='21.0.0.2')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-    def test_show_bgp_vrf_all_neighbors_received_routes_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowBgpVrfAllNeighborsReceivedRoutes(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf='default', neighbor='21.0.0.2')
-
     def test_show_bgp_vrf_all_neighbors_received_routes_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowBgpVrfAllNeighborsReceivedRoutes(device=self.device)
         parsed_output = obj.parse(vrf='default', neighbor='19.0.101.1')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+    def test_show_bgp_vrf_all_neighbors_received_routes_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpVrfAllNeighborsReceivedRoutes(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(vrf='default', neighbor='21.0.0.2')
+
 
 # ========================================================================
 # Unit test for 'show running-config bgp'
