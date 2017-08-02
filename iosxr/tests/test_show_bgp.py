@@ -799,776 +799,458 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     
     golden_parsed_output = {
-        "instance": {
-            "default": {
-               "vrf": {
-                    "a": {
-                         "operation_mode": "STANDALONE",
-                         "generic_scan_interval": 60,
-                         "received_notifications": 0,
-                         "default_value_for_bmp_buffer_size": 307,
-                         "default_local_preference": 100,
-                         "pool": {
-                              "300": {
-                                   "free": 0,
-                                   "alloc": 1
-                              },
-                              "4500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "20000": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "200": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "1200": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "600": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "5000": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "400": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "4000": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "2200": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "700": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "800": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "900": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "3300": {
-                                   "free": 0,
-                                   "alloc": 0
-                              }
-                         },
-                         "sent_notifications": 0,
-                         "fast_external_fallover": True,
-                         "node": "node0_0_CPU0",
-                         "non_stop_routing": True,
-                         "max_limit_for_bmp_buffer_size": 409,
-                         "att": {
-                              "ppmp_attr": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "bmp_paths": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "paths": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "tunnel_encap_attr": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "route_reflector_entries": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "pmsi_tunnel_attr": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "ribrnh_tunnel_attr": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "attributes": {
-                                   "memory_used": 152,
-                                   "number": 1
-                              },
-                              "extended_communities": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "nexthop_entries": {
-                                   "memory_used": 7600,
-                                   "number": 19
-                              },
-                              "as_paths": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "bmp_prefixes": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "communities": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "pe_distinguisher_labels": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              }
-                         },
-                         "as_system_number_format": "ASPLAIN",
-                         "active_cluster_id": "10",
-                         "message_logging_pool_summary": {
-                              "4500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              }
-                         },
-                         "update_delay": 120,
-                         "platform_rlimit_max": 2147483648,
-                         "bgp_speaker_process": 0,
-                         "address_family": {
-                              "ipv4 unicast ": {
-                                   "nexthop_resolution_minimum_prefix_length": "0 (not configured)",
-                                   "rib_table_prefix_limit_ver": "0",
-                                   "state": "read only mode",
-                                   "dynamic_med_timer": "Not Running",
-                                   "table_version_synced_to_rib": "1",
-                                   "soft_reconfig_entries": "0",
-                                   "rib_table_prefix_limit_reached": "no",
-                                   "dynamic_med_periodic_timer": "Not Running",
-                                   "prefix_scanned_per_segment": "100000",
-                                   "table_version_acked_by_rib": "0",
-                                   "permanent_network": "unconfigured",
-                                   "label_retention_timer_value": "5 mins",
-                                   "dynamic_med_int": "10 minutes",
-                                   "dynamic_med": True,
-                                   "table_state": "inactive",
-                                   "chunk_elememt_size": "3",
-                                   "num_of_scan_segments": "0",
-                                   "main_table_version": "1",
-                                   "remote_local": {
-                                        "prefixes": {
-                                             "allocated": 0,
-                                             "freed": 0
-                                        }
-                                   },
-                                   "table_bit_field_size": "1 ",
-                                   "dampening": False,
-                                   "attribute_download": "Disabled",
-                                   "rib_has_not_converged": "version 0",
-                                   "prefixes_path": {
-                                        "prefixes": {
-                                             "number": 0,
-                                             "mem_used": 0
-                                        }
-                                   },
-                                   "scan_interval": "60",
-                                   "bgp_table_version": "1",
-                                   "current_vrf": "a ",
-                                   "total_prefixes_scanned": "0"
-                              }
-                         },
-                         "current_limit_for_bmp_buffer_size": 307,
-                         "default_cluster_id": "10",
-                         "received_updates": 0,
-                         "current_utilization_of_bmp_buffer_limit": 0,
-                         "sent_updates": 0,
-                         "router_id": "4.4.4.4",
-                         "bmp_pool_summary": {
-                              "300": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "4500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "20000": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "10000": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "200": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "100": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "6500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "8500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "400": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "600": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "2200": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "1200": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "4000": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "3300": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "5500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "700": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "800": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "900": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "7500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              }
-                         },
-                         "as_number": 100,
-                         "restart_count": 1,
-                         "vrf_info": {
-                              "non-default": {
-                                   "nbrs_estab": 0,
-                                   "total": 3,
-                                   "cfg": 2
-                              },
-                              "default": {
-                                   "nbrs_estab": 0,
-                                   "total": 1,
-                                   "cfg": 1
-                              }
-                         },
-                         "neighbor_logging": True,
-                         "default_keepalive": 60,
-                         "enforce_first_as_enabled": True
-                    },
-                    "VRF1": {
-                         "operation_mode": "STANDALONE",
-                         "generic_scan_interval": 60,
-                         "received_notifications": 0,
-                         "default_local_preference": 100,
-                         "pool": {
-                              "300": {
-                                   "free": 0,
-                                   "alloc": 1
-                              },
-                              "4500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "20000": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "200": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "1200": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "600": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "5000": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "400": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "4000": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "2200": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "700": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "800": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "900": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "3300": {
-                                   "free": 0,
-                                   "alloc": 0
-                              }
-                         },
-                         "sent_notifications": 0,
-                         "fast_external_fallover": True,
-                         "node": "node0_0_CPU0",
-                         "non_stop_routing": True,
-                         "max_limit_for_bmp_buffer_size": 409,
-                         "att": {
-                              "ribrnh_tunnel_attr": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "attributes": {
-                                   "memory_used": 152,
-                                   "number": 1
-                              },
-                              "extended_communities": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "nexthop_entries": {
-                                   "memory_used": 7600,
-                                   "number": 19
-                              },
-                              "as_paths": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "communities": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "route_reflector_entries": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "tunnel_encap_attr": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "ppmp_attr": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "pe_distinguisher_labels": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "pmsi_tunnel_attr": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              }
-                         },
-                         "as_system_number_format": "ASPLAIN",
-                         "active_cluster_id": "10",
-                         "message_logging_pool_summary": {
-                              "4500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              }
-                         },
-                         "update_delay": 120,
-                         "platform_rlimit_max": 2147483648,
-                         "default_cluster_id": "10",
-                         "bgp_speaker_process": 0,
-                         "current_limit_for_bmp_buffer_size": 307,
-                         "default_value_for_bmp_buffer_size": 307,
-                         "received_updates": 0,
-                         "current_utilization_of_bmp_buffer_limit": 0,
-                         "sent_updates": 0,
-                         "router_id": "4.4.4.4",
-                         "bmp_pool_summary": {
-                              "300": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "4500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "20000": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "10000": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "200": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "100": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "6500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "8500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "400": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "600": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "2200": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "1200": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "4000": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "3300": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "5500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "700": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "800": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "900": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "7500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              }
-                         },
-                         "as_number": 100,
-                         "restart_count": 1,
-                         "vrf_info": {
-                              "non-default": {
-                                   "nbrs_estab": 0,
-                                   "total": 3,
-                                   "cfg": 2
-                              },
-                              "default": {
-                                   "nbrs_estab": 0,
-                                   "total": 1,
-                                   "cfg": 1
-                              }
-                         },
-                         "neighbor_logging": True,
-                         "default_keepalive": 60,
-                         "enforce_first_as_enabled": True
-                    },
-                    "vrf1": {
-                         "operation_mode": "STANDALONE",
-                         "generic_scan_interval": 60,
-                         "received_notifications": 0,
-                         "default_local_preference": 100,
-                         "pool": {
-                              "300": {
-                                   "free": 0,
-                                   "alloc": 1
-                              },
-                              "4500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "20000": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "200": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "1200": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "600": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "5000": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "400": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "4000": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "2200": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "700": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "800": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "900": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "3300": {
-                                   "free": 0,
-                                   "alloc": 0
-                              }
-                         },
-                         "sent_notifications": 0,
-                         "fast_external_fallover": True,
-                         "node": "node0_0_CPU0",
-                         "non_stop_routing": True,
-                         "max_limit_for_bmp_buffer_size": 409,
-                         "att": {
-                              "ribrnh_tunnel_attr": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "attributes": {
-                                   "memory_used": 152,
-                                   "number": 1
-                              },
-                              "extended_communities": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "nexthop_entries": {
-                                   "memory_used": 7600,
-                                   "number": 19
-                              },
-                              "as_paths": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "communities": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "route_reflector_entries": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "tunnel_encap_attr": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "ppmp_attr": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "pe_distinguisher_labels": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              },
-                              "pmsi_tunnel_attr": {
-                                   "memory_used": 0,
-                                   "number": 0
-                              }
-                         },
-                         "as_system_number_format": "ASPLAIN",
-                         "active_cluster_id": "10",
-                         "message_logging_pool_summary": {
-                              "4500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              }
-                         },
-                         "update_delay": 120,
-                         "platform_rlimit_max": 2147483648,
-                         "default_cluster_id": "10",
-                         "bgp_speaker_process": 0,
-                         "current_limit_for_bmp_buffer_size": 307,
-                         "default_value_for_bmp_buffer_size": 307,
-                         "received_updates": 0,
-                         "current_utilization_of_bmp_buffer_limit": 0,
-                         "sent_updates": 0,
-                         "router_id": "4.4.4.4",
-                         "bmp_pool_summary": {
-                              "300": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "4500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "20000": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "10000": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "200": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "100": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "6500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "8500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "400": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "600": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "2200": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "1200": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "4000": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "3300": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "5500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "700": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "800": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "900": {
-                                   "free": 0,
-                                   "alloc": 0
-                              },
-                              "7500": {
-                                   "free": 0,
-                                   "alloc": 0
-                              }
-                         },
-                         "as_number": 100,
-                         "restart_count": 1,
-                         "vrf_info": {
-                              "non-default": {
-                                   "nbrs_estab": 0,
-                                   "total": 3,
-                                   "cfg": 2
-                              },
-                              "default": {
-                                   "nbrs_estab": 0,
-                                   "total": 1,
-                                   "cfg": 1
-                              }
-                         },
-                         "neighbor_logging": True,
-                         "default_keepalive": 60,
-                         "enforce_first_as_enabled": True
-                    }
-                }
-            },
-            "test": {}
-        }
-    }
+        'instance': {'default': {'vrf': {'VRF1': {'active_cluster_id': '10',
+                                           'as_number': 100,
+                                           'as_system_number_format': 'ASPLAIN',
+                                           'att': {'as_paths': {'memory_used': 0,
+                                                                'number': 0},
+                                                   'attributes': {'memory_used': 152,
+                                                                  'number': 1},
+                                                   'communities': {'memory_used': 0,
+                                                                   'number': 0},
+                                                   'extended_communities': {'memory_used': 0,
+                                                                            'number': 0},
+                                                   'nexthop_entries': {'memory_used': 7600,
+                                                                       'number': 19},
+                                                   'pe_distinguisher_labels': {'memory_used': 0,
+                                                                               'number': 0},
+                                                   'pmsi_tunnel_attr': {'memory_used': 0,
+                                                                        'number': 0},
+                                                   'ppmp_attr': {'memory_used': 0,
+                                                                 'number': 0},
+                                                   'ribrnh_tunnel_attr': {'memory_used': 0,
+                                                                          'number': 0},
+                                                   'route_reflector_entries': {'memory_used': 0,
+                                                                               'number': 0},
+                                                   'tunnel_encap_attr': {'memory_used': 0,
+                                                                         'number': 0}},
+                                           'bgp_speaker_process': 0,
+                                           'bmp_pool_summary': {'100': {'alloc': 0,
+                                                                        'free': 0},
+                                                                '10000': {'alloc': 0,
+                                                                          'free': 0},
+                                                                '1200': {'alloc': 0,
+                                                                         'free': 0},
+                                                                '200': {'alloc': 0,
+                                                                        'free': 0},
+                                                                '20000': {'alloc': 0,
+                                                                          'free': 0},
+                                                                '2200': {'alloc': 0,
+                                                                         'free': 0},
+                                                                '300': {'alloc': 0,
+                                                                        'free': 0},
+                                                                '3300': {'alloc': 0,
+                                                                         'free': 0},
+                                                                '400': {'alloc': 0,
+                                                                        'free': 0},
+                                                                '4000': {'alloc': 0,
+                                                                         'free': 0},
+                                                                '4500': {'alloc': 0,
+                                                                         'free': 0},
+                                                                '500': {'alloc': 0,
+                                                                        'free': 0},
+                                                                '5500': {'alloc': 0,
+                                                                         'free': 0},
+                                                                '600': {'alloc': 0,
+                                                                        'free': 0},
+                                                                '6500': {'alloc': 0,
+                                                                         'free': 0},
+                                                                '700': {'alloc': 0,
+                                                                        'free': 0},
+                                                                '7500': {'alloc': 0,
+                                                                         'free': 0},
+                                                                '800': {'alloc': 0,
+                                                                        'free': 0},
+                                                                '8500': {'alloc': 0,
+                                                                         'free': 0},
+                                                                '900': {'alloc': 0,
+                                                                        'free': 0}},
+                                           'current_limit_for_bmp_buffer_size': 307,
+                                           'current_utilization_of_bmp_buffer_limit': 0,
+                                           'default_cluster_id': '10',
+                                           'default_keepalive': 60,
+                                           'default_local_preference': 100,
+                                           'default_value_for_bmp_buffer_size': 307,
+                                           'enforce_first_as_enabled': True,
+                                           'fast_external_fallover': True,
+                                           'generic_scan_interval': 60,
+                                           'max_limit_for_bmp_buffer_size': 409,
+                                           'message_logging_pool_summary': {'100': {'alloc': 0,
+                                                                                    'free': 0},
+                                                                            '200': {'alloc': 0,
+                                                                                    'free': 0},
+                                                                            '2200': {'alloc': 0,
+                                                                                     'free': 0},
+                                                                            '4500': {'alloc': 0,
+                                                                                     'free': 0},
+                                                                            '500': {'alloc': 0,
+                                                                                    'free': 0}},
+                                           'neighbor_logging': True,
+                                           'node': 'node0_0_CPU0',
+                                           'non_stop_routing': True,
+                                           'operation_mode': 'standalone',
+                                           'platform_rlimit_max': 2147483648,
+                                           'pool': {'1200': {'alloc': 0,
+                                                             'free': 0},
+                                                    '200': {'alloc': 0,
+                                                            'free': 0},
+                                                    '20000': {'alloc': 0,
+                                                              'free': 0},
+                                                    '2200': {'alloc': 0,
+                                                             'free': 0},
+                                                    '300': {'alloc': 1,
+                                                            'free': 0},
+                                                    '3300': {'alloc': 0,
+                                                             'free': 0},
+                                                    '400': {'alloc': 0,
+                                                            'free': 0},
+                                                    '4000': {'alloc': 0,
+                                                             'free': 0},
+                                                    '4500': {'alloc': 0,
+                                                             'free': 0},
+                                                    '500': {'alloc': 0,
+                                                            'free': 0},
+                                                    '5000': {'alloc': 0,
+                                                             'free': 0},
+                                                    '600': {'alloc': 0,
+                                                            'free': 0},
+                                                    '700': {'alloc': 0,
+                                                            'free': 0},
+                                                    '800': {'alloc': 0,
+                                                            'free': 0},
+                                                    '900': {'alloc': 0,
+                                                            'free': 0}},
+                                           'received_notifications': 0,
+                                           'received_updates': 0,
+                                           'restart_count': 1,
+                                           'route_distinguisher': '100:2',
+                                           'router_id': '4.4.4.4',
+                                           'sent_notifications': 0,
+                                           'sent_updates': 0,
+                                           'update_delay': 120,
+                                           'vrf_info': {'default': {'cfg': 1,
+                                                                    'nbrs_estab': 0,
+                                                                    'total': 1},
+                                                        'non-default': {'cfg': 2,
+                                                                        'nbrs_estab': 0,
+                                                                        'total': 3}}},
+                                  'a': {'active_cluster_id': '10',
+                                        'address_family': {'ipv4 unicast ': {'attribute_download': 'Disabled',
+                                                                             'bgp_table_version': '1',
+                                                                             'chunk_elememt_size': '3',
+                                                                             'current_vrf': 'a ',
+                                                                             'dampening': False,
+                                                                             'dynamic_med': True,
+                                                                             'dynamic_med_int': '10 '
+                                                                                                'minutes',
+                                                                             'dynamic_med_periodic_timer': 'Not '
+                                                                                                           'Running',
+                                                                             'dynamic_med_timer': 'Not '
+                                                                                                  'Running',
+                                                                             'label_retention_timer_value': '5 '
+                                                                                                            'mins',
+                                                                             'main_table_version': '1',
+                                                                             'nexthop_resolution_minimum_prefix_length': '0 '
+                                                                                                                         '(not '
+                                                                                                                         'configured)',
+                                                                             'num_of_scan_segments': '0',
+                                                                             'permanent_network': 'unconfigured',
+                                                                             'prefix_scanned_per_segment': '100000',
+                                                                             'prefixes_path': {'prefixes': {'mem_used': 0,
+                                                                                                            'number': 0}},
+                                                                             'remote_local': {'prefixes': {'allocated': 0,
+                                                                                                           'freed': 0}},
+                                                                             'rib_has_not_converged': 'version '
+                                                                                                      '0',
+                                                                             'rib_table_prefix_limit_reached': 'no',
+                                                                             'rib_table_prefix_limit_ver': '0',
+                                                                             'scan_interval': '60',
+                                                                             'soft_reconfig_entries': '0',
+                                                                             'state': 'read '
+                                                                                      'only '
+                                                                                      'mode',
+                                                                             'table_bit_field_size': '1 ',
+                                                                             'table_state': 'inactive',
+                                                                             'table_version_acked_by_rib': '0',
+                                                                             'table_version_synced_to_rib': '1',
+                                                                             'total_prefixes_scanned': '0'}},
+                                        'as_number': 100,
+                                        'as_system_number_format': 'ASPLAIN',
+                                        'att': {'as_paths': {'memory_used': 0,
+                                                             'number': 0},
+                                                'attributes': {'memory_used': 152,
+                                                               'number': 1},
+                                                'bmp_paths': {'memory_used': 0,
+                                                              'number': 0},
+                                                'bmp_prefixes': {'memory_used': 0,
+                                                                 'number': 0},
+                                                'communities': {'memory_used': 0,
+                                                                'number': 0},
+                                                'extended_communities': {'memory_used': 0,
+                                                                         'number': 0},
+                                                'nexthop_entries': {'memory_used': 7600,
+                                                                    'number': 19},
+                                                'paths': {'memory_used': 0,
+                                                          'number': 0},
+                                                'pe_distinguisher_labels': {'memory_used': 0,
+                                                                            'number': 0},
+                                                'pmsi_tunnel_attr': {'memory_used': 0,
+                                                                     'number': 0},
+                                                'ppmp_attr': {'memory_used': 0,
+                                                              'number': 0},
+                                                'ribrnh_tunnel_attr': {'memory_used': 0,
+                                                                       'number': 0},
+                                                'route_reflector_entries': {'memory_used': 0,
+                                                                            'number': 0},
+                                                'tunnel_encap_attr': {'memory_used': 0,
+                                                                      'number': 0}},
+                                        'bgp_speaker_process': 0,
+                                        'bmp_pool_summary': {'100': {'alloc': 0,
+                                                                     'free': 0},
+                                                             '10000': {'alloc': 0,
+                                                                       'free': 0},
+                                                             '1200': {'alloc': 0,
+                                                                      'free': 0},
+                                                             '200': {'alloc': 0,
+                                                                     'free': 0},
+                                                             '20000': {'alloc': 0,
+                                                                       'free': 0},
+                                                             '2200': {'alloc': 0,
+                                                                      'free': 0},
+                                                             '300': {'alloc': 0,
+                                                                     'free': 0},
+                                                             '3300': {'alloc': 0,
+                                                                      'free': 0},
+                                                             '400': {'alloc': 0,
+                                                                     'free': 0},
+                                                             '4000': {'alloc': 0,
+                                                                      'free': 0},
+                                                             '4500': {'alloc': 0,
+                                                                      'free': 0},
+                                                             '500': {'alloc': 0,
+                                                                     'free': 0},
+                                                             '5500': {'alloc': 0,
+                                                                      'free': 0},
+                                                             '600': {'alloc': 0,
+                                                                     'free': 0},
+                                                             '6500': {'alloc': 0,
+                                                                      'free': 0},
+                                                             '700': {'alloc': 0,
+                                                                     'free': 0},
+                                                             '7500': {'alloc': 0,
+                                                                      'free': 0},
+                                                             '800': {'alloc': 0,
+                                                                     'free': 0},
+                                                             '8500': {'alloc': 0,
+                                                                      'free': 0},
+                                                             '900': {'alloc': 0,
+                                                                     'free': 0}},
+                                        'current_limit_for_bmp_buffer_size': 307,
+                                        'current_utilization_of_bmp_buffer_limit': 0,
+                                        'default_cluster_id': '10',
+                                        'default_keepalive': 60,
+                                        'default_local_preference': 100,
+                                        'default_value_for_bmp_buffer_size': 307,
+                                        'enforce_first_as_enabled': True,
+                                        'fast_external_fallover': True,
+                                        'generic_scan_interval': 60,
+                                        'max_limit_for_bmp_buffer_size': 409,
+                                        'message_logging_pool_summary': {'100': {'alloc': 0,
+                                                                                 'free': 0},
+                                                                         '200': {'alloc': 0,
+                                                                                 'free': 0},
+                                                                         '2200': {'alloc': 0,
+                                                                                  'free': 0},
+                                                                         '4500': {'alloc': 0,
+                                                                                  'free': 0},
+                                                                         '500': {'alloc': 0,
+                                                                                 'free': 0}},
+                                        'neighbor_logging': True,
+                                        'node': 'node0_0_CPU0',
+                                        'non_stop_routing': True,
+                                        'operation_mode': 'standalone',
+                                        'platform_rlimit_max': 2147483648,
+                                        'pool': {'1200': {'alloc': 0,
+                                                          'free': 0},
+                                                 '200': {'alloc': 0,
+                                                         'free': 0},
+                                                 '20000': {'alloc': 0,
+                                                           'free': 0},
+                                                 '2200': {'alloc': 0,
+                                                          'free': 0},
+                                                 '300': {'alloc': 1,
+                                                         'free': 0},
+                                                 '3300': {'alloc': 0,
+                                                          'free': 0},
+                                                 '400': {'alloc': 0,
+                                                         'free': 0},
+                                                 '4000': {'alloc': 0,
+                                                          'free': 0},
+                                                 '4500': {'alloc': 0,
+                                                          'free': 0},
+                                                 '500': {'alloc': 0,
+                                                         'free': 0},
+                                                 '5000': {'alloc': 0,
+                                                          'free': 0},
+                                                 '600': {'alloc': 0,
+                                                         'free': 0},
+                                                 '700': {'alloc': 0,
+                                                         'free': 0},
+                                                 '800': {'alloc': 0,
+                                                         'free': 0},
+                                                 '900': {'alloc': 0,
+                                                         'free': 0}},
+                                        'received_notifications': 0,
+                                        'received_updates': 0,
+                                        'restart_count': 1,
+                                        'route_distinguisher': '100:1',
+                                        'router_id': '4.4.4.4',
+                                        'sent_notifications': 0,
+                                        'sent_updates': 0,
+                                        'update_delay': 120,
+                                        'vrf_info': {'default': {'cfg': 1,
+                                                                 'nbrs_estab': 0,
+                                                                 'total': 1},
+                                                     'non-default': {'cfg': 2,
+                                                                     'nbrs_estab': 0,
+                                                                     'total': 3}}},
+                                  'vrf1': {'active_cluster_id': '10',
+                                           'as_number': 100,
+                                           'as_system_number_format': 'ASPLAIN',
+                                           'att': {'as_paths': {'memory_used': 0,
+                                                                'number': 0},
+                                                   'attributes': {'memory_used': 152,
+                                                                  'number': 1},
+                                                   'communities': {'memory_used': 0,
+                                                                   'number': 0},
+                                                   'extended_communities': {'memory_used': 0,
+                                                                            'number': 0},
+                                                   'nexthop_entries': {'memory_used': 7600,
+                                                                       'number': 19},
+                                                   'pe_distinguisher_labels': {'memory_used': 0,
+                                                                               'number': 0},
+                                                   'pmsi_tunnel_attr': {'memory_used': 0,
+                                                                        'number': 0},
+                                                   'ppmp_attr': {'memory_used': 0,
+                                                                 'number': 0},
+                                                   'ribrnh_tunnel_attr': {'memory_used': 0,
+                                                                          'number': 0},
+                                                   'route_reflector_entries': {'memory_used': 0,
+                                                                               'number': 0},
+                                                   'tunnel_encap_attr': {'memory_used': 0,
+                                                                         'number': 0}},
+                                           'bgp_speaker_process': 0,
+                                           'bmp_pool_summary': {'100': {'alloc': 0,
+                                                                        'free': 0},
+                                                                '10000': {'alloc': 0,
+                                                                          'free': 0},
+                                                                '1200': {'alloc': 0,
+                                                                         'free': 0},
+                                                                '200': {'alloc': 0,
+                                                                        'free': 0},
+                                                                '20000': {'alloc': 0,
+                                                                          'free': 0},
+                                                                '2200': {'alloc': 0,
+                                                                         'free': 0},
+                                                                '300': {'alloc': 0,
+                                                                        'free': 0},
+                                                                '3300': {'alloc': 0,
+                                                                         'free': 0},
+                                                                '400': {'alloc': 0,
+                                                                        'free': 0},
+                                                                '4000': {'alloc': 0,
+                                                                         'free': 0},
+                                                                '4500': {'alloc': 0,
+                                                                         'free': 0},
+                                                                '500': {'alloc': 0,
+                                                                        'free': 0},
+                                                                '5500': {'alloc': 0,
+                                                                         'free': 0},
+                                                                '600': {'alloc': 0,
+                                                                        'free': 0},
+                                                                '6500': {'alloc': 0,
+                                                                         'free': 0},
+                                                                '700': {'alloc': 0,
+                                                                        'free': 0},
+                                                                '7500': {'alloc': 0,
+                                                                         'free': 0},
+                                                                '800': {'alloc': 0,
+                                                                        'free': 0},
+                                                                '8500': {'alloc': 0,
+                                                                         'free': 0},
+                                                                '900': {'alloc': 0,
+                                                                        'free': 0}},
+                                           'current_limit_for_bmp_buffer_size': 307,
+                                           'current_utilization_of_bmp_buffer_limit': 0,
+                                           'default_cluster_id': '10',
+                                           'default_keepalive': 60,
+                                           'default_local_preference': 100,
+                                           'default_value_for_bmp_buffer_size': 307,
+                                           'enforce_first_as_enabled': True,
+                                           'fast_external_fallover': True,
+                                           'generic_scan_interval': 60,
+                                           'max_limit_for_bmp_buffer_size': 409,
+                                           'message_logging_pool_summary': {'100': {'alloc': 0,
+                                                                                    'free': 0},
+                                                                            '200': {'alloc': 0,
+                                                                                    'free': 0},
+                                                                            '2200': {'alloc': 0,
+                                                                                     'free': 0},
+                                                                            '4500': {'alloc': 0,
+                                                                                     'free': 0},
+                                                                            '500': {'alloc': 0,
+                                                                                    'free': 0}},
+                                           'neighbor_logging': True,
+                                           'node': 'node0_0_CPU0',
+                                           'non_stop_routing': True,
+                                           'operation_mode': 'standalone',
+                                           'platform_rlimit_max': 2147483648,
+                                           'pool': {'1200': {'alloc': 0,
+                                                             'free': 0},
+                                                    '200': {'alloc': 0,
+                                                            'free': 0},
+                                                    '20000': {'alloc': 0,
+                                                              'free': 0},
+                                                    '2200': {'alloc': 0,
+                                                             'free': 0},
+                                                    '300': {'alloc': 1,
+                                                            'free': 0},
+                                                    '3300': {'alloc': 0,
+                                                             'free': 0},
+                                                    '400': {'alloc': 0,
+                                                            'free': 0},
+                                                    '4000': {'alloc': 0,
+                                                             'free': 0},
+                                                    '4500': {'alloc': 0,
+                                                             'free': 0},
+                                                    '500': {'alloc': 0,
+                                                            'free': 0},
+                                                    '5000': {'alloc': 0,
+                                                             'free': 0},
+                                                    '600': {'alloc': 0,
+                                                            'free': 0},
+                                                    '700': {'alloc': 0,
+                                                            'free': 0},
+                                                    '800': {'alloc': 0,
+                                                            'free': 0},
+                                                    '900': {'alloc': 0,
+                                                            'free': 0}},
+                                           'received_notifications': 0,
+                                           'received_updates': 0,
+                                           'restart_count': 1,
+                                           'route_distinguisher': '100:3',
+                                           'router_id': '4.4.4.4',
+                                           'sent_notifications': 0,
+                                           'sent_updates': 0,
+                                           'update_delay': 120,
+                                           'vrf_info': {'default': {'cfg': 1,
+                                                                    'nbrs_estab': 0,
+                                                                    'total': 1},
+                                                        'non-default': {'cfg': 2,
+                                                                        'nbrs_estab': 0,
+                                                                        'total': 3}}}}},
+              'test': {}}}
+
     golden_output = {'execute.return_value': '''
 
         Wed Jul 12 16:37:22.420 EDT
@@ -1582,7 +1264,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
         BGP Process Information: VRF a (Inactive)
         BGP Route Distinguisher: 100:1
 
-        BGP is operating in STANDALONE mode
+        BGP is operating in standalone mode
         Autonomous System number format: ASPLAIN
         Autonomous System: 100
         Router ID: 4.4.4.4
@@ -1731,7 +1413,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
         BGP Process Information: VRF VRF1 (Inactive)
         BGP Route Distinguisher: 100:2
 
-        BGP is operating in STANDALONE mode
+        BGP is operating in standalone mode
         Autonomous System number format: ASPLAIN
         Autonomous System: 100
         Router ID: 4.4.4.4
@@ -1830,7 +1512,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
         BGP Process Information: VRF vrf1 (Inactive)
         BGP Route Distinguisher: 100:3
 
-        BGP is operating in STANDALONE mode
+        BGP is operating in standalone mode
         Autonomous System number format: ASPLAIN
         Autonomous System: 100
         Router ID: 4.4.4.4
@@ -1941,6 +1623,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
         obj = ShowBgpInstanceProcessDetail(device=self.device)
         parsed_output = obj.parse(vrf_type='vrf')
         self.maxDiff = None
+
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -1953,436 +1636,257 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
     
-    golden_parsed_output = {
-        "instance": {
-            "default": {
-                "vrf": {
-                    "default": {
-                        "active_cluster_id": "1.1.1.1",
-                        "router_id": "1.1.1.1",
-                        "current_limit_for_bmp_buffer_size": 307,
-                        "generic_scan_interval": 60,
-                        "bgp_speaker_process": 0,
-                        "sent_notifications": 1,
-                        "fast_external_fallover": True,
-                        "default_cluster_id": "1.1.1.1",
-                        "non_stop_routing": True,
-                        "att": {
-                            "total_rds": {
-                               "number": 4,
-                               "memory_used": 320
-                            },
-                            "attributes": {
-                               "number": 6,
-                               "memory_used": 912
-                            },
-                            "local_paths": {
-                               "number": 30,
-                               "memory_used": 2640
-                            },
-                            "pmsi_tunnel_attr": {
-                               "number": 0,
-                               "memory_used": 0
-                            },
-                            "local_rds": {
-                               "number": 2,
-                               "memory_used": 160
-                            },
-                            "as_paths": {
-                               "number": 6,
-                               "memory_used": 480
-                            },
-                            "communities": {
-                               "number": 0,
-                               "memory_used": 0
-                            },
-                            "extended_communities": {
-                               "number": 6,
-                               "memory_used": 480
-                            },
-                            "nexthop_entries": {
-                               "number": 32,
-                               "memory_used": 12800
-                            },
-                            "route_reflector_entries": {
-                               "number": 4,
-                               "memory_used": 320
-                            },
-                            "pe_distinguisher_labels": {
-                               "number": 0,
-                               "memory_used": 0
-                            },
-                            "tunnel_encap_attr": {
-                               "number": 0,
-                               "memory_used": 0
-                            },
-                            "remote_paths": {
-                               "number": 20,
-                               "memory_used": 1760
-                            },
-                            "local_prefixes": {
-                               "number": 30,
-                               "memory_used": 3210
-                            },
-                            "remote_rds": {
-                               "number": 2,
-                               "memory_used": 160
-                            },
-                            "ppmp_attr": {
-                               "number": 0,
-                               "memory_used": 0
-                            },
-                            "ribrnh_tunnel_attr": {
-                               "number": 0,
-                               "memory_used": 0
-                            },
-                            "total_prefixes": {
-                               "number": 40,
-                               "memory_used": 4280
-                            },
-                            "total_paths": {
-                               "number": 50,
-                               "memory_used": 4400
-                            },
-                            "imported_paths": {
-                               "number": 25,
-                               "memory_used": 2200
-                            }
-                        },
-                        "received_notifications": 0,
-                        "node": "node0_0_CPU0",
-                        "default_value_for_bmp_buffer_size": 307,
-                        "current_utilization_of_bmp_buffer_limit": 0,
-                        "as_number": 100,
-                        "as_system_number_format": "ASPLAIN",
-                        "platform_rlimit_max": 2147483648,
-                        "bmp_pool_summary": {
-                            "8500": {
-                               "free": 0,
-                               "alloc": 0
-                            },
-                            "5500": {
-                               "free": 0,
-                               "alloc": 0
-                            },
-                            "10000": {
-                               "free": 0,
-                               "alloc": 0
-                            },
-                            "20000": {
-                               "free": 0,
-                               "alloc": 0
-                            },
-                            "900": {
-                               "free": 0,
-                               "alloc": 0
-                            },
-                            "3300": {
-                               "free": 0,
-                               "alloc": 0
-                            },
-                            "4500": {
-                               "free": 0,
-                               "alloc": 0
-                            },
-                            "400": {
-                               "free": 0,
-                               "alloc": 0
-                            },
-                            "300": {
-                               "free": 0,
-                               "alloc": 0
-                            },
-                            "600": {
-                               "free": 0,
-                               "alloc": 0
-                            },
-                            "800": {
-                               "free": 0,
-                               "alloc": 0
-                            },
-                            "200": {
-                               "free": 0,
-                               "alloc": 0
-                            },
-                            "700": {
-                               "free": 0,
-                               "alloc": 0
-                            },
-                            "500": {
-                               "free": 0,
-                               "alloc": 0
-                            },
-                            "1200": {
-                               "free": 0,
-                               "alloc": 0
-                            },
-                            "100": {
-                               "free": 0,
-                               "alloc": 0
-                            },
-                            "6500": {
-                               "free": 0,
-                               "alloc": 0
-                            },
-                            "7500": {
-                               "free": 0,
-                               "alloc": 0
-                            },
-                            "4000": {
-                               "free": 0,
-                               "alloc": 0
-                            },
-                            "2200": {
-                               "free": 0,
-                               "alloc": 0
-                            }
-                        },
-                        "update_delay": 120,
-                        "default_keepalive": 60,
-                        "max_limit_for_bmp_buffer_size": 409,
-                        "message_logging_pool_summary": {
-                            "4500": {
-                               "free": 0,
-                               "alloc": 0
-                            }
-                        },
-                        "vrf_info": {
-                            "default": {
-                               "cfg": 2,
-                               "total": 1,
-                               "nbrs_estab": 2
-                            },
-                            "non-default": {
-                               "cfg": 4,
-                               "total": 2,
-                               "nbrs_estab": 4
-                            }
-                        },
-                        "enforce_first_as_enabled": True,
-                        "received_updates": 24,
-                        "operation_mode": "STANDALONE",
-                        "neighbor_logging": True,
-                        "restart_count": 1,
-                        "sent_updates": 14,
-                        "address_family": {
-                            "vpnv6 unicast": {
-                               "dynamic_med_timer": "Not Running",
-                               "table_version_synced_to_rib": "43",
-                               "dynamic_med_periodic_timer": "Not Running",
-                               "label_retention_timer_value": "5 mins",
-                               "total_prefixes_scanned": "40",
-                               "dynamic_med_int": "10 minutes",
-                               "attribute_download": "Disabled",
-                               "permanent_network": "unconfigured",
-                               "rib_table_prefix_limit_reached": "no",
-                               "bgp_table_version": "43",
-                               "table_version_acked_by_rib": "0",
-                               "prefix_scanned_per_segment": "100000",
-                               "nexthop_resolution_minimum_prefix_length": "0 (not configured)",
-                               "num_of_scan_segments": "1",
-                               "main_table_version": "43",
-                               "remote_local": {
-                                    "remote prefixes": {
-                                         "freed": 0,
-                                         "allocated": 10
-                                    }
-                               },
-                               "client_reflection": True,
-                               "chunk_elememt_size": "3",
-                               "scan_interval": "60",
-                               "table_bit_field_size": "1 ",
-                               "prefixes_path": {
-                                    "remote prefixes": {
-                                         "mem_used": 1040,
-                                         "number": 10
-                                    }
-                               },
-                               "dynamic_med": True,
-                               "rib_has_not_converged": "version 0",
-                               "dampening": False,
-                               "thread": {
-                                    "update thread": {
-                                         "triggers": {
-                                              "Jun 28 19:10:16.427": {
-                                                   "trig_tid": 8,
-                                                   "ver": 43,
-                                                   "tbl_ver": 43
-                                              }
-                                         }
-                                    },
-                                    "import thread": {
-                                         "triggers": {
-                                              "Jun 28 19:10:16.427": {
-                                                   "trig_tid": 3,
-                                                   "ver": 43,
-                                                   "tbl_ver": 43
-                                              }
-                                         }
-                                    },
-                                    "label thread": {
-                                         "triggers": {
-                                              "Jun 28 19:10:16.427": {
-                                                   "trig_tid": 3,
-                                                   "ver": 43,
-                                                   "tbl_ver": 43
-                                              }
-                                         }
-                                    },
-                                    "rib thread": {
-                                         "triggers": {
-                                              "Jun 28 18:29:34.604": {
-                                                   "trig_tid": 8,
-                                                   "ver": 33,
-                                                   "tbl_ver": 43
-                                              }
-                                         }
-                                    }
-                               },
-                               "rib_table_prefix_limit_ver": "0",
-                               "state": "normal mode",
-                               "soft_reconfig_entries": "0"
-                          },
-                          "vpnv4 unicast": {
-                               "dynamic_med_timer": "Not Running",
-                               "table_version_synced_to_rib": "43",
-                               "dynamic_med_periodic_timer": "Not Running",
-                               "label_retention_timer_value": "5 mins",
-                               "total_prefixes_scanned": "40",
-                               "dynamic_med_int": "10 minutes",
-                               "attribute_download": "Disabled",
-                               "permanent_network": "unconfigured",
-                               "rib_table_prefix_limit_reached": "no",
-                               "bgp_table_version": "43",
-                               "table_version_acked_by_rib": "0",
-                               "prefix_scanned_per_segment": "100000",
-                               "nexthop_resolution_minimum_prefix_length": "0 (not configured)",
-                               "num_of_scan_segments": "1",
-                               "main_table_version": "43",
-                               "remote_local": {
-                                    "remote prefixes": {
-                                         "freed": 0,
-                                         "allocated": 10
-                                    }
-                               },
-                               "client_reflection": True,
-                               "chunk_elememt_size": "3",
-                               "scan_interval": "60",
-                               "table_bit_field_size": "1 ",
-                               "prefixes_path": {
-                                    "remote prefixes": {
-                                         "mem_used": 920,
-                                         "number": 10
-                                    }
-                               },
-                               "dynamic_med": True,
-                               "rib_has_not_converged": "version 0",
-                               "dampening": False,
-                               "thread": {
-                                    "update thread": {
-                                         "triggers": {
-                                              "Jun 28 19:10:16.427": {
-                                                   "trig_tid": 8,
-                                                   "ver": 43,
-                                                   "tbl_ver": 43
-                                              }
-                                         }
-                                    },
-                                    "import thread": {
-                                         "triggers": {
-                                              "Jun 28 19:10:16.427": {
-                                                   "trig_tid": 3,
-                                                   "ver": 43,
-                                                   "tbl_ver": 43
-                                              }
-                                         }
-                                    },
-                                    "label thread": {
-                                         "triggers": {
-                                              "Jun 28 19:10:16.427": {
-                                                   "trig_tid": 3,
-                                                   "ver": 43,
-                                                   "tbl_ver": 43
-                                              }
-                                         }
-                                    },
-                                    "rib thread": {
-                                         "triggers": {
-                                              "Jun 28 18:29:29.595": {
-                                                   "trig_tid": 8,
-                                                   "ver": 33,
-                                                   "tbl_ver": 43
-                                              }
-                                         }
-                                    }
-                               },
-                               "rib_table_prefix_limit_ver": "0",
-                               "state": "normal mode",
-                               "soft_reconfig_entries": "0"
-                          }
-                        },
-                        "default_local_preference": 100,
-                        "pool": {
-                          "20000": {
-                               "free": 0,
-                               "alloc": 0
-                          },
-                          "900": {
-                               "free": 0,
-                               "alloc": 0
-                          },
-                          "3300": {
-                               "free": 0,
-                               "alloc": 0
-                          },
-                          "4500": {
-                               "free": 0,
-                               "alloc": 0
-                          },
-                          "400": {
-                               "free": 6,
-                               "alloc": 6
-                          },
-                          "300": {
-                               "free": 310,
-                               "alloc": 311
-                          },
-                          "600": {
-                               "free": 12,
-                               "alloc": 12
-                          },
-                          "800": {
-                               "free": 0,
-                               "alloc": 0
-                          },
-                          "5000": {
-                               "free": 0,
-                               "alloc": 0
-                          },
-                          "200": {
-                               "free": 0,
-                               "alloc": 0
-                          },
-                          "700": {
-                               "free": 2,
-                               "alloc": 2
-                          },
-                          "500": {
-                               "free": 20,
-                               "alloc": 20
-                          },
-                          "1200": {
-                               "free": 0,
-                               "alloc": 0
-                          },
-                          "4000": {
-                               "free": 0,
-                               "alloc": 0
-                          },
-                          "2200": {
-                               "free": 0,
-                               "alloc": 0}}}}}}
-    }
+    golden_parsed_output = {'instance': {'default': {'vrf': {'default': {'active_cluster_id': '1.1.1.1',
+                                              'address_family': {'vpnv4 unicast': {'attribute_download': 'Disabled',
+                                                                                   'bgp_table_version': '43',
+                                                                                   'chunk_elememt_size': '3',
+                                                                                   'client_reflection': True,
+                                                                                   'dampening': False,
+                                                                                   'dynamic_med': True,
+                                                                                   'dynamic_med_int': '10 '
+                                                                                                      'minutes',
+                                                                                   'dynamic_med_periodic_timer': 'Not '
+                                                                                                                 'Running',
+                                                                                   'dynamic_med_timer': 'Not '
+                                                                                                        'Running',
+                                                                                   'label_retention_timer_value': '5 '
+                                                                                                                  'mins',
+                                                                                   'main_table_version': '43',
+                                                                                   'nexthop_resolution_minimum_prefix_length': '0 '
+                                                                                                                               '(not '
+                                                                                                                               'configured)',
+                                                                                   'num_of_scan_segments': '1',
+                                                                                   'permanent_network': 'unconfigured',
+                                                                                   'prefix_scanned_per_segment': '100000',
+                                                                                   'prefixes_path': {'remote prefixes': {'mem_used': 920,
+                                                                                                                         'number': 10}},
+                                                                                   'remote_local': {'remote prefixes': {'allocated': 10,
+                                                                                                                        'freed': 0}},
+                                                                                   'rib_has_not_converged': 'version '
+                                                                                                            '0',
+                                                                                   'rib_table_prefix_limit_reached': 'no',
+                                                                                   'rib_table_prefix_limit_ver': '0',
+                                                                                   'scan_interval': '60',
+                                                                                   'soft_reconfig_entries': '0',
+                                                                                   'state': 'normal '
+                                                                                            'mode',
+                                                                                   'table_bit_field_size': '1 ',
+                                                                                   'table_version_acked_by_rib': '0',
+                                                                                   'table_version_synced_to_rib': '43',
+                                                                                   'thread': {'import thread': {'triggers': {'Jun 28 19:10:16.427': {'tbl_ver': 43,
+                                                                                                                                                     'trig_tid': 3,
+                                                                                                                                                     'ver': 43}}},
+                                                                                              'label thread': {'triggers': {'Jun 28 19:10:16.427': {'tbl_ver': 43,
+                                                                                                                                                    'trig_tid': 3,
+                                                                                                                                                    'ver': 43}}},
+                                                                                              'rib thread': {'triggers': {'Jun 28 18:29:29.595': {'tbl_ver': 43,
+                                                                                                                                                  'trig_tid': 8,
+                                                                                                                                                  'ver': 33}}},
+                                                                                              'update thread': {'triggers': {'Jun 28 19:10:16.427': {'tbl_ver': 43,
+                                                                                                                                                     'trig_tid': 8,
+                                                                                                                                                     'ver': 43}}}},
+                                                                                   'total_prefixes_scanned': '40'},
+                                                                 'vpnv6 unicast': {'attribute_download': 'Disabled',
+                                                                                   'bgp_table_version': '43',
+                                                                                   'chunk_elememt_size': '3',
+                                                                                   'client_reflection': True,
+                                                                                   'dampening': False,
+                                                                                   'dynamic_med': True,
+                                                                                   'dynamic_med_int': '10 '
+                                                                                                      'minutes',
+                                                                                   'dynamic_med_periodic_timer': 'Not '
+                                                                                                                 'Running',
+                                                                                   'dynamic_med_timer': 'Not '
+                                                                                                        'Running',
+                                                                                   'label_retention_timer_value': '5 '
+                                                                                                                  'mins',
+                                                                                   'main_table_version': '43',
+                                                                                   'nexthop_resolution_minimum_prefix_length': '0 '
+                                                                                                                               '(not '
+                                                                                                                               'configured)',
+                                                                                   'num_of_scan_segments': '1',
+                                                                                   'permanent_network': 'unconfigured',
+                                                                                   'prefix_scanned_per_segment': '100000',
+                                                                                   'prefixes_path': {'remote prefixes': {'mem_used': 1040,
+                                                                                                                         'number': 10}},
+                                                                                   'remote_local': {'remote prefixes': {'allocated': 10,
+                                                                                                                        'freed': 0}},
+                                                                                   'rib_has_not_converged': 'version '
+                                                                                                            '0',
+                                                                                   'rib_table_prefix_limit_reached': 'no',
+                                                                                   'rib_table_prefix_limit_ver': '0',
+                                                                                   'scan_interval': '60',
+                                                                                   'soft_reconfig_entries': '0',
+                                                                                   'state': 'normal '
+                                                                                            'mode',
+                                                                                   'table_bit_field_size': '1 ',
+                                                                                   'table_version_acked_by_rib': '0',
+                                                                                   'table_version_synced_to_rib': '43',
+                                                                                   'thread': {'import thread': {'triggers': {'Jun 28 19:10:16.427': {'tbl_ver': 43,
+                                                                                                                                                     'trig_tid': 3,
+                                                                                                                                                     'ver': 43}}},
+                                                                                              'label thread': {'triggers': {'Jun 28 19:10:16.427': {'tbl_ver': 43,
+                                                                                                                                                    'trig_tid': 3,
+                                                                                                                                                    'ver': 43}}},
+                                                                                              'rib thread': {'triggers': {'Jun 28 18:29:34.604': {'tbl_ver': 43,
+                                                                                                                                                  'trig_tid': 8,
+                                                                                                                                                  'ver': 33}}},
+                                                                                              'update thread': {'triggers': {'Jun 28 19:10:16.427': {'tbl_ver': 43,
+                                                                                                                                                     'trig_tid': 8,
+                                                                                                                                                     'ver': 43}}}},
+                                                                                   'total_prefixes_scanned': '40'}},
+                                              'as_number': 100,
+                                              'as_system_number_format': 'ASPLAIN',
+                                              'att': {'as_paths': {'memory_used': 480,
+                                                                   'number': 6},
+                                                      'attributes': {'memory_used': 912,
+                                                                     'number': 6},
+                                                      'communities': {'memory_used': 0,
+                                                                      'number': 0},
+                                                      'extended_communities': {'memory_used': 480,
+                                                                               'number': 6},
+                                                      'imported_paths': {'memory_used': 2200,
+                                                                         'number': 25},
+                                                      'local_paths': {'memory_used': 2640,
+                                                                      'number': 30},
+                                                      'local_prefixes': {'memory_used': 3210,
+                                                                         'number': 30},
+                                                      'local_rds': {'memory_used': 160,
+                                                                    'number': 2},
+                                                      'nexthop_entries': {'memory_used': 12800,
+                                                                          'number': 32},
+                                                      'pe_distinguisher_labels': {'memory_used': 0,
+                                                                                  'number': 0},
+                                                      'pmsi_tunnel_attr': {'memory_used': 0,
+                                                                           'number': 0},
+                                                      'ppmp_attr': {'memory_used': 0,
+                                                                    'number': 0},
+                                                      'remote_paths': {'memory_used': 1760,
+                                                                       'number': 20},
+                                                      'remote_rds': {'memory_used': 160,
+                                                                     'number': 2},
+                                                      'ribrnh_tunnel_attr': {'memory_used': 0,
+                                                                             'number': 0},
+                                                      'route_reflector_entries': {'memory_used': 320,
+                                                                                  'number': 4},
+                                                      'total_paths': {'memory_used': 4400,
+                                                                      'number': 50},
+                                                      'total_prefixes': {'memory_used': 4280,
+                                                                         'number': 40},
+                                                      'total_rds': {'memory_used': 320,
+                                                                    'number': 4},
+                                                      'tunnel_encap_attr': {'memory_used': 0,
+                                                                            'number': 0}},
+                                              'bgp_speaker_process': 0,
+                                              'bmp_pool_summary': {'100': {'alloc': 0,
+                                                                           'free': 0},
+                                                                   '10000': {'alloc': 0,
+                                                                             'free': 0},
+                                                                   '1200': {'alloc': 0,
+                                                                            'free': 0},
+                                                                   '200': {'alloc': 0,
+                                                                           'free': 0},
+                                                                   '20000': {'alloc': 0,
+                                                                             'free': 0},
+                                                                   '2200': {'alloc': 0,
+                                                                            'free': 0},
+                                                                   '300': {'alloc': 0,
+                                                                           'free': 0},
+                                                                   '3300': {'alloc': 0,
+                                                                            'free': 0},
+                                                                   '400': {'alloc': 0,
+                                                                           'free': 0},
+                                                                   '4000': {'alloc': 0,
+                                                                            'free': 0},
+                                                                   '4500': {'alloc': 0,
+                                                                            'free': 0},
+                                                                   '500': {'alloc': 0,
+                                                                           'free': 0},
+                                                                   '5500': {'alloc': 0,
+                                                                            'free': 0},
+                                                                   '600': {'alloc': 0,
+                                                                           'free': 0},
+                                                                   '6500': {'alloc': 0,
+                                                                            'free': 0},
+                                                                   '700': {'alloc': 0,
+                                                                           'free': 0},
+                                                                   '7500': {'alloc': 0,
+                                                                            'free': 0},
+                                                                   '800': {'alloc': 0,
+                                                                           'free': 0},
+                                                                   '8500': {'alloc': 0,
+                                                                            'free': 0},
+                                                                   '900': {'alloc': 0,
+                                                                           'free': 0}},
+                                              'current_limit_for_bmp_buffer_size': 307,
+                                              'current_utilization_of_bmp_buffer_limit': 0,
+                                              'default_cluster_id': '1.1.1.1',
+                                              'default_keepalive': 60,
+                                              'default_local_preference': 100,
+                                              'default_value_for_bmp_buffer_size': 307,
+                                              'enforce_first_as_enabled': True,
+                                              'fast_external_fallover': True,
+                                              'generic_scan_interval': 60,
+                                              'max_limit_for_bmp_buffer_size': 409,
+                                              'message_logging_pool_summary': {'100': {'alloc': 19,
+                                                                                       'free': 10},
+                                                                               '200': {'alloc': 11,
+                                                                                       'free': 1},
+                                                                               '2200': {'alloc': 0,
+                                                                                        'free': 0},
+                                                                               '4500': {'alloc': 0,
+                                                                                        'free': 0},
+                                                                               '500': {'alloc': 19,
+                                                                                       'free': 12}},
+                                              'neighbor_logging': True,
+                                              'node': 'node0_0_CPU0',
+                                              'non_stop_routing': True,
+                                              'operation_mode': 'standalone',
+                                              'platform_rlimit_max': 2147483648,
+                                              'pool': {'1200': {'alloc': 0,
+                                                                'free': 0},
+                                                       '200': {'alloc': 0,
+                                                               'free': 0},
+                                                       '20000': {'alloc': 0,
+                                                                 'free': 0},
+                                                       '2200': {'alloc': 0,
+                                                                'free': 0},
+                                                       '300': {'alloc': 311,
+                                                               'free': 310},
+                                                       '3300': {'alloc': 0,
+                                                                'free': 0},
+                                                       '400': {'alloc': 6,
+                                                               'free': 6},
+                                                       '4000': {'alloc': 0,
+                                                                'free': 0},
+                                                       '4500': {'alloc': 0,
+                                                                'free': 0},
+                                                       '500': {'alloc': 20,
+                                                               'free': 20},
+                                                       '5000': {'alloc': 0,
+                                                                'free': 0},
+                                                       '600': {'alloc': 12,
+                                                               'free': 12},
+                                                       '700': {'alloc': 2,
+                                                               'free': 2},
+                                                       '800': {'alloc': 0,
+                                                               'free': 0},
+                                                       '900': {'alloc': 0,
+                                                               'free': 0}},
+                                              'received_notifications': 0,
+                                              'received_updates': 24,
+                                              'restart_count': 1,
+                                              'router_id': '1.1.1.1',
+                                              'sent_notifications': 1,
+                                              'sent_updates': 14,
+                                              'update_delay': 120,
+                                              'vrf_info': {'default': {'cfg': 2,
+                                                                       'nbrs_estab': 2,
+                                                                       'total': 1},
+                                                           'non-default': {'cfg': 4,
+                                                                           'nbrs_estab': 4,
+                                                                           'total': 2}}}}}}}
+
 
     golden_output = {'execute.return_value': '''
         Wed Jun 28 19:11:16.033 UTC
@@ -2391,7 +1895,7 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
         =========================
 
         BGP Process Information: 
-        BGP is operating in STANDALONE mode
+        BGP is operating in standalone mode
         Autonomous System number format: ASPLAIN
         Autonomous System: 100
         Router ID: 1.1.1.1 (manually configured)
@@ -2667,251 +2171,244 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
         Total RDs:            4               320
     '''}
 
-    golden_parsed_output1 = {
-        'instance': 
-            {'default': 
-                {'vrf': 
-                    {'default': 
-                        {'active_cluster_id': '1.1.1.1',
-                        'address_family': 
-                            {'vpnv4 unicast': 
-                                {'attribute_download': 'Disabled',
-                                'bgp_table_version': '7',
-                                'chunk_elememt_size': '3',
-                                'client_reflection': True,
-                                'dampening': False,
-                                'dynamic_med': True,
-                                'dynamic_med_int': '10 '
-                                              'minutes',
-                                'dynamic_med_periodic_timer': 'Not '
-                                                         'Running',
-                                'dynamic_med_timer': 'Not '
-                                                'Running',
-                                'label_retention_timer_value': '5 '
-                                                          'mins',
-                                'main_table_version': '7',
-                                'nexthop_resolution_minimum_prefix_length': '0 '
-                                                                       '(not '
-                                                                       'configured)',
-                                'num_of_scan_segments': '1',
-                                'permanent_network': 'unconfigured',
-                                'prefix_scanned_per_segment': '100000',
-                                'prefixes_path': {'remote prefixes': {'mem_used': 0,
-                                                                 'number': 0}},
-                                'remote_local': {'remote prefixes': {'allocated': 0,
-                                                                'freed': 0}},
-                                'rib_has_not_converged': 'version '
-                                                    '0',
-                                'rib_table_prefix_limit_reached': 'no',
-                                'rib_table_prefix_limit_ver': '0',
-                                'scan_interval': '60',
-                                'soft_reconfig_entries': '0',
-                                'state': 'normal '
-                                    'mode',
-                                'table_bit_field_size': '1 ',
-                                'table_version_acked_by_rib': '0',
-                                'table_version_synced_to_rib': '7',
-                                'total_prefixes_scanned': '0'},
-                            'vpnv6 unicast': 
-                                {'attribute_download': 'Disabled',
-                                'bgp_table_version': '7',
-                                'chunk_elememt_size': '3',
-                                'client_reflection': True,
-                                'dampening': False,
-                                'dynamic_med': True,
-                                'dynamic_med_int': '10 '
-                                                  'minutes',
-                                'dynamic_med_periodic_timer': 'Not '
-                                                             'Running',
-                                'dynamic_med_timer': 'Not '
-                                                    'Running',
-                                'label_retention_timer_value': '5 '
-                                                              'mins',
-                                'main_table_version': '7',
-                                'nexthop_resolution_minimum_prefix_length': '0 '
-                                                                           '(not '
-                                                                           'configured)',
-                                'num_of_scan_segments': '1',
-                                'permanent_network': 'unconfigured',
-                                'prefix_scanned_per_segment': '100000',
-                                'prefixes_path': {'remote prefixes': {'mem_used': 0,
-                                                                     'number': 0}},
-                                'remote_local': {'remote prefixes': {'allocated': 0,
-                                                                    'freed': 0}},
-                                'rib_has_not_converged': 'version '
-                                                        '0',
-                                'rib_table_prefix_limit_reached': 'no',
-                                'rib_table_prefix_limit_ver': '0',
-                                'scan_interval': '60',
-                                'soft_reconfig_entries': '0',
-                                'state': 'normal '
-                                        'mode',
-                                'table_bit_field_size': '1 ',
-                                'table_version_acked_by_rib': '0',
-                                'table_version_synced_to_rib': '7',
-                                'total_prefixes_scanned': '0'}},
-                        'as_number': 100,
-                        'as_system_number_format': 'ASPLAIN',
-                        'att': 
-                            {'as_paths': {'memory_used': 0,
-                                           'number': 0},
-                              'attributes': {'memory_used': 0,
-                                             'number': 0},
-                              'communities': {'memory_used': 0,
-                                              'number': 0},
-                              'extended_communities': {'memory_used': 0,
-                                                       'number': 0},
-                              'imported_paths': {'memory_used': 0,
-                                                 'number': 0},
-                              'large_communities': {'memory_used': 0,
-                                                    'number': 0},
-                              'local_paths': {'memory_used': 0,
-                                              'number': 0},
-                              'local_prefixes': {'memory_used': 0,
-                                                 'number': 0},
-                              'local_rds': {'memory_used': 160,
-                                            'number': 2},
-                              'nexthop_entries': {'memory_used': 10400,
-                                                  'number': 26},
-                              'pe_distinguisher_labels': {'memory_used': 0,
-                                                          'number': 0},
-                              'pmsi_tunnel_attr': {'memory_used': 0,
-                                                   'number': 0},
-                              'ppmp_attr': {'memory_used': 0,
-                                            'number': 0},
-                              'remote_paths': {'memory_used': 0,
-                                               'number': 0},
-                              'remote_rds': {'memory_used': 0,
-                                             'number': 0},
-                              'ribrnh_tunnel_attr': {'memory_used': 0,
-                                                     'number': 0},
-                              'route_reflector_entries': {'memory_used': 0,
-                                                          'number': 0},
-                              'total_paths': {'memory_used': 0,
-                                              'number': 0},
-                              'total_prefixes': {'memory_used': 0,
-                                                 'number': 0},
-                              'total_rds': {'memory_used': 160,
-                                            'number': 2},
-                              'tunnel_encap_attr': {'memory_used': 0,
-                                                    'number': 0}},
-                        'bgp_speaker_process': 0,
-                        'bmp_pool_summary': {'100': {'alloc': 0,
-                                                   'free': 0},
-                                           '10000': {'alloc': 0,
-                                                     'free': 0},
-                                           '1200': {'alloc': 0,
-                                                    'free': 0},
-                                           '200': {'alloc': 0,
-                                                   'free': 0},
-                                           '20000': {'alloc': 0,
-                                                     'free': 0},
-                                           '2200': {'alloc': 0,
-                                                    'free': 0},
-                                           '300': {'alloc': 0,
-                                                   'free': 0},
-                                           '3300': {'alloc': 0,
-                                                    'free': 0},
-                                           '400': {'alloc': 0,
-                                                   'free': 0},
-                                           '4000': {'alloc': 0,
-                                                    'free': 0},
-                                           '4500': {'alloc': 0,
-                                                    'free': 0},
-                                           '500': {'alloc': 0,
-                                                   'free': 0},
-                                           '5500': {'alloc': 0,
-                                                    'free': 0},
-                                           '600': {'alloc': 0,
-                                                   'free': 0},
-                                           '6500': {'alloc': 0,
-                                                    'free': 0},
-                                           '700': {'alloc': 0,
-                                                   'free': 0},
-                                           '7500': {'alloc': 0,
-                                                    'free': 0},
-                                           '800': {'alloc': 0,
-                                                   'free': 0},
-                                           '8500': {'alloc': 0,
-                                                    'free': 0},
-                                           '900': {'alloc': 0,
-                                                   'free': 0}},
-                        'current_limit_for_bmp_buffer_size': 326,
-                        'current_utilization_of_bmp_buffer_limit': 0,
-                        'default_cluster_id': '1.1.1.1',
-                        'default_keepalive': 60,
-                        'default_local_preference': 100,
-                        'default_value_for_bmp_buffer_size': 326,
-                        'enforce_first_as_enabled': True,
-                        'fast_external_fallover': True,
-                        'generic_scan_interval': 60,
-                        'max_limit_for_bmp_buffer_size': 435,
-                        'message_logging_pool_summary': {'4500': {'alloc': 0,
-                                                                'free': 0}},
-                        'neighbor_logging': True,
-                        'node': 'node0_RSP1_CPU0',
-                        'non_stop_routing': True,
-                        'operation_mode': 'STANDALONE',
-                        'platform_rlimit_max': 2281701376,
-                        'pool': {'1200': {'alloc': 0,
-                                        'free': 0},
-                               '200': {'alloc': 0,
-                                       'free': 0},
-                               '20000': {'alloc': 0,
-                                         'free': 0},
-                               '2200': {'alloc': 0,
-                                        'free': 0},
-                               '300': {'alloc': 1,
-                                       'free': 0},
-                               '3300': {'alloc': 0,
-                                        'free': 0},
-                               '400': {'alloc': 0,
-                                       'free': 0},
-                               '4000': {'alloc': 0,
-                                        'free': 0},
-                               '4500': {'alloc': 0,
-                                        'free': 0},
-                               '500': {'alloc': 0,
-                                       'free': 0},
-                               '5000': {'alloc': 0,
-                                        'free': 0},
-                               '600': {'alloc': 0,
-                                       'free': 0},
-                               '700': {'alloc': 0,
-                                       'free': 0},
-                               '800': {'alloc': 0,
-                                       'free': 0},
-                               '900': {'alloc': 0,
-                                       'free': 0}},
-                        'received_notifications': 0,
-                        'received_updates': 0,
-                        'restart_count': 1,
-                        'router_id': '1.1.1.1',
-                        'sent_notifications': 0,
-                        'sent_updates': 0,
-                        'update_delay': 120,
-                        'vrf_info': {'default': {'cfg': 2,
-                                               'nbrs_estab': 0,
-                                               'total': 1},
-                                   'non-default': {'cfg': 4,
-                                                   'nbrs_estab': 0,
-                                                   'total': 2}}}}},
-            'test': 
-                {'vrf': 
-                    {'default': {}}},
-            'test1': 
-                {'vrf': 
-                    {'default': {}}},
-            'test2': 
-                {'vrf': 
-                    {'default': {}}}}}
-
+    golden_parsed_output1 = {'instance': {'default': {'vrf': {'default': {'active_cluster_id': '1.1.1.1',
+                                              'address_family': {'vpnv4 unicast': {'attribute_download': 'Disabled',
+                                                                                   'bgp_table_version': '7',
+                                                                                   'chunk_elememt_size': '3',
+                                                                                   'client_reflection': True,
+                                                                                   'dampening': False,
+                                                                                   'dynamic_med': True,
+                                                                                   'dynamic_med_int': '10 '
+                                                                                                      'minutes',
+                                                                                   'dynamic_med_periodic_timer': 'Not '
+                                                                                                                 'Running',
+                                                                                   'dynamic_med_timer': 'Not '
+                                                                                                        'Running',
+                                                                                   'label_retention_timer_value': '5 '
+                                                                                                                  'mins',
+                                                                                   'main_table_version': '7',
+                                                                                   'nexthop_resolution_minimum_prefix_length': '0 '
+                                                                                                                               '(not '
+                                                                                                                               'configured)',
+                                                                                   'num_of_scan_segments': '1',
+                                                                                   'permanent_network': 'unconfigured',
+                                                                                   'prefix_scanned_per_segment': '100000',
+                                                                                   'prefixes_path': {'remote prefixes': {'mem_used': 0,
+                                                                                                                         'number': 0}},
+                                                                                   'remote_local': {'remote prefixes': {'allocated': 0,
+                                                                                                                        'freed': 0}},
+                                                                                   'rib_has_not_converged': 'version '
+                                                                                                            '0',
+                                                                                   'rib_table_prefix_limit_reached': 'no',
+                                                                                   'rib_table_prefix_limit_ver': '0',
+                                                                                   'scan_interval': '60',
+                                                                                   'soft_reconfig_entries': '0',
+                                                                                   'state': 'normal '
+                                                                                            'mode',
+                                                                                   'table_bit_field_size': '1 ',
+                                                                                   'table_version_acked_by_rib': '0',
+                                                                                   'table_version_synced_to_rib': '7',
+                                                                                   'total_prefixes_scanned': '0'},
+                                                                 'vpnv6 unicast': {'attribute_download': 'Disabled',
+                                                                                   'bgp_table_version': '7',
+                                                                                   'chunk_elememt_size': '3',
+                                                                                   'client_reflection': True,
+                                                                                   'dampening': False,
+                                                                                   'dynamic_med': True,
+                                                                                   'dynamic_med_int': '10 '
+                                                                                                      'minutes',
+                                                                                   'dynamic_med_periodic_timer': 'Not '
+                                                                                                                 'Running',
+                                                                                   'dynamic_med_timer': 'Not '
+                                                                                                        'Running',
+                                                                                   'label_retention_timer_value': '5 '
+                                                                                                                  'mins',
+                                                                                   'main_table_version': '7',
+                                                                                   'nexthop_resolution_minimum_prefix_length': '0 '
+                                                                                                                               '(not '
+                                                                                                                               'configured)',
+                                                                                   'num_of_scan_segments': '1',
+                                                                                   'permanent_network': 'unconfigured',
+                                                                                   'prefix_scanned_per_segment': '100000',
+                                                                                   'prefixes_path': {'remote prefixes': {'mem_used': 0,
+                                                                                                                         'number': 0}},
+                                                                                   'remote_local': {'remote prefixes': {'allocated': 0,
+                                                                                                                        'freed': 0}},
+                                                                                   'rib_has_not_converged': 'version '
+                                                                                                            '0',
+                                                                                   'rib_table_prefix_limit_reached': 'no',
+                                                                                   'rib_table_prefix_limit_ver': '0',
+                                                                                   'scan_interval': '60',
+                                                                                   'soft_reconfig_entries': '0',
+                                                                                   'state': 'normal '
+                                                                                            'mode',
+                                                                                   'table_bit_field_size': '1 ',
+                                                                                   'table_version_acked_by_rib': '0',
+                                                                                   'table_version_synced_to_rib': '7',
+                                                                                   'total_prefixes_scanned': '0'}},
+                                              'as_number': 100,
+                                              'as_system_number_format': 'ASPLAIN',
+                                              'att': {'as_paths': {'memory_used': 0,
+                                                                   'number': 0},
+                                                      'attributes': {'memory_used': 0,
+                                                                     'number': 0},
+                                                      'communities': {'memory_used': 0,
+                                                                      'number': 0},
+                                                      'extended_communities': {'memory_used': 0,
+                                                                               'number': 0},
+                                                      'imported_paths': {'memory_used': 0,
+                                                                         'number': 0},
+                                                      'large_communities': {'memory_used': 0,
+                                                                            'number': 0},
+                                                      'local_paths': {'memory_used': 0,
+                                                                      'number': 0},
+                                                      'local_prefixes': {'memory_used': 0,
+                                                                         'number': 0},
+                                                      'local_rds': {'memory_used': 160,
+                                                                    'number': 2},
+                                                      'nexthop_entries': {'memory_used': 10400,
+                                                                          'number': 26},
+                                                      'pe_distinguisher_labels': {'memory_used': 0,
+                                                                                  'number': 0},
+                                                      'pmsi_tunnel_attr': {'memory_used': 0,
+                                                                           'number': 0},
+                                                      'ppmp_attr': {'memory_used': 0,
+                                                                    'number': 0},
+                                                      'remote_paths': {'memory_used': 0,
+                                                                       'number': 0},
+                                                      'remote_rds': {'memory_used': 0,
+                                                                     'number': 0},
+                                                      'ribrnh_tunnel_attr': {'memory_used': 0,
+                                                                             'number': 0},
+                                                      'route_reflector_entries': {'memory_used': 0,
+                                                                                  'number': 0},
+                                                      'total_paths': {'memory_used': 0,
+                                                                      'number': 0},
+                                                      'total_prefixes': {'memory_used': 0,
+                                                                         'number': 0},
+                                                      'total_rds': {'memory_used': 160,
+                                                                    'number': 2},
+                                                      'tunnel_encap_attr': {'memory_used': 0,
+                                                                            'number': 0}},
+                                              'bgp_speaker_process': 0,
+                                              'bmp_pool_summary': {'100': {'alloc': 0,
+                                                                           'free': 0},
+                                                                   '10000': {'alloc': 0,
+                                                                             'free': 0},
+                                                                   '1200': {'alloc': 0,
+                                                                            'free': 0},
+                                                                   '200': {'alloc': 0,
+                                                                           'free': 0},
+                                                                   '20000': {'alloc': 0,
+                                                                             'free': 0},
+                                                                   '2200': {'alloc': 0,
+                                                                            'free': 0},
+                                                                   '300': {'alloc': 0,
+                                                                           'free': 0},
+                                                                   '3300': {'alloc': 0,
+                                                                            'free': 0},
+                                                                   '400': {'alloc': 0,
+                                                                           'free': 0},
+                                                                   '4000': {'alloc': 0,
+                                                                            'free': 0},
+                                                                   '4500': {'alloc': 0,
+                                                                            'free': 0},
+                                                                   '500': {'alloc': 0,
+                                                                           'free': 0},
+                                                                   '5500': {'alloc': 0,
+                                                                            'free': 0},
+                                                                   '600': {'alloc': 0,
+                                                                           'free': 0},
+                                                                   '6500': {'alloc': 0,
+                                                                            'free': 0},
+                                                                   '700': {'alloc': 0,
+                                                                           'free': 0},
+                                                                   '7500': {'alloc': 0,
+                                                                            'free': 0},
+                                                                   '800': {'alloc': 0,
+                                                                           'free': 0},
+                                                                   '8500': {'alloc': 0,
+                                                                            'free': 0},
+                                                                   '900': {'alloc': 0,
+                                                                           'free': 0}},
+                                              'current_limit_for_bmp_buffer_size': 326,
+                                              'current_utilization_of_bmp_buffer_limit': 0,
+                                              'default_cluster_id': '1.1.1.1',
+                                              'default_keepalive': 60,
+                                              'default_local_preference': 100,
+                                              'default_value_for_bmp_buffer_size': 326,
+                                              'enforce_first_as_enabled': True,
+                                              'fast_external_fallover': True,
+                                              'generic_scan_interval': 60,
+                                              'max_limit_for_bmp_buffer_size': 435,
+                                              'message_logging_pool_summary': {'100': {'alloc': 0,
+                                                                                       'free': 0},
+                                                                               '200': {'alloc': 0,
+                                                                                       'free': 0},
+                                                                               '2200': {'alloc': 0,
+                                                                                        'free': 0},
+                                                                               '4500': {'alloc': 0,
+                                                                                        'free': 0},
+                                                                               '500': {'alloc': 0,
+                                                                                       'free': 0}},
+                                              'neighbor_logging': True,
+                                              'node': 'node0_RSP1_CPU0',
+                                              'non_stop_routing': True,
+                                              'operation_mode': 'standalone',
+                                              'platform_rlimit_max': 2281701376,
+                                              'pool': {'1200': {'alloc': 0,
+                                                                'free': 0},
+                                                       '200': {'alloc': 0,
+                                                               'free': 0},
+                                                       '20000': {'alloc': 0,
+                                                                 'free': 0},
+                                                       '2200': {'alloc': 0,
+                                                                'free': 0},
+                                                       '300': {'alloc': 1,
+                                                               'free': 0},
+                                                       '3300': {'alloc': 0,
+                                                                'free': 0},
+                                                       '400': {'alloc': 0,
+                                                               'free': 0},
+                                                       '4000': {'alloc': 0,
+                                                                'free': 0},
+                                                       '4500': {'alloc': 0,
+                                                                'free': 0},
+                                                       '500': {'alloc': 0,
+                                                               'free': 0},
+                                                       '5000': {'alloc': 0,
+                                                                'free': 0},
+                                                       '600': {'alloc': 0,
+                                                               'free': 0},
+                                                       '700': {'alloc': 0,
+                                                               'free': 0},
+                                                       '800': {'alloc': 0,
+                                                               'free': 0},
+                                                       '900': {'alloc': 0,
+                                                               'free': 0}},
+                                              'received_notifications': 0,
+                                              'received_updates': 0,
+                                              'restart_count': 1,
+                                              'router_id': '1.1.1.1',
+                                              'sent_notifications': 0,
+                                              'sent_updates': 0,
+                                              'update_delay': 120,
+                                              'vrf_info': {'default': {'cfg': 2,
+                                                                       'nbrs_estab': 0,
+                                                                       'total': 1},
+                                                           'non-default': {'cfg': 4,
+                                                                           'nbrs_estab': 0,
+                                                                           'total': 2}}}}},
+              'test': {'vrf': {'default': {}}},
+              'test1': {'vrf': {'default': {}}},
+              'test2': {'vrf': {'default': {}}}}}
+        
     golden_output1 = {'execute.return_value': '''
         BGP instance 0: 'default'
         =========================
 
         BGP Process Information: 
-        BGP is operating in STANDALONE mode
+        BGP is operating in standalone mode
         Autonomous System number format: ASPLAIN
         Autonomous System: 100
         Router ID: 1.1.1.1 (manually configured)
@@ -3198,6 +2695,7 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
         self.device = Mock(**self.golden_output1)
         obj = ShowBgpInstanceProcessDetail(device=self.device)
         parsed_output = obj.parse(vrf_type='all')
+        self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output1)
 
 # ==============================================================
@@ -4519,62 +4017,50 @@ class test_show_bgp_instance_all_vrf_all_neighbors_advertised_routes(unittest.Te
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output =  {
-        "instance": {
-            "default": {
-                "vrf": {
-                    "VRF2": {
-                        "address_family": {
-                            "ipv4 unicast RD 200:2": {
-                                "advertised": {
-                                    "prefix": {
-                                        "46.2.2.0/24": {
-                                            "index": {
-                                                1: {
-                                                    "froms": "2.2.2.2",
-                                                    "next_hop": "20.1.5.1",
-                                                    "asn": 100,
-                                                    "origin_code": "e",
-                                                    "path": "400 33299 51178 47751 {27016}"}}},
-                                        "46.1.1.0/24": {
-                                            "index": {
-                                                1: {
-                                                    "froms": "2.2.2.2",
-                                                    "next_hop": "20.1.5.1",
-                                                    "asn": 100,
-                                                    "origin_code": "e",
-                                                    "path": "300 33299 51178 47751 {27016}"}}},
-                                        "46.1.5.0/24": {
-                                            "index": {
-                                                1: {
-                                                    "froms": "2.2.2.2",
-                                                    "next_hop": "20.1.5.1",
-                                                    "asn": 100,
-                                                    "origin_code": "e",
-                                                    "path": "300 33299 51178 47751 {27016}"}}},
-                                        "46.1.4.0/24": {
-                                            "index": {
-                                                1: {
-                                                    "froms": "2.2.2.2",
-                                                    "next_hop": "20.1.5.1",
-                                                    "asn": 100,
-                                                    "origin_code": "e",
-                                                    "path": "300 33299 51178 47751 {27016}"
-                                        }}}}},
-                                "processed_prefixes": "4",
-                                "route_distinguisher": "200:2",
-                                "processed_paths": "4",
-                                "default_vrf": "VRF2"}}},
-                    "VRF1": {}
-                    }
-                }
-            }
-        }
-
-
+    golden_parsed_output =  {'instance': {'default': {'vrf': {'VRF1': {},
+                                  'VRF2': {'address_family': {'ipv4 unicast RD 200:2': {'advertised': {'prefix': {'46.1.1.0/24': {'index': {1: {'froms': '2.2.2.2',
+                                                                                                                                                'next_hop': '20.1.5.1',
+                                                                                                                                                'origin_code': 'e',
+                                                                                                                                                'path': '100 '
+                                                                                                                                                        '300 '
+                                                                                                                                                        '33299 '
+                                                                                                                                                        '51178 '
+                                                                                                                                                        '47751 '
+                                                                                                                                                        '{27016}'}}},
+                                                                                                                  '46.1.4.0/24': {'index': {1: {'froms': '2.2.2.2',
+                                                                                                                                                'next_hop': '20.1.5.1',
+                                                                                                                                                'origin_code': 'e',
+                                                                                                                                                'path': '100 '
+                                                                                                                                                        '300 '
+                                                                                                                                                        '33299 '
+                                                                                                                                                        '51178 '
+                                                                                                                                                        '47751 '
+                                                                                                                                                        '{27016}'}}},
+                                                                                                                  '46.1.5.0/24': {'index': {1: {'froms': '2.2.2.2',
+                                                                                                                                                'next_hop': '20.1.5.1',
+                                                                                                                                                'origin_code': 'e',
+                                                                                                                                                'path': '100 '
+                                                                                                                                                        '300 '
+                                                                                                                                                        '33299 '
+                                                                                                                                                        '51178 '
+                                                                                                                                                        '47751 '
+                                                                                                                                                        '{27016}'}}},
+                                                                                                                  '46.2.2.0/24': {'index': {1: {'froms': '2.2.2.2',
+                                                                                                                                                'next_hop': '20.1.5.1',
+                                                                                                                                                'origin_code': 'e',
+                                                                                                                                                'path': '100 '
+                                                                                                                                                        '400 '
+                                                                                                                                                        '33299 '
+                                                                                                                                                        '51178 '
+                                                                                                                                                        '47751 '
+                                                                                                                                                        '{27016}'}}}}},
+                                                                                        'default_vrf': 'VRF2',
+                                                                                        'processed_paths': '4',
+                                                                                        'processed_prefixes': '4',
+                                                                                        'route_distinguisher': '200:2'}}}}}}}
 
     golden_output = {'execute.return_value': '''
-    
+
      Neighbor not found
 
     BGP instance 0: 'default'
@@ -4619,82 +4105,46 @@ class test_show_bgp_instance_all_all_all_neighbors_advertised_routes(unittest.Te
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output =  {
-        "instance": {
-            "default": {
-                "vrf": {
-                    "default": {
-                        "address_family": {
-                            "vpnv4 unicast RD 200:2": {
-                                "processed_paths": "2",
-                                "processed_prefixes": "2",
-                                "advertised": {
-                                    "prefix": {
-                                        "15.1.2.0/24": {
-                                            "index": {
-                                                1: {
-                                                    "froms": "20.1.5.5",
-                                                    "path": "33299 51178 47751 {27016}",
-                                                    "asn": 200,
-                                                    "next_hop": "1.1.1.1",
-                                                    "origin_code": "e"
-                                                }
-                                            }
-                                        },
-                                        "15.1.1.0/24": {
-                                            "index": {
-                                                1: {
-                                                    "froms": "20.1.5.5",
-                                                    "path": "33299 51178 47751 {27016}",
-                                                    "asn": 200,
-                                                    "next_hop": "1.1.1.1",
-                                                    "origin_code": "e"
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                "default_vrf": "default",
-                                "route_distinguisher": "200:2"
-                            },
-                            "vpnv6 unicast RD 200:2": {
-                                "processed_paths": "2",
-                                "processed_prefixes": "2",
-                                "advertised": {
-                                    "prefix": {
-                                        "615:11:11::/64": {
-                                            "index": {
-                                                1: {
-                                                    "froms": "2001:db8:20:1:5::5",
-                                                    "path": "33299 51178 47751 {27017}",
-                                                    "asn": 200,
-                                                    "next_hop": "1.1.1.1",
-                                                    "origin_code": "e"
-                                                }
-                                            }
-                                        },
-                                        "615:11:11:1::/64": {
-                                            "index": {
-                                                1: {
-                                                    "froms": "2001:db8:20:1:5::5",
-                                                    "path": "33299 51178 47751 {27016}",
-                                                    "asn": 200,
-                                                    "next_hop": "1.1.1.1",
-                                                    "origin_code": "e"
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                "default_vrf": "default",
-                                "route_distinguisher": "200:2"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+    golden_parsed_output =  {'instance': {'default': {'vrf': {'default': {'address_family': {'vpnv4 unicast RD 200:2': {'advertised': {'prefix': {'15.1.1.0/24': {'index': {1: {'froms': '20.1.5.5',
+                                                                                                                                                    'next_hop': '1.1.1.1',
+                                                                                                                                                    'origin_code': 'e',
+                                                                                                                                                    'path': '200 '
+                                                                                                                                                            '33299 '
+                                                                                                                                                            '51178 '
+                                                                                                                                                            '47751 '
+                                                                                                                                                            '{27016}'}}},
+                                                                                                                      '15.1.2.0/24': {'index': {1: {'froms': '20.1.5.5',
+                                                                                                                                                    'next_hop': '1.1.1.1',
+                                                                                                                                                    'origin_code': 'e',
+                                                                                                                                                    'path': '200 '
+                                                                                                                                                            '33299 '
+                                                                                                                                                            '51178 '
+                                                                                                                                                            '47751 '
+                                                                                                                                                            '{27016}'}}}}},
+                                                                                            'default_vrf': 'default',
+                                                                                            'processed_paths': '2',
+                                                                                            'processed_prefixes': '2',
+                                                                                            'route_distinguisher': '200:2'},
+                                                                 'vpnv6 unicast RD 200:2': {'advertised': {'prefix': {'615:11:11:1::/64': {'index': {1: {'froms': '2001:db8:20:1:5::5',
+                                                                                                                                                         'next_hop': '1.1.1.1',
+                                                                                                                                                         'origin_code': 'e',
+                                                                                                                                                         'path': '200 '
+                                                                                                                                                                 '33299 '
+                                                                                                                                                                 '51178 '
+                                                                                                                                                                 '47751 '
+                                                                                                                                                                 '{27016}'}}},
+                                                                                                                      '615:11:11::/64': {'index': {1: {'froms': '2001:db8:20:1:5::5',
+                                                                                                                                                       'next_hop': '1.1.1.1',
+                                                                                                                                                       'origin_code': 'e',
+                                                                                                                                                       'path': '200 '
+                                                                                                                                                               '33299 '
+                                                                                                                                                               '51178 '
+                                                                                                                                                               '47751 '
+                                                                                                                                                               '{27017}'}}}}},
+                                                                                            'default_vrf': 'default',
+                                                                                            'processed_paths': '2',
+                                                                                            'processed_prefixes': '2',
+                                                                                            'route_distinguisher': '200:2'}}}}}}}
 
     golden_output = {'execute.return_value': '''
 
@@ -4739,61 +4189,50 @@ class test_show_bgp_instance_all_all_all_neighbors_advertised_routes(unittest.Te
 
 
 # ==============================================================================
-# Unit test for 'show bgp instance all vrf all neighbors <WORD> received-routes'
+# Unit test for 'show bgp instance all vrf all neighbors <WORD> received routes'
 # ==============================================================================
 
 class test_show_bgp_instance_all_vrf_all_neighbors_received_routes(unittest.TestCase):
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output =   {
-        "instance": {
-           "default": {
-                "vrf": {
-                    "vrf2": {
-                        "address_family": {
-                            "ipv4 unicast RD 200:2": {
-                                "non_stop_routing": True,
-                                "vrf_id": "0x60000002",
-                                "processed_prefixes": 2,
-                                "table_state": "Active",
-                                "state": "Active",
-                                "processed_paths": 2,
-                                "table_id": "0xe0000011",
-                                "nsr_initial_initsync_version": "11 (Reached)",
-                                "tbl_ver": 63,
-                                "received": {
-                                    "prefix": {
-                                        "15.1.1.0/24": {
-                                            "index": {
-                                                1: {
-                                                    "next_hop": "20.1.5.5",
-                                                    "origin_codes": "e",
-                                                    "metric": "2219",
-                                                    "path": "200 33299 51178 47751 {27016}",
-                                                    "weight": "0",
-                                                    "status_codes": "*"
-                                                }
-                                            }
-                                        },
-                                        "15.1.2.0/24": {
-                                            "index": {
-                                                1: {
-                                                    "next_hop": "20.1.5.5",
-                                                    "origin_codes": "e",
-                                                    "metric": "2219",
-                                                    "path": "200 33299 51178 47751 {27016}",
-                                                    "weight": "0",
-                                                    "status_codes": "*"
-                                                }}}}},
-                               "local_as": 100,
-                               "route_identifier": "11.11.11.11",
-                               "rd_version": 63,
-                               "nsr_issu_sync_group_versions": "0/0"
-                            }}}}}}}
+    golden_parsed_output =  {'instance': {'default': {'vrf': {'VRF2': {'address_family': {'ipv4 unicast RD 200:2': {'local_as': 100,
+                                                                                        'non_stop_routing': True,
+                                                                                        'nsr_initial_init_ver_status': 'reached',
+                                                                                        'nsr_initial_initsync_version': '11',
+                                                                                        'nsr_issu_sync_group_versions': '0/0',
+                                                                                        'processed_paths': 2,
+                                                                                        'processed_prefixes': 2,
+                                                                                        'rd_version': 63,
+                                                                                        'received': {'prefix': {'15.1.1.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                              'next_hop': '20.1.5.5',
+                                                                                                                                              'origin_codes': 'e',
+                                                                                                                                              'path': '200 '
+                                                                                                                                                      '33299 '
+                                                                                                                                                      '51178 '
+                                                                                                                                                      '47751 '
+                                                                                                                                                      '{27016}',
+                                                                                                                                              'status_codes': '*',
+                                                                                                                                              'weight': '0'}}},
+                                                                                                                '15.1.2.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                              'next_hop': '20.1.5.5',
+                                                                                                                                              'origin_codes': 'e',
+                                                                                                                                              'path': '200 '
+                                                                                                                                                      '33299 '
+                                                                                                                                                      '51178 '
+                                                                                                                                                      '47751 '
+                                                                                                                                                      '{27016}',
+                                                                                                                                              'status_codes': '*',
+                                                                                                                                              'weight': '0'}}}}},
+                                                                                        'route_distinguisher': '200:2',
+                                                                                        'router_identifier': '11.11.11.11',
+                                                                                        'state': 'active',
+                                                                                        'table_id': '0xe0000011',
+                                                                                        'table_state': 'active',
+                                                                                        'tbl_ver': 63,
+                                                                                        'vrf_id': '0x60000002'}}}}}}}
 
-
-
+  
     golden_output = {'execute.return_value': '''
         Wed Jun 28 19:20:50.783 UTC
         % Neighbor not found
@@ -4843,148 +4282,131 @@ class test_show_bgp_instance_all_vrf_all_neighbors_received_routes(unittest.Test
 
 
 # ==============================================================================
-# Unit test for 'show bgp instance all all all neighbors <WORD> received-routes'
+# Unit test for 'show bgp instance all all all neighbors <WORD> received routes'
 # ==============================================================================
 
 class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.TestCase):
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output =  {
-        "instance": {
-            "default": {
-                "vrf": {
-                    "default": {
-                        "address_family": {
-                            "vpnv4 unicast RD 300:1": {
-                                "nsr_initial_initsync_version": "11 (Reached)",
-                                "route_identifier": "1.1.1.1",
-                                "non_stop_routing": True,
-                                "nsr_issu_sync_group_versions": "0/0",
-                                "received": {
-                                    "prefix": {
-                                        "46.1.1.0/24": {
-                                            "index": {
-                                                1: {
-                                                    "metric": "2219",
-                                                    "locprf": "100",
-                                                    "path": "300 33299 51178 47751 {27016}",
-                                                    "weight": "0",
-                                                    "origin_codes": "e",
-                                                    "status_codes": "*i",
-                                                    "next_hop": "4.4.4.4"
-                                                }}}}},
-                                "generic_scan_interval": 60,
-                                "local_as": 100,
-                                "rd_version": 0,
-                                "tbl_ver": 43,
-                                "table_id": "0x0",
-                                "table_state": "Active",
-                                "scan_interval": 60
-                            },
-                            "vpnv6 unicast RD 300:1": {
-                                "nsr_initial_initsync_version": "11 (Reached)",
-                                "route_identifier": "1.1.1.1",
-                                "non_stop_routing": True,
-                                "nsr_issu_sync_group_versions": "0/0",
-                                "received": {
-                                    "prefix": {
-                                        "646:11:11::/64": {
-                                            "index": {
-                                                1: {
-                                                    "metric": "2219",
-                                                    "locprf": "100",
-                                                    "path": "300 33299 51178 47751 {27016}",
-                                                    "weight": "0",
-                                                    "origin_codes": "e",
-                                                    "status_codes": "*i",
-                                                    "next_hop": "4.4.4.4"
-                                                   }
-                                              }
-                                        },
-                                        "646:11:11:4::/64": {
-                                            "index": {
-                                                1: {
-                                                    "metric": "2219",
-                                                    "locprf": "100",
-                                                    "path": "300 33299 51178 47751 {27016}",
-                                                    "weight": "0",
-                                                    "origin_codes": "e",
-                                                    "status_codes": "*i",
-                                                    "next_hop": "4.4.4.4"
-                                                   }}}}},
-                                "generic_scan_interval": 60,
-                                "local_as": 100,
-                                "rd_version": 0,
-                                "tbl_ver": 43,
-                                "table_id": "0x0",
-                                "table_state": "Active",
-                                "scan_interval": 60
-                            },
-                            "vpnv6 unicast RD 400:1": {
-                                "nsr_initial_initsync_version": "11 (Reached)",
-                                "route_identifier": "1.1.1.1",
-                                "non_stop_routing": True,
-                                "nsr_issu_sync_group_versions": "0/0",
-                                "received": {
-                                    "prefix": {
-                                        "646:22:22:1::/64": {
-                                            "index": {
-                                                1: {
-                                                    "metric": "2219",
-                                                    "locprf": "100",
-                                                    "path": "400 33299 51178 47751 {27016}",
-                                                    "weight": "0",
-                                                    "origin_codes": "e",
-                                                    "status_codes": "*i",
-                                                    "next_hop": "4.4.4.4"}}},
-                                        "646:22:22::/64": {
-                                            "index": {
-                                                1: {
-                                                    "metric": "2219",
-                                                    "locprf": "100",
-                                                    "path": "400 33299 51178 47751 {27016}",
-                                                    "weight": "0",
-                                                    "origin_codes": "e",
-                                                    "status_codes": "*i",
-                                                    "next_hop": "4.4.4.4"
-                                                   }}}}},
-                                "generic_scan_interval": 60,
-                                "processed_paths": 10,
-                                "rd_version": 0,
-                                "tbl_ver": 43,
-                                "table_id": "0x0",
-                                "table_state": "Active",
-                                "processed_prefixes": 10,
-                                "local_as": 100,
-                                "scan_interval": 60
-                            },
-                            "vpnv4 unicast RD 400:1": {
-                                "nsr_initial_initsync_version": "11 (Reached)",
-                                "route_identifier": "1.1.1.1",
-                                "non_stop_routing": True,
-                                "nsr_issu_sync_group_versions": "0/0",
-                                "received": {
-                                    "prefix": {
-                                        "46.2.2.0/24": {
-                                            "index": {
-                                                1: {
-                                                    "metric": "2219",
-                                                    "locprf": "100",
-                                                    "path": "400 33299 51178 47751 {27016}",
-                                                    "weight": "0",
-                                                    "origin_codes": "e",
-                                                    "status_codes": "*i",
-                                                    "next_hop": "4.4.4.4"}}}}},
-                                "generic_scan_interval": 60,
-                                "processed_paths": 10,
-                                "rd_version": 0,
-                                "tbl_ver": 43,
-                                "table_id": "0x0",
-                                "table_state": "Active",
-                                "processed_prefixes": 10,
-                                "local_as": 100,
-                                "scan_interval": 60}}}}}}}
+    golden_parsed_output =  {'instance': {'default': {'vrf': {'default': {'address_family': {'vpnv4 unicast RD 300:1': {'generic_scan_interval': 60,
+                                                                                            'local_as': 100,
+                                                                                            'non_stop_routing': True,
+                                                                                            'nsr_initial_init_ver_status': 'reached',
+                                                                                            'nsr_initial_initsync_version': '11',
+                                                                                            'nsr_issu_sync_group_versions': '0/0',
+                                                                                            'rd_version': 0,
+                                                                                            'received': {'prefix': {'46.1.1.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                                  'metric': '2219',
+                                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                                  'path': '300 '
+                                                                                                                                                          '33299 '
+                                                                                                                                                          '51178 '
+                                                                                                                                                          '47751 '
+                                                                                                                                                          '{27016}',
+                                                                                                                                                  'status_codes': '*i',
+                                                                                                                                                  'weight': '0'}}}}},
+                                                                                            'router_identifier': '1.1.1.1',
+                                                                                            'scan_interval': 60,
+                                                                                            'table_id': '0x0',
+                                                                                            'table_state': 'active',
+                                                                                            'tbl_ver': 43},
+                                                                 'vpnv4 unicast RD 400:1': {'generic_scan_interval': 60,
+                                                                                            'local_as': 100,
+                                                                                            'non_stop_routing': True,
+                                                                                            'nsr_initial_init_ver_status': 'reached',
+                                                                                            'nsr_initial_initsync_version': '11',
+                                                                                            'nsr_issu_sync_group_versions': '0/0',
+                                                                                            'processed_paths': 10,
+                                                                                            'processed_prefixes': 10,
+                                                                                            'rd_version': 0,
+                                                                                            'received': {'prefix': {'46.2.2.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                                  'metric': '2219',
+                                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                                  'path': '400 '
+                                                                                                                                                          '33299 '
+                                                                                                                                                          '51178 '
+                                                                                                                                                          '47751 '
+                                                                                                                                                          '{27016}',
+                                                                                                                                                  'status_codes': '*i',
+                                                                                                                                                  'weight': '0'}}}}},
+                                                                                            'router_identifier': '1.1.1.1',
+                                                                                            'scan_interval': 60,
+                                                                                            'table_id': '0x0',
+                                                                                            'table_state': 'active',
+                                                                                            'tbl_ver': 43},
+                                                                 'vpnv6 unicast RD 300:1': {'generic_scan_interval': 60,
+                                                                                            'local_as': 100,
+                                                                                            'non_stop_routing': True,
+                                                                                            'nsr_initial_init_ver_status': 'reached',
+                                                                                            'nsr_initial_initsync_version': '11',
+                                                                                            'nsr_issu_sync_group_versions': '0/0',
+                                                                                            'rd_version': 0,
+                                                                                            'received': {'prefix': {'646:11:11:4::/64': {'index': {1: {'locprf': '100',
+                                                                                                                                                       'metric': '2219',
+                                                                                                                                                       'next_hop': '4.4.4.4',
+                                                                                                                                                       'origin_codes': 'e',
+                                                                                                                                                       'path': '300 '
+                                                                                                                                                               '33299 '
+                                                                                                                                                               '51178 '
+                                                                                                                                                               '47751 '
+                                                                                                                                                               '{27016}',
+                                                                                                                                                       'status_codes': '*i',
+                                                                                                                                                       'weight': '0'}}},
+                                                                                                                    '646:11:11::/64': {'index': {1: {'locprf': '100',
+                                                                                                                                                     'metric': '2219',
+                                                                                                                                                     'next_hop': '4.4.4.4',
+                                                                                                                                                     'origin_codes': 'e',
+                                                                                                                                                     'path': '300 '
+                                                                                                                                                             '33299 '
+                                                                                                                                                             '51178 '
+                                                                                                                                                             '47751 '
+                                                                                                                                                             '{27016}',
+                                                                                                                                                     'status_codes': '*i',
+                                                                                                                                                     'weight': '0'}}}}},
+                                                                                            'router_identifier': '1.1.1.1',
+                                                                                            'scan_interval': 60,
+                                                                                            'table_id': '0x0',
+                                                                                            'table_state': 'active',
+                                                                                            'tbl_ver': 43},
+                                                                 'vpnv6 unicast RD 400:1': {'generic_scan_interval': 60,
+                                                                                            'local_as': 100,
+                                                                                            'non_stop_routing': True,
+                                                                                            'nsr_initial_init_ver_status': 'reached',
+                                                                                            'nsr_initial_initsync_version': '11',
+                                                                                            'nsr_issu_sync_group_versions': '0/0',
+                                                                                            'processed_paths': 10,
+                                                                                            'processed_prefixes': 10,
+                                                                                            'rd_version': 0,
+                                                                                            'received': {'prefix': {'646:22:22:1::/64': {'index': {1: {'locprf': '100',
+                                                                                                                                                       'metric': '2219',
+                                                                                                                                                       'next_hop': '4.4.4.4',
+                                                                                                                                                       'origin_codes': 'e',
+                                                                                                                                                       'path': '400 '
+                                                                                                                                                               '33299 '
+                                                                                                                                                               '51178 '
+                                                                                                                                                               '47751 '
+                                                                                                                                                               '{27016}',
+                                                                                                                                                       'status_codes': '*i',
+                                                                                                                                                       'weight': '0'}}},
+                                                                                                                    '646:22:22::/64': {'index': {1: {'locprf': '100',
+                                                                                                                                                     'metric': '2219',
+                                                                                                                                                     'next_hop': '4.4.4.4',
+                                                                                                                                                     'origin_codes': 'e',
+                                                                                                                                                     'path': '400 '
+                                                                                                                                                             '33299 '
+                                                                                                                                                             '51178 '
+                                                                                                                                                             '47751 '
+                                                                                                                                                             '{27016}',
+                                                                                                                                                     'status_codes': '*i',
+                                                                                                                                                     'weight': '0'}}}}},
+                                                                                            'router_identifier': '1.1.1.1',
+                                                                                            'scan_interval': 60,
+                                                                                            'table_id': '0x0',
+                                                                                            'table_state': 'active',
+                                                                                            'tbl_ver': 43}}}}}}}
 
 
 
@@ -5067,54 +4489,42 @@ class test_show_bgp_instance_all_vrf_all_neighbors_routes(unittest.TestCase):
     
     dev = Device(name='Device')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output = {
-        "instance": {
-            "default": {
-                "vrf": {
-                    "vrf2": {
-                        "address_family": {
-                            "ipv4 unicast RD 200:2": {
-                                "nsr_initial_initsync_version": "11 (Reached)",
-                                "route_identifier": "11.11.11.11",
-                                "non_stop_routing": True,
-                                "processed_prefixes": 2,
-                                "vrf_id": "0x60000002",
-                                "table_id": "0xe0000011",
-                                "local_as": 100,
-                                "tbl_ver": 63,
-                                "processed_paths": 2,
-                                "nsr_issu_sync_group_versions": "0/0",
-                                "table_state": "Active",
-                                "routes": {
-                                    "prefix": {
-                                        "15.1.1.0/24": {
-                                            "index": {
-                                                1: {
-                                                    "path": "200 33299 51178 47751 {27016}",
-                                                    "next_hop": "20.1.5.5",
-                                                    "status_codes": "*>",
-                                                    "weight": "0",
-                                                    "metric": "2219",
-                                                    "origin_codes": "e"
-                                                }
-                                            }
-                                        },
-                                        "15.1.2.0/24": {
-                                            "index": {
-                                                1: {
-                                                    "path": "200 33299 51178 47751 {27016}",
-                                                    "next_hop": "20.1.5.5",
-                                                    "status_codes": "*>",
-                                                    "weight": "0",
-                                                    "metric": "2219",
-                                                    "origin_codes": "e"
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                "state": "Active",
-                                "rd_version": 63}}}}}}}
+    golden_parsed_output = {'instance': {'default': {'vrf': {'VRF2': {'address_family': {'ipv4 unicast RD 200:2': {'local_as': 100,
+                                                                                        'non_stop_routing': True,
+                                                                                        'nsr_initial_init_ver_status': 'reached',
+                                                                                        'nsr_initial_initsync_version': '11',
+                                                                                        'nsr_issu_sync_group_versions': '0/0',
+                                                                                        'processed_paths': 2,
+                                                                                        'processed_prefixes': 2,
+                                                                                        'rd_version': 63,
+                                                                                        'route_distinguisher': '200:2',
+                                                                                        'router_identifier': '11.11.11.11',
+                                                                                        'routes': {'prefix': {'15.1.1.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                            'next_hop': '20.1.5.5',
+                                                                                                                                            'origin_codes': 'e',
+                                                                                                                                            'path': '200 '
+                                                                                                                                                    '33299 '
+                                                                                                                                                    '51178 '
+                                                                                                                                                    '47751 '
+                                                                                                                                                    '{27016}',
+                                                                                                                                            'status_codes': '*>',
+                                                                                                                                            'weight': '0'}}},
+                                                                                                              '15.1.2.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                            'next_hop': '20.1.5.5',
+                                                                                                                                            'origin_codes': 'e',
+                                                                                                                                            'path': '200 '
+                                                                                                                                                    '33299 '
+                                                                                                                                                    '51178 '
+                                                                                                                                                    '47751 '
+                                                                                                                                                    '{27016}',
+                                                                                                                                            'status_codes': '*>',
+                                                                                                                                            'weight': '0'}}}}},
+                                                                                        'state': 'active',
+                                                                                        'table_id': '0xe0000011',
+                                                                                        'table_state': 'active',
+                                                                                        'tbl_ver': 63,
+                                                                                        'vrf_id': '0x60000002'}}}}}}}
+
 
     golden_output = {'execute.return_value': '''
     
@@ -5172,155 +4582,114 @@ class test_show_bgp_instance_all_vrf_all_neighbors_routes(unittest.TestCase):
 class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output = {
-       "instance": {
-          "default": {
-               "vrf": {
-                    "default": {
-                         "address_family": {
-                              "vpnv4 unicast RD 400:1": {
-                                   "rd_version": 0,
-                                   "route_identifier": "1.1.1.1",
-                                   "routes": {
-                                        "prefix": {
-                                             "46.2.2.0/24": {
-                                                  "index": {
-                                                       1: {
-                                                            "path": "400 33299 51178 47751 {27016}",
-                                                            "status_codes": "*i",
-                                                            "locprf": "100",
-                                                            "weight": "0",
-                                                            "next_hop": "4.4.4.4",
-                                                            "metric": "2219",
-                                                            "origin_codes": "e"
-                                                       }
-                                                  }
-                                             }
-                                        }
-                                   },
-                                   "non_stop_routing": True,
-                                   "scan_interval": 60,
-                                   "tbl_ver": 43,
-                                   "nsr_issu_sync_group_versions": "0/0",
-                                   "local_as": 100,
-                                   "nsr_initial_initsync_version": "11 (Reached)",
-                                   "table_id": "0x0",
-                                   "table_state": "Active",
-                                   "processed_prefixes": 2,
-                                   "generic_scan_interval": 60,
-                                   "processed_paths": 2
-                              },
-                              "vpnv6 unicast RD 400:1": {
-                                   "rd_version": 0,
-                                   "route_identifier": "1.1.1.1",
-                                   "routes": {
-                                        "prefix": {
-                                             "646:22:22::/64": {
-                                                  "index": {
-                                                       1: {
-                                                            "path": "400 33299 51178 47751 {27016}",
-                                                            "status_codes": "*i",
-                                                            "locprf": "100",
-                                                            "weight": "0",
-                                                            "next_hop": "4.4.4.4",
-                                                            "metric": "2219",
-                                                            "origin_codes": "e"
-                                                       }
-                                                  }
-                                             }
-                                        }
-                                   },
-                                   "non_stop_routing": True,
-                                   "scan_interval": 60,
-                                   "tbl_ver": 43,
-                                   "nsr_issu_sync_group_versions": "0/0",
-                                   "local_as": 100,
-                                   "nsr_initial_initsync_version": "11 (Reached)",
-                                   "table_id": "0x0",
-                                   "table_state": "Active",
-                                   "processed_prefixes": 3,
-                                   "generic_scan_interval": 60,
-                                   "processed_paths": 3
-                              },
-                              "vpnv4 unicast RD 300:1": {
-                                   "rd_version": 0,
-                                   "route_identifier": "1.1.1.1",
-                                   "routes": {
-                                        "prefix": {
-                                             "46.1.1.0/24": {
-                                                  "index": {
-                                                       1: {
-                                                            "path": "300 33299 51178 47751 {27016}",
-                                                            "status_codes": "*i",
-                                                            "locprf": "100",
-                                                            "weight": "0",
-                                                            "next_hop": "4.4.4.4",
-                                                            "metric": "2219",
-                                                            "origin_codes": "e"
-                                                       }
-                                                  }
-                                             }
-                                        }
-                                   },
-                                   "non_stop_routing": True,
-                                   "scan_interval": 60,
-                                   "tbl_ver": 43,
-                                   "nsr_issu_sync_group_versions": "0/0",
-                                   "local_as": 100,
-                                   "nsr_initial_initsync_version": "11 (Reached)",
-                                   "table_id": "0x0",
-                                   "table_state": "Active",
-                                   "generic_scan_interval": 60
-                              },
-                              "vpnv6 unicast RD 300:1": {
-                                   "rd_version": 0,
-                                   "route_identifier": "1.1.1.1",
-                                   "routes": {
-                                        "prefix": {
-                                             "646:11:11::/64": {
-                                                  "index": {
-                                                       1: {
-                                                            "path": "300 33299 51178 47751 {27016}",
-                                                            "status_codes": "*i",
-                                                            "locprf": "100",
-                                                            "weight": "0",
-                                                            "next_hop": "4.4.4.4",
-                                                            "metric": "2219",
-                                                            "origin_codes": "e"
-                                                       }
-                                                  }
-                                             },
-                                             "646:11:11:1::/64": {
-                                                  "index": {
-                                                       1: {
-                                                            "path": "300 33299 51178 47751 {27016}",
-                                                            "status_codes": "*i",
-                                                            "locprf": "100",
-                                                            "weight": "0",
-                                                            "next_hop": "4.4.4.4",
-                                                            "metric": "2219",
-                                                            "origin_codes": "e"
-                                                       }
-                                                  }
-                                             }
-                                        }
-                                   },
-                                   "non_stop_routing": True,
-                                   "scan_interval": 60,
-                                   "tbl_ver": 43,
-                                   "nsr_issu_sync_group_versions": "0/0",
-                                   "local_as": 100,
-                                   "nsr_initial_initsync_version": "11 (Reached)",
-                                   "table_id": "0x0",
-                                   "table_state": "Active",
-                                   "generic_scan_interval": 60
-                              }
-                         }
-                    }
-               }
-          }
-     }
-    }
+    golden_parsed_output = {'instance': {'default': {'vrf': {'default': {'address_family': {'vpnv4 unicast RD 300:1': {'generic_scan_interval': 60,
+                                                                                            'local_as': 100,
+                                                                                            'non_stop_routing': True,
+                                                                                            'nsr_initial_init_ver_status': 'reached',
+                                                                                            'nsr_initial_initsync_version': '11',
+                                                                                            'nsr_issu_sync_group_versions': '0/0',
+                                                                                            'rd_version': 0,
+                                                                                            'router_identifier': '1.1.1.1',
+                                                                                            'routes': {'prefix': {'46.1.1.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                                'metric': '2219',
+                                                                                                                                                'next_hop': '4.4.4.4',
+                                                                                                                                                'origin_codes': 'e',
+                                                                                                                                                'path': '300 '
+                                                                                                                                                        '33299 '
+                                                                                                                                                        '51178 '
+                                                                                                                                                        '47751 '
+                                                                                                                                                        '{27016}',
+                                                                                                                                                'status_codes': '*i',
+                                                                                                                                                'weight': '0'}}}}},
+                                                                                            'scan_interval': 60,
+                                                                                            'table_id': '0x0',
+                                                                                            'table_state': 'active',
+                                                                                            'tbl_ver': 43},
+                                                                 'vpnv4 unicast RD 400:1': {'generic_scan_interval': 60,
+                                                                                            'local_as': 100,
+                                                                                            'non_stop_routing': True,
+                                                                                            'nsr_initial_init_ver_status': 'reached',
+                                                                                            'nsr_initial_initsync_version': '11',
+                                                                                            'nsr_issu_sync_group_versions': '0/0',
+                                                                                            'processed_paths': 2,
+                                                                                            'processed_prefixes': 2,
+                                                                                            'rd_version': 0,
+                                                                                            'router_identifier': '1.1.1.1',
+                                                                                            'routes': {'prefix': {'46.2.2.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                                'metric': '2219',
+                                                                                                                                                'next_hop': '4.4.4.4',
+                                                                                                                                                'origin_codes': 'e',
+                                                                                                                                                'path': '400 '
+                                                                                                                                                        '33299 '
+                                                                                                                                                        '51178 '
+                                                                                                                                                        '47751 '
+                                                                                                                                                        '{27016}',
+                                                                                                                                                'status_codes': '*i',
+                                                                                                                                                'weight': '0'}}}}},
+                                                                                            'scan_interval': 60,
+                                                                                            'table_id': '0x0',
+                                                                                            'table_state': 'active',
+                                                                                            'tbl_ver': 43},
+                                                                 'vpnv6 unicast RD 300:1': {'generic_scan_interval': 60,
+                                                                                            'local_as': 100,
+                                                                                            'non_stop_routing': True,
+                                                                                            'nsr_initial_init_ver_status': 'reached',
+                                                                                            'nsr_initial_initsync_version': '11',
+                                                                                            'nsr_issu_sync_group_versions': '0/0',
+                                                                                            'rd_version': 0,
+                                                                                            'router_identifier': '1.1.1.1',
+                                                                                            'routes': {'prefix': {'646:11:11:1::/64': {'index': {1: {'locprf': '100',
+                                                                                                                                                     'metric': '2219',
+                                                                                                                                                     'next_hop': '4.4.4.4',
+                                                                                                                                                     'origin_codes': 'e',
+                                                                                                                                                     'path': '300 '
+                                                                                                                                                             '33299 '
+                                                                                                                                                             '51178 '
+                                                                                                                                                             '47751 '
+                                                                                                                                                             '{27016}',
+                                                                                                                                                     'status_codes': '*i',
+                                                                                                                                                     'weight': '0'}}},
+                                                                                                                  '646:11:11::/64': {'index': {1: {'locprf': '100',
+                                                                                                                                                   'metric': '2219',
+                                                                                                                                                   'next_hop': '4.4.4.4',
+                                                                                                                                                   'origin_codes': 'e',
+                                                                                                                                                   'path': '300 '
+                                                                                                                                                           '33299 '
+                                                                                                                                                           '51178 '
+                                                                                                                                                           '47751 '
+                                                                                                                                                           '{27016}',
+                                                                                                                                                   'status_codes': '*i',
+                                                                                                                                                   'weight': '0'}}}}},
+                                                                                            'scan_interval': 60,
+                                                                                            'table_id': '0x0',
+                                                                                            'table_state': 'active',
+                                                                                            'tbl_ver': 43},
+                                                                 'vpnv6 unicast RD 400:1': {'generic_scan_interval': 60,
+                                                                                            'local_as': 100,
+                                                                                            'non_stop_routing': True,
+                                                                                            'nsr_initial_init_ver_status': 'reached',
+                                                                                            'nsr_initial_initsync_version': '11',
+                                                                                            'nsr_issu_sync_group_versions': '0/0',
+                                                                                            'processed_paths': 3,
+                                                                                            'processed_prefixes': 3,
+                                                                                            'rd_version': 0,
+                                                                                            'router_identifier': '1.1.1.1',
+                                                                                            'routes': {'prefix': {'646:22:22::/64': {'index': {1: {'locprf': '100',
+                                                                                                                                                   'metric': '2219',
+                                                                                                                                                   'next_hop': '4.4.4.4',
+                                                                                                                                                   'origin_codes': 'e',
+                                                                                                                                                   'path': '400 '
+                                                                                                                                                           '33299 '
+                                                                                                                                                           '51178 '
+                                                                                                                                                           '47751 '
+                                                                                                                                                           '{27016}',
+                                                                                                                                                   'status_codes': '*i',
+                                                                                                                                                   'weight': '0'}}}}},
+                                                                                            'scan_interval': 60,
+                                                                                            'table_id': '0x0',
+                                                                                            'table_state': 'active',
+                                                                                            'tbl_ver': 43}}}}}}}
+
 
     golden_output = {'execute.return_value': '''
         BGP instance 0: 'default'
@@ -5405,97 +4774,76 @@ class test_show_bgp_instance_all_all_all_summary(unittest.TestCase):
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
     
-    golden_parsed_output = {
-        "instance": {
-            "default": {
-                "vrf": {
-                    "default": {
-                        "neighbor": {
-                            "2.2.2.2": {
-                                "remote_as": 100,
-                                "address_family": {
-                                    "vpnv4 unicast": {
-                                        "msg_rcvd": 59,
-                                        "output_queue": 0,
-                                        "state_pfxrcd": '10',
-                                        "spk": 0,
-                                        "up_down": "00:50:38",
-                                        "tbl_ver": 43,
-                                        "msg_sent": 56,
-                                        "input_queue": 0},
-                                    "vpnv6 unicast": {
-                                        "msg_rcvd": 59,
-                                        "output_queue": 0,
-                                        "state_pfxrcd": '10',
-                                        "spk": 0,
-                                        "up_down": "00:50:38",
-                                        "tbl_ver": 43,
-                                        "msg_sent": 56,
-                                        "input_queue": 0}}},
-                            "3.3.3.3": {
-                                "remote_as": 100,
-                                "address_family": {
-                                    "vpnv4 unicast": {
-                                        "msg_rcvd": 68,
-                                        "output_queue": 0,
-                                        "state_pfxrcd": '10',
-                                        "spk": 0,
-                                        "up_down": "00:47:11",
-                                        "tbl_ver": 43,
-                                        "msg_sent": 58,
-                                        "input_queue": 0},
-                                    "vpnv6 unicast": {
-                                        "msg_rcvd": 68,
-                                        "output_queue": 0,
-                                        "state_pfxrcd": '10',
-                                        "spk": 0,
-                                        "up_down": "00:47:11",
-                                        "tbl_ver": 43,
-                                        "msg_sent": 58,
-                                        "input_queue": 0}}}},
-                        "address_family": {
-                            "vpnv4 unicast": {
-                                "non_stop_routing": "enabled",
-                                "table_id": "0x0",
-                                "nsr_initial_init_ver_status": "Reached",
-                                "operation_mode": "STANDALONE ",
-                                "bgp_table_version": 43,
-                                "router_id": "1.1.1.1",
-                                "nsr_issu_sync_group_versions": "0/0",
-                                "local_as": 100,
-                                "nsr_initial_initsync_version": 11,
-                                "process": {
-                                    "Speaker": {
-                                        "rcvtblver": 43,
-                                        "labelver": 43,
-                                        "sendtblver": 43,
-                                        "brib_rib": 43,
-                                        "standbyver": 0,
-                                        "importver": 43}},
-                                "generic_scan_interval": 60,
-                                "table_state": "Active",
-                                "rd_version": 0},
-                            "vpnv6 unicast": {
-                                "non_stop_routing": "enabled",
-                                "table_id": "0x0",
-                                "nsr_initial_init_ver_status": "Reached",
-                                "operation_mode": "STANDALONE ",
-                                "bgp_table_version": 43,
-                                "router_id": "1.1.1.1",
-                                "nsr_issu_sync_group_versions": "0/0",
-                                "local_as": 100,
-                                "nsr_initial_initsync_version": 11,
-                                "process": {
-                                    "Speaker": {
-                                        "rcvtblver": 43,
-                                        "labelver": 43,
-                                        "sendtblver": 43,
-                                        "brib_rib": 43,
-                                        "standbyver": 0,
-                                        "importver": 43}},
-                                "generic_scan_interval": 60,
-                                "table_state": "Active",
-                                "rd_version": 0}}}}}}}
+    golden_parsed_output = {'instance': {'default': {'vrf': {'default': {'address_family': {'vpnv4 unicast': {'bgp_table_version': 43,
+                                                                                   'generic_scan_interval': 60,
+                                                                                   'local_as': 100,
+                                                                                   'non_stop_routing': 'enabled',
+                                                                                   'nsr_initial_init_ver_status': 'reached',
+                                                                                   'nsr_initial_initsync_version': 11,
+                                                                                   'nsr_issu_sync_group_versions': '0/0',
+                                                                                   'operation_mode': 'standalone',
+                                                                                   'process': {'Speaker': {'brib_rib': 43,
+                                                                                                           'importver': 43,
+                                                                                                           'labelver': 43,
+                                                                                                           'rcvtblver': 43,
+                                                                                                           'sendtblver': 43,
+                                                                                                           'standbyver': 0}},
+                                                                                   'rd_version': 0,
+                                                                                   'router_id': '1.1.1.1',
+                                                                                   'table_id': '0x0',
+                                                                                   'table_state': 'active'},
+                                                                 'vpnv6 unicast': {'bgp_table_version': 43,
+                                                                                   'generic_scan_interval': 60,
+                                                                                   'local_as': 100,
+                                                                                   'non_stop_routing': 'enabled',
+                                                                                   'nsr_initial_init_ver_status': 'reached',
+                                                                                   'nsr_initial_initsync_version': 11,
+                                                                                   'nsr_issu_sync_group_versions': '0/0',
+                                                                                   'operation_mode': 'standalone',
+                                                                                   'process': {'Speaker': {'brib_rib': 43,
+                                                                                                           'importver': 43,
+                                                                                                           'labelver': 43,
+                                                                                                           'rcvtblver': 43,
+                                                                                                           'sendtblver': 43,
+                                                                                                           'standbyver': 0}},
+                                                                                   'rd_version': 0,
+                                                                                   'router_id': '1.1.1.1',
+                                                                                   'table_id': '0x0',
+                                                                                   'table_state': 'active'}},
+                                              'neighbor': {'2.2.2.2': {'address_family': {'vpnv4 unicast': {'input_queue': 0,
+                                                                                                            'msg_rcvd': 59,
+                                                                                                            'msg_sent': 56,
+                                                                                                            'output_queue': 0,
+                                                                                                            'spk': 0,
+                                                                                                            'state_pfxrcd': '10',
+                                                                                                            'tbl_ver': 43,
+                                                                                                            'up_down': '00:50:38'},
+                                                                                          'vpnv6 unicast': {'input_queue': 0,
+                                                                                                            'msg_rcvd': 59,
+                                                                                                            'msg_sent': 56,
+                                                                                                            'output_queue': 0,
+                                                                                                            'spk': 0,
+                                                                                                            'state_pfxrcd': '10',
+                                                                                                            'tbl_ver': 43,
+                                                                                                            'up_down': '00:50:38'}},
+                                                                       'remote_as': 100},
+                                                           '3.3.3.3': {'address_family': {'vpnv4 unicast': {'input_queue': 0,
+                                                                                                            'msg_rcvd': 68,
+                                                                                                            'msg_sent': 58,
+                                                                                                            'output_queue': 0,
+                                                                                                            'spk': 0,
+                                                                                                            'state_pfxrcd': '10',
+                                                                                                            'tbl_ver': 43,
+                                                                                                            'up_down': '00:47:11'},
+                                                                                          'vpnv6 unicast': {'input_queue': 0,
+                                                                                                            'msg_rcvd': 68,
+                                                                                                            'msg_sent': 58,
+                                                                                                            'output_queue': 0,
+                                                                                                            'spk': 0,
+                                                                                                            'state_pfxrcd': '10',
+                                                                                                            'tbl_ver': 43,
+                                                                                                            'up_down': '00:47:11'}},
+                                                                       'remote_as': 100}}}}}}}
 
     golden_output = {'execute.return_value': '''
     
@@ -5515,7 +4863,7 @@ class test_show_bgp_instance_all_all_all_summary(unittest.TestCase):
         BGP NSR/ISSU Sync-Group versions 0/0
         BGP scan interval 60 secs
 
-        BGP is operating in STANDALONE mode.
+        BGP is operating in standalone mode.
 
 
         Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
@@ -5539,7 +4887,7 @@ class test_show_bgp_instance_all_all_all_summary(unittest.TestCase):
         BGP NSR/ISSU Sync-Group versions 0/0
         BGP scan interval 60 secs
 
-        BGP is operating in STANDALONE mode.
+        BGP is operating in standalone mode.
 
 
         Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
@@ -5557,10 +4905,10 @@ class test_show_bgp_instance_all_all_all_summary(unittest.TestCase):
             parsed_output = bgp_instance_summary_obj.parse(vrf_type='all')
 
     def test_golden(self):
-       self.maxDiff = None
        self.device = Mock(**self.golden_output)
        bgp_instance_summary_obj = ShowBgpInstanceSummary(device=self.device)
        parsed_output = bgp_instance_summary_obj.parse(vrf_type='all')
+       self.maxDiff = None
        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -5574,90 +4922,69 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {
-        "instance": {
-            "default": {
-                "vrf": {
-                    "vrf2": {
-                        "neighbor": {
-                            "20.1.5.5": {
-                                "remote_as": 200,
-                                "address_family": {
-                                    "ipv4 unicast RD 200:2": {
-                                        "tbl_ver": 63,
-                                        "msg_rcvd": 58,
-                                        "msg_sent": 62,
-                                        "route_distinguisher": "200:2",
-                                        "spk": 0,
-                                        "up_down": "00:01:12",
-                                        "state_pfxrcd": '5',
-                                        "output_queue": 0,
-                                        "input_queue": 0}}}},
-                        "address_family": {
-                            "ipv4 unicast RD 200:2": {
-                                "local_as": 100,
-                                "operation_mode": "STANDALONE ",
-                                "table_id": "0xe0000011",
-                                "vrf_state": "active",
-                                "route_distinguisher": "200:2",
-                                "bgp_table_version": 63,
-                                "nsr_initial_initsync_version": 11,
-                                "table_state": "Active",
-                                "vrf_id": "0x60000002",
-                                "router_id": "11.11.11.11",
-                                "bgp_vrf": "vrf2",
-                                "non_stop_routing": "enabled",
-                                "nsr_issu_sync_group_versions": "0/0",
-                                "nsr_initial_init_ver_status": "Reached",
-                                "process": {
-                                    "Speaker": {
-                                        "importver": 63,
-                                        "labelver": 63,
-                                        "standbyver": 0,
-                                        "rcvtblver": 63,
-                                        "brib_rib": 63,
-                                        "sendtblver": 63}},
-                                "rd_version": 63}}},
-                    "vrf1": {
-                        "neighbor": {
-                            "10.1.5.5": {
-                                "remote_as": 200,
-                                "address_family": {
-                                    "ipv4 unicast RD 200:1": {
-                                        "tbl_ver": 63,
-                                        "msg_rcvd": 60,
-                                        "msg_sent": 62,
-                                        "route_distinguisher": "200:1",
-                                        "spk": 0,
-                                        "up_down": "00:57:32",
-                                        "state_pfxrcd": '0',
-                                        "output_queue": 0,
-                                        "input_queue": 0}}}},
-                        "address_family": {
-                            "ipv4 unicast RD 200:1": {
-                                "local_as": 100,
-                                "operation_mode": "STANDALONE ",
-                                "table_id": "0xe0000010",
-                                "vrf_state": "active",
-                                "route_distinguisher": "200:1",
-                                "bgp_table_version": 63,
-                                "nsr_initial_initsync_version": 11,
-                                "table_state": "Active",
-                                "vrf_id": "0x60000001",
-                                "router_id": "11.11.11.11",
-                                "bgp_vrf": "vrf1",
-                                "non_stop_routing": "enabled",
-                                "nsr_issu_sync_group_versions": "0/0",
-                                "nsr_initial_init_ver_status": "Reached",
-                                "process": {
-                                    "Speaker": {
-                                        "importver": 63,
-                                        "labelver": 63,
-                                        "standbyver": 0,
-                                        "rcvtblver": 63,
-                                        "brib_rib": 63,
-                                        "sendtblver": 63}},
-                                "rd_version": 63}}}}}}}
+    golden_parsed_output = {'instance': {'default': {'vrf': {'VRF1': {'address_family': {'ipv4 unicast': {'bgp_table_version': 63,
+                                                                                        'bgp_vrf': 'vrf1',
+                                                                                        'local_as': 100,
+                                                                                        'non_stop_routing': 'enabled',
+                                                                                        'nsr_initial_init_ver_status': 'reached',
+                                                                                        'nsr_initial_initsync_version': 11,
+                                                                                        'nsr_issu_sync_group_versions': '0/0',
+                                                                                        'operation_mode': 'standalone',
+                                                                                        'process': {'Speaker': {'brib_rib': 63,
+                                                                                                                'importver': 63,
+                                                                                                                'labelver': 63,
+                                                                                                                'rcvtblver': 63,
+                                                                                                                'sendtblver': 63,
+                                                                                                                'standbyver': 0}},
+                                                                                        'rd_version': 63,
+                                                                                        'route_distinguisher': '200:1',
+                                                                                        'router_id': '11.11.11.11',
+                                                                                        'table_id': '0xe0000010',
+                                                                                        'table_state': 'active',
+                                                                                        'vrf_id': '0x60000001',
+                                                                                        'vrf_state': 'active'}},
+                                           'neighbor': {'10.1.5.5': {'address_family': {'ipv4 unicast': {'input_queue': 0,
+                                                                                                          'msg_rcvd': 60,
+                                                                                                          'msg_sent': 62,
+                                                                                                          'output_queue': 0,
+                                                                                                          'route_distinguisher': '200:1',
+                                                                                                          'spk': 0,
+                                                                                                          'state_pfxrcd': '0',
+                                                                                                          'tbl_ver': 63,
+                                                                                                          'up_down': '00:57:32'}},
+                                                                     'remote_as': 200}}},
+                                  'VRF2': {'address_family': {'ipv4 unicast': {'bgp_table_version': 63,
+                                                                                'bgp_vrf': 'vrf2',
+                                                                                'local_as': 100,
+                                                                                'non_stop_routing': 'enabled',
+                                                                                'nsr_initial_init_ver_status': 'reached',
+                                                                                'nsr_initial_initsync_version': 11,
+                                                                                'nsr_issu_sync_group_versions': '0/0',
+                                                                                'operation_mode': 'standalone',
+                                                                                'process': {'Speaker': {'brib_rib': 63,
+                                                                                                        'importver': 63,
+                                                                                                        'labelver': 63,
+                                                                                                        'rcvtblver': 63,
+                                                                                                        'sendtblver': 63,
+                                                                                                        'standbyver': 0}},
+                                                                                'rd_version': 63,
+                                                                                'route_distinguisher': '200:2',
+                                                                                'router_id': '11.11.11.11',
+                                                                                'table_id': '0xe0000011',
+                                                                                'table_state': 'active',
+                                                                                'vrf_id': '0x60000002',
+                                                                                'vrf_state': 'active'}},
+                                           'neighbor': {'20.1.5.5': {'address_family': {'ipv4 unicast': {'input_queue': 0,
+                                                                                                          'msg_rcvd': 58,
+                                                                                                          'msg_sent': 62,
+                                                                                                          'output_queue': 0,
+                                                                                                          'route_distinguisher': '200:2',
+                                                                                                          'spk': 0,
+                                                                                                          'state_pfxrcd': '5',
+                                                                                                          'tbl_ver': 63,
+                                                                                                          'up_down': '00:01:12'}},
+                                                             'remote_as': 200}}}}}}}
+
 
     golden_output = {'execute.return_value': '''
         BGP instance 0: 'default'
@@ -5676,7 +5003,7 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
         BGP NSR Initial initsync version 11 (Reached)
         BGP NSR/ISSU Sync-Group versions 0/0
 
-        BGP is operating in STANDALONE mode.
+        BGP is operating in standalone mode.
 
 
         Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
@@ -5699,7 +5026,7 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
         BGP NSR Initial initsync version 11 (Reached)
         BGP NSR/ISSU Sync-Group versions 0/0
 
-        BGP is operating in STANDALONE mode.
+        BGP is operating in standalone mode.
 
 
         Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
@@ -5733,683 +5060,355 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
     
-    golden_parsed_output = {
-        'instance': 
-            {'default': 
-                {'vrf': 
-                    {'default': 
-                        {'address_family': 
-                            {'vpnv4 unicast': 
-                                {'bgp_table_version': 43,
-                                'generic_scan_interval': '60',
-                                'instance_number': '0',
-                                'local_as': 100,
-                                'non_stop_routing': True,
-                                'nsr_initial_initsync_version': '11 '
-                                                                '(Reached)',
-                                'nsr_issu_sync_group_versions': '0/0',
-                                'rd_version': 0,
-                                'route_identifier': '1.1.1.1',
-                                'scan_interval': 60,
-                                'table_id': '0x0',
-                                'table_state': 'Active'},
-                            'vpnv4 unicast RD 200:1': 
-                                {'default_vrf': 'vrf1',
-                                'prefix': 
-                                    {'15.1.1.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'metric': '2219',
-                                                'next_hop': '20.1.5.5',
-                                                'origin_codes': 'e',
-                                                'path': '200 '
-                                                '33299 '
-                                                '51178 '
-                                                '47751 '
-                                                '{27016}',
-                                                'status_codes': '*>',
-                                                'weight': '0'}}},
-                                    '15.1.2.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'metric': '2219',
-                                                'next_hop': '20.1.5.5',
-                                                'origin_codes': 'e',
-                                                'path': '200 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>',
-                                                'weight': '0'}}},
-                                    '46.1.1.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '46.1.2.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '46.1.3.0/24': 
-                                        {'index': 
-                                            {1: {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}}},
-                                'route_distinguisher': '200:1'},
-                            'vpnv4 unicast RD 200:2': {
-                                'default_vrf': 'vrf2',
-                                'prefix': 
-                                    {'15.1.1.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'metric': '2219',
-                                                'next_hop': '20.1.5.5',
-                                                'origin_codes': 'e',
-                                                'path': '200 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>',
-                                                'weight': '0'}}},
-                                    '15.1.2.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'metric': '2219',
-                                                'next_hop': '20.1.5.5',
-                                                'origin_codes': 'e',
-                                                'path': '200 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>',
-                                                'weight': '0'}}},
-                                    '15.1.5.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'metric': '2219',
-                                                'next_hop': '20.1.5.5',
-                                                'origin_codes': 'e',
-                                                'path': '200 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>',
-                                                'weight': '0'}}},
-                                    '46.1.1.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '46.1.2.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                '33299 '
-                                                '51178 '
-                                                '47751 '
-                                                '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '46.1.3.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '46.1.4.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '46.1.5.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}}},
-                                'route_distinguisher': '200:2'},
-                            'vpnv4 unicast RD 300:1': 
-                                {'default_vrf': 'none',
-                                'prefix': 
-                                    {'46.1.1.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'},
-                                            2: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*i',
-                                                'weight': '0'}}},
-                                    '46.1.2.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'},
-                                            2: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*i',
-                                                'weight': '0'}}},
-                                    '46.1.3.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'},
-                                            2: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*i',
-                                                'weight': '0'}}}},
-                                'route_distinguisher': '300:1'},
-                            'vpnv4 unicast RD 400:1': 
-                                {'default_vrf': 'none',
-                                'prefix': 
-                                    {'46.2.2.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '400 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'},
-                                            2: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '400 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*i',
-                                                'weight': '0'}}},
-                                    '46.2.3.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '400 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'},
-                                            2: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '400 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*i',
-                                                'weight': '0'}}}},
-                                'processed_paths': 50,
-                                'processed_prefix': 40,
-                                'route_distinguisher': '400:1'},
-                            'vpnv6 unicast': 
-                                {'bgp_table_version': 43,
-                                'generic_scan_interval': '60',
-                                'instance_number': '0',
-                                'local_as': 100,
-                                'non_stop_routing': True,
-                                'nsr_initial_initsync_version': '11 '
-                                                                '(Reached)',
-                                'nsr_issu_sync_group_versions': '0/0',
-                                'rd_version': 0,
-                                'route_identifier': '1.1.1.1',
-                                'scan_interval': 60,
-                                'table_id': '0x0',
-                                'table_state': 'Active'},
-                            'vpnv6 unicast RD 200:1': 
-                                {'default_vrf': 'vrf1',
-                                'prefix': 
-                                    {'46.2.3.0/24': 
-                                        {'index': 
-                                            {3: 
-                                                {'next_hop': '2219',
-                                                 'origin_codes': 'e',
-                                                 'path': '200 '
-                                                         '33299 '
-                                                         '51178 '
-                                                         '47751 '
-                                                         '{27016}',
-                                                 'status_codes': '',
-                                                 'weight': '0'},
-                                             4: {'next_hop': '2219',
-                                                 'origin_codes': 'e',
-                                                 'path': '200 '
-                                                         '33299 '
-                                                         '51178 '
-                                                         '47751 '
-                                                         '{27016}',
-                                                 'status_codes': '',
-                                                 'weight': '0'}}},
-                                    '646:11:11:1::/64': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                '33299 '
-                                                '51178 '
-                                                '47751 '
-                                                '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '646:11:11:2::/64': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '646:11:11::/64': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '646:22:22:4::/64': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '400 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '646:22:22::/64': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '400 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}}},
-                                'route_distinguisher': '200:1'},
-                            'vpnv6 unicast RD 200:2': 
-                                {'default_vrf': 'vrf2',
-                                'prefix': 
-                                    {'646:11:11:1::/64': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '646:11:11:2::/64': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '646:11:11::/64': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '646:22:22:1::/64': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '400 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '646:22:22:2::/64': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '400 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '646:22:22:4::/64': 
-                                        {'index': 
-                                            {2: 
-                                                {'next_hop': '2219',
-                                                'origin_codes': 'e',
-                                                'path': '200 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '',
-                                                'weight': '0'},
-                                            3: 
-                                                {'next_hop': '2219',
-                                                'origin_codes': 'e',
-                                                'path': '200 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '',
-                                                'weight': '0'}}},
-                                    '646:22:22::/64': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '400 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}}},
-                                'route_distinguisher': '200:2'},
-                            'vpnv6 unicast RD 300:1': 
-                                {'default_vrf': 'none',
-                                'prefix': 
-                                    {'646:11:11:1::/64': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'},
-                                            2: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*i',
-                                                'weight': '0'}}},
-                                    '646:11:11::/64': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'},
-                                            2: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*i',
-                                                'weight': '0'}}}},
-                                'route_distinguisher': '300:1'},
-                            'vpnv6 unicast RD 400:1': 
-                                {'default_vrf': 'none',
-                                'prefix': 
-                                    {'646:22:22:1::/64': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '400 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'},
-                                            2: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '400 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*i',
-                                                'weight': '0'}}},
-                                    '646:22:22::/64': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '400 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'},
-                                            2: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '400 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*i',
-                                                'weight': '0'}}}},
-                                'processed_paths': 50,
-                                'processed_prefix': 40,
-                                'route_distinguisher': '400:1'}}}}}}}
+    golden_parsed_output = {'instance': {'default': {'vrf': {'default': {'address_family': {'vpnv4 unicast': {'bgp_table_version': 43,
+                                                                                   'generic_scan_interval': '60',
+                                                                                   'instance_number': '0',
+                                                                                   'local_as': 100,
+                                                                                   'non_stop_routing': True,
+                                                                                   'nsr_initial_init_ver_status': 'reached',
+                                                                                   'nsr_initial_initsync_version': '11',
+                                                                                   'nsr_issu_sync_group_versions': '0/0',
+                                                                                   'rd_version': 0,
+                                                                                   'router_identifier': '1.1.1.1',
+                                                                                   'scan_interval': 60,
+                                                                                   'table_id': '0x0',
+                                                                                   'table_state': 'active'},
+                                                                 'vpnv4 unicast RD 200:1': {'default_vrf': 'vrf1',
+                                                                                            'prefix': {'15.1.1.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                     'next_hop': '20.1.5.5',
+                                                                                                                                     'origin_codes': 'e',
+                                                                                                                                     'path': '200 '
+                                                                                                                                             '33299 '
+                                                                                                                                             '51178 '
+                                                                                                                                             '47751 '
+                                                                                                                                             '{27016}',
+                                                                                                                                     'status_codes': '*>',
+                                                                                                                                     'weight': '0'}}},
+                                                                                                       '46.1.1.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                     'metric': '2219',
+                                                                                                                                     'next_hop': '4.4.4.4',
+                                                                                                                                     'origin_codes': 'e',
+                                                                                                                                     'path': '300 '
+                                                                                                                                             '33299 '
+                                                                                                                                             '51178 '
+                                                                                                                                             '47751 '
+                                                                                                                                             '{27016}',
+                                                                                                                                     'status_codes': '*>i',
+                                                                                                                                     'weight': '0'}}}},
+                                                                                            'route_distinguisher': '200:1'},
+                                                                 'vpnv4 unicast RD 200:2': {'default_vrf': 'vrf2',
+                                                                                            'prefix': {'15.1.1.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                     'next_hop': '20.1.5.5',
+                                                                                                                                     'origin_codes': 'e',
+                                                                                                                                     'path': '200 '
+                                                                                                                                             '33299 '
+                                                                                                                                             '51178 '
+                                                                                                                                             '47751 '
+                                                                                                                                             '{27016}',
+                                                                                                                                     'status_codes': '*>',
+                                                                                                                                     'weight': '0'}}},
+                                                                                                       '46.1.5.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                     'metric': '2219',
+                                                                                                                                     'next_hop': '4.4.4.4',
+                                                                                                                                     'origin_codes': 'e',
+                                                                                                                                     'path': '300 '
+                                                                                                                                             '33299 '
+                                                                                                                                             '51178 '
+                                                                                                                                             '47751 '
+                                                                                                                                             '{27016}',
+                                                                                                                                     'status_codes': '*>i',
+                                                                                                                                     'weight': '0'}}}},
+                                                                                            'route_distinguisher': '200:2'},
+                                                                 'vpnv4 unicast RD 300:1': {'default_vrf': 'none',
+                                                                                            'prefix': {'46.1.1.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                     'metric': '2219',
+                                                                                                                                     'next_hop': '4.4.4.4',
+                                                                                                                                     'origin_codes': 'e',
+                                                                                                                                     'path': '300 '
+                                                                                                                                             '33299 '
+                                                                                                                                             '51178 '
+                                                                                                                                             '47751 '
+                                                                                                                                             '{27016}',
+                                                                                                                                     'status_codes': '*>i',
+                                                                                                                                     'weight': '0'},
+                                                                                                                                 2: {'locprf': '100',
+                                                                                                                                     'metric': '2219',
+                                                                                                                                     'next_hop': '4.4.4.4',
+                                                                                                                                     'origin_codes': 'e',
+                                                                                                                                     'path': '300 '
+                                                                                                                                             '33299 '
+                                                                                                                                             '51178 '
+                                                                                                                                             '47751 '
+                                                                                                                                             '{27016}',
+                                                                                                                                     'status_codes': '*i',
+                                                                                                                                     'weight': '0'}}}},
+                                                                                            'route_distinguisher': '300:1'},
+                                                                 'vpnv4 unicast RD 400:1': {'default_vrf': 'none',
+                                                                                            'prefix': {'46.2.2.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                     'metric': '2219',
+                                                                                                                                     'next_hop': '4.4.4.4',
+                                                                                                                                     'origin_codes': 'e',
+                                                                                                                                     'path': '400 '
+                                                                                                                                             '33299 '
+                                                                                                                                             '51178 '
+                                                                                                                                             '47751 '
+                                                                                                                                             '{27016}',
+                                                                                                                                     'status_codes': '*>i',
+                                                                                                                                     'weight': '0'},
+                                                                                                                                 2: {'locprf': '100',
+                                                                                                                                     'metric': '2219',
+                                                                                                                                     'next_hop': '4.4.4.4',
+                                                                                                                                     'origin_codes': 'e',
+                                                                                                                                     'path': '400 '
+                                                                                                                                             '33299 '
+                                                                                                                                             '51178 '
+                                                                                                                                             '47751 '
+                                                                                                                                             '{27016}',
+                                                                                                                                     'status_codes': '*i',
+                                                                                                                                     'weight': '0'}}},
+                                                                                                       '46.2.3.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                     'metric': '2219',
+                                                                                                                                     'next_hop': '4.4.4.4',
+                                                                                                                                     'origin_codes': 'e',
+                                                                                                                                     'path': '400 '
+                                                                                                                                             '33299 '
+                                                                                                                                             '51178 '
+                                                                                                                                             '47751 '
+                                                                                                                                             '{27016}',
+                                                                                                                                     'status_codes': '*>i',
+                                                                                                                                     'weight': '0'},
+                                                                                                                                 2: {'locprf': '100',
+                                                                                                                                     'metric': '2219',
+                                                                                                                                     'next_hop': '4.4.4.4',
+                                                                                                                                     'origin_codes': 'e',
+                                                                                                                                     'path': '400 '
+                                                                                                                                             '33299 '
+                                                                                                                                             '51178 '
+                                                                                                                                             '47751 '
+                                                                                                                                             '{27016}',
+                                                                                                                                     'status_codes': '*i',
+                                                                                                                                     'weight': '0'}}}},
+                                                                                            'processed_paths': 50,
+                                                                                            'processed_prefix': 40,
+                                                                                            'route_distinguisher': '400:1'},
+                                                                 'vpnv6 unicast': {'bgp_table_version': 43,
+                                                                                   'generic_scan_interval': '60',
+                                                                                   'instance_number': '0',
+                                                                                   'local_as': 100,
+                                                                                   'non_stop_routing': True,
+                                                                                   'nsr_initial_init_ver_status': 'reached',
+                                                                                   'nsr_initial_initsync_version': '11',
+                                                                                   'nsr_issu_sync_group_versions': '0/0',
+                                                                                   'rd_version': 0,
+                                                                                   'router_identifier': '1.1.1.1',
+                                                                                   'scan_interval': 60,
+                                                                                   'table_id': '0x0',
+                                                                                   'table_state': 'active'},
+                                                                 'vpnv6 unicast RD 200:1': {'default_vrf': 'vrf1',
+                                                                                            'prefix': {'615:11:11:3::/64': {'index': {1: {'metric': '2219',
+                                                                                                                                          'next_hop': '2001:db8:20:1:5::5',
+                                                                                                                                          'origin_codes': 'e',
+                                                                                                                                          'path': '200 '
+                                                                                                                                                  '33299 '
+                                                                                                                                                  '51178 '
+                                                                                                                                                  '47751 '
+                                                                                                                                                  '{27016}',
+                                                                                                                                          'status_codes': '*>',
+                                                                                                                                          'weight': '0'}}},
+                                                                                                       '615:11:11:4::/64': {'index': {1: {'metric': '2219',
+                                                                                                                                          'next_hop': '2001:db8:20:1:5::5',
+                                                                                                                                          'origin_codes': 'e',
+                                                                                                                                          'path': '200 '
+                                                                                                                                                  '33299 '
+                                                                                                                                                  '51178 '
+                                                                                                                                                  '47751 '
+                                                                                                                                                  '{27016}',
+                                                                                                                                          'status_codes': '*>',
+                                                                                                                                          'weight': '0'}}},
+                                                                                                       '646:11:11:1::/64': {'index': {1: {'locprf': '100',
+                                                                                                                                          'metric': '2219',
+                                                                                                                                          'next_hop': '4.4.4.4',
+                                                                                                                                          'origin_codes': 'e',
+                                                                                                                                          'path': '300 '
+                                                                                                                                                  '33299 '
+                                                                                                                                                  '51178 '
+                                                                                                                                                  '47751 '
+                                                                                                                                                  '{27016}',
+                                                                                                                                          'status_codes': '*>i',
+                                                                                                                                          'weight': '0'}}},
+                                                                                                       '646:11:11:2::/64': {'index': {1: {'locprf': '100',
+                                                                                                                                          'metric': '2219',
+                                                                                                                                          'next_hop': '4.4.4.4',
+                                                                                                                                          'origin_codes': 'e',
+                                                                                                                                          'path': '300 '
+                                                                                                                                                  '33299 '
+                                                                                                                                                  '51178 '
+                                                                                                                                                  '47751 '
+                                                                                                                                                  '{27016}',
+                                                                                                                                          'status_codes': '*>i',
+                                                                                                                                          'weight': '0'}}},
+                                                                                                       '646:11:11::/64': {'index': {1: {'locprf': '100',
+                                                                                                                                        'metric': '2219',
+                                                                                                                                        'next_hop': '4.4.4.4',
+                                                                                                                                        'origin_codes': 'e',
+                                                                                                                                        'path': '300 '
+                                                                                                                                                '33299 '
+                                                                                                                                                '51178 '
+                                                                                                                                                '47751 '
+                                                                                                                                                '{27016}',
+                                                                                                                                        'status_codes': '*>i',
+                                                                                                                                        'weight': '0'}}}},
+                                                                                            'route_distinguisher': '200:1'},
+                                                                 'vpnv6 unicast RD 200:2': {'default_vrf': 'vrf2',
+                                                                                            'prefix': {'615:11:11:1::/64': {'index': {1: {'metric': '2219',
+                                                                                                                                          'next_hop': '2001:db8:20:1:5::5',
+                                                                                                                                          'origin_codes': 'e',
+                                                                                                                                          'path': '200 '
+                                                                                                                                                  '33299 '
+                                                                                                                                                  '51178 '
+                                                                                                                                                  '47751 '
+                                                                                                                                                  '{27016}',
+                                                                                                                                          'status_codes': '*>',
+                                                                                                                                          'weight': '0'}}},
+                                                                                                       '615:11:11::/64': {'index': {1: {'metric': '2219',
+                                                                                                                                        'next_hop': '2001:db8:20:1:5::5',
+                                                                                                                                        'origin_codes': 'e',
+                                                                                                                                        'path': '200 '
+                                                                                                                                                '33299 '
+                                                                                                                                                '51178 '
+                                                                                                                                                '47751 '
+                                                                                                                                                '{27016}',
+                                                                                                                                        'status_codes': '*>',
+                                                                                                                                        'weight': '0'}}},
+                                                                                                       '646:11:11:1::/64': {'index': {1: {'locprf': '100',
+                                                                                                                                          'metric': '2219',
+                                                                                                                                          'next_hop': '4.4.4.4',
+                                                                                                                                          'origin_codes': 'e',
+                                                                                                                                          'path': '300 '
+                                                                                                                                                  '33299 '
+                                                                                                                                                  '51178 '
+                                                                                                                                                  '47751 '
+                                                                                                                                                  '{27016}',
+                                                                                                                                          'status_codes': '*>i',
+                                                                                                                                          'weight': '0'}}},
+                                                                                                       '646:11:11:2::/64': {'index': {1: {'locprf': '100',
+                                                                                                                                          'metric': '2219',
+                                                                                                                                          'next_hop': '4.4.4.4',
+                                                                                                                                          'origin_codes': 'e',
+                                                                                                                                          'path': '300 '
+                                                                                                                                                  '33299 '
+                                                                                                                                                  '51178 '
+                                                                                                                                                  '47751 '
+                                                                                                                                                  '{27016}',
+                                                                                                                                          'status_codes': '*>i',
+                                                                                                                                          'weight': '0'}}},
+                                                                                                       '646:11:11::/64': {'index': {1: {'locprf': '100',
+                                                                                                                                        'metric': '2219',
+                                                                                                                                        'next_hop': '4.4.4.4',
+                                                                                                                                        'origin_codes': 'e',
+                                                                                                                                        'path': '300 '
+                                                                                                                                                '33299 '
+                                                                                                                                                '51178 '
+                                                                                                                                                '47751 '
+                                                                                                                                                '{27016}',
+                                                                                                                                        'status_codes': '*>i',
+                                                                                                                                        'weight': '0'}}}},
+                                                                                            'route_distinguisher': '200:2'},
+                                                                 'vpnv6 unicast RD 300:1': {'default_vrf': 'none',
+                                                                                            'prefix': {'646:11:11:1::/64': {'index': {1: {'locprf': '100',
+                                                                                                                                          'metric': '2219',
+                                                                                                                                          'next_hop': '4.4.4.4',
+                                                                                                                                          'origin_codes': 'e',
+                                                                                                                                          'path': '300 '
+                                                                                                                                                  '33299 '
+                                                                                                                                                  '51178 '
+                                                                                                                                                  '47751 '
+                                                                                                                                                  '{27016}',
+                                                                                                                                          'status_codes': '*>i',
+                                                                                                                                          'weight': '0'},
+                                                                                                                                      2: {'locprf': '100',
+                                                                                                                                          'metric': '2219',
+                                                                                                                                          'next_hop': '4.4.4.4',
+                                                                                                                                          'origin_codes': 'e',
+                                                                                                                                          'path': '300 '
+                                                                                                                                                  '33299 '
+                                                                                                                                                  '51178 '
+                                                                                                                                                  '47751 '
+                                                                                                                                                  '{27016}',
+                                                                                                                                          'status_codes': '*i',
+                                                                                                                                          'weight': '0'}}},
+                                                                                                       '646:11:11::/64': {'index': {1: {'locprf': '100',
+                                                                                                                                        'metric': '2219',
+                                                                                                                                        'next_hop': '4.4.4.4',
+                                                                                                                                        'origin_codes': 'e',
+                                                                                                                                        'path': '300 '
+                                                                                                                                                '33299 '
+                                                                                                                                                '51178 '
+                                                                                                                                                '47751 '
+                                                                                                                                                '{27016}',
+                                                                                                                                        'status_codes': '*>i',
+                                                                                                                                        'weight': '0'},
+                                                                                                                                    2: {'locprf': '100',
+                                                                                                                                        'metric': '2219',
+                                                                                                                                        'next_hop': '4.4.4.4',
+                                                                                                                                        'origin_codes': 'e',
+                                                                                                                                        'path': '300 '
+                                                                                                                                                '33299 '
+                                                                                                                                                '51178 '
+                                                                                                                                                '47751 '
+                                                                                                                                                '{27016}',
+                                                                                                                                        'status_codes': '*i',
+                                                                                                                                        'weight': '0'}}}},
+                                                                                            'route_distinguisher': '300:1'},
+                                                                 'vpnv6 unicast RD 400:1': {'default_vrf': 'none',
+                                                                                            'prefix': {'646:22:22:1::/64': {'index': {1: {'locprf': '100',
+                                                                                                                                          'metric': '2219',
+                                                                                                                                          'next_hop': '4.4.4.4',
+                                                                                                                                          'origin_codes': 'e',
+                                                                                                                                          'path': '400 '
+                                                                                                                                                  '33299 '
+                                                                                                                                                  '51178 '
+                                                                                                                                                  '47751 '
+                                                                                                                                                  '{27016}',
+                                                                                                                                          'status_codes': '*>i',
+                                                                                                                                          'weight': '0'},
+                                                                                                                                      2: {'locprf': '100',
+                                                                                                                                          'metric': '2219',
+                                                                                                                                          'next_hop': '4.4.4.4',
+                                                                                                                                          'origin_codes': 'e',
+                                                                                                                                          'path': '400 '
+                                                                                                                                                  '33299 '
+                                                                                                                                                  '51178 '
+                                                                                                                                                  '47751 '
+                                                                                                                                                  '{27016}',
+                                                                                                                                          'status_codes': '*i',
+                                                                                                                                          'weight': '0'}}},
+                                                                                                       '646:22:22::/64': {'index': {1: {'locprf': '100',
+                                                                                                                                        'metric': '2219',
+                                                                                                                                        'next_hop': '4.4.4.4',
+                                                                                                                                        'origin_codes': 'e',
+                                                                                                                                        'path': '400 '
+                                                                                                                                                '33299 '
+                                                                                                                                                '51178 '
+                                                                                                                                                '47751 '
+                                                                                                                                                '{27016}',
+                                                                                                                                        'status_codes': '*>i',
+                                                                                                                                        'weight': '0'},
+                                                                                                                                    2: {'locprf': '100',
+                                                                                                                                        'metric': '2219',
+                                                                                                                                        'next_hop': '4.4.4.4',
+                                                                                                                                        'origin_codes': 'e',
+                                                                                                                                        'path': '400 '
+                                                                                                                                                '33299 '
+                                                                                                                                                '51178 '
+                                                                                                                                                '47751 '
+                                                                                                                                                '{27016}',
+                                                                                                                                        'status_codes': '*i',
+                                                                                                                                        'weight': '0'}}}},
+                                                                                            'processed_paths': 50,
+                                                                                            'processed_prefix': 40,
+                                                                                            'route_distinguisher': '400:1'}}}}}}}
+                                                
 
     golden_output = {'execute.return_value': '''
     
@@ -6435,25 +5434,12 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
            Network            Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 200:1 (default for vrf VRF1)
         *> 15.1.1.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-        *> 15.1.2.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
         *>i46.1.1.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i46.1.2.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i46.1.3.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         Route Distinguisher: 200:2 (default for vrf VRF2)
         *> 15.1.1.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-        *> 15.1.2.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-        *> 15.1.5.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-        *>i46.1.1.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i46.1.2.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i46.1.3.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i46.1.4.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         *>i46.1.5.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         Route Distinguisher: 300:1
         *>i46.1.1.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        * i                   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i46.1.2.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        * i                   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i46.1.3.0/24        4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         * i                   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         Route Distinguisher: 400:1
         *>i46.2.2.0/24        4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
@@ -6481,9 +5467,6 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
         Origin codes: i - IGP, e - EGP, ? - incomplete
            Network            Next Hop            Metric LocPrf Weight Path
         Route Distinguisher: 200:1 (default for vrf VRF1)
-
-
-
         *> 615:11:11:3::/64   2001:db8:20:1:5::5
                                                     2219             0 200 33299 51178 47751 {27016} e
         *> 615:11:11:4::/64   2001:db8:20:1:5::5
@@ -6491,8 +5474,6 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
         *>i646:11:11::/64     4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         *>i646:11:11:1::/64   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         *>i646:11:11:2::/64   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i646:22:22::/64     4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        *>i646:22:22:4::/64   4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
         Route Distinguisher: 200:2 (default for vrf VRF2)
         *> 615:11:11::/64     2001:db8:20:1:5::5
                                                     2219             0 200 33299 51178 47751 {27016} e
@@ -6501,9 +5482,6 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
         *>i646:11:11::/64     4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         *>i646:11:11:1::/64   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         *>i646:11:11:2::/64   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
-        *>i646:22:22::/64     4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        *>i646:22:22:1::/64   4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
-        *>i646:22:22:2::/64   4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
         Route Distinguisher: 300:1
         *>i646:11:11::/64     4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         * i                   4.4.4.4               2219    100      0 300 33299 51178 47751 {27016} e
@@ -6526,10 +5504,10 @@ class test_show_bgp_instance_all_all_all(unittest.TestCase):
             parsed_output = bgp_instance_all_all_obj.parse(vrf_type='all')
 
     def test_golden_all(self):
-       self.maxDiff = None
        self.device = Mock(**self.golden_output)
        bgp_instance_all_all_obj = ShowBgpInstanceAllAll(device=self.device)
        parsed_output = bgp_instance_all_all_obj.parse(vrf_type='all')
+       self.maxDiff = None
        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -6543,464 +5521,362 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
     
-    golden_parsed_output = {
-        'instance': 
-            {'default': 
-                {'vrf': 
-                    {'vrf1': 
-                        {'address_family': 
-                            {'ipv4 unicast': 
-                                {'bgp_table_version': 43,
-                                'bgp_vrf': 'vrf1',
-                                'local_as': 100,
-                                'non_stop_routing': True,
-                                'nsr_initial_initsync_version': '11 '
-                                '(Reached)',
-                                'nsr_issu_sync_group_versions': '0/0',
-                                'rd_version': 43,
-                                'route_identifier': '11.11.11.11',
-                                'table_id': '0xe0000010',
-                                'table_state': 'Active',
-                                'vrf_id': '0x60000001',
-                                'vrf_state': 'active'},
-                            'ipv4 unicast RD 200:1': 
-                                {'default_vrf': 'vrf1',
-                                'prefix': 
-                                    {'15.1.1.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'metric': '2219',
-                                                'next_hop': '20.1.5.5',
-                                                'origin_codes': 'e',
-                                                'path': '200 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>',
-                                                'weight': '0'}}},
-                                    '15.1.2.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'metric': '2219',
-                                                'next_hop': '20.1.5.5',
-                                                'origin_codes': 'e',
-                                                'path': '200 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>',
-                                                'weight': '0'}}},
-                                    '15.1.3.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'metric': '2219',
-                                                'next_hop': '20.1.5.5',
-                                                'origin_codes': 'e',
-                                                'path': '200 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>',
-                                                'weight': '0'}}},
-                                    '15.1.4.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'metric': '2219',
-                                                'next_hop': '20.1.5.5',
-                                                'origin_codes': 'e',
-                                                'path': '200 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>',
-                                                'weight': '0'}}},
-                                    '15.1.5.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'metric': '2219',
-                                                'next_hop': '20.1.5.5',
-                                                'origin_codes': 'e',
-                                                'path': '200 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>',
-                                                'weight': '0'}}},
-                                    '46.1.1.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '46.1.2.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '46.1.3.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '46.1.4.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '46.1.5.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '300 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '46.2.2.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '400 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '46.2.3.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '400 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '46.2.4.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '400 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '46.2.5.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '400 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}},
-                                    '46.2.6.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'locprf': '100',
-                                                'metric': '2219',
-                                                'next_hop': '4.4.4.4',
-                                                'origin_codes': 'e',
-                                                'path': '400 '
-                                                '33299 '
-                                                '51178 '
-                                                '47751 '
-                                                '{27016}',
-                                                'status_codes': '*>i',
-                                                'weight': '0'}}}},
-                                'processed_paths': 15,
-                                'processed_prefix': 15,
-                                'route_distinguisher': '200:1'}}},
-                    'vrf2': 
-                        {'address_family': 
-                            {'ipv4 unicast': 
-                                {'bgp_table_version': 43,
-                                'bgp_vrf': 'vrf2',
-                                'local_as': 100,
-                                'non_stop_routing': True,
-                                'nsr_initial_initsync_version': '11 '
-                                '(Reached)',
-                                'nsr_issu_sync_group_versions': '0/0',
-                                'rd_version': 43,
-                                'route_identifier': '11.11.11.11',
-                                'table_id': '0xe0000011',
-                                'table_state': 'Active',
-                                'vrf_id': '0x60000002',
-                                'vrf_state': 'active'},
-                            'ipv4 unicast RD 200:2': 
-                                {'default_vrf': 'vrf2',
-                                'prefix': 
-                                    {'15.1.1.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'metric': '2219',
-                                                'next_hop': '20.1.5.5',
-                                                'origin_codes': 'e',
-                                                'path': '200 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>',
-                                                'weight': '0'}}},
-                                    '15.1.2.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'metric': '2219',
-                                                'next_hop': '20.1.5.5',
-                                                'origin_codes': 'e',
-                                                'path': '200 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>',
-                                                'weight': '0'}}},
-                                    '15.1.3.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'metric': '2219',
-                                                'next_hop': '20.1.5.5',
-                                                'origin_codes': 'e',
-                                                'path': '200 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>',
-                                                'weight': '0'}}},
-                                    '15.1.4.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'metric': '2219',
-                                                'next_hop': '20.1.5.5',
-                                                'origin_codes': 'e',
-                                                'path': '200 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>',
-                                                'weight': '0'}}},
-                                    '15.1.5.0/24': 
-                                        {'index': 
-                                            {1: 
-                                                {'metric': '2219',
-                                                'next_hop': '20.1.5.5',
-                                                'origin_codes': 'e',
-                                                'path': '200 '
-                                                        '33299 '
-                                                        '51178 '
-                                                        '47751 '
-                                                        '{27016}',
-                                                'status_codes': '*>',
-                                                'weight': '0'}}},
-                                '46.1.1.0/24': 
-                                    {'index': 
-                                        {1: 
-                                            {'locprf': '100',
-                                            'metric': '2219',
-                                            'next_hop': '4.4.4.4',
-                                            'origin_codes': 'e',
-                                            'path': '300 '
-                                                    '33299 '
-                                                    '51178 '
-                                                    '47751 '
-                                                    '{27016}',
-                                            'status_codes': '*>i',
-                                            'weight': '0'}}},
-                                '46.1.2.0/24': 
-                                    {'index': 
-                                        {1: 
-                                            {'locprf': '100',
-                                            'metric': '2219',
-                                            'next_hop': '4.4.4.4',
-                                            'origin_codes': 'e',
-                                            'path': '300 '
-                                                    '33299 '
-                                                    '51178 '
-                                                    '47751 '
-                                                    '{27016}',
-                                            'status_codes': '*>i',
-                                            'weight': '0'}}},
-                                '46.1.3.0/24': 
-                                    {'index': 
-                                        {1: 
-                                            {'locprf': '100',
-                                            'metric': '2219',
-                                            'next_hop': '4.4.4.4',
-                                            'origin_codes': 'e',
-                                            'path': '300 '
-                                                    '33299 '
-                                                    '51178 '
-                                                    '47751 '
-                                                    '{27016}',
-                                            'status_codes': '*>i',
-                                            'weight': '0'}}},
-                                '46.1.4.0/24': 
-                                    {'index': 
-                                        {1: 
-                                            {'locprf': '100',
-                                            'metric': '2219',
-                                            'next_hop': '4.4.4.4',
-                                            'origin_codes': 'e',
-                                            'path': '300 '
-                                                    '33299 '
-                                                    '51178 '
-                                                    '47751 '
-                                                    '{27016}',
-                                            'status_codes': '*>i',
-                                            'weight': '0'}}},
-                                '46.1.5.0/24': 
-                                    {'index': 
-                                        {1: 
-                                            {'locprf': '100',
-                                            'metric': '2219',
-                                            'next_hop': '4.4.4.4',
-                                            'origin_codes': 'e',
-                                            'path': '300 '
-                                                    '33299 '
-                                                    '51178 '
-                                                    '47751 '
-                                                    '{27016}',
-                                            'status_codes': '*>i',
-                                            'weight': '0'}}},
-                                '46.2.2.0/24': 
-                                    {'index': 
-                                        {1: 
-                                            {'locprf': '100',
-                                            'metric': '2219',
-                                            'next_hop': '4.4.4.4',
-                                            'origin_codes': 'e',
-                                            'path': '400 '
-                                                    '33299 '
-                                                    '51178 '
-                                                    '47751 '
-                                                    '{27016}',
-                                            'status_codes': '*>i',
-                                            'weight': '0'}}},
-                                '46.2.3.0/24': 
-                                    {'index': 
-                                        {1: 
-                                            {'locprf': '100',
-                                            'metric': '2219',
-                                            'next_hop': '4.4.4.4',
-                                            'origin_codes': 'e',
-                                            'path': '400 '
-                                                    '33299 '
-                                                    '51178 '
-                                                    '47751 '
-                                                    '{27016}',
-                                            'status_codes': '*>i',
-                                            'weight': '0'}}},
-                                '46.2.4.0/24': 
-                                    {'index': 
-                                        {1: 
-                                            {'locprf': '100',
-                                            'metric': '2219',
-                                            'next_hop': '4.4.4.4',
-                                            'origin_codes': 'e',
-                                            'path': '400 '
-                                                    '33299 '
-                                                    '51178 '
-                                                    '47751 '
-                                                    '{27016}',
-                                            'status_codes': '*>i',
-                                            'weight': '0'}}},
-                                '46.2.5.0/24': 
-                                    {'index': 
-                                        {1: 
-                                            {'locprf': '100',
-                                            'metric': '2219',
-                                            'next_hop': '4.4.4.4',
-                                            'origin_codes': 'e',
-                                            'path': '400 '
-                                                    '33299 '
-                                                    '51178 '
-                                                    '47751 '
-                                                    '{27016}',
-                                            'status_codes': '*>i',
-                                            'weight': '0'}}},
-                                '46.2.6.0/24': 
-                                    {'index': 
-                                        {1: 
-                                            {'locprf': '100',
-                                            'metric': '2219',
-                                            'next_hop': '4.4.4.4',
-                                            'origin_codes': 'e',
-                                            'path': '400 '
-                                                    '33299 '
-                                                    '51178 '
-                                                    '47751 '
-                                                    '{27016}',
-                                            'status_codes': '*>i',
-                                            'weight': '0'}}}},
-                            'processed_paths': 15,
-                            'processed_prefix': 15,
-                            'route_distinguisher': '200:2'}}}}}}}
+    golden_parsed_output = {'instance': {'default': {'vrf': {'VRF1': {'address_family': {'ipv4 unicast': {'bgp_table_version': 43,
+                                                                               'bgp_vrf': 'vrf1',
+                                                                               'local_as': 100,
+                                                                               'non_stop_routing': True,
+                                                                               'nsr_initial_init_ver_status': 'reached',
+                                                                               'nsr_initial_initsync_version': '11',
+                                                                               'nsr_issu_sync_group_versions': '0/0',
+                                                                               'rd_version': 43,
+                                                                               'router_identifier': '11.11.11.11',
+                                                                               'table_id': '0xe0000010',
+                                                                               'table_state': 'active',
+                                                                               'vrf_id': '0x60000001',
+                                                                               'vrf_state': 'active'},
+                                                              'ipv4 unicast RD 200:1': {'default_vrf': 'vrf1',
+                                                                                        'prefix': {'15.1.1.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                 'next_hop': '20.1.5.5',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '200 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '15.1.2.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                 'next_hop': '20.1.5.5',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '200 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '15.1.3.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                 'next_hop': '20.1.5.5',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '200 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '15.1.4.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                 'next_hop': '20.1.5.5',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '200 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '15.1.5.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                 'next_hop': '20.1.5.5',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '200 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '46.1.1.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                 'metric': '2219',
+                                                                                                                                 'next_hop': '4.4.4.4',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '300 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>i',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '46.1.2.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                 'metric': '2219',
+                                                                                                                                 'next_hop': '4.4.4.4',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '300 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>i',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '46.1.3.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                 'metric': '2219',
+                                                                                                                                 'next_hop': '4.4.4.4',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '300 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>i',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '46.1.4.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                 'metric': '2219',
+                                                                                                                                 'next_hop': '4.4.4.4',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '300 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>i',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '46.1.5.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                 'metric': '2219',
+                                                                                                                                 'next_hop': '4.4.4.4',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '300 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>i',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '46.2.2.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                 'metric': '2219',
+                                                                                                                                 'next_hop': '4.4.4.4',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '400 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>i',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '46.2.3.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                 'metric': '2219',
+                                                                                                                                 'next_hop': '4.4.4.4',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '400 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>i',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '46.2.4.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                 'metric': '2219',
+                                                                                                                                 'next_hop': '4.4.4.4',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '400 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>i',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '46.2.5.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                 'metric': '2219',
+                                                                                                                                 'next_hop': '4.4.4.4',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '400 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>i',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '46.2.6.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                 'metric': '2219',
+                                                                                                                                 'next_hop': '4.4.4.4',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '400 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>i',
+                                                                                                                                 'weight': '0'}}}},
+                                                                                        'processed_paths': 15,
+                                                                                        'processed_prefix': 15,
+                                                                                        'route_distinguisher': '200:1'}}},
+                                  'VRF2': {'address_family': {'ipv4 unicast': {'bgp_table_version': 43,
+                                                                               'bgp_vrf': 'vrf2',
+                                                                               'local_as': 100,
+                                                                               'non_stop_routing': True,
+                                                                               'nsr_initial_init_ver_status': 'reached',
+                                                                               'nsr_initial_initsync_version': '11',
+                                                                               'nsr_issu_sync_group_versions': '0/0',
+                                                                               'rd_version': 43,
+                                                                               'router_identifier': '11.11.11.11',
+                                                                               'table_id': '0xe0000011',
+                                                                               'table_state': 'active',
+                                                                               'vrf_id': '0x60000002',
+                                                                               'vrf_state': 'active'},
+                                                              'ipv4 unicast RD 200:2': {'default_vrf': 'vrf2',
+                                                                                        'prefix': {'15.1.1.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                 'next_hop': '20.1.5.5',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '200 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '15.1.2.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                 'next_hop': '20.1.5.5',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '200 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '15.1.3.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                 'next_hop': '20.1.5.5',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '200 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '15.1.4.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                 'next_hop': '20.1.5.5',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '200 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '15.1.5.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                 'next_hop': '20.1.5.5',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '200 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '46.1.1.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                 'metric': '2219',
+                                                                                                                                 'next_hop': '4.4.4.4',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '300 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>i',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '46.1.2.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                 'metric': '2219',
+                                                                                                                                 'next_hop': '4.4.4.4',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '300 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>i',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '46.1.3.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                 'metric': '2219',
+                                                                                                                                 'next_hop': '4.4.4.4',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '300 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>i',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '46.1.4.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                 'metric': '2219',
+                                                                                                                                 'next_hop': '4.4.4.4',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '300 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>i',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '46.1.5.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                 'metric': '2219',
+                                                                                                                                 'next_hop': '4.4.4.4',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '300 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>i',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '46.2.2.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                 'metric': '2219',
+                                                                                                                                 'next_hop': '4.4.4.4',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '400 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>i',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '46.2.3.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                 'metric': '2219',
+                                                                                                                                 'next_hop': '4.4.4.4',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '400 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>i',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '46.2.4.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                 'metric': '2219',
+                                                                                                                                 'next_hop': '4.4.4.4',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '400 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>i',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '46.2.5.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                 'metric': '2219',
+                                                                                                                                 'next_hop': '4.4.4.4',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '400 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>i',
+                                                                                                                                 'weight': '0'}}},
+                                                                                                   '46.2.6.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                 'metric': '2219',
+                                                                                                                                 'next_hop': '4.4.4.4',
+                                                                                                                                 'origin_codes': 'e',
+                                                                                                                                 'path': '400 '
+                                                                                                                                         '33299 '
+                                                                                                                                         '51178 '
+                                                                                                                                         '47751 '
+                                                                                                                                         '{27016}',
+                                                                                                                                 'status_codes': '*>i',
+                                                                                                                                 'weight': '0'}}}},
+                                                                                        'processed_paths': 15,
+                                                                                        'processed_prefix': 15,
+                                                                                        'route_distinguisher': '200:2'}}}}}}}
+
+
 
     golden_output = {'execute.return_value': '''
         BGP instance 0: 'default'
@@ -7091,7 +5967,6 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
         bgp_instance_all_all_obj = ShowBgpInstanceAllAll(device=self.device)
         parsed_output = bgp_instance_all_all_obj.parse(vrf_type='vrf')
         self.assertEqual(parsed_output,self.golden_parsed_output)
-
 
 if __name__ == '__main__':
     unittest.main()
