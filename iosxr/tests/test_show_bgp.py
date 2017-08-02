@@ -4018,7 +4018,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_advertised_routes(unittest.Te
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output =  {'instance': {'default': {'vrf': {'VRF1': {},
-                                  'VRF2': {'address_family': {'ipv4 unicast RD 200:2': {'advertised': {'prefix': {'46.1.1.0/24': {'index': {1: {'froms': '2.2.2.2',
+                                  'VRF2': {'address_family': {'vpnv4 unicast RD 200:2': {'advertised': {'prefix': {'46.1.1.0/24': {'index': {1: {'froms': '2.2.2.2',
                                                                                                                                                 'next_hop': '20.1.5.1',
                                                                                                                                                 'origin_code': 'e',
                                                                                                                                                 'path': '100 '
@@ -4196,41 +4196,41 @@ class test_show_bgp_instance_all_vrf_all_neighbors_received_routes(unittest.Test
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output =  {'instance': {'default': {'vrf': {'VRF2': {'address_family': {'ipv4 unicast RD 200:2': {'local_as': 100,
-                                                                                        'non_stop_routing': True,
-                                                                                        'nsr_initial_init_ver_status': 'reached',
-                                                                                        'nsr_initial_initsync_version': '11',
-                                                                                        'nsr_issu_sync_group_versions': '0/0',
-                                                                                        'processed_paths': 2,
-                                                                                        'processed_prefixes': 2,
-                                                                                        'rd_version': 63,
-                                                                                        'received': {'prefix': {'15.1.1.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                              'next_hop': '20.1.5.5',
-                                                                                                                                              'origin_codes': 'e',
-                                                                                                                                              'path': '200 '
-                                                                                                                                                      '33299 '
-                                                                                                                                                      '51178 '
-                                                                                                                                                      '47751 '
-                                                                                                                                                      '{27016}',
-                                                                                                                                              'status_codes': '*',
-                                                                                                                                              'weight': '0'}}},
-                                                                                                                '15.1.2.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                              'next_hop': '20.1.5.5',
-                                                                                                                                              'origin_codes': 'e',
-                                                                                                                                              'path': '200 '
-                                                                                                                                                      '33299 '
-                                                                                                                                                      '51178 '
-                                                                                                                                                      '47751 '
-                                                                                                                                                      '{27016}',
-                                                                                                                                              'status_codes': '*',
-                                                                                                                                              'weight': '0'}}}}},
-                                                                                        'route_distinguisher': '200:2',
-                                                                                        'router_identifier': '11.11.11.11',
-                                                                                        'state': 'active',
-                                                                                        'table_id': '0xe0000011',
-                                                                                        'table_state': 'active',
-                                                                                        'tbl_ver': 63,
-                                                                                        'vrf_id': '0x60000002'}}}}}}}
+    golden_parsed_output =  {'instance': {'default': {'vrf': {'VRF2': {'address_family': {'vpnv4 unicast RD 200:2': {'local_as': 100,
+                                                                                         'non_stop_routing': True,
+                                                                                         'nsr_initial_init_ver_status': 'reached',
+                                                                                         'nsr_initial_initsync_version': '11',
+                                                                                         'nsr_issu_sync_group_versions': '0/0',
+                                                                                         'processed_paths': 2,
+                                                                                         'processed_prefixes': 2,
+                                                                                         'rd_version': 63,
+                                                                                         'received': {'prefix': {'15.1.1.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                               'next_hop': '20.1.5.5',
+                                                                                                                                               'origin_codes': 'e',
+                                                                                                                                               'path': '200 '
+                                                                                                                                                       '33299 '
+                                                                                                                                                       '51178 '
+                                                                                                                                                       '47751 '
+                                                                                                                                                       '{27016}',
+                                                                                                                                               'status_codes': '*',
+                                                                                                                                               'weight': '0'}}},
+                                                                                                                 '15.1.2.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                               'next_hop': '20.1.5.5',
+                                                                                                                                               'origin_codes': 'e',
+                                                                                                                                               'path': '200 '
+                                                                                                                                                       '33299 '
+                                                                                                                                                       '51178 '
+                                                                                                                                                       '47751 '
+                                                                                                                                                       '{27016}',
+                                                                                                                                               'status_codes': '*',
+                                                                                                                                               'weight': '0'}}}}},
+                                                                                         'route_distinguisher': '200:2',
+                                                                                         'router_identifier': '11.11.11.11',
+                                                                                         'state': 'active',
+                                                                                         'table_id': '0xe0000011',
+                                                                                         'table_state': 'active',
+                                                                                         'tbl_ver': 63,
+                                                                                         'vrf_id': '0x60000002'}}}}}}}
 
   
     golden_output = {'execute.return_value': '''
@@ -4489,7 +4489,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_routes(unittest.TestCase):
     
     dev = Device(name='Device')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output = {'instance': {'default': {'vrf': {'VRF2': {'address_family': {'ipv4 unicast RD 200:2': {'local_as': 100,
+    golden_parsed_output = {'instance': {'default': {'vrf': {'VRF2': {'address_family': {'vpnv4 unicast RD 200:2': {'local_as': 100,
                                                                                         'non_stop_routing': True,
                                                                                         'nsr_initial_init_ver_status': 'reached',
                                                                                         'nsr_initial_initsync_version': '11',
@@ -4922,28 +4922,28 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {'instance': {'default': {'vrf': {'VRF1': {'address_family': {'ipv4 unicast': {'bgp_table_version': 63,
-                                                                                        'bgp_vrf': 'vrf1',
-                                                                                        'local_as': 100,
-                                                                                        'non_stop_routing': 'enabled',
-                                                                                        'nsr_initial_init_ver_status': 'reached',
-                                                                                        'nsr_initial_initsync_version': 11,
-                                                                                        'nsr_issu_sync_group_versions': '0/0',
-                                                                                        'operation_mode': 'standalone',
-                                                                                        'process': {'Speaker': {'brib_rib': 63,
-                                                                                                                'importver': 63,
-                                                                                                                'labelver': 63,
-                                                                                                                'rcvtblver': 63,
-                                                                                                                'sendtblver': 63,
-                                                                                                                'standbyver': 0}},
-                                                                                        'rd_version': 63,
-                                                                                        'route_distinguisher': '200:1',
-                                                                                        'router_id': '11.11.11.11',
-                                                                                        'table_id': '0xe0000010',
-                                                                                        'table_state': 'active',
-                                                                                        'vrf_id': '0x60000001',
-                                                                                        'vrf_state': 'active'}},
-                                           'neighbor': {'10.1.5.5': {'address_family': {'ipv4 unicast': {'input_queue': 0,
+    golden_parsed_output = {'instance': {'default': {'vrf': {'VRF1': {'address_family': {'vpnv4 unicast': {'bgp_table_version': 63,
+                                                                                'bgp_vrf': 'vrf1',
+                                                                                'local_as': 100,
+                                                                                'non_stop_routing': 'enabled',
+                                                                                'nsr_initial_init_ver_status': 'reached',
+                                                                                'nsr_initial_initsync_version': 11,
+                                                                                'nsr_issu_sync_group_versions': '0/0',
+                                                                                'operation_mode': 'standalone',
+                                                                                'process': {'Speaker': {'brib_rib': 63,
+                                                                                                        'importver': 63,
+                                                                                                        'labelver': 63,
+                                                                                                        'rcvtblver': 63,
+                                                                                                        'sendtblver': 63,
+                                                                                                        'standbyver': 0}},
+                                                                                'rd_version': 63,
+                                                                                'route_distinguisher': '200:1',
+                                                                                'router_id': '11.11.11.11',
+                                                                                'table_id': '0xe0000010',
+                                                                                'table_state': 'active',
+                                                                                'vrf_id': '0x60000001',
+                                                                                'vrf_state': 'active'}},
+                                           'neighbor': {'10.1.5.5': {'address_family': {'vpnv4 unicast': {'input_queue': 0,
                                                                                                           'msg_rcvd': 60,
                                                                                                           'msg_sent': 62,
                                                                                                           'output_queue': 0,
@@ -4953,7 +4953,7 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
                                                                                                           'tbl_ver': 63,
                                                                                                           'up_down': '00:57:32'}},
                                                                      'remote_as': 200}}},
-                                  'VRF2': {'address_family': {'ipv4 unicast': {'bgp_table_version': 63,
+                                  'VRF2': {'address_family': {'vpnv4 unicast': {'bgp_table_version': 63,
                                                                                 'bgp_vrf': 'vrf2',
                                                                                 'local_as': 100,
                                                                                 'non_stop_routing': 'enabled',
@@ -4974,7 +4974,7 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
                                                                                 'table_state': 'active',
                                                                                 'vrf_id': '0x60000002',
                                                                                 'vrf_state': 'active'}},
-                                           'neighbor': {'20.1.5.5': {'address_family': {'ipv4 unicast': {'input_queue': 0,
+                                           'neighbor': {'20.1.5.5': {'address_family': {'vpnv4 unicast': {'input_queue': 0,
                                                                                                           'msg_rcvd': 58,
                                                                                                           'msg_sent': 62,
                                                                                                           'output_queue': 0,
@@ -4983,7 +4983,7 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
                                                                                                           'state_pfxrcd': '5',
                                                                                                           'tbl_ver': 63,
                                                                                                           'up_down': '00:01:12'}},
-                                                             'remote_as': 200}}}}}}}
+                                                                     'remote_as': 200}}}}}}}
 
 
     golden_output = {'execute.return_value': '''
@@ -5521,361 +5521,360 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
     
-    golden_parsed_output = {'instance': {'default': {'vrf': {'VRF1': {'address_family': {'ipv4 unicast': {'bgp_table_version': 43,
-                                                                               'bgp_vrf': 'vrf1',
-                                                                               'local_as': 100,
-                                                                               'non_stop_routing': True,
-                                                                               'nsr_initial_init_ver_status': 'reached',
-                                                                               'nsr_initial_initsync_version': '11',
-                                                                               'nsr_issu_sync_group_versions': '0/0',
-                                                                               'rd_version': 43,
-                                                                               'router_identifier': '11.11.11.11',
-                                                                               'table_id': '0xe0000010',
-                                                                               'table_state': 'active',
-                                                                               'vrf_id': '0x60000001',
-                                                                               'vrf_state': 'active'},
-                                                              'ipv4 unicast RD 200:1': {'default_vrf': 'vrf1',
-                                                                                        'prefix': {'15.1.1.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                 'next_hop': '20.1.5.5',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '200 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '15.1.2.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                 'next_hop': '20.1.5.5',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '200 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '15.1.3.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                 'next_hop': '20.1.5.5',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '200 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '15.1.4.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                 'next_hop': '20.1.5.5',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '200 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '15.1.5.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                 'next_hop': '20.1.5.5',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '200 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '46.1.1.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                 'metric': '2219',
-                                                                                                                                 'next_hop': '4.4.4.4',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '300 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>i',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '46.1.2.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                 'metric': '2219',
-                                                                                                                                 'next_hop': '4.4.4.4',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '300 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>i',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '46.1.3.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                 'metric': '2219',
-                                                                                                                                 'next_hop': '4.4.4.4',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '300 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>i',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '46.1.4.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                 'metric': '2219',
-                                                                                                                                 'next_hop': '4.4.4.4',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '300 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>i',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '46.1.5.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                 'metric': '2219',
-                                                                                                                                 'next_hop': '4.4.4.4',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '300 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>i',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '46.2.2.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                 'metric': '2219',
-                                                                                                                                 'next_hop': '4.4.4.4',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '400 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>i',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '46.2.3.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                 'metric': '2219',
-                                                                                                                                 'next_hop': '4.4.4.4',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '400 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>i',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '46.2.4.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                 'metric': '2219',
-                                                                                                                                 'next_hop': '4.4.4.4',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '400 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>i',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '46.2.5.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                 'metric': '2219',
-                                                                                                                                 'next_hop': '4.4.4.4',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '400 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>i',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '46.2.6.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                 'metric': '2219',
-                                                                                                                                 'next_hop': '4.4.4.4',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '400 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>i',
-                                                                                                                                 'weight': '0'}}}},
-                                                                                        'processed_paths': 15,
-                                                                                        'processed_prefix': 15,
-                                                                                        'route_distinguisher': '200:1'}}},
-                                  'VRF2': {'address_family': {'ipv4 unicast': {'bgp_table_version': 43,
-                                                                               'bgp_vrf': 'vrf2',
-                                                                               'local_as': 100,
-                                                                               'non_stop_routing': True,
-                                                                               'nsr_initial_init_ver_status': 'reached',
-                                                                               'nsr_initial_initsync_version': '11',
-                                                                               'nsr_issu_sync_group_versions': '0/0',
-                                                                               'rd_version': 43,
-                                                                               'router_identifier': '11.11.11.11',
-                                                                               'table_id': '0xe0000011',
-                                                                               'table_state': 'active',
-                                                                               'vrf_id': '0x60000002',
-                                                                               'vrf_state': 'active'},
-                                                              'ipv4 unicast RD 200:2': {'default_vrf': 'vrf2',
-                                                                                        'prefix': {'15.1.1.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                 'next_hop': '20.1.5.5',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '200 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '15.1.2.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                 'next_hop': '20.1.5.5',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '200 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '15.1.3.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                 'next_hop': '20.1.5.5',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '200 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '15.1.4.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                 'next_hop': '20.1.5.5',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '200 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '15.1.5.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                 'next_hop': '20.1.5.5',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '200 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '46.1.1.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                 'metric': '2219',
-                                                                                                                                 'next_hop': '4.4.4.4',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '300 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>i',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '46.1.2.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                 'metric': '2219',
-                                                                                                                                 'next_hop': '4.4.4.4',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '300 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>i',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '46.1.3.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                 'metric': '2219',
-                                                                                                                                 'next_hop': '4.4.4.4',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '300 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>i',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '46.1.4.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                 'metric': '2219',
-                                                                                                                                 'next_hop': '4.4.4.4',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '300 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>i',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '46.1.5.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                 'metric': '2219',
-                                                                                                                                 'next_hop': '4.4.4.4',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '300 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>i',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '46.2.2.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                 'metric': '2219',
-                                                                                                                                 'next_hop': '4.4.4.4',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '400 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>i',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '46.2.3.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                 'metric': '2219',
-                                                                                                                                 'next_hop': '4.4.4.4',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '400 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>i',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '46.2.4.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                 'metric': '2219',
-                                                                                                                                 'next_hop': '4.4.4.4',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '400 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>i',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '46.2.5.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                 'metric': '2219',
-                                                                                                                                 'next_hop': '4.4.4.4',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '400 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>i',
-                                                                                                                                 'weight': '0'}}},
-                                                                                                   '46.2.6.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                 'metric': '2219',
-                                                                                                                                 'next_hop': '4.4.4.4',
-                                                                                                                                 'origin_codes': 'e',
-                                                                                                                                 'path': '400 '
-                                                                                                                                         '33299 '
-                                                                                                                                         '51178 '
-                                                                                                                                         '47751 '
-                                                                                                                                         '{27016}',
-                                                                                                                                 'status_codes': '*>i',
-                                                                                                                                 'weight': '0'}}}},
-                                                                                        'processed_paths': 15,
-                                                                                        'processed_prefix': 15,
-                                                                                        'route_distinguisher': '200:2'}}}}}}}
-
+    golden_parsed_output = {'instance': {'default': {'vrf': {'VRF1': {'address_family': {'vpnv4 unicast': {'bgp_table_version': 43,
+                                                                                'bgp_vrf': 'vrf1',
+                                                                                'local_as': 100,
+                                                                                'non_stop_routing': True,
+                                                                                'nsr_initial_init_ver_status': 'reached',
+                                                                                'nsr_initial_initsync_version': '11',
+                                                                                'nsr_issu_sync_group_versions': '0/0',
+                                                                                'rd_version': 43,
+                                                                                'router_identifier': '11.11.11.11',
+                                                                                'table_id': '0xe0000010',
+                                                                                'table_state': 'active',
+                                                                                'vrf_id': '0x60000001',
+                                                                                'vrf_state': 'active'},
+                                                              'vpnv4 unicast RD 200:1': {'default_vrf': 'vrf1',
+                                                                                         'prefix': {'15.1.1.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                  'next_hop': '20.1.5.5',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '200 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '15.1.2.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                  'next_hop': '20.1.5.5',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '200 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '15.1.3.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                  'next_hop': '20.1.5.5',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '200 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '15.1.4.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                  'next_hop': '20.1.5.5',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '200 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '15.1.5.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                  'next_hop': '20.1.5.5',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '200 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '46.1.1.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                  'metric': '2219',
+                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '300 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '46.1.2.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                  'metric': '2219',
+                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '300 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '46.1.3.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                  'metric': '2219',
+                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '300 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '46.1.4.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                  'metric': '2219',
+                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '300 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '46.1.5.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                  'metric': '2219',
+                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '300 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '46.2.2.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                  'metric': '2219',
+                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '400 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '46.2.3.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                  'metric': '2219',
+                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '400 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '46.2.4.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                  'metric': '2219',
+                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '400 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '46.2.5.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                  'metric': '2219',
+                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '400 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '46.2.6.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                  'metric': '2219',
+                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '400 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                  'weight': '0'}}}},
+                                                                                         'processed_paths': 15,
+                                                                                         'processed_prefix': 15,
+                                                                                         'route_distinguisher': '200:1'}}},
+                                  'VRF2': {'address_family': {'vpnv4 unicast': {'bgp_table_version': 43,
+                                                                                'bgp_vrf': 'vrf2',
+                                                                                'local_as': 100,
+                                                                                'non_stop_routing': True,
+                                                                                'nsr_initial_init_ver_status': 'reached',
+                                                                                'nsr_initial_initsync_version': '11',
+                                                                                'nsr_issu_sync_group_versions': '0/0',
+                                                                                'rd_version': 43,
+                                                                                'router_identifier': '11.11.11.11',
+                                                                                'table_id': '0xe0000011',
+                                                                                'table_state': 'active',
+                                                                                'vrf_id': '0x60000002',
+                                                                                'vrf_state': 'active'},
+                                                              'vpnv4 unicast RD 200:2': {'default_vrf': 'vrf2',
+                                                                                         'prefix': {'15.1.1.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                  'next_hop': '20.1.5.5',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '200 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '15.1.2.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                  'next_hop': '20.1.5.5',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '200 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '15.1.3.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                  'next_hop': '20.1.5.5',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '200 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '15.1.4.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                  'next_hop': '20.1.5.5',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '200 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '15.1.5.0/24': {'index': {1: {'metric': '2219',
+                                                                                                                                  'next_hop': '20.1.5.5',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '200 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '46.1.1.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                  'metric': '2219',
+                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '300 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '46.1.2.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                  'metric': '2219',
+                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '300 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '46.1.3.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                  'metric': '2219',
+                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '300 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '46.1.4.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                  'metric': '2219',
+                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '300 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '46.1.5.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                  'metric': '2219',
+                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '300 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '46.2.2.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                  'metric': '2219',
+                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '400 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '46.2.3.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                  'metric': '2219',
+                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '400 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '46.2.4.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                  'metric': '2219',
+                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '400 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '46.2.5.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                  'metric': '2219',
+                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '400 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                  'weight': '0'}}},
+                                                                                                    '46.2.6.0/24': {'index': {1: {'locprf': '100',
+                                                                                                                                  'metric': '2219',
+                                                                                                                                  'next_hop': '4.4.4.4',
+                                                                                                                                  'origin_codes': 'e',
+                                                                                                                                  'path': '400 '
+                                                                                                                                          '33299 '
+                                                                                                                                          '51178 '
+                                                                                                                                          '47751 '
+                                                                                                                                          '{27016}',
+                                                                                                                                  'status_codes': '*>i',
+                                                                                                                                  'weight': '0'}}}},
+                                                                                         'processed_paths': 15,
+                                                                                         'processed_prefix': 15,
+                                                                                         'route_distinguisher': '200:2'}}}}}}}
 
 
     golden_output = {'execute.return_value': '''
