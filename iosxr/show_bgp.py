@@ -2052,8 +2052,8 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                     ret_dict['instance'][instance]['vrf'][vrf]['neighbor'] = {}
                 if neighbor not in ret_dict['instance'][instance]['vrf'][vrf]['neighbor']:
                     ret_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor] = {}
-                    sub_dict = ret_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]
-                    continue
+                sub_dict = ret_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]
+                continue
 
             # BGP neighbor is 10.1.5.5, vrf VRF1
             p2_1 =  re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor>[a-zA-Z0-9\.\:]+), +vrf +(?P<vrf>[a-zA-Z0-9]+)$')
@@ -2071,8 +2071,8 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                     ret_dict['instance'][instance]['vrf'][vrf]['neighbor'] = {}
                 if neighbor not in ret_dict['instance'][instance]['vrf'][vrf]['neighbor']:
                     ret_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor] = {}
-                    sub_dict = ret_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]
-                    continue
+                sub_dict = ret_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]
+                continue
             
             # Remote AS 200, local AS 100, external link
             p3 = re.compile(r'^Remote *AS *(?P<remote_as>[0-9]+), *local *AS *(?P<local_as>[0-9]+), *(?P<link_state>[a-zA-Z\s]+)$')
