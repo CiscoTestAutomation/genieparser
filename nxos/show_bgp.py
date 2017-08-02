@@ -1888,12 +1888,6 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                     parsed_dict['vrf'][vrf]['address_family']\
                         [new_address_family]['default_vrf'] = \
                             str(m.groupdict()['default_vrf'])
-                
-                # Delete af dict with original af name
-                try:
-                    del parsed_dict['vrf'][vrf]['address_family'][original_address_family]
-                except:
-                    pass
 
                 # Reset address_family key and af_dict for use in other regex
                 address_family = new_address_family
@@ -3697,13 +3691,6 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                     route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
                         ['address_family'][new_address_family]['default_vrf'] = \
                             str(m.groupdict()['default_vrf'])
-                
-                # Delete af dict with original af name
-                try:
-                    del route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][original_address_family]
-                except:
-                    pass
 
                 # Reset address_family key and af_dict for use in other regex
                 address_family = new_address_family
@@ -4072,13 +4059,6 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
                     route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
                         ['address_family'][new_address_family]['default_vrf'] = \
                             str(m.groupdict()['default_vrf'])
-                
-                # Delete af dict with original af name
-                try:
-                    del route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][original_address_family]
-                except:
-                    pass
 
                 # Reset address_family key and af_dict for use in other regex
                 address_family = new_address_family
@@ -4447,13 +4427,6 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
                     route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
                         ['address_family'][new_address_family]['default_vrf'] = \
                             str(m.groupdict()['default_vrf'])
-                
-                # Delete af dict with original af name
-                try:
-                    del route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
-                        ['address_family'][original_address_family]
-                except:
-                    pass
 
                 # Reset address_family key and af_dict for use in other regex
                 address_family = new_address_family
