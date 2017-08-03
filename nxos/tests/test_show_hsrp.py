@@ -220,6 +220,7 @@ class test_show_hsrp_all(unittest.TestCase):
                         'num_state_changes': 4,
                         'preempt': True,
                         'priority': 110,
+                        'active_priority': 110,
                         'standby_router': '192.168.1.2',
                         'standby_priority': 90,
                         'standby_expire': 2.426,

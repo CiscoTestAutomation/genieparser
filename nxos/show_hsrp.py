@@ -268,7 +268,8 @@ class ShowHsrpAll(ShowHsrpAllSchema):
             m = p2.match(line)
             if m:
                 intf_key['local_state'] = m.groupdict()['local_state'].lower()
-                intf_key['priority'] = int(m.groupdict()['priority'])
+                priority = int(m.groupdict()['priority'])
+                intf_key['priority'] = priority
                 intf_key['configured_priority'] = \
                     int(m.groupdict()['configured_priority'])
                 if m.groupdict()['preempt'] is not None:
@@ -328,10 +329,14 @@ class ShowHsrpAll(ShowHsrpAllSchema):
                              'in *(?P<expire>[\w\.]+) *sec\(s\))?$')
             m = p7.match(line)
             if m:
-                intf_key['active_router'] = m.groupdict()['active_router']
-                if m.groupdict()['active_priority']:
-                    intf_key['active_priority'] = \
-                        int(m.groupdict()['active_priority'])
+                role = m.groupdict()['active_router']
+                if role == 'local':
+                    active_priority = priority
+                else:
+                    active_priority = m.groupdict()['active_priority']
+                intf_key['active_router'] = role
+                if active_priority:
+                    intf_key['active_priority'] = int(active_priority)
                 if m.groupdict()['expire']:
                     intf_key['active_expire'] = \
                         float(m.groupdict()['expire'])
@@ -345,10 +350,15 @@ class ShowHsrpAll(ShowHsrpAllSchema):
                              'in *(?P<expire>[\w\.]+) *sec\(s\))?$')
             m = p8.match(line)
             if m:
-                intf_key['standby_router'] = m.groupdict()['standby_router']
-                if m.groupdict()['standby_priority']:
-                    intf_key['standby_priority'] = \
-                        int(m.groupdict()['standby_priority'])
+                role = m.groupdict()['standby_router']
+                if role == 'local':
+                    standby_priority = priority
+                else:
+                    standby_priority = m.groupdict()['standby_priority']
+
+                intf_key['standby_router'] = role
+                if standby_priority:
+                    intf_key['standby_priority'] = int(standby_priority)
                 if m.groupdict()['expire']:
                     intf_key['standby_expire'] = \
                         float(m.groupdict()['expire'])
