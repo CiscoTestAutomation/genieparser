@@ -131,7 +131,6 @@ Active Package(s)
     # Can't test empty parser with non-tabular parsergen due to below limitation
     # needs a fix.
         # attributes = list(self._attributes)
-        # import pdb; pdb.set_trace()
         # attribute_n = attributes[0]
         # attribute_n_idx = 0
         # none_wild_match = []
