@@ -331,7 +331,12 @@ class ShowHsrpAll(ShowHsrpAllSchema):
             if m:
                 role = m.groupdict()['active_router']
                 if role == 'local':
-                    active_priority = priority
+                    try:
+                        priority
+                    except:
+                        pass
+                    else:
+                        active_priority = priority
                 else:
                     active_priority = m.groupdict()['active_priority']
                 intf_key['active_router'] = role
@@ -352,7 +357,12 @@ class ShowHsrpAll(ShowHsrpAllSchema):
             if m:
                 role = m.groupdict()['standby_router']
                 if role == 'local':
-                    standby_priority = priority
+                    try:
+                        priority
+                    except:
+                        pass
+                    else:
+                        standby_priority = priority
                 else:
                     standby_priority = m.groupdict()['standby_priority']
 
