@@ -3427,7 +3427,11 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                 # Set af_dict
                 af_dict = route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
                     ['address_family'][address_family]
-                continue
+
+                # Init advertised dict
+                if 'advertised' not in af_dict:
+                    af_dict['advertised'] = {}
+                    continue
 
             # BGP table version is 25, Local Router ID is 21.0.101.1
             p2 = re.compile(r'^\s*BGP +table +version +is'
@@ -3696,7 +3700,11 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                 address_family = new_address_family
                 af_dict = route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
                     ['address_family'][address_family]
-                continue
+
+                # Init advertised dict
+                if 'advertised' not in af_dict:
+                    af_dict['advertised'] = {}
+                    continue
 
         return route_dict
 
@@ -3795,7 +3803,11 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
                 # Set af_dict
                 af_dict = route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
                     ['address_family'][address_family]
-                continue
+                
+                # Init routes dict
+                if 'routes' not in af_dict:
+                    af_dict['routes'] = {}
+                    continue
 
             # BGP table version is 25, Local Router ID is 21.0.101.1
             p2 = re.compile(r'^\s*BGP +table +version +is'
@@ -4064,7 +4076,11 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
                 address_family = new_address_family
                 af_dict = route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
                     ['address_family'][address_family]
-                continue
+                
+                # Init routes dict
+                if 'routes' not in af_dict:
+                    af_dict['routes'] = {}
+                    continue
 
         return route_dict
 
@@ -4163,7 +4179,11 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
                 # Set af_dict
                 af_dict = route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
                     ['address_family'][address_family]
-                continue
+                
+                # Init received_routes dict
+                if 'received_routes' not in af_dict:
+                    af_dict['received_routes'] = {}
+                    continue
 
             # BGP table version is 25, Local Router ID is 21.0.101.1
             p2 = re.compile(r'^\s*BGP +table +version +is'
@@ -4432,7 +4452,11 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
                 address_family = new_address_family
                 af_dict = route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
                     ['address_family'][address_family]
-                continue
+                
+                # Init received_routes dict
+                if 'received_routes' not in af_dict:
+                    af_dict['received_routes'] = {}
+                    continue
 
         return route_dict
 
