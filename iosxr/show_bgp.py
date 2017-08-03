@@ -2976,9 +2976,9 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
         out = self.device.execute(cmd)
 
         ret_dict = {}
-        # address_family default to 'ipv4 unicast' when command is 
+        # address_family default to 'vpnv4 unicast' when command is 
         # show bgp instance all vrf all neighbors ****
-        af = 'ipv4 unicast' if vrf == 'vrf' else None
+        af = 'vpnv4 unicast' if vrf == 'vrf' else None
         # if vrf == all then it means default vrf
         vrf = 'default' if vrf == 'all' else None
         # initial var
@@ -3419,7 +3419,7 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
 
         ret_dict = {}
         # if vrf == all then it means default vrf
-        af = 'ipv4 unicast' if vrf == 'vrf' else None
+        af = 'vpnv4 unicast' if vrf == 'vrf' else None
         vrf = 'default' if vrf == 'all' else None
         address_family = None
 
@@ -3703,7 +3703,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
     def cli(self, vrf_type, af_type=''):
 
         assert vrf_type in ['all', 'vrf']
-        assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
+        assert af_type in ['', 'vpnv4 unicast', 'ipv6 unicast']
         cmd = 'show bgp instance all {vrf_type} all {af_type} summary'.format(vrf_type=vrf_type, af_type=af_type)
         out = self.device.execute(cmd)
 
@@ -3753,7 +3753,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                     bgp_instance_summary_dict['instance'][instance]['vrf'][vrf] = {}
                 # Address family is default - init ipv4 unicast dictionary here
                 if af_default == 'default':
-                    address_family = 'ipv4 unicast'
+                    address_family = 'vpnv4 unicast'
                     if 'address_family' not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]:
                         bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'] = {}
                     if address_family not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family']:
@@ -4076,7 +4076,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                     bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf] = {}
                 # Address family is default - init ipv4 unicast dictionary here
                 if af_default == 'default':
-                    address_family = 'ipv4 unicast'
+                    address_family = 'vpnv4 unicast'
                     original_address_family = address_family
                     if 'address_family' not in bgp_instance_all_all_dict['instance']\
                                                         [instance]['vrf'][vrf]:
