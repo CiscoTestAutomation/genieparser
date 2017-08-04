@@ -2,6 +2,7 @@ import re
 from metaparser import MetaParser   
 from metaparser.util.schemaengine import Schema, Any, Optional 
 
+
 class ShowRouteMapSchema(MetaParser):
 
     ''' Schema for:
@@ -13,38 +14,39 @@ class ShowRouteMapSchema(MetaParser):
             {'statements':
                 {Any():
                     {'conditions':
-                        {'match_med_eq': int,
-                         'match_nexthop_in': str,
-                         'match_nexthop_in_v6': str,
-                         'match_route_type': str,
-                         'match_community_list': str,
-                         'match_ext_community_list': str,
-                         'match_as_path_list': str,
-                         'match_interface': str,
-                         'match_prefix_list': str,
-                         'match_prefix_list_v6': str,
-                         'match_tag_list': int,
+                        {Optional('match_med_eq'): int,
+                         Optional('match_nexthop_in'): str,
+                         Optional('match_nexthop_in_v6'): str,
+                         Optional('match_route_type'): str,
+                         Optional('match_community_list'): str,
+                         Optional('match_ext_community_list'): str,
+                         Optional('match_as_path_list'): str,
+                         Optional('match_interface'): str,
+                         Optional('match_prefix_list'): str,
+                         Optional('match_prefix_list_v6'): str,
+                         Optional('match_tag_list'): str,
                          },
                      'actions':
-                        {'set_route_origin': str, 
-                         'set_local_pref': int, 
-                         'set_next_hop': str, 
-                         'set_next_hop_v6': str, 
-                         'set_med': int, 
-                         'set_as_path_prepend': str,
-                         'set_as_path_group': list, 
-                         'set_as_path_prepend_repeat_n': int,
-                         'set_community': str,
-                         'set_community_additive': bool,
-                         'set_community_no_advertise': bool,
-                         'set_community_no_export': bool,
-                         'set_community_delete': str,
-                         'set_ext_community_rt': str,
-                         'set_ext_community_delete': str,
-                         'set_level': str,
-                         'set_metric_type': str,
-                         'route_disposition': str,
-                         'set_tag': int
+                        {Optional('set_route_origin'): str, 
+                         Optional('set_local_pref'): int, 
+                         Optional('set_next_hop'): str, 
+                         Optional('set_next_hop_v6'): str, 
+                         Optional('set_med'): int, 
+                         Optional('set_as_path_prepend'): str,
+                         Optional('set_as_path_group'): list, 
+                         Optional('set_as_path_prepend_repeat_n'): int,
+                         Optional('set_community'): str,
+                         Optional('set_community_additive'): bool,
+                         Optional('set_community_no_advertise'): bool,
+                         Optional('set_community_no_export'): bool,
+                         Optional('set_community_delete'): str,
+                         Optional('set_ext_community_rt'): str,
+                         Optional('set_ext_community_rt_additive'): bool,
+                         Optional('set_ext_community_delete'): str,
+                         Optional('set_level'): str,
+                         Optional('set_metric_type'): str,
+                         Optional('route_disposition'): str,
+                         Optional('set_tag'): int
                         },
                     },
                 },
@@ -62,7 +64,7 @@ class ShowRouteMap(ShowRouteMapSchema):
             line = line.rstrip()
 
             # route-map test, permit, sequence 10 
-            p1 =  re.compile(r'^\s*route-map *(?P<name>[a-zA-Z]+),'
+            p1 =  re.compile(r'^\s*route-map *(?P<name>[a-zA-Z\-\s]+),'
                               ' *(?P<route_disposition>[a-z]+), *sequence'
                               ' *(?P<statements>[0-9]+)$')
             m = p1.match(line)
@@ -77,6 +79,10 @@ class ShowRouteMap(ShowRouteMapSchema):
                     route_map_dict[name]['statements'] = {}
                 if statements not in route_map_dict[name]['statements']:
                     route_map_dict[name]['statements'][statements] = {}
+                if 'actions' not in route_map_dict[name]['statements'][statements]:
+                    route_map_dict[name]['statements'][statements]['actions'] = {}
+                if 'conditions' not in route_map_dict[name]['statements'][statements]:
+                    route_map_dict[name]['statements'][statements]['conditions'] = {}
 
                     set_as_path_group = []
                     continue
@@ -87,9 +93,7 @@ class ShowRouteMap(ShowRouteMapSchema):
             m = p2.match(line)
             if m:
                 match_as_path_list = str(m.groupdict()['match_as_path_list'])
-                if 'conditions' not in route_map_dict[name]['statements'][statements]:
-                    route_map_dict[name]['statements'][statements]['conditions'] = {}
-
+                
                 route_map_dict[name]['statements'][statements]['conditions']['match_as_path_list'] = match_as_path_list
                 continue
 
@@ -122,7 +126,7 @@ class ShowRouteMap(ShowRouteMapSchema):
                 continue
 
             # ipv6 next-hop prefix-lists: test2
-            p6 = re.compile(r'^\s*ipv6 *next-hop *prefix-lists: *(?P<match_nexthop_in_v6>[a-z0-9]+)$')
+            p6 = re.compile(r'^\s*ipv6 *next-hop *prefix-lists: *(?P<match_nexthop_in_v6>[a-zA-Z0-9\-\s]+)$')
             m = p6.match(line)
             if m:
                 match_nexthop_in_v6 = str(m.groupdict()['match_nexthop_in_v6'])
@@ -149,16 +153,16 @@ class ShowRouteMap(ShowRouteMapSchema):
                 continue
 
             #tag: 23 
-            p9 = re.compile(r'^\s*tag: *(?P<match_tag_list>[0-9]+)$')
+            p9 = re.compile(r'^\s*tag: *(?P<match_tag_list>[0-9\s]+)$')
             m = p9.match(line)
             if m:
-                match_tag_list = int(m.groupdict()['match_tag_list'])
+                match_tag_list = str(m.groupdict()['match_tag_list'])
 
                 route_map_dict[name]['statements'][statements]['conditions']['match_tag_list'] = match_tag_list
                 continue
 
             #community  (community-list filter): test3 
-            p10 = re.compile(r'^\s*community *\(community-list *filter\): *(?P<match_community_list>[a-z0-9]+)$')
+            p10 = re.compile(r'^\s*community *\(community-list *filter\): *(?P<match_community_list>[a-z0-9\-\s]+)$')
             m = p10.match(line)
             if m:
                 match_community_list = str(m.groupdict()['match_community_list'])
@@ -190,9 +194,6 @@ class ShowRouteMap(ShowRouteMapSchema):
             if m:
                 set_next_hop = str(m.groupdict()['set_next_hop'])
                 
-                if 'actions' not in route_map_dict[name]['statements'][statements]:
-                    route_map_dict[name]['statements'][statements]['actions'] = {}
-
                 route_map_dict[name]['statements'][statements]['actions']['set_next_hop'] = set_next_hop
                 continue
 
@@ -269,7 +270,10 @@ class ShowRouteMap(ShowRouteMapSchema):
                 continue
 
             #community 100:1 no-export no-advertise additive 
-            p20_1 = re.compile(r'^\s*community *(?P<set_community>[0-9\:]+)(?: *(?P<set_community_no_export>(no-export)))?(?: *(?P<set_community_no_advertise>(no-advertise)))?(?: *(?P<set_community_additive>(additive)))?$')
+            p20_1 = re.compile(r'^\s*community *(?P<set_community>[0-9\:]+)(?:'
+                                ' *(?P<set_community_no_export>(no-export)))?(?:'
+                                ' *(?P<set_community_no_advertise>(no-advertise)))?(?:'
+                                ' *(?P<set_community_additive>(additive)))?$')
             m = p20_1.match(line)
             if m:
                 set_community = str(m.groupdict()['set_community'])
@@ -312,19 +316,24 @@ class ShowRouteMap(ShowRouteMapSchema):
                 continue
 
             # extcommunity RT:100:10 additive 
-            p23 = re.compile(r'^\s*extcommunity *RT:(?P<set_ext_community_rt>[0-9\:]+) *additive$')
+            p23 = re.compile(r'^\s*extcommunity *RT:(?P<set_ext_community_rt>[0-9\:]+) *(?P<set_ext_community_rt_additive>(additive))$')
             m = p23.match(line)
             if m:
                 set_ext_community_rt = str(m.groupdict()['set_ext_community_rt'])
+                set_ext_community_rt_additive = m.groupdict()['set_ext_community_rt_additive']
 
+                route_map_dict[name]['statements'][statements]['actions']['set_ext_community_rt_additive'] = True
+                route_map_dict[name]['statements'][statements]['actions']['set_ext_community_rt'] = set_ext_community_rt
+                route_map_dict[name]['statements'][statements]['actions']['route_disposition'] = route_disposition
+                continue
+
+            # extcommunity RT:100:10
+            p23_1 = re.compile(r'^\s*extcommunity *RT:(?P<set_ext_community_rt>[0-9\:]+)$')
+            m = p23_1.match(line)
+            if m:
+                set_ext_community_rt = str(m.groupdict()['set_ext_community_rt'])
                 route_map_dict[name]['statements'][statements]['actions']['set_ext_community_rt'] = set_ext_community_rt
                 route_map_dict[name]['statements'][statements]['actions']['route_disposition'] = route_disposition
                 continue
 
         return route_map_dict
-
-
-
-
-
-
