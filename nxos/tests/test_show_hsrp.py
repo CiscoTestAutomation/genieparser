@@ -189,6 +189,8 @@ class test_show_hsrp_all(unittest.TestCase):
                                             "active_router": "local",
                                             "standby_priority": 90,
                                             "upper_fwd_threshold": 100,
+                                            "secondary_vips": "192:168::1",
+                                            "virtual_ip_address": "fe80::5:73ff:fea0:2",
                                             "version": 2
                                        },
                                        "ipv4": {
