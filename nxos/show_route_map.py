@@ -65,7 +65,7 @@ class ShowRouteMap(ShowRouteMapSchema):
             line = line.rstrip()
 
             # route-map test, permit, sequence 10 
-            p1 =  re.compile(r'^\s*route-map *(?P<name>[\w\W\s]+)\,'
+            p1 =  re.compile(r'^\s*route-map *(?P<name>\S+)\,'
                               ' *(?P<route_disposition>[\w\W]+)\, *sequence'
                               ' *(?P<statements>[0-9]+)$')
             m = p1.match(line)
