@@ -82,7 +82,7 @@ class ShowBgpProcessVrfAllSchema(MetaParser):
                          Optional('ibgp_max_paths'): int,
                          Optional('total_paths'): int,
                          Optional('total_prefixes'): int,
-                         'peers': 
+                         Optional('peers'): 
                             {Any(): 
                                 {'active_peers': int,
                                  'routes': int,
@@ -391,7 +391,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
 
             #     Information for address family IPv4 Unicast in VRF VRF1
             p25 = re.compile(r'^\s*Information +for +address +family'
-                               ' +(?P<address_family>[a-zA-Z0-9\s\-]+)'
+                               ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+)'
                                ' +in +VRF +(?P<vrf>[a-zA-Z0-9]+)$')
             m = p25.match(line)
             if m:
@@ -1910,14 +1910,14 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
             {Any(): 
                 {'remote_as': int,
                  Optional('local_as'): str,
-                 'link': str,
-                 'peer_index': int,
+                 Optional('link'): str,
+                 Optional('peer_index'): int,
                  Optional('description'): str,
-                 'bgp_version': int,
-                 'router_id': str,
-                 'session_state': str,
-                 'shutdown': bool,
-                 'up_time': str,
+                 Optional('bgp_version'): int,
+                 Optional('router_id'): str,
+                 Optional('session_state'): str,
+                 Optional('shutdown'): bool,
+                 Optional('up_time'): str,
                  Optional('peer_group'): str,
                  Optional('suppress_four_byte_as_capability'): bool,
                  Optional('retry_time'): str,
@@ -1933,7 +1933,8 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                      Optional('hold_time'): int,
                      Optional('last_written'): str,
                      Optional('keepalive_timer'): str,
-                     Optional('minimum_advertisement_interval'): int,},
+                    },
+                 Optional('minimum_advertisement_interval'): int,
                  Optional('disable_connected_check'): bool,
                  Optional('inherit_peer_session'): str,
                  Optional('ebgp_multihop_max_hop'): int,
@@ -1947,6 +1948,10 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                  Optional('sent_notifications'): int,
                  Optional('sent_bytes_queue'): int,
                  Optional('enabled'): bool,
+                 Optional('remove_private_as'): bool,
+                 Optional('nbr_ebgp_multihop'): bool,
+                 Optional('nbr_ebgp_multihop_max_hop'): int,
+                 Optional('route_reflector_cluster_id'): int,
                  Optional('graceful_restart'): bool,
                  Optional('graceful_restart_helper_only'): bool,
                  Optional('graceful_restart_restart_time'): int,
@@ -3399,7 +3404,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
             # Peer 21.0.0.2 routes for address family IPv4 Unicast:
             p1 = re.compile(r'^\s*Peer +(?P<neighbor_id>(\S+)) +routes +for'
                              ' +address +family'
-                             ' +(?P<address_family>[a-zA-Z0-9\s\-]+) *:$')
+                             ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+) *:$')
             m = p1.match(line)
             if m:
                 neighbor_id = str(m.groupdict()['neighbor_id'])
@@ -3775,7 +3780,7 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
             # Peer 21.0.0.2 routes for address family IPv4 Unicast:
             p1 = re.compile(r'^\s*Peer +(?P<neighbor_id>(\S+)) +routes +for'
                              ' +address +family'
-                             ' +(?P<address_family>[a-zA-Z0-9\s\-]+) *:$')
+                             ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+) *:$')
             m = p1.match(line)
             if m:
                 neighbor_id = str(m.groupdict()['neighbor_id'])
@@ -4151,7 +4156,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
             # Peer 21.0.0.2 routes for address family IPv4 Unicast:
             p1 = re.compile(r'^\s*Peer +(?P<neighbor_id>(\S+)) +routes +for'
                              ' +address +family'
-                             ' +(?P<address_family>[a-zA-Z0-9\s\-]+) *:$')
+                             ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+) *:$')
             m = p1.match(line)
             if m:
                 neighbor_id = str(m.groupdict()['neighbor_id'])
