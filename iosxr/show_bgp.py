@@ -201,9 +201,6 @@ class ShowBgpInstanceAfGroupConfiguration(ShowBgpInstanceAfGroupConfigurationSch
                 else:
                     instance_name = 'default'
 
-                # cmd = 'show bgp instance {instance_name} af-group {pp_name} configuration'.format(instance_name=instance_name, pp_name=pp_name)
-                # out = self.device.execute(cmd)
-        
                 # instance instance_name
                 if 'instance' not in ret_dict:
                     ret_dict['instance'] = {}
@@ -3703,7 +3700,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
     def cli(self, vrf_type, af_type=''):
 
         assert vrf_type in ['all', 'vrf']
-        assert af_type in ['', 'vpnv4 unicast', 'ipv6 unicast']
+        assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
         cmd = 'show bgp instance all {vrf_type} all {af_type} summary'.format(vrf_type=vrf_type, af_type=af_type)
         out = self.device.execute(cmd)
 
