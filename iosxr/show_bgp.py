@@ -143,10 +143,10 @@ class ShowBgpInstanceAfGroupConfigurationSchema(MetaParser):
                          Optional('address_family'): str,
                          Optional('default_originate_route_map'): str,
                          Optional('default_originate_inherit'): str,
-                         Optional('max_prefix_no'): int,
-                         Optional('max_prefix_threshold'): int,
-                         Optional('max_prefix_restart'): int,
-                         Optional('max_prefix_inherit'): str,
+                         Optional('maximum_prefix_max_prefix_no'): int,
+                         Optional('maximum_prefix_threshold'): int,
+                         Optional('maximum_prefix_restart'): int,
+                         Optional('maximum_prefix_warning_only'): str,
                          Optional('next_hop_self'): bool,
                          Optional('next_hop_self_inherit'): str,
                          Optional('route_map_name_in'): str,
@@ -258,19 +258,19 @@ class ShowBgpInstanceAfGroupConfiguration(ShowBgpInstanceAfGroupConfigurationSch
                     m = p3.match(line)
                     if m:
                         ret_dict['instance'][instance_name]['pp_name'][pp_name]\
-                            ['max_prefix_no'] = int(m.groupdict()['no'])
+                            ['maximum_prefix_max_prefix_no'] = int(m.groupdict()['no'])
         
                         if m.groupdict()['th']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
-                                ['max_prefix_threshold'] = int(m.groupdict()['th'])
+                                ['maximum_prefix_threshold'] = int(m.groupdict()['th'])
         
                         if m.groupdict()['re']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
-                                ['max_prefix_restart'] = int(m.groupdict()['re'])
+                                ['maximum_prefix_restart'] = int(m.groupdict()['re'])
         
                         if m.groupdict()['inherit']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
-                                ['max_prefix_inherit'] = m.groupdict()['inherit']
+                                ['maximum_prefix_warning_only'] = m.groupdict()['inherit']
                         continue
         
                     # next-hop-self                               []
