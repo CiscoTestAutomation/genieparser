@@ -71,7 +71,7 @@ class test_yang_bgp_iosxr(unittest.TestCase):
                         'input_queue': 0,
                         'output_queue': 0,
                         'remote_as': 100,
-                        'session_state': 'IDLE'},
+                        'session_state': 'idle'},
                     '3.3.3.3': 
                         {'address_family': 
                             {'idx:l3vpn-ipv4-unicast': 
@@ -103,13 +103,12 @@ class test_yang_bgp_iosxr(unittest.TestCase):
                         'input_queue': 0,
                         'output_queue': 0,
                         'remote_as': 100,
-                        'session_state': 'IDLE'}},
+                        'session_state': 'idle'}},
                 'router_id': '1.1.1.1'}}}
 
     class etree_holder():
         def __init__(self):
-            self.data = ET.fromstring('''
-                <rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="101">
+            self.data_ele = ET.fromstring('''
                  <data>
                   <bgp xmlns="http://openconfig.net/yang/bgp">
                    <global>
@@ -318,14 +317,16 @@ class test_yang_bgp_iosxr(unittest.TestCase):
                    </neighbors>
                   </bgp>
                  </data>
-                </rpc-reply>
-            ''')
+                ''')
 
-    golden_output = {'get.return_value': etree_holder()}
+    yang_output = etree_holder()
 
     def test_bgp_openconfig_yang_iosxr(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output)
+        self.device = Mock()
+        # YANG output
+        self.device.get = Mock()
+        self.device.get.side_effect = [self.yang_output]
         obj = BgpOpenconfigYang(device=self.device, context='yang')
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
@@ -589,8 +590,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
 
     class etree_holder():
         def __init__(self):
-            self.data = ET.fromstring('''
-            <rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="101">
+            self.data_ele = ET.fromstring('''
                 <data>
                     <bgp xmlns="http://openconfig.net/yang/bgp">
                         <global>
@@ -1919,14 +1919,16 @@ class test_yang_bgp_nxos(unittest.TestCase):
                         </neighbors>
                     </bgp>
                 </data>
-            </rpc-reply>
-            ''')
+                ''')
 
-    golden_output = {'get.return_value': etree_holder()}
+    yang_output = etree_holder()
 
     def test_bgp_openconfig_yang_nxos(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output)
+        self.device = Mock()
+        # YANG output
+        self.device.get = Mock()
+        self.device.get.side_effect = [self.yang_output]
         obj = BgpOpenconfigYang(device=self.device, context='yang')
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
