@@ -4470,168 +4470,172 @@ class ShowRunningConfigBgpSchema(MetaParser):
     '''Schema for show running-config bgp'''
 
     schema = {'bgp':
-                {'bgp_id': int,
-                 'protocol_shutdown': bool,
-                 Optional('ps_name'):
-                    {Any():
-                        {'ps_fall_over_bfd': bool,
-                         'ps_suppress_four_byte_as_capability': bool,
-                         Optional('ps_description'): str,
-                         'ps_disable_connected_check': bool,
-                         'ps_ebgp_multihop': bool,
-                         Optional('ps_ebgp_multihop_max_hop'): int,
-                         Optional('ps_local_as_as_no'): int,
-                         'ps_local_as_no_prepend': bool,
-                         'ps_local_as_dual_as': bool,
-                         'ps_local_as_replace_as': bool,
-                         Optional('ps_password_text'): str,
-                         Optional('ps_remote_as'): int,
-                         'ps_shutdown': bool,
-                         Optional('ps_keepalive_interval'): int,
-                         Optional('ps_hodltime'): int,
-                         Optional('ps_transport_connection_mode'): str,
-                         Optional('ps_update_source'): str}
-                    },
-                 Optional('pp_name'):
-                    {Any():
-                        {Optional('pp_allowas_in'): bool,
-                         'pp_allowas_in_as_number': int,
-                         'pp_as_override': bool,
-                         'pp_default_originate': bool,
-                         Optional('pp_default_originate_route_map'): str,
-                         Optional('pp_route_map_name_in'): str,
-                         Optional('pp_route_map_name_out'): str,
-                         Optional('pp_maximum_prefix_max_prefix_no'): int,
-                         Optional('pp_maximum_prefix_threshold'): int,
-                         Optional('pp_maximum_prefix_restart'): int,
-                         Optional('pp_maximum_prefix_warning_only'): bool,
-                         'pp_next_hop_self': bool,
-                         'pp_route_reflector_client': bool,
-                         Optional('pp_send_community'): str,
-                         'pp_soft_reconfiguration': bool,
-                         Optional('pp_soo'): str}
-                    },
-                 'vrf':
-                    {Any():
-                        {Optional('always_compare_med'): bool,
-                         Optional('bestpath_compare_routerid'): bool,
-                         Optional('bestpath_cost_community_ignore'): bool,
-                         Optional('bestpath_med_missing_at_worst'): bool,
-                         Optional('cluster_id'): str,
-                         Optional('confederation_identifier'): int,
-                         Optional('confederation_peers_as'): str,
-                         'graceful_restart': bool,
-                         Optional('graceful_restart_restart_time'): int,
-                         Optional('graceful_restart_stalepath_time'): int,
-                         'log_neighbor_changes': bool,
-                         Optional('router_id'): str,
-                         Optional('keepalive_interval'): int,
-                         Optional('holdtime'): int,
-                         'enforce_first_as': bool,
-                         'fast_external_fallover': bool,
-                         Optional('default_choice_ipv4_unicast'): str,
-                         Optional('dynamic_med_interval'): int,
-                         Optional('shutdown'): str,
-                         'flush_routes': bool,
-                         'isolate': bool,
-                         Optional('disable_policy_batching_ipv4'): str,
-                         Optional('disable_policy_batching_ipv6'): str,
-                         Optional('af_name'):
+                {'instance':
+                    {'default':
+                        {'bgp_id': int,
+                         'protocol_shutdown': bool,
+                         Optional('ps_name'):
                             {Any():
-                                {Optional('af_dampening'): bool,
-                                 Optional('af_dampening_route_map'): str,
-                                 Optional('af_dampening_half_life_time'): int,
-                                 Optional('af_dampening_reuse_time'): int,
-                                 Optional('af_dampening_suppress_time'): int,
-                                 Optional('af_dampening_max_suppress_time'): int,
-                                 Optional('af_nexthop_route_map'): str,
-                                 Optional('af_nexthop_trigger_enable'): bool,
-                                 Optional('af_nexthop_trigger_delay_critical'): int,
-                                 Optional('af_nexthop_trigger_delay_non_critical'): int,
-                                 Optional('af_client_to_client_reflection'): bool,
-                                 Optional('af_distance_extern_as'): int,
-                                 Optional('af_distance_internal_as'): int,
-                                 Optional('af_distance_local'): int,
-                                 Optional('af_maximum_paths_ebgp'): int,
-                                 Optional('af_maximum_paths_ibgp'): int,
-                                 Optional('af_maximum_paths_eibgp'): int,
-                                 Optional('af_aggregate_address_ipv4_address'): str,
-                                 Optional('af_aggregate_address_ipv4_mask'): int,
-                                 Optional('af_aggregate_address_as_set'): bool,
-                                 Optional('af_aggregate_address_summary_only'): bool,
-                                 Optional('af_network_number'): str,
-                                 Optional('af_network_mask'): int,
-                                 Optional('af_network_route_map'): str,
-                                 Optional('af_redist_isis'): str,
-                                 Optional('af_redist_isis_metric'): str,
-                                 Optional('af_redist_isis_route_policy'): str,
-                                 Optional('af_redist_ospf'): str,
-                                 Optional('af_redist_ospf_metric'): str,
-                                 Optional('af_redist_ospf_route_policy'): str,
-                                 Optional('af_redist_rip'): str,
-                                 Optional('af_redist_rip_metric'): str,
-                                 Optional('af_redist_rip_route_policy'): str,
-                                 Optional('af_redist_static'): bool,
-                                 Optional('af_redist_static_metric'): str,
-                                 Optional('af_redist_static_route_policy'): str,
-                                 Optional('af_redist_connected'): bool,
-                                 Optional('af_redist_connected_metric'): str,
-                                 Optional('af_redist_connected_route_policy'): str,
-                                 Optional('af_v6_aggregate_address_ipv6_address'): str,
-                                 Optional('af_v6_aggregate_address_as_set'): bool,
-                                 Optional('af_v6_aggregate_address_summary_only'): bool,
-                                 Optional('af_v6_network_number'): str,
-                                 Optional('af_v6_network_route_map'): str,
-                                 Optional('af_v6_allocate_label_all'): bool,
-                                 Optional('af_retain_rt_all'): bool,
-                                 Optional('af_label_allocation_mode'): str}
+                                {'ps_fall_over_bfd': bool,
+                                 'ps_suppress_four_byte_as_capability': bool,
+                                 Optional('ps_description'): str,
+                                 'ps_disable_connected_check': bool,
+                                 'ps_ebgp_multihop': bool,
+                                 Optional('ps_ebgp_multihop_max_hop'): int,
+                                 Optional('ps_local_as_as_no'): int,
+                                 'ps_local_as_no_prepend': bool,
+                                 'ps_local_as_dual_as': bool,
+                                 'ps_local_as_replace_as': bool,
+                                 Optional('ps_password_text'): str,
+                                 Optional('ps_remote_as'): int,
+                                 'ps_shutdown': bool,
+                                 Optional('ps_keepalive_interval'): int,
+                                 Optional('ps_hodltime'): int,
+                                 Optional('ps_transport_connection_mode'): str,
+                                 Optional('ps_update_source'): str}
                             },
-                         Optional('neighbor_id'):
+                         Optional('pp_name'):
                             {Any():
-                                {Optional('nbr_fall_over_bfd'): bool,
-                                 Optional('nbr_suppress_four_byte_as_capability'): bool,
-                                 Optional('nbr_description'): str,
-                                 Optional('nbr_disable_connected_check'): bool,
-                                 Optional('nbr_ebgp_multihop'): bool,
-                                 Optional('nbr_ebgp_multihop_max_hop'): int,
-                                 Optional('nbr_inherit_peer_session'): str,
-                                 Optional('nbr_local_as_as_no'): str,
-                                 Optional('nbr_local_as_no_prepend'): bool,
-                                 Optional('nbr_local_as_replace_as'): bool,
-                                 Optional('nbr_local_as_dual_as'): bool,
-                                 Optional('nbr_remote_as'): int,
-                                 Optional('nbr_remove_private_as'): bool,
-                                 Optional('nbr_shutdown'): bool,
-                                 Optional('nbr_keepalive_interval'): int,
-                                 Optional('nbr_holdtime'): int,
-                                 Optional('nbr_update_source'): str,
-                                 Optional('nbr_password_text'): str,
-                                 Optional('nbr_transport_connection_mode'): str,
-                                 Optional('nbr_af_name'):
+                                {Optional('pp_allowas_in'): bool,
+                                 'pp_allowas_in_as_number': int,
+                                 'pp_as_override': bool,
+                                 'pp_default_originate': bool,
+                                 Optional('pp_default_originate_route_map'): str,
+                                 Optional('pp_route_map_name_in'): str,
+                                 Optional('pp_route_map_name_out'): str,
+                                 Optional('pp_maximum_prefix_max_prefix_no'): int,
+                                 Optional('pp_maximum_prefix_threshold'): int,
+                                 Optional('pp_maximum_prefix_restart'): int,
+                                 Optional('pp_maximum_prefix_warning_only'): bool,
+                                 'pp_next_hop_self': bool,
+                                 'pp_route_reflector_client': bool,
+                                 Optional('pp_send_community'): str,
+                                 'pp_soft_reconfiguration': bool,
+                                 Optional('pp_soo'): str}
+                            },
+                         'vrf':
+                            {Any():
+                                {Optional('always_compare_med'): bool,
+                                 Optional('bestpath_compare_routerid'): bool,
+                                 Optional('bestpath_cost_community_ignore'): bool,
+                                 Optional('bestpath_med_missing_at_worst'): bool,
+                                 Optional('cluster_id'): str,
+                                 Optional('confederation_identifier'): int,
+                                 Optional('confederation_peers_as'): str,
+                                 'graceful_restart': bool,
+                                 Optional('graceful_restart_restart_time'): int,
+                                 Optional('graceful_restart_stalepath_time'): int,
+                                 'log_neighbor_changes': bool,
+                                 Optional('router_id'): str,
+                                 Optional('keepalive_interval'): int,
+                                 Optional('holdtime'): int,
+                                 'enforce_first_as': bool,
+                                 'fast_external_fallover': bool,
+                                 Optional('default_choice_ipv4_unicast'): str,
+                                 Optional('dynamic_med_interval'): int,
+                                 Optional('shutdown'): str,
+                                 'flush_routes': bool,
+                                 'isolate': bool,
+                                 Optional('disable_policy_batching_ipv4'): str,
+                                 Optional('disable_policy_batching_ipv6'): str,
+                                 Optional('af_name'):
                                     {Any():
-                                        {Optional('nbr_af_allowas_in'): bool,
-                                         Optional('nbr_af_allowas_in_as_number'): int,
-                                         Optional('nbr_af_inherit_peer_policy'): str,
-                                         Optional('nbr_af_inherit_peer_seq'): int,
-                                         Optional('nbr_af_maximum_prefix_max_prefix_no'): int,
-                                         Optional('nbr_af_maximum_prefix_threshold'): int,
-                                         Optional('nbr_af_maximum_prefix_restart'): int,
-                                         Optional('nbr_af_maximum_prefix_warning_only'): bool,
-                                         Optional('nbr_af_route_map_name_in'): str,
-                                         Optional('nbr_af_route_map_name_out'): str,
-                                         Optional('nbr_af_route_reflector_client'): bool,
-                                         Optional('nbr_af_send_community'): str,
-                                         Optional('nbr_af_soft_reconfiguration'): bool,
-                                         Optional('nbr_af_next_hop_self'): bool,
-                                         Optional('nbr_af_as_override'): bool,
-                                         Optional('nbr_af_default_originate'): bool,
-                                         Optional('nbr_af_default_originate_route_map'): str,
-                                         Optional('nbr_af_soo'): str}
+                                        {Optional('af_dampening'): bool,
+                                         Optional('af_dampening_route_map'): str,
+                                         Optional('af_dampening_half_life_time'): int,
+                                         Optional('af_dampening_reuse_time'): int,
+                                         Optional('af_dampening_suppress_time'): int,
+                                         Optional('af_dampening_max_suppress_time'): int,
+                                         Optional('af_nexthop_route_map'): str,
+                                         Optional('af_nexthop_trigger_enable'): bool,
+                                         Optional('af_nexthop_trigger_delay_critical'): int,
+                                         Optional('af_nexthop_trigger_delay_non_critical'): int,
+                                         Optional('af_client_to_client_reflection'): bool,
+                                         Optional('af_distance_extern_as'): int,
+                                         Optional('af_distance_internal_as'): int,
+                                         Optional('af_distance_local'): int,
+                                         Optional('af_maximum_paths_ebgp'): int,
+                                         Optional('af_maximum_paths_ibgp'): int,
+                                         Optional('af_maximum_paths_eibgp'): int,
+                                         Optional('af_aggregate_address_ipv4_address'): str,
+                                         Optional('af_aggregate_address_ipv4_mask'): int,
+                                         Optional('af_aggregate_address_as_set'): bool,
+                                         Optional('af_aggregate_address_summary_only'): bool,
+                                         Optional('af_network_number'): str,
+                                         Optional('af_network_mask'): int,
+                                         Optional('af_network_route_map'): str,
+                                         Optional('af_redist_isis'): str,
+                                         Optional('af_redist_isis_metric'): str,
+                                         Optional('af_redist_isis_route_policy'): str,
+                                         Optional('af_redist_ospf'): str,
+                                         Optional('af_redist_ospf_metric'): str,
+                                         Optional('af_redist_ospf_route_policy'): str,
+                                         Optional('af_redist_rip'): str,
+                                         Optional('af_redist_rip_metric'): str,
+                                         Optional('af_redist_rip_route_policy'): str,
+                                         Optional('af_redist_static'): bool,
+                                         Optional('af_redist_static_metric'): str,
+                                         Optional('af_redist_static_route_policy'): str,
+                                         Optional('af_redist_connected'): bool,
+                                         Optional('af_redist_connected_metric'): str,
+                                         Optional('af_redist_connected_route_policy'): str,
+                                         Optional('af_v6_aggregate_address_ipv6_address'): str,
+                                         Optional('af_v6_aggregate_address_as_set'): bool,
+                                         Optional('af_v6_aggregate_address_summary_only'): bool,
+                                         Optional('af_v6_network_number'): str,
+                                         Optional('af_v6_network_route_map'): str,
+                                         Optional('af_v6_allocate_label_all'): bool,
+                                         Optional('af_retain_rt_all'): bool,
+                                         Optional('af_label_allocation_mode'): str}
+                                    },
+                                 Optional('neighbor_id'):
+                                    {Any():
+                                        {Optional('nbr_fall_over_bfd'): bool,
+                                         Optional('nbr_suppress_four_byte_as_capability'): bool,
+                                         Optional('nbr_description'): str,
+                                         Optional('nbr_disable_connected_check'): bool,
+                                         Optional('nbr_ebgp_multihop'): bool,
+                                         Optional('nbr_ebgp_multihop_max_hop'): int,
+                                         Optional('nbr_inherit_peer_session'): str,
+                                         Optional('nbr_local_as_as_no'): str,
+                                         Optional('nbr_local_as_no_prepend'): bool,
+                                         Optional('nbr_local_as_replace_as'): bool,
+                                         Optional('nbr_local_as_dual_as'): bool,
+                                         Optional('nbr_remote_as'): int,
+                                         Optional('nbr_remove_private_as'): bool,
+                                         Optional('nbr_shutdown'): bool,
+                                         Optional('nbr_keepalive_interval'): int,
+                                         Optional('nbr_holdtime'): int,
+                                         Optional('nbr_update_source'): str,
+                                         Optional('nbr_password_text'): str,
+                                         Optional('nbr_transport_connection_mode'): str,
+                                         Optional('nbr_af_name'):
+                                            {Any():
+                                                {Optional('nbr_af_allowas_in'): bool,
+                                                 Optional('nbr_af_allowas_in_as_number'): int,
+                                                 Optional('nbr_af_inherit_peer_policy'): str,
+                                                 Optional('nbr_af_inherit_peer_seq'): int,
+                                                 Optional('nbr_af_maximum_prefix_max_prefix_no'): int,
+                                                 Optional('nbr_af_maximum_prefix_threshold'): int,
+                                                 Optional('nbr_af_maximum_prefix_restart'): int,
+                                                 Optional('nbr_af_maximum_prefix_warning_only'): bool,
+                                                 Optional('nbr_af_route_map_name_in'): str,
+                                                 Optional('nbr_af_route_map_name_out'): str,
+                                                 Optional('nbr_af_route_reflector_client'): bool,
+                                                 Optional('nbr_af_send_community'): str,
+                                                 Optional('nbr_af_soft_reconfiguration'): bool,
+                                                 Optional('nbr_af_next_hop_self'): bool,
+                                                 Optional('nbr_af_as_override'): bool,
+                                                 Optional('nbr_af_default_originate'): bool,
+                                                 Optional('nbr_af_default_originate_route_map'): str,
+                                                 Optional('nbr_af_soo'): str}
+                                            },
+                                        }
                                     },
                                 }
                             },
                         }
-                    },
+                    }
                 }
             }
 
@@ -4665,13 +4669,18 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                 bgp_id = int(m.groupdict()['bgp_id'])
                 if 'bgp' not in bgp_dict:
                     bgp_dict['bgp'] = {}
-                bgp_dict['bgp']['bgp_id'] = bgp_id
-                bgp_dict['bgp']['protocol_shutdown'] = protocol_shutdown
+                if 'instance' not in bgp_dict['bgp']:
+                    bgp_dict['bgp']['instance'] = {}
+                if 'default' not in bgp_dict['bgp']['instance']:
+                    bgp_dict['bgp']['instance']['default'] = {}
+                bgp_dict['bgp']['instance']['default']['bgp_id'] = bgp_id
+                bgp_dict['bgp']['instance']['default']['protocol_shutdown'] = \
+                    protocol_shutdown
                 vrf = 'default'
-                if 'vrf' not in bgp_dict['bgp']:
-                    bgp_dict['bgp']['vrf'] = {}
-                if vrf not in bgp_dict['bgp']['vrf']:
-                    bgp_dict['bgp']['vrf'][vrf] = {}
+                if 'vrf' not in bgp_dict['bgp']['instance']['default']:
+                    bgp_dict['bgp']['instance']['default']['vrf'] = {}
+                if vrf not in bgp_dict['bgp']['instance']['default']['vrf']:
+                    bgp_dict['bgp']['instance']['default']['vrf'][vrf] = {}
                 continue
 
             if bgp_id:
@@ -4679,7 +4688,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                 p2 = re.compile(r'^\s*shutdown$')
                 m = p2.match(line)
                 if m:
-                    bgp_dict['bgp']['protocol_shutdown'] = True
+                    bgp_dict['bgp']['instance']['default']['protocol_shutdown'] = True
                     continue
 
                 #   vrf vpn1
@@ -4691,10 +4700,10 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     af_name = ''
                     neighbor_id = ''
                     nbr_af_name = ''
-                    if 'vrf' not in bgp_dict['bgp']:
-                        bgp_dict['bgp']['vrf'] = {}
-                    if vrf not in bgp_dict['bgp']['vrf']:
-                        bgp_dict['bgp']['vrf'][vrf] = {}
+                    if 'vrf' not in bgp_dict['bgp']['instance']['default']:
+                        bgp_dict['bgp']['instance']['default']['vrf'] = {}
+                    if vrf not in bgp_dict['bgp']['instance']['default']['vrf']:
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf] = {}
                     continue
 
                 if vrf:
@@ -4708,29 +4717,29 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         # Get keys
                         best_path = str(m.groupdict()['best_path'])
                         # Initialize variables
-                        bgp_dict['bgp']['vrf'][vrf]['always_compare_med'] = \
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['always_compare_med'] = \
                             False
-                        bgp_dict['bgp']['vrf'][vrf]['bestpath_compare_routerid'] = \
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['bestpath_compare_routerid'] = \
                             False
-                        bgp_dict['bgp']['vrf'][vrf]['bestpath_cost_community_ignore'] = \
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['bestpath_cost_community_ignore'] = \
                             False
-                        bgp_dict['bgp']['vrf'][vrf]['bestpath_med_missing_at_worst'] = \
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['bestpath_med_missing_at_worst'] = \
                             False
                         if best_path == 'cost-community ignore':
-                            bgp_dict['bgp']['vrf'][vrf]['bestpath_cost_community_ignore'] = True
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['bestpath_cost_community_ignore'] = True
                         elif best_path == 'compare-routerid':
-                            bgp_dict['bgp']['vrf'][vrf]['bestpath_compare_routerid'] = True
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['bestpath_compare_routerid'] = True
                         elif best_path == 'med missing-as-worst':
-                            bgp_dict['bgp']['vrf'][vrf]['bestpath_med_missing_at_worst'] = True
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['bestpath_med_missing_at_worst'] = True
                         elif best_path == 'always-compare-med':
-                            bgp_dict['bgp']['vrf'][vrf]['always_compare_med'] = True
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['always_compare_med'] = True
                         continue
 
                     #   cluster-id <cluster_id>
                     p5 = re.compile(r'^\s*cluster-id +(?P<cluster_id>[0-9\.]+)$')
                     m = p5.match(line)
                     if m:
-                        bgp_dict['bgp']['vrf'][vrf]['cluster_id'] = \
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['cluster_id'] = \
                             str(m.groupdict()['cluster_id'])
                         continue
 
@@ -4738,7 +4747,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     p6 = re.compile(r'^\s*confederation +identifier +(?P<confederation_identifier>[0-9]+)$')
                     m = p6.match(line)
                     if m:
-                        bgp_dict['bgp']['vrf'][vrf]['confederation_identifier'] = \
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['confederation_identifier'] = \
                             int(m.groupdict()['confederation_identifier'])
                         continue
 
@@ -4746,7 +4755,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     p7 = re.compile(r'^\s*confederation +peers +(?P<confederation_peers_as>[0-9]+)$')
                     m = p7.match(line)
                     if m:
-                        bgp_dict['bgp']['vrf'][vrf]['confederation_peers_as'] = \
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['confederation_peers_as'] = \
                             str(m.groupdict()['confederation_peers_as'])
                         continue
 
@@ -4754,10 +4763,10 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     p8 = re.compile(r'^\s*no graceful-restart$')
                     m = p8.match(line)
                     if m:
-                        bgp_dict['bgp']['vrf'][vrf]['graceful_restart'] = False
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['graceful_restart'] = False
                         continue
-                    elif 'graceful_restart' not in bgp_dict['bgp']['vrf'][vrf]:
-                        bgp_dict['bgp']['vrf'][vrf]['graceful_restart'] = True
+                    elif 'graceful_restart' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]:
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['graceful_restart'] = True
 
                     #   graceful-restart restart-time 121
                     #   graceful-restart stalepath-time 301
@@ -4769,11 +4778,11 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         graceful_restart_type = \
                             str(m.groupdict()['graceful_restart_type'])
                         if graceful_restart_type == 'restart-time':
-                            bgp_dict['bgp']['vrf'][vrf][
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf][
                                 'graceful_restart_restart_time'] = \
                                     int(m.groupdict()['time'])
                         else:
-                            bgp_dict['bgp']['vrf'][vrf][
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf][
                                 'graceful_restart_stalepath_time'] = \
                                     int(m.groupdict()['time'])
                         continue
@@ -4782,16 +4791,16 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     p10 = re.compile(r'^\s*log-neighbor-changes$')
                     m = p10.match(line)
                     if m:
-                        bgp_dict['bgp']['vrf'][vrf]['log_neighbor_changes'] = True
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['log_neighbor_changes'] = True
                         continue
-                    elif 'log_neighbor_changes' not in bgp_dict['bgp']['vrf'][vrf]:
-                        bgp_dict['bgp']['vrf'][vrf]['log_neighbor_changes'] = False
+                    elif 'log_neighbor_changes' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]:
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['log_neighbor_changes'] = False
 
                     #   router-id <router-id>
                     p11 = re.compile(r'^\s*router-id +(?P<router_id>[0-9]+)$')
                     m = p11.match(line)
                     if m:
-                        bgp_dict['bgp']['vrf'][vrf]['router_id'] = \
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['router_id'] = \
                             str(m.groupdict()['router_id'])
                         continue
 
@@ -4800,9 +4809,9 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                                       ' +(?P<holdtime>[0-9]+)$')
                     m = p12.match(line)
                     if m:
-                        bgp_dict['bgp']['vrf'][vrf]['keepalive_interval'] = \
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['keepalive_interval'] = \
                             int(m.groupdict()['keepalive_interval'])
-                        bgp_dict['bgp']['vrf'][vrf]['holdtime'] = \
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['holdtime'] = \
                             int(m.groupdict()['holdtime'])
                         continue
 
@@ -4810,25 +4819,25 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     p13 = re.compile(r'^\s*no enforce-first-as$')
                     m = p13.match(line)
                     if m:
-                        bgp_dict['bgp']['vrf'][vrf]['enforce_first_as'] = False
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['enforce_first_as'] = False
                         continue
-                    elif 'enforce_first_as' not in bgp_dict['bgp']['vrf'][vrf]:
-                        bgp_dict['bgp']['vrf'][vrf]['enforce_first_as'] = True
+                    elif 'enforce_first_as' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]:
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['enforce_first_as'] = True
 
                     #   no fast-external-fallover
                     p14 = re.compile(r'^\s*no fast-external-fallover$')
                     m = p14.match(line)
                     if m:
-                        bgp_dict['bgp']['vrf'][vrf]['fast_external_fallover'] = False
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['fast_external_fallover'] = False
                         continue
-                    elif 'fast_external_fallover' not in bgp_dict['bgp']['vrf'][vrf]:
-                        bgp_dict['bgp']['vrf'][vrf]['fast_external_fallover'] = True
+                    elif 'fast_external_fallover' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]:
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['fast_external_fallover'] = True
 
                     #   dynamic-med-interval 70
                     p15 = re.compile(r'^\s*dynamic-med-interval +(?P<dynamic_med_interval>[0-9]+)$')
                     m = p15.match(line)
                     if m:
-                        bgp_dict['bgp']['vrf'][vrf]['dynamic_med_interval'] = \
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['dynamic_med_interval'] = \
                             int(m.groupdict()['dynamic_med_interval'])
                         continue
 
@@ -4836,25 +4845,25 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     p16 = re.compile(r'^\s*flush-routes$')
                     m = p16.match(line)
                     if m:
-                        bgp_dict['bgp']['vrf'][vrf]['flush_routes'] = True
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['flush_routes'] = True
                         continue
-                    elif 'flush_routes' not in bgp_dict['bgp']['vrf'][vrf]:
-                        bgp_dict['bgp']['vrf'][vrf]['flush_routes'] = False
+                    elif 'flush_routes' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]:
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['flush_routes'] = False
 
                     #   isolate
                     p17 = re.compile(r'^\s*isolate$')
                     m = p17.match(line)
                     if m:
-                        bgp_dict['bgp']['vrf'][vrf]['isolate'] = True
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['isolate'] = True
                         continue
-                    elif 'isolate' not in bgp_dict['bgp']['vrf'][vrf]:
-                        bgp_dict['bgp']['vrf'][vrf]['isolate'] = False
+                    elif 'isolate' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]:
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['isolate'] = False
 
                     #   disable-policy-batching ipv4 prefix-list <WORD>
                     p18 = re.compile(r'^\s*disable-policy-batching ipv4 prefix-list +(?P<disable_policy_batching_ipv4>[a-zA-Z0-9]+)$')
                     m = p18.match(line)
                     if m:
-                        bgp_dict['bgp']['vrf'][vrf]['disable_policy_batching_ipv4'] = \
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['disable_policy_batching_ipv4'] = \
                             str(m.groupdict()['disable_policy_batching_ipv4'])
                         continue
 
@@ -4862,7 +4871,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     p19 = re.compile(r'^\s*disable-policy-batching ipv6 prefix-list +(?P<disable_policy_batching_ipv6>[a-zA-Z0-9]+)$')
                     m = p19.match(line)
                     if m:
-                        bgp_dict['bgp']['vrf'][vrf]['disable_policy_batching_ipv6'] = \
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['disable_policy_batching_ipv6'] = \
                             str(m.groupdict()['disable_policy_batching_ipv6'])
                         continue
 
@@ -4873,10 +4882,10 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         if m:
                             # Get keys
                             af_name = str(m.groupdict()['af_name'])
-                            if 'af_name' not in bgp_dict['bgp']['vrf'][vrf]:
-                                bgp_dict['bgp']['vrf'][vrf]['af_name'] = {}
-                            if af_name not in bgp_dict['bgp']['vrf'][vrf]['af_name']:
-                                bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name] = {}
+                            if 'af_name' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]:
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'] = {}
+                            if af_name not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name']:
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name] = {}
                             continue
 
                     if af_name:
@@ -4891,15 +4900,15 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                                           '+(?P<af_dampening_max_suppress_time>[0-9]+)$')
                         m = p21.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_dampening'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_dampening'] = \
                                 True
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_dampening_half_life_time'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_dampening_half_life_time'] = \
                                 int(m.groupdict()['af_dampening_half_life_time'])
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_dampening_reuse_time'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_dampening_reuse_time'] = \
                                 int(m.groupdict()['af_dampening_reuse_time'])
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_dampening_suppress_time'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_dampening_suppress_time'] = \
                                 int(m.groupdict()['af_dampening_suppress_time'])
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_dampening_max_suppress_time'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_dampening_max_suppress_time'] = \
                                 int(m.groupdict()['af_dampening_max_suppress_time'])
                             continue
 
@@ -4907,9 +4916,9 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p22 = re.compile(r'^\s*dampening +route-map +(?P<af_dampening_route_map>[A-Z0-9\-\_]+)$')
                         m = p22.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_dampening'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_dampening'] = \
                                 True
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_dampening_route_map'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_dampening_route_map'] = \
                                 str(m.groupdict()['af_dampening_route_map'])
                             continue
 
@@ -4917,7 +4926,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p23 = re.compile(r'^\s*nexthop +route-map +(?P<af_nexthop_route_map>[A-Za-z0-9\-\_]+)$')
                         m = p23.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_nexthop_route_map'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_nexthop_route_map'] = \
                                 str(m.groupdict()['af_nexthop_route_map'])
                             continue
 
@@ -4928,11 +4937,11 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p24 = re.compile(r'^\s*nexthop +trigger-delay +critical +(?P<af_nexthop_trigger_delay_critical>[0-9]+) +non-critical +(?P<af_nexthop_trigger_delay_non_critical>[0-9]+)$')
                         m = p24.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_nexthop_trigger_enable'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_nexthop_trigger_enable'] = \
                                 True
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_nexthop_trigger_delay_critical'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_nexthop_trigger_delay_critical'] = \
                                 int(m.groupdict()['af_nexthop_trigger_delay_critical'])
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_nexthop_trigger_delay_non_critical'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_nexthop_trigger_delay_non_critical'] = \
                                 int(m.groupdict()['af_nexthop_trigger_delay_non_critical'])
                             continue
 
@@ -4940,7 +4949,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p25 = re.compile(r'^\s*no nexthop trigger-delay$')
                         m = p25.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_nexthop_trigger_enable'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_nexthop_trigger_enable'] = \
                                 False
                             continue
 
@@ -4948,22 +4957,22 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p26 = re.compile(r'^\s*no client-to-client reflection$')
                         m = p26.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_client_to_client_reflection'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_client_to_client_reflection'] = \
                                 False
                             continue
-                        elif 'af_client_to_client_reflection' not in bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]:
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_client_to_client_reflection'] = \
+                        elif 'af_client_to_client_reflection' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]:
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_client_to_client_reflection'] = \
                                 True
 
                         #    distance <af_distance_extern_as> <af_distance_internal_as> <af_distance_local> | no distance [ <af_distance_extern_as> <af_distance_internal_as> <af_distance_local> ]
                         p27 = re.compile(r'^\s*distance +(?P<af_distance_extern_as>[0-9]+) +(?P<af_distance_internal_as>[0-9]+) +(?P<af_distance_local>[0-9]+)$')
                         m = p27.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_distance_extern_as'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_distance_extern_as'] = \
                                 int(m.groupdict()['af_distance_extern_as'])
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_distance_internal_as'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_distance_internal_as'] = \
                                 int(m.groupdict()['af_distance_internal_as'])
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_distance_local'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_distance_local'] = \
                                 int(m.groupdict()['af_distance_local'])
                             continue
 
@@ -4973,10 +4982,10 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         m = p28.match(line)
                         if m:
                             if m.groupdict()['af_maximum_paths_type']:
-                                bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_maximum_paths_ibgp'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_maximum_paths_ibgp'] = \
                                     int(m.groupdict()['af_maximum_paths_value'])
                             else:
-                                bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_maximum_paths_ebgp'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_maximum_paths_ebgp'] = \
                                     int(m.groupdict()['af_maximum_paths_value'])
                             continue
 
@@ -4984,7 +4993,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p29 = re.compile(r'^\s*maximum-paths +eibgp +(?P<af_maximum_paths_eibgp>[0-9]+)$')
                         m = p29.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_maximum_paths_eibgp'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_maximum_paths_eibgp'] = \
                                 int(m.groupdict()['af_maximum_paths_eibgp'])
                             continue
 
@@ -4995,36 +5004,36 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         if m:
                             ip_address = str(m.groupdict()['af_aggregate_address_address'])
                             if '::' not in ip_address:
-                                bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_aggregate_address_ipv4_address'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_aggregate_address_ipv4_address'] = \
                                     ip_address
-                                bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_aggregate_address_ipv4_mask'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_aggregate_address_ipv4_mask'] = \
                                     int(m.groupdict()['af_aggregate_address_ipv4_mask'])
                                 if m.groupdict()['extra_line']:
                                     if m.groupdict()['extra_line'] == 'as-set':
-                                        bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_aggregate_address_as_set'] = \
+                                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_aggregate_address_as_set'] = \
                                             True
                                     elif m.groupdict()['extra_line'] == 'summary-only':
-                                        bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_aggregate_address_summary_only'] = \
+                                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_aggregate_address_summary_only'] = \
                                             True
                                     elif m.groupdict()['extra_line'] == 'as-set summary-only':
-                                        bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_aggregate_address_as_set'] = \
+                                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_aggregate_address_as_set'] = \
                                             True
-                                        bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_aggregate_address_summary_only'] = \
+                                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_aggregate_address_summary_only'] = \
                                             True
                             else:
-                                bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_v6_aggregate_address_ipv6_address'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_v6_aggregate_address_ipv6_address'] = \
                                     ip_address
                                 if m.groupdict()['extra_line']:
                                     if m.groupdict()['extra_line'] == 'as-set':
-                                        bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_v6_aggregate_address_as_set'] = \
+                                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_v6_aggregate_address_as_set'] = \
                                             True
                                     elif m.groupdict()['extra_line'] == 'summary-only':
-                                        bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_v6_aggregate_address_summary_only'] = \
+                                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_v6_aggregate_address_summary_only'] = \
                                             True
                                     elif m.groupdict()['extra_line'] == 'as-set summary-only':
-                                        bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_v6_aggregate_address_as_set'] = \
+                                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_v6_aggregate_address_as_set'] = \
                                             True
-                                        bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_v6_aggregate_address_summary_only'] = \
+                                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_v6_aggregate_address_summary_only'] = \
                                             True
                             continue
 
@@ -5034,18 +5043,18 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         m = p31.match(line)
                         if m:
                             if m.groupdict()['af_network_mask']:
-                                bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_network_number'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_network_number'] = \
                                     str(m.groupdict()['af_network_number'])
-                                bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_network_mask'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_network_mask'] = \
                                     str(m.groupdict()['af_network_mask'])
                                 if m.groupdict()['af_network_route_map']:
-                                    bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_network_route_map'] = \
+                                    bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_network_route_map'] = \
                                         str(m.groupdict()['af_network_route_map'])
                             else:
-                                bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_v6_network_number'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_v6_network_number'] = \
                                     str(m.groupdict()['af_network_number'])
                                 if m.groupdict()['af_network_route_map']:
-                                    bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_v6_network_route_map'] = \
+                                    bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_v6_network_route_map'] = \
                                         str(m.groupdict()['af_network_route_map'])
                             continue
 
@@ -5053,12 +5062,12 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p32 = re.compile(r'^\s*network +(?P<af_network_number>[0-9\.]+)\/(?P<af_network_mask>[0-9]+)( +route-map +(?P<af_network_route_map>[A-Za-z0-9\-\_]+))?$')
                         m = p32.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_network_number'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_network_number'] = \
                                 str(m.groupdict()['af_network_number'])
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_network_mask'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_network_mask'] = \
                                 str(m.groupdict()['af_network_mask'])
                             if m.groupdict()['af_network_route_map']:
-                                bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_network_route_map'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_network_route_map'] = \
                                     str(m.groupdict()['af_network_route_map'])
                             continue
 
@@ -5066,9 +5075,9 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p33 = re.compile(r'^\s*redistribute +isis +(?P<af_redist_isis>[0-9]+) +route-map+(?P<af_redist_isis_route_policy>[A-Za-z0-9\-\_]+)$')
                         m = p32.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_redist_isis'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_redist_isis'] = \
                                 str(m.groupdict()['af_redist_isis'])
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_redist_isis_route_policy'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_redist_isis_route_policy'] = \
                                 str(m.groupdict()['af_redist_isis_route_policy'])
                             continue
 
@@ -5076,9 +5085,9 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p34 = re.compile(r'^\s*redistribute +isis +(?P<af_redist_isis>[0-9]+) +route-map+(?P<af_redist_isis_route_policy>[A-Za-z0-9\-\_]+)$')
                         m = p34.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_redist_isis'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_redist_isis'] = \
                                 str(m.groupdict()['af_redist_isis'])
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_redist_isis_route_policy'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_redist_isis_route_policy'] = \
                                 str(m.groupdict()['af_redist_isis_route_policy'])
                             continue
 
@@ -5086,9 +5095,9 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p35 = re.compile(r'^\s*redistribute +ospf +(?P<af_redist_ospf>[0-9]+) +route-map+(?P<af_redist_ospf_route_policy>[A-Za-z0-9\-\_]+)$')
                         m = p35.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_redist_ospf'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_redist_ospf'] = \
                                 str(m.groupdict()['af_redist_ospf'])
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_redist_ospf_route_policy'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_redist_ospf_route_policy'] = \
                                 str(m.groupdict()['af_redist_ospf_route_policy'])
                             continue
 
@@ -5096,9 +5105,9 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p36 = re.compile(r'^\s*redistribute +rip +(?P<af_redist_rip>[0-9]+) +route-map +(?P<af_redist_rip_route_policy>[A-Za-z0-9\-\_]+)$')
                         m = p36.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_redist_rip'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_redist_rip'] = \
                                 str(m.groupdict()['af_redist_rip'])
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_redist_rip_route_policy'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_redist_rip_route_policy'] = \
                                 str(m.groupdict()['af_redist_rip_route_policy'])
                             continue
 
@@ -5106,8 +5115,8 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p37 = re.compile(r'^\s*redistribute +static +route-map +(?P<af_redist_static_route_policy>[A-Za-z0-9\-\_]+)$')
                         m = p37.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_redist_static'] = True
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_redist_static_route_policy'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_redist_static'] = True
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_redist_static_route_policy'] = \
                                 str(m.groupdict()['af_redist_static_route_policy'])
                             continue
 
@@ -5115,8 +5124,8 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p38 = re.compile(r'^\s*redistribute +direct +route-map +(?P<af_redist_connected_route_policy>[A-Za-z0-9\-\_]+)$')
                         m = p38.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_redist_connected'] = True
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_redist_connected_route_policy'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_redist_connected'] = True
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_redist_connected_route_policy'] = \
                                 str(m.groupdict()['af_redist_connected_route_policy'])
                             continue
 
@@ -5124,21 +5133,21 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p39 = re.compile(r'^\s*allocate-label all$')
                         m = p39.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_v6_allocate_label_all'] = True
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_v6_allocate_label_all'] = True
                             continue
 
                         #    retain route-target all
                         p40 = re.compile(r'^\s*retain route-target all$')
                         m = p40.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_retain_rt_all'] = True
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_retain_rt_all'] = True
                             continue
 
                         #    label-allocation-mode per-vrf
                         p41 = re.compile(r'^\s*label-allocation-mode +(?P<per_vrf>[A-Za-z0-9]+)$')
                         m = p41.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['af_name'][af_name]['af_label_allocation_mode'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_label_allocation_mode'] = \
                                 str(m.groupdict()['per_vrf'])
                             continue
 
@@ -5148,10 +5157,10 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     if m:
                         # Get keys
                         neighbor_id = str(m.groupdict()['neighbor_id'])
-                        if 'neighbor_id' not in bgp_dict['bgp']['vrf'][vrf]:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'] = {}
-                        if neighbor_id not in bgp_dict['bgp']['vrf'][vrf]['neighbor_id']:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id] = {}
+                        if 'neighbor_id' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]:
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'] = {}
+                        if neighbor_id not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id']:
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id] = {}
                         continue
 
                     #   Same line of configuration can be configured under the peer session section
@@ -5160,29 +5169,29 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p43 = re.compile(r'^\s*bfd$')
                         m = p43.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_fall_over_bfd'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_fall_over_bfd'] = \
                                 True
                             continue
-                        elif 'nbr_fall_over_bfd' not in bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_fall_over_bfd'] = \
+                        elif 'nbr_fall_over_bfd' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]:
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_fall_over_bfd'] = \
                                 False
 
                         #   capability suppress 4-byte-as
                         p44 = re.compile(r'^\s*capability suppress 4-byte-as$')
                         m = p44.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_suppress_four_byte_as_capability'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_suppress_four_byte_as_capability'] = \
                                 True
                             continue
-                        elif 'nbr_suppress_four_byte_as_capability' not in bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_suppress_four_byte_as_capability'] = \
+                        elif 'nbr_suppress_four_byte_as_capability' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]:
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_suppress_four_byte_as_capability'] = \
                                 False
 
                         #   description <nbr_description>
                         p45 = re.compile(r'^\s*description +(?P<nbr_description>[A-Za-z0-9]+)$')
                         m = p45.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_description'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_description'] = \
                                 str(m.groupdict()['nbr_description'])
                             continue
 
@@ -5190,31 +5199,31 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p46 = re.compile(r'^\s*disable-connected-check$')
                         m = p46.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_disable_connected_check'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_disable_connected_check'] = \
                                 True
                             continue
-                        elif 'nbr_disable_connected_check' not in bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_disable_connected_check'] = \
+                        elif 'nbr_disable_connected_check' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]:
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_disable_connected_check'] = \
                                 False
 
                         #   ebgp-multihop <nbr_ebgp_multihop_max_hop>
                         p47 = re.compile(r'^\s*ebgp-multihop +(?P<nbr_ebgp_multihop_max_hop>[0-9]+)$')
                         m = p47.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_ebgp_multihop'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_ebgp_multihop'] = \
                                 True
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_ebgp_multihop_max_hop'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_ebgp_multihop_max_hop'] = \
                                 int(m.groupdict()['nbr_ebgp_multihop_max_hop'])
                             continue
-                        elif 'nbr_ebgp_multihop' not in bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_ebgp_multihop'] = \
+                        elif 'nbr_ebgp_multihop' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]:
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_ebgp_multihop'] = \
                                 False
 
                         #   inherit peer-session <nbr_inherit_peer_session>
                         p48 = re.compile(r'^\s*inherit peer-session +(?P<nbr_inherit_peer_session>[A-Za-z0-9\-]+)$')
                         m = p48.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_inherit_peer_session'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_inherit_peer_session'] = \
                                 str(m.groupdict()['nbr_inherit_peer_session'])
                             continue
 
@@ -5222,29 +5231,29 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p49 = re.compile(r'^\s*local-as +(?P<nbr_local_as_as_no>[0-9\.]+)( +(?P<no_prepend>no-prepend)( +(?P<replace_as>replace-as)( +(?P<dual_as>dual-as))?)?)?$')
                         m = p49.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_as_no'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_as_no'] = \
                                 str(m.groupdict()['nbr_local_as_as_no'])
                             if 'nbr_local_as_no_prepend' in m.groupdict():
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_no_prepend'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_no_prepend'] = \
                                     True
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_replace_as'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_replace_as'] = \
                                     True
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_dual_as'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_dual_as'] = \
                                     True
                             continue
-                        elif 'nbr_local_as_no_prepend' not in bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_no_prepend'] = \
+                        elif 'nbr_local_as_no_prepend' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]:
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_no_prepend'] = \
                                 False
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_replace_as'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_replace_as'] = \
                                 False
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_dual_as'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_dual_as'] = \
                                 False
 
                         #   { remote-as <nbr_remote_as> }
                         p50 = re.compile(r'^\s*remote-as +(?P<nbr_remote_as>[0-9]+)$')
                         m = p50.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_remote_as'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_remote_as'] = \
                                 int(m.groupdict()['nbr_remote_as'])
                             continue
 
@@ -5252,31 +5261,31 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p51 = re.compile(r'^\s*remove-private-as$')
                         m = p51.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_remove_private_as'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_remove_private_as'] = \
                                 True
                             continue
-                        elif 'nbr_remove_private_as' not in bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_remove_private_as'] = \
+                        elif 'nbr_remove_private_as' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]:
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_remove_private_as'] = \
                                 False
 
                         #   shutdown
                         p52 = re.compile(r'^\s*shutdown$')
                         m = p52.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_shutdown'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_shutdown'] = \
                                 True
                             continue
-                        elif 'nbr_shutdown' not in bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_shutdown'] = \
+                        elif 'nbr_shutdown' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]:
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_shutdown'] = \
                                 False
 
                         #   timers <nbr_keepalive_interval> <nbr_holdtime>
                         p53 = re.compile(r'^\s*timers +(?P<nbr_keepalive_interval>[0-9]+) +(?P<nbr_holdtime>[0-9]+)$')
                         m = p53.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_keepalive_interval'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_keepalive_interval'] = \
                                 int(m.groupdict()['nbr_keepalive_interval'])
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_holdtime'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_holdtime'] = \
                                 int(m.groupdict()['nbr_holdtime'])
                             continue
 
@@ -5284,7 +5293,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p54 = re.compile(r'^\s*update-source +(?P<nbr_update_source>[A-Za-z0-9\/\.]+)$')
                         m = p54.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_update_source'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_update_source'] = \
                                 str(m.groupdict()['nbr_update_source'])
                             continue
 
@@ -5292,7 +5301,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p55 = re.compile(r'^\s*password +(?P<nbr_password_text>.*)$')
                         m = p55.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_password_text'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_password_text'] = \
                                 str(m.groupdict()['nbr_password_text'])
                             continue
 
@@ -5300,7 +5309,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         p56 = re.compile(r'^\s*transport connection-mode +(?P<nbr_transport_connection_mode>[a-z]+)$')
                         m = p56.match(line)
                         if m:
-                            bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_transport_connection_mode'] = \
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_transport_connection_mode'] = \
                                 str(m.groupdict()['nbr_transport_connection_mode'])
                             continue
 
@@ -5309,10 +5318,10 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         m = p57.match(line)
                         if m:
                             nbr_af_name = str(m.groupdict()['nbr_af_name'])
-                            if 'nbr_af_name' not in bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'] = {}
-                            if nbr_af_name not in bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name']:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name] = {}
+                            if 'nbr_af_name' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]:
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'] = {}
+                            if nbr_af_name not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name']:
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name] = {}
                             continue
 
                         if nbr_af_name:
@@ -5320,23 +5329,23 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             p58 = re.compile(r'^\s*allowas-in( +(?P<nbr_af_allowas_in_as_number>[0-9]+))?$')
                             m = p58.match(line)
                             if m:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_allowas_in'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_allowas_in'] = \
                                     True
                                 if m.groupdict()['nbr_af_allowas_in_as_number']:
-                                    bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_allowas_in_as_number'] = \
+                                    bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_allowas_in_as_number'] = \
                                         int(m.groupdict()['nbr_af_allowas_in_as_number'])
                                 continue
-                            elif 'nbr_af_allowas_in' not in bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_allowas_in'] = \
+                            elif 'nbr_af_allowas_in' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]:
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_allowas_in'] = \
                                     False
 
                             #   inherit peer-policy <nbr_af_inherit_peer_policy> <nbr_af_inherit_peer_seq>
                             p59 = re.compile(r'^\s*inherit peer-policy +(?P<nbr_af_inherit_peer_policy>[A-Za-z0-9\-]+) +(?P<nbr_af_inherit_peer_seq>[0-9]+)$')
                             m = p59.match(line)
                             if m:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_inherit_peer_policy'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_inherit_peer_policy'] = \
                                     str(m.groupdict()['nbr_af_inherit_peer_policy'])
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_inherit_peer_seq'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_inherit_peer_seq'] = \
                                     int(m.groupdict()['nbr_af_inherit_peer_seq'])
                                 continue
 
@@ -5344,13 +5353,13 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             p60 = re.compile(r'^\s*maximum-prefix +(?P<nbr_af_maximum_prefix_max_prefix_no>[0-9]+)( +(?P<nbr_af_maximum_prefix_threshold>[0-9]+))?( +restart +(?P<nbr_af_maximum_prefix_restart>[0-9]+))?$')
                             m = p60.match(line)
                             if m:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_max_prefix_no'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_max_prefix_no'] = \
                                     int(m.groupdict()['nbr_af_maximum_prefix_max_prefix_no'])
                                 if m.groupdict()['nbr_af_maximum_prefix_threshold']:
-                                    bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_threshold'] = \
+                                    bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_threshold'] = \
                                         int(m.groupdict()['nbr_af_maximum_prefix_threshold'])
                                 if m.groupdict()['nbr_af_maximum_prefix_restart']:
-                                    bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_restart'] = \
+                                    bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_restart'] = \
                                         int(m.groupdict()['nbr_af_maximum_prefix_restart'])
                                 continue
 
@@ -5358,15 +5367,15 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             p61 = re.compile(r'^\s*maximum-prefix +(?P<nbr_af_maximum_prefix_max_prefix_no>[0-9]+)( +(?P<nbr_af_maximum_prefix_threshold>[0-9]+))?( +(?P<nbr_af_maximum_prefix_warning_only>warning-only))?$')
                             m = p61.match(line)
                             if m:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_max_prefix_no'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_max_prefix_no'] = \
                                     int(m.groupdict()['nbr_af_maximum_prefix_max_prefix_no'])
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_threshold'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_threshold'] = \
                                     int(m.groupdict()['nbr_af_maximum_prefix_threshold'])
                                 if m.groupdict()['nbr_af_maximum_prefix_warning_only']:
-                                    bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_warning_only'] = \
+                                    bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_warning_only'] = \
                                         True
                                 else:
-                                    bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_warning_only'] = \
+                                    bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_maximum_prefix_warning_only'] = \
                                         False
                                 continue
 
@@ -5374,7 +5383,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             p62 = re.compile(r'^\s*route-map +(?P<nbr_af_route_map_name_in>.*) in$')
                             m = p62.match(line)
                             if m:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_route_map_name_in'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_route_map_name_in'] = \
                                     str(m.groupdict()['nbr_af_route_map_name_in'])
                                 continue
 
@@ -5382,7 +5391,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             p63 = re.compile(r'^\s*route-map +(?P<nbr_af_route_map_name_out>.*) out$')
                             m = p63.match(line)
                             if m:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_route_map_name_out'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_route_map_name_out'] = \
                                     str(m.groupdict()['nbr_af_route_map_name_out'])
                                 continue
 
@@ -5390,18 +5399,18 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             p64 = re.compile(r'^\s*route-reflector-client$')
                             m = p64.match(line)
                             if m:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_route_reflector_client'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_route_reflector_client'] = \
                                     True
                                 continue
-                            elif 'nbr_af_route_reflector_client' not in bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_route_reflector_client'] = \
+                            elif 'nbr_af_route_reflector_client' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]:
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_route_reflector_client'] = \
                                     False
 
                             #   send-community
                             p65 = re.compile(r'^\s*send-community$')
                             m = p65.match(line)
                             if m:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_send_community'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_send_community'] = \
                                     'standard'
                                 send_community_standard_match = 'True'
                                 continue
@@ -5411,10 +5420,10 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             m = p66.match(line)
                             if m:
                                 if send_community_standard_match:
-                                    bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_send_community'] = \
+                                    bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_send_community'] = \
                                         'both'
                                 else:
-                                    bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_send_community'] = \
+                                    bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_send_community'] = \
                                         'extended'
                                 continue
 
@@ -5422,54 +5431,54 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             p67 = re.compile(r'^\s*soft-reconfiguration inbound( +(?P<nbr_af_soft_reconfiguration_extra>.*))?$')
                             m = p67.match(line)
                             if m:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_soft_reconfiguration'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_soft_reconfiguration'] = \
                                     True
                                 continue
-                            elif 'nbr_af_soft_reconfiguration' not in bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_soft_reconfiguration'] = \
+                            elif 'nbr_af_soft_reconfiguration' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]:
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_soft_reconfiguration'] = \
                                     False
 
                             #   next-hop-self
                             p68 = re.compile(r'^\s*next-hop-self$')
                             m = p68.match(line)
                             if m:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_next_hop_self'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_next_hop_self'] = \
                                     True
                                 continue
-                            elif 'nbr_af_next_hop_self' not in bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_next_hop_self'] = \
+                            elif 'nbr_af_next_hop_self' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]:
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_next_hop_self'] = \
                                     False
 
                             #   as-override
                             p69 = re.compile(r'^\s*as-override$')
                             m = p69.match(line)
                             if m:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_as_override'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_as_override'] = \
                                     True
                                 continue
-                            elif 'nbr_af_as_override' not in bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_as_override'] = \
+                            elif 'nbr_af_as_override' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]:
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_as_override'] = \
                                     False
 
                             #   default-originate [ route-map <nbr_af_default_originate_route_map> ]
                             p70 = re.compile(r'^\s*default-originate( +route-map +(?P<nbr_af_default_originate_route_map>.*))?$')
                             m = p70.match(line)
                             if m:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_default_originate'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_default_originate'] = \
                                     True
                                 if m.groupdict()['nbr_af_default_originate_route_map']:
-                                    bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_default_originate_route_map'] = \
+                                    bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_default_originate_route_map'] = \
                                         str(m.groupdict()['nbr_af_default_originate_route_map'])
                                 continue
-                            elif 'nbr_af_default_originate' not in bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_default_originate'] = \
+                            elif 'nbr_af_default_originate' not in bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]:
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_default_originate'] = \
                                     False
 
                             #   soo <nbr_af_soo>
                             p71 = re.compile(r'^\s*soo +(?P<nbr_af_soo>.*)$')
                             m = p71.match(line)
                             if m:
-                                bgp_dict['bgp']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_soo'] = \
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_soo'] = \
                                     str(m.groupdict()['nbr_af_soo'])
                                 continue
 
@@ -5480,9 +5489,9 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     # Get keys
                     ps_name = str(m.groupdict()['ps_name'])
                     if 'ps_name' not in bgp_dict['bgp']:
-                        bgp_dict['bgp']['ps_name'] = {}
-                    if ps_name not in bgp_dict['bgp']['ps_name']:
-                        bgp_dict['bgp']['ps_name'][ps_name] = {}
+                        bgp_dict['bgp']['instance']['default']['ps_name'] = {}
+                    if ps_name not in bgp_dict['bgp']['instance']['default']['ps_name']:
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name] = {}
                     continue
 
                 if ps_name:
@@ -5491,26 +5500,26 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     m = p73.match(line)
                     if m:
                         # Get keys
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_fall_over_bfd'] = True
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_fall_over_bfd'] = True
                         continue
-                    elif 'ps_fall_over_bfd' not in bgp_dict['bgp']['ps_name'][ps_name]:
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_fall_over_bfd'] = False
+                    elif 'ps_fall_over_bfd' not in bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]:
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_fall_over_bfd'] = False
 
                     #   capability suppress 4-byte-as
                     p74 = re.compile(r'^\s*bfd$')
                     m = p74.match(line)
                     if m:
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_suppress_four_byte_as_capability'] = True
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_suppress_four_byte_as_capability'] = True
                         continue
-                    elif 'ps_suppress_four_byte_as_capability' not in bgp_dict['bgp']['ps_name'][ps_name]:
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_suppress_four_byte_as_capability'] = False
+                    elif 'ps_suppress_four_byte_as_capability' not in bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]:
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_suppress_four_byte_as_capability'] = False
 
                     #   description <ps_description>
                     p75 = re.compile(r'^\s*description +(?P<ps_description>.*)$')
                     m = p75.match(line)
                     if m:
                         # Get keys
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_description'] = \
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_description'] = \
                             str(m.groupdict()['ps_description'])
                         continue
 
@@ -5518,48 +5527,48 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     p76 = re.compile(r'^\s*disable-connected-check$')
                     m = p76.match(line)
                     if m:
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_disable_connected_check'] = True
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_disable_connected_check'] = True
                         continue
-                    elif 'ps_disable_connected_check' not in bgp_dict['bgp']['ps_name'][ps_name]:
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_disable_connected_check'] = False
+                    elif 'ps_disable_connected_check' not in bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]:
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_disable_connected_check'] = False
 
                     #   ebgp-multihop <ps_ebgp_multihop_max_hop>
                     p77 = re.compile(r'^\s*ebgp-multihop +(?P<ps_ebgp_multihop_max_hop>[0-9]+)$$')
                     m = p77.match(line)
                     if m:
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_ebgp_multihop'] = True
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_ebgp_multihop_max_hop'] = \
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_ebgp_multihop'] = True
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_ebgp_multihop_max_hop'] = \
                             int(m.groupdict()['ps_ebgp_multihop_max_hop'])
                         continue
-                    elif 'ps_ebgp_multihop' not in bgp_dict['bgp']['ps_name'][ps_name]:
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_ebgp_multihop'] = False
+                    elif 'ps_ebgp_multihop' not in bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]:
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_ebgp_multihop'] = False
 
                     #    { local-as <ps_local_as_as_no> [ no-prepend [ replace-as [ dual-as ] ] ] }
                     p78 = re.compile(r'^\s*local-as +(?P<ps_local_as_as_no>[0-9\.]+)( +no-prepend( +replace-as( +dual-as)?)?)?$')
                     m = p78.match(line)
                     if m:
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_local_as_as_no'] = \
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_local_as_as_no'] = \
                             str(m.groupdict()['ps_local_as_as_no'])
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_local_as_no_prepend'] = \
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_local_as_no_prepend'] = \
                             True
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_local_as_replace_as'] = \
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_local_as_replace_as'] = \
                             True
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_local_as_dual_as'] = \
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_local_as_dual_as'] = \
                             True
                         continue
-                    elif 'ps_local_as_no_prepend' not in bgp_dict['bgp']['ps_name'][ps_name]:
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_local_as_no_prepend'] = \
+                    elif 'ps_local_as_no_prepend' not in bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]:
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_local_as_no_prepend'] = \
                             False
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_local_as_replace_as'] = \
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_local_as_replace_as'] = \
                             False
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_local_as_dual_as'] = \
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_local_as_dual_as'] = \
                             False
 
                     #   password <ps_password_text>
                     p79 = re.compile(r'^\s*password +(?P<ps_password_text>.*)$')
                     m = p79.match(line)
                     if m:
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_password_text'] = \
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_password_text'] = \
                             str(m.groupdict()['ps_password_text'])
                         continue
 
@@ -5567,7 +5576,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     p80 = re.compile(r'^\s*remote-as +(?P<ps_remote_as>[0-9]+)$')
                     m = p80.match(line)
                     if m:
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_remote_as'] = \
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_remote_as'] = \
                             int(m.groupdict()['ps_remote_as'])
                         continue
 
@@ -5575,20 +5584,20 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     p81 = re.compile(r'^\s*shutdown$')
                     m = p81.match(line)
                     if m:
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_shutdown'] = \
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_shutdown'] = \
                             True
                         continue
-                    elif 'ps_shutdown' not in bgp_dict['bgp']['ps_name'][ps_name]:
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_shutdown'] = \
+                    elif 'ps_shutdown' not in bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]:
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_shutdown'] = \
                             False
 
                     #   timers <ps_keepalive_interval> <ps_hodltime>
                     p82 = re.compile(r'^\s*timers +(?P<ps_keepalive_interval>[0-9]+) +(?P<ps_hodltime>[0-9]+)$')
                     m = p82.match(line)
                     if m:
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_keepalive_interval'] = \
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_keepalive_interval'] = \
                             int(m.groupdict()['ps_keepalive_interval'])
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_hodltime'] = \
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_hodltime'] = \
                             int(m.groupdict()['ps_hodltime'])
                         continue
 
@@ -5596,7 +5605,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     p83 = re.compile(r'^\s*transport connection-mode +(?P<ps_transport_connection_mode>[a-z]+)$')
                     m = p83.match(line)
                     if m:
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_transport_connection_mode'] = \
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_transport_connection_mode'] = \
                             str(m.groupdict()['ps_transport_connection_mode'])
                         continue
 
@@ -5604,7 +5613,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     p84 = re.compile(r'^\s*update-source +(?P<ps_update_source>[A-Za-z0-9\/\.]+)$')
                     m = p54.match(line)
                     if m:
-                        bgp_dict['bgp']['ps_name'][ps_name]['ps_update_source'] = \
+                        bgp_dict['bgp']['instance']['default']['ps_name'][ps_name]['ps_update_source'] = \
                             str(m.groupdict()['ps_update_source'])
                         continue
 
@@ -5614,10 +5623,10 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                 if m:
                     # Get keys
                     pp_name = str(m.groupdict()['pp_name'])
-                    if 'pp_name' not in bgp_dict['bgp']:
-                        bgp_dict['bgp']['pp_name'] = {}
-                    if pp_name not in bgp_dict['bgp']['pp_name']:
-                        bgp_dict['bgp']['pp_name'][pp_name] = {}
+                    if 'pp_name' not in bgp_dict['bgp']['instance']['default']:
+                        bgp_dict['bgp']['instance']['default']['pp_name'] = {}
+                    if pp_name not in bgp_dict['bgp']['instance']['default']['pp_name']:
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name] = {}
                     continue
 
                 if pp_name:
@@ -5625,46 +5634,46 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     p86 = re.compile(r'^\s*allowas-in( +(?P<pp_allowas_in_as_number>[0-9]+))?$')
                     m = p86.match(line)
                     if m:
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_allowas_in'] = \
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_allowas_in'] = \
                             True
                         if m.groupdict()['pp_allowas_in_as_number']:
-                            bgp_dict['bgp']['pp_name'][pp_name]['pp_allowas_in_as_number'] = \
+                            bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_allowas_in_as_number'] = \
                                 int(m.groupdict()['pp_allowas_in_as_number'])
                         continue
-                    elif 'pp_allowas_in' not in bgp_dict['bgp']['pp_name'][pp_name]:
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_allowas_in'] = \
+                    elif 'pp_allowas_in' not in bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]:
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_allowas_in'] = \
                             False
 
                     #   as-override
                     p87 = re.compile(r'^\s*as-override$')
                     m = p87.match(line)
                     if m:
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_as_override'] = \
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_as_override'] = \
                             True
                         continue
-                    elif 'pp_as_override' not in bgp_dict['bgp']['pp_name'][pp_name]:
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_as_override'] = \
+                    elif 'pp_as_override' not in bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]:
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_as_override'] = \
                             False
 
                     #   default-originate [ route-map <pp_default_originate_route_map> ]
                     p88 = re.compile(r'^\s*default-originate( +route-map +(?P<pp_default_originate_route_map>.*))?$')
                     m = p88.match(line)
                     if m:
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_default_originate'] = \
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_default_originate'] = \
                             True
                         if m.groupdict()['pp_default_originate_route_map']:
-                            bgp_dict['bgp']['pp_name'][pp_name]['pp_default_originate_route_map'] = \
+                            bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_default_originate_route_map'] = \
                                 str(m.groupdict()['pp_default_originate_route_map'])
                         continue
-                    elif 'pp_default_originate' not in bgp_dict['bgp']['pp_name'][pp_name]:
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_default_originate'] = \
+                    elif 'pp_default_originate' not in bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]:
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_default_originate'] = \
                             False
 
                     #   route-map <pp_route_map_name_in> in
                     p89 = re.compile(r'^\s*route-map +(?P<pp_route_map_name_in>.*) in$')
                     m = p89.match(line)
                     if m:
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_route_map_name_in'] = \
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_route_map_name_in'] = \
                             str(m.groupdict()['pp_route_map_name_in'])
                         continue
 
@@ -5672,7 +5681,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     p90 = re.compile(r'^\s*route-map +(?P<pp_route_map_name_out>.*) out$')
                     m = p90.match(line)
                     if m:
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_route_map_name_out'] = \
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_route_map_name_out'] = \
                             str(m.groupdict()['pp_route_map_name_out'])
                         continue
 
@@ -5680,11 +5689,11 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     p91 = re.compile(r'^\s*maximum-prefix +(?P<pp_maximum_prefix_max_prefix_no>[0-9]+)( +(?P<nbr_af_maximum_prefix_threshold>[0-9]+))?(restart +(?P<nbr_af_maximum_prefix_restart>[0-9]+))?$')
                     m = p91.match(line)
                     if m:
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_maximum_prefix_max_prefix_no'] = \
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_maximum_prefix_max_prefix_no'] = \
                             int(m.groupdict()['pp_maximum_prefix_max_prefix_no'])
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_maximum_prefix_threshold'] = \
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_maximum_prefix_threshold'] = \
                             int(m.groupdict()['pp_maximum_prefix_threshold'])
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_maximum_prefix_restart'] = \
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_maximum_prefix_restart'] = \
                             int(m.groupdict()['pp_maximum_prefix_restart'])
                         continue
 
@@ -5692,15 +5701,15 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     p92 = re.compile(r'^\s*maximum-prefix +(?P<pp_maximum_prefix_max_prefix_no>[0-9]+)( +(?P<pp_maximum_prefix_threshold>[0-9]+))?( +(?P<pp_maximum_prefix_warning_only>warning-only))?$')
                     m = p92.match(line)
                     if m:
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_maximum_prefix_max_prefix_no'] = \
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_maximum_prefix_max_prefix_no'] = \
                             int(m.groupdict()['pp_maximum_prefix_max_prefix_no'])
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_maximum_prefix_threshold'] = \
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_maximum_prefix_threshold'] = \
                             int(m.groupdict()['pp_maximum_prefix_threshold'])
                         if m.groupdict()['pp_maximum_prefix_warning_only']:
-                            bgp_dict['bgp']['pp_name'][pp_name]['pp_maximum_prefix_warning_only'] = \
+                            bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_maximum_prefix_warning_only'] = \
                                 True
                         else:
-                            bgp_dict['bgp']['pp_name'][pp_name]['pp_maximum_prefix_warning_only'] = \
+                            bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_maximum_prefix_warning_only'] = \
                                 False
                         continue
 
@@ -5708,29 +5717,29 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     p93 = re.compile(r'^\s*next-hop-self$')
                     m = p93.match(line)
                     if m:
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_next_hop_self'] = \
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_next_hop_self'] = \
                             True
                         continue
-                    elif 'pp_next_hop_self' not in bgp_dict['bgp']['pp_name'][pp_name]:
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_next_hop_self'] = \
+                    elif 'pp_next_hop_self' not in bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]:
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_next_hop_self'] = \
                             False
 
                     #   route-reflector-client
                     p94 = re.compile(r'^\s*route-reflector-client$')
                     m = p94.match(line)
                     if m:
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_route_reflector_client'] = \
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_route_reflector_client'] = \
                             True
                         continue
-                    elif 'pp_route_reflector_client' not in bgp_dict['bgp']['pp_name'][pp_name]:
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_route_reflector_client'] = \
+                    elif 'pp_route_reflector_client' not in bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]:
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_route_reflector_client'] = \
                             False
 
                     #   send-community
                     p95 = re.compile(r'^\s*send-community$')
                     m = p95.match(line)
                     if m:
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_send_community'] = \
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_send_community'] = \
                             'standard'
                         peer_policy_send_community_standard_match = 'True'
                         continue
@@ -5740,10 +5749,10 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     m = p96.match(line)
                     if m:
                         if peer_policy_send_community_standard_match:
-                            bgp_dict['bgp']['pp_name'][pp_name]['pp_send_community'] = \
+                            bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_send_community'] = \
                                 'both'
                         else:
-                            bgp_dict['bgp']['pp_name'][pp_name]['pp_send_community'] = \
+                            bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_send_community'] = \
                                 'extended'
                         continue
 
@@ -5751,18 +5760,18 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     p97 = re.compile(r'^\s*soft-reconfiguration inbound( +(?P<nbr_af_soft_reconfiguration_extra>.*))?$')
                     m = p97.match(line)
                     if m:
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_soft_reconfiguration'] = \
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_soft_reconfiguration'] = \
                             True
                         continue
-                    elif 'pp_soft_reconfiguration' not in bgp_dict['bgp']['pp_name'][pp_name]:
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_soft_reconfiguration'] = \
+                    elif 'pp_soft_reconfiguration' not in bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]:
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_soft_reconfiguration'] = \
                             False
 
                     #   soo <pp_soo>
                     p98 = re.compile(r'^\s*soo +(?P<pp_soo>.*)$')
                     m = p98.match(line)
                     if m:
-                        bgp_dict['bgp']['pp_name'][pp_name]['pp_soo'] = \
+                        bgp_dict['bgp']['instance']['default']['pp_name'][pp_name]['pp_soo'] = \
                             str(m.groupdict()['pp_soo'])
                         continue
 
