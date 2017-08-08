@@ -143,10 +143,10 @@ class ShowBgpInstanceAfGroupConfigurationSchema(MetaParser):
                          Optional('address_family'): str,
                          Optional('default_originate_route_map'): str,
                          Optional('default_originate_inherit'): str,
-                         Optional('max_prefix_no'): int,
-                         Optional('max_prefix_threshold'): int,
-                         Optional('max_prefix_restart'): int,
-                         Optional('max_prefix_inherit'): str,
+                         Optional('maximum_prefix_max_prefix_no'): int,
+                         Optional('maximum_prefix_threshold'): int,
+                         Optional('maximum_prefix_restart'): int,
+                         Optional('maximum_prefix_warning_only'): str,
                          Optional('next_hop_self'): bool,
                          Optional('next_hop_self_inherit'): str,
                          Optional('route_map_name_in'): str,
@@ -201,9 +201,6 @@ class ShowBgpInstanceAfGroupConfiguration(ShowBgpInstanceAfGroupConfigurationSch
                 else:
                     instance_name = 'default'
 
-                # cmd = 'show bgp instance {instance_name} af-group {pp_name} configuration'.format(instance_name=instance_name, pp_name=pp_name)
-                # out = self.device.execute(cmd)
-        
                 # instance instance_name
                 if 'instance' not in ret_dict:
                     ret_dict['instance'] = {}
@@ -261,19 +258,19 @@ class ShowBgpInstanceAfGroupConfiguration(ShowBgpInstanceAfGroupConfigurationSch
                     m = p3.match(line)
                     if m:
                         ret_dict['instance'][instance_name]['pp_name'][pp_name]\
-                            ['max_prefix_no'] = int(m.groupdict()['no'])
+                            ['maximum_prefix_max_prefix_no'] = int(m.groupdict()['no'])
         
                         if m.groupdict()['th']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
-                                ['max_prefix_threshold'] = int(m.groupdict()['th'])
+                                ['maximum_prefix_threshold'] = int(m.groupdict()['th'])
         
                         if m.groupdict()['re']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
-                                ['max_prefix_restart'] = int(m.groupdict()['re'])
+                                ['maximum_prefix_restart'] = int(m.groupdict()['re'])
         
                         if m.groupdict()['inherit']:
                             ret_dict['instance'][instance_name]['pp_name'][pp_name]\
-                                ['max_prefix_inherit'] = m.groupdict()['inherit']
+                                ['maximum_prefix_warning_only'] = m.groupdict()['inherit']
                         continue
         
                     # next-hop-self                               []
@@ -3703,7 +3700,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
     def cli(self, vrf_type, af_type=''):
 
         assert vrf_type in ['all', 'vrf']
-        assert af_type in ['', 'vpnv4 unicast', 'ipv6 unicast']
+        assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
         cmd = 'show bgp instance all {vrf_type} all {af_type} summary'.format(vrf_type=vrf_type, af_type=af_type)
         out = self.device.execute(cmd)
 
