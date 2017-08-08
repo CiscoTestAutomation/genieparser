@@ -8,7 +8,6 @@ class ShowRouteMapSchema(MetaParser):
     ''' Schema for:
         # 'show route-map'
     '''
-
     schema = {
         Any():
             {'statements':
@@ -23,11 +22,12 @@ class ShowRouteMapSchema(MetaParser):
                          Optional('match_as_path_list'): str,
                          Optional('match_interface'): str,
                          Optional('match_prefix_list'): str,
+                         Optional('match_as_number_list'): str,
                          Optional('match_prefix_list_v6'): str,
-                         Optional('match_tag_list'): str,
                          },
                      'actions':
-                        {Optional('set_route_origin'): str, 
+                        {Optional('set_route_origin'): str,
+                         Optional('set_distance'): int, 
                          Optional('set_local_pref'): int, 
                          Optional('set_next_hop'): str, 
                          Optional('set_next_hop_v6'): str, 
@@ -45,7 +45,8 @@ class ShowRouteMapSchema(MetaParser):
                          Optional('set_ext_community_delete'): str,
                          Optional('set_level'): str,
                          Optional('set_metric_type'): str,
-                         Optional('route_disposition'): str,
+                         'clause': bool,
+                         'route_disposition': str,
                          Optional('set_tag'): int
                         },
                     },
@@ -64,8 +65,8 @@ class ShowRouteMap(ShowRouteMapSchema):
             line = line.rstrip()
 
             # route-map test, permit, sequence 10 
-            p1 =  re.compile(r'^\s*route-map *(?P<name>[a-zA-Z\-\s]+),'
-                              ' *(?P<route_disposition>[a-z]+), *sequence'
+            p1 =  re.compile(r'^\s*route-map *(?P<name>[\w\W\s]+)\,'
+                              ' *(?P<route_disposition>[\w\W]+)\, *sequence'
                               ' *(?P<statements>[0-9]+)$')
             m = p1.match(line)
             if m:
@@ -95,9 +96,22 @@ class ShowRouteMap(ShowRouteMapSchema):
                 ['match_as_path_list'] = str(m.groupdict()['match_as_path_list'])
                 continue
 
+            # as-number (as-path-list filter): List1, List2                 
+            p2_1 = re.compile(r'^\s*as-number *\(as-path-list *filter\)\:'
+                               ' *(?P<match_as_number_list>[\w\W\,\s]+)$')
+            m = p2_1.match(line)
+            if m:
+                match_as_number_list = m.groupdict()['match_as_number_list']
+                match_as_number_list = match_as_number_list.replace(" ","")
+                match_as_number_list = match_as_number_list.lower()
+
+                route_map_dict[name]['statements'][statements]['conditions']\
+                ['match_as_number_list'] = match_as_number_list
+                continue
+
             # ip address prefix-lists: test-test 
             p3 = re.compile(r'^\s*ip *address *prefix-lists:'
-                             ' *(?P<match_prefix_list>[a-z\-]+)$')
+                             ' *(?P<match_prefix_list>[a-zA-Z0-9\S]+)$')
             m = p3.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
@@ -106,7 +120,7 @@ class ShowRouteMap(ShowRouteMapSchema):
 
             #ip next-hop prefix-lists: test
             p4 =  re.compile(r'^\s*ip *next-hop *prefix-lists:'
-                              ' *(?P<match_nexthop_in>[a-z]+)$')
+                              ' *(?P<match_nexthop_in>[a-zA-Z0-9\S]+)$')
             m = p4.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
@@ -115,7 +129,7 @@ class ShowRouteMap(ShowRouteMapSchema):
 
             # ipv6 address prefix-lists: test-test
             p5 = re.compile(r'^\s*ipv6 *address *prefix-lists:'
-                             ' *(?P<match_prefix_list_v6>[a-z\-]+)$')
+                             ' *(?P<match_prefix_list_v6>[a-zA-Z0-9\S]+)$')
             m = p5.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
@@ -145,14 +159,6 @@ class ShowRouteMap(ShowRouteMapSchema):
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
                 ['match_med_eq'] = int(m.groupdict()['match_med_eq'])
-                continue
-
-            #tag: 23 
-            p9 = re.compile(r'^\s*tag: *(?P<match_tag_list>[0-9\s]+)$')
-            m = p9.match(line)
-            if m:
-                route_map_dict[name]['statements'][statements]['conditions']\
-                ['match_tag_list'] = str(m.groupdict()['match_tag_list'])
                 continue
 
             #community  (community-list filter): test3 
@@ -212,6 +218,14 @@ class ShowRouteMap(ShowRouteMapSchema):
             if m:
                 route_map_dict[name]['statements'][statements]['actions']\
                 ['set_med'] = int(m.groupdict()['set_med'])
+                continue
+
+            #distance: 10
+            p15_1 = re.compile(r'^\s*distance: *(?P<set_distance>[0-9]+)$')
+            m = p15_1.match(line)
+            if m:
+                route_map_dict[name]['statements'][statements]['actions']\
+                ['set_distance'] = int(m.groupdict()['set_distance'])
                 continue
 
             #metric-type external 
@@ -316,6 +330,7 @@ class ShowRouteMap(ShowRouteMapSchema):
                               ' *(?P<set_ext_community_rt_additive>(additive))$')
             m = p23.match(line)
             if m:
+
                 set_ext_community_rt = str(m.groupdict()['set_ext_community_rt'])
                 set_ext_community_rt_additive = m.groupdict()\
                 ['set_ext_community_rt_additive']
@@ -335,8 +350,14 @@ class ShowRouteMap(ShowRouteMapSchema):
                 set_ext_community_rt = str(m.groupdict()['set_ext_community_rt'])
                 route_map_dict[name]['statements'][statements]['actions']\
                 ['set_ext_community_rt'] = set_ext_community_rt
+                continue
+
+            p24_1 = re.compile(r'^\s*(?P<clause>(Set clauses:))$')
+            m = p24_1.match(line)
+            if m:
+                route_map_dict[name]['statements'][statements]['actions']\
+                ['clause'] = True
                 route_map_dict[name]['statements'][statements]['actions']\
                 ['route_disposition'] = route_disposition
-                continue
 
         return route_map_dict
