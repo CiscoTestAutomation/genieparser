@@ -12188,13 +12188,19 @@ class test_show_running_config_bgp(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        "bgp": {
+  "bgp": {
+    "instance": {
+        "default": {
             "bgp_id": 333,
             "protocol_shutdown": True,
             "vrf": {
               "management": {
                 "graceful_restart": True,
                 "log_neighbor_changes": False,
+                "enforce_first_as": True,
+                "flush_routes": False,
+                "fast_external_fallover": True,
+                "isolate": False,
                 "neighbor_id": {
                   "5.5.5.5": {'nbr_disable_connected_check': False,
                               'nbr_ebgp_multihop': False,
@@ -12206,13 +12212,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                                                    '386c0565965f89de',
                               'nbr_remove_private_as': False,
                               'nbr_shutdown': False,
-                              'nbr_suppress_four_byte_as_capability': False}
-                },
-                "enforce_first_as": True,
-                "flush_routes": False,
-                "fast_external_fallover": True,
-                "isolate": False
-              },
+                              'nbr_suppress_four_byte_as_capability': False}}},
               "ac": {
                 "log_neighbor_changes": False,
                 "bestpath_cost_community_ignore": False,
@@ -12375,6 +12375,16 @@ class test_show_running_config_bgp(unittest.TestCase):
                 "neighbor_id": {
                   "fec1::2002": {
                     "nbr_local_as_replace_as": False,
+                    "nbr_disable_connected_check": False,
+                    "nbr_remove_private_as": False,
+                    "nbr_local_as_dual_as": False,
+                    "nbr_ebgp_multihop": False,
+                    "nbr_local_as_no_prepend": False,
+                    "nbr_shutdown": False,
+                    "nbr_suppress_four_byte_as_capability": False,
+                    "nbr_fall_over_bfd": False,
+                    "nbr_remote_as": 888,
+                    'nbr_update_source': 'loopback0',
                     "nbr_af_name": {
                       "ipv4 unicast": {
                         "nbr_af_soft_reconfiguration": True,
@@ -12399,16 +12409,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                         "nbr_af_send_community": "both",
                         "nbr_af_allowas_in": False
                       }
-                    },
-                    "nbr_disable_connected_check": False,
-                    "nbr_remove_private_as": False,
-                    "nbr_local_as_dual_as": False,
-                    "nbr_ebgp_multihop": False,
-                    "nbr_local_as_no_prepend": False,
-                    "nbr_shutdown": False,
-                    "nbr_suppress_four_byte_as_capability": False,
-                    "nbr_fall_over_bfd": False,
-                    "nbr_remote_as": 888
+                    }
                   },
                   "21.0.102.1": {
                     "nbr_local_as_replace_as": False,
@@ -12610,9 +12611,11 @@ class test_show_running_config_bgp(unittest.TestCase):
                 "ps_suppress_four_byte_as_capability": False,
                 "ps_local_as_no_prepend": False,
                 "ps_disable_connected_check": False
-                }
+              }
             }
+          }
         }
+      }
     }
 
 
@@ -12671,6 +12674,7 @@ class test_show_running_config_bgp(unittest.TestCase):
               soft-reconfiguration inbound always
           neighbor fec1::2002
             remote-as 888
+            update-source loopback0
             address-family ipv4 unicast
               send-community
               send-community extended
@@ -12843,7 +12847,6 @@ class test_show_running_config_bgp(unittest.TestCase):
         obj = ShowRunningConfigBgp(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
-
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
