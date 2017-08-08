@@ -5232,7 +5232,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         m = p49.match(line)
                         if m:
                             bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_as_no'] = \
-                                str(m.groupdict()['nbr_local_as_as_no'])
+                                int(m.groupdict()['nbr_local_as_as_no'])
                             if 'nbr_local_as_no_prepend' in m.groupdict():
                                 bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_no_prepend'] = \
                                     True
