@@ -11652,7 +11652,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                     "nbr_ebgp_multihop": False,
                     "nbr_suppress_four_byte_as_capability": True,
                     "nbr_fall_over_bfd": True,
-                    "nbr_local_as_as_no": "222"
+                    "nbr_local_as_as_no": 222
                   }
                 },
                 "fast_external_fallover": True,
