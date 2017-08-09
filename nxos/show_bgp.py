@@ -1956,6 +1956,9 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                  Optional('graceful_restart_helper_only'): bool,
                  Optional('graceful_restart_restart_time'): int,
                  Optional('graceful_restart_stalepath_time'): int,
+                 Optional('allow_own_as'): int,
+                 Optional('send_community'): str,
+                 Optional('route_reflector_client'): bool,
                  Optional('bgp_session_transport'):
                     {Optional('connection'): 
                         {Optional('mode'): str,
