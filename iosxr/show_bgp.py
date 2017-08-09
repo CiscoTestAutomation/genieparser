@@ -728,13 +728,14 @@ class ShowBgpInstanceProcessDetailSchema(MetaParser):
                          Optional('as_number'): int,
                          Optional('default_cluster_id'): str,
                          Optional('active_cluster_id'): str,
+                         Optional('cluster_id'): str,
                          Optional('fast_external_fallover'): bool,
                          Optional('platform_rlimit_max'): int,
                          Optional('max_limit_for_bmp_buffer_size'): int,
                          Optional('default_value_for_bmp_buffer_size'): int,
                          Optional('current_limit_for_bmp_buffer_size'): int,
                          Optional('current_utilization_of_bmp_buffer_limit'): int,
-                         Optional('neighbor_logging'): bool,
+                         Optional('log_neighbor_changes'): bool,
                          Optional('enforce_first_as_enabled'): bool,
                          Optional('default_local_preference'): int,
                          Optional('default_keepalive'): int,
@@ -964,14 +965,16 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             # Default Cluster ID: 1.1.1.1
             # Default Cluster ID: 10 (manually configured)
             p6 = re.compile(r'^Default *Cluster *ID: *'
-                             '(?P<cluster_id>[\w\.\:]+) *'
+                             '(?P<default_cluster_id>[\w\.\:]+) *'
                              '(\([\w\s\:\.\,]+\))?$')
             m = p6.match(line)
             if m:
-                cluster_id = m.groupdict()['cluster_id']
+                default_cluster_id = m.groupdict()['default_cluster_id']
 
                 ret_dict['instance'][instance]['vrf'][vrf]\
-                    ['default_cluster_id'] = cluster_id
+                    ['default_cluster_id'] = default_cluster_id
+                ret_dict['instance'][instance]['vrf'][vrf]\
+                    ['cluster_id'] = default_cluster_id
                 continue
 
             # Active Cluster IDs:  1.1.1.1
@@ -982,6 +985,8 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                 active_cluster_id = m.groupdict()['active_cluster_id']
                 ret_dict['instance'][instance]['vrf'][vrf]\
                     ['active_cluster_id'] = active_cluster_id
+                ret_dict['instance'][instance]['vrf'][vrf]\
+                    ['cluster_id'] = active_cluster_id
                 continue
 
             #Fast external fallover enabled
@@ -1055,10 +1060,10 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                 nbr_logging = m.groupdict()['nbr_logging']
                 if nbr_logging == 'enabled':
                     ret_dict['instance'][instance]['vrf'][vrf]\
-                        ['neighbor_logging'] = True
+                        ['log_neighbor_changes'] = True
                 else:
                     ret_dict['instance'][instance]['vrf'][vrf]\
-                        ['neighbor_logging'] = False
+                        ['log_neighbor_changes'] = False
                 continue
 
             #Enforce first AS enabled
@@ -1949,7 +1954,7 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                          Optional('prefix_advertised'): int,
                                          Optional('prefix_suppressed'): int,
                                          Optional('prefix_withdrawn'): int,
-                                         Optional('maximum_prefixes_allowed'): int,
+                                         Optional('maximum_prefix_max_prefix_no'): int,
                                          Optional('maximum_prefix_threshold'): str,
                                          Optional('maximum_prefix_restart'): int,
                                          Optional('maximum_prefix_warning_only'): bool,
@@ -2597,16 +2602,12 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
 
             # Maximum prefixes allowed 1048576
-            p45 = re.compile(r'^Maximum *prefixes *allowed *(?P<maximum_prefixes_allowed>[0-9]+)$')
+            p45 = re.compile(r'^Maximum *prefixes *allowed *(?P<maximum_prefix_max_prefix_no>[0-9]+)$')
             m = p45.match(line)
             if m:
-                maximum_prefixes_allowed = int(m.groupdict()['maximum_prefixes_allowed'])
+                maximum_prefix_max_prefix_no = int(m.groupdict()['maximum_prefix_max_prefix_no'])
 
-                # TODO if has output -- maximum_prefix_threshold
-                # TODO if has output -- maximum_prefix_restart
-                # TODO if has output -- maximum_prefix_warning_only
-
-                sub_dict['address_family'][address_family]['maximum_prefixes_allowed'] = maximum_prefixes_allowed
+                sub_dict['address_family'][address_family]['maximum_prefix_max_prefix_no'] = maximum_prefix_max_prefix_no
                 continue
 
             # Threshold for warning message 75%, restart interval 0 min
@@ -2914,20 +2915,20 @@ class ShowBgpInstanceNeighborsReceivedRoutesSchema(MetaParser):
                         {Any():
                             {Optional('address_family'):
                                 {Any():
-                                    {'router_identifier': str,
+                                    {Optional('router_identifier'): str,
                                      Optional('route_distinguisher'): str,
-                                     'local_as': int,
+                                     Optional('local_as'): int,
                                      Optional('state'): str,
                                      Optional('vrf_id'): str,
                                      Optional('generic_scan_interval'): int,
-                                     'non_stop_routing': bool,
-                                     'table_state': str,
-                                     'table_id': str,
-                                     'rd_version': int,
-                                     'tbl_ver': int,
-                                     'nsr_initial_initsync_version': str,
+                                     Optional('non_stop_routing'): bool,
+                                     Optional('table_state'): str,
+                                     Optional('table_id'): str,
+                                     Optional('rd_version'): int,
+                                     Optional('tbl_ver'): int,
+                                     Optional('nsr_initial_initsync_version'): str,
                                      Optional('nsr_initial_init_ver_status'): str,
-                                     'nsr_issu_sync_group_versions': str,
+                                     Optional('nsr_issu_sync_group_versions'): str,
                                      Optional('processed_prefixes'): int,
                                      Optional('processed_paths'): int,
                                      Optional('scan_interval'): int,
@@ -3370,7 +3371,7 @@ class ShowBgpInstanceNeighborsAdvertisedRoutesSchema(MetaParser):
                         {Any():
                             {Optional('address_family'):
                                 {Any():
-                                    {'route_distinguisher': str,
+                                    {Optional('route_distinguisher'): str,
                                      Optional('default_vrf'): str,
                                      Optional('processed_prefixes'): str,
                                      Optional('processed_paths'): str,
@@ -3917,7 +3918,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
             # Neighbor        Spk    AS msg_rcvd msg_sent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
             # 10.1.5.5          0   200      60      62       63    0    0 00:57:32          0
             # 2.2.2.2           0   100       0       0        0    0    0 00:00:00 Idle
-            p17 = re.compile(r'^\s*(?P<neighbor>[0-9\.]+) *(?P<spk>[0-9]+)'
+            p17 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+) *(?P<spk>[0-9]+)'
                               ' *(?P<remote_as>[0-9]+) *(?P<msg_rcvd>[0-9]+)'
                               ' *(?P<msg_sent>[0-9]+)'
                               ' *(?P<tbl_ver>[0-9]+) *(?P<input_queue>[0-9]+)'
