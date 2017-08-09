@@ -11605,6 +11605,211 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                               19.0.103.2            555        200          0 3 10 20 30 40 50 60 70 80 90 i
         '''}
 
+    golden_parsed_output3 = {
+        'vrf': 
+            {'default': 
+                {'neighbor': 
+                    {'10.4.6.6': 
+                        {'address_family': 
+                            {'ipv4 unicast': 
+                                {'advertised': 
+                                    {'15.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'metric': 2219,
+                                                'next_hop': '1.1.1.1',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'path_type': 'i',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '15.1.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'metric': 2219,
+                                                'next_hop': '1.1.1.1',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'path_type': 'i',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '15.1.3.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'metric': 2219,
+                                                'next_hop': '1.1.1.1',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'path_type': 'i',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '15.1.4.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'metric': 2219,
+                                                'next_hop': '1.1.1.1',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'path_type': 'i',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '15.1.5.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'metric': 2219,
+                                                'next_hop': '1.1.1.1',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'path_type': 'i',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '46.2.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': 100,
+                                                'next_hop': '20.4.6.6',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '{47751}',
+                                                'path_type': 'e',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '46.2.3.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': 100,
+                                                'next_hop': '20.4.6.6',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '{47751}',
+                                                'path_type': 'e',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '46.2.4.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': 100,
+                                                'next_hop': '20.4.6.6',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '{47751}',
+                                                'path_type': 'e',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '46.2.5.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': 100,
+                                                'next_hop': '20.4.6.6',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '{47751}',
+                                                'path_type': 'e',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '46.2.6.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': 100,
+                                                'next_hop': '20.4.6.6',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '{47751}',
+                                                'path_type': 'e',
+                                                'status_codes': '*>',
+                                                'weight': 0}}}},
+                                'bgp_table_version': 648438,
+                                'local_router_id': '44.44.44.44'},
+                            'ipv6 unicast': 
+                                {'advertised': {},
+                                'bgp_table_version': 256028,
+                                'local_router_id': '44.44.44.44'}}}}}}}
+
+    golden_output3 = {'execute.return_value': '''\
+        R4# show bgp vrf VRF1 all neighbors 10.4.6.6 advertised-routes
+
+        Peer 10.4.6.6 routes for address family IPv4 Unicast:
+        BGP table version is 648438, local router ID is 44.44.44.44
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        *>i15.1.1.0/24        1.1.1.1               2219        100          0 200 33299 51178 47751 {27016} e
+        *>i15.1.2.0/24        1.1.1.1               2219        100          0 200 33299 51178 47751 {27016} e
+        *>i15.1.3.0/24        1.1.1.1               2219        100          0 200 33299 51178 47751 {27016} e
+        *>i15.1.4.0/24        1.1.1.1               2219        100          0 200 33299 51178 47751 {27016} e
+        *>i15.1.5.0/24        1.1.1.1               2219        100          0 200 33299 51178 47751 {27016} e
+        *>e46.2.2.0/24        20.4.6.6               100                     0 400 33299 51178 {47751} e
+        *>e46.2.3.0/24        20.4.6.6               100                     0 400 33299 51178 {47751} e
+        *>e46.2.4.0/24        20.4.6.6               100                     0 400 33299 51178 {47751} e
+        *>e46.2.5.0/24        20.4.6.6               100                     0 400 33299 51178 {47751} e
+        *>e46.2.6.0/24        20.4.6.6               100                     0 400 33299 51178 {47751} e
+
+        Peer 10.4.6.6 routes for address family IPv4 Multicast:
+
+        Peer 10.4.6.6 routes for address family IPv6 Unicast:
+        BGP table version is 256028, local router ID is 44.44.44.44
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+
+        Peer 10.4.6.6 routes for address family IPv6 Multicast:
+
+        Peer 10.4.6.6 routes for address family VPNv4 Unicast:
+
+        Peer 10.4.6.6 routes for address family VPNv6 Unicast:
+
+        Peer 10.4.6.6 routes for address family IPv4 MDT:
+
+        Peer 10.4.6.6 routes for address family IPv6 Label Unicast:
+
+        Peer 10.4.6.6 routes for address family L2VPN VPLS:
+
+        Peer 10.4.6.6 routes for address family IPv4 MVPN:
+
+        Peer 10.4.6.6 routes for address family IPv6 MVPN:
+
+        Peer 10.4.6.6 routes for address family IPv4 Label Unicast:
+        '''}
+
     def test_show_bgp_vrf_all_neighbors_advertised_routes_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -11619,11 +11824,18 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
         parsed_output = obj.parse(vrf='default', neighbor='19.0.102.3')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
+    def test_show_bgp_vrf_all_neighbors_advertised_routes_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowBgpVrfAllNeighborsAdvertisedRoutes(device=self.device)
+        parsed_output = obj.parse(vrf='default', neighbor='10.4.6.6')
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
+
     def test_show_bgp_vrf_all_neighbors_advertised_routes_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpVrfAllNeighborsAdvertisedRoutes(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf='all', neighbor='21.0.0.2')
+            parsed_output = obj.parse(vrf='all', neighbor='10.4.6.6')
 
 # ===============================================================
 # Unit test for 'show bgp vrf <WORD> all neighbors <WORD> routes'
@@ -12246,6 +12458,136 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                               19.0.101.1            4444        100          0 3 10 20 30 40 50 60 70 80 90 i
         '''}
 
+    golden_parsed_output3 = {
+        'vrf': 
+            {'default': 
+                {'neighbor': 
+                    {'10.4.6.6': 
+                        {'address_family': 
+                            {'ipv4 unicast': 
+                                {'bgp_table_version': 773961,
+                                'local_router_id': '44.44.44.44',
+                                'routes': 
+                                    {'46.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': 2219,
+                                                'next_hop': '10.4.6.6',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'path_type': 'e',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '46.1.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': 2219,
+                                                'next_hop': '10.4.6.6',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'path_type': 'e',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '46.1.3.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': 2219,
+                                                'next_hop': '10.4.6.6',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'path_type': 'e',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '46.1.4.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': 2219,
+                                                'next_hop': '10.4.6.6',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'path_type': 'e',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '46.1.5.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': 2219,
+                                                'next_hop': '10.4.6.6',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'path_type': 'e',
+                                                'status_codes': '*>',
+                                                'weight': 0}}}}},
+                            'ipv6 unicast': 
+                                {'bgp_table_version': 256033,
+                                'local_router_id': '44.44.44.44',
+                                'routes': {}}}}}}}}
+
+    golden_output3 = {'execute.return_value': '''
+        R4# show bgp vrf VRF1 all neighbors 10.4.6.6 routes 
+
+        Peer 10.4.6.6 routes for address family IPv4 Unicast:
+        BGP table version is 773961, local router ID is 44.44.44.44
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        *>e46.1.1.0/24        10.4.6.6              2219                     0 300 33299 51178 47751 {27016} e
+        *>e46.1.2.0/24        10.4.6.6              2219                     0 300 33299 51178 47751 {27016} e
+        *>e46.1.3.0/24        10.4.6.6              2219                     0 300 33299 51178 47751 {27016} e
+        *>e46.1.4.0/24        10.4.6.6              2219                     0 300 33299 51178 47751 {27016} e
+        *>e46.1.5.0/24        10.4.6.6              2219                     0 300 33299 51178 47751 {27016} e
+
+        Peer 10.4.6.6 routes for address family IPv4 Multicast:
+
+        Peer 10.4.6.6 routes for address family IPv6 Unicast:
+        BGP table version is 256033, local router ID is 44.44.44.44
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+
+        Peer 10.4.6.6 routes for address family IPv6 Multicast:
+
+        Peer 10.4.6.6 routes for address family VPNv4 Unicast:
+
+        Peer 10.4.6.6 routes for address family VPNv6 Unicast:
+
+        Peer 10.4.6.6 routes for address family IPv4 MDT:
+
+        Peer 10.4.6.6 routes for address family IPv6 Label Unicast:
+
+        Peer 10.4.6.6 routes for address family L2VPN VPLS:
+
+        Peer 10.4.6.6 routes for address family IPv4 MVPN:
+
+        Peer 10.4.6.6 routes for address family IPv6 MVPN:
+
+        Peer 10.4.6.6 routes for address family IPv4 Label Unicast:
+        '''}
+
     def test_show_bgp_vrf_all_neighbors_routes_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -12259,6 +12601,13 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
         obj = ShowBgpVrfAllNeighborsRoutes(device=self.device)
         parsed_output = obj.parse(vrf='default', neighbor='19.0.101.1')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+    def test_show_bgp_vrf_all_neighbors_routes_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowBgpVrfAllNeighborsRoutes(device=self.device)
+        parsed_output = obj.parse(vrf='default', neighbor='10.4.6.6')
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
 
     def test_show_bgp_vrf_all_neighbors_routes_empty(self):
         self.device = Mock(**self.empty_output)
