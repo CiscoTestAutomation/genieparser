@@ -4602,7 +4602,7 @@ class ShowRunningConfigBgpSchema(MetaParser):
                                          Optional('nbr_ebgp_multihop'): bool,
                                          Optional('nbr_ebgp_multihop_max_hop'): int,
                                          Optional('nbr_inherit_peer_session'): str,
-                                         Optional('nbr_local_as_as_no'): str,
+                                         Optional('nbr_local_as_as_no'): int,
                                          Optional('nbr_local_as_no_prepend'): bool,
                                          Optional('nbr_local_as_replace_as'): bool,
                                          Optional('nbr_local_as_dual_as'): bool,
@@ -5237,7 +5237,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         m = p49.match(line)
                         if m:
                             bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_as_no'] = \
-                                str(m.groupdict()['nbr_local_as_as_no'])
+                                int(m.groupdict()['nbr_local_as_as_no'])
                             if 'nbr_local_as_no_prepend' in m.groupdict():
                                 bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_local_as_no_prepend'] = \
                                     True
