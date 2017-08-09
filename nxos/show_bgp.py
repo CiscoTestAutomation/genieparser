@@ -3443,7 +3443,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
 
             # BGP table version is 25, Local Router ID is 21.0.101.1
             p2 = re.compile(r'^\s*BGP +table +version +is'
-                             ' +(?P<bgp_table_version>[0-9]+), +Local +Router'
+                             ' +(?P<bgp_table_version>[0-9]+), +[Ll]ocal +[Rr]outer'
                              ' +ID +is +(?P<local_router_id>(\S+))$')
             m = p2.match(line)
             if m:
@@ -3819,7 +3819,7 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
 
             # BGP table version is 25, Local Router ID is 21.0.101.1
             p2 = re.compile(r'^\s*BGP +table +version +is'
-                             ' +(?P<bgp_table_version>[0-9]+), +Local +Router'
+                             ' +(?P<bgp_table_version>[0-9]+), +[Ll]ocal +[Rr]outer'
                              ' +ID +is +(?P<local_router_id>(\S+))$')
             m = p2.match(line)
             if m:
@@ -4195,7 +4195,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
 
             # BGP table version is 25, Local Router ID is 21.0.101.1
             p2 = re.compile(r'^\s*BGP +table +version +is'
-                             ' +(?P<bgp_table_version>[0-9]+), +Local +Router'
+                             ' +(?P<bgp_table_version>[0-9]+), +[Ll]ocal +[Rr]outer'
                              ' +ID +is +(?P<local_router_id>(\S+))$')
             m = p2.match(line)
             if m:
