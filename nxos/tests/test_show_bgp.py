@@ -5965,6 +5965,8 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True,
                         'soft_configuration': True}},
                 'bfd_live_detection': True,
+                'bfd_enabled': True,
+                'bfd_state': 'up',
                 'bgp_negotiated_keepalive_timers':
                     {'hold_time': 45,
                     'keepalive_interval': 15,
@@ -6108,7 +6110,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
           BGP state = Shut (Admin), down for 02:20:09
           Using loopback0 as update source for this peer
           Connected check is disabled
-          BFD live-detection is configured
+          BFD live-detection is configured and enabled, state is Up
           External BGP peer might be upto 255 hops away
           TCP MD5 authentication is enabled
           Only passive connection setup allowed
