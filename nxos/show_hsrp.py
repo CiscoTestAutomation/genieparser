@@ -187,37 +187,41 @@ class ShowHsrpAllSchema(MetaParser):
                         {Any():
                             {'interface':
                                 {Any():
-                                    {'address_family': str,
-                                     'version': int,
-                                     Optional('local_state'): str,
-                                     Optional('priority'): int,
-                                     Optional('configured_priority'): int,
-                                     Optional('preempt'): bool,
-                                     Optional('preempt_reload_delay'): int,
-                                     Optional('preempt_min_delay'): int,
-                                     Optional('preempt_sync_delay'): int,
-                                     'upper_fwd_threshold': int,
-                                     'lower_fwd_threshold': int,
-                                     'hellotime': int,
-                                     'holdtime': int,
-                                     Optional('virtual_ip_address'): str,
-                                     'active_router': str,
-                                     'standby_router': str,
-                                     'virtual_mac_addr': str,
-                                     Optional('authentication_text'): str,
-                                     'num_state_changes': int,
-                                     'last_state_change': str,
-                                     'ip_redundancy_name': str,
-                                     Optional('active_priority'): int,
-                                     Optional('standby_priority'): int,
-                                     Optional('active_expire'): float,
-                                     Optional('standby_expire'): float,
-                                    },
-                                 },
-                             },
-                         },
-                     },
-             }
+                                    {'address_family':
+                                        {Any():
+                                            {'version': int,
+                                             Optional('local_state'): str,
+                                             Optional('priority'): int,
+                                             Optional('configured_priority'): int,
+                                             Optional('preempt'): bool,
+                                             Optional('preempt_reload_delay'): int,
+                                             Optional('preempt_min_delay'): int,
+                                             Optional('preempt_sync_delay'): int,
+                                             'upper_fwd_threshold': int,
+                                             'lower_fwd_threshold': int,
+                                             'hellotime': int,
+                                             'holdtime': int,
+                                             Optional('virtual_ip_address'): str,
+                                             'active_router': str,
+                                             'standby_router': str,
+                                             'virtual_mac_addr': str,
+                                             Optional('authentication_text'): str,
+                                             'num_state_changes': int,
+                                             'last_state_change': str,
+                                             'ip_redundancy_name': str,
+                                             Optional('active_priority'): int,
+                                             Optional('standby_priority'): int,
+                                             Optional('active_expire'): float,
+                                             Optional('standby_expire'): float,
+                                             Optional('secondary_vips'): str,
+                                            }
+                                        },
+                                    }
+                                },
+                            },
+                        },
+                    }
+                }
 
 class ShowHsrpAll(ShowHsrpAllSchema):
 
@@ -227,6 +231,7 @@ class ShowHsrpAll(ShowHsrpAllSchema):
         
         # Init vars
         hsrp_all_dict = {}
+        secondary_vip_exists = False
         
         for line in out.splitlines():
             line = line.rstrip()
@@ -252,10 +257,26 @@ class ShowHsrpAll(ShowHsrpAllSchema):
                         [group]['interface']:
                     hsrp_all_dict['hsrp_all']['group'][group]\
                         ['interface'][interface] = {}
+
+                if 'address_family' not in hsrp_all_dict['hsrp_all']\
+                    ['group'][group]['interface'][interface]:
+                    hsrp_all_dict['hsrp_all']['group'][group]['interface']\
+                        [interface]['address_family'] = {}
+
+                af = m.groupdict()['af'].lower()
+
+                if af not in hsrp_all_dict['hsrp_all']\
+                    ['group'][group]['interface'][interface]['address_family']:
+                    hsrp_all_dict['hsrp_all']['group'][group]\
+                        ['interface'][interface]['address_family'][af] = {}
+
                     intf_key = hsrp_all_dict['hsrp_all']['group'][group]\
-                        ['interface'][interface]
-                    intf_key['address_family'] = m.groupdict()['af'].lower()
+                        ['interface'][interface]['address_family'][af]
+
                     intf_key['version'] = int(m.groupdict()['version'])
+
+                    # reset secondary flag
+                    secondary_vip_exists = False
                     continue
 
             # Local state is Initial(Interface Down), priority 110 \
@@ -314,7 +335,7 @@ class ShowHsrpAll(ShowHsrpAllSchema):
 
             # Virtual IP address is 192.168.1.254 (Cfged)
             p6 = re.compile(r'\s*Virtual +IP +address +is'
-                             ' +(?P<virtual_ip_address>[0-9\.]+) +\(Cfged\)$')
+                             ' +(?P<virtual_ip_address>[\w\:\.]+) +\([\w]+\)$')
             m = p6.match(line)
             if m:
                 intf_key['virtual_ip_address'] = \
@@ -414,6 +435,21 @@ class ShowHsrpAll(ShowHsrpAllSchema):
             if m:
                 intf_key['ip_redundancy_name'] = \
                     m.groupdict()['ip_redundancy_name']
+                continue
+
+            # Secondary VIP(s):
+            p12 = re.compile(r'\s*Secondary +VIP\(s\):$')
+            m = p12.match(line)
+            if m:
+                secondary_vip_exists = True
+                continue
+
+            # 192:168::1
+            p13 = re.compile(r'\s*(?P<secondary_vips>[\w\:]+)+$')
+            m = p13.match(line)
+            if m and secondary_vip_exists:
+                intf_key['secondary_vips'] = \
+                    m.groupdict()['secondary_vips']
                 continue
 
         return hsrp_all_dict
