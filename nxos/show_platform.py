@@ -89,7 +89,6 @@ class ShowVersion(ShowVersionSchema):
 
         result = pgfill.parse()
         out = pg.ext_dictio[self.device.name]
-        import pdb;pdb.set_trace()
         version_dict = {}
 
         if 'platform' not in version_dict:
@@ -256,11 +255,11 @@ class ShowInventory(ShowInventorySchema):
 
 class ShowInstallActiveSchema(MetaParser):
     schema = {'boot_images':
-                {'kickstart_image': str,
-                 'system_image': str},
+                {Optional('kickstart_image'): str,
+                 Optional('system_image'): str},
               'active_packages':
                 {Any():
-                  {'active_package_name': str}
+                  {Optional('active_package_name'): str}
                 },
               }
 
