@@ -4043,82 +4043,101 @@ class test_show_bgp_instance_all_vrf_all_neighbors_advertised_routes(unittest.Te
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output =  {'instance': {'default': {'vrf': {'VRF1': {},
-                                  'VRF2': {'address_family': {'vpnv4 unicast RD 200:2': {'advertised': {'prefix': {'46.1.1.0/24': {'index': {1: {'froms': '2.2.2.2',
-                                                                                                                                                'next_hop': '20.1.5.1',
-                                                                                                                                                'origin_code': 'e',
-                                                                                                                                                'path': '100 '
-                                                                                                                                                        '300 '
-                                                                                                                                                        '33299 '
-                                                                                                                                                        '51178 '
-                                                                                                                                                        '47751 '
-                                                                                                                                                        '{27016}'}}},
-                                                                                                                  '46.1.4.0/24': {'index': {1: {'froms': '2.2.2.2',
-                                                                                                                                                'next_hop': '20.1.5.1',
-                                                                                                                                                'origin_code': 'e',
-                                                                                                                                                'path': '100 '
-                                                                                                                                                        '300 '
-                                                                                                                                                        '33299 '
-                                                                                                                                                        '51178 '
-                                                                                                                                                        '47751 '
-                                                                                                                                                        '{27016}'}}},
-                                                                                                                  '46.1.5.0/24': {'index': {1: {'froms': '2.2.2.2',
-                                                                                                                                                'next_hop': '20.1.5.1',
-                                                                                                                                                'origin_code': 'e',
-                                                                                                                                                'path': '100 '
-                                                                                                                                                        '300 '
-                                                                                                                                                        '33299 '
-                                                                                                                                                        '51178 '
-                                                                                                                                                        '47751 '
-                                                                                                                                                        '{27016}'}}},
-                                                                                                                  '46.2.2.0/24': {'index': {1: {'froms': '2.2.2.2',
-                                                                                                                                                'next_hop': '20.1.5.1',
-                                                                                                                                                'origin_code': 'e',
-                                                                                                                                                'path': '100 '
-                                                                                                                                                        '400 '
-                                                                                                                                                        '33299 '
-                                                                                                                                                        '51178 '
-                                                                                                                                                        '47751 '
-                                                                                                                                                        '{27016}'}}}}},
-                                                                                        'default_vrf': 'VRF2',
-                                                                                        'processed_paths': '4',
-                                                                                        'processed_prefixes': '4',
-                                                                                        'route_distinguisher': '200:2'}}}}}}}
+    golden_parsed_output =  {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'VRF1': {},
+                    'VRF2': 
+                        {'address_family': 
+                            {'vpnv4 unicast RD 200:2': 
+                                {'advertised': 
+                                    {'46.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'froms': '2.2.2.2',
+                                                'next_hop': '20.1.5.1',
+                                                'origin_code': 'e',
+                                                'path': '100 '
+                                                        '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}'}}},
+                                    '46.1.4.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'froms': '2.2.2.2',
+                                                'next_hop': '20.1.5.1',
+                                                'origin_code': 'e',
+                                                'path': '100 '
+                                                        '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}'}}},
+                                    '46.1.5.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'froms': '2.2.2.2',
+                                                'next_hop': '20.1.5.1',
+                                                'origin_code': 'e',
+                                                'path': '100 '
+                                                        '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}'}}},
+                                    '46.2.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'froms': '2.2.2.2',
+                                                'next_hop': '20.1.5.1',
+                                                'origin_code': 'e',
+                                                'path': '100 '
+                                                        '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}'}}}},
+                                'default_vrf': 'VRF2',
+                                'processed_paths': '4',
+                                'processed_prefixes': '4',
+                                'route_distinguisher': '200:2'}}}}}}}
 
     golden_output = {'execute.return_value': '''
 
-     Neighbor not found
+        Neighbor not found
 
-    BGP instance 0: 'default'
-    =========================
+        BGP instance 0: 'default'
+        =========================
 
-    VRF: VRF1
-    ---------
+        VRF: VRF1
+        ---------
 
-    VRF: VRF2
-    ---------
-    Network            Next Hop        From            AS Path
-    Route Distinguisher: 200:2 (default for vrf VRF2)
-    46.1.1.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
-    46.1.4.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
-    46.1.5.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
-    46.2.2.0/24        20.1.5.1        2.2.2.2         100 400 33299 51178 47751 {27016}e
+        VRF: VRF2
+        ---------
+        Network            Next Hop        From            AS Path
+        Route Distinguisher: 200:2 (default for vrf VRF2)
+        46.1.1.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
+        46.1.4.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
+        46.1.5.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
+        46.2.2.0/24        20.1.5.1        2.2.2.2         100 400 33299 51178 47751 {27016}e
 
-    Processed 4 prefixes, 4 paths
-
+        Processed 4 prefixes, 4 paths
         '''}
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
-        bgp_instance_all_vrf_all_neighbors_advertised_routes_obj = ShowBgpInstanceNeighborsAdvertisedRoutes(device=self.device1)
+        obj = ShowBgpInstanceNeighborsAdvertisedRoutes(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = bgp_instance_all_vrf_all_neighbors_advertised_routes_obj.parse(neighbor='20.1.5.5', vrf='vrf')
+            parsed_output = obj.parse(vrf_type='vrf', neighbor='20.1.5.5')
 
     def test_golden(self):
-        self.device = Mock(**self.golden_output)
-        bgp_instance_all_vrf_all_neighbors_advertised_routes_obj = ShowBgpInstanceNeighborsAdvertisedRoutes(device=self.device)
-        parsed_output = bgp_instance_all_vrf_all_neighbors_advertised_routes_obj.parse(neighbor='20.1.5.5', vrf='vrf')
         self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpInstanceNeighborsAdvertisedRoutes(device=self.device)
+        parsed_output = obj.parse(vrf_type='vrf', neighbor='20.1.5.5')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -4131,50 +4150,73 @@ class test_show_bgp_instance_all_all_all_neighbors_advertised_routes(unittest.Te
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output =  {'instance': {'default': {'vrf': {'default': {'address_family': {'vpnv4 unicast RD 200:2': {'advertised': {'prefix': {'15.1.1.0/24': {'index': {1: {'froms': '20.1.5.5',
-                                                                                                                                                    'next_hop': '1.1.1.1',
-                                                                                                                                                    'origin_code': 'e',
-                                                                                                                                                    'path': '200 '
-                                                                                                                                                            '33299 '
-                                                                                                                                                            '51178 '
-                                                                                                                                                            '47751 '
-                                                                                                                                                            '{27016}'}}},
-                                                                                                                      '15.1.2.0/24': {'index': {1: {'froms': '20.1.5.5',
-                                                                                                                                                    'next_hop': '1.1.1.1',
-                                                                                                                                                    'origin_code': 'e',
-                                                                                                                                                    'path': '200 '
-                                                                                                                                                            '33299 '
-                                                                                                                                                            '51178 '
-                                                                                                                                                            '47751 '
-                                                                                                                                                            '{27016}'}}}}},
-                                                                                            'default_vrf': 'default',
-                                                                                            'processed_paths': '2',
-                                                                                            'processed_prefixes': '2',
-                                                                                            'route_distinguisher': '200:2'},
-                                                                 'vpnv6 unicast RD 200:2': {'advertised': {'prefix': {'615:11:11:1::/64': {'index': {1: {'froms': '2001:db8:20:1:5::5',
-                                                                                                                                                         'next_hop': '1.1.1.1',
-                                                                                                                                                         'origin_code': 'e',
-                                                                                                                                                         'path': '200 '
-                                                                                                                                                                 '33299 '
-                                                                                                                                                                 '51178 '
-                                                                                                                                                                 '47751 '
-                                                                                                                                                                 '{27016}'}}},
-                                                                                                                      '615:11:11::/64': {'index': {1: {'froms': '2001:db8:20:1:5::5',
-                                                                                                                                                       'next_hop': '1.1.1.1',
-                                                                                                                                                       'origin_code': 'e',
-                                                                                                                                                       'path': '200 '
-                                                                                                                                                               '33299 '
-                                                                                                                                                               '51178 '
-                                                                                                                                                               '47751 '
-                                                                                                                                                               '{27017}'}}}}},
-                                                                                            'default_vrf': 'default',
-                                                                                            'processed_paths': '2',
-                                                                                            'processed_prefixes': '2',
-                                                                                            'route_distinguisher': '200:2'}}}}}}}
+    
+    golden_parsed_output =  {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'default': 
+                        {'address_family': 
+                            {'vpnv4 unicast RD 200:2': 
+                                {'advertised': 
+                                    {'15.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'froms': '20.1.5.5',
+                                                'next_hop': '1.1.1.1',
+                                                'origin_code': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}'}}},
+                                    '15.1.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'froms': '20.1.5.5',
+                                                'next_hop': '1.1.1.1',
+                                                'origin_code': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}'}}}},
+                                'default_vrf': 'default',
+                                'processed_paths': '2',
+                                'processed_prefixes': '2',
+                                'route_distinguisher': '200:2'},
+                            'vpnv6 unicast RD 200:2': 
+                                {'advertised': 
+                                    {'615:11:11:1::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'froms': '2001:db8:20:1:5::5',
+                                                'next_hop': '1.1.1.1',
+                                                'origin_code': 'e',
+                                                'path': '200 '
+                                                '33299 '
+                                                '51178 '
+                                                '47751 '
+                                                '{27016}'}}},
+                                    '615:11:11::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'froms': '2001:db8:20:1:5::5',
+                                                'next_hop': '1.1.1.1',
+                                                'origin_code': 'e',
+                                                'path': '200 '
+                                                '33299 '
+                                                '51178 '
+                                                '47751 '
+                                                '{27017}'}}}},
+                                'default_vrf': 'default',
+                                'processed_paths': '2',
+                                'processed_prefixes': '2',
+                                'route_distinguisher': '200:2'}}}}}}}
 
     golden_output = {'execute.return_value': '''
 
-         BGP instance 0: 'default'
+        BGP instance 0: 'default'
         =========================
 
         Address Family: VPNv4 Unicast
@@ -4204,13 +4246,13 @@ class test_show_bgp_instance_all_all_all_neighbors_advertised_routes(unittest.Te
         self.device1 = Mock(**self.empty_output)
         obj = ShowBgpInstanceNeighborsAdvertisedRoutes(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(neighbor='3.3.3.3', vrf='all')
+            parsed_output = obj.parse(vrf_type='all', neighbor='3.3.3.3')
 
     def test_golden(self):
+        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpInstanceNeighborsAdvertisedRoutes(device=self.device)
-        parsed_output = obj.parse(neighbor='3.3.3.3', vrf='all')
-        self.maxDiff = None
+        parsed_output = obj.parse(vrf_type='all', neighbor='3.3.3.3')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -4219,48 +4261,63 @@ class test_show_bgp_instance_all_all_all_neighbors_advertised_routes(unittest.Te
 # ==============================================================================
 
 class test_show_bgp_instance_all_vrf_all_neighbors_received_routes(unittest.TestCase):
+    
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output =  {'instance': {'default': {'vrf': {'VRF2': {'address_family': {'vpnv4 unicast RD 200:2': {'local_as': 100,
-                                                                                         'non_stop_routing': True,
-                                                                                         'nsr_initial_init_ver_status': 'reached',
-                                                                                         'nsr_initial_initsync_version': '11',
-                                                                                         'nsr_issu_sync_group_versions': '0/0',
-                                                                                         'processed_paths': 2,
-                                                                                         'processed_prefixes': 2,
-                                                                                         'rd_version': 63,
-                                                                                         'received': {'prefix': {'15.1.1.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                               'next_hop': '20.1.5.5',
-                                                                                                                                               'origin_codes': 'e',
-                                                                                                                                               'path': '200 '
-                                                                                                                                                       '33299 '
-                                                                                                                                                       '51178 '
-                                                                                                                                                       '47751 '
-                                                                                                                                                       '{27016}',
-                                                                                                                                               'status_codes': '*',
-                                                                                                                                               'weight': '0'}}},
-                                                                                                                 '15.1.2.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                               'next_hop': '20.1.5.5',
-                                                                                                                                               'origin_codes': 'e',
-                                                                                                                                               'path': '200 '
-                                                                                                                                                       '33299 '
-                                                                                                                                                       '51178 '
-                                                                                                                                                       '47751 '
-                                                                                                                                                       '{27016}',
-                                                                                                                                               'status_codes': '*',
-                                                                                                                                               'weight': '0'}}}}},
-                                                                                         'route_distinguisher': '200:2',
-                                                                                         'router_identifier': '11.11.11.11',
-                                                                                         'state': 'active',
-                                                                                         'table_id': '0xe0000011',
-                                                                                         'table_state': 'active',
-                                                                                         'tbl_ver': 63,
-                                                                                         'vrf_id': '0x60000002'}}}}}}}
 
+    golden_parsed_output = {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'VRF2': 
+                        {'address_family': 
+                            {'vpnv4 unicast RD 200:2': 
+                                {'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': '11',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'processed_paths': 2,
+                                'processed_prefixes': 2,
+                                'rd_version': 63,
+                                'received': 
+                                    {'15.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*',
+                                                'weight': '0'}}},
+                                    '15.1.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*',
+                                                'weight': '0'}}}},
+                                'route_distinguisher': '200:2',
+                                'router_identifier': '11.11.11.11',
+                                'state': 'active',
+                                'table_id': '0xe0000011',
+                                'table_state': 'active',
+                                'routing_table_version': 63,
+                                'vrf_id': '0x60000002'}}}}}}}
   
     golden_output = {'execute.return_value': '''
-        Wed Jun 28 19:20:50.783 UTC
+
         % Neighbor not found
 
         BGP instance 0: 'default'
@@ -4297,13 +4354,13 @@ class test_show_bgp_instance_all_vrf_all_neighbors_received_routes(unittest.Test
         self.device1 = Mock(**self.empty_output)
         obj = ShowBgpInstanceNeighborsReceivedRoutes(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf='vrf',neighbor='20.1.5.5')
+            parsed_output = obj.parse(vrf_type='vrf', neighbor='20.1.5.5')
 
     def test_golden(self):
+        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpInstanceNeighborsReceivedRoutes(device=self.device)
-        parsed_output = obj.parse(vrf='vrf',neighbor='20.1.5.5')
-        self.maxDiff = None
+        parsed_output = obj.parse(vrf_type='vrf', neighbor='20.1.5.5')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -4312,129 +4369,161 @@ class test_show_bgp_instance_all_vrf_all_neighbors_received_routes(unittest.Test
 # ==============================================================================
 
 class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.TestCase):
+    
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output =  {'instance': {'default': {'vrf': {'default': {'address_family': {'vpnv4 unicast RD 300:1': {'generic_scan_interval': 60,
-                                                                                            'local_as': 100,
-                                                                                            'non_stop_routing': True,
-                                                                                            'nsr_initial_init_ver_status': 'reached',
-                                                                                            'nsr_initial_initsync_version': '11',
-                                                                                            'nsr_issu_sync_group_versions': '0/0',
-                                                                                            'rd_version': 0,
-                                                                                            'received': {'prefix': {'46.1.1.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                                  'metric': '2219',
-                                                                                                                                                  'next_hop': '4.4.4.4',
-                                                                                                                                                  'origin_codes': 'e',
-                                                                                                                                                  'path': '300 '
-                                                                                                                                                          '33299 '
-                                                                                                                                                          '51178 '
-                                                                                                                                                          '47751 '
-                                                                                                                                                          '{27016}',
-                                                                                                                                                  'status_codes': '*i',
-                                                                                                                                                  'weight': '0'}}}}},
-                                                                                            'router_identifier': '1.1.1.1',
-                                                                                            'scan_interval': 60,
-                                                                                            'table_id': '0x0',
-                                                                                            'table_state': 'active',
-                                                                                            'tbl_ver': 43},
-                                                                 'vpnv4 unicast RD 400:1': {'generic_scan_interval': 60,
-                                                                                            'local_as': 100,
-                                                                                            'non_stop_routing': True,
-                                                                                            'nsr_initial_init_ver_status': 'reached',
-                                                                                            'nsr_initial_initsync_version': '11',
-                                                                                            'nsr_issu_sync_group_versions': '0/0',
-                                                                                            'processed_paths': 10,
-                                                                                            'processed_prefixes': 10,
-                                                                                            'rd_version': 0,
-                                                                                            'received': {'prefix': {'46.2.2.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                                  'metric': '2219',
-                                                                                                                                                  'next_hop': '4.4.4.4',
-                                                                                                                                                  'origin_codes': 'e',
-                                                                                                                                                  'path': '400 '
-                                                                                                                                                          '33299 '
-                                                                                                                                                          '51178 '
-                                                                                                                                                          '47751 '
-                                                                                                                                                          '{27016}',
-                                                                                                                                                  'status_codes': '*i',
-                                                                                                                                                  'weight': '0'}}}}},
-                                                                                            'router_identifier': '1.1.1.1',
-                                                                                            'scan_interval': 60,
-                                                                                            'table_id': '0x0',
-                                                                                            'table_state': 'active',
-                                                                                            'tbl_ver': 43},
-                                                                 'vpnv6 unicast RD 300:1': {'generic_scan_interval': 60,
-                                                                                            'local_as': 100,
-                                                                                            'non_stop_routing': True,
-                                                                                            'nsr_initial_init_ver_status': 'reached',
-                                                                                            'nsr_initial_initsync_version': '11',
-                                                                                            'nsr_issu_sync_group_versions': '0/0',
-                                                                                            'rd_version': 0,
-                                                                                            'received': {'prefix': {'646:11:11:4::/64': {'index': {1: {'locprf': '100',
-                                                                                                                                                       'metric': '2219',
-                                                                                                                                                       'next_hop': '4.4.4.4',
-                                                                                                                                                       'origin_codes': 'e',
-                                                                                                                                                       'path': '300 '
-                                                                                                                                                               '33299 '
-                                                                                                                                                               '51178 '
-                                                                                                                                                               '47751 '
-                                                                                                                                                               '{27016}',
-                                                                                                                                                       'status_codes': '*i',
-                                                                                                                                                       'weight': '0'}}},
-                                                                                                                    '646:11:11::/64': {'index': {1: {'locprf': '100',
-                                                                                                                                                     'metric': '2219',
-                                                                                                                                                     'next_hop': '4.4.4.4',
-                                                                                                                                                     'origin_codes': 'e',
-                                                                                                                                                     'path': '300 '
-                                                                                                                                                             '33299 '
-                                                                                                                                                             '51178 '
-                                                                                                                                                             '47751 '
-                                                                                                                                                             '{27016}',
-                                                                                                                                                     'status_codes': '*i',
-                                                                                                                                                     'weight': '0'}}}}},
-                                                                                            'router_identifier': '1.1.1.1',
-                                                                                            'scan_interval': 60,
-                                                                                            'table_id': '0x0',
-                                                                                            'table_state': 'active',
-                                                                                            'tbl_ver': 43},
-                                                                 'vpnv6 unicast RD 400:1': {'generic_scan_interval': 60,
-                                                                                            'local_as': 100,
-                                                                                            'non_stop_routing': True,
-                                                                                            'nsr_initial_init_ver_status': 'reached',
-                                                                                            'nsr_initial_initsync_version': '11',
-                                                                                            'nsr_issu_sync_group_versions': '0/0',
-                                                                                            'processed_paths': 10,
-                                                                                            'processed_prefixes': 10,
-                                                                                            'rd_version': 0,
-                                                                                            'received': {'prefix': {'646:22:22:1::/64': {'index': {1: {'locprf': '100',
-                                                                                                                                                       'metric': '2219',
-                                                                                                                                                       'next_hop': '4.4.4.4',
-                                                                                                                                                       'origin_codes': 'e',
-                                                                                                                                                       'path': '400 '
-                                                                                                                                                               '33299 '
-                                                                                                                                                               '51178 '
-                                                                                                                                                               '47751 '
-                                                                                                                                                               '{27016}',
-                                                                                                                                                       'status_codes': '*i',
-                                                                                                                                                       'weight': '0'}}},
-                                                                                                                    '646:22:22::/64': {'index': {1: {'locprf': '100',
-                                                                                                                                                     'metric': '2219',
-                                                                                                                                                     'next_hop': '4.4.4.4',
-                                                                                                                                                     'origin_codes': 'e',
-                                                                                                                                                     'path': '400 '
-                                                                                                                                                             '33299 '
-                                                                                                                                                             '51178 '
-                                                                                                                                                             '47751 '
-                                                                                                                                                             '{27016}',
-                                                                                                                                                     'status_codes': '*i',
-                                                                                                                                                     'weight': '0'}}}}},
-                                                                                            'router_identifier': '1.1.1.1',
-                                                                                            'scan_interval': 60,
-                                                                                            'table_id': '0x0',
-                                                                                            'table_state': 'active',
-                                                                                            'tbl_ver': 43}}}}}}}
-
-
+    
+    golden_parsed_output = {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'default': 
+                        {'address_family': 
+                            {'vpnv4 unicast RD 300:1': 
+                                {'generic_scan_interval': 60,
+                                'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': '11',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'rd_version': 0,
+                                'received': 
+                                    {'46.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}}},
+                                'router_identifier': '1.1.1.1',
+                                'scan_interval': 60,
+                                'table_id': '0x0',
+                                'table_state': 'active',
+                                'routing_table_version': 43},
+                            'vpnv4 unicast RD 400:1': 
+                                {'generic_scan_interval': 60,
+                                'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': '11',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'processed_paths': 10,
+                                'processed_prefixes': 10,
+                                'rd_version': 0,
+                                'received': 
+                                    {'46.2.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                      '33299 '
+                                                      '51178 '
+                                                      '47751 '
+                                                      '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}}},
+                                'router_identifier': '1.1.1.1',
+                                'scan_interval': 60,
+                                'table_id': '0x0',
+                                'table_state': 'active',
+                                'routing_table_version': 43},
+                            'vpnv6 unicast RD 300:1': 
+                                {'generic_scan_interval': 60,
+                                'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': '11',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'rd_version': 0,
+                                'received': 
+                                    {'646:11:11:4::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                               'status_codes': '*i',
+                                               'weight': '0'}}},
+                                    '646:11:11::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}}},
+                                'router_identifier': '1.1.1.1',
+                                'scan_interval': 60,
+                                'table_id': '0x0',
+                                'table_state': 'active',
+                                'routing_table_version': 43},
+                            'vpnv6 unicast RD 400:1': 
+                                {'generic_scan_interval': 60,
+                                'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': '11',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'processed_paths': 10,
+                                'processed_prefixes': 10,
+                                'rd_version': 0,
+                                'received': 
+                                    {'646:22:22:1::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}},
+                                    '646:22:22::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}}},
+                                'router_identifier': '1.1.1.1',
+                                'scan_interval': 60,
+                                'table_id': '0x0',
+                                'table_state': 'active',
+                                'routing_table_version': 43}}}}}}}
 
     golden_output = {'execute.return_value': '''
         BGP instance 0: 'default'
@@ -4489,21 +4578,19 @@ class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.Test
         * i646:22:22:1::/64   4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
 
         Processed 10 prefixes, 10 paths
-
-
         '''}
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         obj = ShowBgpInstanceNeighborsReceivedRoutes(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf='all',neighbor='20.1.5.5')
+            parsed_output = obj.parse(vrf_type='all', neighbor='20.1.5.5')
 
     def test_golden(self):
+        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpInstanceNeighborsReceivedRoutes(device=self.device)
-        parsed_output = obj.parse(vrf='all',neighbor='20.1.5.5')
-        self.maxDiff = None
+        parsed_output = obj.parse(vrf_type='all', neighbor='20.1.5.5')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -4515,89 +4602,102 @@ class test_show_bgp_instance_all_vrf_all_neighbors_routes(unittest.TestCase):
     
     dev = Device(name='Device')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output = {'instance': {'default': {'vrf': {'VRF2': {'address_family': {'vpnv4 unicast RD 200:2': {'local_as': 100,
-                                                                                        'non_stop_routing': True,
-                                                                                        'nsr_initial_init_ver_status': 'reached',
-                                                                                        'nsr_initial_initsync_version': '11',
-                                                                                        'nsr_issu_sync_group_versions': '0/0',
-                                                                                        'processed_paths': 2,
-                                                                                        'processed_prefixes': 2,
-                                                                                        'rd_version': 63,
-                                                                                        'route_distinguisher': '200:2',
-                                                                                        'router_identifier': '11.11.11.11',
-                                                                                        'routes': {'prefix': {'15.1.1.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                            'next_hop': '20.1.5.5',
-                                                                                                                                            'origin_codes': 'e',
-                                                                                                                                            'path': '200 '
-                                                                                                                                                    '33299 '
-                                                                                                                                                    '51178 '
-                                                                                                                                                    '47751 '
-                                                                                                                                                    '{27016}',
-                                                                                                                                            'status_codes': '*>',
-                                                                                                                                            'weight': '0'}}},
-                                                                                                              '15.1.2.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                            'next_hop': '20.1.5.5',
-                                                                                                                                            'origin_codes': 'e',
-                                                                                                                                            'path': '200 '
-                                                                                                                                                    '33299 '
-                                                                                                                                                    '51178 '
-                                                                                                                                                    '47751 '
-                                                                                                                                                    '{27016}',
-                                                                                                                                            'status_codes': '*>',
-                                                                                                                                            'weight': '0'}}}}},
-                                                                                        'state': 'active',
-                                                                                        'table_id': '0xe0000011',
-                                                                                        'table_state': 'active',
-                                                                                        'tbl_ver': 63,
-                                                                                        'vrf_id': '0x60000002'}}}}}}}
-
+    
+    golden_parsed_output = {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'VRF2': 
+                        {'address_family': 
+                            {'vpnv4 unicast RD 200:2': 
+                                {'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': '11',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'processed_paths': 2,
+                                'processed_prefixes': 2,
+                                'rd_version': 63,
+                                'route_distinguisher': '200:2',
+                                'router_identifier': '11.11.11.11',
+                                'routes':
+                                    {'15.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>',
+                                                'weight': '0'}}},
+                                    '15.1.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>',
+                                                'weight': '0'}}}},
+                                'state': 'active',
+                                'table_id': '0xe0000011',
+                                'table_state': 'active',
+                                'routing_table_version': 63,
+                                'vrf_id': '0x60000002'}}}}}}}
 
     golden_output = {'execute.return_value': '''
     
-     Neighbor not found
+        Neighbor not found
 
-    BGP instance 0: 'default'
-    =========================
+        BGP instance 0: 'default'
+        =========================
 
-    VRF: VRF1
-    ---------
+        VRF: VRF1
+        ---------
 
-    VRF: VRF2
-    ---------
-    BGP VRF VRF2, state: Active
-    BGP Route Distinguisher: 200:2
-    VRF ID: 0x60000002
-    BGP router identifier 11.11.11.11, local AS number 100
-    Non-stop routing is enabled
-    BGP table state: Active
-    Table ID: 0xe0000011   RD version: 63
-    BGP main routing table version 63
-    BGP NSR Initial initsync version 11 (Reached)
-    BGP NSR/ISSU Sync-Group versions 0/0
+        VRF: VRF2
+        ---------
+        BGP VRF VRF2, state: Active
+        BGP Route Distinguisher: 200:2
+        VRF ID: 0x60000002
+        BGP router identifier 11.11.11.11, local AS number 100
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0000011   RD version: 63
+        BGP main routing table version 63
+        BGP NSR Initial initsync version 11 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
 
-    Status codes: s suppressed, d damped, h history, * valid, > best
-                  i - internal, r RIB-failure, S stale, N Nexthop-discard
-    Origin codes: i - IGP, e - EGP, ? - incomplete
-       Network            Next Hop            Metric LocPrf Weight Path
-    Route Distinguisher: 200:2 (default for vrf VRF2)
-    *> 15.1.1.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-    *> 15.1.2.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-    
-    Processed 2 prefixes, 2 paths
-
+        Status codes: s suppressed, d damped, h history, * valid, > best
+                      i - internal, r RIB-failure, S stale, N Nexthop-discard
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+           Network            Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 200:2 (default for vrf VRF2)
+        *> 15.1.1.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 15.1.2.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        
+        Processed 2 prefixes, 2 paths
         '''}
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowBgpInstanceNeighborsRoutes(device=self.dev1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(neighbor='20.1.5.5', vrf='vrf')
+            parsed_output = obj.parse(vrf_type='vrf', neighbor='20.1.5.5')
 
     def test_golden(self):
+        self.maxDiff = None
         self.dev = Mock(**self.golden_output)
         obj = ShowBgpInstanceNeighborsRoutes(device=self.dev)
-        parsed_output = obj.parse(neighbor='20.1.5.5', vrf='vrf')
-        self.maxDiff = None
+        parsed_output = obj.parse(vrf_type='vrf', neighbor='20.1.5.5')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -4606,116 +4706,146 @@ class test_show_bgp_instance_all_vrf_all_neighbors_routes(unittest.TestCase):
 # =====================================================================
 
 class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
+    
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output = {'instance': {'default': {'vrf': {'default': {'address_family': {'vpnv4 unicast RD 300:1': {'generic_scan_interval': 60,
-                                                                                            'local_as': 100,
-                                                                                            'non_stop_routing': True,
-                                                                                            'nsr_initial_init_ver_status': 'reached',
-                                                                                            'nsr_initial_initsync_version': '11',
-                                                                                            'nsr_issu_sync_group_versions': '0/0',
-                                                                                            'rd_version': 0,
-                                                                                            'router_identifier': '1.1.1.1',
-                                                                                            'routes': {'prefix': {'46.1.1.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                                'metric': '2219',
-                                                                                                                                                'next_hop': '4.4.4.4',
-                                                                                                                                                'origin_codes': 'e',
-                                                                                                                                                'path': '300 '
-                                                                                                                                                        '33299 '
-                                                                                                                                                        '51178 '
-                                                                                                                                                        '47751 '
-                                                                                                                                                        '{27016}',
-                                                                                                                                                'status_codes': '*i',
-                                                                                                                                                'weight': '0'}}}}},
-                                                                                            'scan_interval': 60,
-                                                                                            'table_id': '0x0',
-                                                                                            'table_state': 'active',
-                                                                                            'tbl_ver': 43},
-                                                                 'vpnv4 unicast RD 400:1': {'generic_scan_interval': 60,
-                                                                                            'local_as': 100,
-                                                                                            'non_stop_routing': True,
-                                                                                            'nsr_initial_init_ver_status': 'reached',
-                                                                                            'nsr_initial_initsync_version': '11',
-                                                                                            'nsr_issu_sync_group_versions': '0/0',
-                                                                                            'processed_paths': 2,
-                                                                                            'processed_prefixes': 2,
-                                                                                            'rd_version': 0,
-                                                                                            'router_identifier': '1.1.1.1',
-                                                                                            'routes': {'prefix': {'46.2.2.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                                'metric': '2219',
-                                                                                                                                                'next_hop': '4.4.4.4',
-                                                                                                                                                'origin_codes': 'e',
-                                                                                                                                                'path': '400 '
-                                                                                                                                                        '33299 '
-                                                                                                                                                        '51178 '
-                                                                                                                                                        '47751 '
-                                                                                                                                                        '{27016}',
-                                                                                                                                                'status_codes': '*i',
-                                                                                                                                                'weight': '0'}}}}},
-                                                                                            'scan_interval': 60,
-                                                                                            'table_id': '0x0',
-                                                                                            'table_state': 'active',
-                                                                                            'tbl_ver': 43},
-                                                                 'vpnv6 unicast RD 300:1': {'generic_scan_interval': 60,
-                                                                                            'local_as': 100,
-                                                                                            'non_stop_routing': True,
-                                                                                            'nsr_initial_init_ver_status': 'reached',
-                                                                                            'nsr_initial_initsync_version': '11',
-                                                                                            'nsr_issu_sync_group_versions': '0/0',
-                                                                                            'rd_version': 0,
-                                                                                            'router_identifier': '1.1.1.1',
-                                                                                            'routes': {'prefix': {'646:11:11:1::/64': {'index': {1: {'locprf': '100',
-                                                                                                                                                     'metric': '2219',
-                                                                                                                                                     'next_hop': '4.4.4.4',
-                                                                                                                                                     'origin_codes': 'e',
-                                                                                                                                                     'path': '300 '
-                                                                                                                                                             '33299 '
-                                                                                                                                                             '51178 '
-                                                                                                                                                             '47751 '
-                                                                                                                                                             '{27016}',
-                                                                                                                                                     'status_codes': '*i',
-                                                                                                                                                     'weight': '0'}}},
-                                                                                                                  '646:11:11::/64': {'index': {1: {'locprf': '100',
-                                                                                                                                                   'metric': '2219',
-                                                                                                                                                   'next_hop': '4.4.4.4',
-                                                                                                                                                   'origin_codes': 'e',
-                                                                                                                                                   'path': '300 '
-                                                                                                                                                           '33299 '
-                                                                                                                                                           '51178 '
-                                                                                                                                                           '47751 '
-                                                                                                                                                           '{27016}',
-                                                                                                                                                   'status_codes': '*i',
-                                                                                                                                                   'weight': '0'}}}}},
-                                                                                            'scan_interval': 60,
-                                                                                            'table_id': '0x0',
-                                                                                            'table_state': 'active',
-                                                                                            'tbl_ver': 43},
-                                                                 'vpnv6 unicast RD 400:1': {'generic_scan_interval': 60,
-                                                                                            'local_as': 100,
-                                                                                            'non_stop_routing': True,
-                                                                                            'nsr_initial_init_ver_status': 'reached',
-                                                                                            'nsr_initial_initsync_version': '11',
-                                                                                            'nsr_issu_sync_group_versions': '0/0',
-                                                                                            'processed_paths': 3,
-                                                                                            'processed_prefixes': 3,
-                                                                                            'rd_version': 0,
-                                                                                            'router_identifier': '1.1.1.1',
-                                                                                            'routes': {'prefix': {'646:22:22::/64': {'index': {1: {'locprf': '100',
-                                                                                                                                                   'metric': '2219',
-                                                                                                                                                   'next_hop': '4.4.4.4',
-                                                                                                                                                   'origin_codes': 'e',
-                                                                                                                                                   'path': '400 '
-                                                                                                                                                           '33299 '
-                                                                                                                                                           '51178 '
-                                                                                                                                                           '47751 '
-                                                                                                                                                           '{27016}',
-                                                                                                                                                   'status_codes': '*i',
-                                                                                                                                                   'weight': '0'}}}}},
-                                                                                            'scan_interval': 60,
-                                                                                            'table_id': '0x0',
-                                                                                            'table_state': 'active',
-                                                                                            'tbl_ver': 43}}}}}}}
-
+    
+    golden_parsed_output = {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'default': 
+                        {'address_family': 
+                            {'vpnv4 unicast RD 300:1': 
+                                {'generic_scan_interval': 60,
+                                'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': '11',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'rd_version': 0,
+                                'router_identifier': '1.1.1.1',
+                                'routes': 
+                                    {'46.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}}},
+                                'scan_interval': 60,
+                                'table_id': '0x0',
+                                'table_state': 'active',
+                                'routing_table_version': 43},
+                            'vpnv4 unicast RD 400:1': 
+                                {'generic_scan_interval': 60,
+                                'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': '11',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'processed_paths': 2,
+                                'processed_prefixes': 2,
+                                'rd_version': 0,
+                                'router_identifier': '1.1.1.1',
+                                'routes':
+                                    {'46.2.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}}},
+                                'scan_interval': 60,
+                                'table_id': '0x0',
+                                'table_state': 'active',
+                                'routing_table_version': 43},
+                            'vpnv6 unicast RD 300:1': 
+                                {'generic_scan_interval': 60,
+                                'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': '11',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'rd_version': 0,
+                                'router_identifier': '1.1.1.1',
+                                'routes': 
+                                    {'646:11:11:1::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}},
+                                    '646:11:11::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}}},
+                                'scan_interval': 60,
+                                'table_id': '0x0',
+                                'table_state': 'active',
+                                'routing_table_version': 43},
+                            'vpnv6 unicast RD 400:1': 
+                                {'generic_scan_interval': 60,
+                                'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': '11',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'processed_paths': 3,
+                                'processed_prefixes': 3,
+                                'rd_version': 0,
+                                'router_identifier': '1.1.1.1',
+                                'routes':
+                                    {'646:22:22::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                       '33299 '
+                                                       '51178 '
+                                                       '47751 '
+                                                       '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}}},
+                                'scan_interval': 60,
+                                'table_id': '0x0',
+                                'table_state': 'active',
+                                'routing_table_version': 43}}}}}}}
 
     golden_output = {'execute.return_value': '''
         BGP instance 0: 'default'
@@ -4780,13 +4910,13 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
         self.device1 = Mock(**self.empty_output)
         obj = ShowBgpInstanceNeighborsRoutes(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(neighbor='3.3.3.3', vrf='all')
+            parsed_output = obj.parse(vrf_type='all', neighbor='3.3.3.3')
 
     def test_golden(self):
+        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpInstanceNeighborsRoutes(device=self.device)
-        parsed_output = obj.parse(neighbor='3.3.3.3', vrf='all')
-        self.maxDiff = None
+        parsed_output = obj.parse(vrf_type='all', neighbor='3.3.3.3')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 

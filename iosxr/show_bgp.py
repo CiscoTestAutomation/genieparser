@@ -2895,7 +2895,6 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         # Return to caller
         return map_dict
 
-
 # ================================================================
 # Parser for:
 # 'show bgp instance all all all neighbors <WORD> received routes'
@@ -2925,7 +2924,7 @@ class ShowBgpInstanceNeighborsReceivedRoutesSchema(MetaParser):
                                      Optional('table_state'): str,
                                      Optional('table_id'): str,
                                      Optional('rd_version'): int,
-                                     Optional('tbl_ver'): int,
+                                     Optional('routing_table_version'): int,
                                      Optional('nsr_initial_initsync_version'): str,
                                      Optional('nsr_initial_init_ver_status'): str,
                                      Optional('nsr_issu_sync_group_versions'): str,
@@ -2935,22 +2934,20 @@ class ShowBgpInstanceNeighborsReceivedRoutesSchema(MetaParser):
                                      Optional('route_distinguisher'): str,
                                      Optional('default_vrf'): str,
                                      Optional('received'):
-                                         {Optional('prefix'):
-                                            {Any():
-                                                {Optional('index'):
-                                                    {Any():
-                                                        {Optional('status_codes'): str,
-                                                        Optional('next_hop'): str,
-                                                        Optional('metric'): str,
-                                                        Optional('locprf'): str,
-                                                        Optional('weight'): str,
-                                                        Optional('path'): str,
-                                                        Optional('origin_codes'): str
-                                                        },
+                                        {Any():
+                                            {Optional('index'):
+                                                {Any():
+                                                    {Optional('status_codes'): str,
+                                                    Optional('next_hop'): str,
+                                                    Optional('metric'): str,
+                                                    Optional('locprf'): str,
+                                                    Optional('weight'): str,
+                                                    Optional('path'): str,
+                                                    Optional('origin_codes'): str
                                                     },
                                                 },
                                             },
-                                        }
+                                        },
                                     },
                                 },
                             },
@@ -2966,19 +2963,19 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
         * 'show bgp instance all vrf all neighbors <WORD> received routes'
     '''
 
-    def cli(self, neighbor, vrf, route_type='received routes'):
-        assert vrf in ['all', 'vrf']
+    def cli(self, neighbor, vrf_type, route_type='received routes'):
+        assert vrf_type in ['all', 'vrf']
         assert route_type in ['received routes', 'routes']
-        cmd = 'show bgp instance all {vrf} all neighbors {neighbor} {route}'\
-              .format(neighbor=neighbor, vrf=vrf, route=route_type)
+        cmd = 'show bgp instance all {vrf_type} all neighbors {neighbor} {route}'\
+              .format(neighbor=neighbor, vrf_type=vrf_type, route=route_type)
         out = self.device.execute(cmd)
 
         ret_dict = {}
         # address_family default to 'vpnv4 unicast' when command is 
         # show bgp instance all vrf all neighbors ****
-        af = 'vpnv4 unicast' if vrf == 'vrf' else None
+        af = 'vpnv4 unicast' if vrf_type == 'vrf' else None
         # if vrf == all then it means default vrf
-        vrf = 'default' if vrf == 'all' else None
+        vrf = 'default' if vrf_type == 'all' else None
         # initial var
         address_family = None
         instance = None
@@ -3198,7 +3195,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                 except:
                     pass
                 else:
-                    sub_dict['tbl_ver'] = bgp_table_version
+                    sub_dict['routing_table_version'] = bgp_table_version
 
                 try:
                     nsr_initial_initsync_version
@@ -3252,20 +3249,17 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                     prefix = pre_net
                     index += 1
                 
-                if 'prefix' not in sub_dict[routes]:
-                    sub_dict[routes]['prefix'] = {}
+                if prefix not in sub_dict[routes]:
+                    sub_dict[routes][prefix] = {}
 
-                if prefix not in sub_dict[routes]['prefix']:
-                    sub_dict[routes]['prefix'][prefix] = {}
+                if 'index' not in sub_dict[routes][prefix]:
+                    sub_dict[routes][prefix]['index'] = {}
 
-                if 'index' not in sub_dict[routes]['prefix'][prefix]:
-                    sub_dict[routes]['prefix'][prefix]['index'] = {}
+                if index not in sub_dict[routes][prefix]['index']:
+                    sub_dict[routes][prefix]['index'][index] = {}
 
-                if index not in sub_dict[routes]['prefix'][prefix]['index']:
-                    sub_dict[routes]['prefix'][prefix]['index'][index] = {}
-
-                sub_dict[routes]['prefix'][prefix]['index'][index]['next_hop'] = next_hop
-                sub_dict[routes]['prefix'][prefix]['index'][index]['status_codes'] = status_codes
+                sub_dict[routes][prefix]['index'][index]['next_hop'] = next_hop
+                sub_dict[routes][prefix]['index'][index]['status_codes'] = status_codes
 
                 # dealing with the group of metric, locprf, weight, path
                 group_num = m.groupdict()['number']
@@ -3294,34 +3288,34 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                            .match(group_num)
 
                 if m1:
-                    sub_dict[routes]['prefix'][prefix]['index'][index]['metric'] = \
+                    sub_dict[routes][prefix]['index'][index]['metric'] = \
                         m1.groupdict()['metric']
-                    sub_dict[routes]['prefix'][prefix]['index'][index]['locprf'] = \
+                    sub_dict[routes][prefix]['index'][index]['locprf'] = \
                         m1.groupdict()['locprf']
-                    sub_dict[routes]['prefix'][prefix]['index'][index]['weight'] = \
+                    sub_dict[routes][prefix]['index'][index]['weight'] = \
                         m1.groupdict()['weight']
-                    sub_dict[routes]['prefix'][prefix]['index'][index]['path'] = \
+                    sub_dict[routes][prefix]['index'][index]['path'] = \
                         m1.groupdict()['path'].strip()
                 elif m2:
                     if len(m2.groupdict()['space']) > 8:
-                        sub_dict[routes]['prefix'][prefix]['index'][index]['metric'] = \
+                        sub_dict[routes][prefix]['index'][index]['metric'] = \
                             m2.groupdict()['value']
                     else:
-                        sub_dict[routes]['prefix'][prefix]['index'][index]['locprf'] = \
+                        sub_dict[routes][prefix]['index'][index]['locprf'] = \
                             m2.groupdict()['value']
 
-                    sub_dict[routes]['prefix'][prefix]['index'][index]['weight'] = \
+                    sub_dict[routes][prefix]['index'][index]['weight'] = \
                         m2.groupdict()['weight']
-                    sub_dict[routes]['prefix'][prefix]['index'][index]['path'] = \
+                    sub_dict[routes][prefix]['index'][index]['path'] = \
                         m2.groupdict()['path'].strip()
                 elif m3:
-                    sub_dict[routes]['prefix'][prefix]['index'][index]['weight'] = \
+                    sub_dict[routes][prefix]['index'][index]['weight'] = \
                         m3.groupdict()['weight']
-                    sub_dict[routes]['prefix'][prefix]['index'][index]['path'] = \
+                    sub_dict[routes][prefix]['index'][index]['path'] = \
                         m3.groupdict()['path'].strip()
 
                 if m.groupdict()['origin_codes']:
-                    sub_dict[routes]['prefix'][prefix]['index'][index]['origin_codes'] = \
+                    sub_dict[routes][prefix]['index'][index]['origin_codes'] = \
                         m.groupdict()['origin_codes']
                 continue
 
@@ -3330,12 +3324,12 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                             ' *(?P<origin_codes>(i|e|\?))?$')
             m = p13_1.match(line)
             if m:
-                if 'path' in sub_dict[routes]['prefix'][prefix]['index'][index]:
-                    sub_dict[routes]['prefix'][prefix]['index'][index]['path'] += \
+                if 'path' in sub_dict[routes][prefix]['index'][index]:
+                    sub_dict[routes][prefix]['index'][index]['path'] += \
                         ' ' + m.groupdict()['path'].strip()
 
                 if m.groupdict()['origin_codes']:
-                    sub_dict[routes]['prefix'][prefix]['index'][index]['origin_codes'] = \
+                    sub_dict[routes][prefix]['index'][index]['origin_codes'] = \
                         m.groupdict()['origin_codes']
 
             # Processed 5 prefixes, 5 paths
@@ -3376,27 +3370,25 @@ class ShowBgpInstanceNeighborsAdvertisedRoutesSchema(MetaParser):
                                      Optional('processed_prefixes'): str,
                                      Optional('processed_paths'): str,
                                      Optional('advertised'):
-                                         {Optional('prefix'):
-                                            {Any():
-                                                {Optional('index'):
-                                                    {Any():
-                                                        {Optional('froms'): str,
-                                                        Optional('path'): str,
-                                                        Optional('origin_code'): str,
-                                                        Optional('status_codes'): str,
-                                                        Optional('next_hop'): str,
-                                                        Optional('metric'): str,
-                                                        Optional('locprf'): str,
-                                                        Optional('weight'): str,
-                                                        Optional('path'): str
-                                                        },
-                                                    }
+                                        {Any():
+                                            {Optional('index'):
+                                                {Any():
+                                                    {Optional('froms'): str,
+                                                    Optional('path'): str,
+                                                    Optional('origin_code'): str,
+                                                    Optional('status_codes'): str,
+                                                    Optional('next_hop'): str,
+                                                    Optional('metric'): str,
+                                                    Optional('locprf'): str,
+                                                    Optional('weight'): str,
+                                                    Optional('path'): str
+                                                    },
                                                 },
-                                            }
+                                            },
                                         },
-                                    }
+                                    },
                                 },
-                            }
+                            },
                         },
                     }
                 },
@@ -3409,16 +3401,16 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
         * 'show bgp instance all vrf all neighbors <WORD> advertised-routes'
     '''
 
-    def cli(self, neighbor, vrf):
-        assert vrf in ['all', 'vrf']
-        cmd = 'show bgp instance all {vrf} all neighbors {neighbor} advertised-routes'\
-              .format(neighbor=neighbor, vrf=vrf)
+    def cli(self, neighbor, vrf_type):
+        assert vrf_type in ['all', 'vrf']
+        cmd = 'show bgp instance all {vrf_type} all neighbors {neighbor} advertised-routes'\
+              .format(neighbor=neighbor, vrf_type=vrf_type)
         out = self.device.execute(cmd)
 
         ret_dict = {}
         # if vrf == all then it means default vrf
-        af = 'vpnv4 unicast' if vrf == 'vrf' else None
-        vrf = 'default' if vrf == 'all' else None
+        af = 'vpnv4 unicast' if vrf_type == 'vrf' else None
+        vrf = 'default' if vrf_type == 'all' else None
         address_family = None
 
         for line in out.splitlines():
@@ -3500,24 +3492,22 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
                     index += 1
                 if 'advertised' not in sub_dict:
                     sub_dict['advertised'] = {}
-         
-                if 'prefix' not in sub_dict['advertised']:
-                    sub_dict['advertised']['prefix'] = {}
-                if prefix not in sub_dict['advertised']['prefix']:
-                    sub_dict['advertised']['prefix'][prefix] = {}
-                if 'index' not in sub_dict['advertised']['prefix'][prefix]:
-                    sub_dict['advertised']['prefix'][prefix]['index'] = {}
-                if index not in sub_dict['advertised']['prefix'][prefix]['index']:
-                    sub_dict['advertised']['prefix'][prefix]['index'][index] = {}
+
+                if prefix not in sub_dict['advertised']:
+                    sub_dict['advertised'][prefix] = {}
+                if 'index' not in sub_dict['advertised'][prefix]:
+                    sub_dict['advertised'][prefix]['index'] = {}
+                if index not in sub_dict['advertised'][prefix]['index']:
+                    sub_dict['advertised'][prefix]['index'][index] = {}
 
                 if froms:
-                    sub_dict['advertised']['prefix'][prefix]['index'][index]['froms'] = froms
+                    sub_dict['advertised'][prefix]['index'][index]['froms'] = froms
                 if path:
-                    sub_dict['advertised']['prefix'][prefix]['index'][index]['path'] = path
+                    sub_dict['advertised'][prefix]['index'][index]['path'] = path
                 if origin_code:
-                    sub_dict['advertised']['prefix'][prefix]['index'][index]['origin_code'] = origin_code
+                    sub_dict['advertised'][prefix]['index'][index]['origin_code'] = origin_code
                 if next_hop:
-                    sub_dict['advertised']['prefix'][prefix]['index'][index]['next_hop'] = next_hop
+                    sub_dict['advertised'][prefix]['index'][index]['next_hop'] = next_hop
                     continue
 
             #                                                    200 33299 51178 47751 {27017}e
@@ -3527,9 +3517,9 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
                 path = m.groupdict()['path']
                 origin_code = m.groupdict()['origin_code']
                 if path:
-                    sub_dict['advertised']['prefix'][prefix]['index'][index]['path'] = path
+                    sub_dict['advertised'][prefix]['index'][index]['path'] = path
                 if origin_code:
-                    sub_dict['advertised']['prefix'][prefix]['index'][index]['origin_code'] = origin_code
+                    sub_dict['advertised'][prefix]['index'][index]['origin_code'] = origin_code
                     continue
 
             # Processed 5 prefixes, l5 paths
@@ -3566,41 +3556,39 @@ class ShowBgpInstanceNeighborsRoutesSchema(MetaParser):
                     {Any():
                         {Optional('address_family'):
                             {Any():
-                                {'router_identifier': str,
-                                 'local_as': int,
+                                {Optional('router_identifier'): str,
+                                 Optional('local_as'): int,
                                  Optional('state'): str,
                                  Optional('vrf_id'): str,
                                  Optional('generic_scan_interval'): int,
-                                 'non_stop_routing': bool,
-                                 'table_state': str,
-                                 'table_id': str,
-                                 'rd_version': int,
-                                 'tbl_ver': int,
-                                 'nsr_initial_initsync_version': str,
+                                 Optional('non_stop_routing'): bool,
+                                 Optional('table_state'): str,
+                                 Optional('table_id'): str,
+                                 Optional('rd_version'): int,
+                                 Optional('routing_table_version'): int,
+                                 Optional('nsr_initial_initsync_version'): str,
                                  Optional('nsr_initial_init_ver_status'): str,
-                                 'nsr_issu_sync_group_versions': str,
+                                 Optional('nsr_issu_sync_group_versions'): str,
                                  Optional('processed_prefixes'): int,
                                  Optional('processed_paths'): int,
                                  Optional('scan_interval'): int,
                                  Optional('route_distinguisher'): str,
                                  Optional('default_vrf'): str,
                                  Optional('routes'):
-                                     {Optional('prefix'):
-                                        {Any():
-                                            {Optional('index'):
-                                                {Any():
-                                                    {Optional('status_codes'): str,
-                                                    Optional('next_hop'): str,
-                                                    Optional('metric'): str,
-                                                    Optional('locprf'): str,
-                                                    Optional('weight'): str,
-                                                    Optional('path'): str,
-                                                    Optional('origin_codes'): str
-                                                    },
+                                    {Any():
+                                        {Optional('index'):
+                                            {Any():
+                                                {Optional('status_codes'): str,
+                                                Optional('next_hop'): str,
+                                                Optional('metric'): str,
+                                                Optional('locprf'): str,
+                                                Optional('weight'): str,
+                                                Optional('path'): str,
+                                                Optional('origin_codes'): str
                                                 },
                                             },
                                         },
-                                    }
+                                    },
                                 },
                             },
                         },
@@ -3616,9 +3604,9 @@ class ShowBgpInstanceNeighborsRoutes(ShowBgpInstanceNeighborsRoutesSchema):
         * 'show bgp instance all vrf all neighbors <WORD> routes'
     '''
 
-    def cli(self, neighbor, vrf):
+    def cli(self, neighbor, vrf_type):
         return ShowBgpInstanceNeighborsReceivedRoutes.cli(
-            self, neighbor=neighbor, vrf=vrf, route_type='routes')
+            self, neighbor=neighbor, vrf_type=vrf_type, route_type='routes')
 
 
 # =======================================
