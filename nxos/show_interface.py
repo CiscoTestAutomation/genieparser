@@ -1397,7 +1397,7 @@ class ShowInterfaceSwitchportSchema(MetaParser):
              'switchport_monitor': str,
              'switchport_mode': str,
              'access_vlan': int,
-             'access_vlan_mode': str,
+             Optional('access_vlan_mode'): str,
              'native_vlan': int,
              'native_vlan_mode': str,
              'trunk_vlans': str,
@@ -1496,7 +1496,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
 
             #Access Mode VLAN: 1 (default)
             p5 = re.compile(r'^\s*Access *Mode *VLAN: *(?P<access_vlan>[0-9]+)'
-                             ' *\((?P<access_vlan_mode>[a-zA-Z\s]+)\)$')
+                             ' *\((?P<access_vlan_mode>[a-zA-Z0-9\s]+)\)$')
             m = p5.match(line)
             if m:
                 access_vlan = int(m.groupdict()['access_vlan'])
