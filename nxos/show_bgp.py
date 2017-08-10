@@ -1438,7 +1438,7 @@ class ShowBgpPeerTemplate(ShowBgpPeerTemplateSchema):
                         continue
 
                     # BFD live-detection is configured
-                    p6 = re.compile(r'^\s*BFD live-detection is configured$')
+                    p6 = re.compile(r'^\s*BFD live-detection +is +configured$')
                     m = p6.match(line)
                     if m:
                         sub_dict['bfd_live_detection'] = True
@@ -1923,6 +1923,8 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                  Optional('retry_time'): str,
                  Optional('update_source'): str,
                  Optional('bfd_live_detection'): bool,
+                 Optional('bfd_enabled'): bool,
+                 Optional('bfd_state'): str,
                  Optional('nbr_local_as_cmd'): str,
                  Optional('last_read'): str,
                  Optional('holdtime'): int,
@@ -2134,11 +2136,20 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 continue
 
             # BFD live-detection is configured
-            p6 = re.compile(r'^\s*BFD live-detection is configured$')
+            # BFD live-detection is configured and enabled, state is Up
+            p6 = re.compile(r'^\s*BFD live-detection is configured'
+                             '( *and (?P<bfd_enabled>\w+), state *is *'
+                             '(?P<bfd_state>\w+))?$')
             m = p6.match(line)
             if m:
                 parsed_dict['neighbor'][neighbor_id]['bfd_live_detection'] = \
                     True
+                if m.groupdict()['bfd_enabled'] and \
+                   m.groupdict()['bfd_enabled'].lower() == 'enabled':
+                    parsed_dict['neighbor'][neighbor_id]['bfd_enabled'] = True
+                if m.groupdict()['bfd_state']:
+                    parsed_dict['neighbor'][neighbor_id]['bfd_state'] = \
+                        m.groupdict()['bfd_state'].lower()
                 continue
 
             # Neighbor local-as command not active
