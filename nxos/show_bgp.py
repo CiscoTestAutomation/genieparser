@@ -1438,7 +1438,7 @@ class ShowBgpPeerTemplate(ShowBgpPeerTemplateSchema):
                         continue
 
                     # BFD live-detection is configured
-                    p6 = re.compile(r'^\s*BFD live-detection +is +configured')
+                    p6 = re.compile(r'^\s*BFD live-detection +is +configured$')
                     m = p6.match(line)
                     if m:
                         sub_dict['bfd_live_detection'] = True
