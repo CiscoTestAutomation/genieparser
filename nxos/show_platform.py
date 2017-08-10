@@ -89,6 +89,7 @@ class ShowVersion(ShowVersionSchema):
 
         result = pgfill.parse()
         out = pg.ext_dictio[self.device.name]
+        import pdb;pdb.set_trace()
         version_dict = {}
 
         if 'platform' not in version_dict:
@@ -287,12 +288,12 @@ class ShowInstallActive(ShowInstallActiveSchema):
         active_package_module_number = 0
         for line in out.splitlines():
             line = line.rstrip()
-            p1 = re.compile(r'^\s*Boot Images:$')
+            p1 = re.compile(r'^\s*(?P<boot_images>[a-zA-Z\s]+):$')
             m = p1.match(line)
             if m:
-                if 'Boot Images' not in active_dict:
+                if 'boot_images' not in active_dict:
                     active_dict['boot_images'] = {}
-                continue
+                    continue
 
             p2 = re.compile(r'^\s*Kickstart Image: +(?P<kickstart_image>[a-zA-z0-9\:\/\-\.]+)$')
             m = p2.match(line)
@@ -442,10 +443,10 @@ class ShowRedundancyStatusSchema(MetaParser):
                   {'redundancy_state': str,
                    'supervisor_state': str,
                    'internal_state':str},
-              'supervisor_2':
-                  {'redundancy_state': str,
-                   'supervisor_state': str,
-                   'internal_state':str},
+              Optional('supervisor_2'):
+                  {Optional('redundancy_state'): str,
+                   Optional('supervisor_state'): str,
+                   Optional('internal_state'):str},
               'system_start_time': str,
               'system_uptime': str,
               'kernel_uptime': str,
@@ -1053,7 +1054,7 @@ class ShowVdcDetail(ShowVdcDetailSchema):
                     vdc_dict['vdc'][identity] = {}
                 continue
 
-            p2 = re.compile(r'^\s*vdc +name: +(?P<name>[a-zA-Z0-9\-]+)$')
+            p2 = re.compile(r'^\s*vdc +name: +(?P<name>\S+)$')
             m = p2.match(line)
             if m:
                 vdc_dict['vdc'][identity]['name'] = m.groupdict()['name']

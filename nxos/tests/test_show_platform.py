@@ -25,8 +25,8 @@ class test_show_version(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
     device2 = Device(name='cDevice')
-    empty_output = {'execute.return_value': ''}
-    semi_empty_output = {'execute.return_value': 'Cisco Nexus Operating System (NX-OS) Software'}
+    empty_output = {'execute.return_value': '', 'os': 'nxos'}
+    semi_empty_output = {'execute.return_value': 'Cisco Nexus Operating System (NX-OS) Software', 'os': 'nxos'}
     golden_parsed_output = {'platform':
                               {'reason': 'Reset Requested by CLI command reload',
                                'system_version': '6.2(6)',
@@ -105,7 +105,7 @@ class test_show_version(unittest.TestCase):
 
     Active Package(s)
  
-'''}
+''', 'os': 'nxos'}
 
     ats_mock.tcl.eval.return_value = 'nxos'
 
