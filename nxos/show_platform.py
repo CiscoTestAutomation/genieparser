@@ -73,23 +73,22 @@ class ShowVersion(ShowVersionSchema):
         typically contains 3 steps: executing, transforming, returning
         '''
         cmd = 'show version'.format()
-        output = self.device.execute(cmd)
+        self.device.execute(cmd)
 
         attrValPairsToParse = [
           ('show.version.platform', 'Nexus'),
         ]
 
         pgfill = oper_fill (
-                  attrvalpairs=attrValPairsToParse,
-                  show_command=('show_version'),
+                  self.device,
+                  ('show_version'),
+                  attrValPairsToParse,
                   refresh_cache=True,
                   regex_tag_fill_pattern='show\.version',
-                  skip=True,
-                  device_os='nxos',
-                  device_output=output)
+                  skip=True)
 
         result = pgfill.parse()
-        out = pg.ext_dictio['device_name']
+        out = pg.ext_dictio[self.device.name]
         version_dict = {}
 
         if 'platform' not in version_dict:
@@ -341,10 +340,10 @@ class ShowSystemRedundancyStatusSchema(MetaParser):
                   {'redundancy_state': str,
                    'supervisor_state': str,
                    'internal_state':str},
-              'supervisor_2':
-                  {'redundancy_state': str,
-                   'supervisor_state': str,
-                   'internal_state':str},
+              Optional('supervisor_2'):
+                  {Optional('redundancy_state'): str,
+                   Optional('supervisor_state'): str,
+                   Optional('internal_state'):str},
             }
 
 
@@ -406,7 +405,7 @@ class ShowSystemRedundancyStatus(ShowSystemRedundancyStatusSchema):
                     redundancy_dict['supervisor_2'] = {}
                 continue
 
-            p6 = re.compile(r'^\s*Redundancy state: +(?P<redundancy_state>[a-zA-z\s]+)$')
+            p6 = re.compile(r'^\s*Redundancy state: +(?P<redundancy_state>[a-zA-z\W\s]+)$')
             m = p6.match(line)
             if m:
                 if sup_number is 'sup-1':
@@ -511,7 +510,7 @@ class ShowRedundancyStatus(ShowRedundancyStatusSchema):
                     redundancy_dict['supervisor_2'] = {}
                 continue
 
-            p6 = re.compile(r'^\s*Redundancy state: +(?P<redundancy_state>[a-zA-z\s]+)$')
+            p6 = re.compile(r'^\s*Redundancy state: +(?P<redundancy_state>[a-zA-z\W\s]+)$')
             m = p6.match(line)
             if m:
                 if sup_number is 'sup-1':
@@ -568,20 +567,20 @@ class ShowRedundancyStatus(ShowRedundancyStatusSchema):
 class ShowBootSchema(MetaParser):
     schema = {'current_boot_variable':
                   {Optional('sup_number'):
-                      {Optional(Any()):
-                          {'kickstart_variable': str,
-                           'system_variable': str,
-                           'boot_poap':str}
+                      {Any():
+                          {Optional('kickstart_variable'): str,
+                           Optional('system_variable'): str,
+                           Optional('boot_poap'):str}
                       },
                   Optional('kickstart_variable'): str,
                   Optional('system_variable'): str,
                   Optional('boot_poap'):str},
               'next_reload_boot_variable':
                   {Optional('sup_number'):
-                      {Optional(Any()):
-                          {'kickstart_variable': str,
-                           'system_variable': str,
-                           'boot_poap':str}
+                      {Any():
+                          {Optional('kickstart_variable'): str,
+                           Optional('system_variable'): str,
+                           Optional('boot_poap'):str}
                       },
                   Optional('kickstart_variable'): str,
                   Optional('system_variable'): str,
@@ -1140,7 +1139,7 @@ class ShowVdcDetail(ShowVdcDetailSchema):
                 vdc_dict['vdc'][identity]['type'] = m.groupdict()['type']
                 continue
 
-            p16 = re.compile(r'^\s*vdc +supported +linecards: +(?P<linecards>[a-zA-Z0-9\s]+)$')
+            p16 = re.compile(r'^\s*vdc +supported +linecards: +(?P<linecards>[a-zA-Z0-9]+)$')
             m = p16.match(line)
             if m:
                 if 'vdc' not in vdc_dict:
@@ -1233,7 +1232,7 @@ class ShowVdcMembershipStatus(ShowVdcMembershipStatusSchema):
             if m:
                 continue
 
-            p2 = re.compile(r'^\s*vdc_id: +(?P<id>[0-9]+) +vdc_name: +(?P<name>[a-zA-Z0-9]+) +interfaces:$')
+            p2 = re.compile(r'^\s*vdc_id: +(?P<id>[0-9]+) +vdc_name: +(?P<name>\S+) +interfaces:$')
             m = p2.match(line)
             if m:
                 identity = m.groupdict()['id']
