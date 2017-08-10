@@ -799,457 +799,466 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     
     golden_parsed_output = {
-        'instance': {'default': {'vrf': {'VRF1': {'active_cluster_id': '10',
-                                           'as_number': 100,
-                                           'as_system_number_format': 'ASPLAIN',
-                                           'att': {'as_paths': {'memory_used': 0,
-                                                                'number': 0},
-                                                   'attributes': {'memory_used': 152,
-                                                                  'number': 1},
-                                                   'communities': {'memory_used': 0,
-                                                                   'number': 0},
-                                                   'extended_communities': {'memory_used': 0,
-                                                                            'number': 0},
-                                                   'nexthop_entries': {'memory_used': 7600,
-                                                                       'number': 19},
-                                                   'pe_distinguisher_labels': {'memory_used': 0,
-                                                                               'number': 0},
-                                                   'pmsi_tunnel_attr': {'memory_used': 0,
-                                                                        'number': 0},
-                                                   'ppmp_attr': {'memory_used': 0,
-                                                                 'number': 0},
-                                                   'ribrnh_tunnel_attr': {'memory_used': 0,
-                                                                          'number': 0},
-                                                   'route_reflector_entries': {'memory_used': 0,
-                                                                               'number': 0},
-                                                   'tunnel_encap_attr': {'memory_used': 0,
-                                                                         'number': 0}},
-                                           'bgp_speaker_process': 0,
-                                           'bmp_pool_summary': {'100': {'alloc': 0,
-                                                                        'free': 0},
-                                                                '10000': {'alloc': 0,
-                                                                          'free': 0},
-                                                                '1200': {'alloc': 0,
-                                                                         'free': 0},
-                                                                '200': {'alloc': 0,
-                                                                        'free': 0},
-                                                                '20000': {'alloc': 0,
-                                                                          'free': 0},
-                                                                '2200': {'alloc': 0,
-                                                                         'free': 0},
-                                                                '300': {'alloc': 0,
-                                                                        'free': 0},
-                                                                '3300': {'alloc': 0,
-                                                                         'free': 0},
-                                                                '400': {'alloc': 0,
-                                                                        'free': 0},
-                                                                '4000': {'alloc': 0,
-                                                                         'free': 0},
-                                                                '4500': {'alloc': 0,
-                                                                         'free': 0},
-                                                                '500': {'alloc': 0,
-                                                                        'free': 0},
-                                                                '5500': {'alloc': 0,
-                                                                         'free': 0},
-                                                                '600': {'alloc': 0,
-                                                                        'free': 0},
-                                                                '6500': {'alloc': 0,
-                                                                         'free': 0},
-                                                                '700': {'alloc': 0,
-                                                                        'free': 0},
-                                                                '7500': {'alloc': 0,
-                                                                         'free': 0},
-                                                                '800': {'alloc': 0,
-                                                                        'free': 0},
-                                                                '8500': {'alloc': 0,
-                                                                         'free': 0},
-                                                                '900': {'alloc': 0,
-                                                                        'free': 0}},
-                                           'current_limit_for_bmp_buffer_size': 307,
-                                           'current_utilization_of_bmp_buffer_limit': 0,
-                                           'default_cluster_id': '10',
-                                           'default_keepalive': 60,
-                                           'default_local_preference': 100,
-                                           'default_value_for_bmp_buffer_size': 307,
-                                           'enforce_first_as_enabled': True,
-                                           'fast_external_fallover': True,
-                                           'generic_scan_interval': 60,
-                                           'max_limit_for_bmp_buffer_size': 409,
-                                           'message_logging_pool_summary': {'100': {'alloc': 0,
-                                                                                    'free': 0},
-                                                                            '200': {'alloc': 0,
-                                                                                    'free': 0},
-                                                                            '2200': {'alloc': 0,
-                                                                                     'free': 0},
-                                                                            '4500': {'alloc': 0,
-                                                                                     'free': 0},
-                                                                            '500': {'alloc': 0,
-                                                                                    'free': 0}},
-                                           'neighbor_logging': True,
-                                           'node': 'node0_0_CPU0',
-                                           'non_stop_routing': True,
-                                           'operation_mode': 'standalone',
-                                           'platform_rlimit_max': 2147483648,
-                                           'pool': {'1200': {'alloc': 0,
-                                                             'free': 0},
-                                                    '200': {'alloc': 0,
-                                                            'free': 0},
-                                                    '20000': {'alloc': 0,
-                                                              'free': 0},
-                                                    '2200': {'alloc': 0,
-                                                             'free': 0},
-                                                    '300': {'alloc': 1,
-                                                            'free': 0},
-                                                    '3300': {'alloc': 0,
-                                                             'free': 0},
-                                                    '400': {'alloc': 0,
-                                                            'free': 0},
-                                                    '4000': {'alloc': 0,
-                                                             'free': 0},
-                                                    '4500': {'alloc': 0,
-                                                             'free': 0},
-                                                    '500': {'alloc': 0,
-                                                            'free': 0},
-                                                    '5000': {'alloc': 0,
-                                                             'free': 0},
-                                                    '600': {'alloc': 0,
-                                                            'free': 0},
-                                                    '700': {'alloc': 0,
-                                                            'free': 0},
-                                                    '800': {'alloc': 0,
-                                                            'free': 0},
-                                                    '900': {'alloc': 0,
-                                                            'free': 0}},
-                                           'received_notifications': 0,
-                                           'received_updates': 0,
-                                           'restart_count': 1,
-                                           'route_distinguisher': '100:2',
-                                           'router_id': '4.4.4.4',
-                                           'sent_notifications': 0,
-                                           'sent_updates': 0,
-                                           'update_delay': 120,
-                                           'vrf_info': {'default': {'cfg': 1,
-                                                                    'nbrs_estab': 0,
-                                                                    'total': 1},
-                                                        'non-default': {'cfg': 2,
-                                                                        'nbrs_estab': 0,
-                                                                        'total': 3}}},
-                                  'a': {'active_cluster_id': '10',
-                                        'address_family': {'ipv4 unicast ': {'attribute_download': 'Disabled',
-                                                                             'bgp_table_version': '1',
-                                                                             'chunk_elememt_size': '3',
-                                                                             'current_vrf': 'a ',
-                                                                             'dampening': False,
-                                                                             'dynamic_med': True,
-                                                                             'dynamic_med_int': '10 '
-                                                                                                'minutes',
-                                                                             'dynamic_med_periodic_timer': 'Not '
-                                                                                                           'Running',
-                                                                             'dynamic_med_timer': 'Not '
-                                                                                                  'Running',
-                                                                             'label_retention_timer_value': '5 '
-                                                                                                            'mins',
-                                                                             'main_table_version': '1',
-                                                                             'nexthop_resolution_minimum_prefix_length': '0 '
-                                                                                                                         '(not '
-                                                                                                                         'configured)',
-                                                                             'num_of_scan_segments': '0',
-                                                                             'permanent_network': 'unconfigured',
-                                                                             'prefix_scanned_per_segment': '100000',
-                                                                             'prefixes_path': {'prefixes': {'mem_used': 0,
-                                                                                                            'number': 0}},
-                                                                             'remote_local': {'prefixes': {'allocated': 0,
-                                                                                                           'freed': 0}},
-                                                                             'rib_has_not_converged': 'version '
-                                                                                                      '0',
-                                                                             'rib_table_prefix_limit_reached': 'no',
-                                                                             'rib_table_prefix_limit_ver': '0',
-                                                                             'scan_interval': '60',
-                                                                             'soft_reconfig_entries': '0',
-                                                                             'state': 'read '
-                                                                                      'only '
-                                                                                      'mode',
-                                                                             'table_bit_field_size': '1 ',
-                                                                             'table_state': 'inactive',
-                                                                             'table_version_acked_by_rib': '0',
-                                                                             'table_version_synced_to_rib': '1',
-                                                                             'total_prefixes_scanned': '0'}},
-                                        'as_number': 100,
-                                        'as_system_number_format': 'ASPLAIN',
-                                        'att': {'as_paths': {'memory_used': 0,
-                                                             'number': 0},
-                                                'attributes': {'memory_used': 152,
-                                                               'number': 1},
-                                                'bmp_paths': {'memory_used': 0,
-                                                              'number': 0},
-                                                'bmp_prefixes': {'memory_used': 0,
-                                                                 'number': 0},
-                                                'communities': {'memory_used': 0,
-                                                                'number': 0},
-                                                'extended_communities': {'memory_used': 0,
-                                                                         'number': 0},
-                                                'nexthop_entries': {'memory_used': 7600,
-                                                                    'number': 19},
-                                                'paths': {'memory_used': 0,
-                                                          'number': 0},
-                                                'pe_distinguisher_labels': {'memory_used': 0,
-                                                                            'number': 0},
-                                                'pmsi_tunnel_attr': {'memory_used': 0,
-                                                                     'number': 0},
-                                                'ppmp_attr': {'memory_used': 0,
-                                                              'number': 0},
-                                                'ribrnh_tunnel_attr': {'memory_used': 0,
-                                                                       'number': 0},
-                                                'route_reflector_entries': {'memory_used': 0,
-                                                                            'number': 0},
-                                                'tunnel_encap_attr': {'memory_used': 0,
-                                                                      'number': 0}},
-                                        'bgp_speaker_process': 0,
-                                        'bmp_pool_summary': {'100': {'alloc': 0,
-                                                                     'free': 0},
-                                                             '10000': {'alloc': 0,
-                                                                       'free': 0},
-                                                             '1200': {'alloc': 0,
-                                                                      'free': 0},
-                                                             '200': {'alloc': 0,
-                                                                     'free': 0},
-                                                             '20000': {'alloc': 0,
-                                                                       'free': 0},
-                                                             '2200': {'alloc': 0,
-                                                                      'free': 0},
-                                                             '300': {'alloc': 0,
-                                                                     'free': 0},
-                                                             '3300': {'alloc': 0,
-                                                                      'free': 0},
-                                                             '400': {'alloc': 0,
-                                                                     'free': 0},
-                                                             '4000': {'alloc': 0,
-                                                                      'free': 0},
-                                                             '4500': {'alloc': 0,
-                                                                      'free': 0},
-                                                             '500': {'alloc': 0,
-                                                                     'free': 0},
-                                                             '5500': {'alloc': 0,
-                                                                      'free': 0},
-                                                             '600': {'alloc': 0,
-                                                                     'free': 0},
-                                                             '6500': {'alloc': 0,
-                                                                      'free': 0},
-                                                             '700': {'alloc': 0,
-                                                                     'free': 0},
-                                                             '7500': {'alloc': 0,
-                                                                      'free': 0},
-                                                             '800': {'alloc': 0,
-                                                                     'free': 0},
-                                                             '8500': {'alloc': 0,
-                                                                      'free': 0},
-                                                             '900': {'alloc': 0,
-                                                                     'free': 0}},
-                                        'current_limit_for_bmp_buffer_size': 307,
-                                        'current_utilization_of_bmp_buffer_limit': 0,
-                                        'default_cluster_id': '10',
-                                        'default_keepalive': 60,
-                                        'default_local_preference': 100,
-                                        'default_value_for_bmp_buffer_size': 307,
-                                        'enforce_first_as_enabled': True,
-                                        'fast_external_fallover': True,
-                                        'generic_scan_interval': 60,
-                                        'max_limit_for_bmp_buffer_size': 409,
-                                        'message_logging_pool_summary': {'100': {'alloc': 0,
-                                                                                 'free': 0},
-                                                                         '200': {'alloc': 0,
-                                                                                 'free': 0},
-                                                                         '2200': {'alloc': 0,
-                                                                                  'free': 0},
-                                                                         '4500': {'alloc': 0,
-                                                                                  'free': 0},
-                                                                         '500': {'alloc': 0,
-                                                                                 'free': 0}},
-                                        'neighbor_logging': True,
-                                        'node': 'node0_0_CPU0',
-                                        'non_stop_routing': True,
-                                        'operation_mode': 'standalone',
-                                        'platform_rlimit_max': 2147483648,
-                                        'pool': {'1200': {'alloc': 0,
-                                                          'free': 0},
-                                                 '200': {'alloc': 0,
-                                                         'free': 0},
-                                                 '20000': {'alloc': 0,
-                                                           'free': 0},
-                                                 '2200': {'alloc': 0,
-                                                          'free': 0},
-                                                 '300': {'alloc': 1,
-                                                         'free': 0},
-                                                 '3300': {'alloc': 0,
-                                                          'free': 0},
-                                                 '400': {'alloc': 0,
-                                                         'free': 0},
-                                                 '4000': {'alloc': 0,
-                                                          'free': 0},
-                                                 '4500': {'alloc': 0,
-                                                          'free': 0},
-                                                 '500': {'alloc': 0,
-                                                         'free': 0},
-                                                 '5000': {'alloc': 0,
-                                                          'free': 0},
-                                                 '600': {'alloc': 0,
-                                                         'free': 0},
-                                                 '700': {'alloc': 0,
-                                                         'free': 0},
-                                                 '800': {'alloc': 0,
-                                                         'free': 0},
-                                                 '900': {'alloc': 0,
-                                                         'free': 0}},
-                                        'received_notifications': 0,
-                                        'received_updates': 0,
-                                        'restart_count': 1,
-                                        'route_distinguisher': '100:1',
-                                        'router_id': '4.4.4.4',
-                                        'sent_notifications': 0,
-                                        'sent_updates': 0,
-                                        'update_delay': 120,
-                                        'vrf_info': {'default': {'cfg': 1,
-                                                                 'nbrs_estab': 0,
-                                                                 'total': 1},
-                                                     'non-default': {'cfg': 2,
-                                                                     'nbrs_estab': 0,
-                                                                     'total': 3}}},
-                                  'vrf1': {'active_cluster_id': '10',
-                                           'as_number': 100,
-                                           'as_system_number_format': 'ASPLAIN',
-                                           'att': {'as_paths': {'memory_used': 0,
-                                                                'number': 0},
-                                                   'attributes': {'memory_used': 152,
-                                                                  'number': 1},
-                                                   'communities': {'memory_used': 0,
-                                                                   'number': 0},
-                                                   'extended_communities': {'memory_used': 0,
-                                                                            'number': 0},
-                                                   'nexthop_entries': {'memory_used': 7600,
-                                                                       'number': 19},
-                                                   'pe_distinguisher_labels': {'memory_used': 0,
-                                                                               'number': 0},
-                                                   'pmsi_tunnel_attr': {'memory_used': 0,
-                                                                        'number': 0},
-                                                   'ppmp_attr': {'memory_used': 0,
-                                                                 'number': 0},
-                                                   'ribrnh_tunnel_attr': {'memory_used': 0,
-                                                                          'number': 0},
-                                                   'route_reflector_entries': {'memory_used': 0,
-                                                                               'number': 0},
-                                                   'tunnel_encap_attr': {'memory_used': 0,
-                                                                         'number': 0}},
-                                           'bgp_speaker_process': 0,
-                                           'bmp_pool_summary': {'100': {'alloc': 0,
-                                                                        'free': 0},
-                                                                '10000': {'alloc': 0,
-                                                                          'free': 0},
-                                                                '1200': {'alloc': 0,
-                                                                         'free': 0},
-                                                                '200': {'alloc': 0,
-                                                                        'free': 0},
-                                                                '20000': {'alloc': 0,
-                                                                          'free': 0},
-                                                                '2200': {'alloc': 0,
-                                                                         'free': 0},
-                                                                '300': {'alloc': 0,
-                                                                        'free': 0},
-                                                                '3300': {'alloc': 0,
-                                                                         'free': 0},
-                                                                '400': {'alloc': 0,
-                                                                        'free': 0},
-                                                                '4000': {'alloc': 0,
-                                                                         'free': 0},
-                                                                '4500': {'alloc': 0,
-                                                                         'free': 0},
-                                                                '500': {'alloc': 0,
-                                                                        'free': 0},
-                                                                '5500': {'alloc': 0,
-                                                                         'free': 0},
-                                                                '600': {'alloc': 0,
-                                                                        'free': 0},
-                                                                '6500': {'alloc': 0,
-                                                                         'free': 0},
-                                                                '700': {'alloc': 0,
-                                                                        'free': 0},
-                                                                '7500': {'alloc': 0,
-                                                                         'free': 0},
-                                                                '800': {'alloc': 0,
-                                                                        'free': 0},
-                                                                '8500': {'alloc': 0,
-                                                                         'free': 0},
-                                                                '900': {'alloc': 0,
-                                                                        'free': 0}},
-                                           'current_limit_for_bmp_buffer_size': 307,
-                                           'current_utilization_of_bmp_buffer_limit': 0,
-                                           'default_cluster_id': '10',
-                                           'default_keepalive': 60,
-                                           'default_local_preference': 100,
-                                           'default_value_for_bmp_buffer_size': 307,
-                                           'enforce_first_as_enabled': True,
-                                           'fast_external_fallover': True,
-                                           'generic_scan_interval': 60,
-                                           'max_limit_for_bmp_buffer_size': 409,
-                                           'message_logging_pool_summary': {'100': {'alloc': 0,
-                                                                                    'free': 0},
-                                                                            '200': {'alloc': 0,
-                                                                                    'free': 0},
-                                                                            '2200': {'alloc': 0,
-                                                                                     'free': 0},
-                                                                            '4500': {'alloc': 0,
-                                                                                     'free': 0},
-                                                                            '500': {'alloc': 0,
-                                                                                    'free': 0}},
-                                           'neighbor_logging': True,
-                                           'node': 'node0_0_CPU0',
-                                           'non_stop_routing': True,
-                                           'operation_mode': 'standalone',
-                                           'platform_rlimit_max': 2147483648,
-                                           'pool': {'1200': {'alloc': 0,
-                                                             'free': 0},
-                                                    '200': {'alloc': 0,
-                                                            'free': 0},
-                                                    '20000': {'alloc': 0,
-                                                              'free': 0},
-                                                    '2200': {'alloc': 0,
-                                                             'free': 0},
-                                                    '300': {'alloc': 1,
-                                                            'free': 0},
-                                                    '3300': {'alloc': 0,
-                                                             'free': 0},
-                                                    '400': {'alloc': 0,
-                                                            'free': 0},
-                                                    '4000': {'alloc': 0,
-                                                             'free': 0},
-                                                    '4500': {'alloc': 0,
-                                                             'free': 0},
-                                                    '500': {'alloc': 0,
-                                                            'free': 0},
-                                                    '5000': {'alloc': 0,
-                                                             'free': 0},
-                                                    '600': {'alloc': 0,
-                                                            'free': 0},
-                                                    '700': {'alloc': 0,
-                                                            'free': 0},
-                                                    '800': {'alloc': 0,
-                                                            'free': 0},
-                                                    '900': {'alloc': 0,
-                                                            'free': 0}},
-                                           'received_notifications': 0,
-                                           'received_updates': 0,
-                                           'restart_count': 1,
-                                           'route_distinguisher': '100:3',
-                                           'router_id': '4.4.4.4',
-                                           'sent_notifications': 0,
-                                           'sent_updates': 0,
-                                           'update_delay': 120,
-                                           'vrf_info': {'default': {'cfg': 1,
-                                                                    'nbrs_estab': 0,
-                                                                    'total': 1},
-                                                        'non-default': {'cfg': 2,
-                                                                        'nbrs_estab': 0,
-                                                                        'total': 3}}}}},
-              'test': {}}}
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'VRF1': 
+                        {'active_cluster_id': '10',
+                        'cluster_id': '10',
+                        'as_number': 100,
+                        'as_system_number_format': 'ASPLAIN',
+                        'att': {'as_paths': {'memory_used': 0,
+                                            'number': 0},
+                               'attributes': {'memory_used': 152,
+                                              'number': 1},
+                               'communities': {'memory_used': 0,
+                                               'number': 0},
+                               'extended_communities': {'memory_used': 0,
+                                                        'number': 0},
+                               'nexthop_entries': {'memory_used': 7600,
+                                                   'number': 19},
+                               'pe_distinguisher_labels': {'memory_used': 0,
+                                                           'number': 0},
+                               'pmsi_tunnel_attr': {'memory_used': 0,
+                                                    'number': 0},
+                               'ppmp_attr': {'memory_used': 0,
+                                             'number': 0},
+                               'ribrnh_tunnel_attr': {'memory_used': 0,
+                                                      'number': 0},
+                               'route_reflector_entries': {'memory_used': 0,
+                                                           'number': 0},
+                               'tunnel_encap_attr': {'memory_used': 0,
+                                                     'number': 0}},
+                        'bgp_speaker_process': 0,
+                        'bmp_pool_summary': {'100': {'alloc': 0,
+                                                    'free': 0},
+                                            '10000': {'alloc': 0,
+                                                      'free': 0},
+                                            '1200': {'alloc': 0,
+                                                     'free': 0},
+                                            '200': {'alloc': 0,
+                                                    'free': 0},
+                                            '20000': {'alloc': 0,
+                                                      'free': 0},
+                                            '2200': {'alloc': 0,
+                                                     'free': 0},
+                                            '300': {'alloc': 0,
+                                                    'free': 0},
+                                            '3300': {'alloc': 0,
+                                                     'free': 0},
+                                            '400': {'alloc': 0,
+                                                    'free': 0},
+                                            '4000': {'alloc': 0,
+                                                     'free': 0},
+                                            '4500': {'alloc': 0,
+                                                     'free': 0},
+                                            '500': {'alloc': 0,
+                                                    'free': 0},
+                                            '5500': {'alloc': 0,
+                                                     'free': 0},
+                                            '600': {'alloc': 0,
+                                                    'free': 0},
+                                            '6500': {'alloc': 0,
+                                                     'free': 0},
+                                            '700': {'alloc': 0,
+                                                    'free': 0},
+                                            '7500': {'alloc': 0,
+                                                     'free': 0},
+                                            '800': {'alloc': 0,
+                                                    'free': 0},
+                                            '8500': {'alloc': 0,
+                                                     'free': 0},
+                                            '900': {'alloc': 0,
+                                                    'free': 0}},
+                        'current_limit_for_bmp_buffer_size': 307,
+                        'current_utilization_of_bmp_buffer_limit': 0,
+                        'default_cluster_id': '10',
+                        'default_keepalive': 60,
+                        'default_local_preference': 100,
+                        'default_value_for_bmp_buffer_size': 307,
+                        'enforce_first_as_enabled': True,
+                        'fast_external_fallover': True,
+                        'generic_scan_interval': 60,
+                        'max_limit_for_bmp_buffer_size': 409,
+                        'message_logging_pool_summary': {'100': {'alloc': 0,
+                                                                'free': 0},
+                                                        '200': {'alloc': 0,
+                                                                'free': 0},
+                                                        '2200': {'alloc': 0,
+                                                                 'free': 0},
+                                                        '4500': {'alloc': 0,
+                                                                 'free': 0},
+                                                        '500': {'alloc': 0,
+                                                                'free': 0}},
+                        'log_neighbor_changes': True,
+                        'node': 'node0_0_CPU0',
+                        'non_stop_routing': True,
+                        'operation_mode': 'standalone',
+                        'platform_rlimit_max': 2147483648,
+                        'pool': {'1200': {'alloc': 0,
+                                         'free': 0},
+                                '200': {'alloc': 0,
+                                        'free': 0},
+                                '20000': {'alloc': 0,
+                                          'free': 0},
+                                '2200': {'alloc': 0,
+                                         'free': 0},
+                                '300': {'alloc': 1,
+                                        'free': 0},
+                                '3300': {'alloc': 0,
+                                         'free': 0},
+                                '400': {'alloc': 0,
+                                        'free': 0},
+                                '4000': {'alloc': 0,
+                                         'free': 0},
+                                '4500': {'alloc': 0,
+                                         'free': 0},
+                                '500': {'alloc': 0,
+                                        'free': 0},
+                                '5000': {'alloc': 0,
+                                         'free': 0},
+                                '600': {'alloc': 0,
+                                        'free': 0},
+                                '700': {'alloc': 0,
+                                        'free': 0},
+                                '800': {'alloc': 0,
+                                        'free': 0},
+                                '900': {'alloc': 0,
+                                        'free': 0}},
+                        'received_notifications': 0,
+                        'received_updates': 0,
+                        'restart_count': 1,
+                        'route_distinguisher': '100:2',
+                        'router_id': '4.4.4.4',
+                        'sent_notifications': 0,
+                        'sent_updates': 0,
+                        'update_delay': 120,
+                        'vrf_info': {'default': {'cfg': 1,
+                                                'nbrs_estab': 0,
+                                                'total': 1},
+                                    'non-default': {'cfg': 2,
+                                                    'nbrs_estab': 0,
+                                                    'total': 3}}},
+                    'a': 
+                        {'active_cluster_id': '10',
+                        'cluster_id': '10',
+                        'address_family': {'ipv4 unicast ': {'attribute_download': 'Disabled',
+                                                             'bgp_table_version': '1',
+                                                             'chunk_elememt_size': '3',
+                                                             'current_vrf': 'a ',
+                                                             'dampening': False,
+                                                             'dynamic_med': True,
+                                                             'dynamic_med_int': '10 '
+                                                                                'minutes',
+                                                             'dynamic_med_periodic_timer': 'Not '
+                                                                                           'Running',
+                                                             'dynamic_med_timer': 'Not '
+                                                                                  'Running',
+                                                             'label_retention_timer_value': '5 '
+                                                                                            'mins',
+                                                             'main_table_version': '1',
+                                                             'nexthop_resolution_minimum_prefix_length': '0 '
+                                                                                                         '(not '
+                                                                                                         'configured)',
+                                                             'num_of_scan_segments': '0',
+                                                             'permanent_network': 'unconfigured',
+                                                             'prefix_scanned_per_segment': '100000',
+                                                             'prefixes_path': {'prefixes': {'mem_used': 0,
+                                                                                            'number': 0}},
+                                                             'remote_local': {'prefixes': {'allocated': 0,
+                                                                                           'freed': 0}},
+                                                             'rib_has_not_converged': 'version '
+                                                                                      '0',
+                                                             'rib_table_prefix_limit_reached': 'no',
+                                                             'rib_table_prefix_limit_ver': '0',
+                                                             'scan_interval': '60',
+                                                             'soft_reconfig_entries': '0',
+                                                             'state': 'read '
+                                                                      'only '
+                                                                      'mode',
+                                                             'table_bit_field_size': '1 ',
+                                                             'table_state': 'inactive',
+                                                             'table_version_acked_by_rib': '0',
+                                                             'table_version_synced_to_rib': '1',
+                                                             'total_prefixes_scanned': '0'}},
+                        'as_number': 100,
+                        'as_system_number_format': 'ASPLAIN',
+                        'att': {'as_paths': {'memory_used': 0,
+                                             'number': 0},
+                                'attributes': {'memory_used': 152,
+                                               'number': 1},
+                                'bmp_paths': {'memory_used': 0,
+                                              'number': 0},
+                                'bmp_prefixes': {'memory_used': 0,
+                                                 'number': 0},
+                                'communities': {'memory_used': 0,
+                                                'number': 0},
+                                'extended_communities': {'memory_used': 0,
+                                                         'number': 0},
+                                'nexthop_entries': {'memory_used': 7600,
+                                                    'number': 19},
+                                'paths': {'memory_used': 0,
+                                          'number': 0},
+                                'pe_distinguisher_labels': {'memory_used': 0,
+                                                            'number': 0},
+                                'pmsi_tunnel_attr': {'memory_used': 0,
+                                                     'number': 0},
+                                'ppmp_attr': {'memory_used': 0,
+                                              'number': 0},
+                                'ribrnh_tunnel_attr': {'memory_used': 0,
+                                                       'number': 0},
+                                'route_reflector_entries': {'memory_used': 0,
+                                                            'number': 0},
+                                'tunnel_encap_attr': {'memory_used': 0,
+                                                      'number': 0}},
+                        'bgp_speaker_process': 0,
+                        'bmp_pool_summary': {'100': {'alloc': 0,
+                                                     'free': 0},
+                                             '10000': {'alloc': 0,
+                                                       'free': 0},
+                                             '1200': {'alloc': 0,
+                                                      'free': 0},
+                                             '200': {'alloc': 0,
+                                                     'free': 0},
+                                             '20000': {'alloc': 0,
+                                                       'free': 0},
+                                             '2200': {'alloc': 0,
+                                                      'free': 0},
+                                             '300': {'alloc': 0,
+                                                     'free': 0},
+                                             '3300': {'alloc': 0,
+                                                      'free': 0},
+                                             '400': {'alloc': 0,
+                                                     'free': 0},
+                                             '4000': {'alloc': 0,
+                                                      'free': 0},
+                                             '4500': {'alloc': 0,
+                                                      'free': 0},
+                                             '500': {'alloc': 0,
+                                                     'free': 0},
+                                             '5500': {'alloc': 0,
+                                                      'free': 0},
+                                             '600': {'alloc': 0,
+                                                     'free': 0},
+                                             '6500': {'alloc': 0,
+                                                      'free': 0},
+                                             '700': {'alloc': 0,
+                                                     'free': 0},
+                                             '7500': {'alloc': 0,
+                                                      'free': 0},
+                                             '800': {'alloc': 0,
+                                                     'free': 0},
+                                             '8500': {'alloc': 0,
+                                                      'free': 0},
+                                             '900': {'alloc': 0,
+                                                     'free': 0}},
+                        'current_limit_for_bmp_buffer_size': 307,
+                        'current_utilization_of_bmp_buffer_limit': 0,
+                        'default_cluster_id': '10',
+                        'default_keepalive': 60,
+                        'default_local_preference': 100,
+                        'default_value_for_bmp_buffer_size': 307,
+                        'enforce_first_as_enabled': True,
+                        'fast_external_fallover': True,
+                        'generic_scan_interval': 60,
+                        'max_limit_for_bmp_buffer_size': 409,
+                        'message_logging_pool_summary': {'100': {'alloc': 0,
+                                                                 'free': 0},
+                                                         '200': {'alloc': 0,
+                                                                 'free': 0},
+                                                         '2200': {'alloc': 0,
+                                                                  'free': 0},
+                                                         '4500': {'alloc': 0,
+                                                                  'free': 0},
+                                                         '500': {'alloc': 0,
+                                                                 'free': 0}},
+                        'log_neighbor_changes': True,
+                        'node': 'node0_0_CPU0',
+                        'non_stop_routing': True,
+                        'operation_mode': 'standalone',
+                        'platform_rlimit_max': 2147483648,
+                        'pool': {'1200': {'alloc': 0,
+                                          'free': 0},
+                                 '200': {'alloc': 0,
+                                         'free': 0},
+                                 '20000': {'alloc': 0,
+                                           'free': 0},
+                                 '2200': {'alloc': 0,
+                                          'free': 0},
+                                 '300': {'alloc': 1,
+                                         'free': 0},
+                                 '3300': {'alloc': 0,
+                                          'free': 0},
+                                 '400': {'alloc': 0,
+                                         'free': 0},
+                                 '4000': {'alloc': 0,
+                                          'free': 0},
+                                 '4500': {'alloc': 0,
+                                          'free': 0},
+                                 '500': {'alloc': 0,
+                                         'free': 0},
+                                 '5000': {'alloc': 0,
+                                          'free': 0},
+                                 '600': {'alloc': 0,
+                                         'free': 0},
+                                 '700': {'alloc': 0,
+                                         'free': 0},
+                                 '800': {'alloc': 0,
+                                         'free': 0},
+                                 '900': {'alloc': 0,
+                                         'free': 0}},
+                        'received_notifications': 0,
+                        'received_updates': 0,
+                        'restart_count': 1,
+                        'route_distinguisher': '100:1',
+                        'router_id': '4.4.4.4',
+                        'sent_notifications': 0,
+                        'sent_updates': 0,
+                        'update_delay': 120,
+                        'vrf_info': {'default': {'cfg': 1,
+                                                 'nbrs_estab': 0,
+                                                 'total': 1},
+                                     'non-default': {'cfg': 2,
+                                                     'nbrs_estab': 0,
+                                                     'total': 3}}},
+                    'vrf1': 
+                        {'active_cluster_id': '10',
+                        'cluster_id': '10',
+                        'as_number': 100,
+                        'as_system_number_format': 'ASPLAIN',
+                        'att': {'as_paths': {'memory_used': 0,
+                                            'number': 0},
+                               'attributes': {'memory_used': 152,
+                                              'number': 1},
+                               'communities': {'memory_used': 0,
+                                               'number': 0},
+                               'extended_communities': {'memory_used': 0,
+                                                        'number': 0},
+                               'nexthop_entries': {'memory_used': 7600,
+                                                   'number': 19},
+                               'pe_distinguisher_labels': {'memory_used': 0,
+                                                           'number': 0},
+                               'pmsi_tunnel_attr': {'memory_used': 0,
+                                                    'number': 0},
+                               'ppmp_attr': {'memory_used': 0,
+                                             'number': 0},
+                               'ribrnh_tunnel_attr': {'memory_used': 0,
+                                                      'number': 0},
+                               'route_reflector_entries': {'memory_used': 0,
+                                                           'number': 0},
+                               'tunnel_encap_attr': {'memory_used': 0,
+                                                     'number': 0}},
+                        'bgp_speaker_process': 0,
+                        'bmp_pool_summary': {'100': {'alloc': 0,
+                                                    'free': 0},
+                                            '10000': {'alloc': 0,
+                                                      'free': 0},
+                                            '1200': {'alloc': 0,
+                                                     'free': 0},
+                                            '200': {'alloc': 0,
+                                                    'free': 0},
+                                            '20000': {'alloc': 0,
+                                                      'free': 0},
+                                            '2200': {'alloc': 0,
+                                                     'free': 0},
+                                            '300': {'alloc': 0,
+                                                    'free': 0},
+                                            '3300': {'alloc': 0,
+                                                     'free': 0},
+                                            '400': {'alloc': 0,
+                                                    'free': 0},
+                                            '4000': {'alloc': 0,
+                                                     'free': 0},
+                                            '4500': {'alloc': 0,
+                                                     'free': 0},
+                                            '500': {'alloc': 0,
+                                                    'free': 0},
+                                            '5500': {'alloc': 0,
+                                                     'free': 0},
+                                            '600': {'alloc': 0,
+                                                    'free': 0},
+                                            '6500': {'alloc': 0,
+                                                     'free': 0},
+                                            '700': {'alloc': 0,
+                                                    'free': 0},
+                                            '7500': {'alloc': 0,
+                                                     'free': 0},
+                                            '800': {'alloc': 0,
+                                                    'free': 0},
+                                            '8500': {'alloc': 0,
+                                                     'free': 0},
+                                            '900': {'alloc': 0,
+                                                    'free': 0}},
+                        'current_limit_for_bmp_buffer_size': 307,
+                        'current_utilization_of_bmp_buffer_limit': 0,
+                        'default_cluster_id': '10',
+                        'default_keepalive': 60,
+                        'default_local_preference': 100,
+                        'default_value_for_bmp_buffer_size': 307,
+                        'enforce_first_as_enabled': True,
+                        'fast_external_fallover': True,
+                        'generic_scan_interval': 60,
+                        'max_limit_for_bmp_buffer_size': 409,
+                        'message_logging_pool_summary': {'100': {'alloc': 0,
+                                                                'free': 0},
+                                                        '200': {'alloc': 0,
+                                                                'free': 0},
+                                                        '2200': {'alloc': 0,
+                                                                 'free': 0},
+                                                        '4500': {'alloc': 0,
+                                                                 'free': 0},
+                                                        '500': {'alloc': 0,
+                                                                'free': 0}},
+                        'log_neighbor_changes': True,
+                        'node': 'node0_0_CPU0',
+                        'non_stop_routing': True,
+                        'operation_mode': 'standalone',
+                        'platform_rlimit_max': 2147483648,
+                        'pool': {'1200': {'alloc': 0,
+                                         'free': 0},
+                                '200': {'alloc': 0,
+                                        'free': 0},
+                                '20000': {'alloc': 0,
+                                          'free': 0},
+                                '2200': {'alloc': 0,
+                                         'free': 0},
+                                '300': {'alloc': 1,
+                                        'free': 0},
+                                '3300': {'alloc': 0,
+                                         'free': 0},
+                                '400': {'alloc': 0,
+                                        'free': 0},
+                                '4000': {'alloc': 0,
+                                         'free': 0},
+                                '4500': {'alloc': 0,
+                                         'free': 0},
+                                '500': {'alloc': 0,
+                                        'free': 0},
+                                '5000': {'alloc': 0,
+                                         'free': 0},
+                                '600': {'alloc': 0,
+                                        'free': 0},
+                                '700': {'alloc': 0,
+                                        'free': 0},
+                                '800': {'alloc': 0,
+                                        'free': 0},
+                                '900': {'alloc': 0,
+                                        'free': 0}},
+                        'received_notifications': 0,
+                        'received_updates': 0,
+                        'restart_count': 1,
+                        'route_distinguisher': '100:3',
+                        'router_id': '4.4.4.4',
+                        'sent_notifications': 0,
+                        'sent_updates': 0,
+                        'update_delay': 120,
+                        'vrf_info': {'default': {'cfg': 1,
+                                                'nbrs_estab': 0,
+                                                'total': 1},
+                                    'non-default': {'cfg': 2,
+                                                    'nbrs_estab': 0,
+                                                    'total': 3}}}}},
+            'test': {}}}
 
     golden_output = {'execute.return_value': '''
 
@@ -1636,257 +1645,265 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
     
-    golden_parsed_output = {'instance': {'default': {'vrf': {'default': {'active_cluster_id': '1.1.1.1',
-                                              'address_family': {'vpnv4 unicast': {'attribute_download': 'Disabled',
-                                                                                   'bgp_table_version': '43',
-                                                                                   'chunk_elememt_size': '3',
-                                                                                   'client_reflection': True,
-                                                                                   'dampening': False,
-                                                                                   'dynamic_med': True,
-                                                                                   'dynamic_med_int': '10 '
-                                                                                                      'minutes',
-                                                                                   'dynamic_med_periodic_timer': 'Not '
-                                                                                                                 'Running',
-                                                                                   'dynamic_med_timer': 'Not '
-                                                                                                        'Running',
-                                                                                   'label_retention_timer_value': '5 '
-                                                                                                                  'mins',
-                                                                                   'main_table_version': '43',
-                                                                                   'nexthop_resolution_minimum_prefix_length': '0 '
-                                                                                                                               '(not '
-                                                                                                                               'configured)',
-                                                                                   'num_of_scan_segments': '1',
-                                                                                   'permanent_network': 'unconfigured',
-                                                                                   'prefix_scanned_per_segment': '100000',
-                                                                                   'prefixes_path': {'remote prefixes': {'mem_used': 920,
-                                                                                                                         'number': 10}},
-                                                                                   'remote_local': {'remote prefixes': {'allocated': 10,
-                                                                                                                        'freed': 0}},
-                                                                                   'rib_has_not_converged': 'version '
-                                                                                                            '0',
-                                                                                   'rib_table_prefix_limit_reached': 'no',
-                                                                                   'rib_table_prefix_limit_ver': '0',
-                                                                                   'scan_interval': '60',
-                                                                                   'soft_reconfig_entries': '0',
-                                                                                   'state': 'normal '
-                                                                                            'mode',
-                                                                                   'table_bit_field_size': '1 ',
-                                                                                   'table_version_acked_by_rib': '0',
-                                                                                   'table_version_synced_to_rib': '43',
-                                                                                   'thread': {'import thread': {'triggers': {'Jun 28 19:10:16.427': {'tbl_ver': 43,
-                                                                                                                                                     'trig_tid': 3,
-                                                                                                                                                     'ver': 43}}},
-                                                                                              'label thread': {'triggers': {'Jun 28 19:10:16.427': {'tbl_ver': 43,
-                                                                                                                                                    'trig_tid': 3,
-                                                                                                                                                    'ver': 43}}},
-                                                                                              'rib thread': {'triggers': {'Jun 28 18:29:29.595': {'tbl_ver': 43,
-                                                                                                                                                  'trig_tid': 8,
-                                                                                                                                                  'ver': 33}}},
-                                                                                              'update thread': {'triggers': {'Jun 28 19:10:16.427': {'tbl_ver': 43,
-                                                                                                                                                     'trig_tid': 8,
-                                                                                                                                                     'ver': 43}}}},
-                                                                                   'total_prefixes_scanned': '40'},
-                                                                 'vpnv6 unicast': {'attribute_download': 'Disabled',
-                                                                                   'bgp_table_version': '43',
-                                                                                   'chunk_elememt_size': '3',
-                                                                                   'client_reflection': True,
-                                                                                   'dampening': False,
-                                                                                   'dynamic_med': True,
-                                                                                   'dynamic_med_int': '10 '
-                                                                                                      'minutes',
-                                                                                   'dynamic_med_periodic_timer': 'Not '
-                                                                                                                 'Running',
-                                                                                   'dynamic_med_timer': 'Not '
-                                                                                                        'Running',
-                                                                                   'label_retention_timer_value': '5 '
-                                                                                                                  'mins',
-                                                                                   'main_table_version': '43',
-                                                                                   'nexthop_resolution_minimum_prefix_length': '0 '
-                                                                                                                               '(not '
-                                                                                                                               'configured)',
-                                                                                   'num_of_scan_segments': '1',
-                                                                                   'permanent_network': 'unconfigured',
-                                                                                   'prefix_scanned_per_segment': '100000',
-                                                                                   'prefixes_path': {'remote prefixes': {'mem_used': 1040,
-                                                                                                                         'number': 10}},
-                                                                                   'remote_local': {'remote prefixes': {'allocated': 10,
-                                                                                                                        'freed': 0}},
-                                                                                   'rib_has_not_converged': 'version '
-                                                                                                            '0',
-                                                                                   'rib_table_prefix_limit_reached': 'no',
-                                                                                   'rib_table_prefix_limit_ver': '0',
-                                                                                   'scan_interval': '60',
-                                                                                   'soft_reconfig_entries': '0',
-                                                                                   'state': 'normal '
-                                                                                            'mode',
-                                                                                   'table_bit_field_size': '1 ',
-                                                                                   'table_version_acked_by_rib': '0',
-                                                                                   'table_version_synced_to_rib': '43',
-                                                                                   'thread': {'import thread': {'triggers': {'Jun 28 19:10:16.427': {'tbl_ver': 43,
-                                                                                                                                                     'trig_tid': 3,
-                                                                                                                                                     'ver': 43}}},
-                                                                                              'label thread': {'triggers': {'Jun 28 19:10:16.427': {'tbl_ver': 43,
-                                                                                                                                                    'trig_tid': 3,
-                                                                                                                                                    'ver': 43}}},
-                                                                                              'rib thread': {'triggers': {'Jun 28 18:29:34.604': {'tbl_ver': 43,
-                                                                                                                                                  'trig_tid': 8,
-                                                                                                                                                  'ver': 33}}},
-                                                                                              'update thread': {'triggers': {'Jun 28 19:10:16.427': {'tbl_ver': 43,
-                                                                                                                                                     'trig_tid': 8,
-                                                                                                                                                     'ver': 43}}}},
-                                                                                   'total_prefixes_scanned': '40'}},
-                                              'as_number': 100,
-                                              'as_system_number_format': 'ASPLAIN',
-                                              'att': {'as_paths': {'memory_used': 480,
-                                                                   'number': 6},
-                                                      'attributes': {'memory_used': 912,
-                                                                     'number': 6},
-                                                      'communities': {'memory_used': 0,
-                                                                      'number': 0},
-                                                      'extended_communities': {'memory_used': 480,
-                                                                               'number': 6},
-                                                      'imported_paths': {'memory_used': 2200,
-                                                                         'number': 25},
-                                                      'local_paths': {'memory_used': 2640,
-                                                                      'number': 30},
-                                                      'local_prefixes': {'memory_used': 3210,
-                                                                         'number': 30},
-                                                      'local_rds': {'memory_used': 160,
-                                                                    'number': 2},
-                                                      'nexthop_entries': {'memory_used': 12800,
-                                                                          'number': 32},
-                                                      'pe_distinguisher_labels': {'memory_used': 0,
-                                                                                  'number': 0},
-                                                      'pmsi_tunnel_attr': {'memory_used': 0,
-                                                                           'number': 0},
-                                                      'ppmp_attr': {'memory_used': 0,
-                                                                    'number': 0},
-                                                      'remote_paths': {'memory_used': 1760,
-                                                                       'number': 20},
-                                                      'remote_rds': {'memory_used': 160,
-                                                                     'number': 2},
-                                                      'ribrnh_tunnel_attr': {'memory_used': 0,
-                                                                             'number': 0},
-                                                      'route_reflector_entries': {'memory_used': 320,
-                                                                                  'number': 4},
-                                                      'total_paths': {'memory_used': 4400,
-                                                                      'number': 50},
-                                                      'total_prefixes': {'memory_used': 4280,
-                                                                         'number': 40},
-                                                      'total_rds': {'memory_used': 320,
-                                                                    'number': 4},
-                                                      'tunnel_encap_attr': {'memory_used': 0,
-                                                                            'number': 0}},
-                                              'bgp_speaker_process': 0,
-                                              'bmp_pool_summary': {'100': {'alloc': 0,
-                                                                           'free': 0},
-                                                                   '10000': {'alloc': 0,
-                                                                             'free': 0},
-                                                                   '1200': {'alloc': 0,
-                                                                            'free': 0},
-                                                                   '200': {'alloc': 0,
-                                                                           'free': 0},
-                                                                   '20000': {'alloc': 0,
-                                                                             'free': 0},
-                                                                   '2200': {'alloc': 0,
-                                                                            'free': 0},
-                                                                   '300': {'alloc': 0,
-                                                                           'free': 0},
-                                                                   '3300': {'alloc': 0,
-                                                                            'free': 0},
-                                                                   '400': {'alloc': 0,
-                                                                           'free': 0},
-                                                                   '4000': {'alloc': 0,
-                                                                            'free': 0},
-                                                                   '4500': {'alloc': 0,
-                                                                            'free': 0},
-                                                                   '500': {'alloc': 0,
-                                                                           'free': 0},
-                                                                   '5500': {'alloc': 0,
-                                                                            'free': 0},
-                                                                   '600': {'alloc': 0,
-                                                                           'free': 0},
-                                                                   '6500': {'alloc': 0,
-                                                                            'free': 0},
-                                                                   '700': {'alloc': 0,
-                                                                           'free': 0},
-                                                                   '7500': {'alloc': 0,
-                                                                            'free': 0},
-                                                                   '800': {'alloc': 0,
-                                                                           'free': 0},
-                                                                   '8500': {'alloc': 0,
-                                                                            'free': 0},
-                                                                   '900': {'alloc': 0,
-                                                                           'free': 0}},
-                                              'current_limit_for_bmp_buffer_size': 307,
-                                              'current_utilization_of_bmp_buffer_limit': 0,
-                                              'default_cluster_id': '1.1.1.1',
-                                              'default_keepalive': 60,
-                                              'default_local_preference': 100,
-                                              'default_value_for_bmp_buffer_size': 307,
-                                              'enforce_first_as_enabled': True,
-                                              'fast_external_fallover': True,
-                                              'generic_scan_interval': 60,
-                                              'max_limit_for_bmp_buffer_size': 409,
-                                              'message_logging_pool_summary': {'100': {'alloc': 19,
-                                                                                       'free': 10},
-                                                                               '200': {'alloc': 11,
-                                                                                       'free': 1},
-                                                                               '2200': {'alloc': 0,
-                                                                                        'free': 0},
-                                                                               '4500': {'alloc': 0,
-                                                                                        'free': 0},
-                                                                               '500': {'alloc': 19,
-                                                                                       'free': 12}},
-                                              'neighbor_logging': True,
-                                              'node': 'node0_0_CPU0',
-                                              'non_stop_routing': True,
-                                              'operation_mode': 'standalone',
-                                              'platform_rlimit_max': 2147483648,
-                                              'pool': {'1200': {'alloc': 0,
-                                                                'free': 0},
-                                                       '200': {'alloc': 0,
-                                                               'free': 0},
-                                                       '20000': {'alloc': 0,
-                                                                 'free': 0},
+    golden_parsed_output = {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'default': 
+                        {'active_cluster_id': '1.1.1.1',
+                        'cluster_id': '1.1.1.1',
+                        'address_family': 
+                            {'vpnv4 unicast': 
+                                {'attribute_download': 'Disabled',
+                                'bgp_table_version': '43',
+                                'chunk_elememt_size': '3',
+                                'client_reflection': True,
+                                'dampening': False,
+                                'dynamic_med': True,
+                                'dynamic_med_int': '10 '
+                                                  'minutes',
+                                'dynamic_med_periodic_timer': 'Not '
+                                                             'Running',
+                                'dynamic_med_timer': 'Not '
+                                                    'Running',
+                                'label_retention_timer_value': '5 '
+                                                              'mins',
+                                'main_table_version': '43',
+                                'nexthop_resolution_minimum_prefix_length': '0 '
+                                                                           '(not '
+                                                                           'configured)',
+                                'num_of_scan_segments': '1',
+                                'permanent_network': 'unconfigured',
+                                'prefix_scanned_per_segment': '100000',
+                                'prefixes_path': {'remote prefixes': {'mem_used': 920,
+                                                                     'number': 10}},
+                                'remote_local': {'remote prefixes': {'allocated': 10,
+                                                                    'freed': 0}},
+                                'rib_has_not_converged': 'version '
+                                                        '0',
+                                'rib_table_prefix_limit_reached': 'no',
+                                'rib_table_prefix_limit_ver': '0',
+                                'scan_interval': '60',
+                                'soft_reconfig_entries': '0',
+                                'state': 'normal '
+                                        'mode',
+                                'table_bit_field_size': '1 ',
+                                'table_version_acked_by_rib': '0',
+                                'table_version_synced_to_rib': '43',
+                                'thread': {'import thread': {'triggers': {'Jun 28 19:10:16.427': {'tbl_ver': 43,
+                                                                                                 'trig_tid': 3,
+                                                                                                 'ver': 43}}},
+                                          'label thread': {'triggers': {'Jun 28 19:10:16.427': {'tbl_ver': 43,
+                                                                                                'trig_tid': 3,
+                                                                                                'ver': 43}}},
+                                          'rib thread': {'triggers': {'Jun 28 18:29:29.595': {'tbl_ver': 43,
+                                                                                              'trig_tid': 8,
+                                                                                              'ver': 33}}},
+                                          'update thread': {'triggers': {'Jun 28 19:10:16.427': {'tbl_ver': 43,
+                                                                                                 'trig_tid': 8,
+                                                                                                 'ver': 43}}}},
+                                'total_prefixes_scanned': '40'},
+                            'vpnv6 unicast': 
+                                {'attribute_download': 'Disabled',
+                                'bgp_table_version': '43',
+                                'chunk_elememt_size': '3',
+                                'client_reflection': True,
+                                'dampening': False,
+                                'dynamic_med': True,
+                                'dynamic_med_int': '10 '
+                                                  'minutes',
+                                'dynamic_med_periodic_timer': 'Not '
+                                                             'Running',
+                                'dynamic_med_timer': 'Not '
+                                                    'Running',
+                                'label_retention_timer_value': '5 '
+                                                              'mins',
+                                'main_table_version': '43',
+                                'nexthop_resolution_minimum_prefix_length': '0 '
+                                                                           '(not '
+                                                                           'configured)',
+                                'num_of_scan_segments': '1',
+                                'permanent_network': 'unconfigured',
+                                'prefix_scanned_per_segment': '100000',
+                                'prefixes_path': {'remote prefixes': {'mem_used': 1040,
+                                                                     'number': 10}},
+                                'remote_local': {'remote prefixes': {'allocated': 10,
+                                                                    'freed': 0}},
+                                'rib_has_not_converged': 'version '
+                                                        '0',
+                                'rib_table_prefix_limit_reached': 'no',
+                                'rib_table_prefix_limit_ver': '0',
+                                'scan_interval': '60',
+                                'soft_reconfig_entries': '0',
+                                'state': 'normal '
+                                        'mode',
+                                'table_bit_field_size': '1 ',
+                                'table_version_acked_by_rib': '0',
+                                'table_version_synced_to_rib': '43',
+                                'thread': {'import thread': {'triggers': {'Jun 28 19:10:16.427': {'tbl_ver': 43,
+                                                                                                 'trig_tid': 3,
+                                                                                                 'ver': 43}}},
+                                          'label thread': {'triggers': {'Jun 28 19:10:16.427': {'tbl_ver': 43,
+                                                                                                'trig_tid': 3,
+                                                                                                'ver': 43}}},
+                                          'rib thread': {'triggers': {'Jun 28 18:29:34.604': {'tbl_ver': 43,
+                                                                                              'trig_tid': 8,
+                                                                                              'ver': 33}}},
+                                          'update thread': {'triggers': {'Jun 28 19:10:16.427': {'tbl_ver': 43,
+                                                                                                 'trig_tid': 8,
+                                                                                                 'ver': 43}}}},
+                                'total_prefixes_scanned': '40'}},
+                        'as_number': 100,
+                        'as_system_number_format': 'ASPLAIN',
+                        'att': {'as_paths': {'memory_used': 480,
+                                           'number': 6},
+                              'attributes': {'memory_used': 912,
+                                             'number': 6},
+                              'communities': {'memory_used': 0,
+                                              'number': 0},
+                              'extended_communities': {'memory_used': 480,
+                                                       'number': 6},
+                              'imported_paths': {'memory_used': 2200,
+                                                 'number': 25},
+                              'local_paths': {'memory_used': 2640,
+                                              'number': 30},
+                              'local_prefixes': {'memory_used': 3210,
+                                                 'number': 30},
+                              'local_rds': {'memory_used': 160,
+                                            'number': 2},
+                              'nexthop_entries': {'memory_used': 12800,
+                                                  'number': 32},
+                              'pe_distinguisher_labels': {'memory_used': 0,
+                                                          'number': 0},
+                              'pmsi_tunnel_attr': {'memory_used': 0,
+                                                   'number': 0},
+                              'ppmp_attr': {'memory_used': 0,
+                                            'number': 0},
+                              'remote_paths': {'memory_used': 1760,
+                                               'number': 20},
+                              'remote_rds': {'memory_used': 160,
+                                             'number': 2},
+                              'ribrnh_tunnel_attr': {'memory_used': 0,
+                                                     'number': 0},
+                              'route_reflector_entries': {'memory_used': 320,
+                                                          'number': 4},
+                              'total_paths': {'memory_used': 4400,
+                                              'number': 50},
+                              'total_prefixes': {'memory_used': 4280,
+                                                 'number': 40},
+                              'total_rds': {'memory_used': 320,
+                                            'number': 4},
+                              'tunnel_encap_attr': {'memory_used': 0,
+                                                    'number': 0}},
+                        'bgp_speaker_process': 0,
+                        'bmp_pool_summary': {'100': {'alloc': 0,
+                                                   'free': 0},
+                                           '10000': {'alloc': 0,
+                                                     'free': 0},
+                                           '1200': {'alloc': 0,
+                                                    'free': 0},
+                                           '200': {'alloc': 0,
+                                                   'free': 0},
+                                           '20000': {'alloc': 0,
+                                                     'free': 0},
+                                           '2200': {'alloc': 0,
+                                                    'free': 0},
+                                           '300': {'alloc': 0,
+                                                   'free': 0},
+                                           '3300': {'alloc': 0,
+                                                    'free': 0},
+                                           '400': {'alloc': 0,
+                                                   'free': 0},
+                                           '4000': {'alloc': 0,
+                                                    'free': 0},
+                                           '4500': {'alloc': 0,
+                                                    'free': 0},
+                                           '500': {'alloc': 0,
+                                                   'free': 0},
+                                           '5500': {'alloc': 0,
+                                                    'free': 0},
+                                           '600': {'alloc': 0,
+                                                   'free': 0},
+                                           '6500': {'alloc': 0,
+                                                    'free': 0},
+                                           '700': {'alloc': 0,
+                                                   'free': 0},
+                                           '7500': {'alloc': 0,
+                                                    'free': 0},
+                                           '800': {'alloc': 0,
+                                                   'free': 0},
+                                           '8500': {'alloc': 0,
+                                                    'free': 0},
+                                           '900': {'alloc': 0,
+                                                   'free': 0}},
+                        'current_limit_for_bmp_buffer_size': 307,
+                        'current_utilization_of_bmp_buffer_limit': 0,
+                        'default_cluster_id': '1.1.1.1',
+                        'default_keepalive': 60,
+                        'default_local_preference': 100,
+                        'default_value_for_bmp_buffer_size': 307,
+                        'enforce_first_as_enabled': True,
+                        'fast_external_fallover': True,
+                        'generic_scan_interval': 60,
+                        'max_limit_for_bmp_buffer_size': 409,
+                        'message_logging_pool_summary': {'100': {'alloc': 19,
+                                                               'free': 10},
+                                                       '200': {'alloc': 11,
+                                                               'free': 1},
                                                        '2200': {'alloc': 0,
-                                                                'free': 0},
-                                                       '300': {'alloc': 311,
-                                                               'free': 310},
-                                                       '3300': {'alloc': 0,
-                                                                'free': 0},
-                                                       '400': {'alloc': 6,
-                                                               'free': 6},
-                                                       '4000': {'alloc': 0,
                                                                 'free': 0},
                                                        '4500': {'alloc': 0,
                                                                 'free': 0},
-                                                       '500': {'alloc': 20,
-                                                               'free': 20},
-                                                       '5000': {'alloc': 0,
-                                                                'free': 0},
-                                                       '600': {'alloc': 12,
-                                                               'free': 12},
-                                                       '700': {'alloc': 2,
-                                                               'free': 2},
-                                                       '800': {'alloc': 0,
-                                                               'free': 0},
-                                                       '900': {'alloc': 0,
-                                                               'free': 0}},
-                                              'received_notifications': 0,
-                                              'received_updates': 24,
-                                              'restart_count': 1,
-                                              'router_id': '1.1.1.1',
-                                              'sent_notifications': 1,
-                                              'sent_updates': 14,
-                                              'update_delay': 120,
-                                              'vrf_info': {'default': {'cfg': 2,
-                                                                       'nbrs_estab': 2,
-                                                                       'total': 1},
-                                                           'non-default': {'cfg': 4,
-                                                                           'nbrs_estab': 4,
-                                                                           'total': 2}}}}}}}
-
+                                                       '500': {'alloc': 19,
+                                                               'free': 12}},
+                        'log_neighbor_changes': True,
+                        'node': 'node0_0_CPU0',
+                        'non_stop_routing': True,
+                        'operation_mode': 'standalone',
+                        'platform_rlimit_max': 2147483648,
+                        'pool': {'1200': {'alloc': 0,
+                                        'free': 0},
+                               '200': {'alloc': 0,
+                                       'free': 0},
+                               '20000': {'alloc': 0,
+                                         'free': 0},
+                               '2200': {'alloc': 0,
+                                        'free': 0},
+                               '300': {'alloc': 311,
+                                       'free': 310},
+                               '3300': {'alloc': 0,
+                                        'free': 0},
+                               '400': {'alloc': 6,
+                                       'free': 6},
+                               '4000': {'alloc': 0,
+                                        'free': 0},
+                               '4500': {'alloc': 0,
+                                        'free': 0},
+                               '500': {'alloc': 20,
+                                       'free': 20},
+                               '5000': {'alloc': 0,
+                                        'free': 0},
+                               '600': {'alloc': 12,
+                                       'free': 12},
+                               '700': {'alloc': 2,
+                                       'free': 2},
+                               '800': {'alloc': 0,
+                                       'free': 0},
+                               '900': {'alloc': 0,
+                                       'free': 0}},
+                        'received_notifications': 0,
+                        'received_updates': 24,
+                        'restart_count': 1,
+                        'router_id': '1.1.1.1',
+                        'sent_notifications': 1,
+                        'sent_updates': 14,
+                        'update_delay': 120,
+                        'vrf_info': {'default': {'cfg': 2,
+                                               'nbrs_estab': 2,
+                                               'total': 1},
+                                   'non-default': {'cfg': 4,
+                                                   'nbrs_estab': 4,
+                                                   'total': 2}}}}}}}
 
     golden_output = {'execute.return_value': '''
         Wed Jun 28 19:11:16.033 UTC
@@ -2169,239 +2186,248 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
         Total Path-elems:     40              4400          
         Imported Paths:       25              2200          
         Total RDs:            4               320
-    '''}
+        '''}
 
-    golden_parsed_output1 = {'instance': {'default': {'vrf': {'default': {'active_cluster_id': '1.1.1.1',
-                                              'address_family': {'vpnv4 unicast': {'attribute_download': 'Disabled',
-                                                                                   'bgp_table_version': '7',
-                                                                                   'chunk_elememt_size': '3',
-                                                                                   'client_reflection': True,
-                                                                                   'dampening': False,
-                                                                                   'dynamic_med': True,
-                                                                                   'dynamic_med_int': '10 '
-                                                                                                      'minutes',
-                                                                                   'dynamic_med_periodic_timer': 'Not '
-                                                                                                                 'Running',
-                                                                                   'dynamic_med_timer': 'Not '
-                                                                                                        'Running',
-                                                                                   'label_retention_timer_value': '5 '
-                                                                                                                  'mins',
-                                                                                   'main_table_version': '7',
-                                                                                   'nexthop_resolution_minimum_prefix_length': '0 '
-                                                                                                                               '(not '
-                                                                                                                               'configured)',
-                                                                                   'num_of_scan_segments': '1',
-                                                                                   'permanent_network': 'unconfigured',
-                                                                                   'prefix_scanned_per_segment': '100000',
-                                                                                   'prefixes_path': {'remote prefixes': {'mem_used': 0,
-                                                                                                                         'number': 0}},
-                                                                                   'remote_local': {'remote prefixes': {'allocated': 0,
-                                                                                                                        'freed': 0}},
-                                                                                   'rib_has_not_converged': 'version '
-                                                                                                            '0',
-                                                                                   'rib_table_prefix_limit_reached': 'no',
-                                                                                   'rib_table_prefix_limit_ver': '0',
-                                                                                   'scan_interval': '60',
-                                                                                   'soft_reconfig_entries': '0',
-                                                                                   'state': 'normal '
-                                                                                            'mode',
-                                                                                   'table_bit_field_size': '1 ',
-                                                                                   'table_version_acked_by_rib': '0',
-                                                                                   'table_version_synced_to_rib': '7',
-                                                                                   'total_prefixes_scanned': '0'},
-                                                                 'vpnv6 unicast': {'attribute_download': 'Disabled',
-                                                                                   'bgp_table_version': '7',
-                                                                                   'chunk_elememt_size': '3',
-                                                                                   'client_reflection': True,
-                                                                                   'dampening': False,
-                                                                                   'dynamic_med': True,
-                                                                                   'dynamic_med_int': '10 '
-                                                                                                      'minutes',
-                                                                                   'dynamic_med_periodic_timer': 'Not '
-                                                                                                                 'Running',
-                                                                                   'dynamic_med_timer': 'Not '
-                                                                                                        'Running',
-                                                                                   'label_retention_timer_value': '5 '
-                                                                                                                  'mins',
-                                                                                   'main_table_version': '7',
-                                                                                   'nexthop_resolution_minimum_prefix_length': '0 '
-                                                                                                                               '(not '
-                                                                                                                               'configured)',
-                                                                                   'num_of_scan_segments': '1',
-                                                                                   'permanent_network': 'unconfigured',
-                                                                                   'prefix_scanned_per_segment': '100000',
-                                                                                   'prefixes_path': {'remote prefixes': {'mem_used': 0,
-                                                                                                                         'number': 0}},
-                                                                                   'remote_local': {'remote prefixes': {'allocated': 0,
-                                                                                                                        'freed': 0}},
-                                                                                   'rib_has_not_converged': 'version '
-                                                                                                            '0',
-                                                                                   'rib_table_prefix_limit_reached': 'no',
-                                                                                   'rib_table_prefix_limit_ver': '0',
-                                                                                   'scan_interval': '60',
-                                                                                   'soft_reconfig_entries': '0',
-                                                                                   'state': 'normal '
-                                                                                            'mode',
-                                                                                   'table_bit_field_size': '1 ',
-                                                                                   'table_version_acked_by_rib': '0',
-                                                                                   'table_version_synced_to_rib': '7',
-                                                                                   'total_prefixes_scanned': '0'}},
-                                              'as_number': 100,
-                                              'as_system_number_format': 'ASPLAIN',
-                                              'att': {'as_paths': {'memory_used': 0,
-                                                                   'number': 0},
-                                                      'attributes': {'memory_used': 0,
-                                                                     'number': 0},
-                                                      'communities': {'memory_used': 0,
-                                                                      'number': 0},
-                                                      'extended_communities': {'memory_used': 0,
-                                                                               'number': 0},
-                                                      'imported_paths': {'memory_used': 0,
-                                                                         'number': 0},
-                                                      'large_communities': {'memory_used': 0,
-                                                                            'number': 0},
-                                                      'local_paths': {'memory_used': 0,
-                                                                      'number': 0},
-                                                      'local_prefixes': {'memory_used': 0,
-                                                                         'number': 0},
-                                                      'local_rds': {'memory_used': 160,
-                                                                    'number': 2},
-                                                      'nexthop_entries': {'memory_used': 10400,
-                                                                          'number': 26},
-                                                      'pe_distinguisher_labels': {'memory_used': 0,
-                                                                                  'number': 0},
-                                                      'pmsi_tunnel_attr': {'memory_used': 0,
-                                                                           'number': 0},
-                                                      'ppmp_attr': {'memory_used': 0,
-                                                                    'number': 0},
-                                                      'remote_paths': {'memory_used': 0,
-                                                                       'number': 0},
-                                                      'remote_rds': {'memory_used': 0,
-                                                                     'number': 0},
-                                                      'ribrnh_tunnel_attr': {'memory_used': 0,
-                                                                             'number': 0},
-                                                      'route_reflector_entries': {'memory_used': 0,
-                                                                                  'number': 0},
-                                                      'total_paths': {'memory_used': 0,
-                                                                      'number': 0},
-                                                      'total_prefixes': {'memory_used': 0,
-                                                                         'number': 0},
-                                                      'total_rds': {'memory_used': 160,
-                                                                    'number': 2},
-                                                      'tunnel_encap_attr': {'memory_used': 0,
-                                                                            'number': 0}},
-                                              'bgp_speaker_process': 0,
-                                              'bmp_pool_summary': {'100': {'alloc': 0,
-                                                                           'free': 0},
-                                                                   '10000': {'alloc': 0,
-                                                                             'free': 0},
-                                                                   '1200': {'alloc': 0,
-                                                                            'free': 0},
-                                                                   '200': {'alloc': 0,
-                                                                           'free': 0},
-                                                                   '20000': {'alloc': 0,
-                                                                             'free': 0},
-                                                                   '2200': {'alloc': 0,
-                                                                            'free': 0},
-                                                                   '300': {'alloc': 0,
-                                                                           'free': 0},
-                                                                   '3300': {'alloc': 0,
-                                                                            'free': 0},
-                                                                   '400': {'alloc': 0,
-                                                                           'free': 0},
-                                                                   '4000': {'alloc': 0,
-                                                                            'free': 0},
-                                                                   '4500': {'alloc': 0,
-                                                                            'free': 0},
-                                                                   '500': {'alloc': 0,
-                                                                           'free': 0},
-                                                                   '5500': {'alloc': 0,
-                                                                            'free': 0},
-                                                                   '600': {'alloc': 0,
-                                                                           'free': 0},
-                                                                   '6500': {'alloc': 0,
-                                                                            'free': 0},
-                                                                   '700': {'alloc': 0,
-                                                                           'free': 0},
-                                                                   '7500': {'alloc': 0,
-                                                                            'free': 0},
-                                                                   '800': {'alloc': 0,
-                                                                           'free': 0},
-                                                                   '8500': {'alloc': 0,
-                                                                            'free': 0},
-                                                                   '900': {'alloc': 0,
-                                                                           'free': 0}},
-                                              'current_limit_for_bmp_buffer_size': 326,
-                                              'current_utilization_of_bmp_buffer_limit': 0,
-                                              'default_cluster_id': '1.1.1.1',
-                                              'default_keepalive': 60,
-                                              'default_local_preference': 100,
-                                              'default_value_for_bmp_buffer_size': 326,
-                                              'enforce_first_as_enabled': True,
-                                              'fast_external_fallover': True,
-                                              'generic_scan_interval': 60,
-                                              'max_limit_for_bmp_buffer_size': 435,
-                                              'message_logging_pool_summary': {'100': {'alloc': 0,
-                                                                                       'free': 0},
-                                                                               '200': {'alloc': 0,
-                                                                                       'free': 0},
-                                                                               '2200': {'alloc': 0,
-                                                                                        'free': 0},
-                                                                               '4500': {'alloc': 0,
-                                                                                        'free': 0},
-                                                                               '500': {'alloc': 0,
-                                                                                       'free': 0}},
-                                              'neighbor_logging': True,
-                                              'node': 'node0_RSP1_CPU0',
-                                              'non_stop_routing': True,
-                                              'operation_mode': 'standalone',
-                                              'platform_rlimit_max': 2281701376,
-                                              'pool': {'1200': {'alloc': 0,
-                                                                'free': 0},
+    golden_parsed_output1 = {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'default': 
+                        {'active_cluster_id': '1.1.1.1',
+                        'cluster_id': '1.1.1.1',
+                        'address_family': 
+                            {'vpnv4 unicast': 
+                                {'attribute_download': 'Disabled',
+                                'bgp_table_version': '7',
+                                'chunk_elememt_size': '3',
+                                'client_reflection': True,
+                                'dampening': False,
+                                'dynamic_med': True,
+                                'dynamic_med_int': '10 '
+                                                  'minutes',
+                                'dynamic_med_periodic_timer': 'Not '
+                                                             'Running',
+                                'dynamic_med_timer': 'Not '
+                                                    'Running',
+                                'label_retention_timer_value': '5 '
+                                                              'mins',
+                                'main_table_version': '7',
+                                'nexthop_resolution_minimum_prefix_length': '0 '
+                                                                           '(not '
+                                                                           'configured)',
+                                'num_of_scan_segments': '1',
+                                'permanent_network': 'unconfigured',
+                                'prefix_scanned_per_segment': '100000',
+                                'prefixes_path': {'remote prefixes': {'mem_used': 0,
+                                                                     'number': 0}},
+                                'remote_local': {'remote prefixes': {'allocated': 0,
+                                                                    'freed': 0}},
+                                'rib_has_not_converged': 'version '
+                                                        '0',
+                                'rib_table_prefix_limit_reached': 'no',
+                                'rib_table_prefix_limit_ver': '0',
+                                'scan_interval': '60',
+                                'soft_reconfig_entries': '0',
+                                'state': 'normal '
+                                        'mode',
+                                'table_bit_field_size': '1 ',
+                                'table_version_acked_by_rib': '0',
+                                'table_version_synced_to_rib': '7',
+                                'total_prefixes_scanned': '0'},
+                            'vpnv6 unicast': 
+                                {'attribute_download': 'Disabled',
+                                'bgp_table_version': '7',
+                                'chunk_elememt_size': '3',
+                                'client_reflection': True,
+                                'dampening': False,
+                                'dynamic_med': True,
+                                'dynamic_med_int': '10 '
+                                                  'minutes',
+                                'dynamic_med_periodic_timer': 'Not '
+                                                             'Running',
+                                'dynamic_med_timer': 'Not '
+                                                    'Running',
+                                'label_retention_timer_value': '5 '
+                                                              'mins',
+                                'main_table_version': '7',
+                                'nexthop_resolution_minimum_prefix_length': '0 '
+                                                                           '(not '
+                                                                           'configured)',
+                                'num_of_scan_segments': '1',
+                                'permanent_network': 'unconfigured',
+                                'prefix_scanned_per_segment': '100000',
+                                'prefixes_path': {'remote prefixes': {'mem_used': 0,
+                                                                     'number': 0}},
+                                'remote_local': {'remote prefixes': {'allocated': 0,
+                                                                    'freed': 0}},
+                                'rib_has_not_converged': 'version '
+                                                        '0',
+                                'rib_table_prefix_limit_reached': 'no',
+                                'rib_table_prefix_limit_ver': '0',
+                                'scan_interval': '60',
+                                'soft_reconfig_entries': '0',
+                                'state': 'normal '
+                                        'mode',
+                                'table_bit_field_size': '1 ',
+                                'table_version_acked_by_rib': '0',
+                                'table_version_synced_to_rib': '7',
+                                'total_prefixes_scanned': '0'}},
+                        'as_number': 100,
+                        'as_system_number_format': 'ASPLAIN',
+                        'att': {'as_paths': {'memory_used': 0,
+                                           'number': 0},
+                              'attributes': {'memory_used': 0,
+                                             'number': 0},
+                              'communities': {'memory_used': 0,
+                                              'number': 0},
+                              'extended_communities': {'memory_used': 0,
+                                                       'number': 0},
+                              'imported_paths': {'memory_used': 0,
+                                                 'number': 0},
+                              'large_communities': {'memory_used': 0,
+                                                    'number': 0},
+                              'local_paths': {'memory_used': 0,
+                                              'number': 0},
+                              'local_prefixes': {'memory_used': 0,
+                                                 'number': 0},
+                              'local_rds': {'memory_used': 160,
+                                            'number': 2},
+                              'nexthop_entries': {'memory_used': 10400,
+                                                  'number': 26},
+                              'pe_distinguisher_labels': {'memory_used': 0,
+                                                          'number': 0},
+                              'pmsi_tunnel_attr': {'memory_used': 0,
+                                                   'number': 0},
+                              'ppmp_attr': {'memory_used': 0,
+                                            'number': 0},
+                              'remote_paths': {'memory_used': 0,
+                                               'number': 0},
+                              'remote_rds': {'memory_used': 0,
+                                             'number': 0},
+                              'ribrnh_tunnel_attr': {'memory_used': 0,
+                                                     'number': 0},
+                              'route_reflector_entries': {'memory_used': 0,
+                                                          'number': 0},
+                              'total_paths': {'memory_used': 0,
+                                              'number': 0},
+                              'total_prefixes': {'memory_used': 0,
+                                                 'number': 0},
+                              'total_rds': {'memory_used': 160,
+                                            'number': 2},
+                              'tunnel_encap_attr': {'memory_used': 0,
+                                                    'number': 0}},
+                        'bgp_speaker_process': 0,
+                        'bmp_pool_summary': {'100': {'alloc': 0,
+                                                   'free': 0},
+                                           '10000': {'alloc': 0,
+                                                     'free': 0},
+                                           '1200': {'alloc': 0,
+                                                    'free': 0},
+                                           '200': {'alloc': 0,
+                                                   'free': 0},
+                                           '20000': {'alloc': 0,
+                                                     'free': 0},
+                                           '2200': {'alloc': 0,
+                                                    'free': 0},
+                                           '300': {'alloc': 0,
+                                                   'free': 0},
+                                           '3300': {'alloc': 0,
+                                                    'free': 0},
+                                           '400': {'alloc': 0,
+                                                   'free': 0},
+                                           '4000': {'alloc': 0,
+                                                    'free': 0},
+                                           '4500': {'alloc': 0,
+                                                    'free': 0},
+                                           '500': {'alloc': 0,
+                                                   'free': 0},
+                                           '5500': {'alloc': 0,
+                                                    'free': 0},
+                                           '600': {'alloc': 0,
+                                                   'free': 0},
+                                           '6500': {'alloc': 0,
+                                                    'free': 0},
+                                           '700': {'alloc': 0,
+                                                   'free': 0},
+                                           '7500': {'alloc': 0,
+                                                    'free': 0},
+                                           '800': {'alloc': 0,
+                                                   'free': 0},
+                                           '8500': {'alloc': 0,
+                                                    'free': 0},
+                                           '900': {'alloc': 0,
+                                                   'free': 0}},
+                        'current_limit_for_bmp_buffer_size': 326,
+                        'current_utilization_of_bmp_buffer_limit': 0,
+                        'default_cluster_id': '1.1.1.1',
+                        'default_keepalive': 60,
+                        'default_local_preference': 100,
+                        'default_value_for_bmp_buffer_size': 326,
+                        'enforce_first_as_enabled': True,
+                        'fast_external_fallover': True,
+                        'generic_scan_interval': 60,
+                        'max_limit_for_bmp_buffer_size': 435,
+                        'message_logging_pool_summary': {'100': {'alloc': 0,
+                                                               'free': 0},
                                                        '200': {'alloc': 0,
                                                                'free': 0},
-                                                       '20000': {'alloc': 0,
-                                                                 'free': 0},
                                                        '2200': {'alloc': 0,
-                                                                'free': 0},
-                                                       '300': {'alloc': 1,
-                                                               'free': 0},
-                                                       '3300': {'alloc': 0,
-                                                                'free': 0},
-                                                       '400': {'alloc': 0,
-                                                               'free': 0},
-                                                       '4000': {'alloc': 0,
                                                                 'free': 0},
                                                        '4500': {'alloc': 0,
                                                                 'free': 0},
                                                        '500': {'alloc': 0,
-                                                               'free': 0},
-                                                       '5000': {'alloc': 0,
-                                                                'free': 0},
-                                                       '600': {'alloc': 0,
-                                                               'free': 0},
-                                                       '700': {'alloc': 0,
-                                                               'free': 0},
-                                                       '800': {'alloc': 0,
-                                                               'free': 0},
-                                                       '900': {'alloc': 0,
                                                                'free': 0}},
-                                              'received_notifications': 0,
-                                              'received_updates': 0,
-                                              'restart_count': 1,
-                                              'router_id': '1.1.1.1',
-                                              'sent_notifications': 0,
-                                              'sent_updates': 0,
-                                              'update_delay': 120,
-                                              'vrf_info': {'default': {'cfg': 2,
-                                                                       'nbrs_estab': 0,
-                                                                       'total': 1},
-                                                           'non-default': {'cfg': 4,
-                                                                           'nbrs_estab': 0,
-                                                                           'total': 2}}}}},
-              'test': {'vrf': {'default': {}}},
-              'test1': {'vrf': {'default': {}}},
-              'test2': {'vrf': {'default': {}}}}}
+                        'log_neighbor_changes': True,
+                        'node': 'node0_RSP1_CPU0',
+                        'non_stop_routing': True,
+                        'operation_mode': 'standalone',
+                        'platform_rlimit_max': 2281701376,
+                        'pool': {'1200': {'alloc': 0,
+                                        'free': 0},
+                               '200': {'alloc': 0,
+                                       'free': 0},
+                               '20000': {'alloc': 0,
+                                         'free': 0},
+                               '2200': {'alloc': 0,
+                                        'free': 0},
+                               '300': {'alloc': 1,
+                                       'free': 0},
+                               '3300': {'alloc': 0,
+                                        'free': 0},
+                               '400': {'alloc': 0,
+                                       'free': 0},
+                               '4000': {'alloc': 0,
+                                        'free': 0},
+                               '4500': {'alloc': 0,
+                                        'free': 0},
+                               '500': {'alloc': 0,
+                                       'free': 0},
+                               '5000': {'alloc': 0,
+                                        'free': 0},
+                               '600': {'alloc': 0,
+                                       'free': 0},
+                               '700': {'alloc': 0,
+                                       'free': 0},
+                               '800': {'alloc': 0,
+                                       'free': 0},
+                               '900': {'alloc': 0,
+                                       'free': 0}},
+                        'received_notifications': 0,
+                        'received_updates': 0,
+                        'restart_count': 1,
+                        'router_id': '1.1.1.1',
+                        'sent_notifications': 0,
+                        'sent_updates': 0,
+                        'update_delay': 120,
+                        'vrf_info': {'default': {'cfg': 2,
+                                               'nbrs_estab': 0,
+                                               'total': 1},
+                                   'non-default': {'cfg': 4,
+                                                   'nbrs_estab': 0,
+                                                   'total': 2}}}}},
+            'test': {'vrf': {'default': {}}},
+            'test1': {'vrf': {'default': {}}},
+            'test2': {'vrf': {'default': {}}}}}
         
     golden_output1 = {'execute.return_value': '''
         BGP instance 0: 'default'
@@ -2790,7 +2816,7 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                              "refresh_request_status": "No Refresh request being processed",
                                              "prefix_suppressed": 0,
                                              "route_refresh_request_received": 0,
-                                             "maximum_prefixes_allowed": 2097152,
+                                             "maximum_prefix_max_prefix_no": 2097152,
                                              "neighbor_version": 43,
                                              "maximum_prefix_restart": 0,
                                              "eor_status": "was received during read-only mode",
@@ -2815,7 +2841,7 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                              "refresh_request_status": "No Refresh request being processed",
                                              "prefix_suppressed": 0,
                                              "route_refresh_request_received": 0,
-                                             "maximum_prefixes_allowed": 1048576,
+                                             "maximum_prefix_max_prefix_no": 1048576,
                                              "neighbor_version": 43,
                                              "maximum_prefix_restart": 0,
                                              "eor_status": "was received during read-only mode",
@@ -2930,7 +2956,7 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                              "refresh_request_status": "No Refresh request being processed",
                                              "prefix_suppressed": 0,
                                              "route_refresh_request_received": 0,
-                                             "maximum_prefixes_allowed": 2097152,
+                                             "maximum_prefix_max_prefix_no": 2097152,
                                              "neighbor_version": 43,
                                              "maximum_prefix_restart": 0,
                                              "eor_status": "was not received during read-only mode",
@@ -2955,7 +2981,7 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                              "refresh_request_status": "No Refresh request being processed",
                                              "prefix_suppressed": 0,
                                              "route_refresh_request_received": 0,
-                                             "maximum_prefixes_allowed": 1048576,
+                                             "maximum_prefix_max_prefix_no": 1048576,
                                              "neighbor_version": 43,
                                              "maximum_prefix_restart": 0,
                                              "eor_status": "was not received during read-only mode",
@@ -3264,7 +3290,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                         "last_ack_version": 43,
                                         "best_paths": 0,
                                         "cummulative_no_prefixes_denied": 5,
-                                        "maximum_prefixes_allowed": 524288,
+                                        "maximum_prefix_max_prefix_no": 524288,
                                         "cummulative_no_no_policy": 5,
                                         "eor_status": "was not received during read-only mode",
                                         "maximum_prefix_warning_only": True,
@@ -3386,7 +3412,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                         "last_ack_version": 43,
                                         "best_paths": 0,
                                         "cummulative_no_prefixes_denied": 5,
-                                        "maximum_prefixes_allowed": 1048576,
+                                        "maximum_prefix_max_prefix_no": 1048576,
                                         "cummulative_no_no_policy": 5,
                                         "eor_status": "was not received during read-only mode",
                                         "maximum_prefix_warning_only": True,
@@ -3511,7 +3537,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                         "last_ack_version": 43,
                                         "best_paths": 5,
                                         "cummulative_no_prefixes_denied": 0,
-                                        "maximum_prefixes_allowed": 524288,
+                                        "maximum_prefix_max_prefix_no": 524288,
                                         "eor_status": "was not received during read-only mode",
                                         "maximum_prefix_warning_only": True,
                                         "additional_paths_operation": "None",
@@ -3629,7 +3655,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                         "last_ack_version": 43,
                                         "best_paths": 5,
                                         "cummulative_no_prefixes_denied": 0,
-                                        "maximum_prefixes_allowed": 495,
+                                        "maximum_prefix_max_prefix_no": 495,
                                         "eor_status": "was not received during read-only mode",
                                         "maximum_prefix_warning_only": True,
                                         "additional_paths_operation": "None",
@@ -4017,82 +4043,101 @@ class test_show_bgp_instance_all_vrf_all_neighbors_advertised_routes(unittest.Te
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output =  {'instance': {'default': {'vrf': {'VRF1': {},
-                                  'VRF2': {'address_family': {'vpnv4 unicast RD 200:2': {'advertised': {'prefix': {'46.1.1.0/24': {'index': {1: {'froms': '2.2.2.2',
-                                                                                                                                                'next_hop': '20.1.5.1',
-                                                                                                                                                'origin_code': 'e',
-                                                                                                                                                'path': '100 '
-                                                                                                                                                        '300 '
-                                                                                                                                                        '33299 '
-                                                                                                                                                        '51178 '
-                                                                                                                                                        '47751 '
-                                                                                                                                                        '{27016}'}}},
-                                                                                                                  '46.1.4.0/24': {'index': {1: {'froms': '2.2.2.2',
-                                                                                                                                                'next_hop': '20.1.5.1',
-                                                                                                                                                'origin_code': 'e',
-                                                                                                                                                'path': '100 '
-                                                                                                                                                        '300 '
-                                                                                                                                                        '33299 '
-                                                                                                                                                        '51178 '
-                                                                                                                                                        '47751 '
-                                                                                                                                                        '{27016}'}}},
-                                                                                                                  '46.1.5.0/24': {'index': {1: {'froms': '2.2.2.2',
-                                                                                                                                                'next_hop': '20.1.5.1',
-                                                                                                                                                'origin_code': 'e',
-                                                                                                                                                'path': '100 '
-                                                                                                                                                        '300 '
-                                                                                                                                                        '33299 '
-                                                                                                                                                        '51178 '
-                                                                                                                                                        '47751 '
-                                                                                                                                                        '{27016}'}}},
-                                                                                                                  '46.2.2.0/24': {'index': {1: {'froms': '2.2.2.2',
-                                                                                                                                                'next_hop': '20.1.5.1',
-                                                                                                                                                'origin_code': 'e',
-                                                                                                                                                'path': '100 '
-                                                                                                                                                        '400 '
-                                                                                                                                                        '33299 '
-                                                                                                                                                        '51178 '
-                                                                                                                                                        '47751 '
-                                                                                                                                                        '{27016}'}}}}},
-                                                                                        'default_vrf': 'VRF2',
-                                                                                        'processed_paths': '4',
-                                                                                        'processed_prefixes': '4',
-                                                                                        'route_distinguisher': '200:2'}}}}}}}
+    golden_parsed_output =  {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'VRF1': {},
+                    'VRF2': 
+                        {'address_family': 
+                            {'vpnv4 unicast RD 200:2': 
+                                {'advertised': 
+                                    {'46.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'froms': '2.2.2.2',
+                                                'next_hop': '20.1.5.1',
+                                                'origin_code': 'e',
+                                                'path': '100 '
+                                                        '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}'}}},
+                                    '46.1.4.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'froms': '2.2.2.2',
+                                                'next_hop': '20.1.5.1',
+                                                'origin_code': 'e',
+                                                'path': '100 '
+                                                        '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}'}}},
+                                    '46.1.5.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'froms': '2.2.2.2',
+                                                'next_hop': '20.1.5.1',
+                                                'origin_code': 'e',
+                                                'path': '100 '
+                                                        '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}'}}},
+                                    '46.2.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'froms': '2.2.2.2',
+                                                'next_hop': '20.1.5.1',
+                                                'origin_code': 'e',
+                                                'path': '100 '
+                                                        '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}'}}}},
+                                'default_vrf': 'VRF2',
+                                'processed_paths': '4',
+                                'processed_prefixes': '4',
+                                'route_distinguisher': '200:2'}}}}}}}
 
     golden_output = {'execute.return_value': '''
 
-     Neighbor not found
+        Neighbor not found
 
-    BGP instance 0: 'default'
-    =========================
+        BGP instance 0: 'default'
+        =========================
 
-    VRF: VRF1
-    ---------
+        VRF: VRF1
+        ---------
 
-    VRF: VRF2
-    ---------
-    Network            Next Hop        From            AS Path
-    Route Distinguisher: 200:2 (default for vrf VRF2)
-    46.1.1.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
-    46.1.4.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
-    46.1.5.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
-    46.2.2.0/24        20.1.5.1        2.2.2.2         100 400 33299 51178 47751 {27016}e
+        VRF: VRF2
+        ---------
+        Network            Next Hop        From            AS Path
+        Route Distinguisher: 200:2 (default for vrf VRF2)
+        46.1.1.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
+        46.1.4.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
+        46.1.5.0/24        20.1.5.1        2.2.2.2         100 300 33299 51178 47751 {27016}e
+        46.2.2.0/24        20.1.5.1        2.2.2.2         100 400 33299 51178 47751 {27016}e
 
-    Processed 4 prefixes, 4 paths
-
+        Processed 4 prefixes, 4 paths
         '''}
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
-        bgp_instance_all_vrf_all_neighbors_advertised_routes_obj = ShowBgpInstanceNeighborsAdvertisedRoutes(device=self.device1)
+        obj = ShowBgpInstanceNeighborsAdvertisedRoutes(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = bgp_instance_all_vrf_all_neighbors_advertised_routes_obj.parse(neighbor='20.1.5.5', vrf='vrf')
+            parsed_output = obj.parse(vrf_type='vrf', neighbor='20.1.5.5')
 
     def test_golden(self):
-        self.device = Mock(**self.golden_output)
-        bgp_instance_all_vrf_all_neighbors_advertised_routes_obj = ShowBgpInstanceNeighborsAdvertisedRoutes(device=self.device)
-        parsed_output = bgp_instance_all_vrf_all_neighbors_advertised_routes_obj.parse(neighbor='20.1.5.5', vrf='vrf')
         self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpInstanceNeighborsAdvertisedRoutes(device=self.device)
+        parsed_output = obj.parse(vrf_type='vrf', neighbor='20.1.5.5')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -4105,50 +4150,73 @@ class test_show_bgp_instance_all_all_all_neighbors_advertised_routes(unittest.Te
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output =  {'instance': {'default': {'vrf': {'default': {'address_family': {'vpnv4 unicast RD 200:2': {'advertised': {'prefix': {'15.1.1.0/24': {'index': {1: {'froms': '20.1.5.5',
-                                                                                                                                                    'next_hop': '1.1.1.1',
-                                                                                                                                                    'origin_code': 'e',
-                                                                                                                                                    'path': '200 '
-                                                                                                                                                            '33299 '
-                                                                                                                                                            '51178 '
-                                                                                                                                                            '47751 '
-                                                                                                                                                            '{27016}'}}},
-                                                                                                                      '15.1.2.0/24': {'index': {1: {'froms': '20.1.5.5',
-                                                                                                                                                    'next_hop': '1.1.1.1',
-                                                                                                                                                    'origin_code': 'e',
-                                                                                                                                                    'path': '200 '
-                                                                                                                                                            '33299 '
-                                                                                                                                                            '51178 '
-                                                                                                                                                            '47751 '
-                                                                                                                                                            '{27016}'}}}}},
-                                                                                            'default_vrf': 'default',
-                                                                                            'processed_paths': '2',
-                                                                                            'processed_prefixes': '2',
-                                                                                            'route_distinguisher': '200:2'},
-                                                                 'vpnv6 unicast RD 200:2': {'advertised': {'prefix': {'615:11:11:1::/64': {'index': {1: {'froms': '2001:db8:20:1:5::5',
-                                                                                                                                                         'next_hop': '1.1.1.1',
-                                                                                                                                                         'origin_code': 'e',
-                                                                                                                                                         'path': '200 '
-                                                                                                                                                                 '33299 '
-                                                                                                                                                                 '51178 '
-                                                                                                                                                                 '47751 '
-                                                                                                                                                                 '{27016}'}}},
-                                                                                                                      '615:11:11::/64': {'index': {1: {'froms': '2001:db8:20:1:5::5',
-                                                                                                                                                       'next_hop': '1.1.1.1',
-                                                                                                                                                       'origin_code': 'e',
-                                                                                                                                                       'path': '200 '
-                                                                                                                                                               '33299 '
-                                                                                                                                                               '51178 '
-                                                                                                                                                               '47751 '
-                                                                                                                                                               '{27017}'}}}}},
-                                                                                            'default_vrf': 'default',
-                                                                                            'processed_paths': '2',
-                                                                                            'processed_prefixes': '2',
-                                                                                            'route_distinguisher': '200:2'}}}}}}}
+    
+    golden_parsed_output =  {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'default': 
+                        {'address_family': 
+                            {'vpnv4 unicast RD 200:2': 
+                                {'advertised': 
+                                    {'15.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'froms': '20.1.5.5',
+                                                'next_hop': '1.1.1.1',
+                                                'origin_code': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}'}}},
+                                    '15.1.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'froms': '20.1.5.5',
+                                                'next_hop': '1.1.1.1',
+                                                'origin_code': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}'}}}},
+                                'default_vrf': 'default',
+                                'processed_paths': '2',
+                                'processed_prefixes': '2',
+                                'route_distinguisher': '200:2'},
+                            'vpnv6 unicast RD 200:2': 
+                                {'advertised': 
+                                    {'615:11:11:1::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'froms': '2001:db8:20:1:5::5',
+                                                'next_hop': '1.1.1.1',
+                                                'origin_code': 'e',
+                                                'path': '200 '
+                                                '33299 '
+                                                '51178 '
+                                                '47751 '
+                                                '{27016}'}}},
+                                    '615:11:11::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'froms': '2001:db8:20:1:5::5',
+                                                'next_hop': '1.1.1.1',
+                                                'origin_code': 'e',
+                                                'path': '200 '
+                                                '33299 '
+                                                '51178 '
+                                                '47751 '
+                                                '{27017}'}}}},
+                                'default_vrf': 'default',
+                                'processed_paths': '2',
+                                'processed_prefixes': '2',
+                                'route_distinguisher': '200:2'}}}}}}}
 
     golden_output = {'execute.return_value': '''
 
-         BGP instance 0: 'default'
+        BGP instance 0: 'default'
         =========================
 
         Address Family: VPNv4 Unicast
@@ -4178,13 +4246,13 @@ class test_show_bgp_instance_all_all_all_neighbors_advertised_routes(unittest.Te
         self.device1 = Mock(**self.empty_output)
         obj = ShowBgpInstanceNeighborsAdvertisedRoutes(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(neighbor='3.3.3.3', vrf='all')
+            parsed_output = obj.parse(vrf_type='all', neighbor='3.3.3.3')
 
     def test_golden(self):
+        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpInstanceNeighborsAdvertisedRoutes(device=self.device)
-        parsed_output = obj.parse(neighbor='3.3.3.3', vrf='all')
-        self.maxDiff = None
+        parsed_output = obj.parse(vrf_type='all', neighbor='3.3.3.3')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -4193,48 +4261,63 @@ class test_show_bgp_instance_all_all_all_neighbors_advertised_routes(unittest.Te
 # ==============================================================================
 
 class test_show_bgp_instance_all_vrf_all_neighbors_received_routes(unittest.TestCase):
+    
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output =  {'instance': {'default': {'vrf': {'VRF2': {'address_family': {'vpnv4 unicast RD 200:2': {'local_as': 100,
-                                                                                         'non_stop_routing': True,
-                                                                                         'nsr_initial_init_ver_status': 'reached',
-                                                                                         'nsr_initial_initsync_version': '11',
-                                                                                         'nsr_issu_sync_group_versions': '0/0',
-                                                                                         'processed_paths': 2,
-                                                                                         'processed_prefixes': 2,
-                                                                                         'rd_version': 63,
-                                                                                         'received': {'prefix': {'15.1.1.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                               'next_hop': '20.1.5.5',
-                                                                                                                                               'origin_codes': 'e',
-                                                                                                                                               'path': '200 '
-                                                                                                                                                       '33299 '
-                                                                                                                                                       '51178 '
-                                                                                                                                                       '47751 '
-                                                                                                                                                       '{27016}',
-                                                                                                                                               'status_codes': '*',
-                                                                                                                                               'weight': '0'}}},
-                                                                                                                 '15.1.2.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                               'next_hop': '20.1.5.5',
-                                                                                                                                               'origin_codes': 'e',
-                                                                                                                                               'path': '200 '
-                                                                                                                                                       '33299 '
-                                                                                                                                                       '51178 '
-                                                                                                                                                       '47751 '
-                                                                                                                                                       '{27016}',
-                                                                                                                                               'status_codes': '*',
-                                                                                                                                               'weight': '0'}}}}},
-                                                                                         'route_distinguisher': '200:2',
-                                                                                         'router_identifier': '11.11.11.11',
-                                                                                         'state': 'active',
-                                                                                         'table_id': '0xe0000011',
-                                                                                         'table_state': 'active',
-                                                                                         'tbl_ver': 63,
-                                                                                         'vrf_id': '0x60000002'}}}}}}}
 
+    golden_parsed_output = {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'VRF2': 
+                        {'address_family': 
+                            {'vpnv4 unicast RD 200:2': 
+                                {'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': '11',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'processed_paths': 2,
+                                'processed_prefixes': 2,
+                                'rd_version': 63,
+                                'received': 
+                                    {'15.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*',
+                                                'weight': '0'}}},
+                                    '15.1.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*',
+                                                'weight': '0'}}}},
+                                'route_distinguisher': '200:2',
+                                'router_identifier': '11.11.11.11',
+                                'state': 'active',
+                                'table_id': '0xe0000011',
+                                'table_state': 'active',
+                                'routing_table_version': 63,
+                                'vrf_id': '0x60000002'}}}}}}}
   
     golden_output = {'execute.return_value': '''
-        Wed Jun 28 19:20:50.783 UTC
+
         % Neighbor not found
 
         BGP instance 0: 'default'
@@ -4271,13 +4354,13 @@ class test_show_bgp_instance_all_vrf_all_neighbors_received_routes(unittest.Test
         self.device1 = Mock(**self.empty_output)
         obj = ShowBgpInstanceNeighborsReceivedRoutes(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf='vrf',neighbor='20.1.5.5')
+            parsed_output = obj.parse(vrf_type='vrf', neighbor='20.1.5.5')
 
     def test_golden(self):
+        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpInstanceNeighborsReceivedRoutes(device=self.device)
-        parsed_output = obj.parse(vrf='vrf',neighbor='20.1.5.5')
-        self.maxDiff = None
+        parsed_output = obj.parse(vrf_type='vrf', neighbor='20.1.5.5')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -4286,129 +4369,161 @@ class test_show_bgp_instance_all_vrf_all_neighbors_received_routes(unittest.Test
 # ==============================================================================
 
 class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.TestCase):
+    
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output =  {'instance': {'default': {'vrf': {'default': {'address_family': {'vpnv4 unicast RD 300:1': {'generic_scan_interval': 60,
-                                                                                            'local_as': 100,
-                                                                                            'non_stop_routing': True,
-                                                                                            'nsr_initial_init_ver_status': 'reached',
-                                                                                            'nsr_initial_initsync_version': '11',
-                                                                                            'nsr_issu_sync_group_versions': '0/0',
-                                                                                            'rd_version': 0,
-                                                                                            'received': {'prefix': {'46.1.1.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                                  'metric': '2219',
-                                                                                                                                                  'next_hop': '4.4.4.4',
-                                                                                                                                                  'origin_codes': 'e',
-                                                                                                                                                  'path': '300 '
-                                                                                                                                                          '33299 '
-                                                                                                                                                          '51178 '
-                                                                                                                                                          '47751 '
-                                                                                                                                                          '{27016}',
-                                                                                                                                                  'status_codes': '*i',
-                                                                                                                                                  'weight': '0'}}}}},
-                                                                                            'router_identifier': '1.1.1.1',
-                                                                                            'scan_interval': 60,
-                                                                                            'table_id': '0x0',
-                                                                                            'table_state': 'active',
-                                                                                            'tbl_ver': 43},
-                                                                 'vpnv4 unicast RD 400:1': {'generic_scan_interval': 60,
-                                                                                            'local_as': 100,
-                                                                                            'non_stop_routing': True,
-                                                                                            'nsr_initial_init_ver_status': 'reached',
-                                                                                            'nsr_initial_initsync_version': '11',
-                                                                                            'nsr_issu_sync_group_versions': '0/0',
-                                                                                            'processed_paths': 10,
-                                                                                            'processed_prefixes': 10,
-                                                                                            'rd_version': 0,
-                                                                                            'received': {'prefix': {'46.2.2.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                                  'metric': '2219',
-                                                                                                                                                  'next_hop': '4.4.4.4',
-                                                                                                                                                  'origin_codes': 'e',
-                                                                                                                                                  'path': '400 '
-                                                                                                                                                          '33299 '
-                                                                                                                                                          '51178 '
-                                                                                                                                                          '47751 '
-                                                                                                                                                          '{27016}',
-                                                                                                                                                  'status_codes': '*i',
-                                                                                                                                                  'weight': '0'}}}}},
-                                                                                            'router_identifier': '1.1.1.1',
-                                                                                            'scan_interval': 60,
-                                                                                            'table_id': '0x0',
-                                                                                            'table_state': 'active',
-                                                                                            'tbl_ver': 43},
-                                                                 'vpnv6 unicast RD 300:1': {'generic_scan_interval': 60,
-                                                                                            'local_as': 100,
-                                                                                            'non_stop_routing': True,
-                                                                                            'nsr_initial_init_ver_status': 'reached',
-                                                                                            'nsr_initial_initsync_version': '11',
-                                                                                            'nsr_issu_sync_group_versions': '0/0',
-                                                                                            'rd_version': 0,
-                                                                                            'received': {'prefix': {'646:11:11:4::/64': {'index': {1: {'locprf': '100',
-                                                                                                                                                       'metric': '2219',
-                                                                                                                                                       'next_hop': '4.4.4.4',
-                                                                                                                                                       'origin_codes': 'e',
-                                                                                                                                                       'path': '300 '
-                                                                                                                                                               '33299 '
-                                                                                                                                                               '51178 '
-                                                                                                                                                               '47751 '
-                                                                                                                                                               '{27016}',
-                                                                                                                                                       'status_codes': '*i',
-                                                                                                                                                       'weight': '0'}}},
-                                                                                                                    '646:11:11::/64': {'index': {1: {'locprf': '100',
-                                                                                                                                                     'metric': '2219',
-                                                                                                                                                     'next_hop': '4.4.4.4',
-                                                                                                                                                     'origin_codes': 'e',
-                                                                                                                                                     'path': '300 '
-                                                                                                                                                             '33299 '
-                                                                                                                                                             '51178 '
-                                                                                                                                                             '47751 '
-                                                                                                                                                             '{27016}',
-                                                                                                                                                     'status_codes': '*i',
-                                                                                                                                                     'weight': '0'}}}}},
-                                                                                            'router_identifier': '1.1.1.1',
-                                                                                            'scan_interval': 60,
-                                                                                            'table_id': '0x0',
-                                                                                            'table_state': 'active',
-                                                                                            'tbl_ver': 43},
-                                                                 'vpnv6 unicast RD 400:1': {'generic_scan_interval': 60,
-                                                                                            'local_as': 100,
-                                                                                            'non_stop_routing': True,
-                                                                                            'nsr_initial_init_ver_status': 'reached',
-                                                                                            'nsr_initial_initsync_version': '11',
-                                                                                            'nsr_issu_sync_group_versions': '0/0',
-                                                                                            'processed_paths': 10,
-                                                                                            'processed_prefixes': 10,
-                                                                                            'rd_version': 0,
-                                                                                            'received': {'prefix': {'646:22:22:1::/64': {'index': {1: {'locprf': '100',
-                                                                                                                                                       'metric': '2219',
-                                                                                                                                                       'next_hop': '4.4.4.4',
-                                                                                                                                                       'origin_codes': 'e',
-                                                                                                                                                       'path': '400 '
-                                                                                                                                                               '33299 '
-                                                                                                                                                               '51178 '
-                                                                                                                                                               '47751 '
-                                                                                                                                                               '{27016}',
-                                                                                                                                                       'status_codes': '*i',
-                                                                                                                                                       'weight': '0'}}},
-                                                                                                                    '646:22:22::/64': {'index': {1: {'locprf': '100',
-                                                                                                                                                     'metric': '2219',
-                                                                                                                                                     'next_hop': '4.4.4.4',
-                                                                                                                                                     'origin_codes': 'e',
-                                                                                                                                                     'path': '400 '
-                                                                                                                                                             '33299 '
-                                                                                                                                                             '51178 '
-                                                                                                                                                             '47751 '
-                                                                                                                                                             '{27016}',
-                                                                                                                                                     'status_codes': '*i',
-                                                                                                                                                     'weight': '0'}}}}},
-                                                                                            'router_identifier': '1.1.1.1',
-                                                                                            'scan_interval': 60,
-                                                                                            'table_id': '0x0',
-                                                                                            'table_state': 'active',
-                                                                                            'tbl_ver': 43}}}}}}}
-
-
+    
+    golden_parsed_output = {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'default': 
+                        {'address_family': 
+                            {'vpnv4 unicast RD 300:1': 
+                                {'generic_scan_interval': 60,
+                                'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': '11',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'rd_version': 0,
+                                'received': 
+                                    {'46.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}}},
+                                'router_identifier': '1.1.1.1',
+                                'scan_interval': 60,
+                                'table_id': '0x0',
+                                'table_state': 'active',
+                                'routing_table_version': 43},
+                            'vpnv4 unicast RD 400:1': 
+                                {'generic_scan_interval': 60,
+                                'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': '11',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'processed_paths': 10,
+                                'processed_prefixes': 10,
+                                'rd_version': 0,
+                                'received': 
+                                    {'46.2.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                      '33299 '
+                                                      '51178 '
+                                                      '47751 '
+                                                      '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}}},
+                                'router_identifier': '1.1.1.1',
+                                'scan_interval': 60,
+                                'table_id': '0x0',
+                                'table_state': 'active',
+                                'routing_table_version': 43},
+                            'vpnv6 unicast RD 300:1': 
+                                {'generic_scan_interval': 60,
+                                'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': '11',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'rd_version': 0,
+                                'received': 
+                                    {'646:11:11:4::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                               'status_codes': '*i',
+                                               'weight': '0'}}},
+                                    '646:11:11::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}}},
+                                'router_identifier': '1.1.1.1',
+                                'scan_interval': 60,
+                                'table_id': '0x0',
+                                'table_state': 'active',
+                                'routing_table_version': 43},
+                            'vpnv6 unicast RD 400:1': 
+                                {'generic_scan_interval': 60,
+                                'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': '11',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'processed_paths': 10,
+                                'processed_prefixes': 10,
+                                'rd_version': 0,
+                                'received': 
+                                    {'646:22:22:1::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}},
+                                    '646:22:22::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}}},
+                                'router_identifier': '1.1.1.1',
+                                'scan_interval': 60,
+                                'table_id': '0x0',
+                                'table_state': 'active',
+                                'routing_table_version': 43}}}}}}}
 
     golden_output = {'execute.return_value': '''
         BGP instance 0: 'default'
@@ -4463,21 +4578,19 @@ class test_show_bgp_instance_all_all_all_neighbors_received_routes(unittest.Test
         * i646:22:22:1::/64   4.4.4.4               2219    100      0 400 33299 51178 47751 {27016} e
 
         Processed 10 prefixes, 10 paths
-
-
         '''}
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         obj = ShowBgpInstanceNeighborsReceivedRoutes(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf='all',neighbor='20.1.5.5')
+            parsed_output = obj.parse(vrf_type='all', neighbor='20.1.5.5')
 
     def test_golden(self):
+        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpInstanceNeighborsReceivedRoutes(device=self.device)
-        parsed_output = obj.parse(vrf='all',neighbor='20.1.5.5')
-        self.maxDiff = None
+        parsed_output = obj.parse(vrf_type='all', neighbor='20.1.5.5')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -4489,89 +4602,102 @@ class test_show_bgp_instance_all_vrf_all_neighbors_routes(unittest.TestCase):
     
     dev = Device(name='Device')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output = {'instance': {'default': {'vrf': {'VRF2': {'address_family': {'vpnv4 unicast RD 200:2': {'local_as': 100,
-                                                                                        'non_stop_routing': True,
-                                                                                        'nsr_initial_init_ver_status': 'reached',
-                                                                                        'nsr_initial_initsync_version': '11',
-                                                                                        'nsr_issu_sync_group_versions': '0/0',
-                                                                                        'processed_paths': 2,
-                                                                                        'processed_prefixes': 2,
-                                                                                        'rd_version': 63,
-                                                                                        'route_distinguisher': '200:2',
-                                                                                        'router_identifier': '11.11.11.11',
-                                                                                        'routes': {'prefix': {'15.1.1.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                            'next_hop': '20.1.5.5',
-                                                                                                                                            'origin_codes': 'e',
-                                                                                                                                            'path': '200 '
-                                                                                                                                                    '33299 '
-                                                                                                                                                    '51178 '
-                                                                                                                                                    '47751 '
-                                                                                                                                                    '{27016}',
-                                                                                                                                            'status_codes': '*>',
-                                                                                                                                            'weight': '0'}}},
-                                                                                                              '15.1.2.0/24': {'index': {1: {'metric': '2219',
-                                                                                                                                            'next_hop': '20.1.5.5',
-                                                                                                                                            'origin_codes': 'e',
-                                                                                                                                            'path': '200 '
-                                                                                                                                                    '33299 '
-                                                                                                                                                    '51178 '
-                                                                                                                                                    '47751 '
-                                                                                                                                                    '{27016}',
-                                                                                                                                            'status_codes': '*>',
-                                                                                                                                            'weight': '0'}}}}},
-                                                                                        'state': 'active',
-                                                                                        'table_id': '0xe0000011',
-                                                                                        'table_state': 'active',
-                                                                                        'tbl_ver': 63,
-                                                                                        'vrf_id': '0x60000002'}}}}}}}
-
+    
+    golden_parsed_output = {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'VRF2': 
+                        {'address_family': 
+                            {'vpnv4 unicast RD 200:2': 
+                                {'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': '11',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'processed_paths': 2,
+                                'processed_prefixes': 2,
+                                'rd_version': 63,
+                                'route_distinguisher': '200:2',
+                                'router_identifier': '11.11.11.11',
+                                'routes':
+                                    {'15.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>',
+                                                'weight': '0'}}},
+                                    '15.1.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': '2219',
+                                                'next_hop': '20.1.5.5',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*>',
+                                                'weight': '0'}}}},
+                                'state': 'active',
+                                'table_id': '0xe0000011',
+                                'table_state': 'active',
+                                'routing_table_version': 63,
+                                'vrf_id': '0x60000002'}}}}}}}
 
     golden_output = {'execute.return_value': '''
     
-     Neighbor not found
+        Neighbor not found
 
-    BGP instance 0: 'default'
-    =========================
+        BGP instance 0: 'default'
+        =========================
 
-    VRF: VRF1
-    ---------
+        VRF: VRF1
+        ---------
 
-    VRF: VRF2
-    ---------
-    BGP VRF VRF2, state: Active
-    BGP Route Distinguisher: 200:2
-    VRF ID: 0x60000002
-    BGP router identifier 11.11.11.11, local AS number 100
-    Non-stop routing is enabled
-    BGP table state: Active
-    Table ID: 0xe0000011   RD version: 63
-    BGP main routing table version 63
-    BGP NSR Initial initsync version 11 (Reached)
-    BGP NSR/ISSU Sync-Group versions 0/0
+        VRF: VRF2
+        ---------
+        BGP VRF VRF2, state: Active
+        BGP Route Distinguisher: 200:2
+        VRF ID: 0x60000002
+        BGP router identifier 11.11.11.11, local AS number 100
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0000011   RD version: 63
+        BGP main routing table version 63
+        BGP NSR Initial initsync version 11 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
 
-    Status codes: s suppressed, d damped, h history, * valid, > best
-                  i - internal, r RIB-failure, S stale, N Nexthop-discard
-    Origin codes: i - IGP, e - EGP, ? - incomplete
-       Network            Next Hop            Metric LocPrf Weight Path
-    Route Distinguisher: 200:2 (default for vrf VRF2)
-    *> 15.1.1.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-    *> 15.1.2.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
-    
-    Processed 2 prefixes, 2 paths
-
+        Status codes: s suppressed, d damped, h history, * valid, > best
+                      i - internal, r RIB-failure, S stale, N Nexthop-discard
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+           Network            Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 200:2 (default for vrf VRF2)
+        *> 15.1.1.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        *> 15.1.2.0/24        20.1.5.5              2219             0 200 33299 51178 47751 {27016} e
+        
+        Processed 2 prefixes, 2 paths
         '''}
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowBgpInstanceNeighborsRoutes(device=self.dev1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(neighbor='20.1.5.5', vrf='vrf')
+            parsed_output = obj.parse(vrf_type='vrf', neighbor='20.1.5.5')
 
     def test_golden(self):
+        self.maxDiff = None
         self.dev = Mock(**self.golden_output)
         obj = ShowBgpInstanceNeighborsRoutes(device=self.dev)
-        parsed_output = obj.parse(neighbor='20.1.5.5', vrf='vrf')
-        self.maxDiff = None
+        parsed_output = obj.parse(vrf_type='vrf', neighbor='20.1.5.5')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -4580,116 +4706,146 @@ class test_show_bgp_instance_all_vrf_all_neighbors_routes(unittest.TestCase):
 # =====================================================================
 
 class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
+    
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output = {'instance': {'default': {'vrf': {'default': {'address_family': {'vpnv4 unicast RD 300:1': {'generic_scan_interval': 60,
-                                                                                            'local_as': 100,
-                                                                                            'non_stop_routing': True,
-                                                                                            'nsr_initial_init_ver_status': 'reached',
-                                                                                            'nsr_initial_initsync_version': '11',
-                                                                                            'nsr_issu_sync_group_versions': '0/0',
-                                                                                            'rd_version': 0,
-                                                                                            'router_identifier': '1.1.1.1',
-                                                                                            'routes': {'prefix': {'46.1.1.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                                'metric': '2219',
-                                                                                                                                                'next_hop': '4.4.4.4',
-                                                                                                                                                'origin_codes': 'e',
-                                                                                                                                                'path': '300 '
-                                                                                                                                                        '33299 '
-                                                                                                                                                        '51178 '
-                                                                                                                                                        '47751 '
-                                                                                                                                                        '{27016}',
-                                                                                                                                                'status_codes': '*i',
-                                                                                                                                                'weight': '0'}}}}},
-                                                                                            'scan_interval': 60,
-                                                                                            'table_id': '0x0',
-                                                                                            'table_state': 'active',
-                                                                                            'tbl_ver': 43},
-                                                                 'vpnv4 unicast RD 400:1': {'generic_scan_interval': 60,
-                                                                                            'local_as': 100,
-                                                                                            'non_stop_routing': True,
-                                                                                            'nsr_initial_init_ver_status': 'reached',
-                                                                                            'nsr_initial_initsync_version': '11',
-                                                                                            'nsr_issu_sync_group_versions': '0/0',
-                                                                                            'processed_paths': 2,
-                                                                                            'processed_prefixes': 2,
-                                                                                            'rd_version': 0,
-                                                                                            'router_identifier': '1.1.1.1',
-                                                                                            'routes': {'prefix': {'46.2.2.0/24': {'index': {1: {'locprf': '100',
-                                                                                                                                                'metric': '2219',
-                                                                                                                                                'next_hop': '4.4.4.4',
-                                                                                                                                                'origin_codes': 'e',
-                                                                                                                                                'path': '400 '
-                                                                                                                                                        '33299 '
-                                                                                                                                                        '51178 '
-                                                                                                                                                        '47751 '
-                                                                                                                                                        '{27016}',
-                                                                                                                                                'status_codes': '*i',
-                                                                                                                                                'weight': '0'}}}}},
-                                                                                            'scan_interval': 60,
-                                                                                            'table_id': '0x0',
-                                                                                            'table_state': 'active',
-                                                                                            'tbl_ver': 43},
-                                                                 'vpnv6 unicast RD 300:1': {'generic_scan_interval': 60,
-                                                                                            'local_as': 100,
-                                                                                            'non_stop_routing': True,
-                                                                                            'nsr_initial_init_ver_status': 'reached',
-                                                                                            'nsr_initial_initsync_version': '11',
-                                                                                            'nsr_issu_sync_group_versions': '0/0',
-                                                                                            'rd_version': 0,
-                                                                                            'router_identifier': '1.1.1.1',
-                                                                                            'routes': {'prefix': {'646:11:11:1::/64': {'index': {1: {'locprf': '100',
-                                                                                                                                                     'metric': '2219',
-                                                                                                                                                     'next_hop': '4.4.4.4',
-                                                                                                                                                     'origin_codes': 'e',
-                                                                                                                                                     'path': '300 '
-                                                                                                                                                             '33299 '
-                                                                                                                                                             '51178 '
-                                                                                                                                                             '47751 '
-                                                                                                                                                             '{27016}',
-                                                                                                                                                     'status_codes': '*i',
-                                                                                                                                                     'weight': '0'}}},
-                                                                                                                  '646:11:11::/64': {'index': {1: {'locprf': '100',
-                                                                                                                                                   'metric': '2219',
-                                                                                                                                                   'next_hop': '4.4.4.4',
-                                                                                                                                                   'origin_codes': 'e',
-                                                                                                                                                   'path': '300 '
-                                                                                                                                                           '33299 '
-                                                                                                                                                           '51178 '
-                                                                                                                                                           '47751 '
-                                                                                                                                                           '{27016}',
-                                                                                                                                                   'status_codes': '*i',
-                                                                                                                                                   'weight': '0'}}}}},
-                                                                                            'scan_interval': 60,
-                                                                                            'table_id': '0x0',
-                                                                                            'table_state': 'active',
-                                                                                            'tbl_ver': 43},
-                                                                 'vpnv6 unicast RD 400:1': {'generic_scan_interval': 60,
-                                                                                            'local_as': 100,
-                                                                                            'non_stop_routing': True,
-                                                                                            'nsr_initial_init_ver_status': 'reached',
-                                                                                            'nsr_initial_initsync_version': '11',
-                                                                                            'nsr_issu_sync_group_versions': '0/0',
-                                                                                            'processed_paths': 3,
-                                                                                            'processed_prefixes': 3,
-                                                                                            'rd_version': 0,
-                                                                                            'router_identifier': '1.1.1.1',
-                                                                                            'routes': {'prefix': {'646:22:22::/64': {'index': {1: {'locprf': '100',
-                                                                                                                                                   'metric': '2219',
-                                                                                                                                                   'next_hop': '4.4.4.4',
-                                                                                                                                                   'origin_codes': 'e',
-                                                                                                                                                   'path': '400 '
-                                                                                                                                                           '33299 '
-                                                                                                                                                           '51178 '
-                                                                                                                                                           '47751 '
-                                                                                                                                                           '{27016}',
-                                                                                                                                                   'status_codes': '*i',
-                                                                                                                                                   'weight': '0'}}}}},
-                                                                                            'scan_interval': 60,
-                                                                                            'table_id': '0x0',
-                                                                                            'table_state': 'active',
-                                                                                            'tbl_ver': 43}}}}}}}
-
+    
+    golden_parsed_output = {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'default': 
+                        {'address_family': 
+                            {'vpnv4 unicast RD 300:1': 
+                                {'generic_scan_interval': 60,
+                                'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': '11',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'rd_version': 0,
+                                'router_identifier': '1.1.1.1',
+                                'routes': 
+                                    {'46.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}}},
+                                'scan_interval': 60,
+                                'table_id': '0x0',
+                                'table_state': 'active',
+                                'routing_table_version': 43},
+                            'vpnv4 unicast RD 400:1': 
+                                {'generic_scan_interval': 60,
+                                'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': '11',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'processed_paths': 2,
+                                'processed_prefixes': 2,
+                                'rd_version': 0,
+                                'router_identifier': '1.1.1.1',
+                                'routes':
+                                    {'46.2.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}}},
+                                'scan_interval': 60,
+                                'table_id': '0x0',
+                                'table_state': 'active',
+                                'routing_table_version': 43},
+                            'vpnv6 unicast RD 300:1': 
+                                {'generic_scan_interval': 60,
+                                'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': '11',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'rd_version': 0,
+                                'router_identifier': '1.1.1.1',
+                                'routes': 
+                                    {'646:11:11:1::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}},
+                                    '646:11:11::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}}},
+                                'scan_interval': 60,
+                                'table_id': '0x0',
+                                'table_state': 'active',
+                                'routing_table_version': 43},
+                            'vpnv6 unicast RD 400:1': 
+                                {'generic_scan_interval': 60,
+                                'local_as': 100,
+                                'non_stop_routing': True,
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': '11',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'processed_paths': 3,
+                                'processed_prefixes': 3,
+                                'rd_version': 0,
+                                'router_identifier': '1.1.1.1',
+                                'routes':
+                                    {'646:22:22::/64': 
+                                        {'index': 
+                                            {1: 
+                                                {'locprf': '100',
+                                                'metric': '2219',
+                                                'next_hop': '4.4.4.4',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                       '33299 '
+                                                       '51178 '
+                                                       '47751 '
+                                                       '{27016}',
+                                                'status_codes': '*i',
+                                                'weight': '0'}}}},
+                                'scan_interval': 60,
+                                'table_id': '0x0',
+                                'table_state': 'active',
+                                'routing_table_version': 43}}}}}}}
 
     golden_output = {'execute.return_value': '''
         BGP instance 0: 'default'
@@ -4754,13 +4910,13 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
         self.device1 = Mock(**self.empty_output)
         obj = ShowBgpInstanceNeighborsRoutes(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(neighbor='3.3.3.3', vrf='all')
+            parsed_output = obj.parse(vrf_type='all', neighbor='3.3.3.3')
 
     def test_golden(self):
+        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpInstanceNeighborsRoutes(device=self.device)
-        parsed_output = obj.parse(neighbor='3.3.3.3', vrf='all')
-        self.maxDiff = None
+        parsed_output = obj.parse(vrf_type='all', neighbor='3.3.3.3')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
