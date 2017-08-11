@@ -379,8 +379,10 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
 
             # Active router is 
             # Active router is 192.168.1.2 expires in 00:00:02
+            # Active router is 192.168.1.2, priority 90 expires in 00:00:02
             p8 = re.compile(r'\s*Active +router +is'
                              ' +(?P<active_router>([\w\:\.]+)(, *[\w\.\:]+)?)'
+                             '(, *priority (?P<priority>\d+))?'
                              '( *(expired|expires +in +(?P<expire>[\w\:\.]+)))?$')
             m = p8.match(line)
             if m:
