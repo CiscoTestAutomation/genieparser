@@ -249,10 +249,10 @@ class ShowHsrpDetailSchema(MetaParser):
                                              'last_resign_sent': str,
                                              'last_resign_received': str,
                                              Optional('track_objects'):
-                                                {'num_tracked_objects': int,
-                                                 'num_tracked_objects_up': int,
+                                                {Optional('num_tracked_objects'): int,
+                                                 Optional('num_tracked_objects_up'): int,
                                                  Any():
-                                                        {'priority_decrement': int},
+                                                        {Optional('priority_decrement'): int},
                                                  },
                                             },
                                         },
@@ -261,7 +261,7 @@ class ShowHsrpDetailSchema(MetaParser):
                              },
                          },
                      },
-             }
+                }
 
 class ShowHsrpDetail(ShowHsrpDetailSchema):
 
@@ -276,7 +276,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
             line = line.rstrip()
 
             # GigabitEthernet0/0/0/1 - IPv4 Group 5 (version 1)
-            p1 = re.compile(r'\s*(?P<intf>[a-zA-Z0-9\/]+)'
+            p1 = re.compile(r'\s*(?P<intf>[a-zA-Z0-9\/\.]+)'
                              ' +\- +(?P<af>[a-zA-Z0-9]+)'
                              ' +Group +(?P<group>[0-9]+)'
                              ' +\(version +(?P<version>[0-9]+)\)$')
