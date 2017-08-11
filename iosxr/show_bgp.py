@@ -3823,6 +3823,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                 # Address family is default - init af dictionary here
                 if vrf_type == 'vrf' and af_default:
                     address_family = af_default
+                    original_address_family = address_family
                     if 'address_family' not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]:
                         bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'] = {}
                     if address_family not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family']:
@@ -4024,17 +4025,21 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
         return bgp_instance_summary_dict
 
 
-# ===============================
+# ============================================
 # Parser for:
 # 'show bgp instance all all all'
 # 'show bgp instance all vrf all'
-# ===============================
+# 'show bgp instance all vrf all ipv4 unicast'
+# 'show bgp instance all vrf all ipv6 unicast'
+# ============================================
 
 class ShowBgpInstanceAllAllSchema(MetaParser):
 
     ''' Schema for:
         * 'show bgp instance all all all'
         * 'show bgp instance all vrf all'
+        * 'show bgp instance all vrf all ipv4 unicast'
+        * 'show bgp instance all vrf all ipv6 unicast'
     '''
 
     schema = {
@@ -4092,6 +4097,8 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
     ''' Parser for:
         * 'show bgp instance all all all'
         * 'show bgp instance all vrf all'
+        * 'show bgp instance all vrf all ipv4 unicast'
+        * 'show bgp instance all vrf all ipv6 unicast'
     '''
 
     def cli(self, vrf_type, af_type=''):
@@ -4109,7 +4116,10 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
             af_default = None
         elif vrf_type == 'vrf':
             vrf = None
-            af_default = 'default'
+            if af_type == 'ipv6 unicast':
+                af_default = 'vpnv6 unicast'
+            else:
+                af_default = 'vpnv4 unicast'
 
         # init the route_distinguisher when all all all command
 
@@ -4129,7 +4139,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                 if instance not in bgp_instance_all_all_dict['instance']:
                     bgp_instance_all_all_dict['instance'][instance] = {}
                 # VRF is default - init dictionary here
-                if vrf == 'default':
+                if vrf_type == 'all' and vrf == 'default':
                     if 'vrf' not in bgp_instance_all_all_dict['instance'][instance]:
                         bgp_instance_all_all_dict['instance'][instance]['vrf'] = {}
                     if vrf not in bgp_instance_all_all_dict['instance'][instance]['vrf']:
@@ -4146,8 +4156,8 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                 if vrf not in bgp_instance_all_all_dict['instance'][instance]['vrf']:
                     bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf] = {}
                 # Address family is default - init ipv4 unicast dictionary here
-                if af_default == 'default':
-                    address_family = 'vpnv4 unicast'
+                if vrf_type == 'vrf' and af_default:
+                    address_family = af_default
                     original_address_family = address_family
                     if 'address_family' not in bgp_instance_all_all_dict['instance']\
                                                         [instance]['vrf'][vrf]:
