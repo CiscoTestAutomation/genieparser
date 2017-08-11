@@ -5,7 +5,9 @@ IOSXR parsers for the following show commands:
     * 'show bgp instance <WORD> af-group <WORD> configuration'
     * 'show bgp instance <WORD> session-group <WORD> configuration'
     * 'show bgp instance all all all process detail'
-    * 'show bgo instance all vrf all process detail'
+    * 'show bgp instance all vrf all process detail'
+    * 'show bgp instance all vrf all ipv4 unicast process detail'
+    * 'show bgp instance all vrf all ipv6 unicast process detail'
     * 'show bgp instance all all all neighbors detail'
     * 'show bgp instance all vrf all neighbors detail'
     * 'show bgp instance all all all neighbors <WORD> routes'
@@ -703,17 +705,21 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
         return ret_dict
 
 
-# ==============================================
+# ===========================================================
 # Parser for:
 # 'show bgp instance all all all process detail'
 # 'show bgp instance all vrf all process detail'
-# ==============================================
+# 'show bgp instance all vrf all ipv4 unicast process detail'
+# 'show bgp instance all vrf all ipv6 unicast process detail'
+# ===========================================================
 
 class ShowBgpInstanceProcessDetailSchema(MetaParser):
 
     ''' Schema for:
         * 'show bgp instance all all all process detail'
         * 'show bgp instance all vrf all process detail'
+        * 'show bgp instance all vrf all ipv4 unicast process detail'
+        * 'show bgp instance all vrf all ipv6 unicast process detail'
     '''
 
     schema = {
@@ -858,6 +864,8 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
     ''' Parser for:
         * 'show bgp instance all all all process detail'
         * 'show bgp instance all vrf all process detail'
+        * 'show bgp instance all vrf all ipv4 unicast process detail'
+        * 'show bgp instance all vrf all ipv6 unicast process detail'
     '''
 
     def cli(self, vrf_type, af_type=''):
@@ -884,7 +892,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            #BGP instance 0: 'default'
+            # BGP instance 0: 'default'
             p1 = re.compile(r'^\s*BGP +instance +(?P<num>\S+): +\'(?P<instance>\S+)\'$')
             m = p1.match(line)
             if m:
@@ -1085,6 +1093,8 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                         ['enforce_first_as_enabled'] = False
                 continue
 
+            # iBGP to IGP redistribution enabled
+
             #Default local preference: 100
             p16 = re.compile(r'^Default *local *preference: *'
                               '(?P<preference>[0-9]+)$')
@@ -1228,8 +1238,8 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                     ['message_logging_pool_summary'][pool]['free'] = free
                 continue
             elif m and flag == 'bmp':
-                if 'bmp_pool_summary' not in ret_dict['instance'][instance]['vrf'][vrf]\
-                    :
+                if 'bmp_pool_summary' not in ret_dict['instance'][instance]\
+                        ['vrf'][vrf]:
                     ret_dict['instance'][instance]['vrf'][vrf]\
                         ['bmp_pool_summary'] = {}
 
@@ -1333,11 +1343,11 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                 continue
 
             # Address family: VPNv4 Unicast
-            p29 = re.compile(r'^Address *family: *(?P<af>[\w\s]+)$')
+            p29 = re.compile(r'^Address *family: *(?P<af>[a-zA-Z0-9\s\-\_]+)$')
             m = p29.match(line)
             if m:
-                af = m.groupdict()['af'].lower()
-
+                af = str(m.groupdict()['af']).lower()
+                af.strip()
                 if 'address_family' not in ret_dict['instance'][instance]['vrf'][vrf]:
                     ret_dict['instance'][instance]['vrf'][vrf]\
                         ['address_family'] = {}
@@ -1347,13 +1357,22 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                         ['address_family'][af] = {}
                 continue
 
-            p29_1 = re.compile(r'^(VRF +(?P<current_vrf>[a-zA-Z0-9\s]+))? *Address +family: *(?P<af>[a-zA-Z0-9\s]+) *(\(Table +(?P<table_state>[a-z]+)\))?$')
+            # VRF VRF1 Address family: IPv6 Unicast
+            p29_1 = re.compile(r'^VRF +(?P<current_vrf>(\S+)) +Address +family:'
+                                ' +(?P<af>[a-zA-Z0-9\s\-\_]+)'
+                                '(?: +\(Table +(?P<table_state>[a-z]+)\))?$')
             m = p29_1.match(line)
             if m:
-                af = m.groupdict()['af'].lower()
+                af = str(m.groupdict()['af']).lower()
+                af.strip()
                 current_vrf = str(m.groupdict()['current_vrf']).lower()
                 table_state = str(m.groupdict()['table_state'])
-
+                
+                # Reset address_family for 'all vrf all'
+                if vrf_type == 'vrf':
+                    af = 'vpnv6 unicast' if af_type == 'ipv6 unicast'\
+                        else 'vpnv4 unicast'
+                
                 if 'address_family' not in ret_dict['instance'][instance]\
                     ['vrf'][vrf]:
                     ret_dict['instance'][instance]['vrf']\
