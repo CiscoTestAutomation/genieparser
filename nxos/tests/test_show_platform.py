@@ -125,7 +125,7 @@ Active Package(s)
     def test_empty(self):
         self.device2 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.device2)
-        with self.assertRaises(IndexError):
+        with self.assertRaises(AttributeError):
             parsed_output = version_obj.parse()
 
     # Can't test empty parser with non-tabular parsergen due to below limitation
