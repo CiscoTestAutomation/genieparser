@@ -6118,7 +6118,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'sent_bytes_queue': 0,
                 'sent_messages': 0,
                 'sent_notifications': 0,
-                'session_state': 'Idle',
+                'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '02:19:37'}}}
 
@@ -6268,7 +6268,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'sent_bytes_queue': 0,
                 'sent_messages': 263,
                 'sent_notifications': 0,
-                'session_state': 'Established',
+                'session_state': 'established',
                 'shutdown': False,
                 'suppress_four_byte_as_capability': True,
                 'up_time': '02:20:02',
@@ -6324,7 +6324,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'sent_bytes_queue': 0,
                 'sent_messages': 0,
                 'sent_notifications': 0,
-                'session_state': 'Idle',
+                'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '02:20:08'},
             '2.2.2.5':
@@ -6415,7 +6415,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'sent_bytes_queue': 0,
                 'sent_messages': 0,
                 'sent_notifications': 0,
-                'session_state': 'Shut (Admin)',
+                'session_state': 'shut (admin)',
                 'shutdown': True,
                 'tcp_md5_auth': 'enabled',
                 'tcp_md5_auth_config': 'TCP MD5 authentication '
@@ -6710,7 +6710,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'remote_as': 333,
                 'retry_time': 'None',
                 'router_id': '21.0.101.1',
-                'session_state': 'Established',
+                'session_state': 'established',
                 'shutdown': False,
                 'up_time': '00:07:46'},
             '21.0.102.1':
@@ -6815,7 +6815,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'remote_as': 333,
                 'retry_time': '00:00:55',
                 'router_id': '0.0.0.0',
-                'session_state': 'Idle',
+                'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '01:27:53'},
             '21.0.201.1':
@@ -6909,7 +6909,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'remote_as': 888,
                 'retry_time': '00:01:12',
                 'router_id': '0.0.0.0',
-                'session_state': 'Idle',
+                'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '01:27:52'},
             '4.4.4.4':
@@ -6960,7 +6960,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'remote_as': 0,
                 'retry_time': '0.000000',
                 'router_id': '0.0.0.0',
-                'session_state': 'Idle',
+                'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '01:27:54'},
             'fec1::1002':
@@ -7045,7 +7045,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'remote_as': 333,
                 'retry_time': 'None',
                 'router_id': '21.0.101.1',
-                'session_state': 'Established',
+                'session_state': 'established',
                 'shutdown': False,
                 'up_time': '00:07:40'},
             'fec1::2002':
@@ -7118,7 +7118,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'remote_as': 888,
                 'retry_time': '00:00:29',
                 'router_id': '0.0.0.0',
-                'session_state': 'Idle',
+                'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '01:27:55'}}}
 
@@ -7706,7 +7706,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 'route_reflector_cluster_id': 3,
                 'router_id': '0.0.0.0',
                 'send_community': 'BOTH',
-                'session_state': 'Idle',
+                'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '1w4d'},
             '21.0.102.1': 
@@ -7831,7 +7831,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 'route_reflector_cluster_id': 3,
                 'router_id': '0.0.0.0',
                 'send_community': 'BOTH',
-                'session_state': 'Idle',
+                'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '1w4d'},
             '21.0.201.1': 
@@ -7939,7 +7939,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 'route_reflector_cluster_id': 3,
                 'router_id': '0.0.0.0',
                 'send_community': 'BOTH',
-                'session_state': 'Idle',
+                'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '1w4d'},
             '4.4.4.4': 
@@ -8001,7 +8001,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 'retry_time': '0.000000',
                 'route_reflector_cluster_id': 3,
                 'router_id': '0.0.0.0',
-                'session_state': 'Idle',
+                'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '1w4d'},
             'fec1::1002': 
@@ -8079,7 +8079,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 'route_reflector_cluster_id': 3,
                 'router_id': '0.0.0.0',
                 'send_community': 'BOTH',
-                'session_state': 'Idle',
+                'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '1w4d'},
             'fec1::2002': 
@@ -8167,7 +8167,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 'route_reflector_cluster_id': 3,
                 'router_id': '0.0.0.0',
                 'send_community': 'BOTH',
-                'session_state': 'Idle',
+                'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '1w4d'}}}
 

@@ -72,23 +72,24 @@ class ShowVersion(ShowVersionSchema):
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
         '''
-        cmd = 'show version'.format()
-        self.device.execute(cmd)
+        cmd = 'show version'
+        output = self.device.execute(cmd)
 
         attrValPairsToParse = [
           ('show.version.platform', 'Nexus'),
         ]
 
         pgfill = oper_fill (
-                  self.device,
-                  ('show_version'),
-                  attrValPairsToParse,
+                  attrvalpairs=attrValPairsToParse,
+                  show_command=('show_version'),
                   refresh_cache=True,
                   regex_tag_fill_pattern='show\.version',
-                  skip=True)
+                  skip=True,
+                  device_os='nxos',
+                  device_output=output)
 
         result = pgfill.parse()
-        out = pg.ext_dictio[self.device.name]
+        out = pg.ext_dictio['device_name']
         version_dict = {}
 
         if 'platform' not in version_dict:
