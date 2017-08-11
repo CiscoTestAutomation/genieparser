@@ -3411,17 +3411,21 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
         return ret_dict 
 
 
-# ==================================================================
+# ===============================================================================
 # Parser for:
 # 'show bgp instance all all all neighbors <WORD> advertised-routes'
 # 'show bgp instance all vrf all neighbors <WORD> advertised-routes'
-# ==================================================================
+# 'show bgp instance all vrf all ipv4 unicast neighbors <WORD> advertised-routes'
+# 'show bgp instance all vrf all ipv6 unicast neighbors <WORD> advertised-routes'
+# ===============================================================================
 
 class ShowBgpInstanceNeighborsAdvertisedRoutesSchema(MetaParser):
 
     ''' Schema for:
         * 'show bgp instance all all all neighbors <WORD> advertised-routes'
         * 'show bgp instance all vrf all neighbors <WORD> advertised-routes'
+        * 'show bgp instance all vrf all ipv4 unicast neighbors <WORD> advertised-routes'
+        * 'show bgp instance all vrf all ipv6 unicast neighbors <WORD> advertised-routes'
     '''
 
     schema = {'instance':
@@ -3464,6 +3468,8 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
     ''' Parser for:
         * 'show bgp instance all all all neighbors <WORD> advertised-routes'
         * 'show bgp instance all vrf all neighbors <WORD> advertised-routes'
+        * 'show bgp instance all vrf all ipv4 unicast neighbors <WORD> advertised-routes'
+        * 'show bgp instance all vrf all ipv6 unicast neighbors <WORD> advertised-routes'
     '''
 
     def cli(self, neighbor, vrf_type, af_type=''):
@@ -3476,10 +3482,16 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
         out = self.device.execute(cmd)
 
         ret_dict = {}
-        # if vrf == all then it means default vrf
-        af = 'vpnv4 unicast' if vrf_type == 'vrf' else None
-        vrf = 'default' if vrf_type == 'all' else None
         address_family = None
+
+        if vrf_type == 'all':
+            vrf = 'default'
+        elif vrf_type == 'vrf':
+            vrf = None
+            if af_type == 'ipv6 unicast':
+                af = 'vpnv6 unicast'
+            else:
+                af = 'vpnv4 unicast'
 
         for line in out.splitlines():
             line = line.strip()
@@ -3497,32 +3509,30 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
                     ret_dict['instance'][instance] = {}
                     continue
 
-            #VRF: VRF2
-            
+            # VRF: VRF2
             p2 = re.compile(r'^VRF: *(?P<vrf>[a-zA-Z0-9]+)$')
             m = p2.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
-
                 if 'vrf' not in ret_dict['instance'][instance]:
                     ret_dict['instance'][instance]['vrf'] = {}
                 if vrf not in ret_dict['instance'][instance]['vrf']:
                     ret_dict['instance'][instance]['vrf'][vrf] = {}
-                continue
+                    continue
 
             # Address Family: VPNv4 Unicast
             p7 = re.compile(r'^Address *Family: *(?P<address_family>[a-zA-Z0-9\s]+)$')
             m = p7.match(line)
             if m and vrf == 'default':
                 address_family = m.groupdict()['address_family'].lower()
-                if 'vrf' not in ret_dict['instance'][instance]:
-                    ret_dict['instance'][instance]['vrf'] = {}
-                if vrf not in ret_dict['instance'][instance]['vrf']:
-                    ret_dict['instance'][instance]['vrf'][vrf] = {}
-                continue
+                if vrf_type == 'all' and vrf == 'default':
+                    if 'vrf' not in ret_dict['instance'][instance]:
+                        ret_dict['instance'][instance]['vrf'] = {}
+                    if vrf not in ret_dict['instance'][instance]['vrf']:
+                        ret_dict['instance'][instance]['vrf'][vrf] = {}
+                        continue
 
-            #Route Distinguisher: 200:2 (default for vrf VRF2)
-            
+            # Route Distinguisher: 200:2 (default for vrf VRF2)
             p3 = re.compile(r'^Route *Distinguisher: *(?P<route_distinguisher>[0-9\:]+) *'
                              '(\(default *for *vrf (?P<default_vrf>[0-9A-Z]+)\))?$')
             m = p3.match(line)
@@ -3536,7 +3546,6 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
                     sub_dict = ret_dict['instance'][instance]['vrf'][vrf]['address_family'][addr] = {}
                 sub_dict['route_distinguisher'] = rd
                 sub_dict['default_vrf'] = default_vrf if default_vrf else 'default'
-                
                 continue
 
             # Network            Next Hop        From            AS Path
