@@ -1941,8 +1941,8 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                          Optional('refresh_request_status'): str,
                                          Optional('route_refresh_request_received'): int,
                                          Optional('route_refresh_request_sent'): int,
-                                         Optional('policy_for_incoming_adv'): str,
-                                         Optional('policy_for_outgoing_adv'): str,
+                                         Optional('route_map_name_in'): str,
+                                         Optional('route_map_name_out'): str,
                                          Optional('accepted_prefixes'): int,
                                          Optional('best_paths'): int,
                                          Optional('exact_no_prefixes_denied'): int,
@@ -2519,21 +2519,21 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
 
             # Policy for incoming advertisements is all-pass
-            p37 = re.compile(r'^Policy *for *incoming *advertisements *is *(?P<policy_for_incoming_adv>[a-z\-]+)$')
+            p37 = re.compile(r'^Policy *for *incoming *advertisements *is *(?P<route_map_name_in>[a-zA-Z\-\_]+)$')
             m = p37.match(line)
             if m:
-                policy_for_incoming_adv = m.groupdict()['policy_for_incoming_adv']
+                route_map_name_in = m.groupdict()['route_map_name_in']
 
-                sub_dict['address_family'][address_family]['policy_for_incoming_adv'] = policy_for_incoming_adv
+                sub_dict['address_family'][address_family]['route_map_name_in'] = route_map_name_in
                 continue
 
             # Policy for outgoing advertisements is all-pass
-            p38 = re.compile(r'^Policy *for *outgoing *advertisements *is *(?P<policy_for_outgoing_adv>[a-z\-]+)$')
+            p38 = re.compile(r'^Policy *for *outgoing *advertisements *is *(?P<route_map_name_out>[a-zA-Z\-\_]+)$')
             m = p38.match(line)
             if m:
-                policy_for_outgoing_adv = m.groupdict()['policy_for_outgoing_adv']
+                route_map_name_out = m.groupdict()['route_map_name_out']
 
-                sub_dict['address_family'][address_family]['policy_for_outgoing_adv'] = policy_for_outgoing_adv
+                sub_dict['address_family'][address_family]['route_map_name_out'] = route_map_name_out
                 continue
 
             # 0 accepted prefixes, 0 are bestpaths

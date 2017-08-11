@@ -157,66 +157,68 @@ class test_show_hsrp_detail(unittest.TestCase):
             5: {
                 'interface': {
                     'GigabitEthernet0/0/0/1': {
-                        'active_router': 'local',
-                        'address_family': 'ipv4',
-                        'authentication_text': 'cisco123',
-                        'config_hellotime': 1000,
-                        'config_holdtime': 3000,
-                        'hellotime': 1000,
-                        'holdtime': 3000,
-                        'ip_address': '192.168.1.254',
-                        'last_coup_received': 'Never',
-                        'last_coup_sent': 'Never',
-                        'last_resign_received': 'Never',
-                        'last_resign_sent': 'Never',
-                        'last_state_change': '2d07h',
-                        'local_state': 'active',
-                        'min_delay': 5,
-                        'num_state_changes': 4,
-                        'preempt': True,
-                        'priority': 49,
-                        'reload_delay': 10,
-                        'standby_router': 'unknown '
-                                          'expired',
-                        'standby_state': 'active',
-                        'standby_virtual_mac_addr': '0000.0c07.ac05',
-                        'track_objects': {
-                            '1': {
-                                'priority_decrement': 20},
-                            'apple': {
-                                'priority_decrement': 55},
-                            'banana': {
-                                'priority_decrement': 6},
-                            'num_tracked_objects': 3,
-                            'num_tracked_objects_up': 1},
-                          'version': 1}}},
+                        'address_family': {
+                            'ipv4': {
+                                'active_router': 'local',
+                                'authentication_text': 'cisco123',
+                                'config_hellotime': 1000,
+                                'config_holdtime': 3000,
+                                'hellotime': 1000,
+                                'holdtime': 3000,
+                                'ip_address': '192.168.1.254',
+                                'last_coup_received': 'Never',
+                                'last_coup_sent': 'Never',
+                                'last_resign_received': 'Never',
+                                'last_resign_sent': 'Never',
+                                'last_state_change': '2d07h',
+                                'local_state': 'active',
+                                'min_delay': 5,
+                                'num_state_changes': 4,
+                                'preempt': True,
+                                'priority': 49,
+                                'reload_delay': 10,
+                                'standby_router': 'unknown '
+                                                  'expired',
+                                'standby_state': 'active',
+                                'standby_virtual_mac_addr': '0000.0c07.ac05',
+                                'track_objects': {
+                                    '1': {
+                                        'priority_decrement': 20},
+                                    'apple': {
+                                        'priority_decrement': 55},
+                                    'banana': {
+                                        'priority_decrement': 6},
+                                    'num_tracked_objects': 3,
+                                    'num_tracked_objects_up': 1},
+                                  'version': 1}}}}},
             8: {
                 'interface': {
                     'GigabitEthernet0/0/0/2': {
-                        'active_router': 'unknown '
-                                         'expired',
-                        'address_family': 'ipv4',
-                        'authentication_text': 'cisco123',
-                        'hellotime': 3000,
-                        'holdtime': 10000,
-                        'ip_address': '192.168.2.254',
-                        'last_coup_received': 'Never',
-                        'last_coup_sent': 'Never',
-                        'last_resign_received': 'Never',
-                        'last_resign_sent': 'Never',
-                        'last_state_change': 'never',
-                        'local_state': 'init',
-                        'min_delay': 5,
-                        'num_state_changes': 0,
-                        'preempt': True,
-                        'preempt_delay': 10,
-                        'priority': 115,
-                        'reload_delay': 15,
-                        'standby_router': 'unknown '
-                                          'expired',
-                        'standby_state': 'stored',
-                        'standby_virtual_mac_addr': '0000.0c07.ac08',
-                        'version': 1}}}}}}
+                        'address_family': {
+                            'ipv4': {
+                                'active_router': 'unknown '
+                                                 'expired',
+                                'authentication_text': 'cisco123',
+                                'hellotime': 3000,
+                                'holdtime': 10000,
+                                'ip_address': '192.168.2.254',
+                                'last_coup_received': 'Never',
+                                'last_coup_sent': 'Never',
+                                'last_resign_received': 'Never',
+                                'last_resign_sent': 'Never',
+                                'last_state_change': 'never',
+                                'local_state': 'init',
+                                'min_delay': 5,
+                                'num_state_changes': 0,
+                                'preempt': True,
+                                'preempt_delay': 10,
+                                'priority': 115,
+                                'reload_delay': 15,
+                                'standby_router': 'unknown '
+                                                  'expired',
+                                'standby_state': 'stored',
+                                'standby_virtual_mac_addr': '0000.0c07.ac08',
+                                'version': 1}}}}}}}}
 
     golden_output = {'execute.return_value': '''
         GigabitEthernet0/0/0/1 - IPv4 Group 5 (version 1)

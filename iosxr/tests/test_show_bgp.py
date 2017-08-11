@@ -3285,7 +3285,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                         "outstanding_version_objects_current": 0,
                                         "outstanding_version_objects_max": 1,
                                         "cummulative_no_by_orf_policy": 0,
-                                        "policy_for_incoming_adv": "all-pass",
+                                        "route_map_name_in": "all-pass",
                                         "last_synced_ack_version": 0,
                                         "last_ack_version": 43,
                                         "best_paths": 0,
@@ -3311,7 +3311,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                         "route_refresh_request_sent": 0,
                                         "accepted_prefixes": 0,
                                         "cummulative_no_failed_rt_match": 0,
-                                        "policy_for_outgoing_adv": "all-pass"
+                                        "route_map_name_out": "all-pass"
                                     }
                                 },
                                 "second_last_write_before_written": 0,
@@ -3407,7 +3407,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                         "outstanding_version_objects_current": 0,
                                         "outstanding_version_objects_max": 1,
                                         "cummulative_no_by_orf_policy": 0,
-                                        "policy_for_incoming_adv": "all-pass",
+                                        "route_map_name_in": "all-pass",
                                         "last_synced_ack_version": 0,
                                         "last_ack_version": 43,
                                         "best_paths": 0,
@@ -3433,7 +3433,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                         "route_refresh_request_sent": 0,
                                         "accepted_prefixes": 0,
                                         "cummulative_no_failed_rt_match": 0,
-                                        "policy_for_outgoing_adv": "all-pass"
+                                        "route_map_name_out": "all-pass"
                                     }
                                 },
                                 "second_last_write_before_written": 0,
@@ -3542,7 +3542,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                         "maximum_prefix_warning_only": True,
                                         "additional_paths_operation": "None",
                                         "maximum_prefix_restart": 0,
-                                        "policy_for_incoming_adv": "all-pass",
+                                        "route_map_name_in": "all-pass",
                                         "route_refresh_request_received": 0,
                                         "accepted_prefixes": 5,
                                         "update_group": "0.1",
@@ -3554,7 +3554,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                         "prefix_suppressed": 0,
                                         "route_refresh_request_sent": 0,
                                         "maximum_prefix_threshold": "75%",
-                                        "policy_for_outgoing_adv": "all-pass",
+                                        "route_map_name_out": "all-pass",
                                         "refresh_request_status": "No Refresh request being processed"
                                     }
                                 },
@@ -3660,7 +3660,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                         "maximum_prefix_warning_only": True,
                                         "additional_paths_operation": "None",
                                         "maximum_prefix_restart": 0,
-                                        "policy_for_incoming_adv": "all-pass",
+                                        "route_map_name_in": "all-pass",
                                         "route_refresh_request_received": 0,
                                         "accepted_prefixes": 5,
                                         "update_group": "0.1",
@@ -3672,7 +3672,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                         "prefix_suppressed": 0,
                                         "route_refresh_request_sent": 0,
                                         "maximum_prefix_threshold": "75%",
-                                        "policy_for_outgoing_adv": "all-pass",
+                                        "route_map_name_out": "all-pass",
                                         "refresh_request_status": "No Refresh request being processed"
                                     }
                                 },

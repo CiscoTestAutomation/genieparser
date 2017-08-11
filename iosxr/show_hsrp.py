@@ -219,37 +219,40 @@ class ShowHsrpDetailSchema(MetaParser):
                         {Any():
                             {'interface':
                                 {Any():
-                                    {'address_family': str,
-                                     'version': int,
-                                     'local_state': str,
-                                     'priority': int,
-                                     'preempt': bool,
-                                     Optional('preempt_delay'): int,
-                                     'hellotime': int,
-                                     'holdtime': int,
-                                     Optional('config_hellotime'): int,
-                                     Optional('config_holdtime'): int,
-                                     'min_delay': int,
-                                     'reload_delay': int,
-                                     'ip_address': str,
-                                     'active_router': str,
-                                     'standby_router': str,
-                                     'standby_virtual_mac_addr': str,
-                                     'standby_state': str,
-                                     Optional('authentication_text'): str,
-                                     'num_state_changes': int,
-                                     'last_state_change': str,
-                                     'last_coup_sent': str,
-                                     'last_coup_received': str,
-                                     'last_resign_sent': str,
-                                     'last_resign_received': str,
-                                     Optional('track_objects'):
-                                        {'num_tracked_objects': int,
-                                         'num_tracked_objects_up': int,
-                                         Any():
-                                                {'priority_decrement': int},
-                                         },
-                                    },
+                                    {'address_family':
+                                        {Any():
+                                             {'version': int,
+                                             'local_state': str,
+                                             'priority': int,
+                                             'preempt': bool,
+                                             Optional('preempt_delay'): int,
+                                             'hellotime': int,
+                                             'holdtime': int,
+                                             Optional('config_hellotime'): int,
+                                             Optional('config_holdtime'): int,
+                                             'min_delay': int,
+                                             'reload_delay': int,
+                                             'ip_address': str,
+                                             'active_router': str,
+                                             'standby_router': str,
+                                             'standby_virtual_mac_addr': str,
+                                             'standby_state': str,
+                                             Optional('authentication_text'): str,
+                                             'num_state_changes': int,
+                                             'last_state_change': str,
+                                             'last_coup_sent': str,
+                                             'last_coup_received': str,
+                                             'last_resign_sent': str,
+                                             'last_resign_received': str,
+                                             Optional('track_objects'):
+                                                {'num_tracked_objects': int,
+                                                 'num_tracked_objects_up': int,
+                                                 Any():
+                                                        {'priority_decrement': int},
+                                                 },
+                                            },
+                                        },
+                                    }
                                  },
                              },
                          },
@@ -291,9 +294,22 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                         [group]['interface']:
                     hsrp_detail_dict['hsrp_detail']['group'][group]\
                         ['interface'][interface] = {}
-                    intf_key = hsrp_detail_dict['hsrp_detail']['group']\
-                        [group]['interface'][interface]
-                    intf_key['address_family'] =  m.groupdict()['af'].lower()
+
+                if 'address_family' not in hsrp_detail_dict['hsrp_detail']\
+                    ['group'][group]['interface'][interface]:
+                    hsrp_detail_dict['hsrp_detail']['group'][group]['interface']\
+                        [interface]['address_family'] = {}
+
+                af = m.groupdict()['af'].lower()
+
+                if af not in hsrp_detail_dict['hsrp_detail']\
+                    ['group'][group]['interface'][interface]['address_family']:
+                    hsrp_detail_dict['hsrp_detail']['group'][group]\
+                        ['interface'][interface]['address_family'][af] = {}
+
+                    intf_key = hsrp_detail_dict['hsrp_detail']['group'][group]\
+                        ['interface'][interface]['address_family'][af]
+                        
                     intf_key['version'] = int(m.groupdict()['version'])
                     continue
 
