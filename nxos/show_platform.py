@@ -1165,7 +1165,7 @@ class ShowVdcDetail(ShowVdcDetailSchema):
                 vdc_dict['vdc'][identity]['type'] = m.groupdict()['type']
                 continue
 
-            p16 = re.compile(r'^\s*vdc +supported +linecards: +(?P<linecards>[a-zA-Z0-9]+)$')
+            p16 = re.compile(r'^\s*vdc +supported +linecards: +(?P<linecards>[a-zA-Z0-9\s]+)$')
             m = p16.match(line)
             if m:
                 if 'vdc' not in vdc_dict:
