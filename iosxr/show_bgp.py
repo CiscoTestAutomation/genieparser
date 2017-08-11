@@ -1378,7 +1378,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                 af.strip()
                 current_vrf = str(m.groupdict()['current_vrf']).lower()
                 table_state = str(m.groupdict()['table_state'])
-                
+
                 # Reset address_family for 'all vrf all'
                 if vrf_type == 'vrf':
                     if af_type == 'ipv6 unicast' or af == 'ipv6 unicast':
@@ -2947,17 +2947,21 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         return map_dict
 
 
-# ================================================================
+# =============================================================================
 # Parser for:
 # 'show bgp instance all all all neighbors <WORD> received routes'
 # 'show bgp instance all vrf all neighbors <WORD> received routes'
-# ================================================================
+# 'show bgp instance all vrf all ipv4 unicast neighbors <WORD> received routes'
+# 'show bgp instance all vrf all ipv6 unicast neighbors <WORD> received routes'
+# =============================================================================
 
 class ShowBgpInstanceNeighborsReceivedRoutesSchema(MetaParser):
     
     ''' Schema for:
         * 'show bgp instance all all all neighbors <WORD> received routes'
         * 'show bgp instance all vrf all neighbors <WORD> received routes'
+        * 'show bgp instance all vrf all ipv4 unicast neighbors <WORD> received routes'
+        * 'show bgp instance all vrf all ipv6 unicast neighbors <WORD> received routes'
     '''
 
     schema = {'instance':
@@ -3013,6 +3017,8 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
     ''' Parser for:
         * 'show bgp instance all all all neighbors <WORD> received routes'
         * 'show bgp instance all vrf all neighbors <WORD> received routes'
+        * 'show bgp instance all vrf all ipv4 unicast neighbors <WORD> received routes'
+        * 'show bgp instance all vrf all ipv6 unicast neighbors <WORD> received routes'
     '''
 
     def cli(self, neighbor, vrf_type, af_type='', route_type='received routes'):
@@ -3025,18 +3031,22 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
               .format(neighbor=neighbor, vrf_type=vrf_type, route=route_type)
         out = self.device.execute(cmd)
 
+        # Init vars
         ret_dict = {}
-        # address_family default to 'vpnv4 unicast' when command is 
-        # show bgp instance all vrf all neighbors ****
-        af = 'vpnv4 unicast' if vrf_type == 'vrf' else None
-        # if vrf == all then it means default vrf
-        vrf = 'default' if vrf_type == 'all' else None
-        # initial var
-        address_family = None
         instance = None
+        address_family = None
+
+        if vrf_type == 'all':
+            vrf = 'default'
+        elif vrf_type == 'vrf':
+            vrf = None
+            if af_type == 'ipv6 unicast':
+                af = 'vpnv6 unicast'
+            else:
+                af = 'vpnv4 unicast'
+
         # handle route table name
         routes = 'received' if 'received' in route_type else 'routes'
-
 
         for line in out.splitlines():
             line = line.strip()
@@ -3069,7 +3079,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                     ret_dict['instance'][instance]['vrf'][vrf] = {}
                 continue
 
-            #BGP Route Distinguisher: 200:2
+            # BGP Route Distinguisher: 200:2
             p15_1 = re.compile(r'^BGP Route Distinguisher: *(?P<route_distinguisher>[0-9\:]+)')
             m = p15_1.match(line)
             if m:
@@ -3594,17 +3604,21 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
         return ret_dict
 
 
-# =======================================================
+# ====================================================================
 # Parser for:
 # 'show bgp instance all all all neighbors <WORD> routes'
 # 'show bgp instance all vrf all neighbors <WORD> routes'
-# =======================================================
+# 'show bgp instance all vrf all ipv4 unicast neighbors <WORD> routes'
+# 'show bgp instance all vrf all ipv6 unicast neighbors <WORD> routes'
+# ====================================================================
 
 class ShowBgpInstanceNeighborsRoutesSchema(MetaParser):
 
     ''' Schema for:
         * 'show bgp instance all all all neighbors <WORD> routes'
         * 'show bgp instance all vrf all neighbors <WORD> routes'
+        * 'show bgp instance all vrf all ipv4 unicast neighbors <WORD> routes'
+        * 'show bgp instance all vrf all ipv6 unicast neighbors <WORD> routes'
     '''
 
     schema = {
@@ -3660,6 +3674,8 @@ class ShowBgpInstanceNeighborsRoutes(ShowBgpInstanceNeighborsRoutesSchema):
     ''' Parser for:
         * 'show bgp instance all all all neighbors <WORD> routes'
         * 'show bgp instance all vrf all neighbors <WORD> routes'
+        * 'show bgp instance all vrf all ipv4 unicast neighbors <WORD> routes'
+        * 'show bgp instance all vrf all ipv6 unicast neighbors <WORD> routes'
     '''
 
     def cli(self, neighbor, vrf_type, af_type=''):
