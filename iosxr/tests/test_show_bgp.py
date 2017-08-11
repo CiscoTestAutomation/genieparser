@@ -4034,7 +4034,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "last_ka_start_before_second_last": "00:00:00",
                                 "message_stats_input_queue": 0,
                                 "address_family": {
-                                    "ipv6 unicast": {
+                                    "vpnv6 unicast": {
                                         "outstanding_version_objects_current": 0,
                                         "outstanding_version_objects_max": 1,
                                         "cummulative_no_by_orf_policy": 0,
@@ -4156,7 +4156,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "last_ka_start_before_second_last": "00:00:00",
                                 "message_stats_input_queue": 0,
                                 "address_family": {
-                                    "ipv4 unicast": {
+                                    "vpnv4 unicast": {
                                         "outstanding_version_objects_current": 0,
                                         "outstanding_version_objects_max": 1,
                                         "cummulative_no_by_orf_policy": 0,
@@ -4282,7 +4282,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "last_ka_start_before_second_last": "00:00:00",
                                 "message_stats_input_queue": 0,
                                 "address_family": {
-                                    "ipv6 unicast": {
+                                    "vpnv6 unicast": {
                                         "outstanding_version_objects_current": 0,
                                         "outstanding_version_objects_max": 1,
                                         "additional_routes_local_label": "Unicast SAFI",
@@ -4400,7 +4400,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "last_ka_start_before_second_last": "00:00:00",
                                 "message_stats_input_queue": 0,
                                 "address_family": {
-                                    "ipv4 unicast": {
+                                    "vpnv4 unicast": {
                                         "outstanding_version_objects_current": 0,
                                         "outstanding_version_objects_max": 1,
                                         "additional_routes_local_label": "Unicast SAFI",
@@ -4474,17 +4474,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                               "opens": 1,
                                               "keepalives": 50,
                                               "notifications": 0,
-                                              "updates": 2,
-                                         }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+                                              "updates": 2}}}}}}}}}}
 
     golden_output = {'execute.return_value': '''
         Wed Jun 28 19:18:23.304 UTC
@@ -4769,22 +4759,414 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
           Local host: 2001:db8:20:1:5::1, Local port: 179, IF Handle: 0x00000080
           Foreign host: 2001:db8:20:1:5::5, Foreign port: 11013
           Last reset 00:00:00
-        
-            '''}
+        '''}
 
+    golden_parsed_output2 = {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'VRF1': 
+                        {'neighbor': 
+                            {'2001:db8:1:5::5': 
+                                {'address_family': 
+                                    {'vpnv6 unicast': 
+                                        {'accepted_prefixes': 0,
+                                        'additional_paths_operation': 'None',
+                                        'additional_routes_local_label': 'Unicast '
+                                                                      'SAFI',
+                                        'best_paths': 0,
+                                        'cummulative_no_prefixes_denied': 0,
+                                        'eor_status': 'was '
+                                                   'not '
+                                                   'received '
+                                                   'during '
+                                                   'read-only '
+                                                   'mode',
+                                        'exact_no_prefixes_denied': 0,
+                                        'filter_group': '0.0',
+                                        'last_ack_version': 1,
+                                        'last_synced_ack_version': 0,
+                                        'maximum_prefix_max_prefix_no': 524288,
+                                        'maximum_prefix_restart': 0,
+                                        'maximum_prefix_threshold': '75%',
+                                        'maximum_prefix_warning_only': True,
+                                        'neighbor_version': 0,
+                                        'outstanding_version_objects_current': 0,
+                                        'outstanding_version_objects_max': 0,
+                                        'prefix_advertised': 0,
+                                        'prefix_suppressed': 0,
+                                        'prefix_withdrawn': 0,
+                                        'refresh_request_status': 'No '
+                                                               'Refresh '
+                                                               'request '
+                                                               'being '
+                                                               'processed',
+                                        'route_map_name_in': 'all-pass',
+                                        'route_map_name_out': 'all-pass',
+                                        'route_refresh_request_received': 0,
+                                        'route_refresh_request_sent': 0,
+                                        'update_group': '0.1'}},
+                                'attempted': 0,
+                                'bgp_negotiated_keepalive_timers': {'hold_time': 180,
+                                                                    'keepalive_interval': 60},
+                                'bgp_neighbor_counters': {'messages': {'received': {'keepalives': 0,
+                                                                                    'notifications': 0,
+                                                                                    'opens': 0,
+                                                                                    'updates': 0},
+                                                                       'sent': {'keepalives': 0,
+                                                                                'notifications': 0,
+                                                                                'opens': 0,
+                                                                                'updates': 0}}},
+                                'bgp_session_transport': {'connection': {'connections_dropped': 0,
+                                                                         'connections_established': 0,
+                                                                         'last_reset': '00:00:00',
+                                                                         'state': 'established'},
+                                                          'transport': {'foreign_host': '2001:db8:1:5::5',
+                                                                        'foreign_port': '0',
+                                                                        'if_handle': '0x00000000',
+                                                                        'local_host': '::',
+                                                                        'local_port': '0'}},
+                                'configured_hold_time': 180,
+                                'enforcing_first_as': 'enabled',
+                                'inbound_message': '3',
+                                'keepalive': 60,
+                                'last_full_not_set_pulse_count': 0,
+                                'last_ka_error_before_reset': '00:00:00',
+                                'last_ka_error_ka_not_sent': '00:00:00',
+                                'last_ka_expiry_before_reset': '00:00:00',
+                                'last_ka_expiry_before_second_last': '00:00:00',
+                                'last_ka_start_before_reset': '00:00:00',
+                                'last_ka_start_before_second_last': '00:00:00',
+                                'last_read': '00:00:00',
+                                'last_read_before_reset': '00:00:00',
+                                'last_write': '00:00:00',
+                                'last_write_attempted': 0,
+                                'last_write_before_reset': '00:00:00',
+                                'last_write_pulse_rcvd': 'not '
+                                                         'set ',
+                                'last_write_pulse_rcvd_before_reset': '00:00:00',
+                                'last_write_thread_event_before_reset': '00:00:00',
+                                'last_write_thread_event_second_last': '00:00:00',
+                                'last_write_written': 0,
+                                'link_state': 'external '
+                                              'link',
+                                'local_as_as_no': 100,
+                                'message_stats_input_queue': 0,
+                                'message_stats_output_queue': 0,
+                                'min_acceptable_hold_time': 3,
+                                'minimum_time_between_adv_runs': 0,
+                                'multiprotocol_capability': 'not '
+                                                            'received',
+                                'non_stop_routing': 'enabled',
+                                'nsr_state': 'None',
+                                'outbound_message': '3',
+                                'precedence': 'internet',
+                                'remote_as': 200,
+                                'router_id': '0.0.0.0',
+                                'second_attempted': 0,
+                                'second_last_write': '00:00:00',
+                                'second_last_write_before_attempted': 0,
+                                'second_last_write_before_reset': '00:00:00',
+                                'second_last_write_before_written': 0,
+                                'second_written': 0,
+                                'session_state': 'idle',
+                                'session_state_reason': ' '
+                                                        '(No '
+                                                        'best '
+                                                        'local '
+                                                        'address '
+                                                        'found)',
+                                'tcp_initial_sync': '---',
+                                'tcp_initial_sync_done': '---',
+                                'written': 0}}},
+            'VRF2': 
+                {'neighbor': 
+                    {'2001:db8:20:1:5::5': 
+                        {'address_family': 
+                            {'vpnv6 unicast': 
+                                {'accepted_prefixes': 0,
+                                'additional_paths_operation': 'None',
+                                'additional_routes_local_label': 'Unicast '
+                                                                 'SAFI',
+                                'best_paths': 0,
+                                'cummulative_no_prefixes_denied': 0,
+                                'eor_status': 'was '
+                                              'not '
+                                              'received '
+                                              'during '
+                                              'read-only '
+                                              'mode',
+                                'exact_no_prefixes_denied': 0,
+                                'filter_group': '0.0',
+                                'last_ack_version': 1,
+                                'last_synced_ack_version': 0,
+                                'maximum_prefix_max_prefix_no': 524288,
+                                'maximum_prefix_restart': 0,
+                                'maximum_prefix_threshold': '75%',
+                                'maximum_prefix_warning_only': True,
+                                'neighbor_version': 0,
+                                'outstanding_version_objects_current': 0,
+                                'outstanding_version_objects_max': 0,
+                                'prefix_advertised': 0,
+                                'prefix_suppressed': 0,
+                                'prefix_withdrawn': 0,
+                                'refresh_request_status': 'No '
+                                                          'Refresh '
+                                                          'request '
+                                                          'being '
+                                                          'processed',
+                                'route_map_name_in': 'all-pass',
+                                'route_map_name_out': 'all-pass',
+                                'route_refresh_request_received': 0,
+                                'route_refresh_request_sent': 0,
+                                'update_group': '0.1'}},
+                        'attempted': 0,
+                        'bgp_negotiated_keepalive_timers': {'hold_time': 180,
+                                                           'keepalive_interval': 60},
+                        'bgp_neighbor_counters': {'messages': {'received': {'keepalives': 0,
+                                                                           'notifications': 0,
+                                                                           'opens': 0,
+                                                                           'updates': 0},
+                                                              'sent': {'keepalives': 0,
+                                                                       'notifications': 0,
+                                                                       'opens': 0,
+                                                                       'updates': 0}}},
+                        'bgp_session_transport': {'connection': {'connections_dropped': 0,
+                                                                'connections_established': 0,
+                                                                'last_reset': '00:00:00',
+                                                                'state': 'established'},
+                                                 'transport': {'foreign_host': '2001:db8:20:1:5::5',
+                                                               'foreign_port': '0',
+                                                               'if_handle': '0x00000000',
+                                                               'local_host': '::',
+                                                               'local_port': '0'}},
+                        'configured_hold_time': 180,
+                        'enforcing_first_as': 'enabled',
+                        'inbound_message': '3',
+                        'keepalive': 60,
+                        'last_full_not_set_pulse_count': 0,
+                        'last_ka_error_before_reset': '00:00:00',
+                        'last_ka_error_ka_not_sent': '00:00:00',
+                        'last_ka_expiry_before_reset': '00:00:00',
+                        'last_ka_expiry_before_second_last': '00:00:00',
+                        'last_ka_start_before_reset': '00:00:00',
+                        'last_ka_start_before_second_last': '00:00:00',
+                        'last_read': '00:00:00',
+                        'last_read_before_reset': '00:00:00',
+                        'last_write': '00:00:00',
+                        'last_write_attempted': 0,
+                        'last_write_before_reset': '00:00:00',
+                        'last_write_pulse_rcvd': 'not '
+                                                'set ',
+                        'last_write_pulse_rcvd_before_reset': '00:00:00',
+                        'last_write_thread_event_before_reset': '00:00:00',
+                        'last_write_thread_event_second_last': '00:00:00',
+                        'last_write_written': 0,
+                        'link_state': 'external '
+                                     'link',
+                        'local_as_as_no': 100,
+                        'message_stats_input_queue': 0,
+                        'message_stats_output_queue': 0,
+                        'min_acceptable_hold_time': 3,
+                        'minimum_time_between_adv_runs': 0,
+                        'multiprotocol_capability': 'not '
+                                                   'received',
+                        'non_stop_routing': 'enabled',
+                        'nsr_state': 'None',
+                        'outbound_message': '3',
+                        'precedence': 'internet',
+                        'remote_as': 200,
+                        'router_id': '0.0.0.0',
+                        'second_attempted': 0,
+                        'second_last_write': '00:00:00',
+                        'second_last_write_before_attempted': 0,
+                        'second_last_write_before_reset': '00:00:00',
+                        'second_last_write_before_written': 0,
+                        'second_written': 0,
+                        'session_state': 'idle',
+                        'session_state_reason': ' '
+                                               '(No '
+                                               'best '
+                                               'local '
+                                               'address '
+                                               'found)',
+                        'tcp_initial_sync': '---',
+                        'tcp_initial_sync_done': '---',
+                        'written': 0}}}}},
+            'test': {},
+            'test1': {},
+            'test2': {}}}
+
+    golden_output2 = {'execute.return_value': '''
+        RP/0/RSP1/CPU0:PE1#show bgp instance all vrf all ipv6 unicast neighbors detail 
+        Fri Aug 11 13:15:07.809 PDT
+
+        BGP instance 0: 'default'
+        =========================
+
+        VRF: VRF1
+        ---------
+
+        BGP neighbor is 2001:db8:1:5::5, vrf VRF1
+         Remote AS 200, local AS 100, external link
+         Remote router ID 0.0.0.0
+          BGP state = Idle (No best local address found)
+          NSR State: None
+          Last read 00:00:00, Last read before reset 00:00:00
+          Hold time is 180, keepalive interval is 60 seconds
+          Configured hold time: 180, keepalive: 60, min acceptable hold time: 3
+          Last write 00:00:00, attempted 0, written 0
+          Second last write 00:00:00, attempted 0, written 0
+          Last write before reset 00:00:00, attempted 0, written 0
+          Second last write before reset 00:00:00, attempted 0, written 0
+          Last write pulse rcvd  not set last full not set pulse count 0
+          Last write pulse rcvd before reset 00:00:00
+          Socket not armed for io, not armed for read, not armed for write
+          Last write thread event before reset 00:00:00, second last 00:00:00
+          Last KA expiry before reset 00:00:00, second last 00:00:00
+          Last KA error before reset 00:00:00, KA not sent 00:00:00
+          Last KA start before reset 00:00:00, second last 00:00:00
+          Precedence: internet
+          Non-stop routing is enabled
+          Entered Neighbor NSR TCP mode:
+            TCP Initial Sync :              ---                
+            TCP Initial Sync Phase Two :    ---                
+            TCP Initial Sync Done :         ---                
+          Enforcing first AS is enabled
+          Multi-protocol capability not received
+          Message stats:
+            InQ depth: 0, OutQ depth: 0
+                            Last_Sent               Sent  Last_Rcvd               Rcvd
+            Open:           ---                        0  ---                        0
+            Notification:   ---                        0  ---                        0
+            Update:         ---                        0  ---                        0
+            Keepalive:      ---                        0  ---                        0
+            Route_Refresh:  ---                        0  ---                        0
+            Total:                                     0                             0
+          Minimum time between advertisement runs is 0 secs
+          Inbound message logging enabled, 3 messages buffered
+          Outbound message logging enabled, 3 messages buffered
+
+         For Address Family: IPv6 Unicast
+          BGP neighbor version 0
+          Update group: 0.1 Filter-group: 0.0  No Refresh request being processed
+          Route refresh request: received 0, sent 0
+          Policy for incoming advertisements is all-pass
+          Policy for outgoing advertisements is all-pass
+          0 accepted prefixes, 0 are bestpaths
+          Exact no. of prefixes denied : 0.
+          Cumulative no. of prefixes denied: 0. 
+          Prefix advertised 0, suppressed 0, withdrawn 0
+          Maximum prefixes allowed 524288
+          Threshold for warning message 75%, restart interval 0 min
+          An EoR was not received during read-only mode
+          Last ack version 1, Last synced ack version 0
+          Outstanding version objects: current 0, max 0
+          Additional-paths operation: None
+          Advertise routes with local-label via Unicast SAFI
+                  
+          Connections established 0; dropped 0
+          Local host: ::, Local port: 0, IF Handle: 0x00000000
+          Foreign host: 2001:db8:1:5::5, Foreign port: 0
+          Last reset 00:00:00
+          External BGP neighbor not directly connected.
+                  
+        VRF: VRF2 
+        --------- 
+                  
+        BGP neighbor is 2001:db8:20:1:5::5, vrf VRF2
+         Remote AS 200, local AS 100, external link
+         Remote router ID 0.0.0.0
+          BGP state = Idle (No best local address found)
+          NSR State: None
+          Last read 00:00:00, Last read before reset 00:00:00
+          Hold time is 180, keepalive interval is 60 seconds
+          Configured hold time: 180, keepalive: 60, min acceptable hold time: 3
+          Last write 00:00:00, attempted 0, written 0
+          Second last write 00:00:00, attempted 0, written 0
+          Last write before reset 00:00:00, attempted 0, written 0
+          Second last write before reset 00:00:00, attempted 0, written 0
+          Last write pulse rcvd  not set last full not set pulse count 0
+          Last write pulse rcvd before reset 00:00:00
+          Socket not armed for io, not armed for read, not armed for write
+          Last write thread event before reset 00:00:00, second last 00:00:00
+          Last KA expiry before reset 00:00:00, second last 00:00:00
+          Last KA error before reset 00:00:00, KA not sent 00:00:00
+          Last KA start before reset 00:00:00, second last 00:00:00
+          Precedence: internet
+          Non-stop routing is enabled
+          Entered Neighbor NSR TCP mode:
+            TCP Initial Sync :              ---                
+            TCP Initial Sync Phase Two :    ---                
+            TCP Initial Sync Done :         ---                
+          Enforcing first AS is enabled
+          Multi-protocol capability not received
+          Message stats:
+            InQ depth: 0, OutQ depth: 0
+                            Last_Sent               Sent  Last_Rcvd               Rcvd
+            Open:           ---                        0  ---                        0
+            Notification:   ---                        0  ---                        0
+            Update:         ---                        0  ---                        0
+            Keepalive:      ---                        0  ---                        0
+            Route_Refresh:  ---                        0  ---                        0
+            Total:                                     0                             0
+          Minimum time between advertisement runs is 0 secs
+          Inbound message logging enabled, 3 messages buffered
+          Outbound message logging enabled, 3 messages buffered
+                  
+         For Address Family: IPv6 Unicast
+          BGP neighbor version 0
+          Update group: 0.1 Filter-group: 0.0  No Refresh request being processed
+          Route refresh request: received 0, sent 0
+          Policy for incoming advertisements is all-pass
+          Policy for outgoing advertisements is all-pass
+          0 accepted prefixes, 0 are bestpaths
+          Exact no. of prefixes denied : 0.
+          Cumulative no. of prefixes denied: 0. 
+          Prefix advertised 0, suppressed 0, withdrawn 0
+          Maximum prefixes allowed 524288
+          Threshold for warning message 75%, restart interval 0 min
+          An EoR was not received during read-only mode
+          Last ack version 1, Last synced ack version 0
+          Outstanding version objects: current 0, max 0
+          Additional-paths operation: None
+          Advertise routes with local-label via Unicast SAFI
+                  
+          Connections established 0; dropped 0
+          Local host: ::, Local port: 0, IF Handle: 0x00000000
+          Foreign host: 2001:db8:20:1:5::5, Foreign port: 0
+          Last reset 00:00:00
+          External BGP neighbor not directly connected.
+                  
+        BGP instance 1: 'test'
+        ======================
+                  
+        BGP instance 2: 'test1'
+        =======================
+                  
+        BGP instance 3: 'test2'
+        =======================
+        '''}
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
-        bgp_instance_neighbors_detail_obj = ShowBgpInstanceNeighborsDetail(device=self.device1)
+        obj = ShowBgpInstanceNeighborsDetail(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = bgp_instance_neighbors_detail_obj.parse(vrf_type='vrf')
+            parsed_output = obj.parse(vrf_type='vrf')
 
     def test_golden(self):
-        self.device = Mock(**self.golden_output)
-        bgp_instance_neighbors_detail_obj = ShowBgpInstanceNeighborsDetail(device=self.device)
-        parsed_output = bgp_instance_neighbors_detail_obj.parse(vrf_type='vrf')
         self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpInstanceNeighborsDetail(device=self.device)
+        parsed_output = obj.parse(vrf_type='vrf')
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowBgpInstanceNeighborsDetail(device=self.device)
+        parsed_output = obj.parse(vrf_type='vrf', af_type='ipv6 unicast')
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 
 # ================================================================================
