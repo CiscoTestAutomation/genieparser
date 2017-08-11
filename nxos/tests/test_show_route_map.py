@@ -268,7 +268,6 @@ class test_show_route_map(unittest.TestCase):
         route_map_obj = ShowRouteMap(device=self.device)
         parsed_output = route_map_obj.parse()
         self.maxDiff = None
-        # import pdb;pdb.set_trace()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 if __name__ == '__main__':

@@ -61,7 +61,6 @@ class test_show_vrf(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowVrf(device=self.device)
         parsed_output = obj.parse()
-        #import pprint ; import pdb ; pdb.set_trace()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 

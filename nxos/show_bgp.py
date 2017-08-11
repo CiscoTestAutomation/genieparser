@@ -2114,7 +2114,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
             m = p4.match(line)
             if m:
                 parsed_dict['neighbor'][neighbor_id]['session_state'] = \
-                        str(m.groupdict()['session_state'])
+                        str(m.groupdict()['session_state']).lower()
                 parsed_dict['neighbor'][neighbor_id]['up_time'] = \
                         str(m.groupdict()['up_time'])
                 parsed_dict['neighbor'][neighbor_id]['retry_time'] = \

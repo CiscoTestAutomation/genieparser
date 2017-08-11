@@ -95,7 +95,6 @@ class test_show_ip_bgp_summary(unittest.TestCase):
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         bgp_summary_obj = ShowIpBgpSummary(device=self.device)
-        #import pprint ; import pdb ; pdb.set_trace()
         parsed_output = bgp_summary_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
