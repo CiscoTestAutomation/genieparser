@@ -2519,7 +2519,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
 
             # Policy for incoming advertisements is all-pass
-            p37 = re.compile(r'^Policy *for *incoming *advertisements *is *(?P<route_map_name_in>[a-zA-Z\-\_]+)$')
+            p37 = re.compile(r'^Policy *for *incoming *advertisements *is *(?P<route_map_name_in>[\w\-\_]+)$')
             m = p37.match(line)
             if m:
                 route_map_name_in = m.groupdict()['route_map_name_in']
@@ -2528,7 +2528,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
 
             # Policy for outgoing advertisements is all-pass
-            p38 = re.compile(r'^Policy *for *outgoing *advertisements *is *(?P<route_map_name_out>[a-zA-Z\-\_]+)$')
+            p38 = re.compile(r'^Policy *for *outgoing *advertisements *is *(?P<route_map_name_out>[\w\-\_]+)$')
             m = p38.match(line)
             if m:
                 route_map_name_out = m.groupdict()['route_map_name_out']
