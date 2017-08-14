@@ -179,12 +179,12 @@ Active Package(s):
 
     ats_mock.tcl.eval.return_value = 'nxos'
 
-    # def test_golden(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.golden_output)
-    #     version_obj = ShowVersion(device=self.device)
-    #     parsed_output = version_obj.parse()
-    #     self.assertEqual(parsed_output,self.golden_parsed_output)
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        version_obj = ShowVersion(device=self.device)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_golden2(self):
         self.maxDiff = None
@@ -198,21 +198,6 @@ Active Package(s):
         version_obj = ShowVersion(device=self.device2)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = version_obj.parse()
-
-    # Can't test empty parser with non-tabular parsergen due to below limitation
-    # needs a fix.
-        # attributes = list(self._attributes)
-        # attribute_n = attributes[0]
-        # attribute_n_idx = 0
-        # none_wild_match = []
-        # [pyats] ssr-sucs-lnx7:/auto/nostgAuto/USERS/karmoham/pyats>:python parser/nxos/tests/test_show_version.py
-        # > /auto/nostgAuto/USERS/karmoham/pyats/lib/python3.4/site-packages/parsercore/__init__.py(1211)_parser()
-        # -> attribute_n = attributes[0]
-        # (Pdb) attributes
-        # []
-        # (Pdb) self._attributes
-        # []
-        # (Pdb) 
 
 
 class test_show_inventory(unittest.TestCase):
