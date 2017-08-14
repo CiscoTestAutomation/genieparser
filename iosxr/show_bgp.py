@@ -54,6 +54,13 @@ from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
 # Parser
 from parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
 
+# Parsergen
+import parsergen
+from parsergen import oper_fill
+
+# Markup
+from .tests import markup
+
 # Logger
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -2570,7 +2577,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
 
             # Policy for incoming advertisements is all-pass
-            p37 = re.compile(r'^Policy *for *incoming *advertisements *is *(?P<route_map_name_in>[a-zA-Z\-\_]+)$')
+            p37 = re.compile(r'^Policy *for *incoming *advertisements *is *(?P<route_map_name_in>[\w\-\_]+)$')
             m = p37.match(line)
             if m:
                 route_map_name_in = m.groupdict()['route_map_name_in']
@@ -2579,7 +2586,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
 
             # Policy for outgoing advertisements is all-pass
-            p38 = re.compile(r'^Policy *for *outgoing *advertisements *is *(?P<route_map_name_out>[a-zA-Z\-\_]+)$')
+            p38 = re.compile(r'^Policy *for *outgoing *advertisements *is *(?P<route_map_name_out>[\w\-\_]+)$')
             m = p38.match(line)
             if m:
                 route_map_name_out = m.groupdict()['route_map_name_out']
@@ -4962,5 +4969,65 @@ class ShowBgpL2vpnEvpnAdvertised(MetaParser):
                 continue
 
         return result
+
+class ShowBgpInstanceSchema(MetaParser):
+    schema = {'address_family':
+                {Any():
+                    {'ip_address': str,
+                     'localpref_number': str
+                    }
+                },
+            }
+
+class ShowBgpInstance(ShowBgpInstanceSchema):
+    """ parser class - implements detail parsing mechanisms for cli, xml, and
+    yang output.
+    """
+    #*************************
+    # schema - class variable
+    #
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
+    # parsing mechanisms (cli(), yang(), xml()).
+
+    def cli(self):
+        ''' parsing mechanism: cli
+
+        Function cli() defines the cli type output parsing mechanism which
+        typically contains 3 steps: executing, transforming, returning
+        '''
+        cmd = 'show_bgp_instance_all_all_all_<WORD>'.format()
+        self.device.execute(cmd)
+
+        attrValPairsToParse = [
+          ('show.bgp.instance.all.all.all.date',   'Wed'),
+        ]
+
+        pgfill = oper_fill (
+                  self.device,
+                  ('show_bgp_instance_all_all_all_<WORD>', [], {'address_family':'IPv4 Unicast'}),
+                  attrValPairsToParse,
+                  refresh_cache=True,
+                  regex_tag_fill_pattern='show\.bgp\.instance\.all\.all\.all',
+                  skip=True)
+
+        result = pgfill.parse()
+        out = parsergen.ext_dictio[self.device.name]
+        add_family_dict = {}
+        import pdb;pdb.set_trace()
+
+        if 'address_family' not in add_family_dict:
+            add_family_dict['address_family'] = {}
+
+        address_family = out['show.bgp.instance.all.all.all.address_family']
+        if address_family not in add_family_dict['address_family']:
+            add_family_dict['address_family'][address_family] = {}
+
+        add_family_dict['address_family'][address_family]['ip_address'] = \
+            out['show.bgp.instance.all.all.all.ip_address']
+        add_family_dict['address_family'][address_family]['localpref_number'] = \
+            out['show.bgp.instance.all.all.all.localpref_number']
+
+        return add_family_dict
 
 # vim: ft=python ts=8 sw=4 et

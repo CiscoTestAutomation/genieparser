@@ -21,8 +21,9 @@ from parser.iosxr.show_bgp import ShowPlacementProgramAll,\
                                   ShowBgpInstanceNeighborsReceivedRoutes,\
                                   ShowBgpInstanceNeighborsRoutes,\
                                   ShowBgpInstanceSummary,\
-                                  ShowBgpInstanceAllAll
-
+                                  ShowBgpInstanceAllAll,\
+                                  ShowBgpInstance
+ats_mock = Mock()
 
 # ==========================================
 # Unit test for 'show placement program all'
@@ -7257,6 +7258,59 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
         bgp_instance_all_all_obj = ShowBgpInstanceAllAll(device=self.device)
         parsed_output = bgp_instance_all_all_obj.parse(vrf_type='vrf')
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+class test_Show_Bgp_Instance(unittest.TestCase):
+    device = Device(name='aDevice')
+    device1 = Device(name='bDevice')
+    device2 = Device(name='cDevice')
+    empty_output = {'execute.return_value': '', 'os':'iosxr'}
+    golden_parsed_output = {'address_family':
+                            {'IPv4 Unicast':
+                              {'ip_address': '10.3.4.0',
+                               'localpref_number': '100'}
+                            }
+                        }
+
+    golden_output = {'execute.return_value': '''
+
+Wed Jul 12 15:23:42.143 EDT
+
+BGP instance 0: 'default'
+=========================
+
+Address Family: IPv4 Unicast
+----------------------------
+
+BGP routing table entry for 10.3.4.0/34
+Versions:
+  Process           bRIB/RIB  SendTblVer
+  Speaker                  4           4
+Last Modified: Jul  9 08:46:14.166 for 3d06h
+Paths: (1 available, best #1)
+  Not advertised to any peer
+  Path #1: Received by speaker 0
+  Not advertised to any peer
+  Local
+    0.0.0.0 from 0.0.0.0 (4.4.4.4)
+      Origin incomplete, metric 0, localpref 100, weight 32768, valid, redistributed, best, group-best
+      Received Path ID 0, Local Path ID 0, version 4
+
+''', 'os':'iosxr'}
+
+    ats_mock.tcl.eval.return_value = 'iosxr'
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        version_obj = ShowBgpInstance(device=self.device)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_empty(self):
+        self.device2 = Mock(**self.empty_output)
+        version_obj = ShowBgpInstance(device=self.device2)
+        with self.assertRaises(IndexError):
+            parsed_output = version_obj.parse()
 
 if __name__ == '__main__':
     unittest.main()

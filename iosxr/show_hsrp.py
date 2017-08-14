@@ -222,14 +222,18 @@ class ShowHsrpDetailSchema(MetaParser):
                                     {'address_family':
                                         {Any():
                                              {'version': int,
-                                             'local_state': str,
-                                             'priority': int,
-                                             'preempt': bool,
+                                             Optional('local_state'): str,
+                                             Optional('priority'): int,
+                                             Optional('preempt'): bool,
                                              Optional('preempt_delay'): int,
                                              'hellotime': int,
                                              'holdtime': int,
                                              Optional('config_hellotime'): int,
                                              Optional('config_holdtime'): int,
+                                             Optional('active_priority'): int,
+                                             Optional('standby_priority'): int,
+                                             Optional('active_expire'): str,
+                                             Optional('standby_expire'): str,
                                              'min_delay': int,
                                              'reload_delay': int,
                                              'ip_address': str,
@@ -245,10 +249,10 @@ class ShowHsrpDetailSchema(MetaParser):
                                              'last_resign_sent': str,
                                              'last_resign_received': str,
                                              Optional('track_objects'):
-                                                {'num_tracked_objects': int,
-                                                 'num_tracked_objects_up': int,
+                                                {Optional('num_tracked_objects'): int,
+                                                 Optional('num_tracked_objects_up'): int,
                                                  Any():
-                                                        {'priority_decrement': int},
+                                                        {Optional('priority_decrement'): int},
                                                  },
                                             },
                                         },
@@ -257,7 +261,7 @@ class ShowHsrpDetailSchema(MetaParser):
                              },
                          },
                      },
-             }
+                }
 
 class ShowHsrpDetail(ShowHsrpDetailSchema):
 
@@ -272,7 +276,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
             line = line.rstrip()
 
             # GigabitEthernet0/0/0/1 - IPv4 Group 5 (version 1)
-            p1 = re.compile(r'\s*(?P<intf>[a-zA-Z0-9\/]+)'
+            p1 = re.compile(r'\s*(?P<intf>[a-zA-Z0-9\/\.]+)'
                              ' +\- +(?P<af>[a-zA-Z0-9]+)'
                              ' +Group +(?P<group>[0-9]+)'
                              ' +\(version +(?P<version>[0-9]+)\)$')
@@ -320,7 +324,8 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
             m = p2.match(line)
             if m:
                 intf_key['local_state'] = m.groupdict()['local_state'].lower()
-                intf_key['priority'] = int(m.groupdict()['priority'])
+                priority = int(m.groupdict()['priority'])
+                intf_key['priority'] = priority
                 if m.groupdict()['preempt'] is not None:
                     intf_key['preempt'] = True
                     continue
@@ -364,27 +369,59 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                 continue
 
             # Hot standby IP address is 192.168.1.254 configured
+            # Hot standby IP address is fe80::205:73ff:fea0:1 configured
             p7 = re.compile(r'\s*Hot +standby +IP +address +is'
-                             ' +(?P<ip_address>[0-9\.]+) +configured$')
+                             ' +(?P<ip_address>[\w\:\.]+) +configured$')
             m = p7.match(line)
             if m:
                 intf_key['ip_address'] = m.groupdict()['ip_address']
                 continue
 
-            # Active router is local
+            # Active router is 
+            # Active router is 192.168.1.2 expires in 00:00:02
+            # Active router is 192.168.1.2, priority 90 expires in 00:00:02
             p8 = re.compile(r'\s*Active +router +is'
-                             ' +(?P<active_router>[a-zA-Z\s]+)$')
+                             ' +(?P<active_router>([\w\:\.]+)(, *[\w\.\:]+)?)'
+                             '(, *priority (?P<priority>\d+))?'
+                             '( *(expired|expires +in +(?P<expire>[\w\:\.]+)))?$')
             m = p8.match(line)
             if m:
-                intf_key['active_router'] = m.groupdict()['active_router']
+                role = m.groupdict()['active_router']
+                if role == 'local':
+                    try:
+                        priority
+                    except:
+                        pass
+                    else:
+                        intf_key['active_priority'] = int(priority)
+
+                intf_key['active_router'] = role
+                    
+                if m.groupdict()['expire']:
+                    intf_key['active_expire'] = m.groupdict()['expire']
                 continue
 
             # Standby router is unknown expired
+            # Standby router is 192.168.1.2 expires in 00:00:02
+            # Standby router is fe80::5000:1cff:fe0a:1, 5200.1c0a.0001 expires in 00:00:02
             p9 = re.compile(r'\s*Standby +router +is'
-                             ' +(?P<standby_router>[a-zA-Z\s]+)$')
+                             ' +(?P<standby_router>([\w\:\.]+)(, *[\w\.\:]+)?)'
+                             '( *(expired|expires +in +(?P<expire>[\w\:\.]+)))?$')
             m = p9.match(line)
             if m:
-                intf_key['standby_router'] = m.groupdict()['standby_router']
+                role = m.groupdict()['standby_router']
+                if role == 'local':
+                    try:
+                        priority
+                    except:
+                        pass
+                    else:
+                        intf_key['standby_priority'] = int(priority)
+
+                intf_key['standby_router'] = role
+                    
+                if m.groupdict()['expire']:
+                    intf_key['standby_expire'] = m.groupdict()['expire']
                 continue
 
             # Standby virtual mac address is 0000.0c07.ac05, state is active
@@ -408,9 +445,10 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                 continue
 
             # 4 state changes, last state change 2d03h
+            # 2 state changes, last state change 01:18:43
             p12 = re.compile(r'\s*(?P<num_state_changes>[0-9]+) +state'
                               ' +changes, +last +state +change'
-                              ' +(?P<last_state_change>[a-zA-Z0-9]+)$')
+                              ' +(?P<last_state_change>[a-zA-Z0-9\:\.]+)$')
             m = p12.match(line)
             if m:
                 intf_key['num_state_changes'] = \
@@ -420,8 +458,9 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                 continue
 
             # Last coup sent:       Never
+            # Last coup sent:       Aug 11 08:26:25.272 UTC
             p13 = re.compile(r'\s*Last +coup +sent:'
-                              ' +(?P<last_coup_sent>[a-zA-Z0-9]+)$')
+                              ' +(?P<last_coup_sent>[\w\s\:\.]+)$')
             m = p13.match(line)
             if m:
                 intf_key['last_coup_sent'] = m.groupdict()['last_coup_sent']
@@ -429,7 +468,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
 
             # Last coup received:   Never
             p14 = re.compile(r'\s*Last +coup +received:'
-                              ' +(?P<last_coup_received>[a-zA-Z0-9]+)$')
+                              ' +(?P<last_coup_received>[\w\s\:\.]+)$')
             m = p14.match(line)
             if m:
                 intf_key['last_coup_received'] = \
@@ -438,15 +477,16 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
 
             # Last resign sent:     Never
             p15 = re.compile(r'\s*Last +resign +sent:'
-                              ' +(?P<last_resign_sent>[a-zA-Z0-9]+)$')
+                              ' +(?P<last_resign_sent>[\w\s\:\.]+)$')
             m = p15.match(line)
             if m:
                 intf_key['last_resign_sent'] = m.groupdict()['last_resign_sent']
                 continue
 
             # Last resign received: Never
+            # Last resign received: Aug 11 08:26:25.272 UTC
             p16 = re.compile(r'\s*Last +resign +received:'
-                              ' +(?P<last_resign_received>[a-zA-Z0-9]+)$')
+                              ' +(?P<last_resign_received>[\w\s\:\.]+)$')
             m = p16.match(line)
             if m:
                 intf_key['last_resign_received'] = \
