@@ -10,7 +10,7 @@ from metaparser.util.schemaengine import Schema, Any, Optional
 
 
 # ###############################################################################
-# #                            show ip mroute vrf all parser
+#                             show ip mroute vrf all parser
 # ###############################################################################
 
 
