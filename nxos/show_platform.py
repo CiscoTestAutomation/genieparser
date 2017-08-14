@@ -26,32 +26,32 @@ def regexp(expression):
 
 class ShowVersionSchema(MetaParser):
     schema = {'platform':
-                  {'reason': str,
-                   'system_version': str,
-                   'os': str,
-                   'hardware':
-                      {'bootflash': str,
-                      'chassis': str,
-                      'cpu': str,
-                      'device_name': str,
-                      'memory': str,
-                      'model': str,
-                      'processor_board_id': str,
-                      'slots': str},
+                  {Optional('reason'): str,
+                   Optional('system_version'): str,
+                   Optional('os'): str,
+                   Optional('hardware'):
+                      {Optional('bootflash'): str,
+                      Optional('chassis'): str,
+                      Optional('cpu'): str,
+                      Optional('device_name'): str,
+                      Optional('memory'): str,
+                      Optional('model'): str,
+                      Optional('processor_board_id'): str,
+                      Optional('slots'): str},
                   'kernel_uptime':
-                      {'days': str,
-                      'hours': str,
-                      'minutes': str,
-                      'seconds': str},
+                      {Optional('days'): str,
+                      Optional('hours'): str,
+                      Optional('minutes'): str,
+                      Optional('seconds'): str},
                   'software':
-                      {'bios': str,
-                      'bios_compile_time': str,
-                      'kickstart': str,
-                      'kickstart_compile_time': str,
-                      'kickstart_image_file': str,
-                      'system': str,
-                      'system_compile_time': str,
-                      'system_image_file': str}
+                      {Optional('bios'): str,
+                      Optional('bios_compile_time'): str,
+                      Optional('kickstart'): str,
+                      Optional('kickstart_compile_time'): str,
+                      Optional('kickstart_image_file'): str,
+                      Optional('system'): str,
+                      Optional('system_compile_time'): str,
+                      Optional('system_image_file'): str}
                   }
               }
 
@@ -79,6 +79,8 @@ class ShowVersion(ShowVersionSchema):
           ('show.version.platform', 'Nexus'),
         ]
 
+        # import pdb; pdb.set_trace()
+
         pgfill = oper_fill (
                   attrvalpairs=attrValPairsToParse,
                   show_command=('show_version'),
@@ -97,37 +99,60 @@ class ShowVersion(ShowVersionSchema):
 
         if 'hardware' not in version_dict['platform']:
             version_dict['platform']['hardware'] = {}
-        version_dict['platform']['hardware']['bootflash'] = out['show.version.bootflash']
-        version_dict['platform']['hardware']['chassis'] = out['show.version.chassis']
-        version_dict['platform']['hardware']['cpu'] = out['show.version.cpu']
-        version_dict['platform']['hardware']['device_name'] = out['show.version.device_name']
-        version_dict['platform']['hardware']['memory'] = out['show.version.memory']
-        version_dict['platform']['hardware']['model'] = out['show.version.model']
-        version_dict['platform']['hardware']['processor_board_id'] = out['show.version.processor_board_id']
-        version_dict['platform']['hardware']['slots'] = out['show.version.slots']
+
+        if 'show.version.bootflash' in out:
+            version_dict['platform']['hardware']['bootflash'] = out['show.version.bootflash']
+        if 'show.version.chassis' in out:
+            version_dict['platform']['hardware']['chassis'] = out['show.version.chassis']
+        if 'show.version.cpu' in out:
+            version_dict['platform']['hardware']['cpu'] = out['show.version.cpu']
+        if 'show.version.device_name' in out:
+            version_dict['platform']['hardware']['device_name'] = out['show.version.device_name']
+        if 'show.version.memory' in out:
+            version_dict['platform']['hardware']['memory'] = out['show.version.memory']
+        if 'show.version.model' in out:
+            version_dict['platform']['hardware']['model'] = out['show.version.model']
+        if 'show.version.processor_board_id' in out:
+            version_dict['platform']['hardware']['processor_board_id'] = out['show.version.processor_board_id']
+        if 'show.version.slots' in out:
+            version_dict['platform']['hardware']['slots'] = out['show.version.slots']
 
         if 'kernel_uptime' not in version_dict['platform']:
             version_dict['platform']['kernel_uptime'] = {}
-        version_dict['platform']['kernel_uptime']['days'] = out['show.version.days']
-        version_dict['platform']['kernel_uptime']['hours'] = out['show.version.hours']
-        version_dict['platform']['kernel_uptime']['minutes'] = out['show.version.minutes']
-        version_dict['platform']['kernel_uptime']['seconds'] = out['show.version.seconds']
+        if 'show.version.days' in out:
+            version_dict['platform']['kernel_uptime']['days'] = out['show.version.days']
+        if 'show.version.hours' in out:
+            version_dict['platform']['kernel_uptime']['hours'] = out['show.version.hours']
+        if 'show.version.minutes' in out:
+            version_dict['platform']['kernel_uptime']['minutes'] = out['show.version.minutes']
+        if 'show.version.seconds' in out:
+            version_dict['platform']['kernel_uptime']['seconds'] = out['show.version.seconds']
 
         version_dict['platform']['reason'] = out['show.version.reason']
 
         if 'software' not in version_dict['platform']:
             version_dict['platform']['software'] = {}
-        version_dict['platform']['software']['bios'] = out['show.version.bios']
-        version_dict['platform']['software']['bios_compile_time'] = out['show.version.bios_compile_time']
-        version_dict['platform']['software']['kickstart'] = out['show.version.kickstart']
-        version_dict['platform']['software']['kickstart_compile_time'] = out['show.version.kickstart_compile_time']
-        version_dict['platform']['software']['kickstart_image_file'] = out['show.version.kickstart_image_file']
-        version_dict['platform']['software']['system'] = out['show.version.system']
-        version_dict['platform']['software']['system_compile_time'] = out['show.version.system_compile_time']
-        version_dict['platform']['software']['system_image_file'] = out['show.version.system_image_file']
+        if 'show.version.bios' in out:
+            version_dict['platform']['software']['bios'] = out['show.version.bios']
+        if 'show.version.bios_compile_time' in out:
+            version_dict['platform']['software']['bios_compile_time'] = out['show.version.bios_compile_time']
+        if 'show.version.kickstart' in out:
+            version_dict['platform']['software']['kickstart'] = out['show.version.kickstart']
+        if 'show.version.kickstart_compile_time' in out:
+            version_dict['platform']['software']['kickstart_compile_time'] = out['show.version.kickstart_compile_time']
+        if 'show.version.kickstart_image_file' in out:
+            version_dict['platform']['software']['kickstart_image_file'] = out['show.version.kickstart_image_file']
+        if 'show.version.system' in out:
+            version_dict['platform']['software']['system'] = out['show.version.system']
+        if 'show.version.system_compile_time' in out:
+            version_dict['platform']['software']['system_compile_time'] = out['show.version.system_compile_time']
+        if 'show.version.system_image_file' in out:
+            version_dict['platform']['software']['system_image_file'] = out['show.version.system_image_file']
 
-        version_dict['platform']['system_version'] = out['show.version.system_version']
-        version_dict['platform']['os'] = out['show.version.os']
+        if 'show.version.system_version' in out:
+            version_dict['platform']['system_version'] = out['show.version.system_version']
+        if 'show.version.os' in out:
+            version_dict['platform']['os'] = out['show.version.os']
 
         return version_dict
 
@@ -1140,7 +1165,7 @@ class ShowVdcDetail(ShowVdcDetailSchema):
                 vdc_dict['vdc'][identity]['type'] = m.groupdict()['type']
                 continue
 
-            p16 = re.compile(r'^\s*vdc +supported +linecards: +(?P<linecards>[a-zA-Z0-9]+)$')
+            p16 = re.compile(r'^\s*vdc +supported +linecards: +(?P<linecards>[a-zA-Z0-9\s]+)$')
             m = p16.match(line)
             if m:
                 if 'vdc' not in vdc_dict:

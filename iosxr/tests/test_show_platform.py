@@ -7,11 +7,11 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Parser
-from parser.iosxr.show_platform import ShowVersion, ShowSdrDetail,\
-                                ShowPlatform, ShowPlatformVm,\
+from parser.iosxr.show_platform import ShowRedundancy, ShowPlatformVm,\
+                                ShowPlatform, ShowSdrDetail,\
                                 ShowInstallActiveSummary, ShowInventory,\
                                 ShowRedundancySummary, AdminShowDiagChassis,\
-                                ShowRedundancy, Dir
+                                ShowVersion, Dir
 
 # Metaparser
 from metaparser.util.exceptions import SchemaEmptyParserError
@@ -875,55 +875,55 @@ class test_show_redundancy(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output1 = {
-        'node': {
-            '0/RSP0/CPU0': {
-                'group': {
-                    'central-services': {
-                        'backup': 'N/A',
-                        'primary': '0/RSP0/CPU0',
-                        'status': 'Not '
-                                  'Ready'},
-                    'dlrsc': {
-                        'backup': 'N/A',
-                        'primary': '0/RSP0/CPU0',
-                        'status': 'Not Ready'},
-                    'dsc': {
-                        'backup': 'N/A',
-                        'primary': '0/RSP0/CPU0',
-                        'status': 'Not Ready'},
-                    'mcast-routing': {
-                        'backup': 'N/A',
-                        'primary': '0/RSP0/CPU0',
-                        'status': 'Not '
-                                  'Ready'},
-                    'netmgmt': {
-                        'backup': 'N/A',
-                        'primary': '0/RSP0/CPU0',
-                        'status': 'Not Ready'},
-                    'v4-routing': {
-                        'backup': 'N/A',
-                        'primary': '0/RSP0/CPU0',
-                        'status': 'Not Ready'},
-                    'v6-routing': {
-                        'backup': 'N/A',
-                        'primary': '0/RSP0/CPU0',
-                        'status': 'Not Ready'}},
-                'last_reload_timestamp': 'Thu Apr 27 02:14:12 '
-                                         '2017',
-                'last_switchover_timepstamp': 'Thu Apr 27 '
-                                              '03:29:57 2017',
-                'node_uptime': '8 minutes ago',
-                'node_uptime_timestamp': 'Thu Apr 27 03:22:37 '
-                                         '2017',
-                'primary_rmf_state': 'not ready',
-                'primary_rmf_state_reason': 'Backup is not '
-                                            'Present',
-                'reload_cause': 'Initiating switch-over',
-                'role': 'ACTIVE',
-                'time_since_last_reload': '1 hour, 16 minutes ago',
-                'time_since_last_switchover': '1 minute ago',
-                'valid_partner': ''}}}
+    golden_parsed_output1 = {'node': {
+        '0/RSP0/CPU0': {
+            'group': {
+                'central-services': {
+                    'backup': 'N/A',
+                    'primary': '0/RSP0/CPU0',
+                    'status': 'Not '
+                              'Ready'},
+                'dlrsc': {
+                    'backup': 'N/A',
+                    'primary': '0/RSP0/CPU0',
+                    'status': 'Not Ready'},
+                'dsc': {
+                    'backup': 'N/A',
+                    'primary': '0/RSP0/CPU0',
+                    'status': 'Not Ready'},
+                'mcast-routing': {
+                    'backup': 'N/A',
+                    'primary': '0/RSP0/CPU0',
+                    'status': 'Not '
+                              'Ready'},
+                'netmgmt': {
+                    'backup': 'N/A',
+                    'primary': '0/RSP0/CPU0',
+                    'status': 'Not Ready'},
+                'v4-routing': {
+                    'backup': 'N/A',
+                    'primary': '0/RSP0/CPU0',
+                    'status': 'Not Ready'},
+                'v6-routing': {
+                    'backup': 'N/A',
+                    'primary': '0/RSP0/CPU0',
+                    'status': 'Not Ready'}},
+            'last_reload_timestamp': 'Thu Apr 27 02:14:12 '
+                                     '2017',
+            'last_switchover_timepstamp': 'Thu Apr 27 '
+                                          '03:29:57 2017',
+            'node_uptime': '8 minutes ago',
+            'node_uptime_timestamp': 'Thu Apr 27 03:22:37 '
+                                     '2017',
+            'primary_rmf_state': 'not ready',
+            'primary_rmf_state_reason': 'Backup is not '
+                                        'Present',
+            'reload_cause': 'Initiating switch-over',
+            'role': 'ACTIVE',
+            'time_since_last_reload': '1 hour, 16 minutes ago',
+            'time_since_last_switchover': '1 minute ago',
+            'valid_partner': 'no'}}}
+
 
     golden_output1 = {'execute.return_value': '''
         Redundancy information for node 0/RSP0/CPU0:
@@ -957,6 +957,7 @@ class test_show_redundancy(unittest.TestCase):
         Active node booted Thu Apr 27 03:22:37 2017: 8 minutes ago
         Last switch-over Thu Apr 27 03:29:57 2017: 1 minute ago
         Active node reload  Cause: Initiating switch-over.
+
         '''}
 
     def test_show_redundancy_golden1(self):
