@@ -25,7 +25,7 @@ class ShowRplRoutePolicySchema(MetaParser):
                              Optional('match_as_path_length'): int,
                              Optional('match_as_path_length_oper'): str,
                              Optional('match_level_eq'): str,
-                             Optional('match_area_eq'): int,
+                             Optional('match_area_eq'): str,
                              Optional('match_prefix_list'): str,
                              Optional('match_prefix_list_v6'): str,
                              Optional('match_tag_list'): str
@@ -59,8 +59,8 @@ class ShowRplRoutePolicySchema(MetaParser):
                              Optional('set_tag'): str,
                              Optional('set_weight'): str,
                              Optional('actions'): str
-                            },
-                        },
+                            }
+                        }
                     },
                 },
             }
@@ -77,6 +77,7 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
             line = line.strip()
 
             # route-policy test
+            
             p1 = re.compile(r'^\s*route-policy *(?P<name>[\w\W\s]+)$')
             m = p1.match(line)
             if m:
@@ -94,7 +95,7 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                     rpl_route_policy_dict[name]['statements'][statements]['actions'] = {}
                 if 'conditions' not in rpl_route_policy_dict[name]:
                     rpl_route_policy_dict[name]['statements'][statements]['conditions'] = {}
-                    continue
+                continue
 
             if line.startswith('elseif') or line.startswith('else'):
                 statements = statements + 10
@@ -107,11 +108,12 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                     rpl_route_policy_dict[name]['statements'][statements]['conditions'] = {}
 
             # 36 / #test
-            p1_1 = re.compile(r'^\s*# *(?P<description>[\w\W]+)$')
+            p1_1 = re.compile(r'^\s*# *(?P<description>[a-zA-Z\W]+)$')
             m = p1_1.match(line)
             if m:
+                # import pdb;pdb.set_trace()
                 description = str(m.groupdict()['description'])
-
+                
                 rpl_route_policy_dict[name]['description'] = description
                 continue
 
@@ -119,20 +121,27 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
             p1_2 = re.compile(r'^\s*# *(?P<statements>[0-9]+)$')
             m = p1_2.match(line)
             if m:
-                statements = m.groupdict()['statements']
+                
+                if statements in rpl_route_policy_dict[name]['statements']:
+                    del rpl_route_policy_dict[name]['statements'][statements]
 
+                statements = m.groupdict()['statements']
                 if 'statements' not in rpl_route_policy_dict[name]:
                     rpl_route_policy_dict[name]['statements'] = {}
                 if statements not in rpl_route_policy_dict[name]['statements']:
                     rpl_route_policy_dict[name]['statements'][statements] = {}
-                    continue
+                if 'actions' not in rpl_route_policy_dict[name]:
+                    rpl_route_policy_dict[name]['statements'][statements]['actions'] = {}
+                if 'conditions' not in rpl_route_policy_dict[name]:
+                    rpl_route_policy_dict[name]['statements'][statements]['conditions'] = {}
+                continue
 
             # set med 113
             p2 = re.compile(r'^\s*set *med *(?P<set_med>[0-9]+)$')
             m = p2.match(line)
             if m:
                 rpl_route_policy_dict[name]['statements'][statements]['actions']\
-                ['set_med'] = set_med = str(m.groupdict()['set_med'])
+                ['set_med'] = str(m.groupdict()['set_med'])
                 continue
 
             # set origin egp
@@ -385,29 +394,30 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                 continue
 
             # elseif ospf-area is 1.1.1.1 and route-type is level-1 and route-type is level-2 then
-            p23 = re.compile(r'^\s*(elif|if) *ospf-area *is'
+            p23 = re.compile(r'^\s*(elseif|if) *ospf-area *is'
                               ' *(?P<match_area_eq>[0-9\.]+) *and *route-type *is'
                               ' *(?P<match_level_eq>[a-z0-9\-\s]+)'
                               ' *then$')
             m = p23.match(line)
             if m:
-                match_area_eq = m.groupdict()['match_area_eq']
+                match_area_eq = str(m.groupdict()['match_area_eq'])
                 match_level_eq = m.groupdict()['match_level_eq']
                 match_level_eq = match_level_eq.replace("and route-type is",",")
+
                 rpl_route_policy_dict[name]['statements'][statements]['conditions']\
-                ['match_ext_community_list_type'] = match_ext_community_list_type
+                ['match_area_eq'] = match_area_eq
                 rpl_route_policy_dict[name]['statements'][statements]['conditions']\
-                ['match_ext_community_list'] = match_ext_community_list
+                ['match_level_eq'] = match_level_eq
                 continue
 
             #elseif as-path length ge 7 then
-            p24 = re.compile(r'^\s*(elif|if) *as-path *length'
+            p24 = re.compile(r'^\s*(elseif|if) *as-path *length'
                               ' *(?P<match_as_path_length_oper>[a-z]+)'
                               ' *(?P<match_as_path_length>[0-9]+) *then$')
             m = p24.match(line)
             if m:
                 match_as_path_length_oper = m.groupdict()['match_as_path_length_oper']
-                match_as_path_length = m.groupdict()['match_as_path_length']
+                match_as_path_length = int(m.groupdict()['match_as_path_length'])
 
                 rpl_route_policy_dict[name]['statements'][statements]['conditions']\
                 ['match_as_path_length_oper'] = match_as_path_length_oper
@@ -416,7 +426,7 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                 continue
 
             #if as-path in test then
-            p25 = re.compile(r'^\s*(elif|if) *as-path *in *(?P<match_as_path_list>[\w\W]+) *then$')
+            p25 = re.compile(r'^\s*(elseif|if) *as-path *in *(?P<match_as_path_list>[\w\W]+) *then$')
             m = p25.match(line)
             if m:
                 match_as_path_list = m.groupdict()['match_as_path_list']

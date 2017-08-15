@@ -16,8 +16,8 @@ class test_show_rpl_route_policy(unittest.TestCase):
                                                'set_community': 'no-export',
                                                'set_community_additive': True},
                                    'conditions': {}}}},
- 'all-pass': {'statements': {10: {'actions': {'actions': 'pass'},
-                                  'conditions': {}}}},
+ 'all-pass': {'statements': {'1': {'actions': {'actions': 'pass'},
+                                   'conditions': {}}}},
  'allpass': {'statements': {10: {'actions': {'actions': 'pass'},
                                  'conditions': {}}}},
  'as-path': {'statements': {10: {'actions': {}, 'conditions': {}}}},
@@ -25,14 +25,14 @@ class test_show_rpl_route_policy(unittest.TestCase):
                                 'conditions': {'match_as_path_list': 'test '}},
                            20: {'actions': {'actions': 'drop'},
                                 'conditions': {}}}},
- 'test': {'description': '1',
-          'statements': {10: {'actions': {'set_route_origin': 'incomplete'},
+ 'test': {'statements': {10: {'actions': {'set_route_origin': 'incomplete'},
                               'conditions': {'match_community_list': 'None',
                                              'match_local_pref_eq': '123'}},
                          20: {'actions': {'set_tag': 'None',
                                           'set_weight': '44'},
                               'conditions': {'match_med_eq': 100,
-                                             'match_origin_eq': 'None'}}}},
+                                             'match_origin_eq': 'None'}},
+                         '1': {'actions': {}, 'conditions': {}}}},
  'test2': {'statements': {10: {'actions': {'actions': 'pass'},
                                'conditions': {'match_med_eq': 100,
                                               'match_origin_eq': 'egp'}},
@@ -45,11 +45,15 @@ class test_show_rpl_route_policy(unittest.TestCase):
  'test3': {'statements': {10: {'actions': {'actions': 'pass'},
                                'conditions': {}},
                           20: {'actions': {'actions': 'pass'},
-                               'conditions': {}},
+                               'conditions': {'match_area_eq': '1.1.1.1',
+                                              'match_level_eq': 'level-1 '
+                                                                ', '
+                                                                'level-2 '}},
                           30: {'actions': {'actions': 'pass'},
                                'conditions': {}},
                           40: {'actions': {'actions': 'pass'},
-                               'conditions': {}},
+                               'conditions': {'match_as_path_length': 7,
+                                              'match_as_path_length_oper': 'ge'}},
                           50: {'actions': {'set_as_path_prepend': 100,
                                            'set_as_path_prepend_repeat_n': 10,
                                            'set_community': '100:100',
@@ -162,6 +166,7 @@ class test_show_rpl_route_policy(unittest.TestCase):
     end-policy
     !
     route-policy all-pass
+      #1
       pass
     end-policy
     !
