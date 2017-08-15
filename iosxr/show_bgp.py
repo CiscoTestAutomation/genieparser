@@ -5012,7 +5012,6 @@ class ShowBgpInstance(ShowBgpInstanceSchema):
         result = pgfill.parse()
         out = parsergen.ext_dictio[self.device.name]
         add_family_dict = {}
-        import pdb;pdb.set_trace()
 
         if 'address_family' not in add_family_dict:
             add_family_dict['address_family'] = {}
