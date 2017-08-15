@@ -6061,7 +6061,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 {'address_family':
                     {'ipv4 unicast':
                         {'bgp_table_version': 21,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0,
@@ -6165,7 +6165,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                     {'vpnv4 unicast':
                         {'bgp_table_version': 11,
                         'maximum_prefix_max_prefix_no': 300000,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 1,
                             'memory_usage': 48,
@@ -6176,7 +6176,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'vpnv6 unicast':
                         {'bgp_table_version': 10,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 1,
                             'memory_usage': 48,
@@ -6581,7 +6581,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 {'address_family':
                     {'ipv4 multicast':
                         {'bgp_table_version': 55,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 5,
                             'memory_usage': 660},
@@ -6590,7 +6590,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'ipv4 unicast':
                         {'bgp_table_version': 6765004,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 5,
                             'memory_usage': 660},
@@ -6599,7 +6599,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'ipv6 multicast':
                         {'bgp_table_version': 2,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -6608,7 +6608,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'ipv6 unicast':
                         {'bgp_table_version': 2,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -6617,7 +6617,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'vpnv4 unicast':
                         {'bgp_table_version': 12863408,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -6626,7 +6626,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'vpnv6 unicast':
                         {'bgp_table_version': 2,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -6717,7 +6717,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 {'address_family':
                     {'ipv4 multicast':
                         {'bgp_table_version': 55,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -6726,7 +6726,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'ipv4 unicast':
                         {'bgp_table_version': 6765004,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -6735,7 +6735,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'ipv6 multicast':
                         {'bgp_table_version': 2,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -6744,7 +6744,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'ipv6 unicast':
                         {'bgp_table_version': 2,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -6753,7 +6753,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'vpnv4 unicast':
                         {'bgp_table_version': 12863408,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -6761,7 +6761,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'vpnv6 unicast':
                         {'bgp_table_version': 2,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -6968,7 +6968,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                     {'ipv4 unicast':
                         {'bgp_table_version': 6765004,
                         'neighbor_version': 6765004,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 5,
                             'memory_usage': 660},
@@ -7587,7 +7587,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                     {'ipv4 multicast': 
                         {'bgp_table_version': 53,
                         'neighbor_version': 0,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path': 
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -7598,14 +7598,14 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                                      'graceful_restart': False,
                                      'ipv4_unicast_send_default_route': False,
                                      'neighbor_version': 0,
-                                     'next_hop_self': False,
+                                     'third_party_nexthop': True,
                                      'path': {'accepted_paths': 0,
                                               'memory_usage': 0},
                                      'route_reflector_client': True,
                                      'send_community': True},
                     'ipv6 multicast': {'bgp_table_version': 53,
                                        'neighbor_version': 0,
-                                       'next_hop_self': False,
+                                       'third_party_nexthop': True,
                                        'path': {'accepted_paths': 0,
                                                 'memory_usage': 0},
                                        'route_reflector_client': True,
@@ -7614,7 +7614,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                                      'enabled': True,
                                      'graceful_restart': False,
                                      'neighbor_version': 0,
-                                     'next_hop_self': False,
+                                     'third_party_nexthop': True,
                                      'path': {'accepted_paths': 0,
                                               'memory_usage': 0},
                                      'route_reflector_client': True,
@@ -7625,14 +7625,14 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                                            'graceful_restart': False},
                     'vpnv4 unicast': {'bgp_table_version': 291,
                                       'neighbor_version': 0,
-                                      'next_hop_self': False,
+                                      'third_party_nexthop': True,
                                       'path': {'accepted_paths': 0,
                                                'memory_usage': 0},
                                       'route_reflector_client': True,
                                       'send_community': True},
                     'vpnv6 unicast': {'bgp_table_version': 2,
                                       'neighbor_version': 0,
-                                      'next_hop_self': False,
+                                      'third_party_nexthop': True,
                                       'path': {'accepted_paths': 0,
                                                'memory_usage': 0},
                                       'route_reflector_client': True,
@@ -7714,7 +7714,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                     {'ipv4 multicast': 
                         {'bgp_table_version': 53,
                         'neighbor_version': 0,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path': 
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -7724,14 +7724,14 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                                      'enabled': True,
                                      'graceful_restart': False,
                                      'neighbor_version': 0,
-                                     'next_hop_self': False,
+                                     'third_party_nexthop': True,
                                      'path': {'accepted_paths': 0,
                                               'memory_usage': 0},
                                      'route_reflector_client': True,
                                      'send_community': True},
                     'ipv6 multicast': {'bgp_table_version': 53,
                                        'neighbor_version': 0,
-                                       'next_hop_self': False,
+                                       'third_party_nexthop': True,
                                        'path': {'accepted_paths': 0,
                                                 'memory_usage': 0},
                                        'route_reflector_client': True,
@@ -7740,7 +7740,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                                      'enabled': True,
                                      'graceful_restart': False,
                                      'neighbor_version': 0,
-                                     'next_hop_self': False,
+                                     'third_party_nexthop': True,
                                      'path': {'accepted_paths': 0,
                                               'memory_usage': 0},
                                      'route_reflector_client': True,
@@ -7751,13 +7751,13 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                                            'graceful_restart': False},
                     'vpnv4 unicast': {'bgp_table_version': 291,
                                       'neighbor_version': 0,
-                                      'next_hop_self': False,
+                                      'third_party_nexthop': True,
                                       'path': {'accepted_paths': 0,
                                                'memory_usage': 0},
                                       'send_community': True},
                     'vpnv6 unicast': {'bgp_table_version': 2,
                                       'neighbor_version': 0,
-                                      'next_hop_self': False,
+                                      'third_party_nexthop': True,
                                       'path': {'accepted_paths': 0,
                                                'memory_usage': 0},
                                       'route_reflector_client': True,
@@ -8012,7 +8012,7 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                         'graceful_restart': False,
                         'ipv4_unicast_send_default_route': False,
                         'neighbor_version': 0,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path': 
                             {'accepted_paths': 0,
                             'memory_usage': 0},
