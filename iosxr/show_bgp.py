@@ -892,7 +892,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
         assert vrf_type in ['all', 'vrf']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
 
-        out = self.device.execute('show bgp instance all {vrf_type} all process detail'.format(vrf_type=vrf_type))
+        out = self.device.execute('show bgp instance all {vrf_type} all {af_type} process detail'.format(vrf_type=vrf_type, af_type=af_type))
 
         # Init dict
         ret_dict = {}
@@ -2063,7 +2063,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         assert vrf_type in ['all', 'vrf']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
 
-        out = self.device.execute('show bgp instance all {vrf_type} all neighbors detail'.format(vrf_type=vrf_type))
+        out = self.device.execute('show bgp instance all {vrf_type} all {af_type} neighbors detail'.format(vrf_type=vrf_type, af_type=af_type))
 
         # Init variables
         ret_dict = {}
@@ -3032,8 +3032,8 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
         assert route_type in ['received routes', 'routes']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
 
-        cmd = 'show bgp instance all {vrf_type} all neighbors {neighbor} {route}'\
-              .format(neighbor=neighbor, vrf_type=vrf_type, route=route_type)
+        cmd = 'show bgp instance all {vrf_type} all {af_type} neighbors {neighbor} {route}'\
+              .format(neighbor=neighbor, vrf_type=vrf_type, af_type=af_type, route=route_type)
         out = self.device.execute(cmd)
 
         # Init vars
@@ -3482,8 +3482,8 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
         assert vrf_type in ['all', 'vrf']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
         
-        cmd = 'show bgp instance all {vrf_type} all neighbors {neighbor} advertised-routes'\
-              .format(neighbor=neighbor, vrf_type=vrf_type)
+        cmd = 'show bgp instance all {vrf_type} all {af_type} neighbors {neighbor} advertised-routes'\
+              .format(neighbor=neighbor, af_type=af_type, vrf_type=vrf_type)
         out = self.device.execute(cmd)
 
         ret_dict = {}
@@ -4120,7 +4120,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
         assert vrf_type in ['all', 'vrf']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
 
-        cmd = 'show bgp instance all {vrf_type} all'.format(vrf_type=vrf_type)
+        cmd = 'show bgp instance all {vrf_type} all {af_type}'.format(vrf_type=vrf_type, af_type=af_type)
         out = self.device.execute(cmd)
 
         bgp_instance_all_all_dict = {}
