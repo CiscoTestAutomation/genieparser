@@ -1110,8 +1110,6 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                         ['enforce_first_as_enabled'] = False
                 continue
 
-            # iBGP to IGP redistribution enabled
-
             #Default local preference: 100
             p16 = re.compile(r'^Default *local *preference: *'
                               '(?P<preference>[0-9]+)$')
