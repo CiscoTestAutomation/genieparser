@@ -4968,7 +4968,15 @@ class ShowBgpL2vpnEvpnAdvertised(MetaParser):
 
         return result
 
+
+# ============================================================
+# Incomplete parsergen example for 'show bgp instance all all'
+# ============================================================
+
 class ShowBgpInstanceSchema(MetaParser):
+    
+    ''' Incomplete parsergen schema for 'show bgp instance all all' '''
+
     schema = {'address_family':
                 {Any():
                     {'ip_address': str,
@@ -4978,22 +4986,11 @@ class ShowBgpInstanceSchema(MetaParser):
             }
 
 class ShowBgpInstance(ShowBgpInstanceSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
+
+    ''' Incomplete parsergen parser for 'show bgp instance all all' '''
 
     def cli(self):
-        ''' parsing mechanism: cli
-
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
-        '''
+        
         cmd = 'show_bgp_instance_all_all_all_<WORD>'.format()
         self.device.execute(cmd)
 
@@ -5026,5 +5023,6 @@ class ShowBgpInstance(ShowBgpInstanceSchema):
             out['show.bgp.instance.all.all.all.localpref_number']
 
         return add_family_dict
+
 
 # vim: ft=python ts=8 sw=4 et
