@@ -62,13 +62,14 @@ class ShowRoutingVrfAllSchema(MetaParser):
         },
     }
 
+
 class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
    
     ''' Parser for 'show routing vrf all' '''
     
-    def cli(self):
+    def cli(self, ip=''):
         
-        out = self.device.execute('show routing vrf all')
+        out = self.device.execute('show routing {} vrf all'.format(ip))
         
         # Init dict
         bgp_dict = {}
@@ -78,17 +79,23 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            p1 = re.compile(r'^IP +Route +Table +for +VRF +"(?P<vrf>\w+)"$')
+            # IP Route Table for VRF "default"
+            # IPv6 Routing Table for VRF "default"
+            p1 = re.compile(r'^(IP|IPv6) +(Route|Routing) +Table +for +VRF +"(?P<vrf>\w+)"$')
             m = p1.match(line)
             if m:
                 vrf = str(m.groupdict()['vrf'])
-                if vrf == 'default':
+                if vrf == 'default' and not ip:
                     address_family = 'ipv4 unicast'
-                else:
+                elif vrf != 'default' and not ip:
                     address_family = 'vpnv4 unicast'
+                elif vrf == 'default' and ip:
+                    address_family = 'ipv6 unicast'
+                elif vrf != 'default' and ip:
+                    address_family = 'vpnv6 unicast'
                 continue
 
-            p2 = re.compile(r'^(?P<ip_mask>.*), +ubest/mbest: +(?P<ubest>\d+)'
+            p2 = re.compile(r'^(?P<ip_mask>[\w\:\.\/]+), +ubest/mbest: +(?P<ubest>\d+)'
                              '/(?P<mbest>\d+),? *(?P<attach>\w+)?$')
             m = p2.match(line)
             if m:
@@ -123,14 +130,15 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
 
             # *via fec1::1002%default, Eth1/1, [200/4444], 15:57:39, bgp-333, internal, tag 333
             # *via 3.3.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
-            p3 = re.compile(r'^(?P<cast>.*)via +(?P<nexthop>[a-zA-Z0-9 \.:]+)'
-                             '%?(?P<table>\w+)?, *'
-                             '(?P<int>[a-zA-Z0-9\./_]+)?,? +'
-                             '\[(?P<preference>\d+)/(?P<metric>\d+)\], +'
-                             '(?P<up_time>.*), +'
-                             '(?:(?P<protocol>\w+)-(?P<process>\d+), +'
-                             '(?P<attribute>\w+), +tag +(?P<tag>.*)'
-                             '|(?P<prot>\w+))$')
+            # *via 2001:db8::5054:ff:fed5:63f9, Eth1/1, [0/0], 00:15:46, direct,
+            # *via 2001:db8:2:2::2, Eth1/1, [0/0], 00:15:46, direct, , tag 222
+            p3 = re.compile(r'^(?P<cast>.*)via +(?P<nexthop>[\w\.\:\s]+)(%(?P<table>\w+))?, *'
+                             '((?P<int>[a-zA-Z0-9\./_]+),)? *'
+                             '\[(?P<preference>\d+)/(?P<metric>\d+)\], *'
+                             '(?P<up_time>[\w\:\.]+), *'
+                             '(?P<protocol>\w+)(\-(?P<process>\d+))?,? *'
+                             '(?P<attribute>\w+)?,? *'
+                             '(tag *((?P<tag>\w+) *(?P<vpn>[\w\(\)\-]+)?|(?P<prot>\w+))?)?$')
             m = p3.match(line)
             if m:
                 cast = m.groupdict()['cast']
@@ -188,7 +196,7 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                 
                 tag = m.groupdict()['tag']
                 if tag:
-                    prot_dict[protocol]['tag'] = tag
+                    prot_dict[protocol]['tag'] = tag.strip()
 
                 # Set extra values for BGP Ops
                 if attribute == 'external' and protocol == 'bgp':
@@ -200,3 +208,8 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                     continue
 
         return bgp_dict
+
+
+class ShowRoutingIpv6VrfAll(ShowRoutingVrfAll):
+    def cli(self):
+        return(super().cli(ip='ipv6'))

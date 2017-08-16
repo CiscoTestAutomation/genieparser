@@ -10,7 +10,7 @@ from ats.topology import Device
 from metaparser.util.exceptions import SchemaEmptyParserError
 
 # nxos show_routing
-from parser.nxos.show_routing import ShowRoutingVrfAll
+from parser.nxos.show_routing import ShowRoutingVrfAll, ShowRoutingIpv6VrfAll
 
 # =====================================
 #  Unit test for 'show routing vrf all'
@@ -18,7 +18,7 @@ from parser.nxos.show_routing import ShowRoutingVrfAll
 
 class test_show_routing_vrf_all(unittest.TestCase):
     
-    '''Unit test for show bgp process vrf all'''
+    '''Unit test for show routing vrf all'''
     
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
@@ -62,7 +62,7 @@ class test_show_routing_vrf_all(unittest.TestCase):
                                                         'protocol_id': '100',
                                                         'attribute': 'internal',
                                                         'route_table': 'default',
-                                                        'tag': '100 (mpls-vpn)'}}}}},
+                                                        'tag': '100'}}}}},
                                     'multicast':
                                         {'nexthop':
                                             {'3.3.3.3':
@@ -74,7 +74,7 @@ class test_show_routing_vrf_all(unittest.TestCase):
                                                         'protocol_id': '100',
                                                         'attribute': 'internal',
                                                         'route_table': 'default',
-                                                        'tag': '100 (mpls-vpn)'}}}}}}},
+                                                        'tag': '100'}}}}}}},
                             '11.11.11.11/32':
                                 {'ubest_num': '2',
                                 'mbest_num': '0',
@@ -190,6 +190,188 @@ class test_show_routing_vrf_all(unittest.TestCase):
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         bgp_obj = ShowRoutingVrfAll(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = bgp_obj.parse()
+
+# ===========================================
+#  Unit test for 'show routing ipv6  vrf all'
+# ===========================================
+
+class test_show_routing_ipv6_vrf_all(unittest.TestCase):
+    
+    '''Unit test for show routing ipv6  vrf all'''
+    
+    device = Device(name='aDevice')
+    device1 = Device(name='bDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+        "vrf": {
+            "default": {
+               "address_family": {
+                    "ipv6 unicast": {
+                         "ip/mask": {
+                              "2001:db8:1:1::1/128": {
+                                   "attach": "attached",
+                                   "best_route": {
+                                        "unicast": {
+                                             "nexthop": {
+                                                  "2001:db8:1:1::1": {
+                                                       "protocol": {
+                                                            "local": {
+                                                                 "interface": "Eth1/1",
+                                                                 "metric": "0",
+                                                                 "uptime": "00:15:46",
+                                                                 "preference": "0"
+                                                            }
+                                                       }
+                                                  }
+                                             }
+                                        }
+                                   },
+                                   "mbest_num": "0",
+                                   "ubest_num": "1"
+                              },
+                              "2001:db8:1:1::/64": {
+                                   "attach": "attached",
+                                   "best_route": {
+                                        "unicast": {
+                                             "nexthop": {
+                                                  "2001:db8:1:1::1": {
+                                                       "protocol": {
+                                                            "direct": {
+                                                                 "interface": "Eth1/1",
+                                                                 "metric": "0",
+                                                                 "uptime": "00:15:46",
+                                                                 "preference": "0"
+                                                            }
+                                                       }
+                                                  }
+                                             }
+                                        }
+                                   },
+                                   "mbest_num": "0",
+                                   "ubest_num": "1"
+                              },
+                              "2001:db8:2:2::2/128": {
+                                   "attach": "attached",
+                                   "best_route": {
+                                        "unicast": {
+                                             "nexthop": {
+                                                  "2001:db8:2:2::2": {
+                                                       "protocol": {
+                                                            "local": {
+                                                                 "interface": "Eth1/1",
+                                                                 "metric": "0",
+                                                                 "tag": "222",
+                                                                 "uptime": "00:15:46",
+                                                                 "preference": "0"
+                                                            }
+                                                       }
+                                                  }
+                                             }
+                                        }
+                                   },
+                                   "mbest_num": "0",
+                                   "ubest_num": "1"
+                              },
+                              "2001:db8::5054:ff:fed5:63f9/128": {
+                                   "attach": "attached",
+                                   "best_route": {
+                                        "unicast": {
+                                             "nexthop": {
+                                                  "2001:db8::5054:ff:fed5:63f9": {
+                                                       "protocol": {
+                                                            "local": {
+                                                                 "interface": "Eth1/1",
+                                                                 "metric": "0",
+                                                                 "uptime": "00:15:46",
+                                                                 "preference": "0"
+                                                            }
+                                                       }
+                                                  }
+                                             }
+                                        }
+                                   },
+                                   "mbest_num": "0",
+                                   "ubest_num": "1"
+                              },
+                              "2001:db8::/64": {
+                                   "attach": "attached",
+                                   "best_route": {
+                                        "unicast": {
+                                             "nexthop": {
+                                                  "2001:db8::5054:ff:fed5:63f9": {
+                                                       "protocol": {
+                                                            "direct": {
+                                                                 "interface": "Eth1/1",
+                                                                 "metric": "0",
+                                                                 "uptime": "00:15:46",
+                                                                 "preference": "0"
+                                                            }
+                                                       }
+                                                  }
+                                             }
+                                        }
+                                   },
+                                   "mbest_num": "0",
+                                   "ubest_num": "1"
+                              },
+                              "2001:db8:2:2::/64": {
+                                   "attach": "attached",
+                                   "best_route": {
+                                        "unicast": {
+                                             "nexthop": {
+                                                  "2001:db8:2:2::2": {
+                                                       "protocol": {
+                                                            "direct": {
+                                                                 "interface": "Eth1/1",
+                                                                 "metric": "0",
+                                                                 "tag": "222",
+                                                                 "uptime": "00:15:46",
+                                                                 "preference": "0"
+                                                            }
+                                                       }
+                                                  }
+                                             }
+                                        }
+                                   },
+                                   "mbest_num": "0",
+                                   "ubest_num": "1"
+                              }}}}}}
+    }
+
+    golden_output = {'execute.return_value': '''
+        IPv6 Routing Table for VRF "default"
+        '*' denotes best ucast next-hop
+        '**' denotes best mcast next-hop
+        '[x/y]' denotes [preference/metric]
+
+        2001:db8::/64, ubest/mbest: 1/0, attached
+            *via 2001:db8::5054:ff:fed5:63f9, Eth1/1, [0/0], 00:15:46, direct, 
+        2001:db8::5054:ff:fed5:63f9/128, ubest/mbest: 1/0, attached
+            *via 2001:db8::5054:ff:fed5:63f9, Eth1/1, [0/0], 00:15:46, local
+        2001:db8:1:1::/64, ubest/mbest: 1/0, attached
+            *via 2001:db8:1:1::1, Eth1/1, [0/0], 00:15:46, direct, 
+        2001:db8:1:1::1/128, ubest/mbest: 1/0, attached
+            *via 2001:db8:1:1::1, Eth1/1, [0/0], 00:15:46, local
+        2001:db8:2:2::/64, ubest/mbest: 1/0, attached
+            *via 2001:db8:2:2::2, Eth1/1, [0/0], 00:15:46, direct, , tag 222
+        2001:db8:2:2::2/128, ubest/mbest: 1/0, attached
+            *via 2001:db8:2:2::2, Eth1/1, [0/0], 00:15:46, local, tag 222
+
+        '''}
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        bgp_obj = ShowRoutingIpv6VrfAll(device=self.device)
+        parsed_output = bgp_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        bgp_obj = ShowRoutingIpv6VrfAll(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = bgp_obj.parse()
 
