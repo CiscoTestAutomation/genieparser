@@ -15,45 +15,36 @@ class test_show_rpl_route_policy(unittest.TestCase):
     golden_parsed_output = {'NO-EXPORT': {'statements': {10: {'actions': {'actions': 'pass',
                                                'set_community': 'no-export',
                                                'set_community_additive': True},
-                                   'conditions': {}}}},
+                                   'conditions': {'match_prefix_list': 'NO-EXPORT'}}}},
  'all-pass': {'statements': {'1': {'actions': {'actions': 'pass'},
                                    'conditions': {}}}},
  'allpass': {'statements': {10: {'actions': {'actions': 'pass'},
                                  'conditions': {}}}},
  'as-path': {'statements': {10: {'actions': {}, 'conditions': {}}}},
  'aspath': {'statements': {10: {'actions': {'actions': 'pass'},
-                                'conditions': {'match_as_path_list': 'test '}},
+                                'conditions': {'match_as_path_list': 'test'}},
                            20: {'actions': {'actions': 'drop'},
                                 'conditions': {}}}},
  'test': {'statements': {10: {'actions': {'set_route_origin': 'incomplete'},
-                              'conditions': {'match_community_list': 'None',
-                                             'match_local_pref_eq': '123'}},
+                              'conditions': {'match_local_pref_eq': '123'}},
                          20: {'actions': {'set_tag': 'None',
                                           'set_weight': '44'},
-                              'conditions': {'match_med_eq': 100,
-                                             'match_origin_eq': 'None'}},
+                              'conditions': {'match_med_eq': 100}},
                          '1': {'actions': {}, 'conditions': {}}}},
  'test2': {'statements': {10: {'actions': {'actions': 'pass'},
-                               'conditions': {'match_med_eq': 100,
-                                              'match_origin_eq': 'egp'}},
+                               'conditions': {'match_origin_eq': 'eg'}},
                           20: {'actions': {'actions': 'pass'},
-                               'conditions': {'match_nexthop_in': 'test6 ',
-                                              'match_prefix_list': 'prefix-set1 '}},
+                               'conditions': {'match_nexthop_in': 'prefix-set'}},
                           30: {'actions': {'actions': 'pass'},
-                               'conditions': {'match_community_list': 'test ',
-                                              'match_local_pref_eq': '130'}}}},
+                               'conditions': {'match_local_pref_eq': '13'}}}},
  'test3': {'statements': {10: {'actions': {'actions': 'pass'},
                                'conditions': {}},
                           20: {'actions': {'actions': 'pass'},
-                               'conditions': {'match_area_eq': '1.1.1.1',
-                                              'match_level_eq': 'level-1 '
-                                                                ', '
-                                                                'level-2 '}},
+                               'conditions': {'match_area_eq': '1'}},
                           30: {'actions': {'actions': 'pass'},
-                               'conditions': {}},
+                               'conditions': {'match_prefix_list': 'prefix-set'}},
                           40: {'actions': {'actions': 'pass'},
-                               'conditions': {'match_as_path_length': 7,
-                                              'match_as_path_length_oper': 'ge'}},
+                               'conditions': {}},
                           50: {'actions': {'set_as_path_prepend': 100,
                                            'set_as_path_prepend_repeat_n': 10,
                                            'set_community': '100:100',
@@ -69,7 +60,7 @@ class test_show_rpl_route_policy(unittest.TestCase):
                                            'set_ext_community_soo_additive': True,
                                            'set_level': 'level-1-2',
                                            'set_local_pref': 100,
-                                           'set_med': '113',
+                                           'set_med': 113,
                                            'set_metric': '100',
                                            'set_metric_type': 'type-2',
                                            'set_next_hop': 'None',
@@ -78,7 +69,14 @@ class test_show_rpl_route_policy(unittest.TestCase):
                                            'set_route_origin': 'egp',
                                            'set_tag': '111',
                                            'set_weight': 'None'},
-                               'conditions': {}}}}}
+                               'conditions': {}}}},
+ 'testtest': {'statements': {10: {'actions': {'set_local_pref': 120,
+                                              'set_med': 111,
+                                              'set_metric_type': 'type-1',
+                                              'set_next_hop': '192.168.1.1',
+                                              'set_next_hop_self': True},
+                                  'conditions': {'match_med_eq': 10}}}}}
+
 
     
     golden_output = {'execute.return_value': '''
@@ -174,6 +172,15 @@ class test_show_rpl_route_policy(unittest.TestCase):
       if destination in NO-EXPORT then
         set community (no-export)
         pass
+      endif
+    end-policy
+    !
+    route-policy testtest
+      if med eq 100 and local-preference eq 100 and ospf-area is 0 then
+        set local-preference 120
+        set next-hop 192.168.1.1
+        set med 111
+        set metric-type type-1
       endif
     end-policy
       '''}

@@ -36,7 +36,7 @@ class ShowRplRoutePolicySchema(MetaParser):
                              Optional('set_next_hop'): str,
                              Optional('set_next_hop_v6'): str,
                              Optional('set_next_hop_self'): bool,  
-                             Optional('set_med'): str,
+                             Optional('set_med'): int,
                              Optional('set_as_path_prepend'): int,
                              Optional('set_as_path_prepend_repeat_n'): int,
                              Optional('set_community'): str,
@@ -111,7 +111,6 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
             p1_1 = re.compile(r'^\s*# *(?P<description>[a-zA-Z\W]+)$')
             m = p1_1.match(line)
             if m:
-                # import pdb;pdb.set_trace()
                 description = str(m.groupdict()['description'])
                 
                 rpl_route_policy_dict[name]['description'] = description
@@ -141,7 +140,7 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
             m = p2.match(line)
             if m:
                 rpl_route_policy_dict[name]['statements'][statements]['actions']\
-                ['set_med'] = str(m.groupdict()['set_med'])
+                ['set_med'] = int(m.groupdict()['set_med'])
                 continue
 
             # set origin egp
@@ -321,123 +320,9 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                 ['set_weight'] = str(m.groupdict()['set_weight'])
                 continue
 
-            #if destination in prefix-set1 and community matches-any cs1 then
-            p18 = re.compile(r'^\s*if *destination *in'
-                              ' *(?P<match_prefix_list>[\w\W\S]+) *and *community'
-                              ' *matches-any *(?P<match_community_list>[\w\W]+)'
-                              ' *then$')
-            m = p18.match(line)
-            if m:
-                match_prefix_list = str(m.groupdict()['match_prefix_list'])
-                match_community_list = str(m.groupdict()['match_community_list'])
-
-                rpl_route_policy_dict[name]['statements'][statements]['conditions']\
-                ['match_prefix_list'] = match_prefix_list
-                rpl_route_policy_dict[name]['statements'][statements]['conditions']\
-                ['match_community_list'] = match_community_list
-                continue
-
-            # if origin is egp and med eq 100 then
-            p19 = re.compile(r'^\s*(if|elseif|else)(?: *origin *is'
-                              ' *(?P<match_origin_eq>[a-z]+))?( *and)?(?: *med'
-                              ' *eq *(?P<match_med_eq>[0-9]+))? *then$')
-            m = p19.match(line)
-            if m:
-
-                rpl_route_policy_dict[name]['statements'][statements]['conditions']\
-                ['match_origin_eq'] = str(m.groupdict()['match_origin_eq'])
-                rpl_route_policy_dict[name]['statements'][statements]['conditions']\
-                ['match_med_eq'] = int(m.groupdict()['match_med_eq'])
-                continue
-
-            # elseif next-hop in prefix-set1 and next-hop in test6 then
-            p20 = re.compile(r'^\s*(elseif|if|else) *next-hop *in'
-                              ' *(?P<match_prefix_list>[\w\W\S]+) *and *next-hop'
-                              ' *in *(?P<match_nexthop_in>[\w\W]+) *then$')
-            m = p20.match(line)
-            if m:
-
-                rpl_route_policy_dict[name]['statements'][statements]['conditions']\
-                ['match_prefix_list'] = str(m.groupdict()['match_prefix_list'])
-                rpl_route_policy_dict[name]['statements'][statements]['conditions']\
-                ['match_nexthop_in'] = m.groupdict()['match_nexthop_in']
-                continue
-
-            # elseif local-preference eq 130 and community matches-any test then
-            p21 = re.compile(r'^\s*(elseif|if|else) *local-preference *eq'
-                              ' *(?P<match_local_pref_eq>[0-9]+)( *and)?'
-                              '(?: *community *matches-any'
-                              ' *(?P<match_community_list>[\w\W]+))? *then$')
-            m = p21.match(line)
-            if m:
-
-                rpl_route_policy_dict[name]['statements'][statements]['conditions']\
-                ['match_local_pref_eq'] = str(m.groupdict()['match_local_pref_eq'])
-                rpl_route_policy_dict[name]['statements'][statements]['conditions']\
-                ['match_community_list'] = str(m.groupdict()['match_community_list'])
-                continue
-
-            # if extcommunity rt matches-any test then
-            p22 = re.compile(r'^\s*if *extcommunity'
-                              ' *(?P<match_ext_community_list_type>[a-z]+)'
-                              ' *matches-any'
-                              ' *(?P<match_ext_community_list>[/w/W\s]+) *then$')
-            m = p22.match(line)
-            if m:
-                match_ext_community_list_type = m.groupdict()['match_ext_community_list_type']
-                match_ext_community_list = m.groupdict()['match_ext_community_list']
-
-                rpl_route_policy_dict[name]['statements'][statements]['conditions']\
-                ['match_ext_community_list_type'] = match_ext_community_list_type
-                rpl_route_policy_dict[name]['statements'][statements]['conditions']\
-                ['match_ext_community_list'] = match_ext_community_list
-                continue
-
-            # elseif ospf-area is 1.1.1.1 and route-type is level-1 and route-type is level-2 then
-            p23 = re.compile(r'^\s*(elseif|if) *ospf-area *is'
-                              ' *(?P<match_area_eq>[0-9\.]+) *and *route-type *is'
-                              ' *(?P<match_level_eq>[a-z0-9\-\s]+)'
-                              ' *then$')
-            m = p23.match(line)
-            if m:
-                match_area_eq = str(m.groupdict()['match_area_eq'])
-                match_level_eq = m.groupdict()['match_level_eq']
-                match_level_eq = match_level_eq.replace("and route-type is",",")
-
-                rpl_route_policy_dict[name]['statements'][statements]['conditions']\
-                ['match_area_eq'] = match_area_eq
-                rpl_route_policy_dict[name]['statements'][statements]['conditions']\
-                ['match_level_eq'] = match_level_eq
-                continue
-
-            #elseif as-path length ge 7 then
-            p24 = re.compile(r'^\s*(elseif|if) *as-path *length'
-                              ' *(?P<match_as_path_length_oper>[a-z]+)'
-                              ' *(?P<match_as_path_length>[0-9]+) *then$')
-            m = p24.match(line)
-            if m:
-                match_as_path_length_oper = m.groupdict()['match_as_path_length_oper']
-                match_as_path_length = int(m.groupdict()['match_as_path_length'])
-
-                rpl_route_policy_dict[name]['statements'][statements]['conditions']\
-                ['match_as_path_length_oper'] = match_as_path_length_oper
-                rpl_route_policy_dict[name]['statements'][statements]['conditions']\
-                ['match_as_path_length'] = match_as_path_length
-                continue
-
-            #if as-path in test then
-            p25 = re.compile(r'^\s*(elseif|if) *as-path *in *(?P<match_as_path_list>[\w\W]+) *then$')
-            m = p25.match(line)
-            if m:
-                match_as_path_list = m.groupdict()['match_as_path_list']
-
-                rpl_route_policy_dict[name]['statements'][statements]['conditions']\
-                ['match_as_path_list'] = match_as_path_list
-                continue
-
             #pass|done|drop
-            p26 = re.compile(r'^\s*(?P<actions>(pass|done|drop))$')
-            m = p26.match(line)
+            p18 = re.compile(r'^\s*(?P<actions>(pass|done|drop))$')
+            m = p18.match(line)
             if m:
                 actions = m.groupdict()['actions']
 
@@ -445,4 +330,77 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                 ['actions'] = actions
                 continue
 
+            p19 = re.compile(r'^\s*(if|elseif|else) *(?P<condition1>\S+ \S+ \S+)'
+                              '( *and)?(?:(?P<condition2>\S+ \S+ \S+))?( *and)?'
+                              '(?:(?P<condition3>\S+ \S+ \S+))?( *and)?(?:'
+                              '(?P<condition4>\S+ \S+ \S+))?( *and)?(?:'
+                              '(?P<condition5>\S+ \S+ \S+))? *then$')
+            m = p19.match(line)
+            if m:
+                for cond in m.groupdict().keys():
+                    if cond == None or m.groupdict()[cond] == None:
+                        continue
+                    if 'origin is' in m.groupdict()[cond]:
+                        v = re.match('origin is (?P<match_origin_eq>[a-z]+)', m.groupdict()[cond])
+                        match_origin_eq = v.groupdict()['match_origin_eq']
+                        rpl_route_policy_dict[name]['statements'][statements]['conditions']\
+                        ['match_origin_eq'] = match_origin_eq
+
+                    if 'med eq' in m.groupdict()[cond]:
+                        v = re.match('med eq (?P<match_med_eq>[0-9]+)', m.groupdict()[cond])
+                        match_med_eq = v.groupdict()['match_med_eq']
+                        rpl_route_policy_dict[name]['statements'][statements]['conditions']\
+                        ['match_med_eq'] = int(v.groupdict()['match_med_eq'])
+
+                    if 'local-preference eq' in m.groupdict()[cond]:
+                        v = re.match('local-preference eq (?P<match_local_pref_eq>[0-9]+)', m.groupdict()[cond])
+                        match_local_pref_eq = v.groupdict()['match_local_pref_eq']
+                        rpl_route_policy_dict[name]['statements'][statements]['conditions']\
+                        ['match_local_pref_eq'] = match_local_pref_eq
+
+                    if 'ospf-area is' in m.groupdict()[cond]:
+                        v = re.match('ospf-area is (?P<match_area_eq>[0-9]+)', m.groupdict()[cond])
+                        match_area_eq = v.groupdict()['match_area_eq']
+                        rpl_route_policy_dict[name]['statements'][statements]['conditions']\
+                        ['match_area_eq'] = match_area_eq
+
+                    if 'next-hop in' in m.groupdict()[cond]:
+                        v = re.match('next-hop in (?P<match_nexthop_in>[\w\W]+)', m.groupdict()[cond])
+                        match_nexthop_in = v.groupdict()['match_nexthop_in']
+                        rpl_route_policy_dict[name]['statements'][statements]['conditions']\
+                        ['match_nexthop_in'] = match_nexthop_in
+
+                    if 'community matches-any' in m.groupdict()[cond]:
+                        v = re.match('community matches-any (?P<match_community_list>[\w\W]+)', m.groupdict()[cond])
+                        match_ext_community_list = v.groupdict()['match_ext_community_list']
+                        rpl_route_policy_dict[name]['statements'][statements]['conditions']\
+                        ['match_ext_community_list'] = match_ext_community_list
+
+                    if 'as-path in' in m.groupdict()[cond]:
+                        v = re.match('as-path in (?P<match_as_path_list>[\w\W]+)', m.groupdict()[cond])
+                        match_as_path_list = v.groupdict()['match_as_path_list']
+                        rpl_route_policy_dict[name]['statements'][statements]['conditions']\
+                        ['match_as_path_list'] = match_as_path_list
+
+                    if 'as-path length' in m.groupdict()[cond]:
+                        v = re.match('as-path length (?P<match_as_path_length_oper>[\w\W]+)', m.groupdict()[cond])
+                        match_as_path_length_oper = v.groupdict()['match_as_path_length_oper']
+                        rpl_route_policy_dict[name]['statements'][statements]['conditions']\
+                        ['match_as_path_length_oper'] = match_as_path_length_oper
+
+                    if 'route-type is' in m.groupdict()[cond]:
+                        v = re.match('route-type is (?P<match_level_eq>[\w\W]+)', m.groupdict()[cond])
+                        match_level_eq = v.groupdict()['match_level_eq']
+                        rpl_route_policy_dict[name]['statements'][statements]['conditions']\
+                        ['match_level_eq'] = match_level_eq
+
+                    if 'destination in' in m.groupdict()[cond]:
+                        v = re.match('destination in (?P<match_prefix_list>[\w\W]+)', m.groupdict()[cond])
+                        match_prefix_list = v.groupdict()['match_prefix_list']
+                        rpl_route_policy_dict[name]['statements'][statements]['conditions']\
+                        ['match_prefix_list'] = match_prefix_list
+                    continue
+
         return rpl_route_policy_dict
+
+        
