@@ -94,7 +94,7 @@ class test_show_interface(unittest.TestCase):
                  'mac_address': 'aaaa.bbbb.cccc',
                  'medium': 'broadcast',
                  'mtu': 1600,
-                 'oper_status': 'up,',
+                 'oper_status': 'up',
                  'phys_address': '5254.003b.4aca',
                  'port_mode': 'routed',
                  'port_speed': '1000',
@@ -114,7 +114,7 @@ class test_show_interface(unittest.TestCase):
                     'mac_address': '5254.003b.4af8',
                     'medium': 'broadcast',
                     'mtu': 1600,
-                    'oper_status': 'down,',
+                    'oper_status': 'down',
                     'parent_interface': 'Ethernet2/1',
                     'phys_address': '5254.003b.4aca',
                     'port_mode': 'routed',
@@ -133,7 +133,7 @@ class test_show_interface(unittest.TestCase):
                     'mac_address': '5254.003b.4af8',
                     'medium': 'p2p',
                     'mtu': 1600,
-                    'oper_status': 'up,',
+                    'oper_status': 'up',
                     'parent_interface': 'Ethernet2/1',
                     'phys_address': '5254.003b.4aca',
                     'port_mode': 'routed',
@@ -208,7 +208,7 @@ class test_show_interface(unittest.TestCase):
                  'mac_address': '5254.00ac.b52e',
                  'medium': 'broadcast',
                  'mtu': 1500,
-                 'oper_status': 'up,',
+                 'oper_status': 'up',
                  'phys_address': '5254.00ac.b52e',
                  'port_mode': 'trunk',
                  'port_speed': '1000',
@@ -424,7 +424,8 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
                                           'ip_subnet': '10.4.4.0',
                                           'prefix_length': '24',
                                           'route_preference': 'None',
-                                          'route_tag': 'None'},
+                                          'route_tag': 'None'},           
+                          'unnumbered':{'interface_ref': 'loopback0'},
                           'counters': {'broadcast_bytes_consumed': 0,
                                        'broadcast_bytes_forwarded': 0,
                                        'broadcast_bytes_originated': 0,
@@ -492,6 +493,7 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
              224.0.0.6  224.0.0.5  224.0.0.2
           IP MTU: 1600 bytes (using link MTU)
           IP primary address route-preference: 0, tag: 0
+          IP unnumbered interface (loopback0)
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: disabled
