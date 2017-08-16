@@ -87,7 +87,7 @@ class test_show_interface(unittest.TestCase):
                  'interface_reset': 1,
                  'ipv4': {'10.4.4.4/24': {'ip': '10.4.4.4',
                                           'prefix_length': '24',
-                                          'route_tag': 10,
+                                          'route_tag': '10',
                                           'secondary': True}},
                  'last_link_flapped': '00:00:29',
                  'link_state': 'None',
@@ -417,12 +417,14 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
                                           'ip': '10.3.3.3',
                                           'ip_subnet': '10.3.3.0',
                                           'prefix_length': '24',
-                                          'route_preference': 0,
-                                          'route_tag': 0,
+                                          'route_preference': '0',
+                                          'route_tag': '0',
                                           'secondary': True},
                           '10.4.4.4/24': {'ip': '10.4.4.4',
                                           'ip_subnet': '10.4.4.0',
-                                          'prefix_length': '24'},
+                                          'prefix_length': '24',
+                                          'route_preference': 'None',
+                                          'route_tag': 'None'},
                           'counters': {'broadcast_bytes_consumed': 0,
                                        'broadcast_bytes_forwarded': 0,
                                        'broadcast_bytes_originated': 0,
@@ -528,7 +530,6 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
         parsed_output = ip_interface_vrf_all_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
-
 
 
 # #############################################################################
@@ -1009,8 +1010,10 @@ class test_show_ipv6_interface_vrf_all(unittest.TestCase):
                           'ipv6_report_link_local': 'disabled',
                           'ipv6_subnet': '2001:db8:1:1::/64',
                           'ipv6_unicast_rev_path_forwarding': 'none',
-                          'ipv6_virtual_add': 'none'},
+                          'ipv6_virtual_add': 'none',
+                          'multicast_groups': True},
                  'vrf': 'VRF1'}}
+
 
     golden_output = {'execute.return_value': '''
         IPv6 Interface Status for VRF "default"

@@ -2017,6 +2017,7 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                          Optional('soo'): str,
                          Optional('soft_configuration'): bool,
                          Optional('next_hop_self'): bool,
+                         Optional('third_party_nexthop'): bool,
                          Optional('as_override_count'): int,
                          Optional('as_override'): bool,
                          Optional('maximum_prefix_max_prefix_no'): int,
@@ -2664,7 +2665,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
             m = p40.match(line)
             if m:
                 parsed_dict['neighbor'][neighbor_id]['address_family']\
-                    [address_family]['next_hop_self'] = False
+                    [address_family]['third_party_nexthop'] = True
                 continue
             
             # SOO Extcommunity: SOO:100:100
@@ -2686,7 +2687,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
 
             # Nexthop always set to local peering address, 0.0.0.0
             p43 = re.compile(r'^\s*Nexthop +always +set +to +local +peering'
-                              ' +address, +0\.0\.0\.0$')
+                              ' +address, +(?P<ip>[\w\.\:]+)$')
             m = p43.match(line)
             if m:
                 parsed_dict['neighbor'][neighbor_id]['address_family']\

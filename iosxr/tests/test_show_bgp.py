@@ -21,8 +21,9 @@ from parser.iosxr.show_bgp import ShowPlacementProgramAll,\
                                   ShowBgpInstanceNeighborsReceivedRoutes,\
                                   ShowBgpInstanceNeighborsRoutes,\
                                   ShowBgpInstanceSummary,\
-                                  ShowBgpInstanceAllAll
-
+                                  ShowBgpInstanceAllAll,\
+                                  ShowBgpInstance
+ats_mock = Mock()
 
 # ==========================================
 # Unit test for 'show placement program all'
@@ -942,10 +943,10 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                     'a': 
                         {'active_cluster_id': '10',
                         'cluster_id': '10',
-                        'address_family': {'ipv4 unicast ': {'attribute_download': 'Disabled',
+                        'address_family': {'vpnv4 unicast': {'attribute_download': 'Disabled',
                                                              'bgp_table_version': '1',
                                                              'chunk_elememt_size': '3',
-                                                             'current_vrf': 'a ',
+                                                             'current_vrf': 'a',
                                                              'dampening': False,
                                                              'dynamic_med': True,
                                                              'dynamic_med_int': '10 '
@@ -1617,9 +1618,756 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
 
         BGP instance 1: 'test'
         ======================
-        % None of the requested address families are configured for instance 'test'(28591)         
+        % None of the requested address families are configured for instance 'test'(28591)
+        '''}
 
-    '''}
+    golden_parsed_output2 = {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'VRF1': 
+                        {'active_cluster_id': '1.1.1.1',
+                        'address_family': 
+                            {'vpnv6 unicast': 
+                                {'attribute_download': 'Disabled',
+                                'bgp_table_version': '3',
+                                'chunk_elememt_size': '3',
+                                'current_vrf': 'vrf1',
+                                'dampening': False,
+                                'dynamic_med': True,
+                                'dynamic_med_int': '10 '
+                                                   'minutes',
+                                'dynamic_med_periodic_timer': 'Not '
+                                                              'Running',
+                                'dynamic_med_timer': 'Not '
+                                                     'Running',
+                                'label_retention_timer_value': '5 '
+                                                               'mins',
+                                'main_table_version': '3',
+                                'nexthop_resolution_minimum_prefix_length': '0 '
+                                                                            '(not '
+                                                                            'configured)',
+                                'num_of_scan_segments': '1',
+                                'permanent_network': 'unconfigured',
+                                'prefix_scanned_per_segment': '100000',
+                                'prefixes_path': {'prefixes': {'mem_used': 0,
+                                                               'number': 0}},
+                                'remote_local': {'prefixes': {'allocated': 0,
+                                                              'freed': 0}},
+                                'rib_table_prefix_limit_reached': 'no',
+                                'rib_table_prefix_limit_ver': '0',
+                                'scan_interval': '60',
+                                'soft_reconfig_entries': '0',
+                                'state': 'normal '
+                                         'mode',
+                                'table_bit_field_size': '1 ',
+                                'table_state': 'None',
+                                'table_version_acked_by_rib': '3',
+                                'table_version_synced_to_rib': '3',
+                                'thread': {'import thread': {'triggers': {'Aug 10 15:55:35.385': {'tbl_ver': 3,
+                                                                                                  'trig_tid': 3,
+                                                                                                  'ver': 3}}},
+                                           'label thread': {'triggers': {'Aug 10 15:55:35.385': {'tbl_ver': 3,
+                                                                                                 'trig_tid': 3,
+                                                                                                 'ver': 3}}},
+                                           'rib thread': {'triggers': {'Aug 10 15:55:32.391': {'tbl_ver': 3,
+                                                                                               'trig_tid': 8,
+                                                                                               'ver': 3}}},
+                                           'update thread': {'triggers': {'Aug 10 15:55:35.385': {'tbl_ver': 3,
+                                                                                                  'trig_tid': 8,
+                                                                                                  'ver': 3}}}},
+                                'total_prefixes_scanned': '0'}},
+                        'as_number': 100,
+                        'as_system_number_format': 'ASPLAIN',
+                        'att': {'as_paths': {'memory_used': 0,
+                                            'number': 0},
+                               'attributes': {'memory_used': 0,
+                                              'number': 0},
+                               'bmp_paths': {'memory_used': 0,
+                                             'number': 0},
+                               'bmp_prefixes': {'memory_used': 0,
+                                                'number': 0},
+                               'communities': {'memory_used': 0,
+                                               'number': 0},
+                               'extended_communities': {'memory_used': 0,
+                                                        'number': 0},
+                               'large_communities': {'memory_used': 0,
+                                                     'number': 0},
+                               'nexthop_entries': {'memory_used': 10800,
+                                                   'number': 27},
+                               'paths': {'memory_used': 0,
+                                         'number': 0},
+                               'pe_distinguisher_labels': {'memory_used': 0,
+                                                           'number': 0},
+                               'pmsi_tunnel_attr': {'memory_used': 0,
+                                                    'number': 0},
+                               'ppmp_attr': {'memory_used': 0,
+                                             'number': 0},
+                               'ribrnh_tunnel_attr': {'memory_used': 0,
+                                                      'number': 0},
+                               'route_reflector_entries': {'memory_used': 0,
+                                                           'number': 0},
+                               'tunnel_encap_attr': {'memory_used': 0,
+                                                     'number': 0}},
+                        'bgp_speaker_process': 0,
+                        'bmp_pool_summary': {'100': {'alloc': 0,
+                                                    'free': 0},
+                                            '10000': {'alloc': 0,
+                                                      'free': 0},
+                                            '1200': {'alloc': 0,
+                                                     'free': 0},
+                                            '200': {'alloc': 0,
+                                                    'free': 0},
+                                            '20000': {'alloc': 0,
+                                                      'free': 0},
+                                            '2200': {'alloc': 0,
+                                                     'free': 0},
+                                            '300': {'alloc': 0,
+                                                    'free': 0},
+                                            '3300': {'alloc': 0,
+                                                     'free': 0},
+                                            '400': {'alloc': 0,
+                                                    'free': 0},
+                                            '4000': {'alloc': 0,
+                                                     'free': 0},
+                                            '4500': {'alloc': 0,
+                                                     'free': 0},
+                                            '500': {'alloc': 0,
+                                                    'free': 0},
+                                            '5500': {'alloc': 0,
+                                                     'free': 0},
+                                            '600': {'alloc': 0,
+                                                    'free': 0},
+                                            '6500': {'alloc': 0,
+                                                     'free': 0},
+                                            '700': {'alloc': 0,
+                                                    'free': 0},
+                                            '7500': {'alloc': 0,
+                                                     'free': 0},
+                                            '800': {'alloc': 0,
+                                                    'free': 0},
+                                            '8500': {'alloc': 0,
+                                                     'free': 0},
+                                            '900': {'alloc': 0,
+                                                    'free': 0}},
+                        'cluster_id': '1.1.1.1',
+                        'current_limit_for_bmp_buffer_size': 326,
+                        'current_utilization_of_bmp_buffer_limit': 0,
+                        'default_cluster_id': '1.1.1.1',
+                        'default_keepalive': 60,
+                        'default_local_preference': 100,
+                        'default_value_for_bmp_buffer_size': 326,
+                        'enforce_first_as_enabled': True,
+                        'fast_external_fallover': True,
+                        'generic_scan_interval': 60,
+                        'log_neighbor_changes': True,
+                        'max_limit_for_bmp_buffer_size': 435,
+                        'message_logging_pool_summary': {'100': {'alloc': 0,
+                                                                'free': 0},
+                                                        '200': {'alloc': 0,
+                                                                'free': 0},
+                                                        '2200': {'alloc': 0,
+                                                                 'free': 0},
+                                                        '4500': {'alloc': 0,
+                                                                 'free': 0},
+                                                        '500': {'alloc': 0,
+                                                                'free': 0}},
+                        'node': 'node0_RSP1_CPU0',
+                        'non_stop_routing': True,
+                        'operation_mode': 'standalone',
+                        'platform_rlimit_max': 2281701376,
+                        'pool': {'1200': {'alloc': 0,
+                                         'free': 0},
+                                '200': {'alloc': 0,
+                                        'free': 0},
+                                '20000': {'alloc': 0,
+                                          'free': 0},
+                                '2200': {'alloc': 0,
+                                         'free': 0},
+                                '300': {'alloc': 1,
+                                        'free': 0},
+                                '3300': {'alloc': 0,
+                                         'free': 0},
+                                '400': {'alloc': 0,
+                                        'free': 0},
+                                '4000': {'alloc': 0,
+                                         'free': 0},
+                                '4500': {'alloc': 0,
+                                         'free': 0},
+                                '500': {'alloc': 0,
+                                        'free': 0},
+                                '5000': {'alloc': 0,
+                                         'free': 0},
+                                '600': {'alloc': 0,
+                                        'free': 0},
+                                '700': {'alloc': 0,
+                                        'free': 0},
+                                '800': {'alloc': 0,
+                                        'free': 0},
+                                '900': {'alloc': 0,
+                                        'free': 0}},
+                        'received_notifications': 0,
+                        'received_updates': 0,
+                        'restart_count': 7,
+                        'route_distinguisher': '200:1',
+                        'router_id': '11.11.11.11',
+                        'sent_notifications': 0,
+                        'sent_updates': 0,
+                        'update_delay': 120,
+                        'vrf_info': 
+                            {'default': 
+                                {'cfg': 3,
+                                'nbrs_estab': 0,
+                                'total': 1},
+                            'non-default': 
+                                {'cfg': 4,
+                                'nbrs_estab': 0,
+                                'total': 2}}},
+                    'VRF2': 
+                        {'active_cluster_id': '1.1.1.1',
+                        'address_family': 
+                            {'vpnv6 unicast': 
+                                {'attribute_download': 'Disabled',
+                                'bgp_table_version': '3',
+                                'chunk_elememt_size': '3',
+                                'current_vrf': 'vrf2',
+                                'dampening': False,
+                                'dynamic_med': True,
+                                'dynamic_med_int': '10 '
+                                                   'minutes',
+                                'dynamic_med_periodic_timer': 'Not '
+                                                              'Running',
+                                'dynamic_med_timer': 'Not '
+                                                     'Running',
+                                'label_retention_timer_value': '5 '
+                                                               'mins',
+                                'main_table_version': '3',
+                                'nexthop_resolution_minimum_prefix_length': '0 '
+                                                                            '(not '
+                                                                            'configured)',
+                                'num_of_scan_segments': '1',
+                                'permanent_network': 'unconfigured',
+                                'prefix_scanned_per_segment': '100000',
+                                'prefixes_path': {'prefixes': {'mem_used': 0,
+                                                               'number': 0}},
+                                'remote_local': {'prefixes': {'allocated': 0,
+                                                              'freed': 0}},
+                                'rib_table_prefix_limit_reached': 'no',
+                                'rib_table_prefix_limit_ver': '0',
+                                'scan_interval': '60',
+                                'soft_reconfig_entries': '0',
+                                'state': 'normal '
+                                         'mode',
+                                'table_bit_field_size': '1 ',
+                                'table_state': 'None',
+                                'table_version_acked_by_rib': '3',
+                                'table_version_synced_to_rib': '3',
+                                'thread': {'import thread': {'triggers': {'Aug 10 15:55:35.385': {'tbl_ver': 3,
+                                                                                                  'trig_tid': 3,
+                                                                                                  'ver': 3}}},
+                                           'label thread': {'triggers': {'Aug 10 15:55:35.385': {'tbl_ver': 3,
+                                                                                                 'trig_tid': 3,
+                                                                                                 'ver': 3}}},
+                                           'rib thread': {'triggers': {'Aug 10 15:55:32.391': {'tbl_ver': 3,
+                                                                                               'trig_tid': 8,
+                                                                                               'ver': 3}}},
+                                           'update thread': {'triggers': {'Aug 10 15:55:35.385': {'tbl_ver': 3,
+                                                                                                  'trig_tid': 8,
+                                                                                                  'ver': 3}}}},
+                                'total_prefixes_scanned': '0'}},
+                        'as_number': 100,
+                        'as_system_number_format': 'ASPLAIN',
+                        'att': {'as_paths': {'memory_used': 0,
+                                            'number': 0},
+                               'attributes': {'memory_used': 0,
+                                              'number': 0},
+                               'bmp_paths': {'memory_used': 0,
+                                             'number': 0},
+                               'bmp_prefixes': {'memory_used': 0,
+                                                'number': 0},
+                               'communities': {'memory_used': 0,
+                                               'number': 0},
+                               'extended_communities': {'memory_used': 0,
+                                                        'number': 0},
+                               'large_communities': {'memory_used': 0,
+                                                     'number': 0},
+                               'nexthop_entries': {'memory_used': 10800,
+                                                   'number': 27},
+                               'paths': {'memory_used': 0,
+                                         'number': 0},
+                               'pe_distinguisher_labels': {'memory_used': 0,
+                                                           'number': 0},
+                               'pmsi_tunnel_attr': {'memory_used': 0,
+                                                    'number': 0},
+                               'ppmp_attr': {'memory_used': 0,
+                                             'number': 0},
+                               'ribrnh_tunnel_attr': {'memory_used': 0,
+                                                      'number': 0},
+                               'route_reflector_entries': {'memory_used': 0,
+                                                           'number': 0},
+                               'tunnel_encap_attr': {'memory_used': 0,
+                                                     'number': 0}},
+                        'bgp_speaker_process': 0,
+                        'bmp_pool_summary': {'100': {'alloc': 0,
+                                                    'free': 0},
+                                            '10000': {'alloc': 0,
+                                                      'free': 0},
+                                            '1200': {'alloc': 0,
+                                                     'free': 0},
+                                            '200': {'alloc': 0,
+                                                    'free': 0},
+                                            '20000': {'alloc': 0,
+                                                      'free': 0},
+                                            '2200': {'alloc': 0,
+                                                     'free': 0},
+                                            '300': {'alloc': 0,
+                                                    'free': 0},
+                                            '3300': {'alloc': 0,
+                                                     'free': 0},
+                                            '400': {'alloc': 0,
+                                                    'free': 0},
+                                            '4000': {'alloc': 0,
+                                                     'free': 0},
+                                            '4500': {'alloc': 0,
+                                                     'free': 0},
+                                            '500': {'alloc': 0,
+                                                    'free': 0},
+                                            '5500': {'alloc': 0,
+                                                     'free': 0},
+                                            '600': {'alloc': 0,
+                                                    'free': 0},
+                                            '6500': {'alloc': 0,
+                                                     'free': 0},
+                                            '700': {'alloc': 0,
+                                                    'free': 0},
+                                            '7500': {'alloc': 0,
+                                                     'free': 0},
+                                            '800': {'alloc': 0,
+                                                    'free': 0},
+                                            '8500': {'alloc': 0,
+                                                     'free': 0},
+                                            '900': {'alloc': 0,
+                                                    'free': 0}},
+                        'cluster_id': '1.1.1.1',
+                        'current_limit_for_bmp_buffer_size': 326,
+                        'current_utilization_of_bmp_buffer_limit': 0,
+                        'default_cluster_id': '1.1.1.1',
+                        'default_keepalive': 60,
+                        'default_local_preference': 100,
+                        'default_value_for_bmp_buffer_size': 326,
+                        'enforce_first_as_enabled': True,
+                        'fast_external_fallover': True,
+                        'generic_scan_interval': 60,
+                        'log_neighbor_changes': True,
+                        'max_limit_for_bmp_buffer_size': 435,
+                        'message_logging_pool_summary': {'100': {'alloc': 0,
+                                                                'free': 0},
+                                                        '200': {'alloc': 0,
+                                                                'free': 0},
+                                                        '2200': {'alloc': 0,
+                                                                 'free': 0},
+                                                        '4500': {'alloc': 0,
+                                                                 'free': 0},
+                                                        '500': {'alloc': 0,
+                                                                'free': 0}},
+                        'node': 'node0_RSP1_CPU0',
+                        'non_stop_routing': True,
+                        'operation_mode': 'standalone',
+                        'platform_rlimit_max': 2281701376,
+                        'pool': {'1200': {'alloc': 0,
+                                         'free': 0},
+                                '200': {'alloc': 0,
+                                        'free': 0},
+                                '20000': {'alloc': 0,
+                                          'free': 0},
+                                '2200': {'alloc': 0,
+                                         'free': 0},
+                                '300': {'alloc': 1,
+                                        'free': 0},
+                                '3300': {'alloc': 0,
+                                         'free': 0},
+                                '400': {'alloc': 0,
+                                        'free': 0},
+                                '4000': {'alloc': 0,
+                                         'free': 0},
+                                '4500': {'alloc': 0,
+                                         'free': 0},
+                                '500': {'alloc': 0,
+                                        'free': 0},
+                                '5000': {'alloc': 0,
+                                         'free': 0},
+                                '600': {'alloc': 0,
+                                        'free': 0},
+                                '700': {'alloc': 0,
+                                        'free': 0},
+                                '800': {'alloc': 0,
+                                        'free': 0},
+                                '900': {'alloc': 0,
+                                        'free': 0}},
+                        'received_notifications': 0,
+                        'received_updates': 0,
+                        'restart_count': 7,
+                        'route_distinguisher': '200:2',
+                        'router_id': '11.11.11.11',
+                        'sent_notifications': 0,
+                        'sent_updates': 0,
+                        'update_delay': 120,
+                        'vrf_info': 
+                            {'default': 
+                                {'cfg': 3,
+                                'nbrs_estab': 0,
+                                'total': 1},
+                            'non-default': 
+                                {'cfg': 4,
+                                'nbrs_estab': 0,
+                                'total': 2}}}}},
+            'test': {},
+            'test1': {},
+            'test2': {}}}
+
+    golden_output2 = {'execute.return_value': '''
+        RP/0/RSP1/CPU0:PE1#show bgp instance all vrf all ipv6 unicast process detail 
+        Fri Aug 11 11:09:29.206 PDT
+
+        BGP instance 0: 'default'
+        =========================
+
+        VRF: VRF1
+        ---------
+
+        BGP Process Information: VRF VRF1
+        BGP Route Distinguisher: 200:1
+
+        BGP is operating in STANDALONE mode
+        Autonomous System number format: ASPLAIN
+        Autonomous System: 100
+        Router ID: 11.11.11.11 (manually configured)
+        Default Cluster ID: 1.1.1.1
+        Active Cluster IDs:  1.1.1.1
+        Fast external fallover enabled
+        Platform RLIMIT max: 2281701376 bytes
+        Maximum limit for BMP buffer size: 435 MB
+        Default value for BMP buffer size: 326 MB
+        Current limit for BMP buffer size: 326 MB
+        Current utilization of BMP buffer limit: 0 B
+        Neighbor logging is enabled
+        Enforce first AS enabled
+        iBGP to IGP redistribution enabled
+        Default local preference: 100
+        Default keepalive: 60
+        Non-stop routing is enabled
+        Update delay: 120
+        Generic scan interval: 60
+
+        BGP Speaker process: 0, Node: node0_RSP1_CPU0
+        Restart count: 7
+                                   Total           Nbrs Estab/Cfg
+        Default VRFs:              1               0/3
+        Non-Default VRFs:          2               0/4
+        This VRF:                                  0/2
+
+                                   Sent            Received
+        Updates:                   0               0               
+        Notifications:             0               0               
+
+                                   Number          Memory Used
+        Attributes:                0               0               
+        AS Paths:                  0               0               
+        Communities:               0               0               
+        Large Communities:         0               0               
+        Extended communities:      0               0               
+        PMSI Tunnel attr:          0               0               
+        RIBRNH Tunnel attr:        0               0               
+        PPMP attr:                 0               0               
+        Tunnel Encap attr:         0               0               
+        PE distinguisher labels:   0               0               
+        Route Reflector Entries:   0               0               
+        Nexthop Entries:           27              10800           
+                  
+                                   Alloc           Free          
+        Pool 200:                  0               0             
+        Pool 300:                  1               0             
+        Pool 400:                  0               0             
+        Pool 500:                  0               0             
+        Pool 600:                  0               0             
+        Pool 700:                  0               0             
+        Pool 800:                  0               0             
+        Pool 900:                  0               0             
+        Pool 1200:                 0               0             
+        Pool 2200:                 0               0             
+        Pool 3300:                 0               0             
+        Pool 4000:                 0               0             
+        Pool 4500:                 0               0             
+        Pool 5000:                 0               0             
+        Pool 20000:                0               0             
+                  
+        Message logging pool summary:
+                                   Alloc           Free          
+        Pool 100:                  0               0             
+        Pool 200:                  0               0             
+        Pool 500:                  0               0             
+        Pool 2200:                 0               0             
+        Pool 4500:                 0               0             
+                  
+        BMP pool summary:
+                                   Alloc           Free          
+        Pool 100:                  0               0             
+        Pool 200:                  0               0             
+        Pool 300:                  0               0             
+        Pool 400:                  0               0             
+        Pool 500:                  0               0             
+        Pool 600:                  0               0             
+        Pool 700:                  0               0             
+        Pool 800:                  0               0             
+        Pool 900:                  0               0             
+        Pool 1200:                 0               0             
+        Pool 2200:                 0               0             
+        Pool 3300:                 0               0             
+        Pool 4000:                 0               0             
+        Pool 4500:                 0               0             
+        Pool 5500:                 0               0             
+        Pool 6500:                 0               0             
+        Pool 7500:                 0               0             
+        Pool 8500:                 0               0             
+        Pool 10000:                0               0             
+        Pool 20000:                0               0             
+                  
+        VRF VRF1 Address family: IPv6 Unicast
+        Dampening is not enabled
+        Client reflection is not enabled in global config
+        Dynamic MED is Disabled
+        Dynamic MED interval : 10 minutes
+        Dynamic MED Timer : Not Running
+        Dynamic MED Periodic Timer : Not Running
+        Scan interval: 60
+        Total prefixes scanned: 0
+        Prefixes scanned per segment: 100000
+        Number of scan segments: 1
+        Nexthop resolution minimum prefix-length: 0 (not configured)
+        Main Table Version: 3
+        Table version synced to RIB: 3
+        Table version acked by RIB: 3
+        RIB has converged: version 2
+        RIB table prefix-limit reached ?  [No], version 0
+        Permanent Network Unconfigured
+                  
+        State: Normal mode.
+        BGP Table Version: 3
+        Attribute download: Disabled
+        Label retention timer value 5 mins
+        Soft Reconfig Entries: 0
+        Table bit-field size : 1 Chunk element size : 3
+                  
+                           Last 8 Triggers       Ver         Tbl Ver     Trig TID  
+                  
+        Label Thread       Aug 10 15:55:35.385   3           3           3         
+                           Aug 10 15:55:32.391   3           3           19        
+                           Aug 10 15:55:32.385   0           3           4         
+                           Total triggers: 3
+                  
+        Import Thread      Aug 10 15:55:35.385   3           3           3         
+                           Aug 10 15:55:32.391   3           3           19        
+                           Aug 10 15:55:32.385   0           3           19        
+                           Total triggers: 3
+                  
+        RIB Thread         Aug 10 15:55:32.391   3           3           8         
+                           Aug 10 15:55:32.385   1           3           8         
+                           Aug 10 15:55:32.385   1           3           6         
+                           Total triggers: 3
+                  
+        Update Thread      Aug 10 15:55:35.385   3           3           8         
+                           Aug 10 15:55:32.391   3           3           8         
+                           Aug 10 15:55:32.391   3           3           19        
+                           Total triggers: 3
+                  
+                                   Allocated       Freed         
+        Prefixes:                  0               0             
+        Paths:                     0               0             
+        Path-elems:                0               0             
+                  
+                                   Number          Mem Used      
+        Prefixes:                  0               0             
+        Paths:                     0               0             
+        Path-elems:                0               0             
+        BMP Prefixes:              0               0             
+        BMP Paths:                 0               0             
+                  
+                  
+        VRF: VRF2 
+        --------- 
+                  
+        BGP Process Information: VRF VRF2
+        BGP Route Distinguisher: 200:2
+                  
+        BGP is operating in STANDALONE mode
+        Autonomous System number format: ASPLAIN
+        Autonomous System: 100
+        Router ID: 11.11.11.11 (manually configured)
+        Default Cluster ID: 1.1.1.1
+        Active Cluster IDs:  1.1.1.1
+        Fast external fallover enabled
+        Platform RLIMIT max: 2281701376 bytes
+        Maximum limit for BMP buffer size: 435 MB
+        Default value for BMP buffer size: 326 MB
+        Current limit for BMP buffer size: 326 MB
+        Current utilization of BMP buffer limit: 0 B
+        Neighbor logging is enabled
+        Enforce first AS enabled
+        iBGP to IGP redistribution enabled
+        Default local preference: 100
+        Default keepalive: 60
+        Non-stop routing is enabled
+        Update delay: 120
+        Generic scan interval: 60
+                  
+        BGP Speaker process: 0, Node: node0_RSP1_CPU0
+        Restart count: 7
+                                   Total           Nbrs Estab/Cfg
+        Default VRFs:              1               0/3
+        Non-Default VRFs:          2               0/4
+        This VRF:                                  0/2
+                  
+                                   Sent            Received
+        Updates:                   0               0               
+        Notifications:             0               0               
+                  
+                                   Number          Memory Used
+        Attributes:                0               0               
+        AS Paths:                  0               0               
+        Communities:               0               0               
+        Large Communities:         0               0               
+        Extended communities:      0               0               
+        PMSI Tunnel attr:          0               0               
+        RIBRNH Tunnel attr:        0               0               
+        PPMP attr:                 0               0               
+        Tunnel Encap attr:         0               0               
+        PE distinguisher labels:   0               0               
+        Route Reflector Entries:   0               0               
+        Nexthop Entries:           27              10800           
+                  
+                                   Alloc           Free          
+        Pool 200:                  0               0             
+        Pool 300:                  1               0             
+        Pool 400:                  0               0             
+        Pool 500:                  0               0             
+        Pool 600:                  0               0             
+        Pool 700:                  0               0             
+        Pool 800:                  0               0             
+        Pool 900:                  0               0             
+        Pool 1200:                 0               0             
+        Pool 2200:                 0               0             
+        Pool 3300:                 0               0             
+        Pool 4000:                 0               0             
+        Pool 4500:                 0               0             
+        Pool 5000:                 0               0             
+        Pool 20000:                0               0             
+                  
+        Message logging pool summary:
+                                   Alloc           Free          
+        Pool 100:                  0               0             
+        Pool 200:                  0               0             
+        Pool 500:                  0               0             
+        Pool 2200:                 0               0             
+        Pool 4500:                 0               0             
+                  
+        BMP pool summary:
+                                   Alloc           Free          
+        Pool 100:                  0               0             
+        Pool 200:                  0               0             
+        Pool 300:                  0               0             
+        Pool 400:                  0               0             
+        Pool 500:                  0               0             
+        Pool 600:                  0               0             
+        Pool 700:                  0               0             
+        Pool 800:                  0               0             
+        Pool 900:                  0               0             
+        Pool 1200:                 0               0             
+        Pool 2200:                 0               0             
+        Pool 3300:                 0               0             
+        Pool 4000:                 0               0             
+        Pool 4500:                 0               0             
+        Pool 5500:                 0               0             
+        Pool 6500:                 0               0             
+        Pool 7500:                 0               0             
+        Pool 8500:                 0               0             
+        Pool 10000:                0               0             
+        Pool 20000:                0               0             
+                  
+        VRF VRF2 Address family: IPv6 Unicast
+        Dampening is not enabled
+        Client reflection is not enabled in global config
+        Dynamic MED is Disabled
+        Dynamic MED interval : 10 minutes
+        Dynamic MED Timer : Not Running
+        Dynamic MED Periodic Timer : Not Running
+        Scan interval: 60
+        Total prefixes scanned: 0
+        Prefixes scanned per segment: 100000
+        Number of scan segments: 1
+        Nexthop resolution minimum prefix-length: 0 (not configured)
+        Main Table Version: 3
+        Table version synced to RIB: 3
+        Table version acked by RIB: 3
+        RIB has converged: version 2
+        RIB table prefix-limit reached ?  [No], version 0
+        Permanent Network Unconfigured
+                  
+        State: Normal mode.
+        BGP Table Version: 3
+        Attribute download: Disabled
+        Label retention timer value 5 mins
+        Soft Reconfig Entries: 0
+        Table bit-field size : 1 Chunk element size : 3
+                  
+                           Last 8 Triggers       Ver         Tbl Ver     Trig TID  
+                  
+        Label Thread       Aug 10 15:55:35.385   3           3           3         
+                           Aug 10 15:55:32.391   3           3           19        
+                           Aug 10 15:55:32.385   0           3           4         
+                           Total triggers: 3
+                  
+        Import Thread      Aug 10 15:55:35.385   3           3           3         
+                           Aug 10 15:55:32.391   3           3           19        
+                           Aug 10 15:55:32.385   0           3           19        
+                           Total triggers: 3
+                  
+        RIB Thread         Aug 10 15:55:32.391   3           3           8         
+                           Aug 10 15:55:32.385   1           3           8         
+                           Aug 10 15:55:32.385   1           3           6         
+                           Total triggers: 3
+                  
+        Update Thread      Aug 10 15:55:35.385   3           3           8         
+                           Aug 10 15:55:32.391   3           3           8         
+                           Aug 10 15:55:32.391   3           3           19        
+                           Total triggers: 3
+                  
+                                   Allocated       Freed         
+        Prefixes:                  0               0             
+        Paths:                     0               0             
+        Path-elems:                0               0             
+                  
+                                   Number          Mem Used      
+        Prefixes:                  0               0             
+        Paths:                     0               0             
+        Path-elems:                0               0             
+        BMP Prefixes:              0               0             
+        BMP Paths:                 0               0             
+                  
+                  
+                  
+        BGP instance 1: 'test'
+        ======================
+        % None of the requested address families are configured for instance 'test'(29193)
+                  
+        BGP instance 2: 'test1'
+        =======================
+        % None of the requested address families are configured for instance 'test1'(29193)
+                  
+        BGP instance 3: 'test2'
+        =======================
+        % None of the requested address families are configured for instance 'test2'(29193)
+        RP/0/RSP1/CPU0:PE1#
+        '''}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -1628,12 +2376,18 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
             parsed_output = obj.parse(vrf_type='vrf')
 
     def test_golden(self):
+        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpInstanceProcessDetail(device=self.device)
         parsed_output = obj.parse(vrf_type='vrf')
-        self.maxDiff = None
-
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowBgpInstanceProcessDetail(device=self.device)
+        parsed_output = obj.parse(vrf_type='vrf', af_type='ipv6 unicast')
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 
 # ============================================================
@@ -3281,7 +4035,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "last_ka_start_before_second_last": "00:00:00",
                                 "message_stats_input_queue": 0,
                                 "address_family": {
-                                    "ipv6 unicast": {
+                                    "vpnv6 unicast": {
                                         "outstanding_version_objects_current": 0,
                                         "outstanding_version_objects_max": 1,
                                         "cummulative_no_by_orf_policy": 0,
@@ -3403,7 +4157,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "last_ka_start_before_second_last": "00:00:00",
                                 "message_stats_input_queue": 0,
                                 "address_family": {
-                                    "ipv4 unicast": {
+                                    "vpnv4 unicast": {
                                         "outstanding_version_objects_current": 0,
                                         "outstanding_version_objects_max": 1,
                                         "cummulative_no_by_orf_policy": 0,
@@ -3529,7 +4283,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "last_ka_start_before_second_last": "00:00:00",
                                 "message_stats_input_queue": 0,
                                 "address_family": {
-                                    "ipv6 unicast": {
+                                    "vpnv6 unicast": {
                                         "outstanding_version_objects_current": 0,
                                         "outstanding_version_objects_max": 1,
                                         "additional_routes_local_label": "Unicast SAFI",
@@ -3647,7 +4401,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "last_ka_start_before_second_last": "00:00:00",
                                 "message_stats_input_queue": 0,
                                 "address_family": {
-                                    "ipv4 unicast": {
+                                    "vpnv4 unicast": {
                                         "outstanding_version_objects_current": 0,
                                         "outstanding_version_objects_max": 1,
                                         "additional_routes_local_label": "Unicast SAFI",
@@ -3721,17 +4475,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                               "opens": 1,
                                               "keepalives": 50,
                                               "notifications": 0,
-                                              "updates": 2,
-                                         }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+                                              "updates": 2}}}}}}}}}}
 
     golden_output = {'execute.return_value': '''
         Wed Jun 28 19:18:23.304 UTC
@@ -4016,22 +4760,414 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
           Local host: 2001:db8:20:1:5::1, Local port: 179, IF Handle: 0x00000080
           Foreign host: 2001:db8:20:1:5::5, Foreign port: 11013
           Last reset 00:00:00
-        
-            '''}
+        '''}
 
+    golden_parsed_output2 = {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'VRF1': 
+                        {'neighbor': 
+                            {'2001:db8:1:5::5': 
+                                {'address_family': 
+                                    {'vpnv6 unicast': 
+                                        {'accepted_prefixes': 0,
+                                        'additional_paths_operation': 'None',
+                                        'additional_routes_local_label': 'Unicast '
+                                                                      'SAFI',
+                                        'best_paths': 0,
+                                        'cummulative_no_prefixes_denied': 0,
+                                        'eor_status': 'was '
+                                                   'not '
+                                                   'received '
+                                                   'during '
+                                                   'read-only '
+                                                   'mode',
+                                        'exact_no_prefixes_denied': 0,
+                                        'filter_group': '0.0',
+                                        'last_ack_version': 1,
+                                        'last_synced_ack_version': 0,
+                                        'maximum_prefix_max_prefix_no': 524288,
+                                        'maximum_prefix_restart': 0,
+                                        'maximum_prefix_threshold': '75%',
+                                        'maximum_prefix_warning_only': True,
+                                        'neighbor_version': 0,
+                                        'outstanding_version_objects_current': 0,
+                                        'outstanding_version_objects_max': 0,
+                                        'prefix_advertised': 0,
+                                        'prefix_suppressed': 0,
+                                        'prefix_withdrawn': 0,
+                                        'refresh_request_status': 'No '
+                                                               'Refresh '
+                                                               'request '
+                                                               'being '
+                                                               'processed',
+                                        'route_map_name_in': 'all-pass',
+                                        'route_map_name_out': 'all-pass',
+                                        'route_refresh_request_received': 0,
+                                        'route_refresh_request_sent': 0,
+                                        'update_group': '0.1'}},
+                                'attempted': 0,
+                                'bgp_negotiated_keepalive_timers': {'hold_time': 180,
+                                                                    'keepalive_interval': 60},
+                                'bgp_neighbor_counters': {'messages': {'received': {'keepalives': 0,
+                                                                                    'notifications': 0,
+                                                                                    'opens': 0,
+                                                                                    'updates': 0},
+                                                                       'sent': {'keepalives': 0,
+                                                                                'notifications': 0,
+                                                                                'opens': 0,
+                                                                                'updates': 0}}},
+                                'bgp_session_transport': {'connection': {'connections_dropped': 0,
+                                                                         'connections_established': 0,
+                                                                         'last_reset': '00:00:00',
+                                                                         'state': 'established'},
+                                                          'transport': {'foreign_host': '2001:db8:1:5::5',
+                                                                        'foreign_port': '0',
+                                                                        'if_handle': '0x00000000',
+                                                                        'local_host': '::',
+                                                                        'local_port': '0'}},
+                                'configured_hold_time': 180,
+                                'enforcing_first_as': 'enabled',
+                                'inbound_message': '3',
+                                'keepalive': 60,
+                                'last_full_not_set_pulse_count': 0,
+                                'last_ka_error_before_reset': '00:00:00',
+                                'last_ka_error_ka_not_sent': '00:00:00',
+                                'last_ka_expiry_before_reset': '00:00:00',
+                                'last_ka_expiry_before_second_last': '00:00:00',
+                                'last_ka_start_before_reset': '00:00:00',
+                                'last_ka_start_before_second_last': '00:00:00',
+                                'last_read': '00:00:00',
+                                'last_read_before_reset': '00:00:00',
+                                'last_write': '00:00:00',
+                                'last_write_attempted': 0,
+                                'last_write_before_reset': '00:00:00',
+                                'last_write_pulse_rcvd': 'not '
+                                                         'set ',
+                                'last_write_pulse_rcvd_before_reset': '00:00:00',
+                                'last_write_thread_event_before_reset': '00:00:00',
+                                'last_write_thread_event_second_last': '00:00:00',
+                                'last_write_written': 0,
+                                'link_state': 'external '
+                                              'link',
+                                'local_as_as_no': 100,
+                                'message_stats_input_queue': 0,
+                                'message_stats_output_queue': 0,
+                                'min_acceptable_hold_time': 3,
+                                'minimum_time_between_adv_runs': 0,
+                                'multiprotocol_capability': 'not '
+                                                            'received',
+                                'non_stop_routing': 'enabled',
+                                'nsr_state': 'None',
+                                'outbound_message': '3',
+                                'precedence': 'internet',
+                                'remote_as': 200,
+                                'router_id': '0.0.0.0',
+                                'second_attempted': 0,
+                                'second_last_write': '00:00:00',
+                                'second_last_write_before_attempted': 0,
+                                'second_last_write_before_reset': '00:00:00',
+                                'second_last_write_before_written': 0,
+                                'second_written': 0,
+                                'session_state': 'idle',
+                                'session_state_reason': ' '
+                                                        '(No '
+                                                        'best '
+                                                        'local '
+                                                        'address '
+                                                        'found)',
+                                'tcp_initial_sync': '---',
+                                'tcp_initial_sync_done': '---',
+                                'written': 0}}},
+            'VRF2': 
+                {'neighbor': 
+                    {'2001:db8:20:1:5::5': 
+                        {'address_family': 
+                            {'vpnv6 unicast': 
+                                {'accepted_prefixes': 0,
+                                'additional_paths_operation': 'None',
+                                'additional_routes_local_label': 'Unicast '
+                                                                 'SAFI',
+                                'best_paths': 0,
+                                'cummulative_no_prefixes_denied': 0,
+                                'eor_status': 'was '
+                                              'not '
+                                              'received '
+                                              'during '
+                                              'read-only '
+                                              'mode',
+                                'exact_no_prefixes_denied': 0,
+                                'filter_group': '0.0',
+                                'last_ack_version': 1,
+                                'last_synced_ack_version': 0,
+                                'maximum_prefix_max_prefix_no': 524288,
+                                'maximum_prefix_restart': 0,
+                                'maximum_prefix_threshold': '75%',
+                                'maximum_prefix_warning_only': True,
+                                'neighbor_version': 0,
+                                'outstanding_version_objects_current': 0,
+                                'outstanding_version_objects_max': 0,
+                                'prefix_advertised': 0,
+                                'prefix_suppressed': 0,
+                                'prefix_withdrawn': 0,
+                                'refresh_request_status': 'No '
+                                                          'Refresh '
+                                                          'request '
+                                                          'being '
+                                                          'processed',
+                                'route_map_name_in': 'all-pass',
+                                'route_map_name_out': 'all-pass',
+                                'route_refresh_request_received': 0,
+                                'route_refresh_request_sent': 0,
+                                'update_group': '0.1'}},
+                        'attempted': 0,
+                        'bgp_negotiated_keepalive_timers': {'hold_time': 180,
+                                                           'keepalive_interval': 60},
+                        'bgp_neighbor_counters': {'messages': {'received': {'keepalives': 0,
+                                                                           'notifications': 0,
+                                                                           'opens': 0,
+                                                                           'updates': 0},
+                                                              'sent': {'keepalives': 0,
+                                                                       'notifications': 0,
+                                                                       'opens': 0,
+                                                                       'updates': 0}}},
+                        'bgp_session_transport': {'connection': {'connections_dropped': 0,
+                                                                'connections_established': 0,
+                                                                'last_reset': '00:00:00',
+                                                                'state': 'established'},
+                                                 'transport': {'foreign_host': '2001:db8:20:1:5::5',
+                                                               'foreign_port': '0',
+                                                               'if_handle': '0x00000000',
+                                                               'local_host': '::',
+                                                               'local_port': '0'}},
+                        'configured_hold_time': 180,
+                        'enforcing_first_as': 'enabled',
+                        'inbound_message': '3',
+                        'keepalive': 60,
+                        'last_full_not_set_pulse_count': 0,
+                        'last_ka_error_before_reset': '00:00:00',
+                        'last_ka_error_ka_not_sent': '00:00:00',
+                        'last_ka_expiry_before_reset': '00:00:00',
+                        'last_ka_expiry_before_second_last': '00:00:00',
+                        'last_ka_start_before_reset': '00:00:00',
+                        'last_ka_start_before_second_last': '00:00:00',
+                        'last_read': '00:00:00',
+                        'last_read_before_reset': '00:00:00',
+                        'last_write': '00:00:00',
+                        'last_write_attempted': 0,
+                        'last_write_before_reset': '00:00:00',
+                        'last_write_pulse_rcvd': 'not '
+                                                'set ',
+                        'last_write_pulse_rcvd_before_reset': '00:00:00',
+                        'last_write_thread_event_before_reset': '00:00:00',
+                        'last_write_thread_event_second_last': '00:00:00',
+                        'last_write_written': 0,
+                        'link_state': 'external '
+                                     'link',
+                        'local_as_as_no': 100,
+                        'message_stats_input_queue': 0,
+                        'message_stats_output_queue': 0,
+                        'min_acceptable_hold_time': 3,
+                        'minimum_time_between_adv_runs': 0,
+                        'multiprotocol_capability': 'not '
+                                                   'received',
+                        'non_stop_routing': 'enabled',
+                        'nsr_state': 'None',
+                        'outbound_message': '3',
+                        'precedence': 'internet',
+                        'remote_as': 200,
+                        'router_id': '0.0.0.0',
+                        'second_attempted': 0,
+                        'second_last_write': '00:00:00',
+                        'second_last_write_before_attempted': 0,
+                        'second_last_write_before_reset': '00:00:00',
+                        'second_last_write_before_written': 0,
+                        'second_written': 0,
+                        'session_state': 'idle',
+                        'session_state_reason': ' '
+                                               '(No '
+                                               'best '
+                                               'local '
+                                               'address '
+                                               'found)',
+                        'tcp_initial_sync': '---',
+                        'tcp_initial_sync_done': '---',
+                        'written': 0}}}}},
+            'test': {},
+            'test1': {},
+            'test2': {}}}
+
+    golden_output2 = {'execute.return_value': '''
+        RP/0/RSP1/CPU0:PE1#show bgp instance all vrf all ipv6 unicast neighbors detail 
+        Fri Aug 11 13:15:07.809 PDT
+
+        BGP instance 0: 'default'
+        =========================
+
+        VRF: VRF1
+        ---------
+
+        BGP neighbor is 2001:db8:1:5::5, vrf VRF1
+         Remote AS 200, local AS 100, external link
+         Remote router ID 0.0.0.0
+          BGP state = Idle (No best local address found)
+          NSR State: None
+          Last read 00:00:00, Last read before reset 00:00:00
+          Hold time is 180, keepalive interval is 60 seconds
+          Configured hold time: 180, keepalive: 60, min acceptable hold time: 3
+          Last write 00:00:00, attempted 0, written 0
+          Second last write 00:00:00, attempted 0, written 0
+          Last write before reset 00:00:00, attempted 0, written 0
+          Second last write before reset 00:00:00, attempted 0, written 0
+          Last write pulse rcvd  not set last full not set pulse count 0
+          Last write pulse rcvd before reset 00:00:00
+          Socket not armed for io, not armed for read, not armed for write
+          Last write thread event before reset 00:00:00, second last 00:00:00
+          Last KA expiry before reset 00:00:00, second last 00:00:00
+          Last KA error before reset 00:00:00, KA not sent 00:00:00
+          Last KA start before reset 00:00:00, second last 00:00:00
+          Precedence: internet
+          Non-stop routing is enabled
+          Entered Neighbor NSR TCP mode:
+            TCP Initial Sync :              ---                
+            TCP Initial Sync Phase Two :    ---                
+            TCP Initial Sync Done :         ---                
+          Enforcing first AS is enabled
+          Multi-protocol capability not received
+          Message stats:
+            InQ depth: 0, OutQ depth: 0
+                            Last_Sent               Sent  Last_Rcvd               Rcvd
+            Open:           ---                        0  ---                        0
+            Notification:   ---                        0  ---                        0
+            Update:         ---                        0  ---                        0
+            Keepalive:      ---                        0  ---                        0
+            Route_Refresh:  ---                        0  ---                        0
+            Total:                                     0                             0
+          Minimum time between advertisement runs is 0 secs
+          Inbound message logging enabled, 3 messages buffered
+          Outbound message logging enabled, 3 messages buffered
+
+         For Address Family: IPv6 Unicast
+          BGP neighbor version 0
+          Update group: 0.1 Filter-group: 0.0  No Refresh request being processed
+          Route refresh request: received 0, sent 0
+          Policy for incoming advertisements is all-pass
+          Policy for outgoing advertisements is all-pass
+          0 accepted prefixes, 0 are bestpaths
+          Exact no. of prefixes denied : 0.
+          Cumulative no. of prefixes denied: 0. 
+          Prefix advertised 0, suppressed 0, withdrawn 0
+          Maximum prefixes allowed 524288
+          Threshold for warning message 75%, restart interval 0 min
+          An EoR was not received during read-only mode
+          Last ack version 1, Last synced ack version 0
+          Outstanding version objects: current 0, max 0
+          Additional-paths operation: None
+          Advertise routes with local-label via Unicast SAFI
+                  
+          Connections established 0; dropped 0
+          Local host: ::, Local port: 0, IF Handle: 0x00000000
+          Foreign host: 2001:db8:1:5::5, Foreign port: 0
+          Last reset 00:00:00
+          External BGP neighbor not directly connected.
+                  
+        VRF: VRF2 
+        --------- 
+                  
+        BGP neighbor is 2001:db8:20:1:5::5, vrf VRF2
+         Remote AS 200, local AS 100, external link
+         Remote router ID 0.0.0.0
+          BGP state = Idle (No best local address found)
+          NSR State: None
+          Last read 00:00:00, Last read before reset 00:00:00
+          Hold time is 180, keepalive interval is 60 seconds
+          Configured hold time: 180, keepalive: 60, min acceptable hold time: 3
+          Last write 00:00:00, attempted 0, written 0
+          Second last write 00:00:00, attempted 0, written 0
+          Last write before reset 00:00:00, attempted 0, written 0
+          Second last write before reset 00:00:00, attempted 0, written 0
+          Last write pulse rcvd  not set last full not set pulse count 0
+          Last write pulse rcvd before reset 00:00:00
+          Socket not armed for io, not armed for read, not armed for write
+          Last write thread event before reset 00:00:00, second last 00:00:00
+          Last KA expiry before reset 00:00:00, second last 00:00:00
+          Last KA error before reset 00:00:00, KA not sent 00:00:00
+          Last KA start before reset 00:00:00, second last 00:00:00
+          Precedence: internet
+          Non-stop routing is enabled
+          Entered Neighbor NSR TCP mode:
+            TCP Initial Sync :              ---                
+            TCP Initial Sync Phase Two :    ---                
+            TCP Initial Sync Done :         ---                
+          Enforcing first AS is enabled
+          Multi-protocol capability not received
+          Message stats:
+            InQ depth: 0, OutQ depth: 0
+                            Last_Sent               Sent  Last_Rcvd               Rcvd
+            Open:           ---                        0  ---                        0
+            Notification:   ---                        0  ---                        0
+            Update:         ---                        0  ---                        0
+            Keepalive:      ---                        0  ---                        0
+            Route_Refresh:  ---                        0  ---                        0
+            Total:                                     0                             0
+          Minimum time between advertisement runs is 0 secs
+          Inbound message logging enabled, 3 messages buffered
+          Outbound message logging enabled, 3 messages buffered
+                  
+         For Address Family: IPv6 Unicast
+          BGP neighbor version 0
+          Update group: 0.1 Filter-group: 0.0  No Refresh request being processed
+          Route refresh request: received 0, sent 0
+          Policy for incoming advertisements is all-pass
+          Policy for outgoing advertisements is all-pass
+          0 accepted prefixes, 0 are bestpaths
+          Exact no. of prefixes denied : 0.
+          Cumulative no. of prefixes denied: 0. 
+          Prefix advertised 0, suppressed 0, withdrawn 0
+          Maximum prefixes allowed 524288
+          Threshold for warning message 75%, restart interval 0 min
+          An EoR was not received during read-only mode
+          Last ack version 1, Last synced ack version 0
+          Outstanding version objects: current 0, max 0
+          Additional-paths operation: None
+          Advertise routes with local-label via Unicast SAFI
+                  
+          Connections established 0; dropped 0
+          Local host: ::, Local port: 0, IF Handle: 0x00000000
+          Foreign host: 2001:db8:20:1:5::5, Foreign port: 0
+          Last reset 00:00:00
+          External BGP neighbor not directly connected.
+                  
+        BGP instance 1: 'test'
+        ======================
+                  
+        BGP instance 2: 'test1'
+        =======================
+                  
+        BGP instance 3: 'test2'
+        =======================
+        '''}
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
-        bgp_instance_neighbors_detail_obj = ShowBgpInstanceNeighborsDetail(device=self.device1)
+        obj = ShowBgpInstanceNeighborsDetail(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = bgp_instance_neighbors_detail_obj.parse(vrf_type='vrf')
+            parsed_output = obj.parse(vrf_type='vrf')
 
     def test_golden(self):
-        self.device = Mock(**self.golden_output)
-        bgp_instance_neighbors_detail_obj = ShowBgpInstanceNeighborsDetail(device=self.device)
-        parsed_output = bgp_instance_neighbors_detail_obj.parse(vrf_type='vrf')
         self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpInstanceNeighborsDetail(device=self.device)
+        parsed_output = obj.parse(vrf_type='vrf')
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowBgpInstanceNeighborsDetail(device=self.device)
+        parsed_output = obj.parse(vrf_type='vrf', af_type='ipv6 unicast')
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 
 # ================================================================================
@@ -6122,6 +7258,59 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
         bgp_instance_all_all_obj = ShowBgpInstanceAllAll(device=self.device)
         parsed_output = bgp_instance_all_all_obj.parse(vrf_type='vrf')
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+class test_Show_Bgp_Instance(unittest.TestCase):
+    device = Device(name='aDevice')
+    device1 = Device(name='bDevice')
+    device2 = Device(name='cDevice')
+    empty_output = {'execute.return_value': '', 'os':'iosxr'}
+    golden_parsed_output = {'address_family':
+                            {'IPv4 Unicast':
+                              {'ip_address': '10.3.4.0',
+                               'localpref_number': '100'}
+                            }
+                        }
+
+    golden_output = {'execute.return_value': '''
+
+Wed Jul 12 15:23:42.143 EDT
+
+BGP instance 0: 'default'
+=========================
+
+Address Family: IPv4 Unicast
+----------------------------
+
+BGP routing table entry for 10.3.4.0/34
+Versions:
+  Process           bRIB/RIB  SendTblVer
+  Speaker                  4           4
+Last Modified: Jul  9 08:46:14.166 for 3d06h
+Paths: (1 available, best #1)
+  Not advertised to any peer
+  Path #1: Received by speaker 0
+  Not advertised to any peer
+  Local
+    0.0.0.0 from 0.0.0.0 (4.4.4.4)
+      Origin incomplete, metric 0, localpref 100, weight 32768, valid, redistributed, best, group-best
+      Received Path ID 0, Local Path ID 0, version 4
+
+''', 'os':'iosxr'}
+
+    ats_mock.tcl.eval.return_value = 'iosxr'
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        version_obj = ShowBgpInstance(device=self.device)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_empty(self):
+        self.device2 = Mock(**self.empty_output)
+        version_obj = ShowBgpInstance(device=self.device2)
+        with self.assertRaises(IndexError):
+            parsed_output = version_obj.parse()
 
 if __name__ == '__main__':
     unittest.main()

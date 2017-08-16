@@ -28,32 +28,59 @@ class test_show_version(unittest.TestCase):
     empty_output = {'execute.return_value': '', 'os': 'nxos'}
     semi_empty_output = {'execute.return_value': 'Cisco Nexus Operating System (NX-OS) Software', 'os': 'nxos'}
     golden_parsed_output = {'platform':
-                              {'reason': 'Reset Requested by CLI command reload',
+                              {'name': 'Nexus',
+                               'reason': 'Reset Requested by CLI command reload',
                                'system_version': '6.2(6)',
                                'os': 'NX-OS',
-                               'hardware': 
-                                {'bootflash': '2007040',
-                                 'chassis': '("Supervisor Module-2")',
-                                 'cpu': 'Intel(R) Xeon(R)',
+                               'hardware':
+                                {'bootflash': '2007040 kB',
+                                 'cpu': None,
+                                 'chassis': 'Supervisor Module-2',
                                  'device_name': 'PE1',
-                                 'memory': '32938744',
+                                 'memory': '32938744 kB',
                                  'model': 'Nexus7000 C7009',
                                  'processor_board_id': 'JAF1708AAKL',
+                                 'slot0': '7989768 kB',
                                  'slots': '9'}, 
-                              'kernel_uptime': 
-                                {'days': '0',
-                                 'hours': '0',
-                                 'minutes': '53',
-                                 'seconds': '5'},
-                              'software': 
-                                {'bios': 'version 2.12.0',
+                              'kernel_uptime':
+                                {'days': 0,
+                                 'hours': 0,
+                                 'minutes': 53,
+                                 'seconds': 5},
+                              'software':
+                                {'bios_version': '2.12.0',
                                  'bios_compile_time': '05/29/2013',
-                                 'kickstart': 'version 8.1(1) [build 8.1(0.129)] [gdb]',
+                                 'kickstart_version': '8.1(1) [build 8.1(0.129)] [gdb]',
                                  'kickstart_compile_time': '4/30/2017 23:00:00 [04/15/2017 ''04:34:05]',
                                  'kickstart_image_file': 'slot0:///n7000-s2-kickstart.8.1.0.129.gbin',
-                                 'system': 'version 8.1(1) [build 8.1(0.129)] [gdb]',
+                                 'system_version': '8.1(1) [build 8.1(0.129)] [gdb]',
                                  'system_compile_time': '4/30/2017 23:00:00 [04/15/2017 ''06:43:41]',
                                  'system_image_file': 'slot0:///n7000-s2-dk9.8.1.0.129.gbin'}
+                              }
+                            }
+
+    golden_parsed_output2 = {'platform':
+                              {'reason': 'Unknown',
+                               'os': 'NX-OS',
+                               'name': 'Nexus',
+                               'hardware':
+                                {'bootflash': '3509454 kB',
+                                 'chassis': 'None',
+                                 'slots': 'None',
+                                 'cpu': 'E5-2699 v3 @ 2.30GHz',
+                                 'device_name': 'N95_2',
+                                 'memory': '10214428 kB',
+                                 'model': 'NX-OSv',
+                                 'processor_board_id': '9YH2MQQB30N'}, 
+                              'kernel_uptime':
+                                {'days': 0,
+                                 'hours': 18,
+                                 'minutes': 29,
+                                 'seconds': 37},
+                              'software':
+                                {'system_version': '7.0(3)I5(2) [build 7.0(3)I5(1.145)]',
+                                 'system_compile_time': '1/4/2017 20:00:00 [01/04/2017 21:47:15]',
+                                 'system_image_file': 'bootflash:///ISSUCleanGolden.system.gbin'}
                               }
                             }
 
@@ -98,12 +125,55 @@ Last reset at 885982 usecs after  Wed Apr 19 10:23:31 2017
 
   Reason: Reset Requested by CLI command reload
   System version: 6.2(6)
-  Service:
+  Service: 
 
 plugin
   Core Plugin, Ethernet Plugin
 
 Active Package(s)
+
+''', 'os': 'nxos'}
+
+    golden_output2 = {'execute.return_value': '''
+
+Cisco Nexus Operating System (NX-OS) Software
+TAC support: http://www.cisco.com/tac
+Documents: http://www.cisco.com/en/US/products/ps9372/tsd_products_support_series_home.html
+Copyright (c) 2002-2017, Cisco Systems, Inc. All rights reserved.
+The copyrights to certain works contained herein are owned by
+other third parties and are used and distributed under license.
+Some parts of this software are covered under the GNU Public
+License. A copy of the license is available at
+http://www.gnu.org/licenses/gpl.html.
+
+NX-OSv9K is a demo version of the Nexus Operating System
+
+Software
+  BIOS: version 
+  NXOS: version 7.0(3)I5(2) [build 7.0(3)I5(1.145)]
+  BIOS compile time:  
+  NXOS image file is: bootflash:///ISSUCleanGolden.system.gbin
+  NXOS compile time:  1/4/2017 20:00:00 [01/04/2017 21:47:15]
+
+
+Hardware
+  cisco NX-OSv Chassis 
+  Intel(R) Xeon(R) CPU E5-2699 v3 @ 2.30GHz with 10214428 kB of memory.
+  Processor Board ID 9YH2MQQB30N
+
+  Device name: N95_2
+  bootflash:    3509454 kB
+Kernel uptime is 0 day(s), 18 hour(s), 29 minute(s), 37 second(s)
+
+Last reset 
+  Reason: Unknown
+  System version: 
+  Service: 
+
+plugin
+  Core Plugin, Ethernet Plugin
+
+Active Package(s):
  
 ''', 'os': 'nxos'}
 
@@ -116,32 +186,18 @@ Active Package(s)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-    def test_semi_empty(self):
-        self.device1 = Mock(**self.semi_empty_output)
-        version_obj = ShowVersion(device=self.device1)
-        with self.assertRaises(KeyError):
-            parsed_output = version_obj.parse()
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        version_obj = ShowVersion(device=self.device)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
     def test_empty(self):
         self.device2 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.device2)
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(SchemaEmptyParserError):
             parsed_output = version_obj.parse()
-
-    # Can't test empty parser with non-tabular parsergen due to below limitation
-    # needs a fix.
-        # attributes = list(self._attributes)
-        # attribute_n = attributes[0]
-        # attribute_n_idx = 0
-        # none_wild_match = []
-        # [pyats] ssr-sucs-lnx7:/auto/nostgAuto/USERS/karmoham/pyats>:python parser/nxos/tests/test_show_version.py
-        # > /auto/nostgAuto/USERS/karmoham/pyats/lib/python3.4/site-packages/parsercore/__init__.py(1211)_parser()
-        # -> attribute_n = attributes[0]
-        # (Pdb) attributes
-        # []
-        # (Pdb) self._attributes
-        # []
-        # (Pdb) 
 
 
 class test_show_inventory(unittest.TestCase):

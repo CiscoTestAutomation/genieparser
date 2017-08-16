@@ -130,7 +130,7 @@ class ShowInterfaceSchema(MetaParser):
                     {Optional('ip'): str,
                      Optional('prefix_length'): str,
                      Optional('secondary'): bool,
-                     Optional('route_tag'): int
+                     Optional('route_tag'): str
                     },
                 },
             },
@@ -249,7 +249,7 @@ class ShowInterface(ShowInterfaceSchema):
                 ip = m.groupdict()['ip']
                 prefix_length = str(m.groupdict()['prefix_length'])
                 secondary = m.groupdict()['secondary']
-                route_tag = int(m.groupdict()['route_tag'])
+                route_tag = str(m.groupdict()['route_tag'])
                 #address = ipv4+prefix_length
                 address = ip + '/' + prefix_length
                 if 'ipv4' not in interface_dict[interface]:
@@ -761,10 +761,10 @@ class ShowIpInterfaceVrfAllSchema(MetaParser):
                 {Optional('ip'): str,
                  Optional('prefix_length'): str,
                  Optional('secondary'): bool,
-                 Optional('route_tag'): int,
+                 Optional('route_tag'): str,
                  Optional('ip_subnet'): str,
                  Optional('broadcast_address'): str,
-                 Optional('route_preference'): int,
+                 Optional('route_preference'): str,
                 },            
             'counters':
                 {'unicast_packets_sent': int,
@@ -851,7 +851,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 continue
 
             #Ethernet2/1, Interface status: protocol-up/link-up/admin-up, iod: 36,
-            p2 = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/]+), *Interface'
+            p2 = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\-\.]+), *Interface'
                              ' *status: *(?P<interface_status>[a-z\-\/\s]+),'
                              ' *iod: *(?P<iod>[0-9]+),$')
             m = p2.match(line)
@@ -901,15 +901,19 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 ['secondary'] = True
                 continue
 
-            #IP address: 10.4.4.4, IP subnet: 10.4.4.0/24
+            # IP address: 201.1.34.1, IP subnet: 201.1.34.0/24 route-preference: 0, tag: 0
             p3_1 = re.compile(r'^\s*IP *address: *(?P<ip>[0-9\.]+), *IP'
                                ' *subnet: *(?P<ip_subnet>[a-z0-9\.]+)\/'
-                               '(?P<prefix_length>[0-9]+)$')
+                               '(?P<prefix_length>[0-9\,]+)(?: *route-preference:'
+                               ' *(?P<route_preference>[0-9]+),)?(?: *tag:'
+                               ' *(?P<route_tag>[0-9]+))?$')
             m = p3_1.match(line)
             if m:
                 ip = m.groupdict()['ip']
                 ip_subnet = m.groupdict()['ip_subnet']
                 prefix_length = m.groupdict()['prefix_length']
+                route_tag = str(m.groupdict()['route_tag'])
+                route_preference = str(m.groupdict()['route_preference'])
 
                 address = ip + '/' + prefix_length
                 if 'ipv4' not in ip_interface_vrf_all_dict[interface]:
@@ -923,6 +927,10 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 ['ip_subnet'] = ip_subnet
                 ip_interface_vrf_all_dict[interface]['ipv4'][address]\
                 ['prefix_length'] = prefix_length
+                ip_interface_vrf_all_dict[interface]['ipv4'][address]\
+                ['route_tag'] = route_tag
+                ip_interface_vrf_all_dict[interface]['ipv4'][address]\
+                ['route_preference'] = route_preference
                 continue
 
             #IP broadcast address: 255.255.255.255
@@ -930,9 +938,9 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                              ' *(?P<broadcast_address>[0-9\.]+)$')
             m = p4.match(line)
             if m:
-                broadcast_address = m.groupdict()['broadcast_address']
+                broadcast_address = str(m.groupdict()['broadcast_address'])
 
-                ip_interface_vrf_all_dict[interface]['ipv4'][address]['broadcast_address']= broadcast_address
+                ip_interface_vrf_all_dict[interface]['ipv4'][address]['broadcast_address'] = broadcast_address
                 continue
             
             #IP multicast groups locally joined: none
@@ -980,8 +988,8 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                              ' *(?P<route_tag>[0-9]+)$')
             m = p7.match(line)
             if m:
-                route_preference = int(m.groupdict()['route_preference'])
-                route_tag = int(m.groupdict()['route_tag'])
+                route_preference = str(m.groupdict()['route_preference'])
+                route_tag = str(m.groupdict()['route_tag'])
 
                 ip_interface_vrf_all_dict[interface]['ipv4'][address]['route_preference']\
                  = route_preference
@@ -1682,11 +1690,14 @@ class ShowIpv6InterfaceVrfAllSchema(MetaParser):
                 'ipv6_link_local': str,
                 'ipv6_link_local_state': str,
                 'ipv6_ll_state': str,
-                'ipv6_virtual_add': str,
+                Optional('ipv6_virtual_add'): str,
+                Optional('ipv6_virtual_groups'): list,
+                Optional('virtual_add'): bool,
+                Optional('multicast_groups'): bool,
                 'ipv6_multicast_routing': str,
                 'ipv6_report_link_local': str,
                 'ipv6_forwarding_feature': str,
-                'ipv6_multicast_groups': list,
+                Optional('ipv6_multicast_groups'): list,
                 'ipv6_multicast_entries': str,
                 'ipv6_mtu': int,
                 'ipv6_unicast_rev_path_forwarding': str,
@@ -1707,6 +1718,8 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
         ipv6_interface_dict = {}
         ipv6_addresses = None
         anycast_addresses = None
+        virtual_add = False
+        multicast_groups = False
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -1740,6 +1753,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
                 # init multicast groups list to empty for this interface
                 ipv6_multicast_groups = []
+                ipv6_virtual_groups = []
                 continue
 
             # IPv6 address:
@@ -1824,6 +1838,33 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
                 ipv6_interface_dict[interface]['ipv6']['ipv6_virtual_add'] = ipv6_virtual_add
                 continue
 
+            #IPv6 virtual addresses configured:
+            #        fe80::5:73ff:fea0:2  192:168::1
+            p6_1 = re.compile(r'^\s*(IPv6 virtual *(?P<virtual_add>(addresses|address) configured:))$')
+            m = p6_1.match(line)
+            if m:
+                virtual_add = m.groupdict()['virtual_add']
+
+                ipv6_interface_dict[interface]['ipv6']['virtual_add'] = True
+                continue
+            
+            if virtual_add:
+                p6_2 = re.compile(r'^\s*(?P<ipv6_virtual_addresses>[a-z0-9\:\s]+)$')
+                m = p6_2.match(line)
+                if m:
+                    ipv6_virtual_addresses = str(m.groupdict()['ipv6_virtual_addresses'])
+
+                    #split string of addresses to list
+                    ipv6_virtual_addresses = [str(j) for j in ipv6_virtual_addresses.split()]
+
+                    #Add to previous created list
+                    for add in ipv6_virtual_addresses:
+                        ipv6_virtual_groups.append(add)
+
+                    ipv6_interface_dict[interface]['ipv6']['ipv6_virtual_groups']\
+                    = ipv6_virtual_groups
+                    continue
+
             #IPv6 multicast routing: disabled
             p7 = re.compile(r'^\s*IPv6 *multicast *routing:'
                              ' *(?P<ipv6_multicast_routing>[a-z]+)$')
@@ -1857,28 +1898,32 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
                 continue
 
             #IPv6 multicast groups locally joined:
-            p10 = re.compile(r'^\s*IPv6 *multicast *groups *locally *joined:$')
+            p10 = re.compile(r'^\s*(?P<multicast_groups>(IPv6 *multicast *(groups|group) *locally *joined:))$')
             m = p10.match(line)
             if m:
+                virtual_add = False
+                multicast_groups = m.groupdict()['multicast_groups']
+                ipv6_interface_dict[interface]['ipv6']['multicast_groups'] = True
                 continue
 
-            # ff02::1:ffbb:cccc  ff02::1:ff00:3  ff02::1:ff00:2  ff02::2   
-            # ff02::1  ff02::1:ff00:1  ff02::1:ffbb:cccc  ff02::1:ff00:0  
-            p11 = re.compile(r'^\s*(?P<ipv6_multicast_group_addresses>[a-z0-9\:\s]+)$')
-            m = p11.match(line)
-            if m:
-                ipv6_multicast_group_addresses = str(m.groupdict()['ipv6_multicast_group_addresses'])
+            if multicast_groups:
+                # ff02::1:ffbb:cccc  ff02::1:ff00:3  ff02::1:ff00:2  ff02::2   
+                # ff02::1  ff02::1:ff00:1  ff02::1:ffbb:cccc  ff02::1:ff00:0  
+                p11 = re.compile(r'^\s*(?P<ipv6_multicast_group_addresses>[a-z0-9\:\s]+)$')
+                m = p11.match(line)
+                if m:
+                    ipv6_multicast_group_addresses = str(m.groupdict()['ipv6_multicast_group_addresses'])
 
-                # Split string of addressed into a list
-                ipv6_multicast_group_addresses = [str(i) for i in ipv6_multicast_group_addresses.split()]
-                
-                # Add to previous created list
-                for address in ipv6_multicast_group_addresses:
-                    ipv6_multicast_groups.append(address)
+                    # Split string of addressed into a list
+                    ipv6_multicast_group_addresses = [str(i) for i in ipv6_multicast_group_addresses.split()]
+                    
+                    # Add to previous created list
+                    for address in ipv6_multicast_group_addresses:
+                        ipv6_multicast_groups.append(address)
 
-                ipv6_interface_dict[interface]['ipv6']['ipv6_multicast_groups']\
-                 = ipv6_multicast_groups
-                continue
+                    ipv6_interface_dict[interface]['ipv6']['ipv6_multicast_groups']\
+                     = ipv6_multicast_groups
+                    continue
 
             #IPv6 multicast (S,G) entries joined: none
             p12 = re.compile(r'^\s*IPv6 *multicast *\(S\,G\) *entries *joined:'
