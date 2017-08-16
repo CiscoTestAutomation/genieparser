@@ -21,9 +21,8 @@ from parser.iosxr.show_bgp import ShowPlacementProgramAll,\
                                   ShowBgpInstanceNeighborsReceivedRoutes,\
                                   ShowBgpInstanceNeighborsRoutes,\
                                   ShowBgpInstanceSummary,\
-                                  ShowBgpInstanceAllAll,\
-                                  ShowBgpInstance
-ats_mock = Mock()
+                                  ShowBgpInstanceAllAll
+
 
 # ==========================================
 # Unit test for 'show placement program all'
@@ -6214,7 +6213,8 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {'instance': {'default': {'vrf': {'VRF1': {'address_family': {'vpnv4 unicast': {'bgp_table_version': 63,
+    golden_parsed_output = {
+        'instance': {'default': {'vrf': {'VRF1': {'address_family': {'vpnv4 unicast': {'bgp_table_version': 63,
                                                                                 'bgp_vrf': 'vrf1',
                                                                                 'local_as': 100,
                                                                                 'non_stop_routing': 'enabled',
@@ -6277,7 +6277,6 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
                                                                                                           'up_down': '00:01:12'}},
                                                                      'remote_as': 200}}}}}}}
 
-
     golden_output = {'execute.return_value': '''
         BGP instance 0: 'default'
         =========================
@@ -6328,6 +6327,156 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
         20.1.5.5          0   200      58      62       63    0    0 00:01:12          5
         '''}
 
+    golden_parsed_output2 = {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'VRF1': 
+                        {'address_family': 
+                            {'vpnv6 unicast': 
+                                {'bgp_table_version': 3,
+                                'bgp_vrf': 'vrf1',
+                                'local_as': 100,
+                                'non_stop_routing': 'enabled',
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': 3,
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'operation_mode': 'standalone',
+                                'process': {'Speaker': {'brib_rib': 3,
+                                                        'importver': 3,
+                                                        'labelver': 3,
+                                                        'rcvtblver': 3,
+                                                        'sendtblver': 3,
+                                                        'standbyver': 0}},
+                                'rd_version': 2,
+                                'route_distinguisher': '200:1',
+                                'router_id': '11.11.11.11',
+                                'table_id': '0xe0800011',
+                                'table_state': 'active',
+                                'vrf_id': '0x60000002',
+                                'vrf_state': 'active'}},
+                        'neighbor': 
+                            {'2001:db8:1:5::5': 
+                                {'address_family': 
+                                    {'vpnv6 unicast': 
+                                        {'input_queue': 0,
+                                         'msg_rcvd': 0,
+                                         'msg_sent': 0,
+                                         'output_queue': 0,
+                                         'route_distinguisher': '200:1',
+                                         'spk': 3,
+                                         'state_pfxrcd': 'Idle',
+                                         'tbl_ver': 0,
+                                         'up_down': '00:00:00'}},
+                                'remote_as': 200}}},
+                    'VRF2': 
+                        {'address_family': 
+                            {'vpnv6 unicast': 
+                                {'bgp_table_version': 3,
+                                'bgp_vrf': 'vrf2',
+                                'local_as': 100,
+                                'non_stop_routing': 'enabled',
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': 3,
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'operation_mode': 'standalone',
+                                'process': {'Speaker': {'brib_rib': 3,
+                                                        'importver': 3,
+                                                        'labelver': 3,
+                                                        'rcvtblver': 3,
+                                                        'sendtblver': 3,
+                                                        'standbyver': 0}},
+                                'rd_version': 3,
+                                'route_distinguisher': '200:2',
+                                'router_id': '11.11.11.11',
+                                'table_id': '0xe0800012',
+                                'table_state': 'active',
+                                'vrf_id': '0x60000003',
+                                'vrf_state': 'active'}},
+                        'neighbor': 
+                            {'2001:db8:20:1:5::5': 
+                                {'address_family': 
+                                    {'vpnv6 unicast': 
+                                        {'input_queue': 0,
+                                        'msg_rcvd': 0,
+                                        'msg_sent': 0,
+                                        'output_queue': 0,
+                                        'route_distinguisher': '200:2',
+                                        'spk': 3,
+                                        'state_pfxrcd': 'Idle',
+                                        'tbl_ver': 0,
+                                        'up_down': '00:00:00'}},
+                                'remote_as': 200}}}}},
+            'test': {},
+            'test1': {},
+            'test2': {}}}
+
+    golden_output2 = {'execute.return_value': '''
+        RP/0/RSP1/CPU0:PE1#show bgp instance all vrf all ipv6 unicast summary
+        Tue Aug 15 14:07:59.536 PDT
+
+        BGP instance 0: 'test'
+        ======================
+        % None of the requested address families are configured for instance 'test'(29261)
+
+        BGP instance 1: 'test1'
+        =======================
+        % None of the requested address families are configured for instance 'test1'(29261)
+
+        BGP instance 2: 'test2'
+        =======================
+        % None of the requested address families are configured for instance 'test2'(29261)
+
+        BGP instance 3: 'default'
+        =========================
+
+        VRF: VRF1
+        ---------
+        BGP VRF VRF1, state: Active
+        BGP Route Distinguisher: 200:1
+        VRF ID: 0x60000002
+        BGP router identifier 11.11.11.11, local AS number 100
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0800011   RD version: 2
+        BGP main routing table version 3
+        BGP NSR Initial initsync version 3 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+
+        BGP is operating in STANDALONE mode.
+
+
+        Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+        Speaker               3          3          3          3           3           0
+
+        Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+        2001:db8:1:5::5   3   200       0       0        0    0    0 00:00:00 Idle
+
+
+        VRF: VRF2
+        ---------
+        BGP VRF VRF2, state: Active
+        BGP Route Distinguisher: 200:2
+        VRF ID: 0x60000003
+        BGP router identifier 11.11.11.11, local AS number 100
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0800012   RD version: 3
+        BGP main routing table version 3
+        BGP NSR Initial initsync version 3 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+
+        BGP is operating in STANDALONE mode.
+
+
+        Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+        Speaker               3          3          3          3           3           0
+
+        Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+        2001:db8:20:1:5::5
+                          3   200       0       0        0    0    0 00:00:00 Idle
+        '''}
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         bgp_instance_summary_obj = ShowBgpInstanceSummary(device=self.device1)
@@ -6341,6 +6490,12 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
         parsed_output = bgp_instance_summary_obj.parse(vrf_type='vrf')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        bgp_instance_summary_obj = ShowBgpInstanceSummary(device=self.device)
+        parsed_output = bgp_instance_summary_obj.parse(vrf_type='vrf', af_type='ipv6 unicast')
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 # =============================================
 # Unit test for 'show bgp instance all all all'
@@ -7259,58 +7414,6 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
         parsed_output = bgp_instance_all_all_obj.parse(vrf_type='vrf')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-class test_Show_Bgp_Instance(unittest.TestCase):
-    device = Device(name='aDevice')
-    device1 = Device(name='bDevice')
-    device2 = Device(name='cDevice')
-    empty_output = {'execute.return_value': '', 'os':'iosxr'}
-    golden_parsed_output = {'address_family':
-                            {'IPv4 Unicast':
-                              {'ip_address': '10.3.4.0',
-                               'localpref_number': '100'}
-                            }
-                        }
-
-    golden_output = {'execute.return_value': '''
-
-Wed Jul 12 15:23:42.143 EDT
-
-BGP instance 0: 'default'
-=========================
-
-Address Family: IPv4 Unicast
-----------------------------
-
-BGP routing table entry for 10.3.4.0/34
-Versions:
-  Process           bRIB/RIB  SendTblVer
-  Speaker                  4           4
-Last Modified: Jul  9 08:46:14.166 for 3d06h
-Paths: (1 available, best #1)
-  Not advertised to any peer
-  Path #1: Received by speaker 0
-  Not advertised to any peer
-  Local
-    0.0.0.0 from 0.0.0.0 (4.4.4.4)
-      Origin incomplete, metric 0, localpref 100, weight 32768, valid, redistributed, best, group-best
-      Received Path ID 0, Local Path ID 0, version 4
-
-''', 'os':'iosxr'}
-
-    ats_mock.tcl.eval.return_value = 'iosxr'
-
-    def test_golden(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output)
-        version_obj = ShowBgpInstance(device=self.device)
-        parsed_output = version_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
-
-    def test_empty(self):
-        self.device2 = Mock(**self.empty_output)
-        version_obj = ShowBgpInstance(device=self.device2)
-        with self.assertRaises(IndexError):
-            parsed_output = version_obj.parse()
 
 if __name__ == '__main__':
     unittest.main()
