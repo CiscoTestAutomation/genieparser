@@ -892,7 +892,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
         assert vrf_type in ['all', 'vrf']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
 
-        out = self.device.execute('show bgp instance all {vrf_type} all process detail'.format(vrf_type=vrf_type))
+        out = self.device.execute('show bgp instance all {vrf_type} all {af_type} process detail'.format(vrf_type=vrf_type, af_type=af_type))
 
         # Init dict
         ret_dict = {}
@@ -2063,7 +2063,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         assert vrf_type in ['all', 'vrf']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
 
-        out = self.device.execute('show bgp instance all {vrf_type} all neighbors detail'.format(vrf_type=vrf_type))
+        out = self.device.execute('show bgp instance all {vrf_type} all {af_type} neighbors detail'.format(vrf_type=vrf_type, af_type=af_type))
 
         # Init variables
         ret_dict = {}
@@ -3032,8 +3032,8 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
         assert route_type in ['received routes', 'routes']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
 
-        cmd = 'show bgp instance all {vrf_type} all neighbors {neighbor} {route}'\
-              .format(neighbor=neighbor, vrf_type=vrf_type, route=route_type)
+        cmd = 'show bgp instance all {vrf_type} all {af_type} neighbors {neighbor} {route}'\
+              .format(neighbor=neighbor, vrf_type=vrf_type, af_type=af_type, route=route_type)
         out = self.device.execute(cmd)
 
         # Init vars
@@ -3482,8 +3482,8 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
         assert vrf_type in ['all', 'vrf']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
         
-        cmd = 'show bgp instance all {vrf_type} all neighbors {neighbor} advertised-routes'\
-              .format(neighbor=neighbor, vrf_type=vrf_type)
+        cmd = 'show bgp instance all {vrf_type} all {af_type} neighbors {neighbor} advertised-routes'\
+              .format(neighbor=neighbor, af_type=af_type, vrf_type=vrf_type)
         out = self.device.execute(cmd)
 
         ret_dict = {}
@@ -3787,7 +3787,9 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
         cmd = 'show bgp instance all {vrf_type} all {af_type} summary'.format(vrf_type=vrf_type, af_type=af_type)
         out = self.device.execute(cmd)
 
+        # Init vars
         bgp_instance_summary_dict = {}
+        data_on_nextline = False
 
         if vrf_type == 'all':
             vrf = 'default'
@@ -4001,16 +4003,57 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['process'][process]['standbyver'] =  int(m.groupdict()['standbyver'])
                 continue 
 
+            # Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+            # 2001:db8:20:1:5::5
+            p17_1 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
+            m = p17_1.match(line)
+            if m:
+                neighbor = str(m.groupdict()['neighbor'])
+                data_on_nextline = True
+                if 'neighbor' not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'] = {}
+                if neighbor not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor']:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor] = {}
+                    continue
+            
+            # Neighbor        Spk    AS msg_rcvd msg_sent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+            #                   3   200       0       0        0    0    0 00:00:00 Idle
+            p17_2 = re.compile(r'^\s*(?P<spk>[0-9]+) +(?P<remote_as>[0-9]+)'
+                                ' +(?P<msg_rcvd>[0-9]+) +(?P<msg_sent>[0-9]+)'
+                                ' +(?P<tbl_ver>[0-9]+) +(?P<input_queue>[0-9]+)'
+                                ' +(?P<output_queue>[0-9]+) +(?P<up_down>[a-z0-9\:]+)'
+                                ' +(?P<state_pfxrcd>\S+)$')
+            m = p17_2.match(line)
+            if m and data_on_nextline:
+                data_on_nextline = False
+                if 'address_family' not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'] = {}
+                if address_family not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family']:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family] = {}
+
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['remote_as'] = int(m.groupdict()['remote_as'])
+                if route_distinguisher is not None:
+                        bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['route_distinguisher'] =  route_distinguisher
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['spk'] = int(m.groupdict()['spk'])                
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['msg_rcvd'] = int(m.groupdict()['msg_rcvd'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['msg_sent'] = int(m.groupdict()['msg_sent'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['tbl_ver'] = int(m.groupdict()['tbl_ver'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['input_queue'] = int(m.groupdict()['input_queue'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['output_queue'] = int(m.groupdict()['output_queue'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['up_down'] =  str(m.groupdict()['up_down'])
+                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['state_pfxrcd'] = str(m.groupdict()['state_pfxrcd'])
+                continue
+
             # Neighbor        Spk    AS msg_rcvd msg_sent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
             # 10.1.5.5          0   200      60      62       63    0    0 00:57:32          0
             # 2.2.2.2           0   100       0       0        0    0    0 00:00:00 Idle
-            p17 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+) *(?P<spk>[0-9]+)'
-                              ' *(?P<remote_as>[0-9]+) *(?P<msg_rcvd>[0-9]+)'
-                              ' *(?P<msg_sent>[0-9]+)'
-                              ' *(?P<tbl_ver>[0-9]+) *(?P<input_queue>[0-9]+)'
-                              ' *(?P<output_queue>[0-9]+) *(?P<up_down>[a-z0-9\:]+)'
-                              ' *(?P<state_pfxrcd>\S+)$')
-            m = p17.match(line)
+            p17_3 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<spk>[0-9]+)'
+                              ' +(?P<remote_as>[0-9]+) +(?P<msg_rcvd>[0-9]+)'
+                              ' +(?P<msg_sent>[0-9]+)'
+                              ' +(?P<tbl_ver>[0-9]+) +(?P<input_queue>[0-9]+)'
+                              ' +(?P<output_queue>[0-9]+) +(?P<up_down>[a-z0-9\:]+)'
+                              ' +(?P<state_pfxrcd>\S+)$')
+            m = p17_3.match(line)
             if m:
                 neighbor = str(m.groupdict()['neighbor'])
                 if 'neighbor' not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]:
@@ -4120,7 +4163,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
         assert vrf_type in ['all', 'vrf']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
 
-        cmd = 'show bgp instance all {vrf_type} all'.format(vrf_type=vrf_type)
+        cmd = 'show bgp instance all {vrf_type} all {af_type}'.format(vrf_type=vrf_type, af_type=af_type)
         out = self.device.execute(cmd)
 
         bgp_instance_all_all_dict = {}
@@ -4967,62 +5010,6 @@ class ShowBgpL2vpnEvpnAdvertised(MetaParser):
                 continue
 
         return result
-
-
-# ============================================================
-# Incomplete parsergen example for 'show bgp instance all all'
-# ============================================================
-
-class ShowBgpInstanceSchema(MetaParser):
-    
-    ''' Incomplete parsergen schema for 'show bgp instance all all' '''
-
-    schema = {'address_family':
-                {Any():
-                    {'ip_address': str,
-                     'localpref_number': str
-                    }
-                },
-            }
-
-class ShowBgpInstance(ShowBgpInstanceSchema):
-
-    ''' Incomplete parsergen parser for 'show bgp instance all all' '''
-
-    def cli(self):
-        
-        cmd = 'show_bgp_instance_all_all_all_<WORD>'.format()
-        self.device.execute(cmd)
-
-        attrValPairsToParse = [
-          ('show.bgp.instance.all.all.all.date',   'Wed'),
-        ]
-
-        pgfill = oper_fill (
-                  self.device,
-                  ('show_bgp_instance_all_all_all_<WORD>', [], {'address_family':'IPv4 Unicast'}),
-                  attrValPairsToParse,
-                  refresh_cache=True,
-                  regex_tag_fill_pattern='show\.bgp\.instance\.all\.all\.all',
-                  skip=True)
-
-        result = pgfill.parse()
-        out = parsergen.ext_dictio[self.device.name]
-        add_family_dict = {}
-
-        if 'address_family' not in add_family_dict:
-            add_family_dict['address_family'] = {}
-
-        address_family = out['show.bgp.instance.all.all.all.address_family']
-        if address_family not in add_family_dict['address_family']:
-            add_family_dict['address_family'][address_family] = {}
-
-        add_family_dict['address_family'][address_family]['ip_address'] = \
-            out['show.bgp.instance.all.all.all.ip_address']
-        add_family_dict['address_family'][address_family]['localpref_number'] = \
-            out['show.bgp.instance.all.all.all.localpref_number']
-
-        return add_family_dict
 
 
 # vim: ft=python ts=8 sw=4 et

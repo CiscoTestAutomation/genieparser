@@ -189,8 +189,8 @@ class ShowInterface(ShowInterfaceSchema):
                 continue
 
             #admin state is up
-            p2 = re.compile(r'^\s*admin *state *is (?P<oper_status>[a-z\,]+)'
-                             '( *Dedicated *Interface)?$')
+            p2 = re.compile(r'^\s*admin *state *is (?P<oper_status>[\w]+)'
+                             '(, *Dedicated *Interface)?$')
             m = p2.match(line)
             if m:
                 oper_status = m.groupdict()['oper_status']
@@ -199,7 +199,7 @@ class ShowInterface(ShowInterfaceSchema):
                 continue
 
             #admin state is down, Dedicated Interface, [parent interface is Ethernet2/1]
-            p2_1 = re.compile(r'^\s*admin *state *is (?P<oper_status>[a-z\,]+)'
+            p2_1 = re.compile(r'^\s*admin *state *is (?P<oper_status>[\w]+),'
                                ' *Dedicated *Interface, \[parent *interface *is'
                                ' *(?P<parent_interface>[a-zA-Z0-9\/\.]+)\]$')
             m = p2_1.match(line)
@@ -766,6 +766,9 @@ class ShowIpInterfaceVrfAllSchema(MetaParser):
                  Optional('broadcast_address'): str,
                  Optional('route_preference'): str,
                 },            
+            Optional('unnumbered'):
+                {'interface_ref': str,
+            },       
             'counters':
                 {'unicast_packets_sent': int,
                  'unicast_packets_received': int,
@@ -1326,6 +1329,16 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
                 ip_interface_vrf_all_dict[interface]['wccp_redirect_exclude']\
                  = wccp_redirect_exclude
+                continue
+
+            # IP unnumbered interface (loopback0)
+            p31 = re.compile(r'^\s*IP +unnumbered +interface +\((?P<unnum_intf>[\w\/\.]+)\)$')
+            m = p31.match(line)
+            if m:
+                unnum_intf = m.groupdict()['unnum_intf']
+                ip_interface_vrf_all_dict[interface]['ipv4']['unnumbered'] = {}
+                ip_interface_vrf_all_dict[interface]['ipv4']['unnumbered']['interface_ref']\
+                 = unnum_intf
                 continue
 
         return ip_interface_vrf_all_dict

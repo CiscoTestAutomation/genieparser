@@ -3060,6 +3060,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
         
         # Init vars
         sum_dict = {}
+        data_on_nextline = False
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -3067,7 +3068,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
             # BGP summary information for VRF VRF1, address family IPv4 Unicast
             p1 = re.compile(r'^\s*BGP +summary +information +for +VRF'
                              ' +(?P<vrf_name>[a-zA-Z0-9]+), +address +family'
-                             ' +(?P<address_family>[a-zA-Z0-9\s]+)$')
+                             ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+)$')
             m = p1.match(line)
             if m:
                 # Save variables for use later
@@ -3146,7 +3147,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
 
             # Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
             # 2.2.2.10        4     0       0       0        0    0    0     5w6d Idle 
-            p8 = re.compile(r'^\s*(?P<neighbor>[0-9\.]+) +(?P<v>[0-9]+)'
+            p8 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<v>[0-9]+)'
                              ' +(?P<as>[0-9]+) +(?P<msg_rcvd>[0-9]+)'
                              ' +(?P<msg_sent>[0-9]+) +(?P<tbl_ver>[0-9]+)'
                              ' +(?P<inq>[0-9]+) +(?P<outq>[0-9]+)'
@@ -3160,14 +3161,88 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                     sum_dict['vrf'][vrf]['neighbor'] = {}
                 if neighbor not in sum_dict['vrf'][vrf]['neighbor']:
                     sum_dict['vrf'][vrf]['neighbor'][neighbor] = {}
-                    nbr_dict = sum_dict['vrf'][vrf]['neighbor'][neighbor]
+                nbr_dict = sum_dict['vrf'][vrf]['neighbor'][neighbor]
 
                 # Add address family to this neighbor
                 if 'address_family' not in nbr_dict:
                     nbr_dict['address_family'] = {}
                 if address_family not in nbr_dict['address_family']:
                     nbr_dict['address_family'][address_family] = {}
-                    nbr_af_dict = nbr_dict['address_family'][address_family]
+                nbr_af_dict = nbr_dict['address_family'][address_family]
+
+                # Add keys for this address_family
+                nbr_af_dict['v'] = int(m.groupdict()['v'])
+                nbr_af_dict['as'] = int(m.groupdict()['as'])
+                nbr_af_dict['msg_rcvd'] = int(m.groupdict()['msg_rcvd'])
+                nbr_af_dict['msg_sent'] = int(m.groupdict()['msg_sent'])
+                nbr_af_dict['tbl_ver'] = int(m.groupdict()['tbl_ver'])
+                nbr_af_dict['inq'] = int(m.groupdict()['inq'])
+                nbr_af_dict['outq'] = int(m.groupdict()['outq'])
+                nbr_af_dict['up_down'] = str(m.groupdict()['up_down'])
+                nbr_af_dict['state_pfxrcd'] = str(m.groupdict()['state'])
+                try:
+                    # Assign variables
+                    nbr_af_dict['route_identifier'] = route_identifier
+                    nbr_af_dict['local_as'] = local_as
+                    nbr_af_dict['bgp_table_version'] = bgp_table_version
+                    nbr_af_dict['config_peers'] = config_peers
+                    nbr_af_dict['capable_peers'] = capable_peers
+                    nbr_af_dict['attribute_entries'] = attribute_entries
+                    nbr_af_dict['as_path_entries'] = as_path_entries
+                    nbr_af_dict['community_entries'] = community_entries
+                    nbr_af_dict['clusterlist_entries'] = clusterlist_entries
+                    nbr_af_dict['dampening'] = dampening
+                    nbr_af_dict['history_paths'] = history_paths
+                    nbr_af_dict['dampened_paths'] = dampened_paths
+                    # Delete variables in preparation for next neighbor
+                    del route_identifier; del local_as; del bgp_table_version;
+                    del config_peers; del capable_peers; del attribute_entries;
+                    del as_path_entries; del community_entries;
+                    del clusterlist_entries; del dampening; del history_paths;
+                    del dampened_paths
+                except:
+                    pass
+                if num_prefix_entries:
+                    nbr_af_dict['prefixes'] = {}
+                    nbr_af_dict['prefixes']['total_entries'] = num_prefix_entries
+                    nbr_af_dict['prefixes']['memory_usage'] = memory_usage
+                if num_path_entries:
+                    nbr_af_dict['path'] = {}
+                    nbr_af_dict['path']['total_entries'] = num_prefix_entries
+                    nbr_af_dict['path']['memory_usage'] = memory_usage
+                    continue
+
+            # Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+            # 2.2.2.10
+            p8_1 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
+            m = p8_1.match(line)
+            if m:
+                data_on_nextline = True
+                # Add neighbor to dictionary
+                neighbor = str(m.groupdict()['neighbor'])
+                if 'neighbor' not in sum_dict['vrf'][vrf]:
+                    sum_dict['vrf'][vrf]['neighbor'] = {}
+                if neighbor not in sum_dict['vrf'][vrf]['neighbor']:
+                    sum_dict['vrf'][vrf]['neighbor'][neighbor] = {}
+                nbr_dict = sum_dict['vrf'][vrf]['neighbor'][neighbor]
+                continue
+
+            # Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+            #                 4     0       0       0        0    0    0     5w6d Idle 
+            p8_2 = re.compile(r'^\s*(?P<v>[0-9]+) +(?P<as>[0-9]+)'
+                             ' +(?P<msg_rcvd>[0-9]+) +(?P<msg_sent>[0-9]+)'
+                             ' +(?P<tbl_ver>[0-9]+) +(?P<inq>[0-9]+)'
+                             ' +(?P<outq>[0-9]+) +(?P<up_down>[a-zA-Z0-9\:]+)'
+                             ' +(?P<state>[a-zA-Z0-9\(\)\s]+)$')
+            m = p8_2.match(line)
+            if m and data_on_nextline:
+                data_on_nextline = False
+                # Add address family to this neighbor
+                if 'address_family' not in nbr_dict:
+                    nbr_dict['address_family'] = {}
+                if address_family not in nbr_dict['address_family']:
+                    nbr_dict['address_family'][address_family] = {}
+                nbr_af_dict = nbr_dict['address_family'][address_family]
 
                 # Add keys for this address_family
                 nbr_af_dict['v'] = int(m.groupdict()['v'])
