@@ -346,13 +346,20 @@ class ShowInterface(ShowInterfaceSchema):
                 interface_dict[interface]['port_mode'] = port_mode
                 continue
 
+            # auto-duplex, auto-speed
+            p10_1 = re.compile(r'^\s*auto-duplex, +auto-speed$')
+            m = p10_1.match(line)
+            if m:
+                # not caring for this line
+                continue
+
             #full-duplex, 1000 Mb/s
             # auto-duplex, auto-speed
-            p10 = re.compile(r'^\s*(?P<duplex_mode>[a-z\-]+),'
+            p10 = re.compile(r'^\s*(?P<duplex_mode>[a-z]+)-duplex,'
                               ' *(?P<port_speed>[a-z0-9\-]+)(?: *Mb/s)?$')
             m = p10.match(line)
             if m:
-                duplex_mode = m.groupdict()['duplex_mode']
+                duplex_mode = m.groupdict()['duplex_mode'].lower()
                 port_speed = m.groupdict()['port_speed']
 
                 interface_dict[interface]['duplex_mode'] = duplex_mode
