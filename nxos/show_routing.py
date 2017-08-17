@@ -48,6 +48,8 @@ class ShowRoutingVrfAllSchema(MetaParser):
                                                         Optional('protocol_id'): str,
                                                         Optional('attribute'): str,
                                                         Optional('tag'): str, 
+                                                        Optional('mpls'): bool,
+                                                        Optional('mpls_vpn'): bool,
                                                     },
                                                 },
                                             },
@@ -142,13 +144,13 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
             # *via 3.3.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
             # *via 2001:db8::5054:ff:fed5:63f9, Eth1/1, [0/0], 00:15:46, direct,
             # *via 2001:db8:2:2::2, Eth1/1, [0/0], 00:15:46, direct, , tag 222
-            p3 = re.compile(r'^(?P<cast>.*)via +(?P<nexthop>[\w\.\:\s]+)(%(?P<table>\w+))?, *'
+            p3 = re.compile(r'^(?P<cast>.*)via +(?P<nexthop>[\w\.\:\s]+)(%(?P<table>[\w\:]+))?, *'
                              '((?P<int>[a-zA-Z0-9\./_]+),)? *'
                              '\[(?P<preference>\d+)/(?P<metric>\d+)\], *'
                              '(?P<up_time>[\w\:\.]+), *'
                              '(?P<protocol>\w+)(\-(?P<process>\d+))?,? *'
                              '(?P<attribute>\w+)?,? *'
-                             '(tag *((?P<tag>\w+) *(?P<vpn>[\w\(\)\-]+)?|(?P<prot>\w+))?)?$')
+                             '(tag *(?P<tag>\w+))?,? *(?P<vpn>[a-zA-Z\(\)\-]+)?$')
             m = p3.match(line)
             if m:
                 cast = m.groupdict()['cast']
@@ -207,6 +209,12 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                 tag = m.groupdict()['tag']
                 if tag:
                     prot_dict[protocol]['tag'] = tag.strip()
+                
+                vpn = m.groupdict()['vpn']
+                if vpn and 'mpls-vpn' in vpn:
+                    prot_dict[protocol]['mpls_vpn'] = True
+                elif vpn and 'mpls' in vpn:
+                    prot_dict[protocol]['mpls'] = True
 
                 # Set extra values for BGP Ops
                 if attribute == 'external' and protocol == 'bgp':
