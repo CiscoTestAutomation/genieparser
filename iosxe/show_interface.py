@@ -11,17 +11,15 @@ import re
 import unittest
 from collections import defaultdict
 
-from ats import tcl
-from ats.tcl.keyedlist import KeyedList
 from ats.log.utils import banner
 import xmltodict
 try:
     import iptools
+    from ats import tcl
+    import parsergen
     from cnetconf import testmodel
 except ImportError:
     pass
-
-import parsergen
 
 from metaparser import MetaParser
 from metaparser.util import merge_dict, keynames_convert

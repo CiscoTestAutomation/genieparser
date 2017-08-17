@@ -5,7 +5,12 @@ Example parser class
 '''
 import xmltodict
 import re
-from ats import tcl
+
+try:
+    from ats import tcl
+except ImportError:
+    pass
+
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Schema, Any, Optional, Or, And, Default, Use
 

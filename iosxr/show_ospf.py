@@ -5,10 +5,18 @@ Example parser class
 '''
 import xmltodict
 import re
-from ats import tcl
-from ats.tcl.keyedlist import KeyedList
+
 from metaparser import MetaParser
-from metaparser.util.schemaengine import Schema, Any, Optional, Or, And, Default, Use
+from metaparser.util.schemaengine import Schema, Any, Optional, Or, And, \
+                                         Default, Use
+
+STR_OR_KEYED_LIST = str
+try:
+    from ats import tcl
+    from ats.tcl.keyedlist import KeyedList
+    STR_OR_KEYED_LIST = Or(str, KeyedList({}))
+except ImportError:
+    pass
 
 def regexp(expression):
     def match(value):
@@ -35,8 +43,8 @@ class ShowOspfSchema(MetaParser):
                              Optional('num_of_nssa_areas'): str,
                              Optional('area'):
                                  {regexp('(.*)'):
-                                     {'interfaces_in_this_area': Or(str, KeyedList({})),
-                                      'active_interfaces': Or(str, KeyedList({}))},
+                                     {'interfaces_in_this_area': STR_OR_KEYED_LIST,
+                                      'active_interfaces': STR_OR_KEYED_LIST},
                                  },
                              }
                          },

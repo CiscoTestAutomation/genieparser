@@ -5,10 +5,20 @@ Example parser class
 '''
 import xmltodict
 import re
-from ats import tcl
-from ats.tcl.keyedlist import KeyedList
+
 from metaparser import MetaParser
-from metaparser.util.schemaengine import Schema, Any, Optional, Or, And, Default, Use
+from metaparser.util.schemaengine import Schema, Any, Optional, Or, And, \
+                                         Default, Use
+
+STR_OR_KEYED_LIST = str
+LIST_OR_KEYED_LIST = list
+try:
+    from ats import tcl
+    from ats.tcl.keyedlist import KeyedList
+    STR_OR_KEYED_LIST = Or(str, KeyedList({}))
+    LIST_OR_KEYED_LIST = Or(list, KeyedList({}))
+except ImportError:
+    pass
 
 def regexp(expression):
     def match(value):
@@ -56,10 +66,10 @@ class ShowIpOspfSchema(MetaParser):
                              Optional('reference_bandwidth'): str,
                              Optional('area'):
                                  {Optional(regexp('(.*)')):
-                                     {Optional('loopback_interfaces'): Or(str, KeyedList({})),
-                                      Optional('interfaces_in_this_area'): Or(str, KeyedList({})),
+                                     {Optional('loopback_interfaces'): STR_OR_KEYED_LIST,
+                                      Optional('interfaces_in_this_area'): STR_OR_KEYED_LIST,
                                       Optional('default_cost'): str,
-                                      Optional('active_interfaces'): Or(str, KeyedList({}))},
+                                      Optional('active_interfaces'): STR_OR_KEYED_LIST},
                                  },
                             }
                         },
@@ -380,13 +390,13 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema, MetaParser):
         return result
 
 class ShowIpOspfInterfaceSchema(MetaParser):
-    schema = {Optional('intfs_all'): Or(list, KeyedList({})),
-              Optional('intfs_up'): Or(list, KeyedList({})),
-              Optional('intfs_down'): Or(list, KeyedList({})),
+    schema = {Optional('intfs_all'): LIST_OR_KEYED_LIST,
+              Optional('intfs_up'): LIST_OR_KEYED_LIST,
+              Optional('intfs_down'): LIST_OR_KEYED_LIST,
               'intf':
                 {Any():
                      {'intf_state': str,
-                      Optional('prot_state'): Or(str, KeyedList({})),
+                      Optional('prot_state'): STR_OR_KEYED_LIST,
                       'addr': str,
                       'mask': str,
                       'area': str,
@@ -398,9 +408,9 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                       Optional('dead_timer'): str,
                       Optional('retransmit_timer'): str,
                       Optional('wait_timer'): str,
-                      Optional('tdelay'): Or(str, KeyedList({})),
-                      Optional('ospf_state'): Or(str, KeyedList({})),
-                      Optional('pri'): Or(str, KeyedList({}))}
+                      Optional('tdelay'): STR_OR_KEYED_LIST,
+                      Optional('ospf_state'): STR_OR_KEYED_LIST,
+                      Optional('pri'): STR_OR_KEYED_LIST}
                 },
             }
 

@@ -56,13 +56,6 @@ from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
 # Parser
 from parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
 
-# Parsergen
-import parsergen
-from parsergen import oper_fill
-
-# Markup
-from .tests import markup
-
 # Logger
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

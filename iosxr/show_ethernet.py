@@ -6,9 +6,6 @@ Example parser class
 
 import logging
 
-from ats import tcl
-from ats.tcl.keyedlist import KeyedList
-
 from metaparser import MetaParser
 from metaparser.util import merge_dict, keynames_convert
 from metaparser.util.schemaengine import Schema, \
