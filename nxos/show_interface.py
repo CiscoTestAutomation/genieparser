@@ -164,8 +164,9 @@ class ShowInterface(ShowInterfaceSchema):
 
                 if interface not in interface_dict:
                     interface_dict[interface] = {}
-                interface_dict[interface]\
-                            ['link_state'] = link_state
+                if link_state:
+                    interface_dict[interface]\
+                                ['link_state'] = link_state
 
                 interface_dict[interface]['enabled'] = False
                 continue
@@ -178,12 +179,13 @@ class ShowInterface(ShowInterfaceSchema):
             if m:
                 interface = m.groupdict()['interface']
                 enabled = m.groupdict()['enabled']
-                link_state = str(m.groupdict()['link_state'])
+                link_state = m.groupdict()['link_state']
 
                 if interface not in interface_dict:
                     interface_dict[interface] = {}
-                interface_dict[interface]\
-                            ['link_state'] = link_state
+                if link_state:
+                    interface_dict[interface]\
+                                ['link_state'] = link_state
 
                 interface_dict[interface]['enabled'] = True
                 continue
@@ -249,7 +251,7 @@ class ShowInterface(ShowInterfaceSchema):
                 ip = m.groupdict()['ip']
                 prefix_length = str(m.groupdict()['prefix_length'])
                 secondary = m.groupdict()['secondary']
-                route_tag = str(m.groupdict()['route_tag'])
+                route_tag = m.groupdict()['route_tag']
                 #address = ipv4+prefix_length
                 address = ip + '/' + prefix_length
                 if 'ipv4' not in interface_dict[interface]:
@@ -262,10 +264,12 @@ class ShowInterface(ShowInterfaceSchema):
                 interface_dict[interface]['ipv4'][address]\
                 ['prefix_length'] = prefix_length
 
-                interface_dict[interface]['ipv4'][address]\
-                ['secondary'] = True
-                interface_dict[interface]['ipv4'][address]\
-                ['route_tag'] = route_tag
+                if secondary:
+                    interface_dict[interface]['ipv4'][address]\
+                    ['secondary'] = True
+                if route_tag:
+                    interface_dict[interface]['ipv4'][address]\
+                    ['route_tag'] = route_tag
                 continue
             
             #MTU 1600 bytes, BW 768 Kbit, DLY 3330 usec
@@ -922,8 +926,8 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 ip = m.groupdict()['ip']
                 ip_subnet = m.groupdict()['ip_subnet']
                 prefix_length = m.groupdict()['prefix_length']
-                route_tag = str(m.groupdict()['route_tag'])
-                route_preference = str(m.groupdict()['route_preference'])
+                route_tag = m.groupdict()['route_tag']
+                route_preference = m.groupdict()['route_preference']
 
                 address = ip + '/' + prefix_length
                 if 'ipv4' not in ip_interface_vrf_all_dict[interface]:
@@ -937,10 +941,12 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 ['ip_subnet'] = ip_subnet
                 ip_interface_vrf_all_dict[interface]['ipv4'][address]\
                 ['prefix_length'] = prefix_length
-                ip_interface_vrf_all_dict[interface]['ipv4'][address]\
-                ['route_tag'] = route_tag
-                ip_interface_vrf_all_dict[interface]['ipv4'][address]\
-                ['route_preference'] = route_preference
+                if route_tag:
+                    ip_interface_vrf_all_dict[interface]['ipv4'][address]\
+                    ['route_tag'] = route_tag
+                if route_preference:
+                    ip_interface_vrf_all_dict[interface]['ipv4'][address]\
+                    ['route_preference'] = route_preference
                 continue
 
             #IP broadcast address: 255.255.255.255
@@ -998,13 +1004,16 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                              ' *(?P<route_tag>[0-9]+)$')
             m = p7.match(line)
             if m:
-                route_preference = str(m.groupdict()['route_preference'])
-                route_tag = str(m.groupdict()['route_tag'])
+                route_preference = m.groupdict()['route_preference']
+                route_tag = m.groupdict()['route_tag']
 
-                ip_interface_vrf_all_dict[interface]['ipv4'][address]['route_preference']\
-                 = route_preference
-                ip_interface_vrf_all_dict[interface]['ipv4'][address]\
-                ['route_tag'] = route_tag
+                if route_preference:
+                    ip_interface_vrf_all_dict[interface]['ipv4'][address]['route_preference']\
+                     = route_preference
+
+                if route_tag:
+                    ip_interface_vrf_all_dict[interface]['ipv4'][address]\
+                    ['route_tag'] = route_tag
                 continue
 
             #IP proxy ARP : disabled
