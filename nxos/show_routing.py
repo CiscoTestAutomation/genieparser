@@ -2,7 +2,7 @@
 
 NXOS parser for the following show commands:
     * show routing vrf all
-    * show route map
+    * show routing ipv6 vrf all
 '''
 
 # Python
