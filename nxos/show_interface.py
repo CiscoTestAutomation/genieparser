@@ -881,6 +881,9 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                  = interface_status
                 ip_interface_vrf_all_dict[interface]['iod'] = iod
                 ip_interface_vrf_all_dict[interface]['vrf'] = vrf
+                
+                if 'ipv4' not in ip_interface_vrf_all_dict[interface]:
+                    ip_interface_vrf_all_dict[interface]['ipv4'] = {}
 
                 #init multicast groups list to empty for this interface
                 multicast_groups = []
@@ -900,8 +903,6 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 secondary = m.groupdict()['secondary']
 
                 address = ip + '/' + prefix_length
-                if 'ipv4' not in ip_interface_vrf_all_dict[interface]:
-                    ip_interface_vrf_all_dict[interface]['ipv4'] = {}
                 if address not in ip_interface_vrf_all_dict[interface]['ipv4']:
                     ip_interface_vrf_all_dict[interface]['ipv4'][address] = {}
 
