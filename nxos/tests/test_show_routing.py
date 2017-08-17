@@ -31,7 +31,7 @@ class test_show_routing_vrf_all(unittest.TestCase):
                     {'vpnv4 unicast':
                         {'bgp_distance_internal_as': 33,
                         'bgp_distance_local': 55,
-                        'ip/mask':
+                        'ip':
                             {'11.0.0.0/8':
                                 {'ubest_num': '1',
                                 'mbest_num': '0',
@@ -88,18 +88,18 @@ class test_show_routing_vrf_all(unittest.TestCase):
                                                         {'uptime': '5w4d',
                                                         'preference': '0',
                                                         'metric': '0',
-                                                        'interface': 'Lo1'},
+                                                        'interface': 'Loopback1'},
                                                     'direct':
                                                         {'uptime': '5w4d',
                                                         'preference': '0',
                                                         'metric': '0',
-                                                        'interface': 'Lo1'}}}}}}}}}}},
+                                                        'interface': 'Loopback1'}}}}}}}}}}},
             'default':
                 {'address_family':
                     {'ipv4 unicast':
                         {'bgp_distance_extern_as': 20,
                         'bgp_distance_internal_as': 200,
-                        'ip/mask':
+                        'ip':
                             {'104.0.0.0/8':
                                 {'ubest_num': '1',
                                 'mbest_num': '0',
@@ -132,7 +132,7 @@ class test_show_routing_vrf_all(unittest.TestCase):
                                                         'attribute': 'internal',
                                                         'route_table': 'default',
                                                         'tag': '333',
-                                                        'interface': 'Eth1/1'}}}}}}},
+                                                        'interface': 'Ethernet1/1'}}}}}}},
                             '104.0.0.5/8':
                                 {'ubest_num': '1',
                                 'mbest_num': '0',
@@ -210,7 +210,7 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
             "default": {
                "address_family": {
                     "ipv6 unicast": {
-                         "ip/mask": {
+                         "ip": {
                               "2001:db8:1:1::1/128": {
                                    "attach": "attached",
                                    "best_route": {
@@ -219,7 +219,7 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
                                                   "2001:db8:1:1::1": {
                                                        "protocol": {
                                                             "local": {
-                                                                 "interface": "Eth1/1",
+                                                                 "interface": "Ethernet1/1",
                                                                  "metric": "0",
                                                                  "uptime": "00:15:46",
                                                                  "preference": "0"
@@ -240,7 +240,7 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
                                                   "2001:db8:1:1::1": {
                                                        "protocol": {
                                                             "direct": {
-                                                                 "interface": "Eth1/1",
+                                                                 "interface": "Ethernet1/1",
                                                                  "metric": "0",
                                                                  "uptime": "00:15:46",
                                                                  "preference": "0"
@@ -261,7 +261,7 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
                                                   "2001:db8:2:2::2": {
                                                        "protocol": {
                                                             "local": {
-                                                                 "interface": "Eth1/1",
+                                                                 "interface": "Ethernet1/1",
                                                                  "metric": "0",
                                                                  "tag": "222",
                                                                  "uptime": "00:15:46",
@@ -283,7 +283,7 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
                                                   "2001:db8::5054:ff:fed5:63f9": {
                                                        "protocol": {
                                                             "local": {
-                                                                 "interface": "Eth1/1",
+                                                                 "interface": "Ethernet1/1",
                                                                  "metric": "0",
                                                                  "uptime": "00:15:46",
                                                                  "preference": "0"
@@ -304,7 +304,7 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
                                                   "2001:db8::5054:ff:fed5:63f9": {
                                                        "protocol": {
                                                             "direct": {
-                                                                 "interface": "Eth1/1",
+                                                                 "interface": "Ethernet1/1",
                                                                  "metric": "0",
                                                                  "uptime": "00:15:46",
                                                                  "preference": "0"
@@ -325,7 +325,7 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
                                                   "2001:db8:2:2::2": {
                                                        "protocol": {
                                                             "direct": {
-                                                                 "interface": "Eth1/1",
+                                                                 "interface": "Ethernet1/1",
                                                                  "metric": "0",
                                                                  "tag": "222",
                                                                  "uptime": "00:15:46",

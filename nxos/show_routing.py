@@ -29,7 +29,7 @@ class ShowRoutingVrfAllSchema(MetaParser):
                         {Optional('bgp_distance_extern_as'): int,
                         Optional('bgp_distance_internal_as'): int,
                         Optional('bgp_distance_local'): int,
-                        'ip/mask':
+                        'ip':
                             {Any():
                                 {'ubest_num': str,
                                 'mbest_num': str,
@@ -66,6 +66,16 @@ class ShowRoutingVrfAllSchema(MetaParser):
 class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
    
     ''' Parser for 'show routing vrf all' '''
+
+    def convert_intf_name(self, intf):
+        # Please add more when face other type of interface
+        convert = {'Eth': 'Ethernet',
+                   'Lo': 'Loopback',
+                   'Null': 'Null'}
+        int_type = re.search('([a-zA-Z]+)', intf).group(0)
+        int_port = re.search('([\d\/\.]+)', intf).group(0)
+        return(convert[int_type] + int_port)
+
     
     def cli(self, ip=''):
         
@@ -115,17 +125,17 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                 # Create sub_dict
                 sub_dict = bgp_dict['vrf'][vrf]['address_family'][address_family]
 
-                # Init ip/mask dict
+                # Init ip dict
                 ip_mask = m.groupdict()['ip_mask']
-                if 'ip/mask' not in sub_dict:
-                    sub_dict['ip/mask'] = {}
-                if ip_mask not in sub_dict['ip/mask']:
-                    sub_dict['ip/mask'][ip_mask] = {}
+                if 'ip' not in sub_dict:
+                    sub_dict['ip'] = {}
+                if ip_mask not in sub_dict['ip']:
+                    sub_dict['ip'][ip_mask] = {}
                 
-                sub_dict['ip/mask'][ip_mask]['ubest_num'] = m.groupdict()['ubest']
-                sub_dict['ip/mask'][ip_mask]['mbest_num'] = m.groupdict()['mbest']
+                sub_dict['ip'][ip_mask]['ubest_num'] = m.groupdict()['ubest']
+                sub_dict['ip'][ip_mask]['mbest_num'] = m.groupdict()['mbest']
                 if m.groupdict()['attach']:
-                    sub_dict['ip/mask'][ip_mask]['attach'] = m.groupdict()['attach']
+                    sub_dict['ip'][ip_mask]['attach'] = m.groupdict()['attach']
                     continue
 
             # *via fec1::1002%default, Eth1/1, [200/4444], 15:57:39, bgp-333, internal, tag 333
@@ -146,19 +156,19 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                         '2': 'multicast'}['{}'.format(cast.count('*'))]
 
                  # Init 'best_route' dict
-                if 'best_route' not in sub_dict['ip/mask'][ip_mask]:
-                    sub_dict['ip/mask'][ip_mask]['best_route'] = {}
-                if cast not in sub_dict['ip/mask'][ip_mask]['best_route']:
-                    sub_dict['ip/mask'][ip_mask]['best_route'][cast] = {}
-                    sub_dict['ip/mask'][ip_mask]['best_route'][cast]\
+                if 'best_route' not in sub_dict['ip'][ip_mask]:
+                    sub_dict['ip'][ip_mask]['best_route'] = {}
+                if cast not in sub_dict['ip'][ip_mask]['best_route']:
+                    sub_dict['ip'][ip_mask]['best_route'][cast] = {}
+                    sub_dict['ip'][ip_mask]['best_route'][cast]\
                         ['nexthop'] = {}
 
                 nexthop = m.groupdict()['nexthop']
                 if nexthop not in sub_dict\
-                   ['ip/mask'][ip_mask]['best_route'][cast]['nexthop']:
-                    sub_dict['ip/mask'][ip_mask]\
+                   ['ip'][ip_mask]['best_route'][cast]['nexthop']:
+                    sub_dict['ip'][ip_mask]\
                       ['best_route'][cast]['nexthop'][nexthop] = {}
-                    prot_dict = sub_dict['ip/mask'][ip_mask]\
+                    prot_dict = sub_dict['ip'][ip_mask]\
                       ['best_route'][cast]['nexthop'][nexthop]['protocol'] = {}
 
                 protocol = m.groupdict()['protocol'] if \
@@ -172,7 +182,7 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
 
                 intf = m.groupdict()['int']
                 if intf:
-                    prot_dict[protocol]['interface'] = intf
+                    prot_dict[protocol]['interface'] = self.convert_intf_name(intf)
 
                 preference = m.groupdict()['preference']
                 if preference:
