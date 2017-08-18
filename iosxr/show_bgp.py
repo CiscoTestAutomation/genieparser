@@ -82,7 +82,7 @@ class ShowBgpInstancesSchema(MetaParser):
                  'instance_id': int,
                  'placed_grp': str,
                  'num_vrfs': int,
-                 Optional('address_family'): list
+                 Optional('address_families'): list
                 }
             },
         }
@@ -136,7 +136,7 @@ class ShowBgpInstances(ShowBgpInstancesSchema):
                     address_family_lst = address_family.strip(',').split(',')
                     address_family_lst = [item.strip() for item in address_family]
 
-                    ret_dict['instance'][instance]['address_family'] = address_family_lst
+                    ret_dict['instance'][instance]['address_families'] = address_family_lst
 
                 ret_dict['instance'][instance]['placed_grp'] = placed_grp
 
@@ -152,7 +152,7 @@ class ShowBgpInstances(ShowBgpInstancesSchema):
                     address_family_extra_line = address_family_extra_line.strip(',').split(',')
                     address_family_extra_line = [item.strip() for item in address_family_extra_line]
                     address_family_lst.extend(address_family_extra_line)
-                    ret_dict['instance'][instance]['address_family'] = address_family_lst
+                    ret_dict['instance'][instance]['address_families'] = address_family_lst
     
         return ret_dict
 

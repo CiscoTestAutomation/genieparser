@@ -45,7 +45,7 @@ class test_show_bgp_instances(unittest.TestCase):
             "default": {
                  "num_vrfs": 2,
                  "instance_id": 3,
-                 "address_family": [
+                 "address_families": [
                       "ipv4 unicast",
                       "vpnv4 unicast",
                       "ipv6 unicast",
