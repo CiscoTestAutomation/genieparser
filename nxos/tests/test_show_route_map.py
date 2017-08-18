@@ -86,7 +86,8 @@ class test_show_route_map(unittest.TestCase):
                     {'actions': 
                         {'clause': True,
                         'route_disposition': 'permit',
-                        'set_tag': 5},
+                        'set_tag': 5,
+                        'set_weight': 50},
                     'conditions': {'match_med_eq': 50}}}},
          'pbr-sample': 
             {'statements': 
@@ -209,7 +210,8 @@ class test_show_route_map(unittest.TestCase):
       Match clauses:
         metric: 50 
       Set clauses:
-        tag 5 
+        tag 5
+        weight 50 
     route-map pbr-sample, permit, sequence 10 
       Match clauses:
         ip address (access-lists): pbr-sample                   
@@ -268,6 +270,7 @@ class test_show_route_map(unittest.TestCase):
         route_map_obj = ShowRouteMap(device=self.device)
         parsed_output = route_map_obj.parse()
         self.maxDiff = None
+        # import pdb;pdb.set_trace()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 if __name__ == '__main__':

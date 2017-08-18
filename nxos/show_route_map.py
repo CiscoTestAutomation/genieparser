@@ -44,6 +44,7 @@ class ShowRouteMapSchema(MetaParser):
                          Optional('set_ext_community_rt_additive'): bool,
                          Optional('set_ext_community_delete'): str,
                          Optional('set_level'): str,
+                         Optional('set_weight'): int,
                          Optional('set_metric_type'): str,
                          'clause': bool,
                          'route_disposition': str,
@@ -210,6 +211,14 @@ class ShowRouteMap(ShowRouteMapSchema):
             if m:
                 route_map_dict[name]['statements'][statements]['actions']\
                 ['set_tag'] = int(m.groupdict()['set_tag'])
+                continue
+
+            # weight 50
+            p14_1 = re.compile(r'^\s*weight *(?P<set_weight>[0-9]+)$')
+            m = p14_1.match(line)
+            if m:
+                route_map_dict[name]['statements'][statements]['actions']\
+                ['set_weight'] = int(m.groupdict()['set_weight'])
                 continue
 
             #metric 20 

@@ -2,7 +2,7 @@
 
 NXOS parser for the following show commands:
     * show routing vrf all
-    * show route map
+    * show routing ipv6 vrf all
 '''
 
 # Python
@@ -29,7 +29,7 @@ class ShowRoutingVrfAllSchema(MetaParser):
                         {Optional('bgp_distance_extern_as'): int,
                         Optional('bgp_distance_internal_as'): int,
                         Optional('bgp_distance_local'): int,
-                        'ip/mask':
+                        'ip':
                             {Any():
                                 {'ubest_num': str,
                                 'mbest_num': str,
@@ -48,6 +48,8 @@ class ShowRoutingVrfAllSchema(MetaParser):
                                                         Optional('protocol_id'): str,
                                                         Optional('attribute'): str,
                                                         Optional('tag'): str, 
+                                                        Optional('mpls'): bool,
+                                                        Optional('mpls_vpn'): bool,
                                                     },
                                                 },
                                             },
@@ -62,13 +64,24 @@ class ShowRoutingVrfAllSchema(MetaParser):
         },
     }
 
+
 class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
    
     ''' Parser for 'show routing vrf all' '''
+
+    def convert_intf_name(self, intf):
+        # Please add more when face other type of interface
+        convert = {'Eth': 'Ethernet',
+                   'Lo': 'Loopback',
+                   'Null': 'Null'}
+        int_type = re.search('([a-zA-Z]+)', intf).group(0)
+        int_port = re.search('([\d\/\.]+)', intf).group(0)
+        return(convert[int_type] + int_port)
+
     
-    def cli(self):
+    def cli(self, ip=''):
         
-        out = self.device.execute('show routing vrf all')
+        out = self.device.execute('show routing {} vrf all'.format(ip))
         
         # Init dict
         bgp_dict = {}
@@ -78,17 +91,23 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            p1 = re.compile(r'^IP +Route +Table +for +VRF +"(?P<vrf>\w+)"$')
+            # IP Route Table for VRF "default"
+            # IPv6 Routing Table for VRF "default"
+            p1 = re.compile(r'^(IP|IPv6) +(Route|Routing) +Table +for +VRF +"(?P<vrf>\w+)"$')
             m = p1.match(line)
             if m:
                 vrf = str(m.groupdict()['vrf'])
-                if vrf == 'default':
+                if vrf == 'default' and not ip:
                     address_family = 'ipv4 unicast'
-                else:
+                elif vrf != 'default' and not ip:
                     address_family = 'vpnv4 unicast'
+                elif vrf == 'default' and ip:
+                    address_family = 'ipv6 unicast'
+                elif vrf != 'default' and ip:
+                    address_family = 'vpnv6 unicast'
                 continue
 
-            p2 = re.compile(r'^(?P<ip_mask>.*), +ubest/mbest: +(?P<ubest>\d+)'
+            p2 = re.compile(r'^(?P<ip_mask>[\w\:\.\/]+), +ubest/mbest: +(?P<ubest>\d+)'
                              '/(?P<mbest>\d+),? *(?P<attach>\w+)?$')
             m = p2.match(line)
             if m:
@@ -108,29 +127,30 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                 # Create sub_dict
                 sub_dict = bgp_dict['vrf'][vrf]['address_family'][address_family]
 
-                # Init ip/mask dict
+                # Init ip dict
                 ip_mask = m.groupdict()['ip_mask']
-                if 'ip/mask' not in sub_dict:
-                    sub_dict['ip/mask'] = {}
-                if ip_mask not in sub_dict['ip/mask']:
-                    sub_dict['ip/mask'][ip_mask] = {}
+                if 'ip' not in sub_dict:
+                    sub_dict['ip'] = {}
+                if ip_mask not in sub_dict['ip']:
+                    sub_dict['ip'][ip_mask] = {}
                 
-                sub_dict['ip/mask'][ip_mask]['ubest_num'] = m.groupdict()['ubest']
-                sub_dict['ip/mask'][ip_mask]['mbest_num'] = m.groupdict()['mbest']
+                sub_dict['ip'][ip_mask]['ubest_num'] = m.groupdict()['ubest']
+                sub_dict['ip'][ip_mask]['mbest_num'] = m.groupdict()['mbest']
                 if m.groupdict()['attach']:
-                    sub_dict['ip/mask'][ip_mask]['attach'] = m.groupdict()['attach']
+                    sub_dict['ip'][ip_mask]['attach'] = m.groupdict()['attach']
                     continue
 
             # *via fec1::1002%default, Eth1/1, [200/4444], 15:57:39, bgp-333, internal, tag 333
             # *via 3.3.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
-            p3 = re.compile(r'^(?P<cast>.*)via +(?P<nexthop>[a-zA-Z0-9 \.:]+)'
-                             '%?(?P<table>\w+)?, *'
-                             '(?P<int>[a-zA-Z0-9\./_]+)?,? +'
-                             '\[(?P<preference>\d+)/(?P<metric>\d+)\], +'
-                             '(?P<up_time>.*), +'
-                             '(?:(?P<protocol>\w+)-(?P<process>\d+), +'
-                             '(?P<attribute>\w+), +tag +(?P<tag>.*)'
-                             '|(?P<prot>\w+))$')
+            # *via 2001:db8::5054:ff:fed5:63f9, Eth1/1, [0/0], 00:15:46, direct,
+            # *via 2001:db8:2:2::2, Eth1/1, [0/0], 00:15:46, direct, , tag 222
+            p3 = re.compile(r'^(?P<cast>.*)via +(?P<nexthop>[\w\.\:\s]+)(%(?P<table>[\w\:]+))?, *'
+                             '((?P<int>[a-zA-Z0-9\./_]+),)? *'
+                             '\[(?P<preference>\d+)/(?P<metric>\d+)\], *'
+                             '(?P<up_time>[\w\:\.]+), *'
+                             '(?P<protocol>\w+)(\-(?P<process>\d+))?,? *'
+                             '(?P<attribute>\w+)?,? *'
+                             '(tag *(?P<tag>\w+))?,? *(?P<vpn>[a-zA-Z\(\)\-]+)?$')
             m = p3.match(line)
             if m:
                 cast = m.groupdict()['cast']
@@ -138,19 +158,19 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                         '2': 'multicast'}['{}'.format(cast.count('*'))]
 
                  # Init 'best_route' dict
-                if 'best_route' not in sub_dict['ip/mask'][ip_mask]:
-                    sub_dict['ip/mask'][ip_mask]['best_route'] = {}
-                if cast not in sub_dict['ip/mask'][ip_mask]['best_route']:
-                    sub_dict['ip/mask'][ip_mask]['best_route'][cast] = {}
-                    sub_dict['ip/mask'][ip_mask]['best_route'][cast]\
+                if 'best_route' not in sub_dict['ip'][ip_mask]:
+                    sub_dict['ip'][ip_mask]['best_route'] = {}
+                if cast not in sub_dict['ip'][ip_mask]['best_route']:
+                    sub_dict['ip'][ip_mask]['best_route'][cast] = {}
+                    sub_dict['ip'][ip_mask]['best_route'][cast]\
                         ['nexthop'] = {}
 
                 nexthop = m.groupdict()['nexthop']
                 if nexthop not in sub_dict\
-                   ['ip/mask'][ip_mask]['best_route'][cast]['nexthop']:
-                    sub_dict['ip/mask'][ip_mask]\
+                   ['ip'][ip_mask]['best_route'][cast]['nexthop']:
+                    sub_dict['ip'][ip_mask]\
                       ['best_route'][cast]['nexthop'][nexthop] = {}
-                    prot_dict = sub_dict['ip/mask'][ip_mask]\
+                    prot_dict = sub_dict['ip'][ip_mask]\
                       ['best_route'][cast]['nexthop'][nexthop]['protocol'] = {}
 
                 protocol = m.groupdict()['protocol'] if \
@@ -164,7 +184,7 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
 
                 intf = m.groupdict()['int']
                 if intf:
-                    prot_dict[protocol]['interface'] = intf
+                    prot_dict[protocol]['interface'] = self.convert_intf_name(intf)
 
                 preference = m.groupdict()['preference']
                 if preference:
@@ -188,7 +208,13 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                 
                 tag = m.groupdict()['tag']
                 if tag:
-                    prot_dict[protocol]['tag'] = tag
+                    prot_dict[protocol]['tag'] = tag.strip()
+                
+                vpn = m.groupdict()['vpn']
+                if vpn and 'mpls-vpn' in vpn:
+                    prot_dict[protocol]['mpls_vpn'] = True
+                elif vpn and 'mpls' in vpn:
+                    prot_dict[protocol]['mpls'] = True
 
                 # Set extra values for BGP Ops
                 if attribute == 'external' and protocol == 'bgp':
@@ -200,3 +226,8 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                     continue
 
         return bgp_dict
+
+
+class ShowRoutingIpv6VrfAll(ShowRoutingVrfAll):
+    def cli(self):
+        return(super().cli(ip='ipv6'))
