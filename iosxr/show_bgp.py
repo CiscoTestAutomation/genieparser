@@ -105,7 +105,6 @@ class ShowBgpInstances(ShowBgpInstancesSchema):
             # 1   bgp2_1      test1             333       0       none
             # 2   bgp3_1      test2             333       0       none
             # 3   bgp4_1      default           100       2       IPv4 Unicast, VPNv4 Unicast,
-            #                                                     IPv6 Unicast, VPNv6 Unicast
             p1 = re.compile(r'^(?P<instance_id>\d+)'
                              ' +(?P<placed_grp>[\w\-]+)'
                              ' +(?P<instance>[\w\-]+)'
