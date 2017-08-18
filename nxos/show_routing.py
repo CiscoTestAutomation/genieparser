@@ -73,15 +73,20 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
         # Please add more when face other type of interface
         convert = {'Eth': 'Ethernet',
                    'Lo': 'Loopback',
-                   'Null': 'Null'}
+                   'Null': 'Null',
+                   'mgmt': 'mgmt'}
         int_type = re.search('([a-zA-Z]+)', intf).group(0)
         int_port = re.search('([\d\/\.]+)', intf).group(0)
-        return(convert[int_type] + int_port)
+        if int_type in convert.keys():
+            return(convert[int_type] + int_port)
+        else:
+            return(intf)
 
     
     def cli(self, ip=''):
-        
-        out = self.device.execute('show routing {} vrf all'.format(ip))
+
+        cmd = 'show routing {} vrf all'.format(ip) if ip else 'show routing vrf all'
+        out = self.device.execute(cmd)
         
         # Init dict
         bgp_dict = {}
