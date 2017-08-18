@@ -77,7 +77,7 @@ class test_show_interface(unittest.TestCase):
                               'rx': True,
                               'tx': True},
                  'delay': 3330,
-                 'description': 'desc',
+                 'description': 'desc-1',
                  'duplex_mode': 'full',
                  'efficient_ethernet': 'n/a',
                  'enabled': True,
@@ -264,7 +264,7 @@ class test_show_interface(unittest.TestCase):
     Ethernet2/1 is up
     admin state is up, Dedicated Interface
       Hardware: 10/100/1000 Ethernet, address: aaaa.bbbb.cccc (bia 5254.003b.4aca)
-      Description: desc
+      Description: desc-1
       Internet Address is 10.4.4.4/24 secondary tag 10
       MTU 1600 bytes, BW 768 Kbit, DLY 3330 usec
       reliability 255/255, txload 1/255, rxload 1/255
