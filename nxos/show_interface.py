@@ -46,7 +46,7 @@ class ShowInterfaceSchema(MetaParser):
             Optional('mac_address'): str,
             Optional('auto_negotiate'): bool,
             Optional('duplex_mode'): str,
-            'port_mode': str,
+            Optional('port_mode'): str,
             Optional('auto_mdix'): str,
             Optional('switchport_monitor'): str,
             Optional('efficient_ethernet'): str,
@@ -190,9 +190,10 @@ class ShowInterface(ShowInterfaceSchema):
                 interface_dict[interface]['enabled'] = True
                 continue
 
-            #admin state is up
+            # admin state is up
+            # admin state is up,
             p2 = re.compile(r'^\s*admin *state *is (?P<oper_status>[\w]+)'
-                             '(, *Dedicated *Interface)?$')
+                             ',? *(Dedicated *Interface)?$')
             m = p2.match(line)
             if m:
                 oper_status = m.groupdict()['oper_status']

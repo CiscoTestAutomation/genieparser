@@ -73,10 +73,14 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
         # Please add more when face other type of interface
         convert = {'Eth': 'Ethernet',
                    'Lo': 'Loopback',
-                   'Null': 'Null'}
+                   'Null': 'Null',
+                   'mgmt': 'mgmt'}
         int_type = re.search('([a-zA-Z]+)', intf).group(0)
         int_port = re.search('([\d\/\.]+)', intf).group(0)
-        return(convert[int_type] + int_port)
+        if int_type in convert.keys():
+            return(convert[int_type] + int_port)
+        else:
+            return(intf)
 
     
     def cli(self, ip=''):
