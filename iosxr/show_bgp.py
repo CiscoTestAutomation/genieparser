@@ -134,7 +134,7 @@ class ShowBgpInstances(ShowBgpInstancesSchema):
 
                 if address_family and address_family != 'none':
                     address_family_lst = address_family.strip(',').split(',')
-                    address_family_lst = [item.strip() for item in address_family]
+                    address_family_lst = [item.strip() for item in address_family_lst]
 
                     ret_dict['instance'][instance]['address_families'] = address_family_lst
 
