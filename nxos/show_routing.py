@@ -80,8 +80,9 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
 
     
     def cli(self, ip=''):
-        
-        out = self.device.execute('show routing {} vrf all'.format(ip))
+
+        cmd = 'show routing {} vrf all'.format(ip) if ip else 'show routing vrf all'
+        out = self.device.execute(cmd)
         
         # Init dict
         bgp_dict = {}
