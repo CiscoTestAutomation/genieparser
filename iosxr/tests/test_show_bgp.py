@@ -47,9 +47,9 @@ class test_show_bgp_instances(unittest.TestCase):
                  "instance_id": 3,
                  "address_family": [
                       "ipv4 unicast",
-                      " vpnv4 unicast",
+                      "vpnv4 unicast",
                       "ipv6 unicast",
-                      " vpnv6 unicast"
+                      "vpnv6 unicast"
                  ],
                  "placed_grp": "bgp4_1",
                  "bgp_id": 100
