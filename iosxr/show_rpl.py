@@ -1,6 +1,6 @@
-############################################################################
+###########################################################################
 # Parser For Show PRL ROUTE POLICY
-############################################################################
+###########################################################################
 
 import re
 from metaparser import MetaParser   
@@ -165,15 +165,19 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                 continue
 
             # set next-hop 1.1.1.1
-            # set next-hop self
-            p5 =  re.compile(r'^\s*set +next-hop( +(?P<set_next_hop>[0-9\.]+)'
-                              '| *(?P<set_next_hop_self>(self)))$')
+            p5 =  re.compile(r'^\s*set +next-hop +(?P<set_next_hop>[0-9\.]+)$')
             m = p5.match(line)
             if m:
-                set_next_hop_self = m.groupdict()['set_next_hop_self']
-
+                set_next_hop = m.groupdict()['set_next_hop']
                 rpl_route_policy_dict[name]['statements'][statements]['actions']\
                 ['set_next_hop'] = str(m.groupdict()['set_next_hop'])
+                continue
+
+            # set next-hop self
+            p5_1 = re.compile(r'^\s*(?P<set_next_hop_self>(self))$')
+            m = p5_1.match(line)
+            if m:
+                set_next_hop_self = m.groupdict()['set_next_hop_self']
                 rpl_route_policy_dict[name]['statements'][statements]['actions']\
                 ['set_next_hop_self'] = True
                 continue
@@ -193,7 +197,6 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                 continue
 
             # set community test
-            # set community test additive
             p7 = re.compile(r'^\s*set +community +(?P<set_community_list>\S+)$')
             m = p7.match(line)
             if m:
@@ -223,9 +226,93 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
 
             # set community (100:100, no-export, no-advertise) additive
             p8 = re.compile(r'^\s*set +community +\((?P<set_community>[0-9\:\s\,]+),'
+                             ' *(?P<set_community_no_export>(no-export)),'
+                             ' *(?P<set_community_no_advertise>(no-advertise))\)'
+                             ' *(?P<set_community_additive>(additive))$')
+            m = p8.match(line)
+            if m:
+                set_community_no_export = m.groupdict()['set_community_no_export']
+                set_community_no_advertise = m.groupdict()['set_community_no_advertise']
+                set_community_additive = m.groupdict()['set_community_additive']
+                set_community = m.groupdict()['set_community']
+
+                set_community = set_community.split(", ")
+
+                rpl_route_policy_dict[name]['statements'][statements]['actions']\
+                ['set_community'] = set_community
+                rpl_route_policy_dict[name]['statements'][statements]['actions']\
+                ['set_community_no_export'] = True
+                rpl_route_policy_dict[name]['statements'][statements]['actions']\
+                ['set_community_no_advertise'] = True
+                rpl_route_policy_dict[name]['statements'][statements]['actions']\
+                ['set_community_additive'] = True
+                continue
+
+            #  set community (111:1, 222:1, no-advertise) additive
+            p8_1 = re.compile(r'^\s*set +community +\((?P<set_community>[0-9\:\s\,]+),'
+                             ' *(?P<set_community_no_advertise>(no-advertise))\)'
+                             '(?: *(?P<set_community_additive>(additive)))?$')
+            m = p8_1.match(line)
+            if m:
+                set_community_no_advertise = m.groupdict()['set_community_no_advertise']
+                set_community_additive = m.groupdict()['set_community_additive']
+                set_community = m.groupdict()['set_community']
+
+                set_community = set_community.split(", ")
+
+                rpl_route_policy_dict[name]['statements'][statements]['actions']\
+                ['set_community'] = set_community
+                rpl_route_policy_dict[name]['statements'][statements]['actions']\
+                ['set_community_no_advertise'] = True
+                rpl_route_policy_dict[name]['statements'][statements]['actions']\
+                ['set_community_additive'] = True
+                continue
+
+            # set community (100:100, no-export) additive
+            p8_2 = re.compile(r'^\s*set +community +\((?P<set_community>[0-9\:\s\,]+),'
+                             ' *(?P<set_community_no_export>(no-export))\)'
+                             '(?: *(?P<set_community_additive>(additive)))?$')
+            m = p8_2.match(line)
+            if m:
+                set_community_no_export = m.groupdict()['set_community_no_export']
+                set_community_additive = m.groupdict()['set_community_additive']
+                set_community = m.groupdict()['set_community']
+
+                set_community = set_community.split(", ")
+
+                rpl_route_policy_dict[name]['statements'][statements]['actions']\
+                ['set_community'] = set_community
+                rpl_route_policy_dict[name]['statements'][statements]['actions']\
+                ['set_community_no_export'] = True
+                rpl_route_policy_dict[name]['statements'][statements]['actions']\
+                ['set_community_additive'] = True
+                continue
+
+            # set community (100:1, 200:1, 300:1, no-export, no-advertise)
+            p8 = re.compile(r'^\s*set +community +\((?P<set_community>[0-9\:\s\,]+),'
+                             ' *(?P<set_community_no_export>(no-export)),'
+                             ' *(?P<set_community_no_advertise>(no-advertise))\)$')
+            m = p8.match(line)
+            if m:
+                set_community_no_export = m.groupdict()['set_community_no_export']
+                set_community_no_advertise = m.groupdict()['set_community_no_advertise']
+                set_community = m.groupdict()['set_community']
+
+                set_community = set_community.split(", ")
+
+                rpl_route_policy_dict[name]['statements'][statements]['actions']\
+                ['set_community'] = set_community
+                rpl_route_policy_dict[name]['statements'][statements]['actions']\
+                ['set_community_no_export'] = True
+                rpl_route_policy_dict[name]['statements'][statements]['actions']\
+                ['set_community_no_advertise'] = True
+                continue
+
+            # set community (100:100, no-export, no-advertise) additive
+            p8 = re.compile(r'^\s*set +community +\((?:(?P<set_community>[0-9\:\s\,]+),)?'
                              '(?: *(?P<set_community_no_export>(no-export)),)?'
-                             '(?: *(?P<set_community_no_advertise>(no-advertise)'
-                             '))?\)(?: *(?P<set_community_additive>(additive)))?$')
+                             '(?: *(?P<set_community_no_advertise>(no-advertise)))?\)'
+                             '(?: *(?P<set_community_additive>(additive)))?$')
             m = p8.match(line)
             if m:
                 set_community_no_export = m.groupdict()['set_community_no_export']

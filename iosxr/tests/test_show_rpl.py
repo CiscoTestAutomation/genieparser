@@ -36,7 +36,6 @@ class test_show_rpl_route_policy(unittest.TestCase):
  'test-community': {'statements': {10: {'actions': {'set_community': ['100:1',
                                                                       '200:1',
                                                                       '300:1'],
-                                                    'set_community_additive': True,
                                                     'set_community_no_advertise': True,
                                                     'set_community_no_export': True},
                                         'conditions': {}},
@@ -44,7 +43,6 @@ class test_show_rpl_route_policy(unittest.TestCase):
                                                                       '222:1'],
                                                     'set_community_additive': True,
                                                     'set_community_no_advertise': True,
-                                                    'set_community_no_export': True,
                                                     'set_ext_community_rt': ['100:1',
                                                                              '200:1'],
                                                     'set_ext_community_rt_additive': True},
@@ -82,8 +80,7 @@ class test_show_rpl_route_policy(unittest.TestCase):
                                            'set_med': 113,
                                            'set_metric': '100',
                                            'set_metric_type': 'type-2',
-                                           'set_next_hop': 'None',
-                                           'set_next_hop_self': True,
+                                           'set_next_hop': '1.1.1.1',
                                            'set_ospf_metric': '100',
                                            'set_route_origin': 'egp',
                                            'set_tag': '111'},
@@ -91,9 +88,9 @@ class test_show_rpl_route_policy(unittest.TestCase):
  'testtest': {'statements': {10: {'actions': {'set_local_pref': 120,
                                               'set_med': 111,
                                               'set_metric_type': 'type-1',
-                                              'set_next_hop': '192.168.1.1',
-                                              'set_next_hop_self': True},
+                                              'set_next_hop': '192.168.1.1'},
                                   'conditions': {'match_med_eq': 10}}}}}
+
 
     
     golden_output = {'execute.return_value': '''
@@ -166,8 +163,6 @@ class test_show_rpl_route_policy(unittest.TestCase):
       if as-path in test then
         pass
       endif
-      if as-path in test then
-        pass
       else
         drop
       endif
@@ -222,6 +217,7 @@ class test_show_rpl_route_policy(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         rpl_route_policy_obj = ShowRplRoutePolicy(device=self.device)
         parsed_output = rpl_route_policy_obj.parse()
+        self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
