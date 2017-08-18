@@ -234,7 +234,7 @@ class ShowInterface(ShowInterfaceSchema):
                 continue
 
             #Description: desc
-            p4 = re.compile(r'^\s*Description: *(?P<description>[a-z]+)$')
+            p4 = re.compile(r'^\s*Description: *(?P<description>\S+)$')
             m = p4.match(line)
             if m:
                 description = m.groupdict()['description']
