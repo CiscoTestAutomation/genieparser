@@ -1,3 +1,7 @@
+############################################################################
+# Unitest For Show PRL ROUTE POLICY PARSER
+############################################################################
+
 import unittest
 from unittest.mock import Mock
 
@@ -13,8 +17,7 @@ class test_show_rpl_route_policy(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     
     golden_parsed_output = {'NO-EXPORT': {'statements': {10: {'actions': {'actions': 'pass',
-                                               'set_community': 'no-export',
-                                               'set_community_additive': True},
+                                               'set_community_list': 'no-export'},
                                    'conditions': {'match_prefix_list': 'NO-EXPORT'}}}},
  'all-pass': {'statements': {'1': {'actions': {'actions': 'pass'},
                                    'conditions': {}}}},
@@ -27,10 +30,25 @@ class test_show_rpl_route_policy(unittest.TestCase):
                                 'conditions': {}}}},
  'test': {'statements': {10: {'actions': {'set_route_origin': 'incomplete'},
                               'conditions': {'match_local_pref_eq': '123'}},
-                         20: {'actions': {'set_tag': 'None',
-                                          'set_weight': '44'},
+                         20: {'actions': {'set_weight': '44'},
                               'conditions': {'match_med_eq': 100}},
                          '1': {'actions': {}, 'conditions': {}}}},
+ 'test-community': {'statements': {10: {'actions': {'set_community': ['100:1',
+                                                                      '200:1',
+                                                                      '300:1'],
+                                                    'set_community_additive': True,
+                                                    'set_community_no_advertise': True,
+                                                    'set_community_no_export': True},
+                                        'conditions': {}},
+                                   20: {'actions': {'set_community': ['111:1',
+                                                                      '222:1'],
+                                                    'set_community_additive': True,
+                                                    'set_community_no_advertise': True,
+                                                    'set_community_no_export': True,
+                                                    'set_ext_community_rt': ['100:1',
+                                                                             '200:1'],
+                                                    'set_ext_community_rt_additive': True},
+                                        'conditions': {}}}},
  'test2': {'statements': {10: {'actions': {'actions': 'pass'},
                                'conditions': {'match_origin_eq': 'eg'}},
                           20: {'actions': {'actions': 'pass'},
@@ -47,14 +65,15 @@ class test_show_rpl_route_policy(unittest.TestCase):
                                'conditions': {}},
                           50: {'actions': {'set_as_path_prepend': 100,
                                            'set_as_path_prepend_repeat_n': 10,
-                                           'set_community': '100:100',
+                                           'set_community': ['100:100'],
                                            'set_community_additive': True,
                                            'set_community_delete': 'test',
+                                           'set_community_list': 'test',
                                            'set_community_no_advertise': True,
                                            'set_community_no_export': True,
                                            'set_ext_community_delete': 'test',
-                                           'set_ext_community_rt': '300:1, '
-                                                                   '300:2',
+                                           'set_ext_community_rt': ['300:1',
+                                                                    '300:2'],
                                            'set_ext_community_rt_additive': True,
                                            'set_ext_community_soo': '100:100',
                                            'set_ext_community_soo_additive': True,
@@ -67,8 +86,7 @@ class test_show_rpl_route_policy(unittest.TestCase):
                                            'set_next_hop_self': True,
                                            'set_ospf_metric': '100',
                                            'set_route_origin': 'egp',
-                                           'set_tag': '111',
-                                           'set_weight': 'None'},
+                                           'set_tag': '111'},
                                'conditions': {}}}},
  'testtest': {'statements': {10: {'actions': {'set_local_pref': 120,
                                               'set_med': 111,
@@ -76,7 +94,6 @@ class test_show_rpl_route_policy(unittest.TestCase):
                                               'set_next_hop': '192.168.1.1',
                                               'set_next_hop_self': True},
                                   'conditions': {'match_med_eq': 10}}}}}
-
 
     
     golden_output = {'execute.return_value': '''
@@ -183,6 +200,15 @@ class test_show_rpl_route_policy(unittest.TestCase):
         set metric-type type-1
       endif
     end-policy
+    !
+    route-policy test-community
+      if med ge 90 then
+        set community (100:1, 200:1, 300:1, no-export, no-advertise)
+      elseif local-preference le 30 then
+        set community (111:1, 222:1, no-advertise) additive
+        set extcommunity rt (100:1, 200:1) additive
+      endif
+    end-policy
       '''}
 
 
@@ -196,7 +222,6 @@ class test_show_rpl_route_policy(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         rpl_route_policy_obj = ShowRplRoutePolicy(device=self.device)
         parsed_output = rpl_route_policy_obj.parse()
-        self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
