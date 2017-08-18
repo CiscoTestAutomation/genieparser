@@ -21,7 +21,76 @@ from parser.iosxr.show_bgp import ShowPlacementProgramAll,\
                                   ShowBgpInstanceNeighborsReceivedRoutes,\
                                   ShowBgpInstanceNeighborsRoutes,\
                                   ShowBgpInstanceSummary,\
-                                  ShowBgpInstanceAllAll
+                                  ShowBgpInstanceAllAll, ShowBgpInstances
+
+
+# ==========================================
+# Unit test for 'show bgp instances'
+# ==========================================
+
+class test_show_bgp_instances(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    device0 = Device(name='bDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "instance": {
+            "test1": {
+                 "num_vrfs": 0,
+                 "instance_id": 1,
+                 "placed_grp": "bgp2_1",
+                 "bgp_id": 333
+            },
+            "default": {
+                 "num_vrfs": 2,
+                 "instance_id": 3,
+                 "address_family": [
+                      "ipv4 unicast",
+                      " vpnv4 unicast",
+                      "ipv6 unicast",
+                      " vpnv6 unicast"
+                 ],
+                 "placed_grp": "bgp4_1",
+                 "bgp_id": 100
+            },
+            "test": {
+                 "num_vrfs": 0,
+                 "instance_id": 0,
+                 "placed_grp": "v4_routing",
+                 "bgp_id": 333
+            },
+            "test2": {
+                 "num_vrfs": 0,
+                 "instance_id": 2,
+                 "placed_grp": "bgp3_1",
+                 "bgp_id": 333
+            }
+        }
+    }
+    
+    golden_output = {'execute.return_value': '''
+        ID  Placed-Grp  Name              AS        VRFs    Address Families
+        --------------------------------------------------------------------------------
+        0   v4_routing  test              333       0       none
+        1   bgp2_1      test1             333       0       none
+        2   bgp3_1      test2             333       0       none
+        3   bgp4_1      default           100       2       IPv4 Unicast, VPNv4 Unicast,
+                                                            IPv6 Unicast, VPNv6 Unicast
+      '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowBgpInstances(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpInstances(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
 # ==========================================

@@ -37,6 +37,7 @@ IOSXR parsers for the following show commands:
     * 'show bgp vrf-db vrf all'
     * 'show bgp l2vpn evpn'
     * 'show bgp l2vpn evpn advertised'
+    * 'show bgp instances'
 '''
 
 # Python
@@ -65,6 +66,93 @@ from .tests import markup
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+
+# =======================================
+# Parser for 'show bgp instances'
+# =======================================
+
+class ShowBgpInstancesSchema(MetaParser):
+
+    ''' Schema for show bgp instances'''
+
+    schema = {
+        'instance':
+            {Any():
+                {'bgp_id': int,
+                 'instance_id': int,
+                 'placed_grp': str,
+                 'num_vrfs': int,
+                 Optional('address_family'): list,
+                }
+            },
+        }
+
+class ShowBgpInstances(ShowBgpInstancesSchema):
+
+    ''' Parser for show bgp instances'''
+
+    def cli(self):
+
+        out = self.device.execute('show bgp instances')
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # ID  Placed-Grp  Name              AS        VRFs    Address Families
+            # --------------------------------------------------------------------------------
+            # 0   v4_routing  test              333       0       none
+            # 1   bgp2_1      test1             333       0       none
+            # 2   bgp3_1      test2             333       0       none
+            # 3   bgp4_1      default           100       2       IPv4 Unicast, VPNv4 Unicast,
+            #                                                     IPv6 Unicast, VPNv6 Unicast
+            p1 = re.compile(r'^(?P<instance_id>\d+)'
+                             ' +(?P<placed_grp>[\w\-]+)'
+                             ' +(?P<instance>[\w\-]+)'
+                             ' +(?P<bgp_id>\d+)'
+                             ' +(?P<num_vrfs>\d+)'
+                             ' +(?P<address_family>[\w\s\,]+)$')
+            m = p1.match(line)
+            if m:
+                instance_id = m.groupdict()['instance_id']
+                placed_grp = m.groupdict()['placed_grp']
+                instance = m.groupdict()['instance']
+                bgp_id = m.groupdict()['bgp_id']
+                num_vrfs = m.groupdict()['num_vrfs']
+                address_family = m.groupdict()['address_family'].lower()
+
+                if 'instance' not in ret_dict:
+                    ret_dict['instance'] = {}
+                if instance not in ret_dict['instance']:
+                    ret_dict['instance'][instance] = {}
+
+                if instance_id:
+                    ret_dict['instance'][instance]['instance_id'] = int(instance_id)
+                if bgp_id:
+                    ret_dict['instance'][instance]['bgp_id'] = int(bgp_id)
+                if num_vrfs:
+                    ret_dict['instance'][instance]['num_vrfs'] = int(num_vrfs)
+
+                if address_family and address_family != 'none':
+                    address_family_lst = address_family.strip(',').split(',')
+                    ret_dict['instance'][instance]['address_family'] = address_family_lst
+
+                ret_dict['instance'][instance]['placed_grp'] = placed_grp
+
+                continue
+
+            #                                                     IPv6 Unicast, VPNv6 Unicast
+            p2 = re.compile(r'^(?P<address_family>[\w\s\,]+)$')
+            m = p2.match(line)
+            if m:
+                address_family_extra_line = m.groupdict()['address_family'].lower()
+
+                if address_family_extra_line and address_family_extra_line != 'none':
+                    address_family_extra_line = address_family_extra_line.strip(',').split(',')
+                    address_family_lst.extend(address_family_extra_line)
+                    ret_dict['instance'][instance]['address_family'] = address_family_lst
+    
+        return ret_dict
 
 # =======================================
 # Parser for 'show placement program all'
