@@ -27,7 +27,7 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
     
-    golden_parsed_output =  {'vrf_name': {'VRF': {},
+    golden_parsed_output =  {'vrf': {'VRF': {},
               'VRF1': {'multicast_group': {'232.0.0.0/8': {'source_address': {'*': {'flag': 'pim '
                                                                                             'ip',
                                                                                     'incoming_interface_list': {'Null': {'rpf_nbr': '0.0.0.0'}},
@@ -160,7 +160,7 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
     
-    golden_parsed_output = {'vrf_name': {'VRF': {},
+    golden_parsed_output = {'vrf': {'VRF': {},
               'VRF1': {'multicast_group': {'ff1e:1111::1:0/128': {'source_address': {'*': {'flag': 'mld '
                                                                                                    'pim6 '
                                                                                                    'ipv6',
@@ -560,33 +560,34 @@ class test_show_ip_static_route_multicast(unittest.TestCase):
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {'vrf': {'VRF1': {'af_name': {'IPv4': {'mroute': {'10.2.2.2/32': {'path': {'0.0.0.0/32%sanity1 Vlan2': {'mroute_neighbor_address': '0.0.0.0/32%sanity1 '
-                                                                                                                                   'Vlan2',
-                                                                                                        'urib': True,
-                                                                                                        'vrf_id': '2'}}},
-                                                  '10.2.2.3/32': {'path': {'0.0.0.0/32%sanity1 Vlan2': {'mroute_neighbor_address': '0.0.0.0/32%sanity1 '
-                                                                                                                                   'Vlan2',
-                                                                                                        'urib': True,
-                                                                                                        'vrf_id': '2'}}}}}}},
-         'default': {'af_name': {'IPv4': {'mroute': {'112.0.0.0/8': {'path': {'0.0.0.0/32 Null0': {'mroute_interface_name': 'Null0',
-                                                                                                   'mroute_neighbor_address': '0.0.0.0/32',
-                                                                                                   'urib': True,
-                                                                                                   'vrf_id': '1'}}},
-                                                     '212.0.0.0/8': {'path': {'0.0.0.0/32 Null0': {'mroute_interface_name': 'Null0',
-                                                                                                   'mroute_neighbor_address': '0.0.0.0/32',
-                                                                                                   'urib': True,
-                                                                                                   'vrf_id': '1'}}}}}}},
-         'management': {'af_name': {'IPv4': {'mroute': {'0.0.0.0/0': {'path': {'172.31.200.1/32': {'mroute_neighbor_address': '172.31.200.1/32',
-                                                                                                   'urib': True,
-                                                                                                   'vrf_id': '3'}}}}}}},
-         'sanity1': {'af_name': {'IPv4': {'mroute': {'10.2.2.2/32': {'path': {'0.0.0.0/32 Vlan2': {'mroute_interface_name': 'Vlan2',
-                                                                                                   'mroute_neighbor_address': '0.0.0.0/32',
-                                                                                                   'urib': True,
-                                                                                                   'vrf_id': '4'}}},
-                                                     '10.2.2.3/32': {'path': {'0.0.0.0/32 Vlan2': {'mroute_interface_name': 'Vlan2',
-                                                                                                   'mroute_neighbor_address': '0.0.0.0/32',
-                                                                                                   'urib': True,
-                                                                                                   'vrf_id': '4'}}}}}}}}}
+    golden_parsed_output = {'vrf': {'VRF1': {'address_family': {'IPv4': {'mroute': {'10.2.2.2/32': {'path': {'0.0.0.0/32%sanity1 Vlan2': {'mroute_neighbor_address': '0.0.0.0/32%sanity1 '
+                                                                                                                                          'Vlan2',
+                                                                                                               'urib': True,
+                                                                                                               'vrf_id': '2'}}},
+                                                         '10.2.2.3/32': {'path': {'0.0.0.0/32%sanity1 Vlan2': {'mroute_neighbor_address': '0.0.0.0/32%sanity1 '
+                                                                                                                                          'Vlan2',
+                                                                                                               'urib': True,
+                                                                                                               'vrf_id': '2'}}}}}}},
+         'default': {'address_family': {'IPv4': {'mroute': {'112.0.0.0/8': {'path': {'0.0.0.0/32 Null0': {'mroute_interface_name': 'Null0',
+                                                                                                          'mroute_neighbor_address': '0.0.0.0/32',
+                                                                                                          'urib': True,
+                                                                                                          'vrf_id': '1'}}},
+                                                            '212.0.0.0/8': {'path': {'0.0.0.0/32 Null0': {'mroute_interface_name': 'Null0',
+                                                                                                          'mroute_neighbor_address': '0.0.0.0/32',
+                                                                                                          'urib': True,
+                                                                                                          'vrf_id': '1'}}}}}}},
+         'management': {'address_family': {'IPv4': {'mroute': {'0.0.0.0/0': {'path': {'172.31.200.1/32': {'mroute_neighbor_address': '172.31.200.1/32',
+                                                                                                          'urib': True,
+                                                                                                          'vrf_id': '3'}}}}}}},
+         'sanity1': {'address_family': {'IPv4': {'mroute': {'10.2.2.2/32': {'path': {'0.0.0.0/32 Vlan2': {'mroute_interface_name': 'Vlan2',
+                                                                                                          'mroute_neighbor_address': '0.0.0.0/32',
+                                                                                                          'urib': True,
+                                                                                                          'vrf_id': '4'}}},
+                                                            '10.2.2.3/32': {'path': {'0.0.0.0/32 Vlan2': {'mroute_interface_name': 'Vlan2',
+                                                                                                          'mroute_neighbor_address': '0.0.0.0/32',
+                                                                                                          'urib': True,
+                                                                                                          'vrf_id': '4'}}}}}}}}}
+
     
     golden_output = {'execute.return_value': '''
       Mstatic-route for VRF "default"(1)
@@ -644,6 +645,7 @@ class test_show_ipv6_static_route_multicast(unittest.TestCase):
   empty_output = {'execute.return_value': ''}
     
   golden_parsed_output = {'vrf': {'default': {'mroute': {'126::/16': {'path': {'0:: Null0': {'bfd_enable': False,
+                                                                    'mroute_int': 'Null0',
                                                                     'mroute_interface_name': 'Null0',
                                                                     'mroute_neighbor_address': '0::',
                                                                     'nh_vrf': 'default',
@@ -652,8 +654,10 @@ class test_show_ipv6_static_route_multicast(unittest.TestCase):
                                                                     'rnh_status': 'not '
                                                                                   'installed '
                                                                                   'in '
-                                                                                  'u6rib'}}},
+                                                                                  'u6rib',
+                                                                    'vrf_id': '1'}}},
                                 '127::/16': {'path': {'0:: port-channel8': {'bfd_enable': False,
+                                                                            'mroute_int': 'port-channel8',
                                                                             'mroute_interface_name': 'port-channel8',
                                                                             'mroute_neighbor_address': '0::',
                                                                             'nh_vrf': 'default',
@@ -662,8 +666,10 @@ class test_show_ipv6_static_route_multicast(unittest.TestCase):
                                                                             'rnh_status': 'not '
                                                                                           'installed '
                                                                                           'in '
-                                                                                          'u6rib'}}},
+                                                                                          'u6rib',
+                                                                            'vrf_id': '1'}}},
                                 '226::/16': {'path': {'0:: Null0': {'bfd_enable': False,
+                                                                    'mroute_int': 'Null0',
                                                                     'mroute_interface_name': 'Null0',
                                                                     'mroute_neighbor_address': '0::',
                                                                     'nh_vrf': 'default',
@@ -672,8 +678,10 @@ class test_show_ipv6_static_route_multicast(unittest.TestCase):
                                                                     'rnh_status': 'not '
                                                                                   'installed '
                                                                                   'in '
-                                                                                  'u6rib'}}},
+                                                                                  'u6rib',
+                                                                    'vrf_id': '1'}}},
                                 '227::/16': {'path': {'0:: Ethernet1/2.10': {'bfd_enable': False,
+                                                                             'mroute_int': 'Ethernet1/2.10',
                                                                              'mroute_interface_name': 'Ethernet1/2.10',
                                                                              'mroute_neighbor_address': '0::',
                                                                              'nh_vrf': 'default',
@@ -682,10 +690,9 @@ class test_show_ipv6_static_route_multicast(unittest.TestCase):
                                                                              'rnh_status': 'not '
                                                                                            'installed '
                                                                                            'in '
-                                                                                           'u6rib'}}}}}}}
-
-
-   
+                                                                                           'u6rib',
+                                                                             'vrf_id': '1'}}}}}}}
+  
   golden_output = {'execute.return_value': '''
       IPv6 Configured Static Routes for VRF "default"(1)
 
