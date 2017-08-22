@@ -7,10 +7,10 @@ from ats.topology import Device
 from metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from parser.iosxr.show_interface import ShowInterfaceDetail, ShowVlanInterface, ShowIpv4VrfAllInterface, ShowIpv6VrfAllInterface
+from parser.iosxr.show_interface import ShowInterfacesDetail, ShowVlanInterface, ShowIpv4VrfAllInterface, ShowIpv6VrfAllInterface
 
 #############################################################################
-# unitest For Show Interface Detail
+# unitest For Show Interfaces Detail
 #############################################################################
 
 class test_show_interface(unittest.TestCase):
@@ -18,6 +18,7 @@ class test_show_interface(unittest.TestCase):
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {'GigabitEthernet0/0/0/0': {'auto_negotiate': True,
+                            'bandwidth': 768,
                             'counters': {'carrier_transitions': 0,
                                          'drops': 0,
                                          'in_abort': 0,
@@ -52,7 +53,8 @@ class test_show_interface(unittest.TestCase):
                                                   'load_interval': 30,
                                                   'out_rate': 0,
                                                   'out_rate_pkts': 0}},
-                            'duplex_mode': 'Full-duplex',
+                            'description': 'desc',
+                            'duplex_mode': 'full',
                             'enabled': False,
                             'encapsulations': {'encapsulation': 'ARPA'},
                             'flow_control': {'flow_control_receive': False,
@@ -66,13 +68,15 @@ class test_show_interface(unittest.TestCase):
                             'location': 'unknown',
                             'loopback_status': 'not set',
                             'mac_address': 'aaaa.bbbb.cccc',
+                            'mtu': 1600,
                             'phys_address': '5254.0077.9407',
                             'port_speed': '1000Mb/s',
                             'reliability': '255/255',
                             'rxload': '0/255',
                             'txload': '0/255',
                             'types': 'GigabitEthernet'},
- 'GigabitEthernet0/0/0/0.10': {'counters': {'drops': 0,
+ 'GigabitEthernet0/0/0/0.10': {'bandwidth': 768,
+                               'counters': {'drops': 0,
                                             'in_broadcast_pkts': 0,
                                             'in_discards': 0,
                                             'in_multicast_pkts': 0,
@@ -100,10 +104,12 @@ class test_show_interface(unittest.TestCase):
                                'last_output': 'never',
                                'line_protocol': 'administratively down',
                                'loopback_status': 'not set',
+                               'mtu': 1608,
                                'reliability': '255/255',
                                'rxload': '0/255',
                                'txload': '0/255'},
- 'GigabitEthernet0/0/0/0.20': {'counters': {'drops': 0,
+ 'GigabitEthernet0/0/0/0.20': {'bandwidth': 768,
+                               'counters': {'drops': 0,
                                             'in_broadcast_pkts': 0,
                                             'in_discards': 0,
                                             'in_multicast_pkts': 0,
@@ -130,10 +136,12 @@ class test_show_interface(unittest.TestCase):
                                'last_output': 'never',
                                'line_protocol': 'administratively down',
                                'loopback_status': 'not set',
+                               'mtu': 1604,
                                'reliability': '255/255',
                                'rxload': '0/255',
                                'txload': '0/255'},
  'MgmtEth0/0/CPU0/0': {'auto_negotiate': True,
+                       'bandwidth': 0,
                        'counters': {'carrier_transitions': 0,
                                     'drops': 0,
                                     'in_abort': 0,
@@ -168,7 +176,7 @@ class test_show_interface(unittest.TestCase):
                                              'load_interval': 5,
                                              'out_rate': 0,
                                              'out_rate_pkts': 0}},
-                       'duplex_mode': 'Duplex unknown',
+                       'duplex_mode': 'duplex unknown',
                        'enabled': False,
                        'encapsulations': {'encapsulation': 'ARPA'},
                        'flow_control': {'flow_control_receive': False,
@@ -180,13 +188,15 @@ class test_show_interface(unittest.TestCase):
                        'location': 'unknown',
                        'loopback_status': 'not set',
                        'mac_address': '5254.00c3.6c43',
+                       'mtu': 1514,
                        'phys_address': '5254.00c3.6c43',
                        'port_speed': '0Kb/s',
                        'reliability': '255/255',
                        'rxload': 'Unknown',
                        'txload': 'Unknown',
                        'types': 'Management Ethernet'},
- 'Null0': {'counters': {'drops': 0,
+ 'Null0': {'bandwidth': 0,
+           'counters': {'drops': 0,
                         'in_broadcast_pkts': 0,
                         'in_discards': 0,
                         'in_multicast_pkts': 0,
@@ -210,11 +220,13 @@ class test_show_interface(unittest.TestCase):
            'line_protocol': 'up',
            'loopback_status': 'not set',
            'mac_address': 'None',
+           'mtu': 1500,
            'phys_address': 'None',
            'reliability': '255/255',
            'rxload': 'Unknown',
            'txload': 'Unknown',
            'types': 'Null '}}
+
 
     golden_output = {'execute.return_value': '''
         Null0 is up, line protocol is up 
@@ -327,13 +339,13 @@ class test_show_interface(unittest.TestCase):
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
-        interface_detail_obj = ShowInterfaceDetail(device=self.device1)
+        interface_detail_obj = ShowInterfacesDetail(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = interface_detail_obj.parse()
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        interface_detail_obj = ShowInterfaceDetail(device=self.device)
+        interface_detail_obj = ShowInterfacesDetail(device=self.device)
         parsed_output = interface_detail_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
@@ -395,9 +407,10 @@ class test_show_ipv4_vrf_all_interface(unittest.TestCase):
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {'GigabitEthernet0/0/0/0': {'int_status': 'Shutdown',
+    golden_parsed_output = {'GigabitEthernet0/0/0/0': {'int_status': 'shutdown',
                             'ipv4': {'10.1.1.1/24': {'ip': '10.1.1.1',
-                                                     'prefix_length': '24'},
+                                                     'prefix_length': '24',
+                                                     'route_tag': 50},
                                      '10.2.2.2/24': {'arp': 'disabled',
                                                      'broadcast_forwarding': 'disabled',
                                                      'helper_address': 'not '
@@ -420,45 +433,46 @@ class test_show_ipv4_vrf_all_interface(unittest.TestCase):
                                                      'table_id': '0xe0000011'},
                                      'unnumbered': {'unnumbered_int': '111.111.111.111/32',
                                                     'unnumbered_intf_ref': 'Loopback11'}},
-                            'oper_status': 'Down',
+                            'oper_status': 'down',
                             'vrf': 'VRF1',
                             'vrf_id': '0x60000002'},
- 'GigabitEthernet0/0/0/0.10': {'int_status': 'Shutdown',
-                               'oper_status': 'Down',
+ 'GigabitEthernet0/0/0/0.10': {'int_status': 'shutdown',
+                               'oper_status': 'down',
                                'vrf': 'default',
                                'vrf_id': '0x60000000'},
- 'GigabitEthernet0/0/0/0.20': {'int_status': 'Shutdown',
-                               'oper_status': 'Down',
+ 'GigabitEthernet0/0/0/0.20': {'int_status': 'shutdown',
+                               'oper_status': 'down',
                                'vrf': 'default',
                                'vrf_id': '0x60000000'},
- 'GigabitEthernet0/0/0/1': {'int_status': 'Shutdown',
-                            'oper_status': 'Down',
+ 'GigabitEthernet0/0/0/1': {'int_status': 'shutdown',
+                            'oper_status': 'down',
                             'vrf': 'VRF2',
                             'vrf_id': '0x60000003'},
- 'GigabitEthernet0/0/0/2': {'int_status': 'Shutdown',
-                            'oper_status': 'Down',
+ 'GigabitEthernet0/0/0/2': {'int_status': 'shutdown',
+                            'oper_status': 'down',
                             'vrf': 'default',
                             'vrf_id': '0x60000000'},
- 'GigabitEthernet0/0/0/3': {'int_status': 'Shutdown',
-                            'oper_status': 'Down',
+ 'GigabitEthernet0/0/0/3': {'int_status': 'shutdown',
+                            'oper_status': 'down',
                             'vrf': 'default',
                             'vrf_id': '0x60000000'},
- 'GigabitEthernet0/0/0/4': {'int_status': 'Shutdown',
-                            'oper_status': 'Down',
+ 'GigabitEthernet0/0/0/4': {'int_status': 'shutdown',
+                            'oper_status': 'down',
                             'vrf': 'default',
                             'vrf_id': '0x60000000'},
- 'GigabitEthernet0/0/0/5': {'int_status': 'Shutdown',
-                            'oper_status': 'Down',
+ 'GigabitEthernet0/0/0/5': {'int_status': 'shutdown',
+                            'oper_status': 'down',
                             'vrf': 'default',
                             'vrf_id': '0x60000000'},
- 'GigabitEthernet0/0/0/6': {'int_status': 'Shutdown',
-                            'oper_status': 'Down',
+ 'GigabitEthernet0/0/0/6': {'int_status': 'shutdown',
+                            'oper_status': 'down',
                             'vrf': 'default',
                             'vrf_id': '0x60000000'},
- 'MgmtEth0/0/CPU0/0': {'int_status': 'Shutdown',
-                       'oper_status': 'Down',
+ 'MgmtEth0/0/CPU0/0': {'int_status': 'shutdown',
+                       'oper_status': 'down',
                        'vrf': 'default',
                        'vrf_id': '0x60000000'}}
+
 
     golden_output = {'execute.return_value': '''
     MgmtEth0/0/CPU0/0 is Shutdown, ipv4 protocol is Down
@@ -530,7 +544,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {'GigabitEthernet0/0/0/0': {'enabled': True,
-                            'int_status': 'Shutdown',
+                            'int_status': 'shutdown',
                             'ipv6': {'2001:db8:1:1::1/64': {'ipv6': '2001:db8:1:1::1',
                                                             'ipv6_prefix_length': '64',
                                                             'ipv6_status': 'tentative',
@@ -542,7 +556,6 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                                      '2001:db8:3:3:a8aa:bbff:febb:cccc/64': {'ipv6': '2001:db8:3:3:a8aa:bbff:febb:cccc',
                                                                              'ipv6_eui64': True,
                                                                              'ipv6_prefix_length': '64',
-                                                                             'ipv6_route_tag': 'None',
                                                                              'ipv6_status': 'tentative',
                                                                              'ipv6_subnet': '2001:db8:3:3::'},
                                      '2001:db8:4:4::4/64': {'ipv6': '2001:db8:4:4::4',
@@ -561,7 +574,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                                      'incomplete_glean_adj': '0',
                                      'incomplete_protocol_adj': '0',
                                      'ipv6_link_local': 'fe80::a8aa:bbff:febb:cccc',
-                                     'ipv6_link_local_state': 'TENTATIVE',
+                                     'ipv6_link_local_state': 'tentative',
                                      'ipv6_mtu': '1600',
                                      'ipv6_mtu_available': '1586',
                                      'nd_adv_retrans_int': '0',
@@ -569,54 +582,65 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                                      'nd_reachable_time': '0',
                                      'out_access_list': 'not set',
                                      'table_id': '0xe0800011'},
-                            'oper_status': 'Down',
+                            'ipv6_enabled': False,
+                            'oper_status': 'down',
                             'vrf': 'VRF1',
                             'vrf_id': '0x60000002'},
  'GigabitEthernet0/0/0/0.10': {'enabled': False,
-                               'int_status': 'Shutdown',
-                               'oper_status': 'Down',
+                               'int_status': 'shutdown',
+                               'ipv6_enabled': False,
+                               'oper_status': 'down',
                                'vrf': 'default',
                                'vrf_id': '0x60000000'},
  'GigabitEthernet0/0/0/0.20': {'enabled': False,
-                               'int_status': 'Shutdown',
-                               'oper_status': 'Down',
+                               'int_status': 'shutdown',
+                               'ipv6_enabled': False,
+                               'oper_status': 'down',
                                'vrf': 'default',
                                'vrf_id': '0x60000000'},
  'GigabitEthernet0/0/0/1': {'enabled': False,
-                            'int_status': 'Shutdown',
-                            'oper_status': 'Down',
+                            'int_status': 'shutdown',
+                            'ipv6_enabled': False,
+                            'oper_status': 'down',
                             'vrf': 'VRF2',
                             'vrf_id': '0x60000003'},
  'GigabitEthernet0/0/0/2': {'enabled': False,
-                            'int_status': 'Shutdown',
-                            'oper_status': 'Down',
+                            'int_status': 'shutdown',
+                            'ipv6_enabled': False,
+                            'oper_status': 'down',
                             'vrf': 'default',
                             'vrf_id': '0x60000000'},
  'GigabitEthernet0/0/0/3': {'enabled': False,
-                            'int_status': 'Shutdown',
-                            'oper_status': 'Down',
+                            'int_status': 'shutdown',
+                            'ipv6_enabled': False,
+                            'oper_status': 'down',
                             'vrf': 'default',
                             'vrf_id': '0x60000000'},
  'GigabitEthernet0/0/0/4': {'enabled': False,
-                            'int_status': 'Shutdown',
-                            'oper_status': 'Down',
+                            'int_status': 'shutdown',
+                            'ipv6_enabled': False,
+                            'oper_status': 'down',
                             'vrf': 'default',
                             'vrf_id': '0x60000000'},
  'GigabitEthernet0/0/0/5': {'enabled': False,
-                            'int_status': 'Shutdown',
-                            'oper_status': 'Down',
+                            'int_status': 'shutdown',
+                            'ipv6_enabled': False,
+                            'oper_status': 'down',
                             'vrf': 'default',
                             'vrf_id': '0x60000000'},
  'GigabitEthernet0/0/0/6': {'enabled': False,
-                            'int_status': 'Shutdown',
-                            'oper_status': 'Down',
+                            'int_status': 'shutdown',
+                            'ipv6_enabled': False,
+                            'oper_status': 'down',
                             'vrf': 'default',
                             'vrf_id': '0x60000000'},
  'MgmtEth0/0/CPU0/0': {'enabled': False,
-                       'int_status': 'Shutdown',
-                       'oper_status': 'Down',
+                       'int_status': 'shutdown',
+                       'ipv6_enabled': False,
+                       'oper_status': 'down',
                        'vrf': 'default',
                        'vrf_id': '0x60000000'}}
+
 
     golden_output = {'execute.return_value': '''
     MgmtEth0/0/CPU0/0 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
