@@ -586,7 +586,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
         interface_detail_dict = {}
 
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
 
             # MgmtEth0/0/CPU0/0 is administratively down, line protocol is administratively down
             p1 = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) +is'
@@ -641,6 +641,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                 types = m.groupdict()['types'].lower()
                 types = types.replace(",","")
                 types = types.replace("interface","")
+                types = types.strip()
                 mac_address = m.groupdict()['mac_address']
                 phys_address = m.groupdict()['phys_address']
 
@@ -863,7 +864,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
 
             # Full-duplex, 1000Mb/s, unknown, link type is autonegotiation
             # Duplex unknown, 0Kb/s, unknown, link type is autonegotiation
-            p9_1 = re.compile(r'^\s*(?P<duplex_mode>[\w\W]+), +(?P<port_speed>\S+),'
+            p9_1 = re.compile(r'^\s*(?P<duplex_mode>[\w\W]+), +(?P<port_speed>\S+)(Mb/s|Kb/s|Gb/s),'
                                ' +(?P<location>\S+), +link +type +is'
                                ' +(?P<auto_negotiate>(autonegotiation))$')
             m = p9_1.match(line)
