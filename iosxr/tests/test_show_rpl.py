@@ -1,6 +1,6 @@
 ############################################################################
 # Unitest For Show PRL ROUTE POLICY PARSER
-############################################################################
+###########################################################################
 
 import unittest
 from unittest.mock import Mock
@@ -19,8 +19,8 @@ class test_show_rpl_route_policy(unittest.TestCase):
     golden_parsed_output = {'NO-EXPORT': {'statements': {10: {'actions': {'actions': 'pass',
                                                'set_community_list': 'no-export'},
                                    'conditions': {'match_prefix_list': 'NO-EXPORT'}}}},
- 'all-pass': {'statements': {'1': {'actions': {'actions': 'pass'},
-                                   'conditions': {}}}},
+ 'all-pass': {'statements': {1: {'actions': {'actions': 'pass'},
+                                 'conditions': {}}}},
  'allpass': {'statements': {10: {'actions': {'actions': 'pass'},
                                  'conditions': {}}}},
  'as-path': {'statements': {10: {'actions': {}, 'conditions': {}}}},
@@ -28,11 +28,11 @@ class test_show_rpl_route_policy(unittest.TestCase):
                                 'conditions': {'match_as_path_list': 'test'}},
                            20: {'actions': {'actions': 'drop'},
                                 'conditions': {}}}},
- 'test': {'statements': {10: {'actions': {'set_route_origin': 'incomplete'},
+ 'test': {'statements': {1: {'actions': {}, 'conditions': {}},
+                         10: {'actions': {'set_route_origin': 'incomplete'},
                               'conditions': {'match_local_pref_eq': '123'}},
                          20: {'actions': {'set_weight': '44'},
-                              'conditions': {'match_med_eq': 100}},
-                         '1': {'actions': {}, 'conditions': {}}}},
+                              'conditions': {'match_med_eq': 100}}}},
  'test-community': {'statements': {10: {'actions': {'set_community': ['100:1',
                                                                       '200:1',
                                                                       '300:1'],
@@ -90,8 +90,6 @@ class test_show_rpl_route_policy(unittest.TestCase):
                                               'set_metric_type': 'type-1',
                                               'set_next_hop': '192.168.1.1'},
                                   'conditions': {'match_med_eq': 10}}}}}
-
-
     
     golden_output = {'execute.return_value': '''
         Listing for all Route Policy objects
