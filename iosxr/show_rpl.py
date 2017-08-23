@@ -129,7 +129,7 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                 if statements in rpl_route_policy_dict[name]['statements']:
                     del rpl_route_policy_dict[name]['statements'][statements]
 
-                statements = m.groupdict()['statements']
+                statements = int(m.groupdict()['statements'])
                 if 'statements' not in rpl_route_policy_dict[name]:
                     rpl_route_policy_dict[name]['statements'] = {}
                 if statements not in rpl_route_policy_dict[name]['statements']:
