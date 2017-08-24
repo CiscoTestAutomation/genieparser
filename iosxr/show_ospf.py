@@ -10,13 +10,17 @@ from metaparser import MetaParser
 from metaparser.util.schemaengine import Schema, Any, Optional, Or, And, \
                                          Default, Use
 
-STR_OR_KEYED_LIST = str
+
 try:
     from ats import tcl
     from ats.tcl.keyedlist import KeyedList
-    STR_OR_KEYED_LIST = Or(str, KeyedList({}))
+
+    def OrKeyedList(default):
+        return Or(default, KeyedList({}))
+
 except ImportError:
-    pass
+    def OrKeyedList(default):
+        return default
 
 def regexp(expression):
     def match(value):
@@ -43,8 +47,8 @@ class ShowOspfSchema(MetaParser):
                              Optional('num_of_nssa_areas'): str,
                              Optional('area'):
                                  {regexp('(.*)'):
-                                     {'interfaces_in_this_area': STR_OR_KEYED_LIST,
-                                      'active_interfaces': STR_OR_KEYED_LIST},
+                                     {'interfaces_in_this_area': OrKeyedList(str),
+                                      'active_interfaces': OrKeyedList(str)},
                                  },
                              }
                          },
