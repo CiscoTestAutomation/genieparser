@@ -403,9 +403,9 @@ class ShowInventorySchema(MetaParser):
                 {Any():
                     {'description': str,
                      'slot': str,
-                     'pid': str,
-                     'vid': str,
-                     'serial_number': str}
+                     Optional('pid'): str,
+                     Optional('vid'): str,
+                     Optional('serial_number'): str}
                 },
             }
 
@@ -450,12 +450,15 @@ class ShowInventory(ShowInventorySchema):
                 inventory_dict['name'][name]['slot'] = slot_number
                 continue
 
-            p2 = re.compile(r'^\s*PID: +(?P<pid>[a-zA-z0-9\-\.]+) +\, +VID: +(?P<vid>[A-Z0-9\/]+) +\, +SN: +(?P<serial_number>[A-Z0-9\/]+)$')
+            p2 = re.compile(r'^\s*PID: +(?P<pid>[a-zA-z0-9\-\.]+)? +\, +VID: +(?P<vid>[A-Z0-9\/]+) +\, +SN: *(?P<serial_number>[A-Z0-9\/]+)?$')
             m = p2.match(line)
             if m:
-                inventory_dict['name'][name]['pid'] = m.groupdict()['pid']
-                inventory_dict['name'][name]['vid'] = m.groupdict()['vid']
-                inventory_dict['name'][name]['serial_number'] = m.groupdict()['serial_number']
+                if m.groupdict()['pid']:
+                    inventory_dict['name'][name]['pid'] = m.groupdict()['pid']
+                if m.groupdict()['vid']:
+                    inventory_dict['name'][name]['vid'] = m.groupdict()['vid']
+                if m.groupdict()['serial_number']:
+                    inventory_dict['name'][name]['serial_number'] = m.groupdict()['serial_number']
                 continue
 
         return inventory_dict
@@ -594,6 +597,16 @@ class ShowRedundancyStatus(ShowRedundancyStatusSchema):
             if m:
                 if 'redundancy_mode' not in redundancy_dict:
                     redundancy_dict['redundancy_mode'] = {}
+                continue
+
+            # Redundancy information not available for this platform
+            p1 = re.compile(r'^\s*Redundancy +information +not +available +for +this +platform$')
+            m = p1.match(line)
+            if m:
+                if 'redundancy_mode' not in redundancy_dict:
+                    redundancy_dict['redundancy_mode'] = {}
+                    redundancy_dict['redundancy_mode']['administrative'] = 'none'
+                    redundancy_dict['redundancy_mode']['operational'] = 'none'
                 continue
 
             p2 = re.compile(r'^\s*administrative: +(?P<administrative>[a-zA-z\s]+)$')
@@ -839,7 +852,7 @@ class ShowModuleSchema(MetaParser):
                          'hardware': str,
                          'mac_address': str,
                          'serial_number': str,
-                         'online_diag_status': str,
+                         Optional('online_diag_status'): str,
                          Optional('slot/world_wide_name'): str}
                       },
                     },
