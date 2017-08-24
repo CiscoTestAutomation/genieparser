@@ -565,7 +565,7 @@ class ShowInventory(ShowInventorySchema):
             # NAME: "module 0/RSP0/CPU0", DESCR: "ASR9K Route Switch Processor with 440G/slot Fabric and 6GB"
             # NAME: "Rack 0", DESCR: "Cisco XRv9K Centralized Virtual Router"
             p1 = re.compile(r'\s*NAME: +\"(?P<module_name>[a-zA-Z0-9\/\s]+)\",'
-                             ' +DESCR: +\"(?P<descr>[a-zA-Z0-9\/\s]+)\"$')
+                             ' +DESCR: +\"(?P<descr>[\w\-\.\:\/\s]+)\"$')
             m = p1.match(line)
             if m:
                 if 'module_name' not in inventory_dict:
@@ -822,7 +822,7 @@ class ShowRedundancySchema(MetaParser):
                 {'role': str,
                  Optional('valid_partner'): str,
                  Optional('ready'): str,
-                 'group': 
+                 Optional('group'): 
                     {Any():
                         {'primary': str,
                          'backup': str,
@@ -835,8 +835,8 @@ class ShowRedundancySchema(MetaParser):
                  'time_since_last_reload': str,
                  'node_uptime': str,
                  'node_uptime_timestamp': str,
-                 'last_switchover_timepstamp': str,
-                 'time_since_last_switchover': str,
+                 Optional('last_switchover_timepstamp'): str,
+                 Optional('time_since_last_switchover'): str,
                  Optional('standby_node_timestamp'): str,
                  Optional('time_since_standby_boot'): str,
                  Optional('standby_node_not_ready'): str,
