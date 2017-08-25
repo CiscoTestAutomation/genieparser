@@ -46,7 +46,7 @@ class ShowInterfaceSchema(MetaParser):
             Optional('mac_address'): str,
             Optional('auto_negotiate'): bool,
             Optional('duplex_mode'): str,
-            'port_mode': str,
+            Optional('port_mode'): str,
             Optional('auto_mdix'): str,
             Optional('switchport_monitor'): str,
             Optional('efficient_ethernet'): str,
@@ -164,8 +164,9 @@ class ShowInterface(ShowInterfaceSchema):
 
                 if interface not in interface_dict:
                     interface_dict[interface] = {}
-                interface_dict[interface]\
-                            ['link_state'] = link_state
+                if link_state:
+                    interface_dict[interface]\
+                                ['link_state'] = link_state
 
                 interface_dict[interface]['enabled'] = False
                 continue
@@ -178,19 +179,21 @@ class ShowInterface(ShowInterfaceSchema):
             if m:
                 interface = m.groupdict()['interface']
                 enabled = m.groupdict()['enabled']
-                link_state = str(m.groupdict()['link_state'])
+                link_state = m.groupdict()['link_state']
 
                 if interface not in interface_dict:
                     interface_dict[interface] = {}
-                interface_dict[interface]\
-                            ['link_state'] = link_state
+                if link_state:
+                    interface_dict[interface]\
+                                ['link_state'] = link_state
 
                 interface_dict[interface]['enabled'] = True
                 continue
 
-            #admin state is up
-            p2 = re.compile(r'^\s*admin *state *is (?P<oper_status>[a-z\,]+)'
-                             '( *Dedicated *Interface)?$')
+            # admin state is up
+            # admin state is up,
+            p2 = re.compile(r'^\s*admin *state *is (?P<oper_status>[\w]+)'
+                             ',? *(Dedicated *Interface)?$')
             m = p2.match(line)
             if m:
                 oper_status = m.groupdict()['oper_status']
@@ -199,7 +202,7 @@ class ShowInterface(ShowInterfaceSchema):
                 continue
 
             #admin state is down, Dedicated Interface, [parent interface is Ethernet2/1]
-            p2_1 = re.compile(r'^\s*admin *state *is (?P<oper_status>[a-z\,]+)'
+            p2_1 = re.compile(r'^\s*admin *state *is (?P<oper_status>[\w]+),'
                                ' *Dedicated *Interface, \[parent *interface *is'
                                ' *(?P<parent_interface>[a-zA-Z0-9\/\.]+)\]$')
             m = p2_1.match(line)
@@ -231,7 +234,7 @@ class ShowInterface(ShowInterfaceSchema):
                 continue
 
             #Description: desc
-            p4 = re.compile(r'^\s*Description: *(?P<description>[a-z]+)$')
+            p4 = re.compile(r'^\s*Description: *(?P<description>\S+)$')
             m = p4.match(line)
             if m:
                 description = m.groupdict()['description']
@@ -249,7 +252,7 @@ class ShowInterface(ShowInterfaceSchema):
                 ip = m.groupdict()['ip']
                 prefix_length = str(m.groupdict()['prefix_length'])
                 secondary = m.groupdict()['secondary']
-                route_tag = str(m.groupdict()['route_tag'])
+                route_tag = m.groupdict()['route_tag']
                 #address = ipv4+prefix_length
                 address = ip + '/' + prefix_length
                 if 'ipv4' not in interface_dict[interface]:
@@ -262,10 +265,12 @@ class ShowInterface(ShowInterfaceSchema):
                 interface_dict[interface]['ipv4'][address]\
                 ['prefix_length'] = prefix_length
 
-                interface_dict[interface]['ipv4'][address]\
-                ['secondary'] = True
-                interface_dict[interface]['ipv4'][address]\
-                ['route_tag'] = route_tag
+                if secondary:
+                    interface_dict[interface]['ipv4'][address]\
+                    ['secondary'] = True
+                if route_tag:
+                    interface_dict[interface]['ipv4'][address]\
+                    ['route_tag'] = route_tag
                 continue
             
             #MTU 1600 bytes, BW 768 Kbit, DLY 3330 usec
@@ -346,13 +351,20 @@ class ShowInterface(ShowInterfaceSchema):
                 interface_dict[interface]['port_mode'] = port_mode
                 continue
 
+            # auto-duplex, auto-speed
+            p10_1 = re.compile(r'^\s*auto-duplex, +auto-speed$')
+            m = p10_1.match(line)
+            if m:
+                # not caring for this line
+                continue
+
             #full-duplex, 1000 Mb/s
             # auto-duplex, auto-speed
-            p10 = re.compile(r'^\s*(?P<duplex_mode>[a-z\-]+),'
+            p10 = re.compile(r'^\s*(?P<duplex_mode>[a-z]+)-duplex,'
                               ' *(?P<port_speed>[a-z0-9\-]+)(?: *Mb/s)?$')
             m = p10.match(line)
             if m:
-                duplex_mode = m.groupdict()['duplex_mode']
+                duplex_mode = m.groupdict()['duplex_mode'].lower()
                 port_speed = m.groupdict()['port_speed']
 
                 interface_dict[interface]['duplex_mode'] = duplex_mode
@@ -766,6 +778,9 @@ class ShowIpInterfaceVrfAllSchema(MetaParser):
                  Optional('broadcast_address'): str,
                  Optional('route_preference'): str,
                 },            
+            Optional('unnumbered'):
+                {'interface_ref': str,
+            },       
             'counters':
                 {'unicast_packets_sent': int,
                  'unicast_packets_received': int,
@@ -870,14 +885,41 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
                 #init multicast groups list to empty for this interface
                 multicast_groups = []
+                unnumbered_intf = None
+                # unnumbered interface didn't share the same information
+                temp_intf = None
+
+                # check if the ipv4 and address already assgined during the unnumbered block
+                if 'ipv4' in ip_interface_vrf_all_dict[interface]:
+                    for key in ip_interface_vrf_all_dict[interface]['ipv4'].keys():
+                        if re.match('^\d+.\d+.\d+.\d+\/\d+', key):
+                            address = key
                 continue
                 
 
-            #IP address: 10.4.4.4, IP subnet: 10.4.4.0/24 secondary
+            # Unnumbered interfaces of loopback0: first iod 46
+            p2_1 = re.compile(r'^\s*Unnumbered +interfaces +of +(?P<unnumbered_intf>[\w\.\/]+): *'
+                               'first +iod +(?P<first_iod>\d+)$')
+            m = p2_1.match(line)
+            if m:
+                unnumbered_intf = m.groupdict()['unnumbered_intf']
+                continue
+
+            # Ethernet2/11:
+            p2_2 = re.compile(r'^\s*(?P<temp_intf>([E|e]thernet|[L|l]oopback|[T|t]unnel|[V|v]lan)[\d\/\.]+):$')
+            m = p2_2.match(line)
+            if m and unnumbered_intf:
+                temp_intf = m.groupdict()['temp_intf']
+                if temp_intf not in ip_interface_vrf_all_dict:
+                    ip_interface_vrf_all_dict[temp_intf] = {}
+                continue
+
+            # IP address: 10.4.4.4, IP subnet: 10.4.4.0/24 secondary
+            # IP address: 4.4.4.4, IP subnet: 4.4.4.0/24
             p3 = re.compile(r'^\s*IP *address: *(?P<ip>[0-9\.]+), *IP'
                              ' *subnet: *(?P<ip_subnet>[a-z0-9\.]+)\/'
                              '(?P<prefix_length>[0-9]+)'
-                             ' *(?P<secondary>(secondary))$')
+                             ' *(?P<secondary>(secondary))?$')
             m = p3.match(line)
             if m:
                 ip = m.groupdict()['ip']
@@ -886,19 +928,32 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 secondary = m.groupdict()['secondary']
 
                 address = ip + '/' + prefix_length
-                if 'ipv4' not in ip_interface_vrf_all_dict[interface]:
-                    ip_interface_vrf_all_dict[interface]['ipv4'] = {}
-                if address not in ip_interface_vrf_all_dict[interface]['ipv4']:
-                    ip_interface_vrf_all_dict[interface]['ipv4'][address] = {}
 
-                ip_interface_vrf_all_dict[interface]['ipv4'][address]\
-                ['ip'] = ip
-                ip_interface_vrf_all_dict[interface]['ipv4'][address]\
-                ['ip_subnet'] = ip_subnet
-                ip_interface_vrf_all_dict[interface]['ipv4'][address]\
-                ['prefix_length'] = prefix_length
-                ip_interface_vrf_all_dict[interface]['ipv4'][address]\
-                ['secondary'] = True
+                if temp_intf:
+                    intf_lst = [interface, temp_intf]
+                else:
+                    intf_lst = [interface]
+
+                for intf in intf_lst:
+                    if 'ipv4' not in ip_interface_vrf_all_dict[intf]:
+                        ip_interface_vrf_all_dict[intf]['ipv4'] = {}
+
+                    if address not in ip_interface_vrf_all_dict[intf]['ipv4']:
+                        ip_interface_vrf_all_dict[intf]['ipv4'][address] = {}
+
+                    ip_interface_vrf_all_dict[intf]['ipv4'][address]\
+                        ['ip'] = ip
+                    ip_interface_vrf_all_dict[intf]['ipv4'][address]\
+                        ['ip_subnet'] = ip_subnet
+                    ip_interface_vrf_all_dict[intf]['ipv4'][address]\
+                        ['prefix_length'] = prefix_length
+                    if secondary:
+                        ip_interface_vrf_all_dict[intf]['ipv4'][address]\
+                            ['secondary'] = True
+                    else:
+                        ip_interface_vrf_all_dict[intf]['ipv4'][address]\
+                            ['secondary'] = False
+
                 continue
 
             # IP address: 201.1.34.1, IP subnet: 201.1.34.0/24 route-preference: 0, tag: 0
@@ -912,25 +967,36 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 ip = m.groupdict()['ip']
                 ip_subnet = m.groupdict()['ip_subnet']
                 prefix_length = m.groupdict()['prefix_length']
-                route_tag = str(m.groupdict()['route_tag'])
-                route_preference = str(m.groupdict()['route_preference'])
+                route_tag = m.groupdict()['route_tag']
+                route_preference = m.groupdict()['route_preference']
 
                 address = ip + '/' + prefix_length
-                if 'ipv4' not in ip_interface_vrf_all_dict[interface]:
-                    ip_interface_vrf_all_dict[interface]['ipv4'] = {}
-                if address not in ip_interface_vrf_all_dict[interface]['ipv4']:
-                    ip_interface_vrf_all_dict[interface]['ipv4'][address] = {}
 
-                ip_interface_vrf_all_dict[interface]['ipv4'][address]\
-                ['ip'] = ip
-                ip_interface_vrf_all_dict[interface]['ipv4'][address]\
-                ['ip_subnet'] = ip_subnet
-                ip_interface_vrf_all_dict[interface]['ipv4'][address]\
-                ['prefix_length'] = prefix_length
-                ip_interface_vrf_all_dict[interface]['ipv4'][address]\
-                ['route_tag'] = route_tag
-                ip_interface_vrf_all_dict[interface]['ipv4'][address]\
-                ['route_preference'] = route_preference
+                if temp_intf:
+                    intf_lst = [interface, temp_intf]
+                    # unnumbered interface didn't share the same information
+                    temp_intf = None
+                else:
+                    intf_lst = [interface]
+
+                for intf in intf_lst:
+                    if 'ipv4' not in ip_interface_vrf_all_dict[interface]:
+                        ip_interface_vrf_all_dict[interface]['ipv4'] = {}
+                    if address not in ip_interface_vrf_all_dict[interface]['ipv4']:
+                        ip_interface_vrf_all_dict[interface]['ipv4'][address] = {}
+
+                    ip_interface_vrf_all_dict[interface]['ipv4'][address]\
+                    ['ip'] = ip
+                    ip_interface_vrf_all_dict[interface]['ipv4'][address]\
+                    ['ip_subnet'] = ip_subnet
+                    ip_interface_vrf_all_dict[interface]['ipv4'][address]\
+                    ['prefix_length'] = prefix_length
+                    if route_tag:
+                        ip_interface_vrf_all_dict[interface]['ipv4'][address]\
+                        ['route_tag'] = route_tag
+                    if route_preference:
+                        ip_interface_vrf_all_dict[interface]['ipv4'][address]\
+                        ['route_preference'] = route_preference
                 continue
 
             #IP broadcast address: 255.255.255.255
@@ -939,7 +1005,6 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
             m = p4.match(line)
             if m:
                 broadcast_address = str(m.groupdict()['broadcast_address'])
-
                 ip_interface_vrf_all_dict[interface]['ipv4'][address]['broadcast_address'] = broadcast_address
                 continue
             
@@ -988,13 +1053,16 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                              ' *(?P<route_tag>[0-9]+)$')
             m = p7.match(line)
             if m:
-                route_preference = str(m.groupdict()['route_preference'])
-                route_tag = str(m.groupdict()['route_tag'])
+                route_preference = m.groupdict()['route_preference']
+                route_tag = m.groupdict()['route_tag']
 
-                ip_interface_vrf_all_dict[interface]['ipv4'][address]['route_preference']\
-                 = route_preference
-                ip_interface_vrf_all_dict[interface]['ipv4'][address]\
-                ['route_tag'] = route_tag
+                if route_preference:
+                    ip_interface_vrf_all_dict[interface]['ipv4'][address]['route_preference']\
+                     = route_preference
+
+                if route_tag:
+                    ip_interface_vrf_all_dict[interface]['ipv4'][address]\
+                    ['route_tag'] = route_tag
                 continue
 
             #IP proxy ARP : disabled
@@ -1326,6 +1394,16 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
                 ip_interface_vrf_all_dict[interface]['wccp_redirect_exclude']\
                  = wccp_redirect_exclude
+                continue
+
+            # IP unnumbered interface (loopback0)
+            p31 = re.compile(r'^\s*IP +unnumbered +interface +\((?P<unnum_intf>[\w\/\.]+)\)$')
+            m = p31.match(line)
+            if m:
+                unnum_intf = m.groupdict()['unnum_intf']
+                ip_interface_vrf_all_dict[interface]['ipv4']['unnumbered'] = {}
+                ip_interface_vrf_all_dict[interface]['ipv4']['unnumbered']['interface_ref']\
+                 = unnum_intf
                 continue
 
         return ip_interface_vrf_all_dict

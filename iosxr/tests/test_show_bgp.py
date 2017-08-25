@@ -21,9 +21,77 @@ from parser.iosxr.show_bgp import ShowPlacementProgramAll,\
                                   ShowBgpInstanceNeighborsReceivedRoutes,\
                                   ShowBgpInstanceNeighborsRoutes,\
                                   ShowBgpInstanceSummary,\
-                                  ShowBgpInstanceAllAll,\
-                                  ShowBgpInstance
-ats_mock = Mock()
+                                  ShowBgpInstanceAllAll, ShowBgpInstances
+
+
+# ==================================
+# Unit test for 'show bgp instances'
+# ==================================
+
+class test_show_bgp_instances(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    device0 = Device(name='bDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "instance": {
+            "test1": {
+                 "num_vrfs": 0,
+                 "instance_id": 1,
+                 "placed_grp": "bgp2_1",
+                 "bgp_id": 333
+            },
+            "default": {
+                 "num_vrfs": 2,
+                 "instance_id": 3,
+                 "address_families": [
+                      "ipv4 unicast",
+                      "vpnv4 unicast",
+                      "ipv6 unicast",
+                      "vpnv6 unicast"
+                 ],
+                 "placed_grp": "bgp4_1",
+                 "bgp_id": 100
+            },
+            "test": {
+                 "num_vrfs": 0,
+                 "instance_id": 0,
+                 "placed_grp": "v4_routing",
+                 "bgp_id": 333
+            },
+            "test2": {
+                 "num_vrfs": 0,
+                 "instance_id": 2,
+                 "placed_grp": "bgp3_1",
+                 "bgp_id": 333
+            }
+        }
+    }
+    
+    golden_output = {'execute.return_value': '''
+        ID  Placed-Grp  Name              AS        VRFs    Address Families
+        --------------------------------------------------------------------------------
+        0   v4_routing  test              333       0       none
+        1   bgp2_1      test1             333       0       none
+        2   bgp3_1      test2             333       0       none
+        3   bgp4_1      default           100       2       IPv4 Unicast, VPNv4 Unicast,
+                                                            IPv6 Unicast, VPNv6 Unicast
+      '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowBgpInstances(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpInstances(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
 
 # ==========================================
 # Unit test for 'show placement program all'
@@ -793,19 +861,20 @@ class test_show_bgp_instance_session_group_configuration(unittest.TestCase):
 # ============================================================
 # Unit test for 'show bgp instance all vrf all process detail'
 # ============================================================
+
 class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
     
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
     
-    golden_parsed_output = {
+    golden_parsed_output1 = {
         'instance': 
             {'default': 
                 {'vrf': 
                     {'VRF1': 
                         {'active_cluster_id': '10',
-                        'cluster_id': '10',
+                        'always_compare_med': False,
                         'as_number': 100,
                         'as_system_number_format': 'ASPLAIN',
                         'att': {'as_paths': {'memory_used': 0,
@@ -830,6 +899,9 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                                                            'number': 0},
                                'tunnel_encap_attr': {'memory_used': 0,
                                                      'number': 0}},
+                        'bestpath_compare_routerid': False,
+                        'bestpath_cost_community_ignore': False,
+                        'bestpath_med_missing_at_worst': False,
                         'bgp_speaker_process': 0,
                         'bmp_pool_summary': {'100': {'alloc': 0,
                                                     'free': 0},
@@ -877,7 +949,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                         'default_keepalive': 60,
                         'default_local_preference': 100,
                         'default_value_for_bmp_buffer_size': 307,
-                        'enforce_first_as_enabled': True,
+                        'enforce_first_as': True,
                         'fast_external_fallover': True,
                         'generic_scan_interval': 60,
                         'max_limit_for_bmp_buffer_size': 409,
@@ -942,10 +1014,10 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                                                     'total': 3}}},
                     'a': 
                         {'active_cluster_id': '10',
-                        'cluster_id': '10',
                         'address_family': {'vpnv4 unicast': {'attribute_download': 'Disabled',
                                                              'bgp_table_version': '1',
                                                              'chunk_elememt_size': '3',
+                                                             'client_to_client_reflection': False,
                                                              'current_vrf': 'a',
                                                              'dampening': False,
                                                              'dynamic_med': True,
@@ -982,6 +1054,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                                                              'table_version_acked_by_rib': '0',
                                                              'table_version_synced_to_rib': '1',
                                                              'total_prefixes_scanned': '0'}},
+                        'always_compare_med': False,
                         'as_number': 100,
                         'as_system_number_format': 'ASPLAIN',
                         'att': {'as_paths': {'memory_used': 0,
@@ -1012,6 +1085,9 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                                                             'number': 0},
                                 'tunnel_encap_attr': {'memory_used': 0,
                                                       'number': 0}},
+                        'bestpath_compare_routerid': False,
+                        'bestpath_cost_community_ignore': False,
+                        'bestpath_med_missing_at_worst': False,
                         'bgp_speaker_process': 0,
                         'bmp_pool_summary': {'100': {'alloc': 0,
                                                      'free': 0},
@@ -1059,7 +1135,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                         'default_keepalive': 60,
                         'default_local_preference': 100,
                         'default_value_for_bmp_buffer_size': 307,
-                        'enforce_first_as_enabled': True,
+                        'enforce_first_as': True,
                         'fast_external_fallover': True,
                         'generic_scan_interval': 60,
                         'max_limit_for_bmp_buffer_size': 409,
@@ -1124,7 +1200,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                                                      'total': 3}}},
                     'vrf1': 
                         {'active_cluster_id': '10',
-                        'cluster_id': '10',
+                        'always_compare_med': False,
                         'as_number': 100,
                         'as_system_number_format': 'ASPLAIN',
                         'att': {'as_paths': {'memory_used': 0,
@@ -1149,6 +1225,9 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                                                            'number': 0},
                                'tunnel_encap_attr': {'memory_used': 0,
                                                      'number': 0}},
+                        'bestpath_compare_routerid': False,
+                        'bestpath_cost_community_ignore': False,
+                        'bestpath_med_missing_at_worst': False,
                         'bgp_speaker_process': 0,
                         'bmp_pool_summary': {'100': {'alloc': 0,
                                                     'free': 0},
@@ -1196,7 +1275,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                         'default_keepalive': 60,
                         'default_local_preference': 100,
                         'default_value_for_bmp_buffer_size': 307,
-                        'enforce_first_as_enabled': True,
+                        'enforce_first_as': True,
                         'fast_external_fallover': True,
                         'generic_scan_interval': 60,
                         'max_limit_for_bmp_buffer_size': 409,
@@ -1261,7 +1340,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                                                     'total': 3}}}}},
             'test': {}}}
 
-    golden_output = {'execute.return_value': '''
+    golden_output1 = {'execute.return_value': '''
 
         Wed Jul 12 16:37:22.420 EDT
 
@@ -1632,6 +1711,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                                 {'attribute_download': 'Disabled',
                                 'bgp_table_version': '3',
                                 'chunk_elememt_size': '3',
+                                'client_to_client_reflection': False,
                                 'current_vrf': 'vrf1',
                                 'dampening': False,
                                 'dynamic_med': True,
@@ -1677,6 +1757,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                                                                                                   'trig_tid': 8,
                                                                                                   'ver': 3}}}},
                                 'total_prefixes_scanned': '0'}},
+                        'always_compare_med': False,
                         'as_number': 100,
                         'as_system_number_format': 'ASPLAIN',
                         'att': {'as_paths': {'memory_used': 0,
@@ -1709,6 +1790,9 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                                                            'number': 0},
                                'tunnel_encap_attr': {'memory_used': 0,
                                                      'number': 0}},
+                        'bestpath_compare_routerid': False,
+                        'bestpath_cost_community_ignore': False,
+                        'bestpath_med_missing_at_worst': False,
                         'bgp_speaker_process': 0,
                         'bmp_pool_summary': {'100': {'alloc': 0,
                                                     'free': 0},
@@ -1750,14 +1834,13 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                                                      'free': 0},
                                             '900': {'alloc': 0,
                                                     'free': 0}},
-                        'cluster_id': '1.1.1.1',
                         'current_limit_for_bmp_buffer_size': 326,
                         'current_utilization_of_bmp_buffer_limit': 0,
                         'default_cluster_id': '1.1.1.1',
                         'default_keepalive': 60,
                         'default_local_preference': 100,
                         'default_value_for_bmp_buffer_size': 326,
-                        'enforce_first_as_enabled': True,
+                        'enforce_first_as': True,
                         'fast_external_fallover': True,
                         'generic_scan_interval': 60,
                         'log_neighbor_changes': True,
@@ -1830,6 +1913,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                                 {'attribute_download': 'Disabled',
                                 'bgp_table_version': '3',
                                 'chunk_elememt_size': '3',
+                                'client_to_client_reflection': False,
                                 'current_vrf': 'vrf2',
                                 'dampening': False,
                                 'dynamic_med': True,
@@ -1875,6 +1959,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                                                                                                   'trig_tid': 8,
                                                                                                   'ver': 3}}}},
                                 'total_prefixes_scanned': '0'}},
+                        'always_compare_med': False,
                         'as_number': 100,
                         'as_system_number_format': 'ASPLAIN',
                         'att': {'as_paths': {'memory_used': 0,
@@ -1907,6 +1992,9 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                                                            'number': 0},
                                'tunnel_encap_attr': {'memory_used': 0,
                                                      'number': 0}},
+                        'bestpath_compare_routerid': False,
+                        'bestpath_cost_community_ignore': False,
+                        'bestpath_med_missing_at_worst': False,
                         'bgp_speaker_process': 0,
                         'bmp_pool_summary': {'100': {'alloc': 0,
                                                     'free': 0},
@@ -1948,14 +2036,13 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                                                      'free': 0},
                                             '900': {'alloc': 0,
                                                     'free': 0}},
-                        'cluster_id': '1.1.1.1',
                         'current_limit_for_bmp_buffer_size': 326,
                         'current_utilization_of_bmp_buffer_limit': 0,
                         'default_cluster_id': '1.1.1.1',
                         'default_keepalive': 60,
                         'default_local_preference': 100,
                         'default_value_for_bmp_buffer_size': 326,
-                        'enforce_first_as_enabled': True,
+                        'enforce_first_as': True,
                         'fast_external_fallover': True,
                         'generic_scan_interval': 60,
                         'log_neighbor_changes': True,
@@ -2375,14 +2462,14 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(vrf_type='vrf')
 
-    def test_golden(self):
+    def test_golden1(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output)
+        self.device = Mock(**self.golden_output1)
         obj = ShowBgpInstanceProcessDetail(device=self.device)
         parsed_output = obj.parse(vrf_type='vrf')
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output,self.golden_parsed_output1)
 
-    def test_golden1(self):
+    def test_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowBgpInstanceProcessDetail(device=self.device)
@@ -2393,25 +2480,25 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
 # ============================================================
 # Unit test for 'show bgp instance all all all process detail'
 # ============================================================
+
 class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
     
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
     
-    golden_parsed_output = {
+    golden_parsed_output1 = {
         'instance': 
             {'default': 
                 {'vrf': 
                     {'default': 
                         {'active_cluster_id': '1.1.1.1',
-                        'cluster_id': '1.1.1.1',
                         'address_family': 
                             {'vpnv4 unicast': 
                                 {'attribute_download': 'Disabled',
                                 'bgp_table_version': '43',
                                 'chunk_elememt_size': '3',
-                                'client_reflection': True,
+                                'client_to_client_reflection': True,
                                 'dampening': False,
                                 'dynamic_med': True,
                                 'dynamic_med_int': '10 '
@@ -2461,9 +2548,9 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
                                 {'attribute_download': 'Disabled',
                                 'bgp_table_version': '43',
                                 'chunk_elememt_size': '3',
-                                'client_reflection': True,
+                                'client_to_client_reflection': True,
                                 'dampening': False,
-                                'dynamic_med': True,
+                                'dynamic_med': False,
                                 'dynamic_med_int': '10 '
                                                   'minutes',
                                 'dynamic_med_periodic_timer': 'Not '
@@ -2596,7 +2683,7 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
                         'default_keepalive': 60,
                         'default_local_preference': 100,
                         'default_value_for_bmp_buffer_size': 307,
-                        'enforce_first_as_enabled': True,
+                        'enforce_first_as': True,
                         'fast_external_fallover': True,
                         'generic_scan_interval': 60,
                         'max_limit_for_bmp_buffer_size': 409,
@@ -2659,7 +2746,7 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
                                                    'nbrs_estab': 4,
                                                    'total': 2}}}}}}}
 
-    golden_output = {'execute.return_value': '''
+    golden_output1 = {'execute.return_value': '''
         Wed Jun 28 19:11:16.033 UTC
 
         BGP instance 0: 'default'
@@ -2942,19 +3029,18 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
         Total RDs:            4               320
         '''}
 
-    golden_parsed_output1 = {
+    golden_parsed_output2 = {
         'instance': 
             {'default': 
                 {'vrf': 
                     {'default': 
                         {'active_cluster_id': '1.1.1.1',
-                        'cluster_id': '1.1.1.1',
                         'address_family': 
                             {'vpnv4 unicast': 
                                 {'attribute_download': 'Disabled',
                                 'bgp_table_version': '7',
                                 'chunk_elememt_size': '3',
-                                'client_reflection': True,
+                                'client_to_client_reflection': True,
                                 'dampening': False,
                                 'dynamic_med': True,
                                 'dynamic_med_int': '10 '
@@ -2992,9 +3078,9 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
                                 {'attribute_download': 'Disabled',
                                 'bgp_table_version': '7',
                                 'chunk_elememt_size': '3',
-                                'client_reflection': True,
+                                'client_to_client_reflection': True,
                                 'dampening': False,
-                                'dynamic_med': True,
+                                'dynamic_med': False,
                                 'dynamic_med_int': '10 '
                                                   'minutes',
                                 'dynamic_med_periodic_timer': 'Not '
@@ -3117,7 +3203,7 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
                         'default_keepalive': 60,
                         'default_local_preference': 100,
                         'default_value_for_bmp_buffer_size': 326,
-                        'enforce_first_as_enabled': True,
+                        'enforce_first_as': True,
                         'fast_external_fallover': True,
                         'generic_scan_interval': 60,
                         'max_limit_for_bmp_buffer_size': 435,
@@ -3183,7 +3269,7 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
             'test1': {'vrf': {'default': {}}},
             'test2': {'vrf': {'default': {}}}}}
         
-    golden_output1 = {'execute.return_value': '''
+    golden_output2 = {'execute.return_value': '''
         BGP instance 0: 'default'
         =========================
 
@@ -3463,20 +3549,21 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(vrf_type='all')
 
-    def test_golden(self):
-        self.device = Mock(**self.golden_output)
-        obj = ShowBgpInstanceProcessDetail(device=self.device)
-        parsed_output = obj.parse(vrf_type='all')
-        self.maxDiff = None
-        self.assertEqual(parsed_output,self.golden_parsed_output)
-
     def test_golden1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowBgpInstanceProcessDetail(device=self.device)
         parsed_output = obj.parse(vrf_type='all')
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output1)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowBgpInstanceProcessDetail(device=self.device)
+        parsed_output = obj.parse(vrf_type='all')
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
+
 
 # ==============================================================
 # Unit test for 'show bgp instance all all all neighbors detail'
@@ -3520,10 +3607,6 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                    "second_last_write_before_attempted": 0,
                                    "last_ka_start_before_second_last": "00:00:00",
                                    "remote_as": 100,
-                                   "bgp_negotiated_keepalive_timers": {
-                                        "keepalive_interval": 60,
-                                        "hold_time": 180
-                                   },
                                    "last_write_pulse_rcvd": "Jun 28 19:03:35.294 ",
                                    "written": 19,
                                    "message_stats_output_queue": 0,
@@ -3555,9 +3638,12 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                    "last_write_thread_event_before_reset": "00:00:00",
                                    "last_write_attempted": 0,
                                    "precedence": "internet",
-                                   "configured_hold_time": 180,
-                                   "keepalive": 60,
+                                   "holdtime": 180,
+                                   "keepalive_interval": 60,
                                    "local_as_as_no": 100,
+                                   "local_as_dual_as": False,
+                                   "local_as_no_prepend": False,
+                                   "local_as_replace_as": False,
                                    "last_read": "00:00:32",
                                    "second_last_write_before_written": 0,
                                    "minimum_time_between_adv_runs": 0,
@@ -3614,7 +3700,7 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                              "prefix_advertised": 5
                                         }
                                    },
-                                   "non_stop_routing": "enabled",
+                                   "non_stop_routing": True,
                                    "last_write": "00:00:23",
                                    "nsr_state": "None",
                                    "tcp_initial_sync_done": "---",
@@ -3660,10 +3746,6 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                    "second_last_write_before_attempted": 0,
                                    "last_ka_start_before_second_last": "00:00:00",
                                    "remote_as": 100,
-                                   "bgp_negotiated_keepalive_timers": {
-                                        "keepalive_interval": 60,
-                                        "hold_time": 180
-                                   },
                                    "last_write_pulse_rcvd": "Jun 28 19:03:52.763 ",
                                    "written": 19,
                                    "message_stats_output_queue": 0,
@@ -3695,9 +3777,12 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                    "last_write_thread_event_before_reset": "00:00:00",
                                    "last_write_attempted": 0,
                                    "precedence": "internet",
-                                   "configured_hold_time": 180,
-                                   "keepalive": 60,
+                                   "holdtime": 180,
+                                   "keepalive_interval": 60,
                                    "local_as_as_no": 100,
+                                   "local_as_dual_as": False,
+                                   "local_as_no_prepend": False,
+                                   "local_as_replace_as": False,
                                    "last_read": "00:00:06",
                                    "second_last_write_before_written": 0,
                                    "minimum_time_between_adv_runs": 0,
@@ -3754,7 +3839,7 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                              "prefix_advertised": 5
                                         }
                                    },
-                                   "non_stop_routing": "enabled",
+                                   "non_stop_routing": True,
                                    "last_write": "00:00:23",
                                    "nsr_state": "None",
                                    "tcp_initial_sync_done": "---",
@@ -3965,7 +4050,6 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
           Last reset 00:00:00
             '''}
 
-
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         bgp_instance_neighbors_detail_obj = ShowBgpInstanceNeighborsDetail(device=self.device1)
@@ -3997,18 +4081,20 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                     "VRF1": {
                         "neighbor": {
                             "2001:db8:1:5::5": {
+                                "remove_private_as": False,
+                                "shutdown": False,
+                                "suppress_four_byte_as_capability": False,
                                 "router_id": "10.1.5.1",
                                 "local_as_as_no": 100,
+                                "local_as_dual_as": False,
+                                "local_as_no_prepend": False,
+                                "local_as_replace_as": False,
                                 "bgp_negotiated_capabilities": {
                                     "ipv6_unicast": "advertised received",
                                     "four_octets_asn": "advertised ",
                                     "route_refresh": "advertised "
                                 },
                                 "last_write_pulse_rcvd": "Jun 28 19:17:44.716 ",
-                                "bgp_negotiated_keepalive_timers": {
-                                    "hold_time": 180,
-                                    "keepalive_interval": 60
-                                },
                                 "tcp_initial_sync": "---",
                                 "last_full_not_set_pulse_count": 112,
                                 "bgp_session_transport": {
@@ -4027,7 +4113,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                     }
                                 },
                                 "inbound_message": "3",
-                                "keepalive": 60,
+                                "keepalive_interval": 60,
                                 "minimum_time_between_adv_runs": 0,
                                 "last_write": "00:00:38",
                                 "enforcing_first_as": "enabled",
@@ -4079,11 +4165,11 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "multiprotocol_capability": "received",
                                 "second_written": 19,
                                 "link_state": "external link",
-                                "configured_hold_time": 180,
+                                "holdtime": 180,
                                 "last_write_pulse_rcvd_before_reset": "00:00:00",
                                 "last_ka_error_before_reset": "00:00:00",
                                 "second_last_write": "00:01:38",
-                                "non_stop_routing": "enabled",
+                                "non_stop_routing": True,
                                 "attempted": 19,
                                 "second_last_write_before_reset": "00:00:00",
                                 "last_ka_expiry_before_second_last": "00:00:00",
@@ -4119,18 +4205,20 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 }
                             },
                             "10.1.5.5": {
+                                "remove_private_as": False,
+                                "shutdown": False,
+                                "suppress_four_byte_as_capability": False,
                                 "router_id": "10.1.5.5",
                                 "local_as_as_no": 100,
+                                "local_as_dual_as": False,
+                                "local_as_no_prepend": False,
+                                "local_as_replace_as": False,
                                 "bgp_negotiated_capabilities": {
                                     "ipv4_unicast": "advertised received",
                                     "four_octets_asn": "advertised ",
                                     "route_refresh": "advertised "
                                 },
                                 "last_write_pulse_rcvd": "Jun 28 19:17:44.716 ",
-                                "bgp_negotiated_keepalive_timers": {
-                                    "hold_time": 180,
-                                    "keepalive_interval": 60
-                                },
                                 "tcp_initial_sync": "---",
                                 "last_full_not_set_pulse_count": 113,
                                 "bgp_session_transport": {
@@ -4149,7 +4237,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                     }
                                 },
                                 "inbound_message": "3",
-                                "keepalive": 60,
+                                "keepalive_interval": 60,
                                 "minimum_time_between_adv_runs": 0,
                                 "last_write": "00:00:38",
                                 "enforcing_first_as": "enabled",
@@ -4201,11 +4289,11 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "multiprotocol_capability": "not received",
                                 "second_written": 19,
                                 "link_state": "external link",
-                                "configured_hold_time": 180,
+                                "holdtime": 180,
                                 "last_write_pulse_rcvd_before_reset": "00:00:00",
                                 "last_ka_error_before_reset": "00:00:00",
                                 "second_last_write": "00:01:38",
-                                "non_stop_routing": "enabled",
+                                "non_stop_routing": True,
                                 "attempted": 19,
                                 "second_last_write_before_reset": "00:00:00",
                                 "last_ka_expiry_before_second_last": "00:00:00",
@@ -4245,18 +4333,20 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                     "VRF2": {
                         "neighbor": {
                             "2001:db8:20:1:5::5": {
+                                "remove_private_as": False,
+                                "shutdown": False,
+                                "suppress_four_byte_as_capability": False,
                                 "router_id": "20.1.5.1",
                                 "local_as_as_no": 100,
+                                "local_as_dual_as": False,
+                                "local_as_no_prepend": False,
+                                "local_as_replace_as": False,
                                 "bgp_negotiated_capabilities": {
                                     "ipv6_unicast": "advertised received",
                                     "four_octets_asn": "advertised ",
                                     "route_refresh": "advertised "
                                 },
                                 "last_write_pulse_rcvd": "Jun 28 19:17:40.237 ",
-                                "bgp_negotiated_keepalive_timers": {
-                                    "hold_time": 180,
-                                    "keepalive_interval": 60
-                                },
                                 "tcp_initial_sync": "---",
                                 "last_full_not_set_pulse_count": 102,
                                 "bgp_session_transport": {
@@ -4275,7 +4365,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                     }
                                 },
                                 "inbound_message": "3",
-                                "keepalive": 60,
+                                "keepalive_interval": 60,
                                 "minimum_time_between_adv_runs": 0,
                                 "last_write": "00:00:43",
                                 "enforcing_first_as": "enabled",
@@ -4323,11 +4413,11 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "multiprotocol_capability": "received",
                                 "second_written": 19,
                                 "link_state": "external link",
-                                "configured_hold_time": 180,
+                                "holdtime": 180,
                                 "last_write_pulse_rcvd_before_reset": "00:00:00",
                                 "last_ka_error_before_reset": "00:00:00",
                                 "second_last_write": "00:01:43",
-                                "non_stop_routing": "enabled",
+                                "non_stop_routing": True,
                                 "attempted": 19,
                                 "second_last_write_before_reset": "00:00:00",
                                 "last_ka_expiry_before_second_last": "00:00:00",
@@ -4363,18 +4453,20 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 }
                             },
                             "20.1.5.5": {
+                                "remove_private_as": False,
+                                "shutdown": False,
+                                "suppress_four_byte_as_capability": False,
                                 "router_id": "20.1.5.5",
                                 "local_as_as_no": 100,
+                                "local_as_dual_as": False,
+                                "local_as_no_prepend": False,
+                                "local_as_replace_as": False,
                                 "bgp_negotiated_capabilities": {
                                     "ipv4_unicast": "advertised received",
                                     "four_octets_asn": "advertised ",
                                     "route_refresh": "advertised "
                                 },
                                 "last_write_pulse_rcvd": "Jun 28 19:17:40.237 ",
-                                "bgp_negotiated_keepalive_timers": {
-                                    "hold_time": 180,
-                                    "keepalive_interval": 60
-                                },
                                 "tcp_initial_sync": "---",
                                 "last_full_not_set_pulse_count": 102,
                                 "bgp_session_transport": {
@@ -4393,7 +4485,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                     }
                                 },
                                 "inbound_message": "3",
-                                "keepalive": 60,
+                                "keepalive_interval": 60,
                                 "minimum_time_between_adv_runs": 0,
                                 "last_write": "00:00:43",
                                 "enforcing_first_as": "enabled",
@@ -4441,11 +4533,11 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "multiprotocol_capability": "not received",
                                 "second_written": 19,
                                 "link_state": "external link",
-                                "configured_hold_time": 180,
+                                "holdtime": 180,
                                 "last_write_pulse_rcvd_before_reset": "00:00:00",
                                 "last_ka_error_before_reset": "00:00:00",
                                 "second_last_write": "00:01:43",
-                                "non_stop_routing": "enabled",
+                                "non_stop_routing": True,
                                 "attempted": 19,
                                 "second_last_write_before_reset": "00:00:00",
                                 "last_ka_expiry_before_second_last": "00:00:00",
@@ -4808,8 +4900,9 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                         'route_refresh_request_sent': 0,
                                         'update_group': '0.1'}},
                                 'attempted': 0,
-                                'bgp_negotiated_keepalive_timers': {'hold_time': 180,
-                                                                    'keepalive_interval': 60},
+                                'remove_private_as': False,
+                                'shutdown': False,
+                                'suppress_four_byte_as_capability': False,
                                 'bgp_neighbor_counters': {'messages': {'received': {'keepalives': 0,
                                                                                     'notifications': 0,
                                                                                     'opens': 0,
@@ -4827,10 +4920,10 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                                                         'if_handle': '0x00000000',
                                                                         'local_host': '::',
                                                                         'local_port': '0'}},
-                                'configured_hold_time': 180,
+                                'holdtime': 180,
                                 'enforcing_first_as': 'enabled',
                                 'inbound_message': '3',
-                                'keepalive': 60,
+                                'keepalive_interval': 60,
                                 'last_full_not_set_pulse_count': 0,
                                 'last_ka_error_before_reset': '00:00:00',
                                 'last_ka_error_ka_not_sent': '00:00:00',
@@ -4852,13 +4945,16 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 'link_state': 'external '
                                               'link',
                                 'local_as_as_no': 100,
+                                'local_as_dual_as': False,
+                                'local_as_no_prepend': False,
+                                'local_as_replace_as': False,
                                 'message_stats_input_queue': 0,
                                 'message_stats_output_queue': 0,
                                 'min_acceptable_hold_time': 3,
                                 'minimum_time_between_adv_runs': 0,
                                 'multiprotocol_capability': 'not '
                                                             'received',
-                                'non_stop_routing': 'enabled',
+                                'non_stop_routing': True,
                                 'nsr_state': 'None',
                                 'outbound_message': '3',
                                 'precedence': 'internet',
@@ -4921,9 +5017,10 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 'route_refresh_request_received': 0,
                                 'route_refresh_request_sent': 0,
                                 'update_group': '0.1'}},
+                        'remove_private_as': False,
+                        'shutdown': False,
+                        'suppress_four_byte_as_capability': False,
                         'attempted': 0,
-                        'bgp_negotiated_keepalive_timers': {'hold_time': 180,
-                                                           'keepalive_interval': 60},
                         'bgp_neighbor_counters': {'messages': {'received': {'keepalives': 0,
                                                                            'notifications': 0,
                                                                            'opens': 0,
@@ -4941,10 +5038,10 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                                                'if_handle': '0x00000000',
                                                                'local_host': '::',
                                                                'local_port': '0'}},
-                        'configured_hold_time': 180,
+                        'holdtime': 180,
                         'enforcing_first_as': 'enabled',
                         'inbound_message': '3',
-                        'keepalive': 60,
+                        'keepalive_interval': 60,
                         'last_full_not_set_pulse_count': 0,
                         'last_ka_error_before_reset': '00:00:00',
                         'last_ka_error_ka_not_sent': '00:00:00',
@@ -4966,13 +5063,16 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                         'link_state': 'external '
                                      'link',
                         'local_as_as_no': 100,
+                        'local_as_dual_as': False,
+                        'local_as_no_prepend': False,
+                        'local_as_replace_as': False,
                         'message_stats_input_queue': 0,
                         'message_stats_output_queue': 0,
                         'min_acceptable_hold_time': 3,
                         'minimum_time_between_adv_runs': 0,
                         'multiprotocol_capability': 'not '
                                                    'received',
-                        'non_stop_routing': 'enabled',
+                        'non_stop_routing': True,
                         'nsr_state': 'None',
                         'outbound_message': '3',
                         'precedence': 'internet',
@@ -6214,7 +6314,8 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {'instance': {'default': {'vrf': {'VRF1': {'address_family': {'vpnv4 unicast': {'bgp_table_version': 63,
+    golden_parsed_output = {
+        'instance': {'default': {'vrf': {'VRF1': {'address_family': {'vpnv4 unicast': {'bgp_table_version': 63,
                                                                                 'bgp_vrf': 'vrf1',
                                                                                 'local_as': 100,
                                                                                 'non_stop_routing': 'enabled',
@@ -6277,7 +6378,6 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
                                                                                                           'up_down': '00:01:12'}},
                                                                      'remote_as': 200}}}}}}}
 
-
     golden_output = {'execute.return_value': '''
         BGP instance 0: 'default'
         =========================
@@ -6328,6 +6428,156 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
         20.1.5.5          0   200      58      62       63    0    0 00:01:12          5
         '''}
 
+    golden_parsed_output2 = {
+        'instance': 
+            {'default': 
+                {'vrf': 
+                    {'VRF1': 
+                        {'address_family': 
+                            {'vpnv6 unicast': 
+                                {'bgp_table_version': 3,
+                                'bgp_vrf': 'vrf1',
+                                'local_as': 100,
+                                'non_stop_routing': 'enabled',
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': 3,
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'operation_mode': 'standalone',
+                                'process': {'Speaker': {'brib_rib': 3,
+                                                        'importver': 3,
+                                                        'labelver': 3,
+                                                        'rcvtblver': 3,
+                                                        'sendtblver': 3,
+                                                        'standbyver': 0}},
+                                'rd_version': 2,
+                                'route_distinguisher': '200:1',
+                                'router_id': '11.11.11.11',
+                                'table_id': '0xe0800011',
+                                'table_state': 'active',
+                                'vrf_id': '0x60000002',
+                                'vrf_state': 'active'}},
+                        'neighbor': 
+                            {'2001:db8:1:5::5': 
+                                {'address_family': 
+                                    {'vpnv6 unicast': 
+                                        {'input_queue': 0,
+                                         'msg_rcvd': 0,
+                                         'msg_sent': 0,
+                                         'output_queue': 0,
+                                         'route_distinguisher': '200:1',
+                                         'spk': 3,
+                                         'state_pfxrcd': 'Idle',
+                                         'tbl_ver': 0,
+                                         'up_down': '00:00:00'}},
+                                'remote_as': 200}}},
+                    'VRF2': 
+                        {'address_family': 
+                            {'vpnv6 unicast': 
+                                {'bgp_table_version': 3,
+                                'bgp_vrf': 'vrf2',
+                                'local_as': 100,
+                                'non_stop_routing': 'enabled',
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_initial_initsync_version': 3,
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'operation_mode': 'standalone',
+                                'process': {'Speaker': {'brib_rib': 3,
+                                                        'importver': 3,
+                                                        'labelver': 3,
+                                                        'rcvtblver': 3,
+                                                        'sendtblver': 3,
+                                                        'standbyver': 0}},
+                                'rd_version': 3,
+                                'route_distinguisher': '200:2',
+                                'router_id': '11.11.11.11',
+                                'table_id': '0xe0800012',
+                                'table_state': 'active',
+                                'vrf_id': '0x60000003',
+                                'vrf_state': 'active'}},
+                        'neighbor': 
+                            {'2001:db8:20:1:5::5': 
+                                {'address_family': 
+                                    {'vpnv6 unicast': 
+                                        {'input_queue': 0,
+                                        'msg_rcvd': 0,
+                                        'msg_sent': 0,
+                                        'output_queue': 0,
+                                        'route_distinguisher': '200:2',
+                                        'spk': 3,
+                                        'state_pfxrcd': 'Idle',
+                                        'tbl_ver': 0,
+                                        'up_down': '00:00:00'}},
+                                'remote_as': 200}}}}},
+            'test': {},
+            'test1': {},
+            'test2': {}}}
+
+    golden_output2 = {'execute.return_value': '''
+        RP/0/RSP1/CPU0:PE1#show bgp instance all vrf all ipv6 unicast summary
+        Tue Aug 15 14:07:59.536 PDT
+
+        BGP instance 0: 'test'
+        ======================
+        % None of the requested address families are configured for instance 'test'(29261)
+
+        BGP instance 1: 'test1'
+        =======================
+        % None of the requested address families are configured for instance 'test1'(29261)
+
+        BGP instance 2: 'test2'
+        =======================
+        % None of the requested address families are configured for instance 'test2'(29261)
+
+        BGP instance 3: 'default'
+        =========================
+
+        VRF: VRF1
+        ---------
+        BGP VRF VRF1, state: Active
+        BGP Route Distinguisher: 200:1
+        VRF ID: 0x60000002
+        BGP router identifier 11.11.11.11, local AS number 100
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0800011   RD version: 2
+        BGP main routing table version 3
+        BGP NSR Initial initsync version 3 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+
+        BGP is operating in STANDALONE mode.
+
+
+        Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+        Speaker               3          3          3          3           3           0
+
+        Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+        2001:db8:1:5::5   3   200       0       0        0    0    0 00:00:00 Idle
+
+
+        VRF: VRF2
+        ---------
+        BGP VRF VRF2, state: Active
+        BGP Route Distinguisher: 200:2
+        VRF ID: 0x60000003
+        BGP router identifier 11.11.11.11, local AS number 100
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0800012   RD version: 3
+        BGP main routing table version 3
+        BGP NSR Initial initsync version 3 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+
+        BGP is operating in STANDALONE mode.
+
+
+        Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+        Speaker               3          3          3          3           3           0
+
+        Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+        2001:db8:20:1:5::5
+                          3   200       0       0        0    0    0 00:00:00 Idle
+        '''}
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         bgp_instance_summary_obj = ShowBgpInstanceSummary(device=self.device1)
@@ -6341,6 +6591,12 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
         parsed_output = bgp_instance_summary_obj.parse(vrf_type='vrf')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        bgp_instance_summary_obj = ShowBgpInstanceSummary(device=self.device)
+        parsed_output = bgp_instance_summary_obj.parse(vrf_type='vrf', af_type='ipv6 unicast')
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 # =============================================
 # Unit test for 'show bgp instance all all all'
@@ -7259,58 +7515,6 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
         parsed_output = bgp_instance_all_all_obj.parse(vrf_type='vrf')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-class test_Show_Bgp_Instance(unittest.TestCase):
-    device = Device(name='aDevice')
-    device1 = Device(name='bDevice')
-    device2 = Device(name='cDevice')
-    empty_output = {'execute.return_value': '', 'os':'iosxr'}
-    golden_parsed_output = {'address_family':
-                            {'IPv4 Unicast':
-                              {'ip_address': '10.3.4.0',
-                               'localpref_number': '100'}
-                            }
-                        }
-
-    golden_output = {'execute.return_value': '''
-
-Wed Jul 12 15:23:42.143 EDT
-
-BGP instance 0: 'default'
-=========================
-
-Address Family: IPv4 Unicast
-----------------------------
-
-BGP routing table entry for 10.3.4.0/34
-Versions:
-  Process           bRIB/RIB  SendTblVer
-  Speaker                  4           4
-Last Modified: Jul  9 08:46:14.166 for 3d06h
-Paths: (1 available, best #1)
-  Not advertised to any peer
-  Path #1: Received by speaker 0
-  Not advertised to any peer
-  Local
-    0.0.0.0 from 0.0.0.0 (4.4.4.4)
-      Origin incomplete, metric 0, localpref 100, weight 32768, valid, redistributed, best, group-best
-      Received Path ID 0, Local Path ID 0, version 4
-
-''', 'os':'iosxr'}
-
-    ats_mock.tcl.eval.return_value = 'iosxr'
-
-    def test_golden(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output)
-        version_obj = ShowBgpInstance(device=self.device)
-        parsed_output = version_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
-
-    def test_empty(self):
-        self.device2 = Mock(**self.empty_output)
-        version_obj = ShowBgpInstance(device=self.device2)
-        with self.assertRaises(IndexError):
-            parsed_output = version_obj.parse()
 
 if __name__ == '__main__':
     unittest.main()

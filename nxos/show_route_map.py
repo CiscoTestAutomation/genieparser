@@ -10,7 +10,8 @@ class ShowRouteMapSchema(MetaParser):
     '''
     schema = {
         Any():
-            {'statements':
+            {Optional('description'): str,
+             'statements':
                 {Any():
                     {'conditions':
                         {Optional('match_med_eq'): int,
@@ -44,6 +45,7 @@ class ShowRouteMapSchema(MetaParser):
                          Optional('set_ext_community_rt_additive'): bool,
                          Optional('set_ext_community_delete'): str,
                          Optional('set_level'): str,
+                         Optional('set_weight'): int,
                          Optional('set_metric_type'): str,
                          'clause': bool,
                          'route_disposition': str,
@@ -86,6 +88,13 @@ class ShowRouteMap(ShowRouteMapSchema):
                     route_map_dict[name]['statements'][statements]['conditions'] = {}
                     set_as_path_group = []
                     continue
+                    
+            # description <description>
+            p1_1 = re.compile(r'^\s*description +(?P<description>[a-zA-Z0-9]+)$')
+            m = p1_1.match(line)
+            if m:
+                description = str(m.groupdict()['description'])
+                route_map_dict[name]['description'] = description
 
             # as-path (as-path filter): aspathlist1 
             p2 = re.compile(r'^\s*as-path *\(as-path *filter\):'
@@ -210,6 +219,14 @@ class ShowRouteMap(ShowRouteMapSchema):
             if m:
                 route_map_dict[name]['statements'][statements]['actions']\
                 ['set_tag'] = int(m.groupdict()['set_tag'])
+                continue
+
+            # weight 50
+            p14_1 = re.compile(r'^\s*weight *(?P<set_weight>[0-9]+)$')
+            m = p14_1.match(line)
+            if m:
+                route_map_dict[name]['statements'][statements]['actions']\
+                ['set_weight'] = int(m.groupdict()['set_weight'])
                 continue
 
             #metric 20 
