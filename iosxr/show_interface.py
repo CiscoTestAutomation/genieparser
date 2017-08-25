@@ -61,9 +61,7 @@ class ShowIpInterfaceBriefSchema(MetaParser):
 
 
 class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    
     #*************************
     # schema - class variable
     #
@@ -180,7 +178,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
     # parsing mechanisms (cli(), yang(), xml()).
 
     def cli(self):
-        ''' parsing mechanism: cli
+        ''' parser for show ip interface brief
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
