@@ -403,9 +403,9 @@ class ShowInventorySchema(MetaParser):
                 {Any():
                     {'description': str,
                      'slot': str,
-                     'pid': str,
-                     'vid': str,
-                     'serial_number': str}
+                     Optional('pid'): str,
+                     Optional('vid'): str,
+                     Optional('serial_number'): str}
                 },
             }
 
@@ -450,12 +450,15 @@ class ShowInventory(ShowInventorySchema):
                 inventory_dict['name'][name]['slot'] = slot_number
                 continue
 
-            p2 = re.compile(r'^\s*PID: +(?P<pid>[a-zA-z0-9\-\.]+) +\, +VID: +(?P<vid>[A-Z0-9\/]+) +\, +SN: +(?P<serial_number>[A-Z0-9\/]+)$')
+            p2 = re.compile(r'^\s*PID: +(?P<pid>[a-zA-z0-9\-\.]+)? +\, +VID: +(?P<vid>[A-Z0-9\/]+) +\, +SN: *(?P<serial_number>[A-Z0-9\/]+)?$')
             m = p2.match(line)
             if m:
-                inventory_dict['name'][name]['pid'] = m.groupdict()['pid']
-                inventory_dict['name'][name]['vid'] = m.groupdict()['vid']
-                inventory_dict['name'][name]['serial_number'] = m.groupdict()['serial_number']
+                if m.groupdict()['pid']:
+                    inventory_dict['name'][name]['pid'] = m.groupdict()['pid']
+                if m.groupdict()['vid']:
+                    inventory_dict['name'][name]['vid'] = m.groupdict()['vid']
+                if m.groupdict()['serial_number']:
+                    inventory_dict['name'][name]['serial_number'] = m.groupdict()['serial_number']
                 continue
 
         return inventory_dict
@@ -539,113 +542,20 @@ class ShowInstallActive(ShowInstallActiveSchema):
 
         return active_dict
 
-class ShowSystemRedundancyStatusSchema(MetaParser):
-    schema = {'redundancy_mode':
-                  {'administrative': str,
-                   'operational': str},
-              'supervisor_1':
-                  {'redundancy_state': str,
-                   'supervisor_state': str,
-                   'internal_state':str},
-              Optional('supervisor_2'):
-                  {Optional('redundancy_state'): str,
-                   Optional('supervisor_state'): str,
-                   Optional('internal_state'):str},
-            }
 
-
-class ShowSystemRedundancyStatus(ShowSystemRedundancyStatusSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
-
-    def cli(self):
-        ''' parsing mechanism: cli
-
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
-        '''
-        cmd = 'show system redundancy status'.format()
-        out = self.device.execute(cmd)
-        redundancy_dict = {}
-        sup_number = None
-        for line in out.splitlines():
-            line = line.rstrip()
-            p1 = re.compile(r'^\s*Redundancy mode$')
-            m = p1.match(line)
-            if m:
-                if 'redundancy_mode' not in redundancy_dict:
-                    redundancy_dict['redundancy_mode'] = {}
-                continue
-
-            p2 = re.compile(r'^\s*administrative: +(?P<administrative>[a-zA-z\s]+)$')
-            m = p2.match(line)
-            if m:
-                redundancy_dict['redundancy_mode']['administrative'] = m.groupdict()['administrative']
-                continue
-
-            p3 = re.compile(r'^\s*operational: +(?P<operational>[a-zA-z\s]+)$')
-            m = p3.match(line)
-            if m:
-                redundancy_dict['redundancy_mode']['operational'] = m.groupdict()['operational']
-                continue
-
-            p4 = re.compile(r'^\s*This supervisor \(sup-1\)$')
-            m = p4.match(line)
-            if m:
-                sup_number = 'sup-1'
-                if 'supervisor_1' not in redundancy_dict:
-                    redundancy_dict['supervisor_1'] = {}
-                continue
-
-            p5 = re.compile(r'^\s*Other supervisor \(sup-2\)$')
-            m = p5.match(line)
-            if m:
-                sup_number = 'sup-2'
-                if 'supervisor_2' not in redundancy_dict:
-                    redundancy_dict['supervisor_2'] = {}
-                continue
-
-            p6 = re.compile(r'^\s*Redundancy state: +(?P<redundancy_state>[a-zA-z\W\s]+)$')
-            m = p6.match(line)
-            if m:
-                if sup_number is 'sup-1':
-                  redundancy_dict['supervisor_1']['redundancy_state'] = m.groupdict()['redundancy_state']
-                elif sup_number is 'sup-2':
-                  redundancy_dict['supervisor_2']['redundancy_state'] = m.groupdict()['redundancy_state']
-                continue
-
-            p7 = re.compile(r'^\s*Supervisor state: +(?P<supervisor_state>[a-zA-z\s]+)$')
-            m = p7.match(line)
-            if m:
-                if sup_number is 'sup-1':
-                  redundancy_dict['supervisor_1']['supervisor_state'] = m.groupdict()['supervisor_state']
-                elif sup_number is 'sup-2':
-                  redundancy_dict['supervisor_2']['supervisor_state'] = m.groupdict()['supervisor_state']
-                continue
-
-            p8 = re.compile(r'^\s*Internal state: +(?P<internal_state>[a-zA-z\s]+)$')
-            m = p8.match(line)
-            if m:
-                if sup_number is 'sup-1':
-                  redundancy_dict['supervisor_1']['internal_state'] = m.groupdict()['internal_state']
-                elif sup_number is 'sup-2':
-                  redundancy_dict['supervisor_2']['internal_state'] = m.groupdict()['internal_state']
-                continue
-
-        return redundancy_dict
+# =====================================
+# Parser for 'show redundancy status'
+# =====================================
 
 class ShowRedundancyStatusSchema(MetaParser):
+    
+    '''Schema for show redundancy status and 
+                  show system redundancy status'''
+
     schema = {'redundancy_mode':
                   {'administrative': str,
                    'operational': str},
-              'supervisor_1':
+              Optional('supervisor_1'):
                   {'redundancy_state': str,
                    'supervisor_state': str,
                    'internal_state':str},
@@ -653,30 +563,26 @@ class ShowRedundancyStatusSchema(MetaParser):
                   {Optional('redundancy_state'): str,
                    Optional('supervisor_state'): str,
                    Optional('internal_state'):str},
-              'system_start_time': str,
-              'system_uptime': str,
-              'kernel_uptime': str,
-              'active_supervisor_time': str}
+              Optional('supervisor_3'):
+                  {Optional('redundancy_state'): str,
+                   Optional('supervisor_state'): str,
+                   Optional('internal_state'):str},
+              Optional('supervisor_4'):
+                  {Optional('redundancy_state'): str,
+                   Optional('supervisor_state'): str,
+                   Optional('internal_state'):str},
+              Optional('system_start_time'): str,
+              Optional('system_uptime'): str,
+              Optional('kernel_uptime'): str,
+              Optional('active_supervisor_time'): str}
 
 
 class ShowRedundancyStatus(ShowRedundancyStatusSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
 
-    def cli(self):
-        ''' parsing mechanism: cli
+    '''Parser for show redundancy status'''
 
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
-        '''
-        cmd = 'show redundancy status'.format()
+    def cli(self, cmd='show redundancy status'):
+
         out = self.device.execute(cmd)
         redundancy_dict = {}
         sup_number = None
@@ -687,6 +593,16 @@ class ShowRedundancyStatus(ShowRedundancyStatusSchema):
             if m:
                 if 'redundancy_mode' not in redundancy_dict:
                     redundancy_dict['redundancy_mode'] = {}
+                continue
+
+            # Redundancy information not available for this platform
+            p1 = re.compile(r'^\s*Redundancy +information +not +available +for +this +platform$')
+            m = p1.match(line)
+            if m:
+                if 'redundancy_mode' not in redundancy_dict:
+                    redundancy_dict['redundancy_mode'] = {}
+                    redundancy_dict['redundancy_mode']['administrative'] = 'none'
+                    redundancy_dict['redundancy_mode']['operational'] = 'none'
                 continue
 
             p2 = re.compile(r'^\s*administrative: +(?P<administrative>[a-zA-z\s]+)$')
@@ -701,48 +617,29 @@ class ShowRedundancyStatus(ShowRedundancyStatusSchema):
                 redundancy_dict['redundancy_mode']['operational'] = m.groupdict()['operational']
                 continue
 
-            p4 = re.compile(r'^\s*This supervisor \(sup-1\)$')
+            p4 = re.compile(r'^\s*(This|Other) +supervisor +\(sup-(?P<sup_num>\d+)\)$')
             m = p4.match(line)
             if m:
-                sup_number = 'sup-1'
-                if 'supervisor_1' not in redundancy_dict:
-                    redundancy_dict['supervisor_1'] = {}
-                continue
-
-            p5 = re.compile(r'^\s*Other supervisor \(sup-2\)$')
-            m = p5.match(line)
-            if m:
-                sup_number = 'sup-2'
-                if 'supervisor_2' not in redundancy_dict:
-                    redundancy_dict['supervisor_2'] = {}
+                sup_num = m.groupdict()['sup_num']
+                key = 'supervisor_{}'.format(sup_num)
+                if key not in redundancy_dict:
+                    redundancy_dict[key] = {}
                 continue
 
             p6 = re.compile(r'^\s*Redundancy state: +(?P<redundancy_state>[a-zA-z\W\s]+)$')
             m = p6.match(line)
             if m:
-                if sup_number is 'sup-1':
-                  redundancy_dict['supervisor_1']['redundancy_state'] = m.groupdict()['redundancy_state']
-                elif sup_number is 'sup-2':
-                  redundancy_dict['supervisor_2']['redundancy_state'] = m.groupdict()['redundancy_state']
-                continue
+                redundancy_dict[key]['redundancy_state'] = m.groupdict()['redundancy_state']
 
             p7 = re.compile(r'^\s*Supervisor state: +(?P<supervisor_state>[a-zA-z\s]+)$')
             m = p7.match(line)
             if m:
-                if sup_number is 'sup-1':
-                  redundancy_dict['supervisor_1']['supervisor_state'] = m.groupdict()['supervisor_state']
-                elif sup_number is 'sup-2':
-                  redundancy_dict['supervisor_2']['supervisor_state'] = m.groupdict()['supervisor_state']
-                continue
+                redundancy_dict[key]['supervisor_state'] = m.groupdict()['supervisor_state']
 
             p8 = re.compile(r'^\s*Internal state: +(?P<internal_state>[a-zA-z\s]+)$')
             m = p8.match(line)
             if m:
-                if sup_number is 'sup-1':
-                  redundancy_dict['supervisor_1']['internal_state'] = m.groupdict()['internal_state']
-                elif sup_number is 'sup-2':
-                  redundancy_dict['supervisor_2']['internal_state'] = m.groupdict()['internal_state']
-                continue
+                redundancy_dict[key]['internal_state'] = m.groupdict()['internal_state']
 
             p9 = re.compile(r'^\s*System start time: +(?P<system_start_time>[a-zA-z0-9\:\s]+)$')
             m = p9.match(line)
@@ -769,6 +666,17 @@ class ShowRedundancyStatus(ShowRedundancyStatusSchema):
                 continue
 
         return redundancy_dict
+
+
+# ==========================================
+# Parser for 'show system redundancy status'
+# ==========================================
+class ShowSystemRedundancyStatus(ShowRedundancyStatus):
+
+    '''Parser for show system redundancy status'''
+
+    def cli(self):
+        return(super().cli(cmd='show system redundancy status'))
 
 
 class ShowBootSchema(MetaParser):
@@ -945,7 +853,7 @@ class ShowModuleSchema(MetaParser):
                          'hardware': str,
                          'mac_address': str,
                          'serial_number': str,
-                         'online_diag_status': str,
+                         Optional('online_diag_status'): str,
                          Optional('slot/world_wide_name'): str}
                       },
                     },

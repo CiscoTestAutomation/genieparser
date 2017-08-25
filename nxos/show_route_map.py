@@ -10,7 +10,8 @@ class ShowRouteMapSchema(MetaParser):
     '''
     schema = {
         Any():
-            {'statements':
+            {Optional('description'): str,
+             'statements':
                 {Any():
                     {'conditions':
                         {Optional('match_med_eq'): int,
@@ -87,6 +88,13 @@ class ShowRouteMap(ShowRouteMapSchema):
                     route_map_dict[name]['statements'][statements]['conditions'] = {}
                     set_as_path_group = []
                     continue
+                    
+            # description <description>
+            p1_1 = re.compile(r'^\s*description +(?P<description>[a-zA-Z0-9]+)$')
+            m = p1_1.match(line)
+            if m:
+                description = str(m.groupdict()['description'])
+                route_map_dict[name]['description'] = description
 
             # as-path (as-path filter): aspathlist1 
             p2 = re.compile(r'^\s*as-path *\(as-path *filter\):'

@@ -15,7 +15,8 @@ class test_show_route_map(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     
     golden_parsed_output = {'BGPPeers': 
-            {'statements': 
+            {'description': 'test15',
+             'statements': 
                 {'10': 
                     {'actions': 
                         {'clause': True,
@@ -168,7 +169,8 @@ class test_show_route_map(unittest.TestCase):
 
    
     golden_output = {'execute.return_value': '''
-      route-map BGPPeers, permit, sequence 10 
+      route-map BGPPeers, permit, sequence 10
+      description test15 
   Match clauses:
     as-number (as-path-list filter): List1, List2                 
     as-number: 64496 64501-64510                                  

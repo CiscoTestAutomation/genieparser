@@ -38,6 +38,8 @@ class ShowInterfaceSchema(MetaParser):
             Optional('types'): str,
             Optional('parent_interface'): str,
             'oper_status': str,
+            Optional('line_protocol'): str,
+            Optional('autostate'): bool,
             Optional('link_state'): str,
             Optional('phys_address'): str,
             Optional('port_speed'): str,
@@ -169,9 +171,42 @@ class ShowInterface(ShowInterfaceSchema):
                                 ['link_state'] = link_state
 
                 interface_dict[interface]['enabled'] = False
+                interface_dict[interface]['oper_status'] = 'down'
                 continue
 
-            #Ethernet2/2 is up
+            # Vlan1 is down (Administratively down), line protocol is down, autostate enabled
+            p1_1 =  re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.]+) *is'
+                              ' *(?P<enabled>\w+)'
+                              '( *\((?P<link_state>[\w\-\/\s]+)\))?, +'
+                              'line +protocol +is +(?P<line_protocol>\w+),? *'
+                              '(autostate +(?P<autostate>\w+))?$')
+            m = p1_1.match(line)
+            if m:
+                interface = m.groupdict()['interface']
+                enabled = m.groupdict()['enabled']
+                link_state = m.groupdict()['link_state']
+                line_protocol = m.groupdict()['line_protocol']
+                autostate = m.groupdict()['autostate']
+
+                if interface not in interface_dict:
+                    interface_dict[interface] = {}
+                if link_state:
+                    interface_dict[interface]\
+                                ['link_state'] = link_state
+
+                if enabled:
+                    enabled = enabled.lower()
+                    interface_dict[interface]['enabled'] = False if enabled == 'down' else True
+                    interface_dict[interface]['oper_status'] = enabled
+                if line_protocol:
+                    interface_dict[interface]['line_protocol'] = line_protocol.lower()
+                if autostate:
+                    interface_dict[interface]['autostate'] = True if \
+                        autostate.lower() == 'enabled' else False
+
+                continue
+
+            # Ethernet2/2 is up
             p1_1 =  re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.]+) *is'
                               ' *(?P<enabled>(up))'
                               '( *\((?P<link_state>[a-zA-Z\s]+)\))?$')
@@ -188,6 +223,7 @@ class ShowInterface(ShowInterfaceSchema):
                                 ['link_state'] = link_state
 
                 interface_dict[interface]['enabled'] = True
+                interface_dict[interface]['oper_status'] = 'up'
                 continue
 
             # admin state is up
@@ -201,7 +237,7 @@ class ShowInterface(ShowInterfaceSchema):
                 interface_dict[interface]['oper_status'] = oper_status
                 continue
 
-            #admin state is down, Dedicated Interface, [parent interface is Ethernet2/1]
+            # admin state is down, Dedicated Interface, [parent interface is Ethernet2/1]
             p2_1 = re.compile(r'^\s*admin *state *is (?P<oper_status>[\w]+),'
                                ' *Dedicated *Interface, \[parent *interface *is'
                                ' *(?P<parent_interface>[a-zA-Z0-9\/\.]+)\]$')
@@ -216,7 +252,7 @@ class ShowInterface(ShowInterfaceSchema):
                 ['parent_interface'] = parent_interface
                 continue
 
-            #Hardware: Ethernet, address: 5254.00c9.d26e (bia 5254.00c9.d26e)
+            # Hardware: Ethernet, address: 5254.00c9.d26e (bia 5254.00c9.d26e)
             p3 = re.compile(r'^\s*Hardware: *(?P<types>[a-zA-Z0-9\/\s]+),'
                             ' *address: *(?P<mac_address>[a-z0-9\.]+)'
                             ' *\(bia *(?P<phys_address>[a-z0-9\.]+)\)$')
@@ -273,11 +309,28 @@ class ShowInterface(ShowInterfaceSchema):
                     ['route_tag'] = route_tag
                 continue
             
-            #MTU 1600 bytes, BW 768 Kbit, DLY 3330 usec
+            # MTU 1600 bytes, BW 768 Kbit, DLY 3330 usec
+            # MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
             p6 = re.compile(r'^\s*MTU *(?P<mtu>[0-9]+) *bytes, *BW'
                              ' *(?P<bandwidth>[0-9]+) *Kbit, *DLY'
-                             ' *(?P<delay>[0-9]+) *usec$')
+                             ' *(?P<delay>[0-9]+) *usec,?$')
             m = p6.match(line)
+            if m:
+                mtu = int(m.groupdict()['mtu'])
+                bandwidth = int(m.groupdict()['bandwidth'])
+                delay = int(m.groupdict()['delay'])
+                
+                interface_dict[interface]['mtu'] = mtu
+                interface_dict[interface]['bandwidth'] = bandwidth
+                interface_dict[interface]['delay'] = delay
+                continue
+            
+            # MTU 1500 bytes,  BW 40000000 Kbit,, BW 40000000 Kbit, DLY 10 usec
+            p6_1 = re.compile(r'^\s*MTU *(?P<mtu>[0-9]+) *bytes, *BW'
+                             ' *(?P<bandwidth>[0-9]+) *Kbit, *,? *BW'
+                             ' *([0-9]+) *Kbit, *DLY'
+                             ' *(?P<delay>[0-9]+) *usec$')
+            m = p6_1.match(line)
             if m:
                 mtu = int(m.groupdict()['mtu'])
                 bandwidth = int(m.groupdict()['bandwidth'])
@@ -341,6 +394,20 @@ class ShowInterface(ShowInterfaceSchema):
                 interface_dict[interface]['encapsulations']\
                 ['first_dot1q'] = first_dot1q
                 interface_dict[interface]['medium'] = medium
+                continue
+
+            # Encapsulation ARPA, loopback not set
+            p8_2 = re.compile(r'^\s*Encapsulation *(?P<encapsulation>[a-zA-Z0-9\.\s]+),'
+                             ' *([\w\s]+)$')
+            m = p8_2.match(line)
+            if m:
+                encapsulation = m.groupdict()['encapsulation'].lower()
+
+                if 'encapsulations' not in interface_dict[interface]:
+                    interface_dict[interface]['encapsulations'] = {}
+
+                interface_dict[interface]['encapsulations']\
+                ['encapsulation'] = encapsulation
                 continue
 
             #Port mode is routed
@@ -486,7 +553,7 @@ class ShowInterface(ShowInterfaceSchema):
                 interface_dict[interface]['interface_reset'] = interface_reset
                 continue
 
-            #1 minute input rate 0 bits/sec, 0 packets/sec  
+            # 1 minute input rate 0 bits/sec, 0 packets/sec  
             p21 = re.compile(r'^\s*(?P<load_interval>[0-9\#]+)'
                               ' *(minute|second|minutes|seconds) *input *rate'
                               ' *(?P<in_rate>[0-9]+) *bits/sec,'
@@ -591,6 +658,8 @@ class ShowInterface(ShowInterfaceSchema):
             if m:
                 in_pkts = int(m.groupdict()['in_pkts'])
                 in_octets = int(m.groupdict()['in_octets'])
+                if 'counters' not in interface_dict[interface]:
+                    interface_dict[interface]['counters'] = {}
 
                 interface_dict[interface]['counters']['in_pkts'] = in_pkts
                 interface_dict[interface]['counters']['in_octets'] = in_octets
@@ -1540,15 +1609,15 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
                 continue
 
             #Operational Mode: trunk
-            p4 = re.compile(r'^\s*Operational *Mode: *(?P<switchport_mode>[a-z]+)$')
+            p4 = re.compile(r'^\s*Operational *Mode: *(?P<switchport_mode>\w+)$')
             m = p4.match(line)
             if m:
                 switchport_mode = m.groupdict()['switchport_mode']
                 if switchport_status == 'Enabled' and switchport_mode == 'trunk':
-                    operation_mode = 'trunk' 
+                    operation_mode = 'trunk'
 
-                    interface_switchport_dict[interface]['switchport_mode'] = switchport_mode 
-                    continue
+                interface_switchport_dict[interface]['switchport_mode'] = switchport_mode 
+                continue
 
             p4_1 = re.compile(r'^\s*Operational *Mode: *(?P<switchport_mode>[a-z]+)$')
             m = p4_1.match(line)
