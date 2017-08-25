@@ -543,7 +543,15 @@ class ShowInstallActive(ShowInstallActiveSchema):
         return active_dict
 
 
+# =====================================
+# Parser for 'show redundancy status'
+# =====================================
+
 class ShowRedundancyStatusSchema(MetaParser):
+    
+    '''Schema for show redundancy status and 
+                  show system redundancy status'''
+
     schema = {'redundancy_mode':
                   {'administrative': str,
                    'operational': str},
@@ -570,22 +578,10 @@ class ShowRedundancyStatusSchema(MetaParser):
 
 
 class ShowRedundancyStatus(ShowRedundancyStatusSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
+
+    '''Parser for show redundancy status'''
 
     def cli(self, cmd='show redundancy status'):
-        ''' parsing mechanism: cli
-
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
-        '''
 
         out = self.device.execute(cmd)
         redundancy_dict = {}
@@ -672,7 +668,12 @@ class ShowRedundancyStatus(ShowRedundancyStatusSchema):
         return redundancy_dict
 
 
+# ==========================================
+# Parser for 'show system redundancy status'
+# ==========================================
 class ShowSystemRedundancyStatus(ShowRedundancyStatus):
+
+    '''Parser for show system redundancy status'''
 
     def cli(self):
         return(super().cli(cmd='show system redundancy status'))
