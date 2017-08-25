@@ -372,6 +372,67 @@ class test_show_interface(unittest.TestCase):
 
         '''}
 
+    golden_output_1 = {'execute.return_value': '''
+        Vlan1 is down (Administratively down), line protocol is down, autostate enabled
+        Hardware is EtherSVI, address is  000c.2958.a04a
+        MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
+
+         reliability 255/255, txload 1/255, rxload 1/255
+        Encapsulation ARPA, loopback not set
+        Keepalive not supported
+        ARP type: ARPA
+        Last clearing of "show interface" counters never
+        L3 in Switched:
+          ucast: 0 pkts, 0 bytes
+
+      Vlan200 is down (VLAN/BD is down), line protocol is down, autostate enabled
+        Hardware is EtherSVI, address is  000c.2958.a04a
+        MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
+
+         reliability 255/255, txload 1/255, rxload 1/255
+        Encapsulation ARPA, loopback not set
+        Keepalive not supported
+        ARP type: ARPA
+        Last clearing of "show interface" counters never
+        L3 in Switched:
+          ucast: 0 pkts, 0 bytes
+    '''}
+
+    golden_parsed_output_1 = {
+        "Vlan1": {
+          "link_state": "Administratively down",
+          "autostate": True,
+          "rxload": "1/255",
+          "line_protocol": "down",
+          "txload": "1/255",
+          "oper_status": "down",
+          "enabled": False,
+          "mtu": 1500,
+          "encapsulations": {
+               "encapsulation": "arpa"
+          },
+          "bandwidth": 1000000,
+          "reliability": "255/255",
+          "delay": 10
+       },
+       "Vlan200": {
+            "link_state": "VLAN/BD is down",
+            "autostate": True,
+            "rxload": "1/255",
+            "line_protocol": "down",
+            "txload": "1/255",
+            "oper_status": "down",
+            "enabled": False,
+            "mtu": 1500,
+            "encapsulations": {
+                 "encapsulation": "arpa"
+            },
+            "bandwidth": 1000000,
+            "reliability": "255/255",
+            "delay": 10
+       }
+    }
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         interface_obj = ShowInterface(device=self.device1)
@@ -384,6 +445,13 @@ class test_show_interface(unittest.TestCase):
         parsed_output = interface_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        interface_obj = ShowInterface(device=self.device)
+        parsed_output = interface_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
 
 # #############################################################################

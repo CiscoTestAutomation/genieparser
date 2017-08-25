@@ -38,6 +38,8 @@ class ShowInterfaceSchema(MetaParser):
             Optional('types'): str,
             Optional('parent_interface'): str,
             'oper_status': str,
+            Optional('line_protocol'): str,
+            Optional('autostate'): bool,
             Optional('link_state'): str,
             Optional('phys_address'): str,
             Optional('port_speed'): str,
@@ -172,6 +174,38 @@ class ShowInterface(ShowInterfaceSchema):
                 interface_dict[interface]['oper_status'] = 'down'
                 continue
 
+            # Vlan1 is down (Administratively down), line protocol is down, autostate enabled
+            p1_1 =  re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.]+) *is'
+                              ' *(?P<enabled>\w+)'
+                              '( *\((?P<link_state>[\w\-\/\s]+)\))?, +'
+                              'line +protocol +is +(?P<line_protocol>\w+),? *'
+                              '(autostate +(?P<autostate>\w+))?$')
+            m = p1_1.match(line)
+            if m:
+                interface = m.groupdict()['interface']
+                enabled = m.groupdict()['enabled']
+                link_state = m.groupdict()['link_state']
+                line_protocol = m.groupdict()['line_protocol']
+                autostate = m.groupdict()['autostate']
+
+                if interface not in interface_dict:
+                    interface_dict[interface] = {}
+                if link_state:
+                    interface_dict[interface]\
+                                ['link_state'] = link_state
+
+                if enabled:
+                    enabled = enabled.lower()
+                    interface_dict[interface]['enabled'] = False if enabled == 'down' else True
+                    interface_dict[interface]['oper_status'] = enabled
+                if line_protocol:
+                    interface_dict[interface]['line_protocol'] = line_protocol.lower()
+                if autostate:
+                    interface_dict[interface]['autostate'] = True if \
+                        autostate.lower() == 'enabled' else False
+
+                continue
+
             # Ethernet2/2 is up
             p1_1 =  re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.]+) *is'
                               ' *(?P<enabled>(up))'
@@ -276,9 +310,10 @@ class ShowInterface(ShowInterfaceSchema):
                 continue
             
             # MTU 1600 bytes, BW 768 Kbit, DLY 3330 usec
+            # MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
             p6 = re.compile(r'^\s*MTU *(?P<mtu>[0-9]+) *bytes, *BW'
                              ' *(?P<bandwidth>[0-9]+) *Kbit, *DLY'
-                             ' *(?P<delay>[0-9]+) *usec$')
+                             ' *(?P<delay>[0-9]+) *usec,?$')
             m = p6.match(line)
             if m:
                 mtu = int(m.groupdict()['mtu'])
@@ -359,6 +394,20 @@ class ShowInterface(ShowInterfaceSchema):
                 interface_dict[interface]['encapsulations']\
                 ['first_dot1q'] = first_dot1q
                 interface_dict[interface]['medium'] = medium
+                continue
+
+            # Encapsulation ARPA, loopback not set
+            p8_2 = re.compile(r'^\s*Encapsulation *(?P<encapsulation>[a-zA-Z0-9\.\s]+),'
+                             ' *([\w\s]+)$')
+            m = p8_2.match(line)
+            if m:
+                encapsulation = m.groupdict()['encapsulation'].lower()
+
+                if 'encapsulations' not in interface_dict[interface]:
+                    interface_dict[interface]['encapsulations'] = {}
+
+                interface_dict[interface]['encapsulations']\
+                ['encapsulation'] = encapsulation
                 continue
 
             #Port mode is routed
