@@ -6,8 +6,7 @@ Example parser class
 
 import re   
 from metaparser import MetaParser
-from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
-                                         Default, Use
+from metaparser.util.schemaengine import Schema, Any, Optional
 
 #*************************
     # schema - class variable
