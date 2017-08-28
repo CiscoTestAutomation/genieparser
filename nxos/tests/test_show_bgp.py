@@ -1956,7 +1956,12 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
             {'default': 
                 {'address_family': 
                     {'ipv4 label unicast': 
-                        {'next_hop_trigger_delay': 
+                        {'advertise_inactive_routes': False,
+                        'ebgp_max_paths': 1,
+                        'enabled': True,
+                        'graceful_restart': False,
+                        'ibgp_max_paths': 1,
+                        'next_hop_trigger_delay': 
                             {'critical': 3000,
                             'non_critical': 10000},
                         'peers': 
@@ -1968,12 +1973,6 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                                 'routes': 0}},
                         'table_id': '0x1',
                         'table_state': 'up'},
-                    'ipv4 labeled unicast': 
-                        {'advertise_inactive_routes': False,
-                        'ebgp_max_paths': 1,
-                        'enabled': True,
-                        'graceful_restart': False,
-                        'ibgp_max_paths': 1},
                     'ipv4 multicast': 
                         {'next_hop_trigger_delay': 
                             {'critical': 3000,
