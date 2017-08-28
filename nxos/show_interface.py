@@ -1552,6 +1552,7 @@ class ShowInterfaceSwitchportSchema(MetaParser):
              'switchport_monitor': str,
              'switchport_mode': str,
              'access_vlan': int,
+             'switchport_enable': bool,
              Optional('access_vlan_mode'): str,
              'native_vlan': int,
              Optional('native_vlan_mode'): str,
@@ -1594,9 +1595,12 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
             p2 = re.compile(r'^\s*Switchport: *(?P<switchport_status>[a-zA-Z\s]+)$')
             m = p2.match(line)
             if m:    
-                switchport_status = m.groupdict()['switchport_status']
+                switchport_status = m.groupdict()['switchport_status'].lower()
+                interface_switchport_dict[interface]['switchport_status'] = switchport_status
 
-                interface_switchport_dict[interface]['switchport_status'] = switchport_status  
+                interface_switchport_dict[interface]['switchport_enable'] = True \
+                    if 'enable' in switchport_status else False
+
                 continue
 
             #Switchport Monitor: Not enabled
