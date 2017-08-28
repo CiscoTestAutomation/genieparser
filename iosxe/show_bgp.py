@@ -121,11 +121,11 @@ class ShowBgpAllSummarySchema(MetaParser):
                       {Any():
                            {'address_family':
                                 {Any():
-                                     {'v': int,
+                                     {'version': int,
                                       'as': int,
                                       'msg_rcvd': int,
                                       'msg_sent': int,
-                                      'tbl_ver': int,
+                                      'table_version': int,
                                       'inq': int,
                                       'outq': int,
                                       'up_down': str,
@@ -160,7 +160,7 @@ class ShowBgpAllSummarySchema(MetaParser):
                        },
                   },
              },
-    }
+        }
 
 
 class ShowBgpAllSummary(ShowBgpAllSummarySchema):
@@ -293,9 +293,9 @@ class ShowBgpAllSummary(ShowBgpAllSummarySchema):
             # 200.0.2.1       4          100       0       0        1    0    0 never    Idle
             # 200.0.4.1       4          100       0       0        1    0    0 01:07:38 Idle
 
-            p9 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<v>[0-9]+)'
+            p9 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<version>[0-9]+)'
                             ' +(?P<as>[0-9]+) +(?P<msg_rcvd>[0-9]+)'
-                            ' +(?P<msg_sent>[0-9]+) +(?P<tbl_ver>[0-9]+)'
+                            ' +(?P<msg_sent>[0-9]+) +(?P<table_version>[0-9]+)'
                             ' +(?P<inq>[0-9]+) +(?P<outq>[0-9]+)'
                             ' +(?P<up_down>[a-zA-Z0-9\:]+)'
                             ' +(?P<state>[a-zA-Z0-9\(\)\s]+)$')
@@ -317,11 +317,11 @@ class ShowBgpAllSummary(ShowBgpAllSummarySchema):
                 nbr_af_dict = nbr_dict['address_family'][address_family]
 
                 # Add keys for this address_family
-                nbr_af_dict['v'] = int(m.groupdict()['v'])
+                nbr_af_dict['version'] = int(m.groupdict()['version'])
                 nbr_af_dict['as'] = int(m.groupdict()['as'])
                 nbr_af_dict['msg_rcvd'] = int(m.groupdict()['msg_rcvd'])
                 nbr_af_dict['msg_sent'] = int(m.groupdict()['msg_sent'])
-                nbr_af_dict['tbl_ver'] = int(m.groupdict()['tbl_ver'])
+                nbr_af_dict['table_version'] = int(m.groupdict()['table_version'])
                 nbr_af_dict['inq'] = int(m.groupdict()['inq'])
                 nbr_af_dict['outq'] = int(m.groupdict()['outq'])
                 nbr_af_dict['up_down'] = str(m.groupdict()['up_down'])

@@ -148,9 +148,9 @@ class test_show_bgp_all_summary(unittest.TestCase):
                                       'route_identifier': '200.0.1.1',
                                       'routing_table_version': 28,
                                       'state_pfxrcd': 'Idle',
-                                      'tbl_ver': 1,
+                                      'table_version': 1,
                                       'up_down': '01:07:38',
-                                      'v': 4}}},
+                                      'version': 4}}},
                       '200.0.2.1':
                            {'address_family':
                                 {'ipv4 unicast':
@@ -187,9 +187,9 @@ class test_show_bgp_all_summary(unittest.TestCase):
                                       'route_identifier': '200.0.1.1',
                                       'routing_table_version': 28,
                                       'state_pfxrcd': 'Idle',
-                                      'tbl_ver': 1,
+                                      'table_version': 1,
                                       'up_down': 'never',
-                                      'v': 4}}},
+                                      'version': 4}}},
                       '200.0.4.1':
                            {'address_family':
                                 {'ipv4 unicast':
@@ -226,9 +226,9 @@ class test_show_bgp_all_summary(unittest.TestCase):
                                       'route_identifier': '200.0.1.1',
                                       'routing_table_version': 28,
                                       'state_pfxrcd': 'Idle',
-                                      'tbl_ver': 1,
+                                      'table_version': 1,
                                       'up_down': '01:07:38',
-                                      'v': 4}}},
+                                      'version': 4}}},
                       '201.0.14.4':
                            {'address_family':
                                 {'ipv4 unicast':
@@ -265,9 +265,9 @@ class test_show_bgp_all_summary(unittest.TestCase):
                                       'route_identifier': '200.0.1.1',
                                       'routing_table_version': 28,
                                       'state_pfxrcd': 'Idle',
-                                      'tbl_ver': 1,
+                                      'table_version': 1,
                                       'up_down': 'never',
-                                      'v': 4}}},
+                                      'version': 4}}},
                       '201.0.26.2':
                            {'address_family':
                                 {'ipv4 unicast':
@@ -304,9 +304,9 @@ class test_show_bgp_all_summary(unittest.TestCase):
                                       'route_identifier': '200.0.1.1',
                                       'routing_table_version': 28,
                                       'state_pfxrcd': 'Idle',
-                                      'tbl_ver': 1,
+                                      'table_version': 1,
                                       'up_down': '01:07:38',
-                                      'v': 4}}},
+                                      'version': 4}}},
                        '2000::1:1': {'address_family': {'ipv6 unicast': {'as': 100,
                                                                          'bgp_table_version': 1,
                                                                          'inq': 0,
@@ -317,9 +317,9 @@ class test_show_bgp_all_summary(unittest.TestCase):
                                                                          'route_identifier': '200.0.1.1',
                                                                          'routing_table_version': 1,
                                                                          'state_pfxrcd': 'Idle',
-                                                                         'tbl_ver': 1,
+                                                                         'table_version': 1,
                                                                          'up_down': '01:07:38',
-                                                                         'v': 4}}},
+                                                                         'version': 4}}},
                        '2000::4:1': {'address_family': {'ipv6 unicast': {'as': 100,
                                                                          'bgp_table_version': 1,
                                                                          'inq': 0,
@@ -330,9 +330,9 @@ class test_show_bgp_all_summary(unittest.TestCase):
                                                                          'route_identifier': '200.0.1.1',
                                                                          'routing_table_version': 1,
                                                                          'state_pfxrcd': 'Idle',
-                                                                         'tbl_ver': 1,
+                                                                         'table_version': 1,
                                                                          'up_down': '01:07:38',
-                                                                         'v': 4}}},
+                                                                         'version': 4}}},
                        '2001::14:4': {'address_family': {'ipv6 unicast': {'as': 200,
                                                                           'bgp_table_version': 1,
                                                                           'inq': 0,
@@ -343,9 +343,9 @@ class test_show_bgp_all_summary(unittest.TestCase):
                                                                           'route_identifier': '200.0.1.1',
                                                                           'routing_table_version': 1,
                                                                           'state_pfxrcd': 'Idle',
-                                                                          'tbl_ver': 1,
+                                                                          'table_version': 1,
                                                                           'up_down': 'never',
-                                                                          'v': 4}}},
+                                                                          'version': 4}}},
                        '2001::26:2': {'address_family': {'ipv6 unicast': {'as': 300,
                                                                           'bgp_table_version': 1,
                                                                           'inq': 0,
@@ -356,9 +356,9 @@ class test_show_bgp_all_summary(unittest.TestCase):
                                                                           'route_identifier': '200.0.1.1',
                                                                           'routing_table_version': 1,
                                                                           'state_pfxrcd': 'Idle',
-                                                                          'tbl_ver': 1,
+                                                                          'table_version': 1,
                                                                           'up_down': '01:07:38',
-                                                                          'v': 4}}},
+                                                                          'version': 4}}},
                        '3.3.3.3': {'address_family':
                                        {'vpnv4 unicast':
                                             {'as': 100,
@@ -371,9 +371,9 @@ class test_show_bgp_all_summary(unittest.TestCase):
                                              'route_identifier': '200.0.1.1',
                                              'routing_table_version': 1,
                                              'state_pfxrcd': 'Idle',
-                                             'tbl_ver': 1,
+                                             'table_version': 1,
                                              'up_down': 'never',
-                                             'v': 4},
+                                             'version': 4},
                                         'vpnv6 unicast':
                                             {'as': 100,
                                              'bgp_table_version': 1,
@@ -385,9 +385,9 @@ class test_show_bgp_all_summary(unittest.TestCase):
                                              'route_identifier': '200.0.1.1',
                                              'routing_table_version': 1,
                                              'state_pfxrcd': 'Idle',
-                                             'tbl_ver': 1,
+                                             'table_version': 1,
                                              'up_down': 'never',
-                                             'v': 4}
+                                             'version': 4}
                                         }
                                    }
                        }
