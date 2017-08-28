@@ -2825,19 +2825,21 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
         bgpOC = BgpOpenconfigYang(self.device)
         yang_dict = bgpOC.yang()
 
-        for vrf_name in yang_dict['vrf']:
-            if vrf_name == vrf:
-                for neighbor in yang_dict['vrf'][vrf_name]['neighbor']:
-                    if 'neighbor' not in map_dict:
-                        map_dict['neighbor'] = {}
-                    if neighbor not in map_dict['neighbor']:
-                        map_dict['neighbor'][neighbor] = {}
-                    for key in yang_dict['vrf'][vrf_name]['neighbor'][neighbor]:
-                        if key == 'ebgp_multihop':
-                            map_dict['neighbor'][neighbor]['link'] = 'ebgp'
-                        map_dict['neighbor'][neighbor][key] = \
-                            yang_dict['vrf'][vrf_name]['neighbor'][neighbor][key]
-                        continue
+        if 'vrf' in yang_dict:
+            for vrf_name in yang_dict['vrf']:
+                if vrf_name == vrf:
+                    if 'neighbor' in yang_dict['vrf'][vrf_name]:
+                        for neighbor in yang_dict['vrf'][vrf_name]['neighbor']:
+                            if 'neighbor' not in map_dict:
+                                map_dict['neighbor'] = {}
+                            if neighbor not in map_dict['neighbor']:
+                                map_dict['neighbor'][neighbor] = {}
+                            for key in yang_dict['vrf'][vrf_name]['neighbor'][neighbor]:
+                                if key == 'ebgp_multihop':
+                                    map_dict['neighbor'][neighbor]['link'] = 'ebgp'
+                                map_dict['neighbor'][neighbor][key] = \
+                                    yang_dict['vrf'][vrf_name]['neighbor'][neighbor][key]
+                                continue
 
         # Return to caller
         return map_dict
