@@ -1,6 +1,25 @@
 ''' show_bgp.py
+    IOSXE parsers for the following show commands:
 
-Example parser class
+    * show bgp all detail
+    * show bgp all neighbor
+    * show bgp all summary
+    * show bgp all cluster-ids
+    * show bgp all
+    * show ip bgp template peer-session <WORD>
+    * show ip bgp template peer-policy <WORD>
+    * show ip bgp all dampening parameters
+    * show ip bgp <af_name> [ vrf <vrf_id> ] <ipv4prefix>
+    * show bgp vrf [vrf_id] <af_name> <ipv6prefix>
+    * show bgp <af_name> <ipv6prefix>
+    * show bgp all neighbors <neighbor> policy
+    * show ip route vrf <WORD> bgp
+    * show vrf detail
+
+    * show bgp all neighbor x.x.x.x advertised-routes
+    * show bgp all neighbor x.x.x.x routes
+    * show bgp all neighbor x.x.x.x received
+    * show bgp all neighbor x.x.x.x received-routes
 
 '''
 
@@ -10,9 +29,10 @@ from metaparser.util.schemaengine import Schema, Any, Optional
 
 
 class ShowBgpAllSummarySchema(MetaParser):
-    ''' Schema for:
-            * 'show bgp all summary'
-    '''
+    """
+    Schema for:
+            * show bgp all summary
+    """
     schema = {
         'vrf':
             {Any():
@@ -64,8 +84,8 @@ class ShowBgpAllSummarySchema(MetaParser):
 
 class ShowBgpAllSummary(ShowBgpAllSummarySchema):
     """
-    parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
+    Parser for:
+          *  show bgp All Summary
     """
 
     def cli(self):
