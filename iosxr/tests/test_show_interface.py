@@ -68,7 +68,6 @@ class test_show_interface(unittest.TestCase):
                             'last_output': 'never',
                             'line_protocol': 'administratively down',
                             'location': 'unknown',
-                            'loopback_status': 'not set',
                             'mac_address': 'aaaa.bbbb.cccc',
                             'mtu': 1600,
                             'phys_address': '5254.0077.9407',
@@ -105,7 +104,6 @@ class test_show_interface(unittest.TestCase):
                                'last_input': 'never',
                                'last_output': 'never',
                                'line_protocol': 'administratively down',
-                               'loopback_status': 'not set',
                                'mac_address': 'aaaa.bbbb.cccc',
                                'mtu': 1608,
                                'reliability': '255/255',
@@ -139,7 +137,6 @@ class test_show_interface(unittest.TestCase):
                                'last_input': 'never',
                                'last_output': 'never',
                                'line_protocol': 'administratively down',
-                               'loopback_status': 'not set',
                                'mac_address': 'aaaa.bbbb.cccc',
                                'mtu': 1604,
                                'reliability': '255/255',
@@ -147,7 +144,7 @@ class test_show_interface(unittest.TestCase):
                                'txload': '0/255',
                                'types': 'vlan sub-(s)'},
  'GigabitEthernet0/0/0/1': {'arp_timeout': '04:00:00',
-                            'arp_type': 'ARPA',
+                            'arp_type': 'arpa',
                             'auto_negotiate': False,
                             'bandwidth': 1000000,
                             'carrier_delay': '10',
@@ -198,7 +195,6 @@ class test_show_interface(unittest.TestCase):
                             'last_output': '00:01:09',
                             'line_protocol': 'up',
                             'location': 'unknown',
-                            'loopback_status': 'not set',
                             'mac_address': '5254.0078.ebe0',
                             'mtu': 1514,
                             'phys_address': '5254.0078.ebe0',
@@ -254,7 +250,6 @@ class test_show_interface(unittest.TestCase):
                        'last_output': 'never',
                        'line_protocol': 'administratively down',
                        'location': 'unknown',
-                       'loopback_status': 'not set',
                        'mac_address': '5254.00c3.6c43',
                        'mtu': 1514,
                        'phys_address': '5254.00c3.6c43',
@@ -286,13 +281,11 @@ class test_show_interface(unittest.TestCase):
            'last_input': 'never',
            'last_output': 'never',
            'line_protocol': 'up',
-           'loopback_status': 'not set',
            'mtu': 1500,
            'reliability': '255/255',
            'rxload': 'unknown',
            'txload': 'unknown',
            'types': 'null'}}
-
 
     golden_output = {'execute.return_value': '''
         Null0 is up, line protocol is up 
@@ -501,27 +494,16 @@ class test_show_ipv4_vrf_all_interface(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {'GigabitEthernet0/0/0/0': {'int_status': 'up',
-                            'ipv4': {'10.1.3.1/24': {'arp': 'disabled',
-                                                     'broadcast_forwarding': 'disabled',
-                                                     'helper_address': 'not '
-                                                                       'set',
-                                                     'icmp_redirects': 'never '
-                                                                       'sent',
-                                                     'icmp_replies': 'never '
-                                                                     'sent',
-                                                     'icmp_unreachables': 'always '
-                                                                          'sent',
-                                                     'in_access_list': 'not '
-                                                                       'set',
-                                                     'in_common_access_list': 'not '
-                                                                              'set',
-                                                     'ip': '10.1.3.1',
-                                                     'mtu': 1514,
-                                                     'mtu_available': 1500,
-                                                     'out_access_list': 'not '
-                                                                        'set',
-                                                     'prefix_length': '24',
-                                                     'table_id': '0xe0000000'}},
+                            'ipv4': {'10.1.3.1/24': {'ip': '10.1.3.1',
+                                                     'prefix_length': '24'},
+                                     'broadcast_forwarding': 'disabled',
+                                     'icmp_redirects': 'never sent',
+                                     'icmp_replies': 'never sent',
+                                     'icmp_unreachables': 'always sent',
+                                     'mtu': 1514,
+                                     'mtu_available': 1500,
+                                     'proxy_arp': 'disabled',
+                                     'table_id': '0xe0000000'},
                             'multicast_groups': ['224.0.0.2',
                                                  '224.0.0.1',
                                                  '224.0.0.2',
@@ -531,79 +513,50 @@ class test_show_ipv4_vrf_all_interface(unittest.TestCase):
                             'vrf': 'default',
                             'vrf_id': '0x60000000'},
  'GigabitEthernet0/0/0/1': {'int_status': 'up',
-                            'ipv4': {'10.1.5.1/24': {'arp': 'disabled',
-                                                     'broadcast_forwarding': 'disabled',
-                                                     'helper_address': 'not '
-                                                                       'set',
-                                                     'icmp_redirects': 'never '
-                                                                       'sent',
-                                                     'icmp_replies': 'never '
-                                                                     'sent',
-                                                     'icmp_unreachables': 'always '
-                                                                          'sent',
-                                                     'in_access_list': 'not '
-                                                                       'set',
-                                                     'in_common_access_list': 'not '
-                                                                              'set',
-                                                     'ip': '10.1.5.1',
-                                                     'mtu': 1514,
-                                                     'mtu_available': 1500,
-                                                     'out_access_list': 'not '
-                                                                        'set',
+                            'ipv4': {'10.1.5.1/24': {'ip': '10.1.5.1',
                                                      'prefix_length': '24',
-                                                     'table_id': '0xe0000010'}},
+                                                     'route_tag': 50},
+                                     '10.2.2.2/24': {'ip': '10.2.2.2',
+                                                     'prefix_length': '24',
+                                                     'secondary': True},
+                                     'broadcast_forwarding': 'disabled',
+                                     'icmp_redirects': 'never sent',
+                                     'icmp_replies': 'never sent',
+                                     'icmp_unreachables': 'always sent',
+                                     'mtu': 1514,
+                                     'mtu_available': 1500,
+                                     'proxy_arp': 'disabled',
+                                     'table_id': '0xe0000010'},
                             'multicast_groups': ['224.0.0.2', '224.0.0.1'],
                             'oper_status': 'up',
                             'vrf': 'VRF1',
                             'vrf_id': '0x60000001'},
  'GigabitEthernet0/0/0/2': {'int_status': 'up',
-                            'ipv4': {'20.1.5.1/24': {'arp': 'disabled',
-                                                     'broadcast_forwarding': 'disabled',
-                                                     'helper_address': 'not '
-                                                                       'set',
-                                                     'icmp_redirects': 'never '
-                                                                       'sent',
-                                                     'icmp_replies': 'never '
-                                                                     'sent',
-                                                     'icmp_unreachables': 'always '
-                                                                          'sent',
-                                                     'in_access_list': 'not '
-                                                                       'set',
-                                                     'in_common_access_list': 'not '
-                                                                              'set',
-                                                     'ip': '20.1.5.1',
-                                                     'mtu': 1514,
-                                                     'mtu_available': 1500,
-                                                     'out_access_list': 'not '
-                                                                        'set',
-                                                     'prefix_length': '24',
-                                                     'table_id': '0xe0000011'}},
+                            'ipv4': {'20.1.5.1/24': {'ip': '20.1.5.1',
+                                                     'prefix_length': '24'},
+                                     'broadcast_forwarding': 'disabled',
+                                     'icmp_redirects': 'never sent',
+                                     'icmp_replies': 'never sent',
+                                     'icmp_unreachables': 'always sent',
+                                     'mtu': 1514,
+                                     'mtu_available': 1500,
+                                     'proxy_arp': 'disabled',
+                                     'table_id': '0xe0000011'},
                             'multicast_groups': ['224.0.0.2', '224.0.0.1'],
                             'oper_status': 'up',
                             'vrf': 'VRF2',
                             'vrf_id': '0x60000002'},
  'GigabitEthernet0/0/0/3': {'int_status': 'up',
-                            'ipv4': {'10.1.2.1/24': {'arp': 'disabled',
-                                                     'broadcast_forwarding': 'disabled',
-                                                     'helper_address': 'not '
-                                                                       'set',
-                                                     'icmp_redirects': 'never '
-                                                                       'sent',
-                                                     'icmp_replies': 'never '
-                                                                     'sent',
-                                                     'icmp_unreachables': 'always '
-                                                                          'sent',
-                                                     'in_access_list': 'not '
-                                                                       'set',
-                                                     'in_common_access_list': 'not '
-                                                                              'set',
-                                                     'ip': '10.1.2.1',
-                                                     'mtu': 1514,
-                                                     'mtu_available': 1500,
-                                                     'out_access_list': 'not '
-                                                                        'set',
-                                                     'prefix_length': '24',
-                                                     'table_id': '0xe0000000'}},
+                            'ipv4': {'10.1.2.1/24': {'ip': '10.1.2.1',
+                                                     'prefix_length': '24'},
+                                     'broadcast_forwarding': 'disabled',
+                                     'icmp_redirects': 'never sent',
+                                     'icmp_replies': 'never sent',
+                                     'icmp_unreachables': 'always sent',
+                                     'mtu': 1514,
+                                     'mtu_available': 1500,
+                                     'proxy_arp': 'disabled',
+                                     'table_id': '0xe0000000'},
                             'multicast_groups': ['224.0.0.2',
                                                  '224.0.0.1',
                                                  '224.0.0.2',
@@ -613,27 +566,16 @@ class test_show_ipv4_vrf_all_interface(unittest.TestCase):
                             'vrf': 'default',
                             'vrf_id': '0x60000000'},
  'GigabitEthernet0/0/0/4': {'int_status': 'up',
-                            'ipv4': {'111.111.111.111/32': {'arp': 'disabled',
-                                                            'broadcast_forwarding': 'disabled',
-                                                            'helper_address': 'not '
-                                                                              'set',
-                                                            'icmp_redirects': 'never '
-                                                                              'sent',
-                                                            'icmp_replies': 'never '
-                                                                            'sent',
-                                                            'icmp_unreachables': 'always '
-                                                                                 'sent',
-                                                            'in_access_list': 'not '
-                                                                              'set',
-                                                            'in_common_access_list': 'not '
-                                                                                     'set',
-                                                            'ip': '111.111.111.111',
-                                                            'mtu': 1514,
-                                                            'mtu_available': 1500,
-                                                            'out_access_list': 'not '
-                                                                               'set',
-                                                            'prefix_length': '32',
-                                                            'table_id': '0xe0000000'},
+                            'ipv4': {'111.111.111.111/32': {'ip': '111.111.111.111',
+                                                            'prefix_length': '32'},
+                                     'broadcast_forwarding': 'disabled',
+                                     'icmp_redirects': 'never sent',
+                                     'icmp_replies': 'never sent',
+                                     'icmp_unreachables': 'always sent',
+                                     'mtu': 1514,
+                                     'mtu_available': 1500,
+                                     'proxy_arp': 'disabled',
+                                     'table_id': '0xe0000000',
                                      'unnumbered': {'unnumbered_intf_ref': 'Loopback11'}},
                             'multicast_groups': ['224.0.0.2', '224.0.0.1'],
                             'oper_status': 'up',
@@ -648,43 +590,30 @@ class test_show_ipv4_vrf_all_interface(unittest.TestCase):
                             'vrf': 'default',
                             'vrf_id': '0x60000000'},
  'Loopback0': {'int_status': 'up',
-               'ipv4': {'1.1.1.1/32': {'arp': 'disabled',
-                                       'broadcast_forwarding': 'disabled',
-                                       'helper_address': 'not set',
-                                       'icmp_redirects': 'never sent',
-                                       'icmp_replies': 'never sent',
-                                       'icmp_unreachables': 'always sent',
-                                       'in_access_list': 'not set',
-                                       'in_common_access_list': 'not set',
-                                       'ip': '1.1.1.1',
-                                       'mtu': 1500,
-                                       'mtu_available': 1500,
-                                       'out_access_list': 'not set',
-                                       'prefix_length': '32',
-                                       'table_id': '0xe0000000'}},
+               'ipv4': {'1.1.1.1/32': {'ip': '1.1.1.1',
+                                       'prefix_length': '32'},
+                        'broadcast_forwarding': 'disabled',
+                        'icmp_redirects': 'never sent',
+                        'icmp_replies': 'never sent',
+                        'icmp_unreachables': 'always sent',
+                        'mtu': 1500,
+                        'mtu_available': 1500,
+                        'proxy_arp': 'disabled',
+                        'table_id': '0xe0000000'},
                'oper_status': 'up',
                'vrf': 'default',
                'vrf_id': '0x60000000'},
  'Loopback11': {'int_status': 'up',
-                'ipv4': {'111.111.111.111/32': {'arp': 'disabled',
-                                                'broadcast_forwarding': 'disabled',
-                                                'helper_address': 'not set',
-                                                'icmp_redirects': 'never '
-                                                                  'sent',
-                                                'icmp_replies': 'never '
-                                                                'sent',
-                                                'icmp_unreachables': 'always '
-                                                                     'sent',
-                                                'in_access_list': 'not set',
-                                                'in_common_access_list': 'not '
-                                                                         'set',
-                                                'ip': '111.111.111.111',
-                                                'mtu': 1500,
-                                                'mtu_available': 1500,
-                                                'out_access_list': 'not '
-                                                                   'set',
-                                                'prefix_length': '32',
-                                                'table_id': '0xe0000000'}},
+                'ipv4': {'111.111.111.111/32': {'ip': '111.111.111.111',
+                                                'prefix_length': '32'},
+                         'broadcast_forwarding': 'disabled',
+                         'icmp_redirects': 'never sent',
+                         'icmp_replies': 'never sent',
+                         'icmp_unreachables': 'always sent',
+                         'mtu': 1500,
+                         'mtu_available': 1500,
+                         'proxy_arp': 'disabled',
+                         'table_id': '0xe0000000'},
                 'oper_status': 'up',
                 'vrf': 'default',
                 'vrf_id': '0x60000000'},
@@ -740,7 +669,8 @@ class test_show_ipv4_vrf_all_interface(unittest.TestCase):
       Table Id is 0xe0000000
     GigabitEthernet0/0/0/1 is Up, ipv4 protocol is Up
       Vrf is VRF1 (vrfid 0x60000001)
-      Internet address is 10.1.5.1/24
+      Internet address is 10.1.5.1/24 with route-tag 50
+      Secondary address 10.2.2.2/24
       MTU is 1514 (1500 is available to IP)
       Helper address is not set
       Multicast reserved groups joined: 224.0.0.2 224.0.0.1
@@ -846,14 +776,13 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                                                             'ipv6_route_tag': '10',
                                                             'ipv6_status': 'tentative',
                                                             'ipv6_subnet': '2001:db8:4:4::'},
-                                     'auto_config_state': 'stateless',
                                      'complete_glean_adj': '0',
                                      'complete_protocol_adj': '0',
+                                     'dad_attempts': '1',
                                      'dropped_glean_req': '0',
                                      'dropped_protocol_req': '0',
                                      'icmp_redirects': 'disabled',
                                      'icmp_unreachables': 'enabled',
-                                     'in_access_list': 'not set',
                                      'incomplete_glean_adj': '0',
                                      'incomplete_protocol_adj': '0',
                                      'ipv6_groups': ['ff02::2', 'ff02::1'],
@@ -863,8 +792,9 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                                      'ipv6_mtu_available': '1586',
                                      'nd_adv_retrans_int': '0',
                                      'nd_cache_limit': '1000000000',
+                                     'nd_dad': 'enabled',
                                      'nd_reachable_time': '0',
-                                     'out_access_list': 'not set',
+                                     'stateless_autoconfig': True,
                                      'table_id': '0xe0800011'},
                             'ipv6_enabled': False,
                             'oper_status': 'down',
@@ -875,9 +805,9 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                                'ipv6': {'2001:db8:1:3::1/64': {'ipv6': '2001:db8:1:3::1',
                                                                'ipv6_prefix_length': '64',
                                                                'ipv6_subnet': '2001:db8:1:3::'},
-                                        'auto_config_state': 'stateless',
                                         'complete_glean_adj': '0',
                                         'complete_protocol_adj': '0',
+                                        'dad_attempts': '1',
                                         'dropped_glean_req': '0',
                                         'dropped_protocol_req': '0',
                                         'icmp_redirects': 'disabled',
@@ -894,9 +824,10 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                                         'nd_adv_duration': '160-240',
                                         'nd_adv_retrans_int': '0',
                                         'nd_cache_limit': '1000000000',
+                                        'nd_dad': 'enabled',
                                         'nd_reachable_time': '0',
                                         'nd_router_adv': '1800',
-                                        'out_access_list': 'not set',
+                                        'stateless_autoconfig': True,
                                         'table_id': '0xe0800000'},
                                'ipv6_enabled': False,
                                'oper_status': 'down',
@@ -907,9 +838,9 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                             'ipv6': {'2001:db8:1:5::1/64': {'ipv6': '2001:db8:1:5::1',
                                                             'ipv6_prefix_length': '64',
                                                             'ipv6_subnet': '2001:db8:1:5::'},
-                                     'auto_config_state': 'stateless',
                                      'complete_glean_adj': '1',
                                      'complete_protocol_adj': '1',
+                                     'dad_attempts': '1',
                                      'dropped_glean_req': '0',
                                      'dropped_protocol_req': '0',
                                      'icmp_redirects': 'disabled',
@@ -926,9 +857,10 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                                      'nd_adv_duration': '160-240',
                                      'nd_adv_retrans_int': '0',
                                      'nd_cache_limit': '1000000000',
+                                     'nd_dad': 'enabled',
                                      'nd_reachable_time': '0',
                                      'nd_router_adv': '1800',
-                                     'out_access_list': 'not set',
+                                     'stateless_autoconfig': True,
                                      'table_id': '0xe0800010'},
                             'ipv6_enabled': True,
                             'oper_status': 'up',
@@ -939,9 +871,9 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                             'ipv6': {'2001:db8:20:1:5::1/64': {'ipv6': '2001:db8:20:1:5::1',
                                                                'ipv6_prefix_length': '64',
                                                                'ipv6_subnet': '2001:db8:20:1::'},
-                                     'auto_config_state': 'stateless',
                                      'complete_glean_adj': '2',
                                      'complete_protocol_adj': '0',
+                                     'dad_attempts': '1',
                                      'dropped_glean_req': '0',
                                      'dropped_protocol_req': '0',
                                      'icmp_redirects': 'disabled',
@@ -958,9 +890,10 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                                      'nd_adv_duration': '160-240',
                                      'nd_adv_retrans_int': '0',
                                      'nd_cache_limit': '1000000000',
+                                     'nd_dad': 'enabled',
                                      'nd_reachable_time': '0',
                                      'nd_router_adv': '1800',
-                                     'out_access_list': 'not set',
+                                     'stateless_autoconfig': True,
                                      'table_id': '0xe0800011'},
                             'ipv6_enabled': True,
                             'oper_status': 'up',
@@ -996,7 +929,6 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                        'oper_status': 'down',
                        'vrf': 'default',
                        'vrf_id': '0x60000000'}}
-
 
     golden_output = {'execute.return_value': '''
     MgmtEth0/0/CPU0/0 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
@@ -1127,7 +1059,6 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         ipv6_vrf_all_interface_obj = ShowIpv6VrfAllInterface(device=self.device)
         parsed_output = ipv6_vrf_all_interface_obj.parse()
-        self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
         
 if __name__ == '__main__':

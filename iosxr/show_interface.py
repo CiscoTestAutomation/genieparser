@@ -749,6 +749,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
             m = p7_1.match(line)
             if m:
                 encapsulation = str(m.groupdict()['encapsulation']).lower()
+                loopback_status = str(m.groupdict()['loopback_status'])
 
                 if 'encapsulations' not in interface_detail_dict[interface]:
                     interface_detail_dict[interface]['encapsulations'] = {}
@@ -757,8 +758,10 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                 ['encapsulation'] = encapsulation
                 interface_detail_dict[interface]['encapsulations']\
                 ['first_dot1q'] = str(m.groupdict()['first_dot1q'])
-                interface_detail_dict[interface]['loopback_status']\
-                 = m.groupdict()['loopback_status']
+
+                if loopback_status != "not set":
+                    interface_detail_dict[interface]['loopback_status']\
+                    = m.groupdict()['loopback_status']
                 continue
             
             p7_2 = re.compile(r'^\s*Encapsulation +(?P<encapsulation>[a-zA-Z0-9\.\s]+),'
@@ -768,6 +771,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
             m = p7_2.match(line)
             if m:
                 encapsulation = str(m.groupdict()['encapsulation']).lower()
+                loopback_status = str(m.groupdict()['loopback_status'])
 
                 if 'encapsulations' not in interface_detail_dict[interface]:
                     interface_detail_dict[interface]['encapsulations'] = {}
@@ -778,8 +782,10 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                 ['first_dot1q'] = str(m.groupdict()['first_dot1q'])
                 interface_detail_dict[interface]['encapsulations']\
                 ['second_dot1q'] = str(m.groupdict()['second_dot1q'])
-                interface_detail_dict[interface]['loopback_status']\
-                 = m.groupdict()['loopback_status']
+
+                if loopback_status != "not set":
+                    interface_detail_dict[interface]['loopback_status']\
+                    = m.groupdict()['loopback_status']
                 continue
 
             # Encapsulation ARPA,
@@ -801,22 +807,29 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
             m = p7_4.match(line)
             if m:
                 encapsulation = str(m.groupdict()['encapsulation']).lower()
+                loopback_status = str(m.groupdict()['loopback_status'])
+
 
                 if 'encapsulations' not in interface_detail_dict[interface]:
                     interface_detail_dict[interface]['encapsulations'] = {}
 
                 interface_detail_dict[interface]['encapsulations']\
                 ['encapsulation'] = encapsulation
-                interface_detail_dict[interface]['loopback_status']\
-                 = m.groupdict()['loopback_status']
+
+                if loopback_status != "not set":
+                    interface_detail_dict[interface]['loopback_status']\
+                    = m.groupdict()['loopback_status']
                 continue
 
             # loopback not set,
             p7_5 = re.compile(r'^\s*loopback +(?P<loopback_status>[a-zA-Z\s]+),$')
             m = p7_5.match(line)
             if m:
-                interface_detail_dict[interface]['loopback_status']\
-                 = m.groupdict()['loopback_status']
+                loopback_status = str(m.groupdict()['loopback_status'])
+
+                if loopback_status != "not set":
+                    interface_detail_dict[interface]['loopback_status']\
+                    = m.groupdict()['loopback_status']
                 continue
 
             # Last input never, output never
@@ -835,8 +848,10 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                                ' +(?P<arp_timeout>\S+)')
             m = p8_1.match(line)
             if m:
+                arp_type = str(m.groupdict()['arp_type']).lower()
+
                 interface_detail_dict[interface]['arp_type']\
-                 = m.groupdict()['arp_type']
+                 = arp_type
                 interface_detail_dict[interface]['arp_timeout']\
                  = m.groupdict()['arp_timeout']
                 continue
@@ -1261,20 +1276,20 @@ class ShowIpv4VrfAllInterfaceSchema(MetaParser):
                      Optional('prefix_length'): str,
                      Optional('secondary'): bool,
                      Optional('route_tag'): int,
-                     Optional('mtu'): int,
-                     Optional('mtu_available'): int,
-                     Optional('helper_address'): str,
-                     Optional('broadcast_forwarding'): str,
-                     Optional('out_access_list'): str,
-                     Optional('in_access_list'): str,  
-                     Optional('in_common_access_list'): str,
-                     Optional('arp'): str,
-                     Optional('icmp_redirects'): str,
-                     Optional('icmp_unreachables'): str,
-                     Optional('icmp_replies'): str,
-                     Optional('table_id'): str,
-                    },
-                Optional('unnumbered'):
+                     },
+                 Optional('mtu'): int,
+                 Optional('mtu_available'): int,
+                 Optional('helper_address'): str,
+                 Optional('broadcast_forwarding'): str,
+                 Optional('out_access_list'): str,
+                 Optional('in_access_list'): str,  
+                 Optional('in_common_access_list'): str,
+                 Optional('proxy_arp'): str,
+                 Optional('icmp_redirects'): str,
+                 Optional('icmp_unreachables'): str,
+                 Optional('icmp_replies'): str,
+                 Optional('table_id'): str,                    
+                 Optional('unnumbered'):
                     {Optional('unnumbered_intf_ref'): str
                     },
                 },
@@ -1413,10 +1428,10 @@ class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
                 mtu_available = m.groupdict()['mtu_available']
 
                 if mtu:
-                    ipv4_vrf_all_interface_dict[interface]['ipv4'][address]\
+                    ipv4_vrf_all_interface_dict[interface]['ipv4']\
                     ['mtu'] = int(m.groupdict()['mtu'])
                 if mtu_available:
-                    ipv4_vrf_all_interface_dict[interface]['ipv4'][address]\
+                    ipv4_vrf_all_interface_dict[interface]['ipv4']\
                     ['mtu_available'] = int(m.groupdict()['mtu_available'])
                 continue
 
@@ -1426,8 +1441,9 @@ class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
             if m:
                 helper_address = str(m.groupdict()['helper_address'])
 
-                ipv4_vrf_all_interface_dict[interface]['ipv4'][address]\
-                ['helper_address'] = helper_address
+                if helper_address != "not set":
+                    ipv4_vrf_all_interface_dict[interface]['ipv4']\
+                    ['helper_address'] = helper_address
                 continue
 
             # Multicast reserved groups joined: 224.0.0.2 224.0.0.1 224.0.0.2
@@ -1469,7 +1485,7 @@ class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
             if m:
                 broadcast_forwarding = str(m.groupdict()['broadcast_forwarding'])
 
-                ipv4_vrf_all_interface_dict[interface]['ipv4'][address]\
+                ipv4_vrf_all_interface_dict[interface]['ipv4']\
                 ['broadcast_forwarding'] = broadcast_forwarding
                 continue
 
@@ -1480,8 +1496,9 @@ class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
             if m:
                 out_access_list = str(m.groupdict()['out_access_list'])
 
-                ipv4_vrf_all_interface_dict[interface]['ipv4'][address]\
-                ['out_access_list'] = out_access_list
+                if out_access_list != "not set":
+                    ipv4_vrf_all_interface_dict[interface]['ipv4']\
+                    ['out_access_list'] = out_access_list
                 continue
 
             # Inbound  access list is not set
@@ -1491,8 +1508,9 @@ class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
             if m:
                 in_access_list = str(m.groupdict()['in_access_list'])
 
-                ipv4_vrf_all_interface_dict[interface]['ipv4'][address]\
-                ['in_access_list'] = in_access_list
+                if in_access_list != "not set":
+                    ipv4_vrf_all_interface_dict[interface]['ipv4']\
+                    ['in_access_list'] = in_access_list
                 continue
 
             # Inbound  common access list is not set, access list is not set
@@ -1504,19 +1522,22 @@ class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
                 in_common_access_list = str(m.groupdict()['in_common_access_list'])
                 in_access_list = str(m.groupdict()['in_access_list'])
 
-                ipv4_vrf_all_interface_dict[interface]['ipv4'][address]\
-                ['in_common_access_list'] = in_common_access_list
-                ipv4_vrf_all_interface_dict[interface]['ipv4'][address]\
-                ['in_access_list'] = in_access_list
+                if in_common_access_list != "not set":
+                    ipv4_vrf_all_interface_dict[interface]['ipv4']\
+                    ['in_common_access_list'] = in_common_access_list
+
+                if in_access_list != "not set":
+                    ipv4_vrf_all_interface_dict[interface]['ipv4']\
+                    ['in_access_list'] = in_access_list
                 continue
 
             # Proxy ARP is disabled
-            p10 = re.compile(r'^\s*Proxy +ARP +is +(?P<arp>[a-zA-Z]+)$')
+            p10 = re.compile(r'^\s*Proxy +ARP +is +(?P<proxy_arp>[a-zA-Z]+)$')
             m = p10.match(line)
             if m:
-                arp = str(m.groupdict()['arp'])
+                proxy_arp = str(m.groupdict()['proxy_arp'])
 
-                ipv4_vrf_all_interface_dict[interface]['ipv4'][address]['arp'] = arp
+                ipv4_vrf_all_interface_dict[interface]['ipv4']['proxy_arp'] = proxy_arp
                 continue
 
             # ICMP redirects are never sent
@@ -1525,7 +1546,7 @@ class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
             if m:
                 icmp_redirects = str(m.groupdict()['icmp_redirects'])
 
-                ipv4_vrf_all_interface_dict[interface]['ipv4'][address]['icmp_redirects'] = icmp_redirects
+                ipv4_vrf_all_interface_dict[interface]['ipv4']['icmp_redirects'] = icmp_redirects
                 continue
 
             # ICMP unreachables are always sent
@@ -1535,7 +1556,7 @@ class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
             if m:
                 icmp_unreachables = str(m.groupdict()['icmp_unreachables'])
 
-                ipv4_vrf_all_interface_dict[interface]['ipv4'][address]\
+                ipv4_vrf_all_interface_dict[interface]['ipv4']\
                 ['icmp_unreachables'] = icmp_unreachables
                 continue
 
@@ -1545,7 +1566,7 @@ class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
             if m:
                 icmp_replies = str(m.groupdict()['icmp_replies'])
 
-                ipv4_vrf_all_interface_dict[interface]['ipv4'][address]['icmp_replies'] = icmp_replies
+                ipv4_vrf_all_interface_dict[interface]['ipv4']['icmp_replies'] = icmp_replies
                 continue
 
             # Table Id is 0xe0000011
@@ -1554,7 +1575,7 @@ class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
             if m:
                 table_id = str(m.groupdict()['table_id'])
 
-                ipv4_vrf_all_interface_dict[interface]['ipv4'][address]['table_id'] = table_id
+                ipv4_vrf_all_interface_dict[interface]['ipv4']['table_id'] = table_id
                 continue
 
         return ipv4_vrf_all_interface_dict
@@ -1600,9 +1621,10 @@ class ShowIpv6VrfAllInterfaceSchema(MetaParser):
                 Optional('nd_adv_retrans_int'): str,
                 Optional('nd_adv_duration'): str,
                 Optional('nd_router_adv'): str,
-                Optional('auto_config_state'): str,
+                Optional('stateless_autoconfig'): bool,
                 Optional('out_access_list'): str,
                 Optional('in_access_list'): str,
+                Optional('in_common_access_list'): str,
                 Optional('table_id'): str,
                 Optional('complete_protocol_adj'): str,
                 Optional('complete_glean_adj'): str,
@@ -1897,7 +1919,7 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
                 continue
 
             # ND DAD is enabled, number of DAD attempts 1
-            p8 = re.compile(r'^\s*ND +is +(?P<nd_dad>[a-z]+), +number +of +DAD'
+            p8 = re.compile(r'^\s*ND +DAD +is +(?P<nd_dad>[a-z]+), +number +of +DAD'
                              ' +attempts +(?P<dad_attempts>[0-9]+)$')
             m = p8.match(line)
             if m:
@@ -1967,14 +1989,14 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
                 continue
 
             # Hosts use stateless autoconfig for addresses.
-            p12 = re.compile(r'^\s*Hosts +use +(?P<auto_config_state>[a-zA-Z]+)'
+            p12 = re.compile(r'^\s*Hosts +use +(?P<stateless_autoconfig>(stateless))'
                               ' +autoconfig +for +addresses.$')
             m = p12.match(line)
             if m:
-                auto_config_state = m.groupdict()['auto_config_state']
+                stateless_autoconfig = m.groupdict()['stateless_autoconfig']
 
                 ipv6_vrf_all_interface_dict[interface]['ipv6']\
-                ['auto_config_state'] = auto_config_state
+                ['stateless_autoconfig'] = True
                 continue
 
             # Outgoing access list is not set
@@ -1984,8 +2006,9 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
             if m:
                 out_access_list = m.groupdict()['out_access_list']
 
-                ipv6_vrf_all_interface_dict[interface]['ipv6']\
-                ['out_access_list'] = out_access_list
+                if out_access_list != "not set":
+                    ipv6_vrf_all_interface_dict[interface]['ipv6']\
+                    ['out_access_list'] = out_access_list
                 continue
 
             # Inbound  access list is not set
@@ -1995,8 +2018,24 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
             if m:
                 in_access_list = m.groupdict()['in_access_list']
 
-                ipv6_vrf_all_interface_dict[interface]['ipv6']\
-                ['in_access_list'] = in_access_list
+                if in_access_list != "not set":
+                    ipv6_vrf_all_interface_dict[interface]['ipv6']['in_access_list'] = in_access_list
+                continue
+
+            # Inbound  common access list is not set, access list is not set
+            p14_1 = re.compile(r'^\s*Inbound +common +access +list +is'
+                                ' +(?P<in_common_access_list>[a-zA-Z\s]+),'
+                                ' +access +list +is +(?P<in_access_list>[a-zA-Z\s]+)$')
+            m = p14_1.match(line)
+            if m:
+                in_common_access_list = m.groupdict()['in_common_access_list']
+                in_access_list = m.groupdict()['in_access_list']
+
+                if in_common_access_list != "not set":
+                    ipv6_vrf_all_interface_dict[interface]['ipv6']['in_common_access_list'] = in_common_access_list
+
+                if in_access_list != "not set":
+                    ipv6_vrf_all_interface_dict[interface]['ipv6']['in_access_list'] = in_access_list
                 continue
 
             # Table Id is 0xe0800011
