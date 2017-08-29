@@ -1485,7 +1485,8 @@ class test_show_interface_switchport(unittest.TestCase):
                  'operational_private_vlan': 'none',
                  'switchport_mode': 'trunk',
                  'switchport_monitor': 'Not enabled',
-                 'switchport_status': 'Enabled',
+                 'switchport_status': 'enabled',
+                 'switchport_enable': True,
                  'trunk_vlans': '100,300'},
  'Ethernet2/3': {'access_vlan': 100,
                  'access_vlan_mode': 'Vlan not created',
@@ -1502,7 +1503,8 @@ class test_show_interface_switchport(unittest.TestCase):
                  'operational_private_vlan': 'none',
                  'switchport_mode': 'access',
                  'switchport_monitor': 'Not enabled',
-                 'switchport_status': 'Enabled',
+                 'switchport_status': 'enabled',
+                 'switchport_enable': True,
                  'trunk_vlans': '1-4094'}}
 
 

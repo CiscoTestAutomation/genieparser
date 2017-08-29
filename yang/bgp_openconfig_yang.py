@@ -226,6 +226,7 @@ class BgpOpenconfigYang(BgpOpenconfigYangSchema):
                                         if safi_key_name == 'afi-safi-name':
                                             address_family = str(safi_key.text).lower()
                                             address_family = address_family.replace("_", " ")
+                                            address_family = address_family.replace("labeled", "label")
                                             if address_family not in parsed_dict['vrf']['default']['address_family'] and\
                                                address_family != 'none':
                                                 parsed_dict['vrf']['default']['address_family'][address_family] = {}

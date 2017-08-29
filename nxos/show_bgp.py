@@ -1807,6 +1807,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 # Set keys
                 af_dict['prefixes'][prefix]['index'][index]['next_hop'] = next_hop
                 af_dict['prefixes'][prefix]['index'][index]['origin_codes'] = origin_codes
+
                 try:
                     # Set values of status_codes and path_type from prefix line
                     af_dict['prefixes'][prefix]['index'][index]['status_codes'] = status_codes
@@ -1893,6 +1894,28 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 address_family = new_address_family
                 af_dict = parsed_dict['vrf'][vrf]['address_family'][address_family]
                 continue
+
+        # order the af prefixes index
+        # return dict when parsed dictionary is empty
+        if 'vrf' not in parsed_dict:
+            return parsed_dict
+
+        for vrf in parsed_dict['vrf']:
+            if 'address_family' not in parsed_dict['vrf'][vrf]:
+                continue
+            for af in parsed_dict['vrf'][vrf]['address_family']:
+                af_dict = parsed_dict['vrf'][vrf]['address_family'][af]
+                if 'prefixes' in af_dict:
+                    for prefixes in af_dict['prefixes']:
+                        if len(af_dict['prefixes'][prefixes]['index'].keys()) > 1:                            
+                            ind = 1
+                            nexthop_dict = {}
+                            for i, j in sorted(af_dict['prefixes'][prefixes]['index'].items(),
+                                               key = lambda x:x[1]['next_hop']):
+                                nexthop_dict[ind] = af_dict['prefixes'][prefixes]['index'][i]
+                                ind += 1
+                            del(af_dict['prefixes'][prefixes]['index'])
+                            af_dict['prefixes'][prefixes]['index'] = nexthop_dict
 
         return parsed_dict
 
@@ -2825,19 +2848,21 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
         bgpOC = BgpOpenconfigYang(self.device)
         yang_dict = bgpOC.yang()
 
-        for vrf_name in yang_dict['vrf']:
-            if vrf_name == vrf:
-                for neighbor in yang_dict['vrf'][vrf_name]['neighbor']:
-                    if 'neighbor' not in map_dict:
-                        map_dict['neighbor'] = {}
-                    if neighbor not in map_dict['neighbor']:
-                        map_dict['neighbor'][neighbor] = {}
-                    for key in yang_dict['vrf'][vrf_name]['neighbor'][neighbor]:
-                        if key == 'ebgp_multihop':
-                            map_dict['neighbor'][neighbor]['link'] = 'ebgp'
-                        map_dict['neighbor'][neighbor][key] = \
-                            yang_dict['vrf'][vrf_name]['neighbor'][neighbor][key]
-                        continue
+        if 'vrf' in yang_dict:
+            for vrf_name in yang_dict['vrf']:
+                if vrf_name == vrf:
+                    if 'neighbor' in yang_dict['vrf'][vrf_name]:
+                        for neighbor in yang_dict['vrf'][vrf_name]['neighbor']:
+                            if 'neighbor' not in map_dict:
+                                map_dict['neighbor'] = {}
+                            if neighbor not in map_dict['neighbor']:
+                                map_dict['neighbor'][neighbor] = {}
+                            for key in yang_dict['vrf'][vrf_name]['neighbor'][neighbor]:
+                                if key == 'ebgp_multihop':
+                                    map_dict['neighbor'][neighbor]['link'] = 'ebgp'
+                                map_dict['neighbor'][neighbor][key] = \
+                                    yang_dict['vrf'][vrf_name]['neighbor'][neighbor][key]
+                                continue
 
         # Return to caller
         return map_dict
