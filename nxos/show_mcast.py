@@ -1,18 +1,25 @@
-# List of NXOS Mcast parsers
-# show ip mroute vrf all
-# Show ipv6 mroute vrf all
-# Show ip static-route multicast
-# Show ipv6 static-route multicast
+''' show_mcast.py
 
+NXOS parsers for the following show commands:
+
+    * show ip mroute vrf all
+    * Show ipv6 mroute vrf all
+    * Show ip static-route multicast
+    * Show ipv6 static-route multicast
+
+'''
+
+# Python
 import re
+
+# Metaparser
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Schema, Any, Optional
 
 
-# ###############################################################################
-# #                            show ip mroute vrf all parser
-# ###############################################################################
-
+# ===================================
+# Parser for 'show ip mroute vrf all'
+# ===================================
 
 class ShowIpMrouteVrfAllSchema(MetaParser):
     # schema for show ip mroute vrf all 
@@ -26,7 +33,7 @@ class ShowIpMrouteVrfAllSchema(MetaParser):
                                     {Optional('source_address'): 
                                         {Any(): 
                                             {Optional('uptime'): str,
-                                             Optional('flag'): str,
+                                             Optional('flags'): str,
                                              Optional('oil_count'): int,
                                              Optional('incoming_interface_list'):
                                                 {Any(): 
@@ -48,12 +55,6 @@ class ShowIpMrouteVrfAllSchema(MetaParser):
                     }
                 },
             }
-
-# expire - n/a
-# mroute_admin_distance n/a
-# oil_expire n/a
-# oil_state_mode n/a
-# rpf_info n/a
 
 class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
 
@@ -94,7 +95,7 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
                 source_address = m.groupdict()['source_address']
                 multicast_group = m.groupdict()['multicast_group']
                 uptime = m.groupdict()['uptime']
-                flag = m.groupdict()['flag']
+                flag = m.groupdict()['flags']
 
                 if 'multicast_group' not in mroute_dict['vrf'][vrf]['address_family'][address_family]:
                     mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'] = {}
@@ -112,7 +113,7 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
                 mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
                 ['source_address'][source_address]['uptime'] = uptime
                 mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
-                ['source_address'][source_address]['flag'] = flag
+                ['source_address'][source_address]['flags'] = flag
                 continue
 
             # Incoming interface: Null, RPF nbr: 0.0.0.0 
@@ -177,10 +178,9 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
         return mroute_dict
 
 
-# ###############################################################################
-# #                         Show ipv6 mroute vrf all
-# ###############################################################################
-
+# =====================================
+# Parser for 'show ipv6 mroute vrf all'
+# =====================================
 
 class ShowIpv6MrouteVrfAllSchema(MetaParser):
  
@@ -193,7 +193,7 @@ class ShowIpv6MrouteVrfAllSchema(MetaParser):
                                     {Optional('source_address'): 
                                         {Any(): 
                                             {Optional('uptime'): str,
-                                             Optional('flag'): str,
+                                             Optional('flags'): str,
                                              Optional('oil_count'): str,
                                              Optional('incoming_interface_list'):
                                                 {Any(): 
@@ -216,7 +216,6 @@ class ShowIpv6MrouteVrfAllSchema(MetaParser):
                     },
                 },
             }
-
 
 class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
     
@@ -256,7 +255,7 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
                 source_address = m.groupdict()['source_address']
                 multicast_group = m.groupdict()['multicast_group']
                 uptime = m.groupdict()['uptime']
-                flag = m.groupdict()['flag']
+                flag = m.groupdict()['flags']
 
                 if 'multicast_group' not in ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]:
                     ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'] = {}
@@ -275,7 +274,7 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
                 ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group']\
                 [multicast_group]['source_address'][source_address]['uptime'] = uptime
                 ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group']\
-                [multicast_group]['source_address'][source_address]['flag'] = flag
+                [multicast_group]['source_address'][source_address]['flags'] = flag
                 continue
 
             ''' Incoming interface: Null, RPF nbr: 0:: '''
@@ -371,10 +370,10 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
 
         return ipv6_mroute_vrf_all_dict
 
-# ###############################################################################
-# #                         Show ip static-route multicast
-# ###############################################################################
 
+# ===========================================
+# Parser for 'show ip static route multicast'
+# ===========================================
 
 class ShowIpStaticRouteMulticastSchema(MetaParser):
     # schema for show ip static-route multicast 
@@ -400,8 +399,6 @@ class ShowIpStaticRouteMulticastSchema(MetaParser):
                     },
                 },
             }
-            
-                
 
 class ShowIpStaticRouteMulticast(ShowIpStaticRouteMulticastSchema):
 
@@ -438,7 +435,7 @@ class ShowIpStaticRouteMulticast(ShowIpStaticRouteMulticastSchema):
                              ' +(MStatic|Unicast Static) +Routes:$')
             m = p2.match(line)
             if m:
-                address_family = str(m.groupdict()['address_family'])
+                address_family = str(m.groupdict()['address_family']).lower()
                 
                 if 'address_family' not in static_routemulticast_dict['vrf'][vrf]:
                     static_routemulticast_dict['vrf'][vrf]['address_family'] = {}
@@ -530,10 +527,9 @@ class ShowIpStaticRouteMulticast(ShowIpStaticRouteMulticastSchema):
         return static_routemulticast_dict
 
 
-###############################################################################
-#                         Show ipv6 static-route multicast
-###############################################################################
-
+# =============================================
+# Parser for 'show ipv6 static route multicast'
+# =============================================
 
 class ShowIpv6StaticRouteMulticastSchema(MetaParser):
 
@@ -565,8 +561,6 @@ class ShowIpv6StaticRouteMulticastSchema(MetaParser):
                     },
                 },
             }
-        
-
 
 class ShowIpv6StaticRouteMulticast(ShowIpv6StaticRouteMulticastSchema):
 
@@ -703,5 +697,3 @@ class ShowIpv6StaticRouteMulticast(ShowIpv6StaticRouteMulticastSchema):
                 continue
         
         return ipv6_multicast_dict
-
-
