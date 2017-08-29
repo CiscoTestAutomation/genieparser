@@ -1807,6 +1807,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 # Set keys
                 af_dict['prefixes'][prefix]['index'][index]['next_hop'] = next_hop
                 af_dict['prefixes'][prefix]['index'][index]['origin_codes'] = origin_codes
+
                 try:
                     # Set values of status_codes and path_type from prefix line
                     af_dict['prefixes'][prefix]['index'][index]['status_codes'] = status_codes
@@ -1893,6 +1894,28 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 address_family = new_address_family
                 af_dict = parsed_dict['vrf'][vrf]['address_family'][address_family]
                 continue
+
+        # order the af prefixes index
+        # return dict when parsed dictionary is empty
+        if 'vrf' not in parsed_dict:
+            return parsed_dict
+
+        for vrf in parsed_dict['vrf']:
+            if 'address_family' not in parsed_dict['vrf'][vrf]:
+                continue
+            for af in parsed_dict['vrf'][vrf]['address_family']:
+                af_dict = parsed_dict['vrf'][vrf]['address_family'][af]
+                if 'prefixes' in af_dict:
+                    for prefixes in af_dict['prefixes']:
+                        if len(af_dict['prefixes'][prefixes]['index'].keys()) > 1:                            
+                            ind = 1
+                            nexthop_dict = {}
+                            for i, j in sorted(af_dict['prefixes'][prefixes]['index'].items(),
+                                               key = lambda x:x[1]['next_hop']):
+                                nexthop_dict[ind] = af_dict['prefixes'][prefixes]['index'][i]
+                                ind += 1
+                            del(af_dict['prefixes'][prefixes]['index'])
+                            af_dict['prefixes'][prefixes]['index'] = nexthop_dict
 
         return parsed_dict
 
