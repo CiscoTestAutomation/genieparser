@@ -3454,55 +3454,56 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                 # dealing with the group of metric, locprf, weight, path
                 group_num = m.groupdict()['number']
 
-                # metric   locprf  weight path
-                # 2219      211       0 200 33299 51178 47751 {27016}
-                m1 = re.compile(r'^(?P<metric>[0-9]+)  +'
-                             '(?P<locprf>[0-9]+)  +'
-                             '(?P<weight>[0-9]+) '
-                             '(?P<path>[0-9\{\}\s]+)$').match(group_num)
-
-                # metric   locprf  weight path
-                # 2219                0 200 33299 51178 47751 {27016}
-                # locprf   weight path
-                # 211         0 200 33299 51178 47751 {27016}
-
-                m2 = re.compile(r'^(?P<value>[0-9]+)'
-                             '(?P<space>\s{2,20})'
-                             '(?P<weight>[0-9]+) '
-                             '(?P<path>[0-9\{\}\s]+)$').match(group_num)
-
-                # weight path
-                # 0 200 33299 51178 47751 {27016}
-                m3 = re.compile(r'^(?P<weight>[0-9]+) '
-                             '(?P<path>((\d+\s)|(\{\d+\}\s))+)$')\
-                           .match(group_num)
-
-                if m1:
-                    sub_dict[routes][prefix]['index'][index]['metric'] = \
-                        m1.groupdict()['metric']
-                    sub_dict[routes][prefix]['index'][index]['locprf'] = \
-                        m1.groupdict()['locprf']
-                    sub_dict[routes][prefix]['index'][index]['weight'] = \
-                        m1.groupdict()['weight']
-                    sub_dict[routes][prefix]['index'][index]['path'] = \
-                        m1.groupdict()['path'].strip()
-                elif m2:
-                    if len(m2.groupdict()['space']) > 8:
+                if group_num:
+                    # metric   locprf  weight path
+                    # 2219      211       0 200 33299 51178 47751 {27016}
+                    m1 = re.compile(r'^(?P<metric>[0-9]+)  +'
+                                 '(?P<locprf>[0-9]+)  +'
+                                 '(?P<weight>[0-9]+) '
+                                 '(?P<path>[0-9\{\}\s]+)$').match(group_num)
+    
+                    # metric   locprf  weight path
+                    # 2219                0 200 33299 51178 47751 {27016}
+                    # locprf   weight path
+                    # 211         0 200 33299 51178 47751 {27016}
+    
+                    m2 = re.compile(r'^(?P<value>[0-9]+)'
+                                 '(?P<space>\s{2,20})'
+                                 '(?P<weight>[0-9]+) '
+                                 '(?P<path>[0-9\{\}\s]+)$').match(group_num)
+    
+                    # weight path
+                    # 0 200 33299 51178 47751 {27016}
+                    m3 = re.compile(r'^(?P<weight>[0-9]+) '
+                                 '(?P<path>((\d+\s)|(\{\d+\}\s))+)$')\
+                               .match(group_num)
+    
+                    if m1:
                         sub_dict[routes][prefix]['index'][index]['metric'] = \
-                            m2.groupdict()['value']
-                    else:
+                            m1.groupdict()['metric']
                         sub_dict[routes][prefix]['index'][index]['locprf'] = \
-                            m2.groupdict()['value']
-
-                    sub_dict[routes][prefix]['index'][index]['weight'] = \
-                        m2.groupdict()['weight']
-                    sub_dict[routes][prefix]['index'][index]['path'] = \
-                        m2.groupdict()['path'].strip()
-                elif m3:
-                    sub_dict[routes][prefix]['index'][index]['weight'] = \
-                        m3.groupdict()['weight']
-                    sub_dict[routes][prefix]['index'][index]['path'] = \
-                        m3.groupdict()['path'].strip()
+                            m1.groupdict()['locprf']
+                        sub_dict[routes][prefix]['index'][index]['weight'] = \
+                            m1.groupdict()['weight']
+                        sub_dict[routes][prefix]['index'][index]['path'] = \
+                            m1.groupdict()['path'].strip()
+                    elif m2:
+                        if len(m2.groupdict()['space']) > 8:
+                            sub_dict[routes][prefix]['index'][index]['metric'] = \
+                                m2.groupdict()['value']
+                        else:
+                            sub_dict[routes][prefix]['index'][index]['locprf'] = \
+                                m2.groupdict()['value']
+    
+                        sub_dict[routes][prefix]['index'][index]['weight'] = \
+                            m2.groupdict()['weight']
+                        sub_dict[routes][prefix]['index'][index]['path'] = \
+                            m2.groupdict()['path'].strip()
+                    elif m3:
+                        sub_dict[routes][prefix]['index'][index]['weight'] = \
+                            m3.groupdict()['weight']
+                        sub_dict[routes][prefix]['index'][index]['path'] = \
+                            m3.groupdict()['path'].strip()
 
                 if m.groupdict()['origin_codes']:
                     sub_dict[routes][prefix]['index'][index]['origin_codes'] = \
