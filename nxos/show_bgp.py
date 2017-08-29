@@ -1805,7 +1805,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                     af_dict['prefixes'][prefix]['index'][index] = {}
 
                 # Set keys
-                af_dict['prefixes'][prefix]['index'][index]['next_hop'] = next_hop                
+                af_dict['prefixes'][prefix]['index'][index]['next_hop'] = next_hop
                 af_dict['prefixes'][prefix]['index'][index]['origin_codes'] = origin_codes
 
                 try:
@@ -1816,7 +1816,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                     pass
 
                 # Parse numbers
-                numbers = m.groupdict()['numbers']                
+                numbers = m.groupdict()['numbers']
                 
                 # Metric     LocPrf     Weight Path
                 #    4444       100          0  10 3 10 20 30 40 50 60 70 80 90
@@ -1896,10 +1896,13 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 continue
 
         # order the af prefixes index
+        # return dict when parsed dictionary is empty
         if 'vrf' not in parsed_dict:
             return parsed_dict
 
         for vrf in parsed_dict['vrf']:
+            if 'address_family' not in parsed_dict['vrf'][vrf]:
+                continue
             for af in parsed_dict['vrf'][vrf]['address_family']:
                 af_dict = parsed_dict['vrf'][vrf]['address_family'][af]
                 if 'prefixes' in af_dict:
