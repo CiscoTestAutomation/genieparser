@@ -1014,7 +1014,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                                                     'total': 3}}},
                     'a': 
                         {'active_cluster_id': '10',
-                        'address_family': {'vpnv4 unicast': {'attribute_download': 'Disabled',
+                        'address_family': {'ipv4 unicast': {'attribute_download': 'Disabled',
                                                              'bgp_table_version': '1',
                                                              'chunk_elememt_size': '3',
                                                              'client_to_client_reflection': False,
@@ -1707,7 +1707,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                     {'VRF1': 
                         {'active_cluster_id': '1.1.1.1',
                         'address_family': 
-                            {'vpnv6 unicast': 
+                            {'ipv6 unicast': 
                                 {'attribute_download': 'Disabled',
                                 'bgp_table_version': '3',
                                 'chunk_elememt_size': '3',
@@ -1909,7 +1909,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
                     'VRF2': 
                         {'active_cluster_id': '1.1.1.1',
                         'address_family': 
-                            {'vpnv6 unicast': 
+                            {'ipv6 unicast': 
                                 {'attribute_download': 'Disabled',
                                 'bgp_table_version': '3',
                                 'chunk_elememt_size': '3',
@@ -4121,7 +4121,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "last_ka_start_before_second_last": "00:00:00",
                                 "message_stats_input_queue": 0,
                                 "address_family": {
-                                    "vpnv6 unicast": {
+                                    "ipv6 unicast": {
                                         "outstanding_version_objects_current": 0,
                                         "outstanding_version_objects_max": 1,
                                         "cummulative_no_by_orf_policy": 0,
@@ -4245,7 +4245,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "last_ka_start_before_second_last": "00:00:00",
                                 "message_stats_input_queue": 0,
                                 "address_family": {
-                                    "vpnv4 unicast": {
+                                    "ipv4 unicast": {
                                         "outstanding_version_objects_current": 0,
                                         "outstanding_version_objects_max": 1,
                                         "cummulative_no_by_orf_policy": 0,
@@ -4373,7 +4373,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "last_ka_start_before_second_last": "00:00:00",
                                 "message_stats_input_queue": 0,
                                 "address_family": {
-                                    "vpnv6 unicast": {
+                                    "ipv6 unicast": {
                                         "outstanding_version_objects_current": 0,
                                         "outstanding_version_objects_max": 1,
                                         "additional_routes_local_label": "Unicast SAFI",
@@ -4493,7 +4493,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                                 "last_ka_start_before_second_last": "00:00:00",
                                 "message_stats_input_queue": 0,
                                 "address_family": {
-                                    "vpnv4 unicast": {
+                                    "ipv4 unicast": {
                                         "outstanding_version_objects_current": 0,
                                         "outstanding_version_objects_max": 1,
                                         "additional_routes_local_label": "Unicast SAFI",
@@ -4862,7 +4862,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                         {'neighbor': 
                             {'2001:db8:1:5::5': 
                                 {'address_family': 
-                                    {'vpnv6 unicast': 
+                                    {'ipv6 unicast': 
                                         {'accepted_prefixes': 0,
                                         'additional_paths_operation': 'None',
                                         'additional_routes_local_label': 'Unicast '
@@ -4980,7 +4980,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
                 {'neighbor': 
                     {'2001:db8:20:1:5::5': 
                         {'address_family': 
-                            {'vpnv6 unicast': 
+                            {'ipv6 unicast': 
                                 {'accepted_prefixes': 0,
                                 'additional_paths_operation': 'None',
                                 'additional_routes_local_label': 'Unicast '
