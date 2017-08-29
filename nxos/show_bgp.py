@@ -1805,8 +1805,9 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                     af_dict['prefixes'][prefix]['index'][index] = {}
 
                 # Set keys
-                af_dict['prefixes'][prefix]['index'][index]['next_hop'] = next_hop
+                af_dict['prefixes'][prefix]['index'][index]['next_hop'] = next_hop                
                 af_dict['prefixes'][prefix]['index'][index]['origin_codes'] = origin_codes
+
                 try:
                     # Set values of status_codes and path_type from prefix line
                     af_dict['prefixes'][prefix]['index'][index]['status_codes'] = status_codes
@@ -1815,7 +1816,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                     pass
 
                 # Parse numbers
-                numbers = m.groupdict()['numbers']
+                numbers = m.groupdict()['numbers']                
                 
                 # Metric     LocPrf     Weight Path
                 #    4444       100          0  10 3 10 20 30 40 50 60 70 80 90
@@ -1893,6 +1894,25 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 address_family = new_address_family
                 af_dict = parsed_dict['vrf'][vrf]['address_family'][address_family]
                 continue
+
+        # order the af prefixes index
+        if 'vrf' not in parsed_dict:
+            return parsed_dict
+
+        for vrf in parsed_dict['vrf']:
+            for af in parsed_dict['vrf'][vrf]['address_family']:
+                af_dict = parsed_dict['vrf'][vrf]['address_family'][af]
+                if 'prefixes' in af_dict:
+                    for prefixes in af_dict['prefixes']:
+                        if len(af_dict['prefixes'][prefixes]['index'].keys()) > 1:                            
+                            ind = 1
+                            nexthop_dict = {}
+                            for i, j in sorted(af_dict['prefixes'][prefixes]['index'].items(),
+                                               key = lambda x:x[1]['next_hop']):
+                                nexthop_dict[ind] = af_dict['prefixes'][prefixes]['index'][i]
+                                ind += 1
+                            del(af_dict['prefixes'][prefixes]['index'])
+                            af_dict['prefixes'][prefixes]['index'] = nexthop_dict
 
         return parsed_dict
 
