@@ -446,7 +446,7 @@ class ShowBgpAllClusterIds(ShowBgpAllClusterIdsSchema):
         # show vrf detail | inc \(VRF
         cmd_vrfs = 'show vrf detail | inc \(VRF'
         out_vrf = self.device.execute(cmd_vrfs)
-        vrf_dict = {}
+        vrf_dict = {'0':'default'}
 
         for line in out_vrf.splitlines():
             if not line:
@@ -464,7 +464,7 @@ class ShowBgpAllClusterIds(ShowBgpAllClusterIdsSchema):
                 # Save variables for use later
                 vrf_name = str(m.groupdict()['vrf_name'])
                 vrf_id = str(m.groupdict()['vrf_id'])
-                vrf_dict[vrf_id] = vrf_name
+                vrf_dict[vrf_id] = vrf_name.lower()
                 continue
 
         # show bgp all cluster-ids

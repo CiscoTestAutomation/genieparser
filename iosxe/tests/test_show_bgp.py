@@ -879,7 +879,7 @@ class test_show_bgp_all_cluster_ids(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
         'vrf':
-            {'VRF1':
+            {'default':
                 {
                     'cluster_id': '4.4.4.4',
                     'configured_id': '0.0.0.0',
@@ -887,7 +887,15 @@ class test_show_bgp_all_cluster_ids(unittest.TestCase):
                     'reflection_type': 'Used',
                     'cluster_status': 'ENABLED',
                 },
-                'VRF2':
+                'vrf1':
+                {
+                    'cluster_id': '4.4.4.4',
+                    'configured_id': '0.0.0.0',
+                    'reflection_status': 'Configured',
+                    'reflection_type': 'Used',
+                    'cluster_status': 'ENABLED',
+                },
+                'vrf2':
                     {
                         'cluster_id': '4.4.4.4',
                         'configured_id': '0.0.0.0',
@@ -913,6 +921,34 @@ class test_show_bgp_all_cluster_ids(unittest.TestCase):
         Cluster-id     #-neighbors C2C-rfl-CFG C2C-rfl-USE
         '''}
 
+    golden_parsed_output_1 = {
+        'vrf':
+            {'default':
+                {
+                    'cluster_id': '4.4.4.4',
+                    'configured_id': '0.0.0.0',
+                    'reflection_status': 'Configured',
+                    'reflection_type': 'Used',
+                    'cluster_status': 'ENABLED',
+                }
+            }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+           R4_iosv#show vrf detail | inc \(VRF
+           % unmatched ()
+           % Failed to compile regular expression.
+
+           R4_iosv#show bgp all cluster-ids
+           Global cluster-id: 4.4.4.4 (configured: 0.0.0.0)
+           BGP client-to-client reflection:         Configured    Used
+            all (inter-cluster and intra-cluster): ENABLED
+            intra-cluster:                         ENABLED       ENABLED
+
+           List of cluster-ids:
+           Cluster-id     #-neighbors C2C-rfl-CFG C2C-rfl-USE
+           '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAllClusterIds(device=self.device)
@@ -925,6 +961,12 @@ class test_show_bgp_all_cluster_ids(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowBgpAllClusterIds(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 if __name__ == '__main__':
     unittest.main()
