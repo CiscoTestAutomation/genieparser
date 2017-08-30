@@ -414,3 +414,139 @@ class ShowBgpAllSummary(ShowBgpAllSummarySchema):
                 continue
 
         return sum_dict
+
+
+class ShowBgpALLClusterIdsSchema(MetaParser):
+    '''
+        Schema for show bgp all cluster-ids
+    '''
+    schema = {
+              'vrf':
+                    {Any():
+                        {
+                          'cluster_id': str,
+                           Optional('configured_id'): str,
+                           Optional('reflection_status'): str,
+                           Optional('reflection_type'): str,
+                           Optional('cluster_status'): str,
+                        }
+                    },
+
+                }
+
+class ShowBgpALLClusterIds(ShowBgpALLClusterIdsSchema):
+    '''
+       Parser for show bgp all cluster-ids
+       Executing 'show vrf detail | inc \(VRF' to collect vrf names.
+
+    '''
+
+    def cli(self):
+        # find vrf names
+        # show vrf detail | inc \(VRF
+        cmd_vrfs = 'show vrf detail | inc \(VRF'
+        out_vrf = self.device.execute(cmd_vrfs)
+        vrf_dict = {}
+
+        for line in out_vrf.splitlines():
+            if not line:
+                continue
+            else:
+                line = line.rstrip()
+
+            # VRF VRF1 (VRF Id = 1); default RD 300:1; default VPNID <not set>
+            # VRF VRF2 (VRF Id = 2); default RD 400:1; default VPNID <not set>
+            p = re.compile(r'^\s*VRF +(?P<vrf_name>[0-9a-zA-Z]+)'
+                            ' +\(+VRF +Id += +(?P<vrf_id>[0-9]+)+\)+;'
+                            ' +default +(?P<other_data>.+)$')
+            m = p.match(line)
+            if m:
+                # Save variables for use later
+                vrf_name = str(m.groupdict()['vrf_name'])
+                vrf_id = str(m.groupdict()['vrf_id'])
+                vrf_dict[vrf_id] = vrf_name
+                continue
+
+        # show bgp all cluster-ids
+        cmd = 'show bgp all cluster-ids'
+        out = self.device.execute(cmd)
+
+        # Init vars
+        sum_dict = {}
+        cluster_id = None
+
+        for line in out.splitlines():
+            if line.strip():
+                line = line.rstrip()
+            else:
+                continue
+
+            # Global cluster-id: 4.4.4.4 (configured: 0.0.0.0)
+            p1 = re.compile(r'^\s*Global +cluster-id: +(?P<cluster_id>[0-9\.]+)'
+                            ' +\(+configured: +(?P<configured>[0-9\.]+)+\)$')
+            m = p1.match(line)
+            if m:
+                # Save variables for use later
+                cluster_id = str(m.groupdict()['cluster_id'])
+                configured_id = str(m.groupdict()['configured'])
+
+                if 'vrf' not in sum_dict:
+                    sum_dict['vrf'] = {}
+
+                continue
+
+            # BGP client-to-client reflection:         Configured    Used
+            p2 = re.compile(r'^\s*BGP +client-to-client +reflection:'
+                            '\s+(?P<reflection_status>[a-zA-Z]+)    +(?P<reflection_type>[a-zA-Z]+)$')
+            m = p2.match(line)
+            if m:
+                reflection_status = str(m.groupdict()['reflection_status'])
+                reflection_type = str(m.groupdict()['reflection_type'])
+                continue
+
+            #   all (inter-cluster and intra-cluster): ENABLED
+            p3 = re.compile(r'^\s*all +\(+inter-cluster +and +intra-cluster+\)+:'
+                            ' +(?P<inter_intra_cluster_status>[a-zA-Z]+)$')
+            m = p3.match(line)
+            if m:
+                inter_intra_cluster_status = str(m.groupdict()['inter_intra_cluster_status'])
+                continue
+
+            # intra-cluster:                         ENABLED       ENABLED
+            p4 = re.compile(r'^\s*intra-cluster:\s+(?P<intra_cluster_status>[a-zA-Z]+)'
+                            '       +(?P<confirm_intra_cluster_status>[a-zA-Z]+)$')
+            m = p4.match(line)
+            if m:
+                intra_cluster_status = str(m.groupdict()['intra_cluster_status'])
+                confirm_intra_cluster_status = str(m.groupdict()['confirm_intra_cluster_status'])
+                continue
+
+            # List of cluster-ids
+            p5 = re.compile(r'^\s*List +of +cluster-ids$')
+            m = p5.match(line)
+            if m:
+                # Cluster-id  #-neighbors C2C-rfl-CFG C2C-rfl-USE
+                p6 = re.compile(r'^\s*Cluster-id+\s+#-neighbors'
+                                ' +(?P<neighbores>[0-9a-zA-Z\-\s]+)$')
+                m = p6.match(line)
+                if m:
+                    cluster_id_neighbores = str(m.groupdict()['neighbores'])
+                    continue
+
+            for vrf_id, vrf_name in vrf_dict.items():
+                if 'vrf' not in sum_dict:
+                    sum_dict['vrf'] = {}
+                if vrf_name not in sum_dict['vrf']:
+                    sum_dict['vrf'][vrf_name] = {}
+                if 'cluster_id' not in sum_dict['vrf'][vrf_name]:
+                    if cluster_id:
+                        sum_dict['vrf'][vrf_name]['cluster_id'] = str(cluster_id)
+                        if configured_id:
+                            sum_dict['vrf'][vrf_name]['configured_id'] = str(configured_id)
+                        if reflection_status:
+                            sum_dict['vrf'][vrf_name]['reflection_status'] = str(reflection_status)
+                        if reflection_type:
+                            sum_dict['vrf'][vrf_name]['reflection_type'] = str(reflection_type)
+                        if inter_intra_cluster_status:
+                            sum_dict['vrf'][vrf_name]['cluster_status'] = str(inter_intra_cluster_status)
+        return sum_dict

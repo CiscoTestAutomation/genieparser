@@ -7,7 +7,7 @@ from ats.topology import Device
 from metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from parser.iosxe.show_bgp import ShowBgpAllSummary
+from parser.iosxe.show_bgp import ShowBgpAllSummary, ShowBgpALLClusterIds
 
 
 class test_show_bgp_all_summary(unittest.TestCase):
@@ -869,6 +869,63 @@ class test_show_bgp_all_summary(unittest.TestCase):
         obj = ShowBgpAllSummary(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+
+class test_show_bgp_all_cluster_ids(unittest.TestCase):
+    '''
+        unit test for  show bgp all cluster_ids
+    '''
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {
+        'vrf':
+            {'VRF1':
+                {
+                    'cluster_id': '4.4.4.4',
+                    'configured_id': '0.0.0.0',
+                    'reflection_status': 'Configured',
+                    'reflection_type': 'Used',
+                    'cluster_status': 'ENABLED',
+                },
+                'VRF2':
+                    {
+                        'cluster_id': '4.4.4.4',
+                        'configured_id': '0.0.0.0',
+                        'reflection_status': 'Configured',
+                        'reflection_type': 'Used',
+                        'cluster_status': 'ENABLED',
+                    }
+            }
+    }
+
+    golden_output = {'execute.return_value': '''
+        R4_iosv#show vrf detail | inc \(VRF
+        VRF VRF1 (VRF Id = 1); default RD 300:1; default VPNID <not set>
+        VRF VRF2 (VRF Id = 2); default RD 400:1; default VPNID <not set>
+
+        R4_iosv#show bgp all cluster-ids
+        Global cluster-id: 4.4.4.4 (configured: 0.0.0.0)
+        BGP client-to-client reflection:         Configured    Used
+         all (inter-cluster and intra-cluster): ENABLED
+         intra-cluster:                         ENABLED       ENABLED
+
+        List of cluster-ids:
+        Cluster-id     #-neighbors C2C-rfl-CFG C2C-rfl-USE
+        '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpALLClusterIds(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpALLClusterIds(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 if __name__ == '__main__':
     unittest.main()
