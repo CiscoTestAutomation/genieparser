@@ -416,7 +416,7 @@ class ShowBgpAllSummary(ShowBgpAllSummarySchema):
         return sum_dict
 
 
-class ShowBgpALLClusterIdsSchema(MetaParser):
+class ShowBgpAllClusterIdsSchema(MetaParser):
     '''
         Schema for show bgp all cluster-ids
     '''
@@ -434,7 +434,7 @@ class ShowBgpALLClusterIdsSchema(MetaParser):
 
                 }
 
-class ShowBgpALLClusterIds(ShowBgpALLClusterIdsSchema):
+class ShowBgpAllClusterIds(ShowBgpAllClusterIdsSchema):
     '''
        Parser for show bgp all cluster-ids
        Executing 'show vrf detail | inc \(VRF' to collect vrf names.
@@ -497,7 +497,8 @@ class ShowBgpALLClusterIds(ShowBgpALLClusterIdsSchema):
 
             # BGP client-to-client reflection:         Configured    Used
             p2 = re.compile(r'^\s*BGP +client-to-client +reflection:'
-                            '\s+(?P<reflection_status>[a-zA-Z]+)    +(?P<reflection_type>[a-zA-Z]+)$')
+                            '\s+(?P<reflection_status>[a-zA-Z]+)'
+                            ' +(?P<reflection_type>[a-zA-Z]+)$')
             m = p2.match(line)
             if m:
                 reflection_status = str(m.groupdict()['reflection_status'])
@@ -514,7 +515,7 @@ class ShowBgpALLClusterIds(ShowBgpALLClusterIdsSchema):
 
             # intra-cluster:                         ENABLED       ENABLED
             p4 = re.compile(r'^\s*intra-cluster:\s+(?P<intra_cluster_status>[a-zA-Z]+)'
-                            '       +(?P<confirm_intra_cluster_status>[a-zA-Z]+)$')
+                            ' +(?P<confirm_intra_cluster_status>[a-zA-Z]+)$')
             m = p4.match(line)
             if m:
                 intra_cluster_status = str(m.groupdict()['intra_cluster_status'])

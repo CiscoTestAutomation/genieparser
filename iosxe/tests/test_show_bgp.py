@@ -7,7 +7,7 @@ from ats.topology import Device
 from metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from parser.iosxe.show_bgp import ShowBgpAllSummary, ShowBgpALLClusterIds
+from parser.iosxe.show_bgp import ShowBgpAllSummary, ShowBgpAllClusterIds
 
 
 class test_show_bgp_all_summary(unittest.TestCase):
@@ -915,14 +915,13 @@ class test_show_bgp_all_cluster_ids(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowBgpALLClusterIds(device=self.device)
+        obj = ShowBgpAllClusterIds(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
-        obj = ShowBgpALLClusterIds(device=self.device)
+        obj = ShowBgpAllClusterIds(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
