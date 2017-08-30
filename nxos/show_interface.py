@@ -346,8 +346,7 @@ class ShowInterface(ShowInterfaceSchema):
                 mtu = int(m.groupdict()['mtu'])
                 bandwidth = int(m.groupdict()['bandwidth'])
                 if m.groupdict()['delay']:
-                    delay = int(m.groupdict()['delay'])
-                    interface_dict[interface]['delay'] = delay
+                    interface_dict[interface]['delay'] = int(m.groupdict()['delay'])
                 
                 interface_dict[interface]['mtu'] = mtu
                 interface_dict[interface]['bandwidth'] = bandwidth
@@ -362,11 +361,10 @@ class ShowInterface(ShowInterfaceSchema):
             if m:
                 mtu = int(m.groupdict()['mtu'])
                 bandwidth = int(m.groupdict()['bandwidth'])
-                delay = int(m.groupdict()['delay'])
                 
                 interface_dict[interface]['mtu'] = mtu
                 interface_dict[interface]['bandwidth'] = bandwidth
-                interface_dict[interface]['delay'] = delay
+                interface_dict[interface]['delay'] = int(m.groupdict()['delay'])
                 continue
 
             # reliability 255/255, txload 1/255, rxload 1/255
@@ -960,7 +958,6 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
             line = line.rstrip()
 
             # IP Interface Status for VRF "VRF1"
-            # IP Interface Status for VRF "blue"
             p1 = re.compile(r'^\s*IP *Interface *Status *for *VRF'
                              ' *(?P<vrf>[a-zA-Z0-9\"]+)$')
             m = p1.match(line)
@@ -1623,7 +1620,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
             line = line.rstrip()
 
             #Name: Ethernet2/2
-            p1 = re.compile(r'^\s*Name: *(?P<interface>[a-zA-Z0-9\/]+)$')
+            p1 = re.compile(r'^\s*Name: *(?P<interface>[a-zA-Z0-9\/\-\.]+)$')
             m = p1.match(line)
             if m:
                 interface = m.groupdict()['interface']
@@ -1658,7 +1655,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
             m = p4.match(line)
             if m:
                 switchport_mode = m.groupdict()['switchport_mode']
-                if switchport_status == 'Enabled' and switchport_mode == 'trunk':
+                if switchport_status == 'enabled' and switchport_mode == 'trunk':
                     operation_mode = 'trunk'
 
                 interface_switchport_dict[interface]['switchport_mode'] = switchport_mode 
