@@ -65,6 +65,10 @@ class ShowInterfaceSchema(MetaParser):
                 {Optional('receive'): bool,
                 Optional('send'): bool,
             },
+            Optional('port_channel'):
+                {Optional('port_channel_member'): bool,
+                Optional('port_channel_int'): str,
+            },
             'bandwidth': int,
             Optional('counters'):
                 {Optional('rate'):
@@ -250,6 +254,19 @@ class ShowInterface(ShowInterfaceSchema):
                         ['oper_status'] = oper_status
                 interface_dict[interface]\
                 ['parent_interface'] = parent_interface
+                continue
+
+            # Belongs to Po1
+            p2_2 = re.compile(r'^\s*Belongs *to *(?P<port_channel_int>[a-zA-Z0-9]+)$')
+            m = p2_2.match(line)
+            if m:
+                port_channel_int = str(m.groupdict()['port_channel_int'])
+                if 'port_channel' not in interface_dict[interface]:
+                    interface_dict[interface]['port_channel'] = {}
+                interface_dict[interface]['port_channel']\
+                    ['port_channel_member'] = True
+                interface_dict[interface]['port_channel']\
+                    ['port_channel_int'] = port_channel_int
                 continue
 
             # Hardware: Ethernet, address: 5254.00c9.d26e (bia 5254.00c9.d26e)
