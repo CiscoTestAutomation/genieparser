@@ -57,10 +57,10 @@ class ShowInterfaceSchema(MetaParser):
             Optional('ethertype'): str,
             Optional('beacon'): str,
             Optional('medium'): str,
-            'reliability': str,
-            'txload': str,
-            'rxload': str,
-            'delay': int,
+            Optional('reliability'): str,
+            Optional('txload'): str,
+            Optional('rxload'): str,
+            Optional('delay'): int,
             Optional('flow_control'):
                 {Optional('receive'): bool,
                 Optional('send'): bool,
@@ -159,7 +159,7 @@ class ShowInterface(ShowInterfaceSchema):
 
 
             # Ethernet2/1.10 is down (Administratively down)
-            p1 =  re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.]+) *is'
+            p1 =  re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
                               ' *(?P<enabled>(down))'
                               '( *\((?P<link_state>[a-zA-Z\s]+)\))?$')
             m = p1.match(line)
@@ -182,7 +182,7 @@ class ShowInterface(ShowInterfaceSchema):
                 continue
 
             # Vlan1 is down (Administratively down), line protocol is down, autostate enabled
-            p1_1 =  re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.]+) *is'
+            p1_1 =  re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
                               ' *(?P<enabled>\w+)'
                               '( *\((?P<link_state>[\w\-\/\s]+)\))?, +'
                               'line +protocol +is +(?P<line_protocol>\w+),? *'
@@ -217,7 +217,7 @@ class ShowInterface(ShowInterfaceSchema):
                 continue
 
             # Ethernet2/2 is up
-            p1_1 =  re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.]+) *is'
+            p1_1 =  re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
                               ' *(?P<enabled>(up))'
                               '( *\((?P<link_state>[a-zA-Z\s]+)\))?$')
             m = p1_1.match(line)
@@ -337,18 +337,19 @@ class ShowInterface(ShowInterfaceSchema):
             
             # MTU 1600 bytes, BW 768 Kbit, DLY 3330 usec
             # MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
+            # MTU 1500 bytes, BW 1000000 Kbit
             p6 = re.compile(r'^\s*MTU *(?P<mtu>[0-9]+) *bytes, *BW'
-                             ' *(?P<bandwidth>[0-9]+) *Kbit, *DLY'
-                             ' *(?P<delay>[0-9]+) *usec,?$')
+                             ' *(?P<bandwidth>[0-9]+) *Kbit(, *DLY'
+                             ' *(?P<delay>[0-9]+) *usec)?,?$')
             m = p6.match(line)
             if m:
                 mtu = int(m.groupdict()['mtu'])
                 bandwidth = int(m.groupdict()['bandwidth'])
-                delay = int(m.groupdict()['delay'])
+                if m.groupdict()['delay']:
+                    interface_dict[interface]['delay'] = int(m.groupdict()['delay'])
                 
                 interface_dict[interface]['mtu'] = mtu
                 interface_dict[interface]['bandwidth'] = bandwidth
-                interface_dict[interface]['delay'] = delay
                 continue
             
             # MTU 1500 bytes,  BW 40000000 Kbit,, BW 40000000 Kbit, DLY 10 usec
@@ -360,14 +361,13 @@ class ShowInterface(ShowInterfaceSchema):
             if m:
                 mtu = int(m.groupdict()['mtu'])
                 bandwidth = int(m.groupdict()['bandwidth'])
-                delay = int(m.groupdict()['delay'])
                 
                 interface_dict[interface]['mtu'] = mtu
                 interface_dict[interface]['bandwidth'] = bandwidth
-                interface_dict[interface]['delay'] = delay
+                interface_dict[interface]['delay'] = int(m.groupdict()['delay'])
                 continue
 
-            #reliability 255/255, txload 1/255, rxload 1/255
+            # reliability 255/255, txload 1/255, rxload 1/255
             p7 = re.compile(r'^\s*reliability *(?P<reliability>[0-9\/]+),'
                              ' *txload *(?P<txload>[0-9\/]+),'
                              ' *rxload *(?P<rxload>[0-9\/]+)$')
@@ -655,6 +655,9 @@ class ShowInterface(ShowInterfaceSchema):
             m = p23_1.match(line)
             if m:
                 rx = m.groupdict()['rx']
+                if 'counters' not in interface_dict[interface]:
+                    interface_dict[interface]['counters'] = {}
+
                 interface_dict[interface]['counters']['rx'] = True
                 continue
 
@@ -773,6 +776,8 @@ class ShowInterface(ShowInterfaceSchema):
             if m:
                 rx = False
                 tx = m.groupdict()['tx']
+                if 'counters' not in interface_dict[interface]:
+                    interface_dict[interface]['counters'] = {}
                 interface_dict[interface]['counters']['tx'] = True
                 continue
                 
@@ -947,11 +952,12 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
         out = self.device.execute('show ip interface vrf all')
 
         ip_interface_vrf_all_dict = {}
+        temp_intf = []
 
         for line in out.splitlines():
             line = line.rstrip()
 
-            #IP Interface Status for VRF "VRF1"
+            # IP Interface Status for VRF "VRF1"
             p1 = re.compile(r'^\s*IP *Interface *Status *for *VRF'
                              ' *(?P<vrf>[a-zA-Z0-9\"]+)$')
             m = p1.match(line)
@@ -1001,12 +1007,15 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 continue
 
             # Ethernet2/11:
-            p2_2 = re.compile(r'^\s*(?P<temp_intf>([E|e]thernet|[L|l]oopback|[T|t]unnel|[V|v]lan)[\d\/\.]+):$')
-            m = p2_2.match(line)
+            # mti18: tunnel-te11: tunnel-te12:
+            p2_2 = re.compile(r'(([E|e]thernet|[L|l]oopback|[T|t]unnel|[V|v]lan|mti|[t|T]unnel-te|[p|P]ort-channel)[\d\/\.]+):')
+            m = p2_2.findall(line)
             if m and unnumbered_intf:
-                temp_intf = m.groupdict()['temp_intf']
-                if temp_intf not in ip_interface_vrf_all_dict:
-                    ip_interface_vrf_all_dict[temp_intf] = {}
+                temp_intf = []
+                temp_intf = [i[0] for i in m]
+                for intf in temp_intf:
+                    if intf not in ip_interface_vrf_all_dict:
+                        ip_interface_vrf_all_dict[intf] = {}
                 continue
 
             # IP address: 10.4.4.4, IP subnet: 10.4.4.0/24 secondary
@@ -1025,7 +1034,8 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 address = ip + '/' + prefix_length
 
                 if temp_intf:
-                    intf_lst = [interface, temp_intf]
+                    temp_intf.append(interface)
+                    intf_lst = temp_intf
                 else:
                     intf_lst = [interface]
 
@@ -1068,29 +1078,31 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 address = ip + '/' + prefix_length
 
                 if temp_intf:
-                    intf_lst = [interface, temp_intf]
+                    temp_intf.append(interface)
+                    intf_lst = temp_intf
                     # unnumbered interface didn't share the same information
                     temp_intf = None
                 else:
                     intf_lst = [interface]
 
                 for intf in intf_lst:
-                    if 'ipv4' not in ip_interface_vrf_all_dict[interface]:
-                        ip_interface_vrf_all_dict[interface]['ipv4'] = {}
-                    if address not in ip_interface_vrf_all_dict[interface]['ipv4']:
-                        ip_interface_vrf_all_dict[interface]['ipv4'][address] = {}
+                    if 'ipv4' not in ip_interface_vrf_all_dict[intf]:
+                        ip_interface_vrf_all_dict[intf]['ipv4'] = {}
 
-                    ip_interface_vrf_all_dict[interface]['ipv4'][address]\
-                    ['ip'] = ip
-                    ip_interface_vrf_all_dict[interface]['ipv4'][address]\
-                    ['ip_subnet'] = ip_subnet
-                    ip_interface_vrf_all_dict[interface]['ipv4'][address]\
-                    ['prefix_length'] = prefix_length
+                    if address not in ip_interface_vrf_all_dict[intf]['ipv4']:
+                        ip_interface_vrf_all_dict[intf]['ipv4'][address] = {}
+
+                    ip_interface_vrf_all_dict[intf]['ipv4'][address]\
+                        ['ip'] = ip
+                    ip_interface_vrf_all_dict[intf]['ipv4'][address]\
+                        ['ip_subnet'] = ip_subnet
+                    ip_interface_vrf_all_dict[intf]['ipv4'][address]\
+                        ['prefix_length'] = prefix_length
                     if route_tag:
-                        ip_interface_vrf_all_dict[interface]['ipv4'][address]\
+                        ip_interface_vrf_all_dict[intf]['ipv4'][address]\
                         ['route_tag'] = route_tag
                     if route_preference:
-                        ip_interface_vrf_all_dict[interface]['ipv4'][address]\
+                        ip_interface_vrf_all_dict[intf]['ipv4'][address]\
                         ['route_preference'] = route_preference
                 continue
 
@@ -1608,7 +1620,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
             line = line.rstrip()
 
             #Name: Ethernet2/2
-            p1 = re.compile(r'^\s*Name: *(?P<interface>[a-zA-Z0-9\/]+)$')
+            p1 = re.compile(r'^\s*Name: *(?P<interface>[a-zA-Z0-9\/\-\.]+)$')
             m = p1.match(line)
             if m:
                 interface = m.groupdict()['interface']
@@ -1643,7 +1655,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
             m = p4.match(line)
             if m:
                 switchport_mode = m.groupdict()['switchport_mode']
-                if switchport_status == 'Enabled' and switchport_mode == 'trunk':
+                if switchport_status == 'enabled' and switchport_mode == 'trunk':
                     operation_mode = 'trunk'
 
                 interface_switchport_dict[interface]['switchport_mode'] = switchport_mode 
