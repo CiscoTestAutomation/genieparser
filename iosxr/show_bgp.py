@@ -1503,13 +1503,6 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                 af.strip()
                 current_vrf = str(m.groupdict()['current_vrf']).lower()
                 table_state = str(m.groupdict()['table_state'])
-
-                # Reset address_family for 'all vrf all'
-                if vrf_type == 'vrf':
-                    if af_type == 'ipv6 unicast' or af == 'ipv6 unicast':
-                        af = 'vpnv6 unicast'
-                    elif af_type == 'ipv4 unicast' or af == 'ipv4 unicast':
-                        af = 'vpnv4 unicast'
                 
                 if 'address_family' not in ret_dict['instance'][instance]\
                     ['vrf'][vrf]:
@@ -2648,13 +2641,6 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
             if m:
                 address_family = str(m.groupdict()['address_family']).lower()
                 address_family.strip()
-
-                # Reset address_family for 'all vrf all'
-                if vrf_type == 'vrf':
-                    if af_type == 'ipv6 unicast' or address_family == 'ipv6 unicast':
-                        address_family = 'vpnv6 unicast'
-                    elif af_type == 'ipv4 unicast' or address_family == 'ipv4 unicast':
-                        address_family = 'vpnv4 unicast'
 
                 if 'address_family' not in sub_dict:
                     sub_dict['address_family'] = {}
