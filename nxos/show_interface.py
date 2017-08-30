@@ -170,6 +170,9 @@ class ShowInterface(ShowInterfaceSchema):
 
                 if interface not in interface_dict:
                     interface_dict[interface] = {}
+                    interface_dict[interface]['port_channel'] = {}
+                    interface_dict[interface]['port_channel']\
+                        ['port_channel_member'] = False
                 if link_state:
                     interface_dict[interface]\
                                 ['link_state'] = link_state
@@ -194,6 +197,9 @@ class ShowInterface(ShowInterfaceSchema):
 
                 if interface not in interface_dict:
                     interface_dict[interface] = {}
+                    interface_dict[interface]['port_channel'] = {}
+                    interface_dict[interface]['port_channel']\
+                        ['port_channel_member'] = False
                 if link_state:
                     interface_dict[interface]\
                                 ['link_state'] = link_state
@@ -222,6 +228,9 @@ class ShowInterface(ShowInterfaceSchema):
 
                 if interface not in interface_dict:
                     interface_dict[interface] = {}
+                    interface_dict[interface]['port_channel'] = {}
+                    interface_dict[interface]['port_channel']\
+                        ['port_channel_member'] = False
                 if link_state:
                     interface_dict[interface]\
                                 ['link_state'] = link_state
