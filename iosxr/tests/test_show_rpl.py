@@ -1,6 +1,6 @@
 ############################################################################
 # Unitest For Show PRL ROUTE POLICY PARSER
-############################################################################
+###########################################################################
 
 import unittest
 from unittest.mock import Mock
@@ -90,8 +90,6 @@ class test_show_rpl_route_policy(unittest.TestCase):
                                               'set_metric_type': 'type-1',
                                               'set_next_hop': '192.168.1.1'},
                                   'conditions': {'match_med_eq': 10}}}}}
-
-
     
     golden_output = {'execute.return_value': '''
         Listing for all Route Policy objects

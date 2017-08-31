@@ -349,7 +349,7 @@ class test_yang_bgp_nxos(unittest.TestCase):
         'vrf': 
             {'default': 
                 {'address_family': 
-                    {'ipv4 labeled unicast': 
+                    {'ipv4 label unicast': 
                         {'advertise_inactive_routes': False,
                         'ebgp_max_paths': 1,
                         'enabled': True,

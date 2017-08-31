@@ -32,12 +32,13 @@ IOSXR parsers for the following show commands:
     * 'show bgp instance all vrf all'
     * 'show bgp instance all vrf all ipv4 unicast'
     * 'show bgp instance all vrf all ipv6 unicast'
+    * 'show bgp instances'
 
     * 'show bgp sessions'
     * 'show bgp vrf-db vrf all'
     * 'show bgp l2vpn evpn'
     * 'show bgp l2vpn evpn advertised'
-    * 'show bgp instances'
+
 '''
 
 # Python
@@ -843,7 +844,6 @@ class ShowBgpInstanceProcessDetailSchema(MetaParser):
                          Optional('as_number'): int,
                          Optional('default_cluster_id'): str,
                          Optional('active_cluster_id'): str,
-                         Optional('cluster_id'): str,
                          Optional('fast_external_fallover'): bool,
                          Optional('platform_rlimit_max'): int,
                          Optional('max_limit_for_bmp_buffer_size'): int,
@@ -851,7 +851,6 @@ class ShowBgpInstanceProcessDetailSchema(MetaParser):
                          Optional('current_limit_for_bmp_buffer_size'): int,
                          Optional('current_utilization_of_bmp_buffer_limit'): int,
                          Optional('log_neighbor_changes'): bool,
-                         Optional('enforce_first_as_enabled'): bool,
                          Optional('default_local_preference'): int,
                          Optional('default_keepalive'): int,
                          Optional('non_stop_routing'): bool,
@@ -864,6 +863,10 @@ class ShowBgpInstanceProcessDetailSchema(MetaParser):
                          Optional('received_updates'): int,
                          Optional('sent_notifications'): int,
                          Optional('received_notifications'): int,
+                         Optional('always_compare_med'): bool,
+                         Optional('bestpath_compare_routerid'): bool,
+                         Optional('bestpath_cost_community_ignore'): bool,
+                         Optional('bestpath_med_missing_at_worst'): bool,
                          Optional('enforce_first_as'): bool,
                          Optional('graceful_restart'): bool,
                          Optional('graceful_restart_helper_only'): bool,
@@ -904,7 +907,7 @@ class ShowBgpInstanceProcessDetailSchema(MetaParser):
                         Optional('address_family'):
                             {Any():
                                 {Optional('dampening'): bool,
-                                 Optional('client_reflection'): bool,
+                                 Optional('client_to_client_reflection'): bool,
                                  Optional('dynamic_med'): bool,
                                  Optional('dynamic_med_int'): str,
                                  Optional('dynamic_med_timer'): str,
@@ -1018,7 +1021,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                         ret_dict['instance'][instance]['vrf'][vrf] = {}
                         continue
 
-            # VRF: a
+            # VRF: VRF1
             p1_1 = re.compile(r'^\s*VRF: +(?P<vrf>[a-zA-Z0-9]+)$')
             m = p1_1.match(line)
             if m:
@@ -1029,9 +1032,23 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                     ret_dict['instance'][instance]['vrf'][vrf] = {}
                 # seperate message logging pool and bmp pool
                 flag = None
+
+                # Init key values to default - overwritten below if configured
+                ret_dict['instance'][instance]['vrf'][vrf]\
+                    ['always_compare_med'] = False
+                ret_dict['instance'][instance]['vrf'][vrf]\
+                    ['bestpath_compare_routerid'] = False
+                ret_dict['instance'][instance]['vrf'][vrf]\
+                    ['bestpath_cost_community_ignore'] = False
+                ret_dict['instance'][instance]['vrf'][vrf]\
+                    ['bestpath_med_missing_at_worst'] = False
+                ret_dict['instance'][instance]['vrf'][vrf]\
+                    ['enforce_first_as'] = False
+                ret_dict['instance'][instance]['vrf'][vrf]\
+                    ['fast_external_fallover'] = False
                 continue
 
-            #BGP Route Distinguisher: 100:1
+            # BGP Route Distinguisher: 100:1
             p1_2 = re.compile(r'^\s*BGP *Route *Distinguisher:'
                               ' *(?P<route_distinguisher>[0-9\:]+)$')
             m = p1_2.match(line)
@@ -1041,7 +1058,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                 ret_dict['instance'][instance]['vrf'][vrf]['route_distinguisher'] = route_distinguisher
                 continue
             
-            #BGP is operating in STANDALONE mode
+            # BGP is operating in STANDALONE mode
             p2 = re.compile(r'BGP *is *operating *in *'
                              '(?P<operation_mode>\w+) *mode$')
             m = p2.match(line)
@@ -1051,7 +1068,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                 ret_dict['instance'][instance]['vrf'][vrf]['operation_mode'] = operation_mode
                 continue
 
-            #Autonomous System number format: ASPLAIN
+            # Autonomous System number format: ASPLAIN
             p3 = re.compile(r'^Autonomous *System *number *format: *'
                              '(?P<as_format>[a-zA-Z]+)$')
             m = p3.match(line)
@@ -1062,7 +1079,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                     ['as_system_number_format'] = as_format
                 continue
 
-            #Autonomous System: 100
+            # Autonomous System: 100
             p4 = re.compile(r'^Autonomous *System: *(?P<as_number>[0-9]+)$')
             m = p4.match(line)
             if m:
@@ -1072,7 +1089,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                     ['as_number'] = as_number
                 continue
 
-            #Router ID: 1.1.1.1 (manually configured)
+            # Router ID: 1.1.1.1 (manually configured)
             p5 = re.compile(r'^Router *ID: *(?P<router_id>[\w\.\:]+) *'
                              '(\([\w\s]+\))?$')
             m = p5.match(line)
@@ -1085,43 +1102,56 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
 
             # Default Cluster ID: 1.1.1.1
             # Default Cluster ID: 10 (manually configured)
-            p6 = re.compile(r'^Default *Cluster *ID: *'
+            p6_1 = re.compile(r'^Default *Cluster *ID: *'
                              '(?P<default_cluster_id>[\w\.\:]+) *'
                              '(\([\w\s\:\.\,]+\))?$')
-            m = p6.match(line)
+            m = p6_1.match(line)
             if m:
                 default_cluster_id = m.groupdict()['default_cluster_id']
-
                 ret_dict['instance'][instance]['vrf'][vrf]\
                     ['default_cluster_id'] = default_cluster_id
-                ret_dict['instance'][instance]['vrf'][vrf]\
-                    ['cluster_id'] = default_cluster_id
                 continue
 
             # Active Cluster IDs:  1.1.1.1
-            p7 = re.compile(r'^Active *Cluster *IDs: *'
+            p6_2 = re.compile(r'^Active *Cluster *IDs: *'
                              '(?P<active_cluster_id>[\w\.\:]+)$')
-            m = p7.match(line)
+            m = p6_2.match(line)
             if m:
                 active_cluster_id = m.groupdict()['active_cluster_id']
                 ret_dict['instance'][instance]['vrf'][vrf]\
                     ['active_cluster_id'] = active_cluster_id
-                ret_dict['instance'][instance]['vrf'][vrf]\
-                    ['cluster_id'] = active_cluster_id
                 continue
 
-            #Fast external fallover enabled
-            p8 = re.compile(r'^Fast +external +fallover +'
-                             '(?P<status>\w+)$')
+            # Always compare MED is enabled
+            p7_1 = re.compile(r'^Always compare MED is enabled$')
+            m = p7_1.match(line)
+            if m:
+                ret_dict['instance'][instance]['vrf'][vrf]\
+                    ['always_compare_med'] = True
+                continue
+
+            # Comparing router ID for eBGP paths
+            p7_2 = re.compile(r'^Comparing router ID for eBGP paths$')
+            m = p7_2.match(line)
+            if m:
+                ret_dict['instance'][instance]['vrf'][vrf]\
+                    ['bestpath_compare_routerid'] = True
+                continue
+
+            # Treating missing MED as worst
+            p7_4 = re.compile(r'^Treating missing MED as worst$')
+            m = p7_4.match(line)
+            if m:
+                ret_dict['instance'][instance]['vrf'][vrf]\
+                    ['bestpath_med_missing_at_worst'] = True
+                continue
+
+            # Fast external fallover enabled
+            p8 = re.compile(r'^Fast +external +fallover +enabled$')
             m = p8.match(line)
             if m:
-                status = m.groupdict()['status']
-                if status == 'enabled':
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf]\
                         ['fast_external_fallover'] = True
-                else:
-                    ret_dict['instance'][instance]['vrf'][vrf]\
-                        ['fast_external_fallover'] = False    
                 continue
 
             #Platform RLIMIT max: 2147483648 bytes
@@ -1174,7 +1204,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                     ['current_utilization_of_bmp_buffer_limit'] = limit
                 continue
 
-            #Neighbor logging is enabled
+            # Neighbor logging is enabled
             p14 = re.compile(r'^Neighbor *logging *is *(?P<nbr_logging>\w+)$')
             m = p14.match(line)
             if m:
@@ -1187,17 +1217,17 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                         ['log_neighbor_changes'] = False
                 continue
 
-            #Enforce first AS enabled
-            p15 = re.compile(r'^Enforce *first *AS *(?P<as_enabled>\w+)$')
+            # Enforce first AS enabled
+            p15 = re.compile(r'^Enforce +first +AS +(?P<as_enabled>\w+)$')
             m = p15.match(line)
             if m:
                 as_enabled = m.groupdict()['as_enabled']
                 if as_enabled == 'enabled':
                     ret_dict['instance'][instance]['vrf'][vrf]\
-                        ['enforce_first_as_enabled'] = True
+                        ['enforce_first_as'] = True
                 else:
                     ret_dict['instance'][instance]['vrf'][vrf]\
-                        ['enforce_first_as_enabled'] = False
+                        ['enforce_first_as'] = False
                 continue
 
             #Default local preference: 100
@@ -1473,13 +1503,6 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                 af.strip()
                 current_vrf = str(m.groupdict()['current_vrf']).lower()
                 table_state = str(m.groupdict()['table_state'])
-
-                # Reset address_family for 'all vrf all'
-                if vrf_type == 'vrf':
-                    if af_type == 'ipv6 unicast' or af == 'ipv6 unicast':
-                        af = 'vpnv6 unicast'
-                    elif af_type == 'ipv4 unicast' or af == 'ipv4 unicast':
-                        af = 'vpnv4 unicast'
                 
                 if 'address_family' not in ret_dict['instance'][instance]\
                     ['vrf'][vrf]:
@@ -1509,18 +1532,19 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                 continue
 
             # Client reflection is enabled in global config
-            p31 = re.compile(r'^Client +reflection +is +'
-                              '(?P<status>\w+) +'
-                              'in +global +config$')
+            p31 = re.compile(r'^Client +reflection +is +enabled +in +global +config$')
             m = p31.match(line)
             if m:
-                status = m.groupdict()['status'].lower()
-                if status == 'enabled':
-                    ret_dict['instance'][instance]['vrf'][vrf]\
-                        ['address_family'][af]['client_reflection'] = True
-                else:
-                    ret_dict['instance'][instance]['vrf'][vrf]\
-                        ['address_family'][af]['client_reflection'] = False
+                ret_dict['instance'][instance]['vrf'][vrf]\
+                    ['address_family'][af]['client_to_client_reflection'] = True
+                continue
+
+            # Client reflection is not enabled in global config
+            p31_1 = re.compile(r'^Client +reflection +is +not +enabled +in +global +config$')
+            m = p31_1.match(line)
+            if m:
+                ret_dict['instance'][instance]['vrf'][vrf]\
+                    ['address_family'][af]['client_to_client_reflection'] = False
                 continue
 
             # Dynamic MED is Disabled
@@ -1953,20 +1977,15 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                         {'neighbor':
                             {Any():
                                 {Optional('description'): str,
-                                 Optional('remove_private_as'): bool,
                                  Optional('peer_group'): str,
                                  Optional('send_community'): str,
                                  Optional('input_queue'): int,
                                  Optional('output_queue'): int,
-                                 Optional('nbr_ebgp_multihop'): bool,
-                                 Optional('nbr_ebgp_multihop_max_hop'): int,
                                  Optional('graceful_restart'): bool,
                                  Optional('graceful_restart_helper_only'): bool,
                                  Optional('graceful_restart_restart_time'): int,
                                  Optional('graceful_restart_stalepath_time'): int,
                                  Optional('allow_own_as'): int,
-                                 Optional('holdtime'): int,
-                                 Optional('keepalive_interval'): int,
                                  Optional('minimum_advertisement_interval'): int,
                                  Optional('route_reflector_client'): bool,
                                  Optional('route_reflector_cluster_id'): int,
@@ -1975,6 +1994,10 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                  Optional('local_as_no_prepend'): bool,
                                  Optional('local_as_replace_as'): bool,
                                  Optional('local_as_dual_as'): bool,
+                                 Optional('remove_private_as'): bool,
+                                 Optional('keepalive_interval'): int,
+                                 Optional('holdtime'): int,
+                                 Optional('min_acceptable_hold_time'): int,
                                  Optional('link_state'): str,
                                  Optional('router_id'): str,
                                  Optional('session_state'): str,
@@ -1987,15 +2010,6 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                  Optional('ebgp_multihop_max_hop'): int,
                                  Optional('shutdown'): bool,
                                  Optional('suppress_four_byte_as_capability'): bool,
-                                 Optional('description'): str,
-                                 Optional('remove_private_as'): bool,
-                                 Optional('bgp_negotiated_keepalive_timers'):
-                                    {Optional('hold_time'): int,
-                                    Optional('keepalive_interval'): int
-                                    },
-                                 Optional('configured_hold_time'): int,
-                                 Optional('keepalive'): int,
-                                 Optional('min_acceptable_hold_time'): int,
                                  Optional('last_write'): str,
                                  Optional('attempted'): int,
                                  Optional('written'): int,
@@ -2021,12 +2035,16 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                  Optional('last_ka_start_before_reset'): str,
                                  Optional('last_ka_start_before_second_last'): str,
                                  Optional('precedence'): str,
-                                 Optional('non_stop_routing'): str,
+                                 Optional('non_stop_routing'): bool,
                                  Optional('tcp_initial_sync'): str,
                                  Optional('tcp_initial_sync_phase_two'): str,
                                  Optional('tcp_initial_sync_done'): str, 
                                  Optional('enforcing_first_as'): str,
                                  Optional('multiprotocol_capability'): str,
+                                 Optional('bgp_negotiated_keepalive_timers'):
+                                    {Optional('hold_time'): int,
+                                    Optional('keepalive_interval'): int
+                                    },
                                  Optional('bgp_negotiated_capabilities'):
                                     {Optional('route_refresh'): str,
                                      Optional('four_octets_asn'): str,
@@ -2212,19 +2230,28 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 if neighbor not in ret_dict['instance'][instance]['vrf'][vrf]['neighbor']:
                     ret_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor] = {}
                 sub_dict = ret_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]
+                
+                # Default values - overwritten if configured
+                sub_dict['suppress_four_byte_as_capability'] = False
+                sub_dict['remove_private_as'] = False
+                sub_dict['shutdown'] = False
                 continue
             
             # Remote AS 200, local AS 100, external link
-            p3 = re.compile(r'^Remote *AS *(?P<remote_as>[0-9]+), *local *AS *(?P<local_as>[0-9]+), *(?P<link_state>[a-zA-Z\s]+)$')
+            p3 = re.compile(r'^Remote +AS +(?P<remote_as>[0-9]+), +local +AS'
+                             ' +(?P<local_as_as_no>[0-9]+)'
+                             '(?:, +(?P<link_state>[a-zA-Z\s]+))?$')
             m = p3.match(line)
             if m:
-                remote_as = int(m.groupdict()['remote_as'])
-                local_as = int(m.groupdict()['local_as'])
-                link_state = str(m.groupdict()['link_state'])
+                sub_dict['remote_as'] = int(m.groupdict()['remote_as'])
+                if m.groupdict()['link_state']:
+                    sub_dict['link_state'] = m.groupdict()['link_state']
+                sub_dict['local_as_as_no'] = int(m.groupdict()['local_as_as_no'])
 
-                sub_dict['remote_as'] = remote_as
-                sub_dict['local_as_as_no'] = local_as
-                sub_dict['link_state'] = link_state
+                # Default the values - overwritten if configured
+                sub_dict['local_as_no_prepend'] = False
+                sub_dict['local_as_replace_as'] = False
+                sub_dict['local_as_dual_as'] = False
                 continue
 
             # Remote router ID 10.1.5.5
@@ -2279,31 +2306,31 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
 
             # Hold time is 180, keepalive interval is 60 seconds
-            p8 = re.compile(r'^Hold time is *(?P<hold_time>[0-9]+), *keepalive *interval *is *(?P<keepalive_interval>[0-9]+) *seconds$')
+            p8 = re.compile(r'^Hold +time +is +(?P<holdtime>[0-9]+), +keepalive'
+                             ' +interval +is +(?P<keepalive_interval>[0-9]+)'
+                             ' +seconds$')
             m = p8.match(line)
             if m:
-                hold_time = int(m.groupdict()['hold_time'])
-                keepalive_interval = int(m.groupdict()['keepalive_interval'])
-                if 'bgp_negotiated_keepalive_timers' not in sub_dict:
-                    sub_dict['bgp_negotiated_keepalive_timers'] = {}
-
-                sub_dict['bgp_negotiated_keepalive_timers']['hold_time'] = hold_time
-                sub_dict['bgp_negotiated_keepalive_timers']['keepalive_interval'] = keepalive_interval
+                sub_dict['holdtime'] = int(m.groupdict()['holdtime'])
+                sub_dict['keepalive_interval'] = \
+                    int(m.groupdict()['keepalive_interval'])
                 continue
 
             # Configured hold time: 180, keepalive: 60, min acceptable hold time: 3
-            p9 = re.compile(r'^Configured *hold *time: *(?P<configured_hold_time>[0-9]+), *keepalive: *(?P<keepalive>[0-9]+), *min *acceptable *hold *time: *(?P<min_acceptable_hold_time>[0-9]+)$')
+            p9 = re.compile(r'^Configured +hold +time:'
+                             ' +(?P<holdtime>[0-9]+), +keepalive:'
+                             ' +(?P<keepalive_interval>[0-9]+), +min'
+                             ' +acceptable +hold +time:'
+                             ' +(?P<min_acceptable_hold_time>[0-9]+)$')
             m = p9.match(line)
             if m:
-                configured_hold_time = int(m.groupdict()['configured_hold_time'])
-                keepalive = int(m.groupdict()['keepalive'])
-                min_acceptable_hold_time = int(m.groupdict()['min_acceptable_hold_time'])
-
-                sub_dict['configured_hold_time'] = configured_hold_time
-                sub_dict['keepalive'] = keepalive
-                sub_dict['min_acceptable_hold_time'] = min_acceptable_hold_time
+                sub_dict['holdtime'] = int(m.groupdict()['holdtime'])
+                sub_dict['keepalive_interval'] = \
+                    int(m.groupdict()['keepalive_interval'])
+                sub_dict['min_acceptable_hold_time'] = \
+                    int(m.groupdict()['min_acceptable_hold_time'])
                 continue
-         
+
             # Last write 00:00:38, attempted 19, written 19
             p10 = re.compile(r'^Last *write *(?P<last_write>[0-9\:]+), *attempted *(?P<attempted>[0-9]+), *written *(?P<written>[0-9]+)$')
             m = p10.match(line)
@@ -2439,12 +2466,10 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
 
             # Non-stop routing is enabled
-            p21 =  re.compile(r'^Non-stop *routing *is *(?P<non_stop_routing>[A-Za-z]+)$')
+            p21 =  re.compile(r'^Non-stop +routing +is +enabled$')
             m = p21.match(line)
             if m:
-                non_stop_routing =  str(m.groupdict()['non_stop_routing'])
-
-                sub_dict['non_stop_routing'] = non_stop_routing
+                sub_dict['non_stop_routing'] = True
                 continue
 
             # TCP Initial Sync :              ---                   
@@ -2583,7 +2608,6 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                     int(m.groupdict()['received'])
                 continue
 
-
             # Minimum time between advertisement runs is 0 secs
             p30 = re.compile(r'^Minimum *time *between *advertisement *runs *is *(?P<minimum_time_between_adv_runs>[0-9]+) *secs$')
             m = p30.match(line)
@@ -2618,13 +2642,6 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 address_family = str(m.groupdict()['address_family']).lower()
                 address_family.strip()
 
-                # Reset address_family for 'all vrf all'
-                if vrf_type == 'vrf':
-                    if af_type == 'ipv6 unicast' or address_family == 'ipv6 unicast':
-                        address_family = 'vpnv6 unicast'
-                    elif af_type == 'ipv4 unicast' or address_family == 'ipv4 unicast':
-                        address_family = 'vpnv4 unicast'
-
                 if 'address_family' not in sub_dict:
                     sub_dict['address_family'] = {}
                 if address_family not in sub_dict['address_family']:
@@ -2632,12 +2649,12 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                     continue
             
             # BGP neighbor version 43
-            p34 = re.compile(r'^BGP +neighbor +version +(?P<neighbor_version>[0-9]+)$')
+            p34 = re.compile(r'^BGP +neighbor +version'
+                              ' +(?P<neighbor_version>[0-9]+)$')
             m = p34.match(line)
             if m:
-                
-                neighbor_version = int(m.groupdict()['neighbor_version'])
-                sub_dict['address_family'][address_family]['neighbor_version'] = neighbor_version
+                sub_dict['address_family'][address_family]['neighbor_version'] =\
+                    int(m.groupdict()['neighbor_version'])
                 continue
             
             # Update group: 0.2 Filter-group: 0.2  No Refresh request being processed
@@ -2732,7 +2749,6 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 sub_dict['address_family'][address_family]['cummulative_no_by_orf_policy'] = cummulative_no_by_orf_policy
                 sub_dict['address_family'][address_family]['cummulative_no_by_policy'] = cummulative_no_by_policy
                 continue
-            
 
             # Prefix advertised 10, suppressed 0, withdrawn 0
             p44 = re.compile(r'^Prefix +advertised +(?P<prefix_advertised>[0-9]+), +suppressed +(?P<prefix_suppressed>[0-9]+), +withdrawn +(?P<prefix_withdrawn>[0-9]+)$')
@@ -2748,12 +2764,13 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
 
             # Maximum prefixes allowed 1048576
-            p45 = re.compile(r'^Maximum *prefixes *allowed *(?P<maximum_prefix_max_prefix_no>[0-9]+)$')
+            p45 = re.compile(r'^Maximum +prefixes +allowed'
+                              ' +(?P<maximum_prefix_max_prefix_no>[0-9]+)$')
             m = p45.match(line)
             if m:
-                maximum_prefix_max_prefix_no = int(m.groupdict()['maximum_prefix_max_prefix_no'])
-
-                sub_dict['address_family'][address_family]['maximum_prefix_max_prefix_no'] = maximum_prefix_max_prefix_no
+                sub_dict['address_family'][address_family]\
+                    ['maximum_prefix_max_prefix_no'] = \
+                        int(m.groupdict()['maximum_prefix_max_prefix_no'])
                 continue
 
             # Threshold for warning message 75%, restart interval 0 min
@@ -2816,7 +2833,6 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
 
                 sub_dict['address_family'][address_family]['additional_routes_local_label'] = additional_routes_local_label
                 continue
-
 
             # Connections established 1; dropped 0
             p51 = re.compile(r'^Connections *(?P<bgp_state>\w+) *'
@@ -3424,55 +3440,56 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                 # dealing with the group of metric, locprf, weight, path
                 group_num = m.groupdict()['number']
 
-                # metric   locprf  weight path
-                # 2219      211       0 200 33299 51178 47751 {27016}
-                m1 = re.compile(r'^(?P<metric>[0-9]+)  +'
-                             '(?P<locprf>[0-9]+)  +'
-                             '(?P<weight>[0-9]+) '
-                             '(?P<path>[0-9\{\}\s]+)$').match(group_num)
-
-                # metric   locprf  weight path
-                # 2219                0 200 33299 51178 47751 {27016}
-                # locprf   weight path
-                # 211         0 200 33299 51178 47751 {27016}
-
-                m2 = re.compile(r'^(?P<value>[0-9]+)'
-                             '(?P<space>\s{2,20})'
-                             '(?P<weight>[0-9]+) '
-                             '(?P<path>[0-9\{\}\s]+)$').match(group_num)
-
-                # weight path
-                # 0 200 33299 51178 47751 {27016}
-                m3 = re.compile(r'^(?P<weight>[0-9]+) '
-                             '(?P<path>((\d+\s)|(\{\d+\}\s))+)$')\
-                           .match(group_num)
-
-                if m1:
-                    sub_dict[routes][prefix]['index'][index]['metric'] = \
-                        m1.groupdict()['metric']
-                    sub_dict[routes][prefix]['index'][index]['locprf'] = \
-                        m1.groupdict()['locprf']
-                    sub_dict[routes][prefix]['index'][index]['weight'] = \
-                        m1.groupdict()['weight']
-                    sub_dict[routes][prefix]['index'][index]['path'] = \
-                        m1.groupdict()['path'].strip()
-                elif m2:
-                    if len(m2.groupdict()['space']) > 8:
+                if group_num:
+                    # metric   locprf  weight path
+                    # 2219      211       0 200 33299 51178 47751 {27016}
+                    m1 = re.compile(r'^(?P<metric>[0-9]+)  +'
+                                 '(?P<locprf>[0-9]+)  +'
+                                 '(?P<weight>[0-9]+) '
+                                 '(?P<path>[0-9\{\}\s]+)$').match(group_num)
+    
+                    # metric   locprf  weight path
+                    # 2219                0 200 33299 51178 47751 {27016}
+                    # locprf   weight path
+                    # 211         0 200 33299 51178 47751 {27016}
+    
+                    m2 = re.compile(r'^(?P<value>[0-9]+)'
+                                 '(?P<space>\s{2,20})'
+                                 '(?P<weight>[0-9]+) '
+                                 '(?P<path>[0-9\{\}\s]+)$').match(group_num)
+    
+                    # weight path
+                    # 0 200 33299 51178 47751 {27016}
+                    m3 = re.compile(r'^(?P<weight>[0-9]+) '
+                                 '(?P<path>((\d+\s)|(\{\d+\}\s))+)$')\
+                               .match(group_num)
+    
+                    if m1:
                         sub_dict[routes][prefix]['index'][index]['metric'] = \
-                            m2.groupdict()['value']
-                    else:
+                            m1.groupdict()['metric']
                         sub_dict[routes][prefix]['index'][index]['locprf'] = \
-                            m2.groupdict()['value']
-
-                    sub_dict[routes][prefix]['index'][index]['weight'] = \
-                        m2.groupdict()['weight']
-                    sub_dict[routes][prefix]['index'][index]['path'] = \
-                        m2.groupdict()['path'].strip()
-                elif m3:
-                    sub_dict[routes][prefix]['index'][index]['weight'] = \
-                        m3.groupdict()['weight']
-                    sub_dict[routes][prefix]['index'][index]['path'] = \
-                        m3.groupdict()['path'].strip()
+                            m1.groupdict()['locprf']
+                        sub_dict[routes][prefix]['index'][index]['weight'] = \
+                            m1.groupdict()['weight']
+                        sub_dict[routes][prefix]['index'][index]['path'] = \
+                            m1.groupdict()['path'].strip()
+                    elif m2:
+                        if len(m2.groupdict()['space']) > 8:
+                            sub_dict[routes][prefix]['index'][index]['metric'] = \
+                                m2.groupdict()['value']
+                        else:
+                            sub_dict[routes][prefix]['index'][index]['locprf'] = \
+                                m2.groupdict()['value']
+    
+                        sub_dict[routes][prefix]['index'][index]['weight'] = \
+                            m2.groupdict()['weight']
+                        sub_dict[routes][prefix]['index'][index]['path'] = \
+                            m2.groupdict()['path'].strip()
+                    elif m3:
+                        sub_dict[routes][prefix]['index'][index]['weight'] = \
+                            m3.groupdict()['weight']
+                        sub_dict[routes][prefix]['index'][index]['path'] = \
+                            m3.groupdict()['path'].strip()
 
                 if m.groupdict()['origin_codes']:
                     sub_dict[routes][prefix]['index'][index]['origin_codes'] = \
