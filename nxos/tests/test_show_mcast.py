@@ -200,7 +200,6 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         ip_mroute_vrf_all_obj = ShowIpMrouteVrfAll(device=self.device)
         parsed_output = ip_mroute_vrf_all_obj.parse()
-        self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -594,7 +593,6 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         ipv6_mroute_vrf_all_obj = ShowIpv6MrouteVrfAll(device=self.device)
         parsed_output = ipv6_mroute_vrf_all_obj.parse()
-        self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -712,7 +710,6 @@ class test_show_ip_static_route_multicast(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         ip_static_route_multicast_obj = ShowIpStaticRouteMulticast(device=self.device)
         parsed_output = ip_static_route_multicast_obj.parse()
-        self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -828,7 +825,6 @@ class test_show_ipv6_static_route_multicast(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         ipv6_static_route_multicast_obj = ShowIpv6StaticRouteMulticast(device=self.device)
         parsed_output = ipv6_static_route_multicast_obj.parse()
-        self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
