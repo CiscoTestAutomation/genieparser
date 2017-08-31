@@ -1933,29 +1933,112 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    parsed_output = {
+    golden_parsed_output = {
+        'bgp_as_path_entries': 0,
+        'bgp_asformat': 'asplain',
+        'bgp_isolate_mode': 'No',
+        'bgp_memory_state': 'ok',
+        'bgp_mmode': 'Initialized',
+        'bgp_paths_per_hwm_attr': 3,
+        'bgp_performance_mode': 'No',
         'bgp_pid': 333,
+        'bgp_protocol_started_reason': 'configuration',
+        'bgp_protocol_state': 'running',
+        'bgp_tag': '333',
+        'bytes_used': 0,
+        'bytes_used_as_path_entries': 0,
+        'entries_pending_delete': 0,
+        'hwm_attr_entries': 7,
+        'hwm_entries_pending_delete': 0,
+        'num_attr_entries': 0,
+        'segment_routing_global_block': '10000-25000',
         'vrf': 
             {'default': 
                 {'address_family': 
-                    {'ipv4 labeled unicast': 
+                    {'ipv4 label unicast': 
                         {'advertise_inactive_routes': False,
                         'ebgp_max_paths': 1,
                         'enabled': True,
                         'graceful_restart': False,
-                        'ibgp_max_paths': 1},
+                        'ibgp_max_paths': 1,
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'table_id': '0x1',
+                        'table_state': 'up'},
+                    'ipv4 multicast': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {3: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'route_reflector': True,
+                        'table_id': '0x1',
+                        'table_state': 'up'},
                     'ipv4 unicast': 
                         {'advertise_inactive_routes': False,
                         'ebgp_max_paths': 1,
                         'enabled': True,
                         'graceful_restart': False,
-                        'ibgp_max_paths': 1},
+                        'ibgp_max_paths': 1,
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {5: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'route_reflector': True,
+                        'table_id': '0x1',
+                        'table_state': 'up'},
+                    'ipv6 multicast': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {4: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'route_reflector': True,
+                        'table_id': '0x80000001',
+                        'table_state': 'up'},
                     'ipv6 unicast': 
                         {'advertise_inactive_routes': False,
                         'ebgp_max_paths': 1,
                         'enabled': True,
                         'graceful_restart': False,
-                        'ibgp_max_paths': 1},
+                        'ibgp_max_paths': 1,
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {4: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'route_reflector': True,
+                        'table_id': '0x80000001',
+                        'table_state': 'up'},
                     'l3vpn ipv4 unicast': 
                         {'advertise_inactive_routes': False,
                         'ebgp_max_paths': 1,
@@ -1967,16 +2050,164 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                         'ebgp_max_paths': 1,
                         'enabled': True,
                         'graceful_restart': False,
-                        'ibgp_max_paths': 1}},
-                'cluster_id': '0.0.03', 
-                 'router_id': '0.0.0.0'}}}
+                        'ibgp_max_paths': 1},
+                    'link-state': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {4: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'route_reflector': True,
+                        'table_id': '0x1',
+                        'table_state': 'up'},
+                    'vpnv4 unicast': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {3: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'route_reflector': True,
+                        'table_id': '0x1',
+                        'table_state': 'up'},
+                    'vpnv6 unicast': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {3: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'route_reflector': True,
+                        'table_id': '0x80000001',
+                        'table_state': 'up'}},
+                'cluster_id': '0.0.03',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 0,
+                'num_conf_peers': 6,
+                'num_established_peers': 0,
+                'num_pending_conf_peers': 0,
+                'router_id': '0.0.0.0',
+                'vrf_id': '1',
+                'vrf_rd': 'not configured',
+                'vrf_state': 'up'},
+            'vpn1': 
+                {'address_family': 
+                    {'ipv4 unicast': 
+                        {'export_default_map': 'PERMIT_ALL_RM',
+                        'export_default_prefix_count': 0,
+                        'export_default_prefix_limit': 1000,
+                        'export_rt_list': '100:1 '
+                                        '400:400',
+                        'import_default_map': 'PERMIT_ALL_RM',
+                        'import_default_prefix_count': 0,
+                        'import_default_prefix_limit': 1000,
+                        'import_rt_list': '100:1',
+                        'label_mode': 'per-prefix',
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'table_id': '0x5',
+                        'table_state': 'up'},
+                    'ipv6 unicast': 
+                        {'export_default_map': 'PERMIT_ALL_RM',
+                        'export_default_prefix_count': 0,
+                        'export_default_prefix_limit': 1000,
+                        'export_rt_list': '1:100 '
+                                        '600:600',
+                        'import_default_map': 'PERMIT_ALL_RM',
+                        'import_default_prefix_count': 0,
+                        'import_default_prefix_limit': 1000,
+                        'import_rt_list': '1:100',
+                        'label_mode': 'per-prefix',
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'table_id': '0x80000005',
+                        'table_state': 'up'}},
+                'cluster_id': '0.0.0.0',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 0,
+                'num_conf_peers': 0,
+                'num_established_peers': 0,
+                'num_pending_conf_peers': 0,
+                'router_id': '33.33.33.33',
+                'vrf_id': '5',
+                'vrf_rd': '1:100',
+                'vrf_state': 'up'},
+            'vpn2': 
+                {'address_family': 
+                    {'ipv4 unicast': 
+                        {'import_rt_list': '400:400',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay': {'critical': 3000,
+                                                 'non_critical': 10000},
+                        'peers': {0: {'active_peers': 0,
+                                    'aggregates': 0,
+                                    'networks': 0,
+                                    'paths': 0,
+                                    'routes': 0}},
+                        'table_id': '0x6',
+                        'table_state': 'up'},
+                    'ipv6 unicast': 
+                        {'import_rt_list': '600:600',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: {'active_peers': 0,
+                                    'aggregates': 0,
+                                    'networks': 0,
+                                    'paths': 0,
+                                    'routes': 0}},
+                        'table_id': '0x80000006',
+                        'table_state': 'up'}},
+                'cluster_id': '0.0.0.0',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 0,
+                'num_conf_peers': 0,
+                'num_established_peers': 0,
+                'num_pending_conf_peers': 0,
+                'router_id': '0.0.0.0',
+                'vrf_id': '6',
+                'vrf_rd': '2:100',
+                'vrf_state': 'up'}}}
 
-    cli_output = {'execute.return_value': '''
+    cli_output = '''\
+        pinxdt-n9kv-3# show bgp process vrf all
+
         BGP Process Information
-        BGP Process ID                 : 29474
+        BGP Process ID                 : 26842
         BGP Protocol Started, reason:  : configuration
-        BGP Protocol Tag               : 100
-        BGP Performance Mode           : No
+        BGP Performance Mode:          : No
+        BGP Protocol Tag               : 333
         BGP Protocol State             : Running
         BGP Isolate Mode               : No
         BGP MMODE                      : Initialized
@@ -1985,482 +2216,319 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
         Segment Routing Global Block   : 10000-25000
 
         BGP attributes information
-        Number of attribute entries    : 4
-        HWM of attribute entries       : 5
-        Bytes used by entries          : 368
+        Number of attribute entries    : 0
+        HWM of attribute entries       : 7
+        Bytes used by entries          : 0
         Entries pending delete         : 0
         HWM of entries pending delete  : 0
-        BGP paths per attribute HWM    : 1
+        BGP paths per attribute HWM    : 3
         BGP AS path entries            : 0
         Bytes used by AS path entries  : 0
 
-        Confcheck capabilities in use:
-          1. CAP_FEATURE_BGP_5_2_1 (refcount = 7)
-
         Information regarding configured VRFs:
 
-        BGP Information for VRF VRF1
-        VRF Id                         : 3
+        BGP Information for VRF default
+        VRF Id                         : 1
         VRF state                      : UP
-        Router-ID                      : 11.11.11.11
+        Router-ID                      : 3.3.3.3
         Configured Router-ID           : 0.0.0.0
         Confed-ID                      : 0
         Cluster-ID                     : 0.0.0.0
-        No. of configured peers        : 1
+        No. of configured peers        : 6
         No. of pending config peers    : 0
         No. of established peers       : 0
-        VRF RD                         : 100:100
+        VRF RD                         : Not configured
 
-            Information for address family IPv4 Unicast in VRF VRF1
-            Table Id                   : 10
+            Information for address family IPv4 Unicast in VRF default
+            Table Id                   : 0x1
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            1          0               5          5          1          2         
+            5          0               0          0          0          0         
 
             Redistribution                
-                direct, route-map genie_redistribution
-                static, route-map genie_redistribution
-                eigrp, route-map test-map
+                None
 
-            Export RT list: 100:100
-            Import RT list: 100:100
-            Label mode: per-prefix
-            Aggregate label: 492287
+            Wait for IGP convergence is not configured
+            Is a Route-reflector
 
-            Information for address family IPv6 Unicast in VRF VRF1
-            Table Id                   : 0x80000010
-            Table state                : UP
-            Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               4          4          1          1         
-
-            Redistribution                
-                direct, route-map genie_redistribution
-                static, route-map genie_redistribution
-
-            Export RT list: 100:100
-            Import RT list: 100:100
-            Label mode: per-prefix
-            Aggregate label: 492288
 
             Nexthop trigger-delay
                 critical 3000 ms
                 non-critical 10000 ms
 
-        BGP Information for VRF default
-        VRF Id                         : 1
-        VRF state                      : UP
-        Router-ID                      : 1.1.1.1
-        Configured Router-ID           : 1.1.1.1
-        Confed-ID                      : 0
-        Cluster-ID                     : 0.0.0.0
-        No. of configured peers        : 3
-        No. of pending config peers    : 0
-        No. of established peers       : 1
-        VRF RD                         : Not configured
-
-            Information for address family IPv4 Unicast in VRF default
-            Table Id                   : 1
+            Information for address family IPv4 Multicast in VRF default
+            Table Id                   : 0x1
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            1          0               0          0          0          0         
+            3          0               0          0          0          0         
 
             Redistribution                
                 None
 
+            Wait for IGP convergence is not configured
+            Is a Route-reflector
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
 
             Information for address family IPv6 Unicast in VRF default
-            Table Id                   : 80000001
+            Table Id                   : 0x80000001
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            0          0               0          0          0          0         
+            4          0               0          0          0          0         
 
             Redistribution                
                 None
 
+            Wait for IGP convergence is not configured
+            Is a Route-reflector
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family IPv6 Multicast in VRF default
+            Table Id                   : 0x80000001
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            4          0               0          0          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+            Is a Route-reflector
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
 
             Information for address family VPNv4 Unicast in VRF default
-            Table Id                   : 1
+            Table Id                   : 0x1
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            1          1               5          5          0          0         
+            3          0               0          0          0          0         
 
             Redistribution                
                 None
 
-            Retain RT: enabled all
+            Wait for IGP convergence is not configured
+            Is a Route-reflector
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
 
             Information for address family VPNv6 Unicast in VRF default
-            Table Id                   : 80000001
+            Table Id                   : 0x80000001
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
-            1          1               4          4          0          0         
+            3          0               0          0          0          0         
 
             Redistribution                
                 None
 
+            Wait for IGP convergence is not configured
+            Is a Route-reflector
 
-            Information for address family IPv6 Label Unicast in VRF default
-            Table Id                   : 80000001
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family IPv4 Label Unicast in VRF default
+            Table Id                   : 0x1
             Table state                : UP
             Peers      Active-peers    Routes     Paths      Networks   Aggregates
             0          0               0          0          0          0         
 
             Redistribution                
                 None
-        '''}
+
+            Wait for IGP convergence is not configured
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family Link-State in VRF default
+            Table Id                   : 0x1
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            4          0               0          0          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+            Is a Route-reflector
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+        BGP Information for VRF vpn1
+        VRF Id                         : 5
+        VRF state                      : UP
+        Router-ID                      : 33.33.33.33
+        Configured Router-ID           : 0.0.0.0
+        Confed-ID                      : 0
+        Cluster-ID                     : 0.0.0.0
+        No. of configured peers        : 0
+        No. of pending config peers    : 0
+        No. of established peers       : 0
+        VRF RD                         : 1:100
+        VRF EVPN RD                    : 1:100
+
+            Information for address family IPv4 Unicast in VRF vpn1
+            Table Id                   : 0x5
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               0          0          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+            Import route-map PERMIT_ALL_RM
+            Export route-map PERMIT_ALL_RM
+            Export RT list:
+                100:1
+                400:400
+            Import RT list:
+                100:1
+            Label mode: per-prefix
+            Import default limit       : 1000
+            Import default prefix count : 0
+            Import default map         : PERMIT_ALL_RM
+            Export default limit       : 1000
+            Export default prefix count : 0
+            Export default map         : PERMIT_ALL_RM
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family IPv6 Unicast in VRF vpn1
+            Table Id                   : 0x80000005
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               0          0          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+            Import route-map PERMIT_ALL_RM
+            Export route-map PERMIT_ALL_RM
+            Export RT list:
+                1:100
+                600:600
+            Import RT list:
+                1:100
+            Label mode: per-prefix
+            Import default limit       : 1000
+            Import default prefix count : 0
+            Import default map         : PERMIT_ALL_RM
+            Export default limit       : 1000
+            Export default prefix count : 0
+            Export default map         : PERMIT_ALL_RM
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+        BGP Information for VRF vpn2
+        VRF Id                         : 6
+        VRF state                      : UP
+        Router-ID                      : 0.0.0.0
+        Configured Router-ID           : 0.0.0.0
+        Confed-ID                      : 0
+        Cluster-ID                     : 0.0.0.0
+        No. of configured peers        : 0
+        No. of pending config peers    : 0
+        No. of established peers       : 0
+        VRF RD                         : 2:100
+        VRF EVPN RD                    : 2:100
+
+            Information for address family IPv4 Unicast in VRF vpn2
+            Table Id                   : 0x6
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               0          0          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+            Import RT list:
+                400:400
+            Label mode: per-vrf
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family IPv6 Unicast in VRF vpn2
+            Table Id                   : 0x80000006
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               0          0          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+            Import RT list:
+                600:600
+            Label mode: per-vrf
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+            '''
 
     class etree_holder():
         def __init__(self):
-            self.data = ET.fromstring('''
-                <rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="101">
-                    <data>
-                        <bgp xmlns="http://openconfig.net/yang/bgp">
-                            <global>
-                                <afi-safis>
-                                    <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                        <afi-safi-name>none</afi-safi-name>
-                                        <config>
-                                            <afi-safi-name>none</afi-safi-name>
-                                        </config>
-                                        <graceful-restart>
-                                            <state>
-                                                <enabled>false</enabled>
-                                            </state>
-                                        </graceful-restart>
-                                        <state>
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <enabled>true</enabled>
-                                        </state>
-                                        <route-selection-options>
-                                            <config>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </config>
-                                            <state>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </state>
-                                        </route-selection-options>
-                                        <use-multiple-paths>
-                                            <ebgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ebgp>
-                                            <ibgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ibgp>
-                                        </use-multiple-paths>
-                                    </afi-safi>
-                                    <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                        <afi-safi-name>none</afi-safi-name>
-                                        <config>
-                                            <afi-safi-name>none</afi-safi-name>
-                                        </config>
-                                        <graceful-restart>
-                                            <state>
-                                                <enabled>false</enabled>
-                                            </state>
-                                        </graceful-restart>
-                                        <state>
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <enabled>true</enabled>
-                                        </state>
-                                        <route-selection-options>
-                                            <config>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </config>
-                                            <state>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </state>
-                                        </route-selection-options>
-                                        <use-multiple-paths>
-                                            <ebgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ebgp>
-                                            <ibgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ibgp>
-                                        </use-multiple-paths>
-                                    </afi-safi>
-                                    <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                        <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                        <config>
-                                            <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                        </config>
-                                        <graceful-restart>
-                                            <state>
-                                                <enabled>false</enabled>
-                                            </state>
-                                        </graceful-restart>
-                                        <state>
-                                            <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                            <enabled>true</enabled>
-                                        </state>
-                                        <route-selection-options>
-                                            <config>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </config>
-                                            <state>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </state>
-                                        </route-selection-options>
-                                        <use-multiple-paths>
-                                            <ebgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ebgp>
-                                            <ibgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ibgp>
-                                        </use-multiple-paths>
-                                    </afi-safi>
-                                    <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                        <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                        <config>
-                                            <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                        </config>
-                                        <graceful-restart>
-                                            <state>
-                                                <enabled>false</enabled>
-                                            </state>
-                                        </graceful-restart>
-                                        <state>
-                                            <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                            <enabled>true</enabled>
-                                        </state>
-                                        <route-selection-options>
-                                            <config>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </config>
-                                            <state>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </state>
-                                        </route-selection-options>
-                                        <use-multiple-paths>
-                                            <ebgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ebgp>
-                                            <ibgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ibgp>
-                                        </use-multiple-paths>
-                                    </afi-safi>
-                                    <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                        <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                        <config>
-                                            <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                        </config>
-                                        <graceful-restart>
-                                            <state>
-                                                <enabled>false</enabled>
-                                            </state>
-                                        </graceful-restart>
-                                        <state>
-                                            <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                            <enabled>true</enabled>
-                                        </state>
-                                        <route-selection-options>
-                                            <config>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </config>
-                                            <state>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </state>
-                                        </route-selection-options>
-                                        <use-multiple-paths>
-                                            <ebgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ebgp>
-                                            <ibgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ibgp>
-                                        </use-multiple-paths>
-                                    </afi-safi>
-                                    <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                        <config>
-                                            <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                        </config>
-                                        <graceful-restart>
-                                            <state>
-                                                <enabled>false</enabled>
-                                            </state>
-                                        </graceful-restart>
-                                        <state>
-                                            <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            <enabled>true</enabled>
-                                        </state>
-                                        <route-selection-options>
-                                            <config>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </config>
-                                            <state>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </state>
-                                        </route-selection-options>
-                                        <use-multiple-paths>
-                                            <ebgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ebgp>
-                                            <ibgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ibgp>
-                                        </use-multiple-paths>
-                                    </afi-safi>
-                                    <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                        <afi-safi-name>none</afi-safi-name>
-                                        <config>
-                                            <afi-safi-name>none</afi-safi-name>
-                                        </config>
-                                        <graceful-restart>
-                                            <state>
-                                                <enabled>false</enabled>
-                                            </state>
-                                        </graceful-restart>
-                                        <state>
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <enabled>true</enabled>
-                                        </state>
-                                        <route-selection-options>
-                                            <config>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </config>
-                                            <state>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </state>
-                                        </route-selection-options>
-                                        <use-multiple-paths>
-                                            <ebgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ebgp>
-                                            <ibgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ibgp>
-                                        </use-multiple-paths>
-                                    </afi-safi>
-                                    <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                        <afi-safi-name>IPV4_LABELED_UNICAST</afi-safi-name>
-                                        <config>
-                                            <afi-safi-name>IPV4_LABELED_UNICAST</afi-safi-name>
-                                        </config>
-                                        <graceful-restart>
-                                            <state>
-                                                <enabled>false</enabled>
-                                            </state>
-                                        </graceful-restart>
-                                        <state>
-                                            <afi-safi-name>IPV4_LABELED_UNICAST</afi-safi-name>
-                                            <enabled>true</enabled>
-                                        </state>
-                                        <route-selection-options>
-                                            <config>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </config>
-                                            <state>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </state>
-                                        </route-selection-options>
-                                        <use-multiple-paths>
-                                            <ebgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ebgp>
-                                            <ibgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ibgp>
-                                        </use-multiple-paths>
-                                    </afi-safi>
-                                </afi-safis>
+            self.data_ele = ET.fromstring('''
+            <data>
+                <bgp xmlns="http://openconfig.net/yang/bgp">
+                    <global>
+                        <afi-safis>
+                            <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                <afi-safi-name>none</afi-safi-name>
+                                <config>
+                                    <afi-safi-name>none</afi-safi-name>
+                                </config>
                                 <graceful-restart>
-                                    <config>
-                                        <enabled>false</enabled>
-                                        <helper-only>false</helper-only>
-                                        <restart-time>120</restart-time>
-                                        <stale-routes-time>300</stale-routes-time>
-                                    </config>
                                     <state>
                                         <enabled>false</enabled>
-                                        <helper-only>false</helper-only>
-                                        <restart-time>120</restart-time>
-                                        <stale-routes-time>300</stale-routes-time>
                                     </state>
                                 </graceful-restart>
-                                <use-multiple-paths xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                <state>
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <enabled>true</enabled>
+                                </state>
+                                <route-selection-options>
+                                    <config>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </config>
+                                    <state>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </state>
+                                </route-selection-options>
+                                <use-multiple-paths>
                                     <ebgp>
                                         <config>
                                             <maximum-paths>1</maximum-paths>
@@ -2478,983 +2546,1306 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                                         </state>
                                     </ibgp>
                                 </use-multiple-paths>
+                            </afi-safi>
+                            <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                <afi-safi-name>none</afi-safi-name>
                                 <config>
-                                    <as>333</as>
-                                    <router-id>0.0.0.0</router-id>
+                                    <afi-safi-name>none</afi-safi-name>
+                                </config>
+                                <graceful-restart>
+                                    <state>
+                                        <enabled>false</enabled>
+                                    </state>
+                                </graceful-restart>
+                                <state>
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <enabled>true</enabled>
+                                </state>
+                                <route-selection-options>
+                                    <config>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </config>
+                                    <state>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </state>
+                                </route-selection-options>
+                                <use-multiple-paths>
+                                    <ebgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ebgp>
+                                    <ibgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ibgp>
+                                </use-multiple-paths>
+                            </afi-safi>
+                            <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                <config>
+                                    <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                </config>
+                                <graceful-restart>
+                                    <state>
+                                        <enabled>false</enabled>
+                                    </state>
+                                </graceful-restart>
+                                <state>
+                                    <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                    <enabled>true</enabled>
+                                </state>
+                                <route-selection-options>
+                                    <config>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </config>
+                                    <state>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </state>
+                                </route-selection-options>
+                                <use-multiple-paths>
+                                    <ebgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ebgp>
+                                    <ibgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ibgp>
+                                </use-multiple-paths>
+                            </afi-safi>
+                            <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
+                                <config>
+                                    <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
+                                </config>
+                                <graceful-restart>
+                                    <state>
+                                        <enabled>false</enabled>
+                                    </state>
+                                </graceful-restart>
+                                <state>
+                                    <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
+                                    <enabled>true</enabled>
+                                </state>
+                                <route-selection-options>
+                                    <config>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </config>
+                                    <state>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </state>
+                                </route-selection-options>
+                                <use-multiple-paths>
+                                    <ebgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ebgp>
+                                    <ibgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ibgp>
+                                </use-multiple-paths>
+                            </afi-safi>
+                            <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                <config>
+                                    <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                </config>
+                                <graceful-restart>
+                                    <state>
+                                        <enabled>false</enabled>
+                                    </state>
+                                </graceful-restart>
+                                <state>
+                                    <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                    <enabled>true</enabled>
+                                </state>
+                                <route-selection-options>
+                                    <config>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </config>
+                                    <state>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </state>
+                                </route-selection-options>
+                                <use-multiple-paths>
+                                    <ebgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ebgp>
+                                    <ibgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ibgp>
+                                </use-multiple-paths>
+                            </afi-safi>
+                            <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                <config>
+                                    <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                </config>
+                                <graceful-restart>
+                                    <state>
+                                        <enabled>false</enabled>
+                                    </state>
+                                </graceful-restart>
+                                <state>
+                                    <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    <enabled>true</enabled>
+                                </state>
+                                <route-selection-options>
+                                    <config>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </config>
+                                    <state>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </state>
+                                </route-selection-options>
+                                <use-multiple-paths>
+                                    <ebgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ebgp>
+                                    <ibgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ibgp>
+                                </use-multiple-paths>
+                            </afi-safi>
+                            <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                <afi-safi-name>none</afi-safi-name>
+                                <config>
+                                    <afi-safi-name>none</afi-safi-name>
+                                </config>
+                                <graceful-restart>
+                                    <state>
+                                        <enabled>false</enabled>
+                                    </state>
+                                </graceful-restart>
+                                <state>
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <enabled>true</enabled>
+                                </state>
+                                <route-selection-options>
+                                    <config>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </config>
+                                    <state>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </state>
+                                </route-selection-options>
+                                <use-multiple-paths>
+                                    <ebgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ebgp>
+                                    <ibgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ibgp>
+                                </use-multiple-paths>
+                            </afi-safi>
+                            <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                <afi-safi-name>IPV4_LABELED_UNICAST</afi-safi-name>
+                                <config>
+                                    <afi-safi-name>IPV4_LABELED_UNICAST</afi-safi-name>
+                                </config>
+                                <graceful-restart>
+                                    <state>
+                                        <enabled>false</enabled>
+                                    </state>
+                                </graceful-restart>
+                                <state>
+                                    <afi-safi-name>IPV4_LABELED_UNICAST</afi-safi-name>
+                                    <enabled>true</enabled>
+                                </state>
+                                <route-selection-options>
+                                    <config>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </config>
+                                    <state>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </state>
+                                </route-selection-options>
+                                <use-multiple-paths>
+                                    <ebgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ebgp>
+                                    <ibgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ibgp>
+                                </use-multiple-paths>
+                            </afi-safi>
+                        </afi-safis>
+                        <graceful-restart>
+                            <config>
+                                <enabled>false</enabled>
+                                <helper-only>false</helper-only>
+                                <restart-time>120</restart-time>
+                                <stale-routes-time>300</stale-routes-time>
+                            </config>
+                            <state>
+                                <enabled>false</enabled>
+                                <helper-only>false</helper-only>
+                                <restart-time>120</restart-time>
+                                <stale-routes-time>300</stale-routes-time>
+                            </state>
+                        </graceful-restart>
+                        <use-multiple-paths xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                            <ebgp>
+                                <config>
+                                    <maximum-paths>1</maximum-paths>
                                 </config>
                                 <state>
-                                    <as>333</as>
-                                    <router-id>0.0.0.0</router-id>
+                                    <maximum-paths>1</maximum-paths>
                                 </state>
-                            </global>
-                            <neighbors>
-                                <neighbor>
+                            </ebgp>
+                            <ibgp>
+                                <config>
+                                    <maximum-paths>1</maximum-paths>
+                                </config>
+                                <state>
+                                    <maximum-paths>1</maximum-paths>
+                                </state>
+                            </ibgp>
+                        </use-multiple-paths>
+                        <config>
+                            <as>333</as>
+                            <router-id>0.0.0.0</router-id>
+                        </config>
+                        <state>
+                            <as>333</as>
+                            <router-id>0.0.0.0</router-id>
+                        </state>
+                    </global>
+                    <neighbors>
+                        <neighbor>
+                            <graceful-restart>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <helper-only>false</helper-only>
+                                    <restart-time>120</restart-time>
+                                    <stale-routes-time>300</stale-routes-time>
+                                </state>
+                            </graceful-restart>
+                            <config>
+                                <description/>
+                                <peer-as/>
+                                <remove-private-as/>
+                                <peer-group/>
+                                <neighbor-address>4.4.4.4</neighbor-address>
+                            </config>
+                            <ebgp-multihop>
+                                <config>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </config>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </state>
+                            </ebgp-multihop>
+                            <logging-options>
+                                <config>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </config>
+                                <state>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </state>
+                            </logging-options>
+                            <route-reflector>
+                                <config>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </config>
+                                <state>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </state>
+                            </route-reflector>
+                            <state>
+                                <description/>
+                                <peer-as/>
+                                <remove-private-as/>
+                                <peer-group/>
+                                <neighbor-address>4.4.4.4</neighbor-address>
+                            </state>
+                            <timers>
+                                <config>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                </config>
+                                <state>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                </state>
+                            </timers>
+                            <transport>
+                                <config>
+                                    <passive-mode>false</passive-mode>
+                                </config>
+                                <state>
+                                    <local-address>0.0.0.0</local-address>
+                                    <passive-mode>false</passive-mode>
+                                    <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
+                                    <remote-address xmlns="http://openconfig.net/yang/bgp-operational">4.4.4.4</remote-address>
+                                    <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
+                                </state>
+                            </transport>
+                            <neighbor-address>4.4.4.4</neighbor-address>
+                        </neighbor>
+                        <neighbor>
+                            <afi-safis>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                    </config>
                                     <graceful-restart>
                                         <state>
                                             <enabled>false</enabled>
-                                            <helper-only>false</helper-only>
-                                            <restart-time>120</restart-time>
-                                            <stale-routes-time>300</stale-routes-time>
                                         </state>
                                     </graceful-restart>
-                                    <config>
-                                        <description/>
-                                        <peer-as/>
-                                        <remove-private-as/>
-                                        <peer-group/>
-                                        <neighbor-address>4.4.4.4</neighbor-address>
-                                    </config>
-                                    <ebgp-multihop>
-                                        <config>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </config>
-                                        <state>
-                                            <enabled>false</enabled>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </state>
-                                    </ebgp-multihop>
-                                    <logging-options>
-                                        <config>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </config>
-                                        <state>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </state>
-                                    </logging-options>
-                                    <route-reflector>
-                                        <config>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </config>
-                                        <state>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </state>
-                                    </route-reflector>
                                     <state>
-                                        <description/>
-                                        <peer-as/>
-                                        <remove-private-as/>
-                                        <peer-group/>
-                                        <neighbor-address>4.4.4.4</neighbor-address>
+                                        <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
                                     </state>
-                                    <timers>
-                                        <config>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                        </config>
-                                        <state>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                        </state>
-                                    </timers>
-                                    <transport>
-                                        <config>
-                                            <passive-mode>false</passive-mode>
-                                        </config>
-                                        <state>
-                                            <local-address>0.0.0.0</local-address>
-                                            <passive-mode>false</passive-mode>
-                                            <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                            <remote-address xmlns="http://openconfig.net/yang/bgp-operational">4.4.4.4</remote-address>
-                                            <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
-                                        </state>
-                                    </transport>
-                                    <neighbor-address>4.4.4.4</neighbor-address>
-                                </neighbor>
-                                <neighbor>
-                                    <afi-safis>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                    </afi-safis>
-                                    <as-path-options>
-                                        <config>
-                                            <allow-own-as>0</allow-own-as>
-                                        </config>
-                                        <state>
-                                            <allow-own-as>0</allow-own-as>
-                                        </state>
-                                    </as-path-options>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                    </config>
                                     <graceful-restart>
                                         <state>
                                             <enabled>false</enabled>
-                                            <helper-only>false</helper-only>
-                                            <restart-time>120</restart-time>
-                                            <stale-routes-time>300</stale-routes-time>
                                         </state>
                                     </graceful-restart>
-                                    <config>
-                                        <description/>
-                                        <peer-as>333</peer-as>
-                                        <remove-private-as/>
-                                        <send-community>BOTH</send-community>
-                                        <peer-group/>
-                                        <neighbor-address>21.0.102.1</neighbor-address>
-                                    </config>
-                                    <ebgp-multihop>
-                                        <config>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </config>
-                                        <state>
-                                            <enabled>false</enabled>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </state>
-                                    </ebgp-multihop>
-                                    <logging-options>
-                                        <config>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </config>
-                                        <state>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </state>
-                                    </logging-options>
-                                    <route-reflector>
-                                        <config>
-                                            <route-reflector-client>true</route-reflector-client>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </config>
-                                        <state>
-                                            <route-reflector-client>true</route-reflector-client>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </state>
-                                    </route-reflector>
                                     <state>
-                                        <description/>
-                                        <peer-as>333</peer-as>
-                                        <remove-private-as/>
-                                        <send-community>BOTH</send-community>
-                                        <peer-group/>
-                                        <neighbor-address>21.0.102.1</neighbor-address>
+                                        <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
                                     </state>
-                                    <timers>
-                                        <config>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                            <minimum-advertisement-interval>0</minimum-advertisement-interval>
-                                        </config>
-                                        <state>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                            <minimum-advertisement-interval>0</minimum-advertisement-interval>
-                                        </state>
-                                    </timers>
-                                    <transport>
-                                        <config>
-                                            <passive-mode>false</passive-mode>
-                                        </config>
-                                        <state>
-                                            <local-address>0.0.0.0</local-address>
-                                            <passive-mode>false</passive-mode>
-                                            <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                            <remote-address xmlns="http://openconfig.net/yang/bgp-operational">21.0.102.1</remote-address>
-                                            <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
-                                        </state>
-                                    </transport>
-                                    <neighbor-address>21.0.102.1</neighbor-address>
-                                </neighbor>
-                                <neighbor>
-                                    <afi-safis>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <ipv6-unicast>
-                                                <config>
-                                                    <send-default-route>false</send-default-route>
-                                                </config>
-                                                <state>
-                                                    <send-default-route>false</send-default-route>
-                                                </state>
-                                            </ipv6-unicast>
-                                            <state>
-                                                <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <ipv4-unicast>
-                                                <config>
-                                                    <send-default-route>false</send-default-route>
-                                                </config>
-                                                <state>
-                                                    <send-default-route>false</send-default-route>
-                                                </state>
-                                            </ipv4-unicast>
-                                            <state>
-                                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                    </afi-safis>
-                                    <as-path-options>
-                                        <config>
-                                            <allow-own-as>0</allow-own-as>
-                                        </config>
-                                        <state>
-                                            <allow-own-as>0</allow-own-as>
-                                        </state>
-                                    </as-path-options>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
                                     <graceful-restart>
                                         <state>
                                             <enabled>false</enabled>
-                                            <helper-only>false</helper-only>
-                                            <restart-time>120</restart-time>
-                                            <stale-routes-time>300</stale-routes-time>
                                         </state>
                                     </graceful-restart>
-                                    <config>
-                                        <description/>
-                                        <peer-as>888</peer-as>
-                                        <remove-private-as/>
-                                        <send-community>BOTH</send-community>
-                                        <peer-group/>
-                                        <neighbor-address>fec1::2002</neighbor-address>
-                                    </config>
-                                    <ebgp-multihop>
-                                        <config>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </config>
-                                        <state>
-                                            <enabled>false</enabled>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </state>
-                                    </ebgp-multihop>
-                                    <logging-options>
-                                        <config>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </config>
-                                        <state>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </state>
-                                    </logging-options>
-                                    <route-reflector>
-                                        <config>
-                                            <route-reflector-client>false</route-reflector-client>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </config>
-                                        <state>
-                                            <route-reflector-client>false</route-reflector-client>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </state>
-                                    </route-reflector>
                                     <state>
-                                        <description/>
-                                        <peer-as>888</peer-as>
-                                        <remove-private-as/>
-                                        <send-community>BOTH</send-community>
-                                        <peer-group/>
-                                        <neighbor-address>fec1::2002</neighbor-address>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
                                     </state>
-                                    <timers>
-                                        <config>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                            <minimum-advertisement-interval>0</minimum-advertisement-interval>
-                                        </config>
-                                        <state>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                            <minimum-advertisement-interval>0</minimum-advertisement-interval>
-                                        </state>
-                                    </timers>
-                                    <transport>
-                                        <config>
-                                            <passive-mode>false</passive-mode>
-                                        </config>
-                                        <state>
-                                            <local-address>::</local-address>
-                                            <passive-mode>false</passive-mode>
-                                            <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                            <remote-address xmlns="http://openconfig.net/yang/bgp-operational">fec1::2002</remote-address>
-                                            <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
-                                        </state>
-                                    </transport>
-                                    <neighbor-address>fec1::2002</neighbor-address>
-                                </neighbor>
-                                <neighbor>
-                                    <afi-safis>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <ipv4-unicast>
-                                                <config>
-                                                    <send-default-route>false</send-default-route>
-                                                </config>
-                                                <state>
-                                                    <send-default-route>false</send-default-route>
-                                                </state>
-                                            </ipv4-unicast>
-                                            <state>
-                                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                    </afi-safis>
-                                    <as-path-options>
-                                        <config>
-                                            <allow-own-as>0</allow-own-as>
-                                        </config>
-                                        <state>
-                                            <allow-own-as>0</allow-own-as>
-                                        </state>
-                                    </as-path-options>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
                                     <graceful-restart>
                                         <state>
                                             <enabled>false</enabled>
-                                            <helper-only>false</helper-only>
-                                            <restart-time>120</restart-time>
-                                            <stale-routes-time>300</stale-routes-time>
                                         </state>
                                     </graceful-restart>
-                                    <config>
-                                        <description/>
-                                        <peer-as>333</peer-as>
-                                        <remove-private-as/>
-                                        <send-community>BOTH</send-community>
-                                        <peer-group/>
-                                        <neighbor-address>fec1::1002</neighbor-address>
-                                    </config>
-                                    <ebgp-multihop>
-                                        <config>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </config>
-                                        <state>
-                                            <enabled>false</enabled>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </state>
-                                    </ebgp-multihop>
-                                    <logging-options>
-                                        <config>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </config>
-                                        <state>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </state>
-                                    </logging-options>
-                                    <route-reflector>
-                                        <config>
-                                            <route-reflector-client>true</route-reflector-client>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </config>
-                                        <state>
-                                            <route-reflector-client>true</route-reflector-client>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </state>
-                                    </route-reflector>
                                     <state>
-                                        <description/>
-                                        <peer-as>333</peer-as>
-                                        <remove-private-as/>
-                                        <send-community>BOTH</send-community>
-                                        <peer-group/>
-                                        <neighbor-address>fec1::1002</neighbor-address>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
                                     </state>
-                                    <timers>
-                                        <config>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                            <minimum-advertisement-interval>0</minimum-advertisement-interval>
-                                        </config>
-                                        <state>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                            <minimum-advertisement-interval>0</minimum-advertisement-interval>
-                                        </state>
-                                    </timers>
-                                    <transport>
-                                        <config>
-                                            <passive-mode>false</passive-mode>
-                                        </config>
-                                        <state>
-                                            <local-address>::</local-address>
-                                            <passive-mode>false</passive-mode>
-                                            <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                            <remote-address xmlns="http://openconfig.net/yang/bgp-operational">fec1::1002</remote-address>
-                                            <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
-                                        </state>
-                                    </transport>
-                                    <neighbor-address>fec1::1002</neighbor-address>
-                                </neighbor>
-                                <neighbor>
-                                    <afi-safis>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <ipv4-unicast>
-                                                <config>
-                                                    <send-default-route>false</send-default-route>
-                                                </config>
-                                                <state>
-                                                    <send-default-route>false</send-default-route>
-                                                </state>
-                                            </ipv4-unicast>
-                                            <state>
-                                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                    </afi-safis>
-                                    <as-path-options>
-                                        <config>
-                                            <allow-own-as>0</allow-own-as>
-                                        </config>
-                                        <state>
-                                            <allow-own-as>0</allow-own-as>
-                                        </state>
-                                    </as-path-options>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
                                     <graceful-restart>
                                         <state>
                                             <enabled>false</enabled>
-                                            <helper-only>false</helper-only>
-                                            <restart-time>120</restart-time>
-                                            <stale-routes-time>300</stale-routes-time>
                                         </state>
                                     </graceful-restart>
-                                    <config>
-                                        <description/>
-                                        <peer-as>333</peer-as>
-                                        <remove-private-as/>
-                                        <send-community>BOTH</send-community>
-                                        <peer-group/>
-                                        <neighbor-address>21.0.101.1</neighbor-address>
-                                    </config>
-                                    <ebgp-multihop>
-                                        <config>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </config>
-                                        <state>
-                                            <enabled>false</enabled>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </state>
-                                    </ebgp-multihop>
-                                    <logging-options>
-                                        <config>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </config>
-                                        <state>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </state>
-                                    </logging-options>
-                                    <route-reflector>
-                                        <config>
-                                            <route-reflector-client>true</route-reflector-client>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </config>
-                                        <state>
-                                            <route-reflector-client>true</route-reflector-client>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </state>
-                                    </route-reflector>
                                     <state>
-                                        <description/>
-                                        <peer-as>333</peer-as>
-                                        <remove-private-as/>
-                                        <send-community>BOTH</send-community>
-                                        <peer-group/>
-                                        <neighbor-address>21.0.101.1</neighbor-address>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
                                     </state>
-                                    <timers>
-                                        <config>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                            <minimum-advertisement-interval>0</minimum-advertisement-interval>
-                                        </config>
-                                        <state>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                            <minimum-advertisement-interval>0</minimum-advertisement-interval>
-                                        </state>
-                                    </timers>
-                                    <transport>
-                                        <config>
-                                            <passive-mode>false</passive-mode>
-                                        </config>
-                                        <state>
-                                            <local-address>0.0.0.0</local-address>
-                                            <passive-mode>false</passive-mode>
-                                            <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                            <remote-address xmlns="http://openconfig.net/yang/bgp-operational">21.0.101.1</remote-address>
-                                            <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
-                                        </state>
-                                    </transport>
-                                    <neighbor-address>21.0.101.1</neighbor-address>
-                                </neighbor>
-                                <neighbor>
-                                    <afi-safis>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <ipv6-unicast>
-                                                <config>
-                                                    <send-default-route>false</send-default-route>
-                                                </config>
-                                                <state>
-                                                    <send-default-route>false</send-default-route>
-                                                </state>
-                                            </ipv6-unicast>
-                                            <state>
-                                                <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <ipv4-unicast>
-                                                <config>
-                                                    <send-default-route>false</send-default-route>
-                                                </config>
-                                                <state>
-                                                    <send-default-route>false</send-default-route>
-                                                </state>
-                                            </ipv4-unicast>
-                                            <state>
-                                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                    </afi-safis>
-                                    <as-path-options>
-                                        <config>
-                                            <allow-own-as>0</allow-own-as>
-                                        </config>
-                                        <state>
-                                            <allow-own-as>0</allow-own-as>
-                                        </state>
-                                    </as-path-options>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    </config>
                                     <graceful-restart>
                                         <state>
                                             <enabled>false</enabled>
-                                            <helper-only>false</helper-only>
-                                            <restart-time>120</restart-time>
-                                            <stale-routes-time>300</stale-routes-time>
                                         </state>
                                     </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
                                     <config>
-                                        <description/>
-                                        <peer-as>888</peer-as>
-                                        <remove-private-as/>
-                                        <send-community>BOTH</send-community>
-                                        <peer-group/>
-                                        <neighbor-address>21.0.201.1</neighbor-address>
+                                        <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
                                     </config>
-                                    <ebgp-multihop>
-                                        <config>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </config>
+                                    <graceful-restart>
                                         <state>
                                             <enabled>false</enabled>
-                                            <multihop-ttl>0</multihop-ttl>
                                         </state>
-                                    </ebgp-multihop>
-                                    <logging-options>
-                                        <config>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </config>
-                                        <state>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </state>
-                                    </logging-options>
-                                    <route-reflector>
-                                        <config>
-                                            <route-reflector-client>false</route-reflector-client>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </config>
-                                        <state>
-                                            <route-reflector-client>false</route-reflector-client>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </state>
-                                    </route-reflector>
+                                    </graceful-restart>
                                     <state>
-                                        <description/>
-                                        <peer-as>888</peer-as>
-                                        <remove-private-as/>
-                                        <send-community>BOTH</send-community>
-                                        <peer-group/>
-                                        <neighbor-address>21.0.201.1</neighbor-address>
+                                        <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
                                     </state>
-                                    <timers>
+                                </afi-safi>
+                            </afi-safis>
+                            <as-path-options>
+                                <config>
+                                    <allow-own-as>0</allow-own-as>
+                                </config>
+                                <state>
+                                    <allow-own-as>0</allow-own-as>
+                                </state>
+                            </as-path-options>
+                            <graceful-restart>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <helper-only>false</helper-only>
+                                    <restart-time>120</restart-time>
+                                    <stale-routes-time>300</stale-routes-time>
+                                </state>
+                            </graceful-restart>
+                            <config>
+                                <description/>
+                                <peer-as>333</peer-as>
+                                <remove-private-as/>
+                                <send-community>BOTH</send-community>
+                                <peer-group/>
+                                <neighbor-address>21.0.102.1</neighbor-address>
+                            </config>
+                            <ebgp-multihop>
+                                <config>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </config>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </state>
+                            </ebgp-multihop>
+                            <logging-options>
+                                <config>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </config>
+                                <state>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </state>
+                            </logging-options>
+                            <route-reflector>
+                                <config>
+                                    <route-reflector-client>true</route-reflector-client>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </config>
+                                <state>
+                                    <route-reflector-client>true</route-reflector-client>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </state>
+                            </route-reflector>
+                            <state>
+                                <description/>
+                                <peer-as>333</peer-as>
+                                <remove-private-as/>
+                                <send-community>BOTH</send-community>
+                                <peer-group/>
+                                <neighbor-address>21.0.102.1</neighbor-address>
+                            </state>
+                            <timers>
+                                <config>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                    <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                </config>
+                                <state>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                    <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                </state>
+                            </timers>
+                            <transport>
+                                <config>
+                                    <passive-mode>false</passive-mode>
+                                </config>
+                                <state>
+                                    <local-address>0.0.0.0</local-address>
+                                    <passive-mode>false</passive-mode>
+                                    <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
+                                    <remote-address xmlns="http://openconfig.net/yang/bgp-operational">21.0.102.1</remote-address>
+                                    <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
+                                </state>
+                            </transport>
+                            <neighbor-address>21.0.102.1</neighbor-address>
+                        </neighbor>
+                        <neighbor>
+                            <afi-safis>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <ipv6-unicast>
                                         <config>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                            <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                            <send-default-route>false</send-default-route>
                                         </config>
                                         <state>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                            <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                            <send-default-route>false</send-default-route>
                                         </state>
-                                    </timers>
-                                    <transport>
+                                    </ipv6-unicast>
+                                    <state>
+                                        <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <ipv4-unicast>
                                         <config>
-                                            <passive-mode>false</passive-mode>
+                                            <send-default-route>false</send-default-route>
                                         </config>
                                         <state>
-                                            <local-address>0.0.0.0</local-address>
-                                            <passive-mode>false</passive-mode>
-                                            <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                            <remote-address xmlns="http://openconfig.net/yang/bgp-operational">21.0.201.1</remote-address>
-                                            <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
+                                            <send-default-route>false</send-default-route>
                                         </state>
-                                    </transport>
-                                    <neighbor-address>21.0.201.1</neighbor-address>
-                                </neighbor>
-                            </neighbors>
-                        </bgp>
-                    </data>
-                </rpc-reply>
+                                    </ipv4-unicast>
+                                    <state>
+                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                            </afi-safis>
+                            <as-path-options>
+                                <config>
+                                    <allow-own-as>0</allow-own-as>
+                                </config>
+                                <state>
+                                    <allow-own-as>0</allow-own-as>
+                                </state>
+                            </as-path-options>
+                            <graceful-restart>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <helper-only>false</helper-only>
+                                    <restart-time>120</restart-time>
+                                    <stale-routes-time>300</stale-routes-time>
+                                </state>
+                            </graceful-restart>
+                            <config>
+                                <description/>
+                                <peer-as>888</peer-as>
+                                <remove-private-as/>
+                                <send-community>BOTH</send-community>
+                                <peer-group/>
+                                <neighbor-address>fec1::2002</neighbor-address>
+                            </config>
+                            <ebgp-multihop>
+                                <config>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </config>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </state>
+                            </ebgp-multihop>
+                            <logging-options>
+                                <config>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </config>
+                                <state>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </state>
+                            </logging-options>
+                            <route-reflector>
+                                <config>
+                                    <route-reflector-client>false</route-reflector-client>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </config>
+                                <state>
+                                    <route-reflector-client>false</route-reflector-client>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </state>
+                            </route-reflector>
+                            <state>
+                                <description/>
+                                <peer-as>888</peer-as>
+                                <remove-private-as/>
+                                <send-community>BOTH</send-community>
+                                <peer-group/>
+                                <neighbor-address>fec1::2002</neighbor-address>
+                            </state>
+                            <timers>
+                                <config>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                    <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                </config>
+                                <state>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                    <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                </state>
+                            </timers>
+                            <transport>
+                                <config>
+                                    <passive-mode>false</passive-mode>
+                                </config>
+                                <state>
+                                    <local-address>::</local-address>
+                                    <passive-mode>false</passive-mode>
+                                    <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
+                                    <remote-address xmlns="http://openconfig.net/yang/bgp-operational">fec1::2002</remote-address>
+                                    <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
+                                </state>
+                            </transport>
+                            <neighbor-address>fec1::2002</neighbor-address>
+                        </neighbor>
+                        <neighbor>
+                            <afi-safis>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <ipv4-unicast>
+                                        <config>
+                                            <send-default-route>false</send-default-route>
+                                        </config>
+                                        <state>
+                                            <send-default-route>false</send-default-route>
+                                        </state>
+                                    </ipv4-unicast>
+                                    <state>
+                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                            </afi-safis>
+                            <as-path-options>
+                                <config>
+                                    <allow-own-as>0</allow-own-as>
+                                </config>
+                                <state>
+                                    <allow-own-as>0</allow-own-as>
+                                </state>
+                            </as-path-options>
+                            <graceful-restart>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <helper-only>false</helper-only>
+                                    <restart-time>120</restart-time>
+                                    <stale-routes-time>300</stale-routes-time>
+                                </state>
+                            </graceful-restart>
+                            <config>
+                                <description/>
+                                <peer-as>333</peer-as>
+                                <remove-private-as/>
+                                <send-community>BOTH</send-community>
+                                <peer-group/>
+                                <neighbor-address>fec1::1002</neighbor-address>
+                            </config>
+                            <ebgp-multihop>
+                                <config>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </config>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </state>
+                            </ebgp-multihop>
+                            <logging-options>
+                                <config>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </config>
+                                <state>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </state>
+                            </logging-options>
+                            <route-reflector>
+                                <config>
+                                    <route-reflector-client>true</route-reflector-client>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </config>
+                                <state>
+                                    <route-reflector-client>true</route-reflector-client>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </state>
+                            </route-reflector>
+                            <state>
+                                <description/>
+                                <peer-as>333</peer-as>
+                                <remove-private-as/>
+                                <send-community>BOTH</send-community>
+                                <peer-group/>
+                                <neighbor-address>fec1::1002</neighbor-address>
+                            </state>
+                            <timers>
+                                <config>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                    <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                </config>
+                                <state>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                    <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                </state>
+                            </timers>
+                            <transport>
+                                <config>
+                                    <passive-mode>false</passive-mode>
+                                </config>
+                                <state>
+                                    <local-address>::</local-address>
+                                    <passive-mode>false</passive-mode>
+                                    <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
+                                    <remote-address xmlns="http://openconfig.net/yang/bgp-operational">fec1::1002</remote-address>
+                                    <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
+                                </state>
+                            </transport>
+                            <neighbor-address>fec1::1002</neighbor-address>
+                        </neighbor>
+                        <neighbor>
+                            <afi-safis>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <ipv4-unicast>
+                                        <config>
+                                            <send-default-route>false</send-default-route>
+                                        </config>
+                                        <state>
+                                            <send-default-route>false</send-default-route>
+                                        </state>
+                                    </ipv4-unicast>
+                                    <state>
+                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                            </afi-safis>
+                            <as-path-options>
+                                <config>
+                                    <allow-own-as>0</allow-own-as>
+                                </config>
+                                <state>
+                                    <allow-own-as>0</allow-own-as>
+                                </state>
+                            </as-path-options>
+                            <graceful-restart>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <helper-only>false</helper-only>
+                                    <restart-time>120</restart-time>
+                                    <stale-routes-time>300</stale-routes-time>
+                                </state>
+                            </graceful-restart>
+                            <config>
+                                <description/>
+                                <peer-as>333</peer-as>
+                                <remove-private-as/>
+                                <send-community>BOTH</send-community>
+                                <peer-group/>
+                                <neighbor-address>21.0.101.1</neighbor-address>
+                            </config>
+                            <ebgp-multihop>
+                                <config>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </config>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </state>
+                            </ebgp-multihop>
+                            <logging-options>
+                                <config>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </config>
+                                <state>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </state>
+                            </logging-options>
+                            <route-reflector>
+                                <config>
+                                    <route-reflector-client>true</route-reflector-client>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </config>
+                                <state>
+                                    <route-reflector-client>true</route-reflector-client>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </state>
+                            </route-reflector>
+                            <state>
+                                <description/>
+                                <peer-as>333</peer-as>
+                                <remove-private-as/>
+                                <send-community>BOTH</send-community>
+                                <peer-group/>
+                                <neighbor-address>21.0.101.1</neighbor-address>
+                            </state>
+                            <timers>
+                                <config>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                    <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                </config>
+                                <state>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                    <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                </state>
+                            </timers>
+                            <transport>
+                                <config>
+                                    <passive-mode>false</passive-mode>
+                                </config>
+                                <state>
+                                    <local-address>0.0.0.0</local-address>
+                                    <passive-mode>false</passive-mode>
+                                    <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
+                                    <remote-address xmlns="http://openconfig.net/yang/bgp-operational">21.0.101.1</remote-address>
+                                    <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
+                                </state>
+                            </transport>
+                            <neighbor-address>21.0.101.1</neighbor-address>
+                        </neighbor>
+                        <neighbor>
+                            <afi-safis>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <ipv6-unicast>
+                                        <config>
+                                            <send-default-route>false</send-default-route>
+                                        </config>
+                                        <state>
+                                            <send-default-route>false</send-default-route>
+                                        </state>
+                                    </ipv6-unicast>
+                                    <state>
+                                        <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <ipv4-unicast>
+                                        <config>
+                                            <send-default-route>false</send-default-route>
+                                        </config>
+                                        <state>
+                                            <send-default-route>false</send-default-route>
+                                        </state>
+                                    </ipv4-unicast>
+                                    <state>
+                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                            </afi-safis>
+                            <as-path-options>
+                                <config>
+                                    <allow-own-as>0</allow-own-as>
+                                </config>
+                                <state>
+                                    <allow-own-as>0</allow-own-as>
+                                </state>
+                            </as-path-options>
+                            <graceful-restart>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <helper-only>false</helper-only>
+                                    <restart-time>120</restart-time>
+                                    <stale-routes-time>300</stale-routes-time>
+                                </state>
+                            </graceful-restart>
+                            <config>
+                                <description/>
+                                <peer-as>888</peer-as>
+                                <remove-private-as/>
+                                <send-community>BOTH</send-community>
+                                <peer-group/>
+                                <neighbor-address>21.0.201.1</neighbor-address>
+                            </config>
+                            <ebgp-multihop>
+                                <config>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </config>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </state>
+                            </ebgp-multihop>
+                            <logging-options>
+                                <config>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </config>
+                                <state>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </state>
+                            </logging-options>
+                            <route-reflector>
+                                <config>
+                                    <route-reflector-client>false</route-reflector-client>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </config>
+                                <state>
+                                    <route-reflector-client>false</route-reflector-client>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </state>
+                            </route-reflector>
+                            <state>
+                                <description/>
+                                <peer-as>888</peer-as>
+                                <remove-private-as/>
+                                <send-community>BOTH</send-community>
+                                <peer-group/>
+                                <neighbor-address>21.0.201.1</neighbor-address>
+                            </state>
+                            <timers>
+                                <config>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                    <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                </config>
+                                <state>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                    <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                </state>
+                            </timers>
+                            <transport>
+                                <config>
+                                    <passive-mode>false</passive-mode>
+                                </config>
+                                <state>
+                                    <local-address>0.0.0.0</local-address>
+                                    <passive-mode>false</passive-mode>
+                                    <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
+                                    <remote-address xmlns="http://openconfig.net/yang/bgp-operational">21.0.201.1</remote-address>
+                                    <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
+                                </state>
+                            </transport>
+                            <neighbor-address>21.0.201.1</neighbor-address>
+                        </neighbor>
+                    </neighbors>
+                </bgp>
+            </data>
             ''')
 
-    yang_output = {'get.return_value': etree_holder()}
+    yang_output = etree_holder()
 
-    # def test_show_bgp_process_vrf_all_golden_yang(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.yang_output)
-    #     obj = ShowBgpProcessVrfAll(device=self.device, context='yang')
-    #     try:
-    #         parsed_output = obj.parse()
-    #         self.assertEqual(parsed_output,self.parsed_output)
-    #     except SchemaMissingKeyError:
-    #         pass
+    def test_show_bgp_process_vrf_all_golden_yang(self):
+        self.maxDiff = None
+        self.device = Mock()
+        # YANG output
+        self.device.get = Mock()
+        self.device.get.side_effect = [self.yang_output]
+        # CLI output to complete it
+        self.device.execute = Mock()
+        self.device.execute.side_effect = [self.cli_output]
+        obj = ShowBgpProcessVrfAll(device=self.device, context=['yang', 'cli'])
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 # =============================================
 #  Unit test for 'show bgp peer-session <WORD>'
@@ -3796,7 +4187,10 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                         'v6_aggregate_address_summary_only': True}}},
             'default':
                 {'address_family':
-                    {'vpnv4 unicast RD 100:100':
+                    {'vpnv4 unicast':
+                        {'bgp_table_version': 48,
+                        'local_router_id': '1.1.1.1'},
+                    'vpnv4 unicast RD 100:100':
                         {'aggregate_address_as_set': True,
                         'aggregate_address_ipv4_address': '11.0.0.0',
                         'aggregate_address_ipv4_mask': '8',
@@ -3853,6 +4247,9 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'status_codes': ' ',
                                         'weight': 32768}}}},
                         'route_distinguisher': '100:100'},
+                    'vpnv6 unicast':
+                        {'bgp_table_version': 41,
+                        'local_router_id': '1.1.1.1'},
                     'vpnv6 unicast RD 100:100':
                         {'bgp_table_version': 41,
                         'default_vrf': 'VRF1',
@@ -4050,7 +4447,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'weight': 32768}}},
                             '104.0.0.0/8':
                                 {'index':
-                                    {3:
+                                    {1:
                                         {'next_hop': '0.0.0.0',
                                         'localprf': 100,
                                         'metric': 4444,
@@ -4066,7 +4463,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'path_type': 'i',
                                         'status_codes': '* ',
                                         'weight': 0},
-                                    1:
+                                    3:
                                         {'next_hop': 'fec1::112',
                                         'localprf': 100,
                                         'metric': 0,
@@ -4076,7 +4473,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'weight': 0}}},
                             '204.0.0.0/8':
                                 {'index':
-                                    {3:
+                                    {1:
                                         {'next_hop': '0.0.0.0',
                                         'localprf': 100,
                                         'metric': 4444,
@@ -4092,7 +4489,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'path_type': 'i',
                                         'status_codes': '* ',
                                         'weight': 0},
-                                    1:
+                                    3:
                                         {'next_hop': 'fec1::112',
                                         'localprf': 100,
                                         'metric': 0,
@@ -4102,7 +4499,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'weight': 0}}},
                             '4.0.0.0/8':
                                 {'index':
-                                    {2:
+                                    {1:
                                         {'next_hop': '21.0.0.2',
                                         'localprf': 100,
                                         'metric': 0,
@@ -4110,7 +4507,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'path_type': 'i',
                                         'status_codes': '*>',
                                         'weight': 0},
-                                    1:
+                                    2:
                                         {'next_hop': 'fec1::112',
                                         'localprf': 100,
                                         'metric': 0,
@@ -4244,7 +4641,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'weight': 32768}}},
                             '104.0.0.0/8':
                                 {'index':
-                                    {3:
+                                    {1:
                                         {'next_hop': '0.0.0.0',
                                         'localprf': 100,
                                         'metric': 4444,
@@ -4260,7 +4657,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'path_type': 'i',
                                         'status_codes': '* ',
                                         'weight': 0},
-                                    1:
+                                    3:
                                         {'next_hop': 'fec1::112',
                                         'localprf': 100,
                                         'metric': 0,
@@ -4270,7 +4667,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'weight': 0}}},
                             '204.0.0.0/8':
                                 {'index':
-                                    {3:
+                                    {1:
                                         {'next_hop': '0.0.0.0',
                                         'localprf': 100,
                                         'metric': 4444,
@@ -4286,7 +4683,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'path_type': 'i',
                                         'status_codes': '* ',
                                         'weight': 0},
-                                    1:
+                                    3:
                                         {'next_hop': 'fec1::112',
                                         'localprf': 100,
                                         'metric': 0,
@@ -4296,7 +4693,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'weight': 0}}},
                             '4.0.0.0/8':
                                 {'index':
-                                    {2:
+                                    {1:
                                         {'next_hop': '21.0.0.2',
                                         'localprf': 100,
                                         'metric': 0,
@@ -4304,7 +4701,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'path_type': 'i',
                                         'status_codes': '*>',
                                         'weight': 0},
-                                    1:
+                                    2:
                                         {'next_hop': 'fec1::112',
                                         'localprf': 100,
                                         'metric': 0,
@@ -4326,6 +4723,9 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'path_type': 'r',
                                         'status_codes': '*>',
                                         'weight': 32768}}}}},
+                    'vpnv4 unicast':
+                        {'bgp_table_version': 23,
+                        'local_router_id': '21.0.101.1'},
                     'vpnv4 unicast RD 1:100':
                         {'bgp_table_version': 23,
                         'default_vrf': 'vpn1',
@@ -4437,6 +4837,9 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                         'status_codes': '*>',
                                         'weight': 32768}}}},
                         'route_distinguisher': '2:100'},                        
+                    'vpnv6 unicast':
+                        {'bgp_table_version': 7,
+                        'local_router_id': '21.0.101.1'},
                     'vpnv6 unicast RD 2:100':
                         {'bgp_table_version': 7,
                         'default_vrf': 'vpn2',
@@ -4989,7 +5392,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                'path_type': 'e',
                                                                'status_codes': 'd ',
                                                                'weight': 0}}}}},
-                                        'ipv6 multicast': {'bgp_table_version': 6,
+                    'ipv6 multicast': {'bgp_table_version': 6,
                                                            'local_router_id': '20.0.0.6',
                                                            'prefixes': {'eeee::/113': {'index': {1: {'localprf': 100,
                                                                                                      'next_hop': 'fec0::1002',
@@ -5003,7 +5406,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                          'path_type': 'i',
                                                                                                          'status_codes': '*>',
                                                                                                          'weight': 0}}}}},
-                                        'ipv6 unicast': {'bgp_table_version': 173,
+                    'ipv6 unicast': {'bgp_table_version': 173,
                                                          'local_router_id': '20.0.0.6',
                                                          'prefixes': {'2001::/112': {'index': {1: {'next_hop': 'fec0::2002',
                                                                                                    'origin_codes': 'i',
@@ -5075,7 +5478,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                        'path_type': 'i',
                                                                                                        'status_codes': '*>',
                                                                                                        'weight': 0}}}}},
-                                        'link-state': {'bgp_table_version': 173,
+                    'link-state': {'bgp_table_version': 173,
                                                        'local_router_id': '20.0.0.6',
                                                        'prefixes': {'[2]:[77][7,0][39.39.39.39,1,656877351][39.1.1.1,22][19.0.102.3,39.0.1.30]/616': {'index': {1: {'next_hop': '19.0.102.3',
                                                                                                                                                                     'origin_codes': 'i',
@@ -5141,7 +5544,10 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                                                                                 'path_type': 'i',
                                                                                                                                                                 'status_codes': '*>',
                                                                                                                                                                 'weight': 0}}}}},
-                                        'vpnv4 unicast RD 0:0': {'bgp_table_version': 183,
+                    'vpnv4 unicast': 
+                        {'bgp_table_version': 183,
+                        'local_router_id': '20.0.0.6'},
+                    'vpnv4 unicast RD 0:0': {'bgp_table_version': 183,
                                                                  'local_router_id': '20.0.0.6',
                                                                  'prefixes': {'2.3.1.0/24': {'index': {1: {'next_hop': '19.0.102.3',
                                                                                                            'origin_codes': 'i',
@@ -5174,9 +5580,9 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                            'status_codes': 'd ',
                                                                                                            'weight': 0}}}},
                                                                  'route_distinguisher': '0:0'},
-                                        'vpnv4 unicast RD 101:100': {'bgp_table_version': 183,
+                    'vpnv4 unicast RD 101:100': {'bgp_table_version': 183,
                                                                      'local_router_id': '20.0.0.6',
-                                                                     'prefixes': {'1.3.1.0/24': {'index': {1: {'localprf': 100,
+                                                                     'prefixes': {'1.3.1.0/24': {'index': {2: {'localprf': 100,
                                                                                                                'next_hop': '19.0.102.4',
                                                                                                                'origin_codes': 'i',
                                                                                                                'path': '3 '
@@ -5187,7 +5593,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                                'path_type': 'i',
                                                                                                                'status_codes': '*>',
                                                                                                                'weight': 0},
-                                                                                                            2: {'localprf': 100,
+                                                                                                            1: {'localprf': 100,
                                                                                                                 'metric': 4444,
                                                                                                                 'next_hop': '19.0.101.1',
                                                                                                                 'origin_codes': 'i',
@@ -5206,7 +5612,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                                 'path_type': 'i',
                                                                                                                 'status_codes': '* ',
                                                                                                                'weight': 0}}},
-                                                                                  '1.3.2.0/24': {'index': {1: {'localprf': 100,
+                                                                                  '1.3.2.0/24': {'index': {2: {'localprf': 100,
                                                                                                                'next_hop': '19.0.102.4',
                                                                                                                'origin_codes': 'i',
                                                                                                                'path': '3 '
@@ -5217,7 +5623,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                                'path_type': 'i',
                                                                                                                'status_codes': '*>',
                                                                                                                'weight': 0},
-                                                                                                            2: {'localprf': 100,
+                                                                                                            1: {'localprf': 100,
                                                                                                                 'metric': 4444,
                                                                                                                 'next_hop': '19.0.101.1',
                                                                                                                 'origin_codes': 'i',
@@ -5237,7 +5643,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                                 'status_codes': '* ',
                                                                                                                 'weight': 0}}}},
                                                                      'route_distinguisher': '101:100'},
-                                        'vpnv4 unicast RD 102:100': {'bgp_table_version': 183,
+                    'vpnv4 unicast RD 102:100': {'bgp_table_version': 183,
                                                                      'local_router_id': '20.0.0.6',
                                                                      'prefixes': {'102.1.1.0/24': {'index': {1: {'localprf': 100,
                                                                                                                  'next_hop': '19.0.102.4',
@@ -5264,7 +5670,10 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                                  'status_codes': '*>',
                                                                                                                  'weight': 0}}}},
                                                                      'route_distinguisher': '102:100'},
-                                        'vpnv6 unicast RD 0xbb00010000000000': {'bgp_table_version': 13,
+                    'vpnv6 unicast': 
+                        {'bgp_table_version': 13,
+                        'local_router_id': '20.0.0.6'},
+                    'vpnv6 unicast RD 0xbb00010000000000': {'bgp_table_version': 13,
                                                                                 'local_router_id': '20.0.0.6',
                                                                                 'prefixes': {'0:0:80::/41': {'index': {1: {'next_hop': '0',
                                                                                                                            'origin_codes': 'i',
@@ -5295,7 +5704,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                                       'status_codes': '*>',
                                                                                                                       'weight': 888}}}},
                                                                                 'route_distinguisher': '0xbb00010000000000'},
-                                        'vpnv6 unicast RD 100:200': {'bgp_table_version': 13,
+                    'vpnv6 unicast RD 100:200': {'bgp_table_version': 13,
                                                                      'local_router_id': '20.0.0.6',
                                                                      'prefixes': {'aaaa:1::/113': {'index': {1: {'localprf': 100,
                                                                                                                  'next_hop': '4444',
@@ -5310,7 +5719,9 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                                      'status_codes': '*>',
                                                                                                                      'weight': 0}}}},
                                                                      'route_distinguisher': '100:200'}}},
-         'vpn1': {'address_family': {'ipv4 unicast': {'bgp_table_version': 9,
+            'vpn1': 
+                {'address_family': 
+                    {'ipv4 unicast': {'bgp_table_version': 9,
                                                       'local_router_id': '0.0.0.0',
                                                       'prefixes': {'1.1.1.0/24': {'index': {1: {'localprf': 100,
                                                                                                 'next_hop': '19.0.102.4',
@@ -5359,7 +5770,9 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                 'path_type': 'i',
                                                                                                 'status_codes': '*>',
                                                                                                 'weight': 0}}}}}}},
-         'vpn2': {'address_family': {'ipv4 unicast': {'bgp_table_version': 7,
+            'vpn2': 
+                {'address_family': 
+                    {'ipv4 unicast': {'bgp_table_version': 7,
                                                       'local_router_id': '0.0.0.0',
                                                       'prefixes': {'1.1.1.0/24': {'index': {1: {'localprf': 100,
                                                                                                 'next_hop': '19.0.102.4',
@@ -5408,7 +5821,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                                                                                                 'path_type': 'i',
                                                                                                 'status_codes': '*>',
                                                                                                 'weight': 0}}}}},
-                                     'ipv6 unicast': {'bgp_table_version': 7,
+                    'ipv6 unicast': {'bgp_table_version': 7,
                                                       'local_router_id': '0.0.0.0',
                                                       'prefixes': {'abcd::/112': {'index': {1: {'localprf': 100,
                                                                                                 'next_hop': 'fec0::1002',
@@ -5647,7 +6060,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 {'address_family':
                     {'ipv4 unicast':
                         {'bgp_table_version': 21,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0,
@@ -5704,7 +6117,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'sent_bytes_queue': 0,
                 'sent_messages': 0,
                 'sent_notifications': 0,
-                'session_state': 'Idle',
+                'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '02:19:37'}}}
 
@@ -5751,7 +6164,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                     {'vpnv4 unicast':
                         {'bgp_table_version': 11,
                         'maximum_prefix_max_prefix_no': 300000,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 1,
                             'memory_usage': 48,
@@ -5762,7 +6175,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'vpnv6 unicast':
                         {'bgp_table_version': 10,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 1,
                             'memory_usage': 48,
@@ -5854,7 +6267,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'sent_bytes_queue': 0,
                 'sent_messages': 263,
                 'sent_notifications': 0,
-                'session_state': 'Established',
+                'session_state': 'established',
                 'shutdown': False,
                 'suppress_four_byte_as_capability': True,
                 'up_time': '02:20:02',
@@ -5910,7 +6323,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'sent_bytes_queue': 0,
                 'sent_messages': 0,
                 'sent_notifications': 0,
-                'session_state': 'Idle',
+                'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '02:20:08'},
             '2.2.2.5':
@@ -5943,6 +6356,8 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True,
                         'soft_configuration': True}},
                 'bfd_live_detection': True,
+                'bfd_enabled': True,
+                'bfd_state': 'up',
                 'bgp_negotiated_keepalive_timers':
                     {'hold_time': 45,
                     'keepalive_interval': 15,
@@ -5999,7 +6414,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'sent_bytes_queue': 0,
                 'sent_messages': 0,
                 'sent_notifications': 0,
-                'session_state': 'Shut (Admin)',
+                'session_state': 'shut (admin)',
                 'shutdown': True,
                 'tcp_md5_auth': 'enabled',
                 'tcp_md5_auth_config': 'TCP MD5 authentication '
@@ -6086,7 +6501,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
           BGP state = Shut (Admin), down for 02:20:09
           Using loopback0 as update source for this peer
           Connected check is disabled
-          BFD live-detection is configured
+          BFD live-detection is configured and enabled, state is Up
           External BGP peer might be upto 255 hops away
           TCP MD5 authentication is enabled
           Only passive connection setup allowed
@@ -6165,7 +6580,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 {'address_family':
                     {'ipv4 multicast':
                         {'bgp_table_version': 55,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 5,
                             'memory_usage': 660},
@@ -6174,7 +6589,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'ipv4 unicast':
                         {'bgp_table_version': 6765004,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 5,
                             'memory_usage': 660},
@@ -6183,7 +6598,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'ipv6 multicast':
                         {'bgp_table_version': 2,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -6192,7 +6607,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'ipv6 unicast':
                         {'bgp_table_version': 2,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -6201,7 +6616,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'vpnv4 unicast':
                         {'bgp_table_version': 12863408,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -6210,7 +6625,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'vpnv6 unicast':
                         {'bgp_table_version': 2,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -6294,14 +6709,14 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'remote_as': 333,
                 'retry_time': 'None',
                 'router_id': '21.0.101.1',
-                'session_state': 'Established',
+                'session_state': 'established',
                 'shutdown': False,
                 'up_time': '00:07:46'},
             '21.0.102.1':
                 {'address_family':
                     {'ipv4 multicast':
                         {'bgp_table_version': 55,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -6310,7 +6725,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'ipv4 unicast':
                         {'bgp_table_version': 6765004,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -6319,7 +6734,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'ipv6 multicast':
                         {'bgp_table_version': 2,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -6328,7 +6743,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'ipv6 unicast':
                         {'bgp_table_version': 2,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -6337,7 +6752,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'vpnv4 unicast':
                         {'bgp_table_version': 12863408,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -6345,7 +6760,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         'send_community': True},
                     'vpnv6 unicast':
                         {'bgp_table_version': 2,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
                             'memory_usage': 0},
@@ -6399,7 +6814,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'remote_as': 333,
                 'retry_time': '00:00:55',
                 'router_id': '0.0.0.0',
-                'session_state': 'Idle',
+                'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '01:27:53'},
             '21.0.201.1':
@@ -6493,7 +6908,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'remote_as': 888,
                 'retry_time': '00:01:12',
                 'router_id': '0.0.0.0',
-                'session_state': 'Idle',
+                'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '01:27:52'},
             '4.4.4.4':
@@ -6544,7 +6959,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'remote_as': 0,
                 'retry_time': '0.000000',
                 'router_id': '0.0.0.0',
-                'session_state': 'Idle',
+                'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '01:27:54'},
             'fec1::1002':
@@ -6552,7 +6967,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                     {'ipv4 unicast':
                         {'bgp_table_version': 6765004,
                         'neighbor_version': 6765004,
-                        'next_hop_self': False,
+                        'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 5,
                             'memory_usage': 660},
@@ -6629,7 +7044,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'remote_as': 333,
                 'retry_time': 'None',
                 'router_id': '21.0.101.1',
-                'session_state': 'Established',
+                'session_state': 'established',
                 'shutdown': False,
                 'up_time': '00:07:40'},
             'fec1::2002':
@@ -6702,7 +7117,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'remote_as': 888,
                 'retry_time': '00:00:29',
                 'router_id': '0.0.0.0',
-                'session_state': 'Idle',
+                'session_state': 'idle',
                 'shutdown': False,
                 'up_time': '01:27:55'}}}
 
@@ -7156,6 +7571,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(vrf='default')
 
+
 class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
 
     '''Unit test for show vrf all neighbors - YANG'''
@@ -7167,110 +7583,338 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
         'neighbor': 
             {'21.0.101.1': 
                 {'address_family': 
-                    {'ipv4 unicast': 
-                        {'enabled': True,
-                        'graceful_restart': False,
-                        'ipv4_unicast_send_default_route': False},
-                    'ipv6 unicast': 
-                        {'enabled': True,
-                        'graceful_restart': False},
-                    'l3vpn ipv4 unicast': 
-                        {'enabled': True,
-                        'graceful_restart': False},
-                    'l3vpn ipv6 unicast': 
-                        {'enabled': True,
-                        'graceful_restart': False}},
+                    {'ipv4 multicast': 
+                        {'bgp_table_version': 53,
+                        'neighbor_version': 0,
+                        'third_party_nexthop': True,
+                        'path': 
+                            {'accepted_paths': 0,
+                            'memory_usage': 0},
+                        'route_reflector_client': True,
+                        'send_community': True},
+                    'ipv4 unicast': {'bgp_table_version': 358,
+                                     'enabled': True,
+                                     'graceful_restart': False,
+                                     'ipv4_unicast_send_default_route': False,
+                                     'neighbor_version': 0,
+                                     'third_party_nexthop': True,
+                                     'path': {'accepted_paths': 0,
+                                              'memory_usage': 0},
+                                     'route_reflector_client': True,
+                                     'send_community': True},
+                    'ipv6 multicast': {'bgp_table_version': 53,
+                                       'neighbor_version': 0,
+                                       'third_party_nexthop': True,
+                                       'path': {'accepted_paths': 0,
+                                                'memory_usage': 0},
+                                       'route_reflector_client': True,
+                                       'send_community': True},
+                    'ipv6 unicast': {'bgp_table_version': 99,
+                                     'enabled': True,
+                                     'graceful_restart': False,
+                                     'neighbor_version': 0,
+                                     'third_party_nexthop': True,
+                                     'path': {'accepted_paths': 0,
+                                              'memory_usage': 0},
+                                     'route_reflector_client': True,
+                                     'send_community': True},
+                    'l3vpn ipv4 unicast': {'enabled': True,
+                                           'graceful_restart': False},
+                    'l3vpn ipv6 unicast': {'enabled': True,
+                                           'graceful_restart': False},
+                    'vpnv4 unicast': {'bgp_table_version': 291,
+                                      'neighbor_version': 0,
+                                      'third_party_nexthop': True,
+                                      'path': {'accepted_paths': 0,
+                                               'memory_usage': 0},
+                                      'route_reflector_client': True,
+                                      'send_community': True},
+                    'vpnv6 unicast': {'bgp_table_version': 2,
+                                      'neighbor_version': 0,
+                                      'third_party_nexthop': True,
+                                      'path': {'accepted_paths': 0,
+                                               'memory_usage': 0},
+                                      'route_reflector_client': True,
+                                      'send_community': True}},
                 'allow_own_as': 0,
+                'bgp_negotiated_keepalive_timers': 
+                    {'hold_time': 180,
+                    'keepalive_interval': 60,
+                    'keepalive_timer': 'not '
+                                    'running',
+                    'last_read': 'never',
+                    'last_written': 'never'},
+                'bgp_neighbor_counters': 
+                    {'messages': 
+                        {'received': 
+                            {'bytes_in_queue': 0,
+                            'capability': 0,
+                            'keepalives': 0,
+                            'notifications': 0,
+                            'opens': 0,
+                            'route_refresh': 0,
+                            'total': 0,
+                            'total_bytes': 0,
+                            'updates': 0},
+                        'sent': 
+                            {'bytes_in_queue': 0,
+                            'capability': 0,
+                            'keepalives': 0,
+                            'notifications': 0,
+                            'opens': 0,
+                            'route_refresh': 0,
+                            'total': 0,
+                            'total_bytes': 0,
+                            'updates': 0}}},
                 'bgp_session_transport': 
-                    {'transport': 
+                    {'connection': 
+                        {'dropped': 0,
+                        'established': 0,
+                        'last_reset': 'never',
+                        'reset_by': 'peer',
+                        'reset_reason': 'no '
+                                         'error'},
+                    'transport': 
                         {'foreign_host': 'unspecified',
                         'foreign_port': '21.0.101.1',
                         'local_host': '0.0.0.0',
                         'local_port': 'unspecified',
                         'passive_mode': 'false'}},
+                'bgp_version': 4,
                 'description': 'None',
-                'ebgp_multihop': False,
-                'ebgp_multihop_max_hop': 0,
                 'graceful_restart': False,
                 'graceful_restart_helper_only': False,
                 'graceful_restart_restart_time': 120,
                 'graceful_restart_stalepath_time': 300,
                 'holdtime': 180,
                 'keepalive_interval': 60,
-                'link': 'ebgp',
+                'link': 'ibgp',
+                'local_as': 'None',
                 'minimum_advertisement_interval': 0,
+                'nbr_ebgp_multihop': False,
+                'nbr_ebgp_multihop_max_hop': 0,
                 'peer_group': 'None',
+                'peer_index': 4,
+                'received_bytes_queue': 0,
+                'received_messages': 0,
+                'received_notifications': 0,
                 'remote_as': 333,
                 'remove_private_as': False,
+                'retry_time': '00:00:21',
                 'route_reflector_client': True,
                 'route_reflector_cluster_id': 3,
-                'send_community': 'BOTH'},
+                'router_id': '0.0.0.0',
+                'send_community': 'BOTH',
+                'session_state': 'idle',
+                'shutdown': False,
+                'up_time': '1w4d'},
             '21.0.102.1': 
                 {'address_family': 
-                    {'ipv4 unicast': 
-                        {'enabled': True,
-                        'graceful_restart': False},
-                    'ipv6 unicast': 
-                        {'enabled': True,
-                        'graceful_restart': False},
-                    'l3vpn ipv4 unicast': 
-                        {'enabled': True,
-                        'graceful_restart': False},
-                    'l3vpn ipv6 unicast': 
-                        {'enabled': True,
-                        'graceful_restart': False}},
+                    {'ipv4 multicast': 
+                        {'bgp_table_version': 53,
+                        'neighbor_version': 0,
+                        'third_party_nexthop': True,
+                        'path': 
+                            {'accepted_paths': 0,
+                            'memory_usage': 0},
+                        'route_reflector_client': True,
+                        'send_community': True},
+                    'ipv4 unicast': {'bgp_table_version': 358,
+                                     'enabled': True,
+                                     'graceful_restart': False,
+                                     'neighbor_version': 0,
+                                     'third_party_nexthop': True,
+                                     'path': {'accepted_paths': 0,
+                                              'memory_usage': 0},
+                                     'route_reflector_client': True,
+                                     'send_community': True},
+                    'ipv6 multicast': {'bgp_table_version': 53,
+                                       'neighbor_version': 0,
+                                       'third_party_nexthop': True,
+                                       'path': {'accepted_paths': 0,
+                                                'memory_usage': 0},
+                                       'route_reflector_client': True,
+                                       'send_community': True},
+                    'ipv6 unicast': {'bgp_table_version': 99,
+                                     'enabled': True,
+                                     'graceful_restart': False,
+                                     'neighbor_version': 0,
+                                     'third_party_nexthop': True,
+                                     'path': {'accepted_paths': 0,
+                                              'memory_usage': 0},
+                                     'route_reflector_client': True,
+                                     'send_community': True},
+                    'l3vpn ipv4 unicast': {'enabled': True,
+                                           'graceful_restart': False},
+                    'l3vpn ipv6 unicast': {'enabled': True,
+                                           'graceful_restart': False},
+                    'vpnv4 unicast': {'bgp_table_version': 291,
+                                      'neighbor_version': 0,
+                                      'third_party_nexthop': True,
+                                      'path': {'accepted_paths': 0,
+                                               'memory_usage': 0},
+                                      'send_community': True},
+                    'vpnv6 unicast': {'bgp_table_version': 2,
+                                      'neighbor_version': 0,
+                                      'third_party_nexthop': True,
+                                      'path': {'accepted_paths': 0,
+                                               'memory_usage': 0},
+                                      'route_reflector_client': True,
+                                      'send_community': True}},
                 'allow_own_as': 0,
+                'bgp_negotiated_keepalive_timers': 
+                    {'hold_time': 180,
+                    'keepalive_interval': 60,
+                    'keepalive_timer': 'not '
+                                'running',
+                    'last_read': 'never',
+                    'last_written': 'never'},
+                'bgp_neighbor_counters': 
+                    {'messages': 
+                        {'received': 
+                            {'bytes_in_queue': 0,
+                            'capability': 0,
+                            'keepalives': 0,
+                            'notifications': 0,
+                            'opens': 0,
+                            'route_refresh': 0,
+                            'total': 0,
+                            'total_bytes': 0,
+                            'updates': 0},
+                        'sent': 
+                            {'bytes_in_queue': 0,
+                            'capability': 0,
+                            'keepalives': 0,
+                            'notifications': 0,
+                            'opens': 0,
+                            'route_refresh': 0,
+                            'total': 0,
+                            'total_bytes': 0,
+                            'updates': 0}}},
                 'bgp_session_transport': 
-                    {'transport': 
+                    {'connection': 
+                        {'dropped': 0,
+                        'established': 0,
+                        'last_reset': 'never',
+                        'reset_by': 'peer',
+                        'reset_reason': 'no '
+                        'error'},
+                    'transport': 
                         {'foreign_host': 'unspecified',
                         'foreign_port': '21.0.102.1',
                         'local_host': '0.0.0.0',
                         'local_port': 'unspecified',
                         'passive_mode': 'false'}},
+                'bgp_version': 4,
                 'description': 'None',
-                'ebgp_multihop': False,
-                'ebgp_multihop_max_hop': 0,
                 'graceful_restart': False,
                 'graceful_restart_helper_only': False,
                 'graceful_restart_restart_time': 120,
                 'graceful_restart_stalepath_time': 300,
                 'holdtime': 180,
                 'keepalive_interval': 60,
-                'link': 'ebgp',
+                'link': 'ibgp',
+                'local_as': 'None',
                 'minimum_advertisement_interval': 0,
+                'nbr_ebgp_multihop': False,
+                'nbr_ebgp_multihop_max_hop': 0,
                 'peer_group': 'None',
+                'peer_index': 5,
+                'received_bytes_queue': 0,
+                'received_messages': 0,
+                'received_notifications': 0,
                 'remote_as': 333,
                 'remove_private_as': False,
+                'retry_time': '00:01:07',
                 'route_reflector_client': True,
                 'route_reflector_cluster_id': 3,
-                'send_community': 'BOTH'},
+                'router_id': '0.0.0.0',
+                'send_community': 'BOTH',
+                'session_state': 'idle',
+                'shutdown': False,
+                'up_time': '1w4d'},
             '21.0.201.1': 
                 {'address_family': 
-                    {'ipv4 unicast': 
-                        {'enabled': True,
-                        'graceful_restart': False,
-                        'ipv4_unicast_send_default_route': False},
-                    'ipv6 unicast': 
-                        {'enabled': True,
-                        'graceful_restart': False,
-                        'ipv6_unicast_send_default_route': False},
-                    'l3vpn ipv4 unicast': 
-                        {'enabled': True,
-                        'graceful_restart': False},
-                    'l3vpn ipv6 unicast': 
-                        {'enabled': True,
-                        'graceful_restart': False}},
+                    {'ipv4 multicast': 
+                        {'bgp_table_version': 53,
+                        'neighbor_version': 0,
+                        'path': 
+                            {'accepted_paths': 0,
+                            'memory_usage': 0},
+                        'send_community': True},
+                    'ipv4 unicast': {'bgp_table_version': 358,
+                                     'enabled': True,
+                                     'graceful_restart': False,
+                                     'ipv4_unicast_send_default_route': False,
+                                     'neighbor_version': 0,
+                                     'path': {'accepted_paths': 0,
+                                              'memory_usage': 0},
+                                     'send_community': True},
+                    'ipv6 multicast': {'bgp_table_version': 53,
+                                       'neighbor_version': 0,
+                                       'path': {'accepted_paths': 0,
+                                                'memory_usage': 0},
+                                       'send_community': True},
+                    'ipv6 unicast': {'bgp_table_version': 99,
+                                     'enabled': True,
+                                     'graceful_restart': False,
+                                     'ipv6_unicast_send_default_route': False,
+                                     'neighbor_version': 0,
+                                     'path': {'accepted_paths': 0,
+                                              'memory_usage': 0},
+                                     'send_community': True},
+                    'l3vpn ipv4 unicast': {'enabled': True,
+                                           'graceful_restart': False},
+                    'l3vpn ipv6 unicast': {'enabled': True,
+                                           'graceful_restart': False},
+                    'vpnv4 unicast': {'bgp_table_version': 291,
+                                      'neighbor_version': 0,
+                                      'path': {'accepted_paths': 0,
+                                               'memory_usage': 0},
+                                      'send_community': True},
+                    'vpnv6 unicast': {'bgp_table_version': 2,
+                                      'neighbor_version': 0,
+                                      'path': {'accepted_paths': 0,
+                                               'memory_usage': 0},
+                                      'send_community': True}},
                 'allow_own_as': 0,
-                'bgp_session_transport': 
-                    {'transport': 
-                        {'foreign_host': 'unspecified',
-                        'foreign_port': '21.0.201.1',
-                        'local_host': '0.0.0.0',
-                        'local_port': 'unspecified',
-                        'passive_mode': 'false'}},
+                'bgp_negotiated_keepalive_timers': {'hold_time': 180,
+                                                 'keepalive_interval': 60,
+                                                 'keepalive_timer': 'not '
+                                                                    'running',
+                                                 'last_read': 'never',
+                                                 'last_written': 'never'},
+                'bgp_neighbor_counters': {'messages': {'received': {'bytes_in_queue': 0,
+                                                                 'capability': 0,
+                                                                 'keepalives': 0,
+                                                                 'notifications': 0,
+                                                                 'opens': 0,
+                                                                 'route_refresh': 0,
+                                                                 'total': 0,
+                                                                 'total_bytes': 0,
+                                                                 'updates': 0},
+                                                    'sent': {'bytes_in_queue': 0,
+                                                             'capability': 0,
+                                                             'keepalives': 0,
+                                                             'notifications': 0,
+                                                             'opens': 0,
+                                                             'route_refresh': 0,
+                                                             'total': 0,
+                                                             'total_bytes': 0,
+                                                             'updates': 0}}},
+                'bgp_session_transport': {'connection': {'dropped': 0,
+                                                      'established': 0,
+                                                      'last_reset': 'never',
+                                                      'reset_by': 'peer',
+                                                      'reset_reason': 'no '
+                                                                      'error'},
+                                       'transport': {'foreign_host': 'unspecified',
+                                                     'foreign_port': '21.0.201.1',
+                                                     'local_host': '0.0.0.0',
+                                                     'local_port': 'unspecified',
+                                                     'passive_mode': 'false'}},
+                'bgp_version': 4,
                 'description': 'None',
-                'ebgp_multihop': False,
-                'ebgp_multihop_max_hop': 0,
                 'graceful_restart': False,
                 'graceful_restart_helper_only': False,
                 'graceful_restart_restart_time': 120,
@@ -7278,86 +7922,227 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 'holdtime': 180,
                 'keepalive_interval': 60,
                 'link': 'ebgp',
+                'local_as': 'None',
                 'minimum_advertisement_interval': 0,
+                'nbr_ebgp_multihop': False,
+                'nbr_ebgp_multihop_max_hop': 0,
                 'peer_group': 'None',
+                'peer_index': 6,
+                'received_bytes_queue': 0,
+                'received_messages': 0,
+                'received_notifications': 0,
                 'remote_as': 888,
                 'remove_private_as': False,
+                'retry_time': '0.080360',
                 'route_reflector_client': False,
                 'route_reflector_cluster_id': 3,
-                'send_community': 'BOTH'},
+                'router_id': '0.0.0.0',
+                'send_community': 'BOTH',
+                'session_state': 'idle',
+                'shutdown': False,
+                'up_time': '1w4d'},
             '4.4.4.4': 
-                {'bgp_session_transport': 
-                    {'transport': 
-                        {'foreign_host': 'unspecified',
-                        'foreign_port': '4.4.4.4',
-                        'local_host': '0.0.0.0',
-                        'local_port': 'unspecified',
-                        'passive_mode': 'false'}},
+                {'bgp_negotiated_keepalive_timers': 
+                    {'hold_time': 180,
+                    'keepalive_interval': 60,
+                    'keepalive_timer': 'not '
+                                       'running',
+                    'last_read': 'never',
+                    'last_written': 'never'},
+                'bgp_neighbor_counters': {'messages': {'received': {'bytes_in_queue': 0,
+                                                                  'capability': 0,
+                                                                  'keepalives': 0,
+                                                                  'notifications': 0,
+                                                                  'opens': 0,
+                                                                  'route_refresh': 0,
+                                                                  'total': 0,
+                                                                  'total_bytes': 0,
+                                                                  'updates': 0},
+                                                     'sent': {'bytes_in_queue': 0,
+                                                              'capability': 0,
+                                                              'keepalives': 0,
+                                                              'notifications': 0,
+                                                              'opens': 0,
+                                                              'route_refresh': 0,
+                                                              'total': 0,
+                                                              'total_bytes': 0,
+                                                              'updates': 0}}},
+                'bgp_session_transport': {'connection': {'dropped': 0,
+                                                       'established': 0,
+                                                       'last_reset': 'never',
+                                                       'reset_by': 'peer',
+                                                       'reset_reason': 'no '
+                                                                       'error'},
+                                        'transport': {'foreign_host': 'unspecified',
+                                                      'foreign_port': '4.4.4.4',
+                                                      'local_host': '0.0.0.0',
+                                                      'local_port': 'unspecified',
+                                                      'passive_mode': 'false'}},
+                'bgp_version': 4,
                 'description': 'None',
-                'ebgp_multihop': False,
-                'ebgp_multihop_max_hop': 0,
                 'graceful_restart': False,
                 'graceful_restart_helper_only': False,
                 'graceful_restart_restart_time': 120,
                 'graceful_restart_stalepath_time': 300,
                 'holdtime': 180,
                 'keepalive_interval': 60,
-                'link': 'ebgp',
+                'link': 'unknown',
+                'local_as': 'None',
+                'nbr_ebgp_multihop': False,
+                'nbr_ebgp_multihop_max_hop': 0,
                 'peer_group': 'None',
+                'peer_index': 3,
+                'received_bytes_queue': 0,
+                'received_messages': 0,
+                'received_notifications': 0,
+                'remote_as': 0,
                 'remove_private_as': False,
-                'route_reflector_cluster_id': 3},
-            'fec1::1002':  
+                'retry_time': '0.000000',
+                'route_reflector_cluster_id': 3,
+                'router_id': '0.0.0.0',
+                'session_state': 'idle',
+                'shutdown': False,
+                'up_time': '1w4d'},
+            'fec1::1002': 
                 {'address_family': 
                     {'ipv4 unicast': 
-                        {'enabled': True,
+                        {'bgp_table_version': 358,
+                        'enabled': True,
                         'graceful_restart': False,
-                        'ipv4_unicast_send_default_route': False}},
+                        'ipv4_unicast_send_default_route': False,
+                        'neighbor_version': 0,
+                        'third_party_nexthop': True,
+                        'path': 
+                            {'accepted_paths': 0,
+                            'memory_usage': 0},
+                        'route_reflector_client': True,
+                        'send_community': True}},
                 'allow_own_as': 0,
-                'bgp_session_transport': 
-                    {'transport': 
-                        {'foreign_host': 'unspecified',
-                        'foreign_port': 'fec1::1002',
-                        'local_host': '::',
-                        'local_port': 'unspecified',
-                        'passive_mode': 'false'}},
+                'bgp_negotiated_keepalive_timers': {'hold_time': 180,
+                                         'keepalive_interval': 60,
+                                         'keepalive_timer': 'not '
+                                                            'running',
+                                         'last_read': 'never',
+                                         'last_written': 'never'},
+                'bgp_neighbor_counters': {'messages': {'received': {'bytes_in_queue': 0,
+                                                         'capability': 0,
+                                                         'keepalives': 0,
+                                                         'notifications': 0,
+                                                         'opens': 0,
+                                                         'route_refresh': 0,
+                                                         'total': 0,
+                                                         'total_bytes': 0,
+                                                         'updates': 0},
+                                            'sent': {'bytes_in_queue': 0,
+                                                     'capability': 0,
+                                                     'keepalives': 0,
+                                                     'notifications': 0,
+                                                     'opens': 0,
+                                                     'route_refresh': 0,
+                                                     'total': 0,
+                                                     'total_bytes': 0,
+                                                     'updates': 0}}},
+                'bgp_session_transport': {'connection': {'dropped': 0,
+                                              'established': 0,
+                                              'last_reset': 'never',
+                                              'reset_by': 'peer',
+                                              'reset_reason': 'no '
+                                                              'error'},
+                               'transport': {'foreign_host': 'unspecified',
+                                             'foreign_port': 'fec1::1002',
+                                             'local_host': '::',
+                                             'local_port': 'unspecified',
+                                             'passive_mode': 'false'}},
+                'bgp_version': 4,
                 'description': 'None',
-                'ebgp_multihop': False,
-                'ebgp_multihop_max_hop': 0,
                 'graceful_restart': False,
                 'graceful_restart_helper_only': False,
                 'graceful_restart_restart_time': 120,
                 'graceful_restart_stalepath_time': 300,
                 'holdtime': 180,
                 'keepalive_interval': 60,
-                'link': 'ebgp',
+                'link': 'ibgp',
+                'local_as': 'None',
                 'minimum_advertisement_interval': 0,
+                'nbr_ebgp_multihop': False,
+                'nbr_ebgp_multihop_max_hop': 0,
                 'peer_group': 'None',
+                'peer_index': 7,
+                'received_bytes_queue': 0,
+                'received_messages': 0,
+                'received_notifications': 0,
                 'remote_as': 333,
                 'remove_private_as': False,
+                'retry_time': '00:00:32',
                 'route_reflector_client': True,
                 'route_reflector_cluster_id': 3,
-                'send_community': 'BOTH'},
+                'router_id': '0.0.0.0',
+                'send_community': 'BOTH',
+                'session_state': 'idle',
+                'shutdown': False,
+                'up_time': '1w4d'},
             'fec1::2002': 
                 {'address_family': 
                     {'ipv4 unicast': 
-                        {'enabled': True,
+                        {'bgp_table_version': 358,
+                        'enabled': True,
                         'graceful_restart': False,
-                        'ipv4_unicast_send_default_route': False},
-                    'ipv6 unicast': 
-                        {'enabled': True,
-                        'graceful_restart': False,
-                        'ipv6_unicast_send_default_route': False}},
+                        'ipv4_unicast_send_default_route': False,
+                        'neighbor_version': 0,
+                        'path': {'accepted_paths': 0,
+                              'memory_usage': 0},
+                        'send_community': True},
+                    'ipv6 multicast': {'bgp_table_version': 2,
+                                       'neighbor_version': 0,
+                                       'path': {'accepted_paths': 0,
+                                                'memory_usage': 0},
+                                       'send_community': True},
+                    'ipv6 unicast': {'bgp_table_version': 99,
+                                     'enabled': True,
+                                     'graceful_restart': False,
+                                     'ipv6_unicast_send_default_route': False,
+                                     'neighbor_version': 0,
+                                     'path': {'accepted_paths': 0,
+                                              'memory_usage': 0},
+                                     'send_community': True}},
                 'allow_own_as': 0,
-                'bgp_session_transport': 
-                    {'transport': 
-                        {'foreign_host': 'unspecified',
-                        'foreign_port': 'fec1::2002',
-                        'local_host': '::',
-                        'local_port': 'unspecified',
-                        'passive_mode': 'false'}},
+                'bgp_negotiated_keepalive_timers': {'hold_time': 180,
+                                                 'keepalive_interval': 60,
+                                                 'keepalive_timer': 'not '
+                                                                    'running',
+                                                 'last_read': 'never',
+                                                 'last_written': 'never'},
+                'bgp_neighbor_counters': {'messages': {'received': {'bytes_in_queue': 0,
+                                                                 'capability': 0,
+                                                                 'keepalives': 0,
+                                                                 'notifications': 0,
+                                                                 'opens': 0,
+                                                                 'route_refresh': 0,
+                                                                 'total': 0,
+                                                                 'total_bytes': 0,
+                                                                 'updates': 0},
+                                                    'sent': {'bytes_in_queue': 0,
+                                                             'capability': 0,
+                                                             'keepalives': 0,
+                                                             'notifications': 0,
+                                                             'opens': 0,
+                                                             'route_refresh': 0,
+                                                             'total': 0,
+                                                             'total_bytes': 0,
+                                                             'updates': 0}}},
+                'bgp_session_transport': {'connection': {'dropped': 0,
+                                                      'established': 0,
+                                                      'last_reset': 'never',
+                                                      'reset_by': 'peer',
+                                                      'reset_reason': 'no '
+                                                                      'error'},
+                                       'transport': {'foreign_host': 'unspecified',
+                                                     'foreign_port': 'fec1::2002',
+                                                     'local_host': '::',
+                                                     'local_port': 'unspecified',
+                                                     'passive_mode': 'false'}},
+                'bgp_version': 4,
                 'description': 'None',
-                'ebgp_multihop': False,
-                'ebgp_multihop_max_hop': 0,
                 'graceful_restart': False,
                 'graceful_restart_helper_only': False,
                 'graceful_restart_restart_time': 120,
@@ -7365,366 +8150,469 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                 'holdtime': 180,
                 'keepalive_interval': 60,
                 'link': 'ebgp',
+                'local_as': 'None',
                 'minimum_advertisement_interval': 0,
+                'nbr_ebgp_multihop': False,
+                'nbr_ebgp_multihop_max_hop': 0,
                 'peer_group': 'None',
+                'peer_index': 8,
+                'received_bytes_queue': 0,
+                'received_messages': 0,
+                'received_notifications': 0,
                 'remote_as': 888,
                 'remove_private_as': False,
+                'retry_time': '00:00:03',
                 'route_reflector_client': False,
                 'route_reflector_cluster_id': 3,
-                'send_community': 'BOTH'}}}
+                'router_id': '0.0.0.0',
+                'send_community': 'BOTH',
+                'session_state': 'idle',
+                'shutdown': False,
+                'up_time': '1w4d'}}}
+
+    cli_output = '''\
+        pinxdt-n9kv-3# show bgp vrf default all neighbors 
+        BGP neighbor is 4.4.4.4, remote AS 0, unknown link, Peer index 3
+          BGP version 4, remote router ID 0.0.0.0
+          BGP state = Idle, down for 1w4d, retry in 0.000000
+          No address family configured
+          Last read never, hold time = 180, keepalive interval is 60 seconds
+          Last written never, keepalive timer not running
+          Received 0 messages, 0 notifications, 0 bytes in queue
+          Sent 0 messages, 0 notifications, 0(0) bytes in queue
+          Connections established 0, dropped 0
+          Connection attempts 0
+          Last reset by us never, due to No error
+          Last reset by peer never, due to No error
+
+          Message statistics:
+                                      Sent               Rcvd
+          Opens:                         0                  0  
+          Notifications:                 0                  0  
+          Updates:                       0                  0  
+          Keepalives:                    0                  0  
+          Route Refresh:                 0                  0  
+          Capability:                    0                  0  
+          Total:                         0                  0  
+          Total bytes:                   0                  0  
+          Bytes in queue:                0                  0  
+
+          No established BGP session with peer
+
+        BGP neighbor is 21.0.101.1, remote AS 333, ibgp link, Peer index 4
+          BGP version 4, remote router ID 0.0.0.0
+          BGP state = Idle, down for 1w4d, retry in 00:00:21
+          Last read never, hold time = 180, keepalive interval is 60 seconds
+          Last written never, keepalive timer not running
+          Received 0 messages, 0 notifications, 0 bytes in queue
+          Sent 0 messages, 0 notifications, 0(0) bytes in queue
+          Connections established 0, dropped 0
+          Connection attempts 10139
+          Last reset by us never, due to No error
+          Last reset by peer never, due to No error
+
+          Message statistics:
+                                      Sent               Rcvd
+          Opens:                         0                  0  
+          Notifications:                 0                  0  
+          Updates:                       0                  0  
+          Keepalives:                    0                  0  
+          Route Refresh:                 0                  0  
+          Capability:                    0                  0  
+          Total:                         0                  0  
+          Total bytes:                   0                  0  
+          Bytes in queue:                0                  0  
+
+          For address family: IPv4 Unicast
+          BGP table version 358, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Inbound soft reconfiguration allowed(always)
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Third-party Nexthop will not be computed.
+          Route reflector client
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: IPv4 Multicast
+          BGP table version 53, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Inbound soft reconfiguration allowed(always)
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Third-party Nexthop will not be computed.
+          Route reflector client
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: IPv6 Unicast
+          BGP table version 99, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Inbound soft reconfiguration allowed(always)
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Third-party Nexthop will not be computed.
+          Route reflector client
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: IPv6 Multicast
+          BGP table version 53, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Inbound soft reconfiguration allowed(always)
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Third-party Nexthop will not be computed.
+          Route reflector client
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: VPNv4 Unicast
+          BGP table version 291, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Third-party Nexthop will not be computed.
+          Route reflector client
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: VPNv6 Unicast
+          BGP table version 96, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Third-party Nexthop will not be computed.
+          Route reflector client
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: Link-State
+          BGP table version 2, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Third-party Nexthop will not be computed.
+          Route reflector client
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          No established BGP session with peer
+
+        BGP neighbor is 21.0.102.1, remote AS 333, ibgp link, Peer index 5
+          BGP version 4, remote router ID 0.0.0.0
+          BGP state = Idle, down for 1w4d, retry in 00:01:07
+          Last read never, hold time = 180, keepalive interval is 60 seconds
+          Last written never, keepalive timer not running
+          Received 0 messages, 0 notifications, 0 bytes in queue
+          Sent 0 messages, 0 notifications, 0(0) bytes in queue
+          Connections established 0, dropped 0
+          Connection attempts 10156
+          Last reset by us never, due to No error
+          Last reset by peer never, due to No error
+
+          Message statistics:
+                                      Sent               Rcvd
+          Opens:                         0                  0  
+          Notifications:                 0                  0  
+          Updates:                       0                  0  
+          Keepalives:                    0                  0  
+          Route Refresh:                 0                  0  
+          Capability:                    0                  0  
+          Total:                         0                  0  
+          Total bytes:                   0                  0  
+          Bytes in queue:                0                  0  
+
+          For address family: IPv4 Unicast
+          BGP table version 358, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Inbound soft reconfiguration allowed(always)
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Third-party Nexthop will not be computed.
+          Route reflector client
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: IPv4 Multicast
+          BGP table version 53, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Inbound soft reconfiguration allowed(always)
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Third-party Nexthop will not be computed.
+          Route reflector client
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: IPv6 Unicast
+          BGP table version 99, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Inbound soft reconfiguration allowed(always)
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Third-party Nexthop will not be computed.
+          Route reflector client
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: IPv6 Multicast
+          BGP table version 53, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Inbound soft reconfiguration allowed(always)
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Third-party Nexthop will not be computed.
+          Route reflector client
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: VPNv4 Unicast
+          BGP table version 291, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Third-party Nexthop will not be computed.
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: VPNv6 Unicast
+          BGP table version 96, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Third-party Nexthop will not be computed.
+          Route reflector client
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: Link-State
+          BGP table version 2, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Third-party Nexthop will not be computed.
+          Route reflector client
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          No established BGP session with peer
+
+        BGP neighbor is 21.0.201.1, remote AS 888, ebgp link, Peer index 6
+          BGP version 4, remote router ID 0.0.0.0
+          BGP state = Idle, down for 1w4d, retry in 0.080360
+          Last read never, hold time = 180, keepalive interval is 60 seconds
+          Last written never, keepalive timer not running
+          Received 0 messages, 0 notifications, 0 bytes in queue
+          Sent 0 messages, 0 notifications, 0(0) bytes in queue
+          Connections established 0, dropped 0
+          Connection attempts 0
+          Last reset by us never, due to No error
+          Last reset by peer never, due to No error
+
+          Message statistics:
+                                      Sent               Rcvd
+          Opens:                         0                  0  
+          Notifications:                 0                  0  
+          Updates:                       0                  0  
+          Keepalives:                    0                  0  
+          Route Refresh:                 0                  0  
+          Capability:                    0                  0  
+          Total:                         0                  0  
+          Total bytes:                   0                  0  
+          Bytes in queue:                0                  0  
+
+          For address family: IPv4 Unicast
+          BGP table version 358, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Inbound soft reconfiguration allowed(always)
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: IPv4 Multicast
+          BGP table version 53, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Inbound soft reconfiguration allowed(always)
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: IPv6 Unicast
+          BGP table version 99, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Inbound soft reconfiguration allowed(always)
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: IPv6 Multicast
+          BGP table version 53, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Inbound soft reconfiguration allowed(always)
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: VPNv4 Unicast
+          BGP table version 291, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: VPNv6 Unicast
+          BGP table version 96, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: Link-State
+          BGP table version 2, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          No established BGP session with peer
+
+        BGP neighbor is fec1::1002, remote AS 333, ibgp link, Peer index 7
+          BGP version 4, remote router ID 0.0.0.0
+          BGP state = Idle, down for 1w4d, retry in 00:00:32
+          Last read never, hold time = 180, keepalive interval is 60 seconds
+          Last written never, keepalive timer not running
+          Received 0 messages, 0 notifications, 0 bytes in queue
+          Sent 0 messages, 0 notifications, 0(0) bytes in queue
+          Connections established 0, dropped 0
+          Connection attempts 10163
+          Last reset by us never, due to No error
+          Last reset by peer never, due to No error
+
+          Message statistics:
+                                      Sent               Rcvd
+          Opens:                         0                  0  
+          Notifications:                 0                  0  
+          Updates:                       0                  0  
+          Keepalives:                    0                  0  
+          Route Refresh:                 0                  0  
+          Capability:                    0                  0  
+          Total:                         0                  0  
+          Total bytes:                   0                  0  
+          Bytes in queue:                0                  0  
+
+          For address family: IPv4 Unicast
+          BGP table version 358, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Inbound soft reconfiguration allowed(always)
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Third-party Nexthop will not be computed.
+          Route reflector client
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          No established BGP session with peer
+
+        BGP neighbor is fec1::2002, remote AS 888, ebgp link, Peer index 8
+          BGP version 4, remote router ID 0.0.0.0
+          BGP state = Idle, down for 1w4d, retry in 00:00:03
+          Last read never, hold time = 180, keepalive interval is 60 seconds
+          Last written never, keepalive timer not running
+          Received 0 messages, 0 notifications, 0 bytes in queue
+          Sent 0 messages, 0 notifications, 0(0) bytes in queue
+          Connections established 0, dropped 0
+          Connection attempts 0
+          Last reset by us never, due to No error
+          Last reset by peer never, due to No error
+
+          Message statistics:
+                                      Sent               Rcvd
+          Opens:                         0                  0  
+          Notifications:                 0                  0  
+          Updates:                       0                  0  
+          Keepalives:                    0                  0  
+          Route Refresh:                 0                  0  
+          Capability:                    0                  0  
+          Total:                         0                  0  
+          Total bytes:                   0                  0  
+          Bytes in queue:                0                  0  
+
+          For address family: IPv4 Unicast
+          BGP table version 358, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Inbound soft reconfiguration allowed(always)
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: IPv6 Unicast
+          BGP table version 99, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Inbound soft reconfiguration allowed(always)
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: IPv6 Multicast
+          BGP table version 53, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Inbound soft reconfiguration allowed(always)
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: Link-State
+          BGP table version 2, neighbor version 0
+          0 accepted paths consume 0 bytes of memory
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          No established BGP session with peer
+        '''
 
     class etree_holder():
         def __init__(self):
-            self.data = ET.fromstring('''
-                <rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="101">
-                    <data>
-                        <bgp xmlns="http://openconfig.net/yang/bgp">
-                            <global>
-                                <afi-safis>
-                                    <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                        <afi-safi-name>none</afi-safi-name>
-                                        <config>
-                                            <afi-safi-name>none</afi-safi-name>
-                                        </config>
-                                        <graceful-restart>
-                                            <state>
-                                                <enabled>false</enabled>
-                                            </state>
-                                        </graceful-restart>
-                                        <state>
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <enabled>true</enabled>
-                                        </state>
-                                        <route-selection-options>
-                                            <config>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </config>
-                                            <state>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </state>
-                                        </route-selection-options>
-                                        <use-multiple-paths>
-                                            <ebgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ebgp>
-                                            <ibgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ibgp>
-                                        </use-multiple-paths>
-                                    </afi-safi>
-                                    <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                        <afi-safi-name>none</afi-safi-name>
-                                        <config>
-                                            <afi-safi-name>none</afi-safi-name>
-                                        </config>
-                                        <graceful-restart>
-                                            <state>
-                                                <enabled>false</enabled>
-                                            </state>
-                                        </graceful-restart>
-                                        <state>
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <enabled>true</enabled>
-                                        </state>
-                                        <route-selection-options>
-                                            <config>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </config>
-                                            <state>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </state>
-                                        </route-selection-options>
-                                        <use-multiple-paths>
-                                            <ebgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ebgp>
-                                            <ibgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ibgp>
-                                        </use-multiple-paths>
-                                    </afi-safi>
-                                    <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                        <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                        <config>
-                                            <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                        </config>
-                                        <graceful-restart>
-                                            <state>
-                                                <enabled>false</enabled>
-                                            </state>
-                                        </graceful-restart>
-                                        <state>
-                                            <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                            <enabled>true</enabled>
-                                        </state>
-                                        <route-selection-options>
-                                            <config>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </config>
-                                            <state>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </state>
-                                        </route-selection-options>
-                                        <use-multiple-paths>
-                                            <ebgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ebgp>
-                                            <ibgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ibgp>
-                                        </use-multiple-paths>
-                                    </afi-safi>
-                                    <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                        <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                        <config>
-                                            <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                        </config>
-                                        <graceful-restart>
-                                            <state>
-                                                <enabled>false</enabled>
-                                            </state>
-                                        </graceful-restart>
-                                        <state>
-                                            <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                            <enabled>true</enabled>
-                                        </state>
-                                        <route-selection-options>
-                                            <config>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </config>
-                                            <state>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </state>
-                                        </route-selection-options>
-                                        <use-multiple-paths>
-                                            <ebgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ebgp>
-                                            <ibgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ibgp>
-                                        </use-multiple-paths>
-                                    </afi-safi>
-                                    <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                        <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                        <config>
-                                            <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                        </config>
-                                        <graceful-restart>
-                                            <state>
-                                                <enabled>false</enabled>
-                                            </state>
-                                        </graceful-restart>
-                                        <state>
-                                            <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                            <enabled>true</enabled>
-                                        </state>
-                                        <route-selection-options>
-                                            <config>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </config>
-                                            <state>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </state>
-                                        </route-selection-options>
-                                        <use-multiple-paths>
-                                            <ebgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ebgp>
-                                            <ibgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ibgp>
-                                        </use-multiple-paths>
-                                    </afi-safi>
-                                    <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                        <config>
-                                            <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                        </config>
-                                        <graceful-restart>
-                                            <state>
-                                                <enabled>false</enabled>
-                                            </state>
-                                        </graceful-restart>
-                                        <state>
-                                            <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            <enabled>true</enabled>
-                                        </state>
-                                        <route-selection-options>
-                                            <config>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </config>
-                                            <state>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </state>
-                                        </route-selection-options>
-                                        <use-multiple-paths>
-                                            <ebgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ebgp>
-                                            <ibgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ibgp>
-                                        </use-multiple-paths>
-                                    </afi-safi>
-                                    <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                        <afi-safi-name>none</afi-safi-name>
-                                        <config>
-                                            <afi-safi-name>none</afi-safi-name>
-                                        </config>
-                                        <graceful-restart>
-                                            <state>
-                                                <enabled>false</enabled>
-                                            </state>
-                                        </graceful-restart>
-                                        <state>
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <enabled>true</enabled>
-                                        </state>
-                                        <route-selection-options>
-                                            <config>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </config>
-                                            <state>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </state>
-                                        </route-selection-options>
-                                        <use-multiple-paths>
-                                            <ebgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ebgp>
-                                            <ibgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ibgp>
-                                        </use-multiple-paths>
-                                    </afi-safi>
-                                    <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                        <afi-safi-name>IPV4_LABELED_UNICAST</afi-safi-name>
-                                        <config>
-                                            <afi-safi-name>IPV4_LABELED_UNICAST</afi-safi-name>
-                                        </config>
-                                        <graceful-restart>
-                                            <state>
-                                                <enabled>false</enabled>
-                                            </state>
-                                        </graceful-restart>
-                                        <state>
-                                            <afi-safi-name>IPV4_LABELED_UNICAST</afi-safi-name>
-                                            <enabled>true</enabled>
-                                        </state>
-                                        <route-selection-options>
-                                            <config>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </config>
-                                            <state>
-                                                <advertise-inactive-routes>false</advertise-inactive-routes>
-                                            </state>
-                                        </route-selection-options>
-                                        <use-multiple-paths>
-                                            <ebgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ebgp>
-                                            <ibgp>
-                                                <config>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </config>
-                                                <state>
-                                                    <maximum-paths>1</maximum-paths>
-                                                </state>
-                                            </ibgp>
-                                        </use-multiple-paths>
-                                    </afi-safi>
-                                </afi-safis>
+            self.data_ele = ET.fromstring('''
+            <data>
+                <bgp xmlns="http://openconfig.net/yang/bgp">
+                    <global>
+                        <afi-safis>
+                            <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                <afi-safi-name>none</afi-safi-name>
+                                <config>
+                                    <afi-safi-name>none</afi-safi-name>
+                                </config>
                                 <graceful-restart>
-                                    <config>
-                                        <enabled>false</enabled>
-                                        <helper-only>false</helper-only>
-                                        <restart-time>120</restart-time>
-                                        <stale-routes-time>300</stale-routes-time>
-                                    </config>
                                     <state>
                                         <enabled>false</enabled>
-                                        <helper-only>false</helper-only>
-                                        <restart-time>120</restart-time>
-                                        <stale-routes-time>300</stale-routes-time>
                                     </state>
                                 </graceful-restart>
-                                <use-multiple-paths xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                <state>
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <enabled>true</enabled>
+                                </state>
+                                <route-selection-options>
+                                    <config>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </config>
+                                    <state>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </state>
+                                </route-selection-options>
+                                <use-multiple-paths>
                                     <ebgp>
                                         <config>
                                             <maximum-paths>1</maximum-paths>
@@ -7742,985 +8630,1307 @@ class test_show_bgp_vrf_all_neighbors_yang(unittest.TestCase):
                                         </state>
                                     </ibgp>
                                 </use-multiple-paths>
+                            </afi-safi>
+                            <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                <afi-safi-name>none</afi-safi-name>
                                 <config>
-                                    <as>333</as>
-                                    <router-id>0.0.0.0</router-id>
+                                    <afi-safi-name>none</afi-safi-name>
+                                </config>
+                                <graceful-restart>
+                                    <state>
+                                        <enabled>false</enabled>
+                                    </state>
+                                </graceful-restart>
+                                <state>
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <enabled>true</enabled>
+                                </state>
+                                <route-selection-options>
+                                    <config>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </config>
+                                    <state>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </state>
+                                </route-selection-options>
+                                <use-multiple-paths>
+                                    <ebgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ebgp>
+                                    <ibgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ibgp>
+                                </use-multiple-paths>
+                            </afi-safi>
+                            <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                <config>
+                                    <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                </config>
+                                <graceful-restart>
+                                    <state>
+                                        <enabled>false</enabled>
+                                    </state>
+                                </graceful-restart>
+                                <state>
+                                    <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                    <enabled>true</enabled>
+                                </state>
+                                <route-selection-options>
+                                    <config>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </config>
+                                    <state>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </state>
+                                </route-selection-options>
+                                <use-multiple-paths>
+                                    <ebgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ebgp>
+                                    <ibgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ibgp>
+                                </use-multiple-paths>
+                            </afi-safi>
+                            <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
+                                <config>
+                                    <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
+                                </config>
+                                <graceful-restart>
+                                    <state>
+                                        <enabled>false</enabled>
+                                    </state>
+                                </graceful-restart>
+                                <state>
+                                    <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
+                                    <enabled>true</enabled>
+                                </state>
+                                <route-selection-options>
+                                    <config>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </config>
+                                    <state>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </state>
+                                </route-selection-options>
+                                <use-multiple-paths>
+                                    <ebgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ebgp>
+                                    <ibgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ibgp>
+                                </use-multiple-paths>
+                            </afi-safi>
+                            <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                <config>
+                                    <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                </config>
+                                <graceful-restart>
+                                    <state>
+                                        <enabled>false</enabled>
+                                    </state>
+                                </graceful-restart>
+                                <state>
+                                    <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                    <enabled>true</enabled>
+                                </state>
+                                <route-selection-options>
+                                    <config>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </config>
+                                    <state>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </state>
+                                </route-selection-options>
+                                <use-multiple-paths>
+                                    <ebgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ebgp>
+                                    <ibgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ibgp>
+                                </use-multiple-paths>
+                            </afi-safi>
+                            <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                <config>
+                                    <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                </config>
+                                <graceful-restart>
+                                    <state>
+                                        <enabled>false</enabled>
+                                    </state>
+                                </graceful-restart>
+                                <state>
+                                    <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    <enabled>true</enabled>
+                                </state>
+                                <route-selection-options>
+                                    <config>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </config>
+                                    <state>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </state>
+                                </route-selection-options>
+                                <use-multiple-paths>
+                                    <ebgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ebgp>
+                                    <ibgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ibgp>
+                                </use-multiple-paths>
+                            </afi-safi>
+                            <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                <afi-safi-name>none</afi-safi-name>
+                                <config>
+                                    <afi-safi-name>none</afi-safi-name>
+                                </config>
+                                <graceful-restart>
+                                    <state>
+                                        <enabled>false</enabled>
+                                    </state>
+                                </graceful-restart>
+                                <state>
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <enabled>true</enabled>
+                                </state>
+                                <route-selection-options>
+                                    <config>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </config>
+                                    <state>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </state>
+                                </route-selection-options>
+                                <use-multiple-paths>
+                                    <ebgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ebgp>
+                                    <ibgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ibgp>
+                                </use-multiple-paths>
+                            </afi-safi>
+                            <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                <afi-safi-name>IPV4_LABELED_UNICAST</afi-safi-name>
+                                <config>
+                                    <afi-safi-name>IPV4_LABELED_UNICAST</afi-safi-name>
+                                </config>
+                                <graceful-restart>
+                                    <state>
+                                        <enabled>false</enabled>
+                                    </state>
+                                </graceful-restart>
+                                <state>
+                                    <afi-safi-name>IPV4_LABELED_UNICAST</afi-safi-name>
+                                    <enabled>true</enabled>
+                                </state>
+                                <route-selection-options>
+                                    <config>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </config>
+                                    <state>
+                                        <advertise-inactive-routes>false</advertise-inactive-routes>
+                                    </state>
+                                </route-selection-options>
+                                <use-multiple-paths>
+                                    <ebgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ebgp>
+                                    <ibgp>
+                                        <config>
+                                            <maximum-paths>1</maximum-paths>
+                                        </config>
+                                        <state>
+                                            <maximum-paths>1</maximum-paths>
+                                        </state>
+                                    </ibgp>
+                                </use-multiple-paths>
+                            </afi-safi>
+                        </afi-safis>
+                        <graceful-restart>
+                            <config>
+                                <enabled>false</enabled>
+                                <helper-only>false</helper-only>
+                                <restart-time>120</restart-time>
+                                <stale-routes-time>300</stale-routes-time>
+                            </config>
+                            <state>
+                                <enabled>false</enabled>
+                                <helper-only>false</helper-only>
+                                <restart-time>120</restart-time>
+                                <stale-routes-time>300</stale-routes-time>
+                            </state>
+                        </graceful-restart>
+                        <use-multiple-paths xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                            <ebgp>
+                                <config>
+                                    <maximum-paths>1</maximum-paths>
                                 </config>
                                 <state>
-                                    <as>333</as>
-                                    <router-id>0.0.0.0</router-id>
+                                    <maximum-paths>1</maximum-paths>
                                 </state>
-                            </global>
-                            <neighbors>
-                                <neighbor>
+                            </ebgp>
+                            <ibgp>
+                                <config>
+                                    <maximum-paths>1</maximum-paths>
+                                </config>
+                                <state>
+                                    <maximum-paths>1</maximum-paths>
+                                </state>
+                            </ibgp>
+                        </use-multiple-paths>
+                        <config>
+                            <as>333</as>
+                            <router-id>0.0.0.0</router-id>
+                        </config>
+                        <state>
+                            <as>333</as>
+                            <router-id>0.0.0.0</router-id>
+                        </state>
+                    </global>
+                    <neighbors>
+                        <neighbor>
+                            <graceful-restart>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <helper-only>false</helper-only>
+                                    <restart-time>120</restart-time>
+                                    <stale-routes-time>300</stale-routes-time>
+                                </state>
+                            </graceful-restart>
+                            <config>
+                                <description/>
+                                <peer-as/>
+                                <remove-private-as/>
+                                <peer-group/>
+                                <neighbor-address>4.4.4.4</neighbor-address>
+                            </config>
+                            <ebgp-multihop>
+                                <config>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </config>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </state>
+                            </ebgp-multihop>
+                            <logging-options>
+                                <config>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </config>
+                                <state>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </state>
+                            </logging-options>
+                            <route-reflector>
+                                <config>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </config>
+                                <state>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </state>
+                            </route-reflector>
+                            <state>
+                                <description/>
+                                <peer-as/>
+                                <remove-private-as/>
+                                <peer-group/>
+                                <neighbor-address>4.4.4.4</neighbor-address>
+                            </state>
+                            <timers>
+                                <config>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                </config>
+                                <state>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                </state>
+                            </timers>
+                            <transport>
+                                <config>
+                                    <passive-mode>false</passive-mode>
+                                </config>
+                                <state>
+                                    <local-address>0.0.0.0</local-address>
+                                    <passive-mode>false</passive-mode>
+                                    <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
+                                    <remote-address xmlns="http://openconfig.net/yang/bgp-operational">4.4.4.4</remote-address>
+                                    <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
+                                </state>
+                            </transport>
+                            <neighbor-address>4.4.4.4</neighbor-address>
+                        </neighbor>
+                        <neighbor>
+                            <afi-safis>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                    </config>
                                     <graceful-restart>
                                         <state>
                                             <enabled>false</enabled>
-                                            <helper-only>false</helper-only>
-                                            <restart-time>120</restart-time>
-                                            <stale-routes-time>300</stale-routes-time>
                                         </state>
                                     </graceful-restart>
-                                    <config>
-                                        <description/>
-                                        <peer-as/>
-                                        <remove-private-as/>
-                                        <peer-group/>
-                                        <neighbor-address>4.4.4.4</neighbor-address>
-                                    </config>
-                                    <ebgp-multihop>
-                                        <config>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </config>
-                                        <state>
-                                            <enabled>false</enabled>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </state>
-                                    </ebgp-multihop>
-                                    <logging-options>
-                                        <config>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </config>
-                                        <state>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </state>
-                                    </logging-options>
-                                    <route-reflector>
-                                        <config>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </config>
-                                        <state>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </state>
-                                    </route-reflector>
                                     <state>
-                                        <description/>
-                                        <peer-as/>
-                                        <remove-private-as/>
-                                        <peer-group/>
-                                        <neighbor-address>4.4.4.4</neighbor-address>
+                                        <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
                                     </state>
-                                    <timers>
-                                        <config>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                        </config>
-                                        <state>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                        </state>
-                                    </timers>
-                                    <transport>
-                                        <config>
-                                            <passive-mode>false</passive-mode>
-                                        </config>
-                                        <state>
-                                            <local-address>0.0.0.0</local-address>
-                                            <passive-mode>false</passive-mode>
-                                            <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                            <remote-address xmlns="http://openconfig.net/yang/bgp-operational">4.4.4.4</remote-address>
-                                            <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
-                                        </state>
-                                    </transport>
-                                    <neighbor-address>4.4.4.4</neighbor-address>
-                                </neighbor>
-                                <neighbor>
-                                    <afi-safis>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                    </afi-safis>
-                                    <as-path-options>
-                                        <config>
-                                            <allow-own-as>0</allow-own-as>
-                                        </config>
-                                        <state>
-                                            <allow-own-as>0</allow-own-as>
-                                        </state>
-                                    </as-path-options>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                    </config>
                                     <graceful-restart>
                                         <state>
                                             <enabled>false</enabled>
-                                            <helper-only>false</helper-only>
-                                            <restart-time>120</restart-time>
-                                            <stale-routes-time>300</stale-routes-time>
                                         </state>
                                     </graceful-restart>
-                                    <config>
-                                        <description/>
-                                        <peer-as>333</peer-as>
-                                        <remove-private-as/>
-                                        <send-community>BOTH</send-community>
-                                        <peer-group/>
-                                        <neighbor-address>21.0.102.1</neighbor-address>
-                                    </config>
-                                    <ebgp-multihop>
-                                        <config>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </config>
-                                        <state>
-                                            <enabled>false</enabled>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </state>
-                                    </ebgp-multihop>
-                                    <logging-options>
-                                        <config>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </config>
-                                        <state>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </state>
-                                    </logging-options>
-                                    <route-reflector>
-                                        <config>
-                                            <route-reflector-client>true</route-reflector-client>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </config>
-                                        <state>
-                                            <route-reflector-client>true</route-reflector-client>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </state>
-                                    </route-reflector>
                                     <state>
-                                        <description/>
-                                        <peer-as>333</peer-as>
-                                        <remove-private-as/>
-                                        <send-community>BOTH</send-community>
-                                        <peer-group/>
-                                        <neighbor-address>21.0.102.1</neighbor-address>
+                                        <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
                                     </state>
-                                    <timers>
-                                        <config>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                            <minimum-advertisement-interval>0</minimum-advertisement-interval>
-                                        </config>
-                                        <state>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                            <minimum-advertisement-interval>0</minimum-advertisement-interval>
-                                        </state>
-                                    </timers>
-                                    <transport>
-                                        <config>
-                                            <passive-mode>false</passive-mode>
-                                        </config>
-                                        <state>
-                                            <local-address>0.0.0.0</local-address>
-                                            <passive-mode>false</passive-mode>
-                                            <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                            <remote-address xmlns="http://openconfig.net/yang/bgp-operational">21.0.102.1</remote-address>
-                                            <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
-                                        </state>
-                                    </transport>
-                                    <neighbor-address>21.0.102.1</neighbor-address>
-                                </neighbor>
-                                <neighbor>
-                                    <afi-safis>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <ipv6-unicast>
-                                                <config>
-                                                    <send-default-route>false</send-default-route>
-                                                </config>
-                                                <state>
-                                                    <send-default-route>false</send-default-route>
-                                                </state>
-                                            </ipv6-unicast>
-                                            <state>
-                                                <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <ipv4-unicast>
-                                                <config>
-                                                    <send-default-route>false</send-default-route>
-                                                </config>
-                                                <state>
-                                                    <send-default-route>false</send-default-route>
-                                                </state>
-                                            </ipv4-unicast>
-                                            <state>
-                                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                    </afi-safis>
-                                    <as-path-options>
-                                        <config>
-                                            <allow-own-as>0</allow-own-as>
-                                        </config>
-                                        <state>
-                                            <allow-own-as>0</allow-own-as>
-                                        </state>
-                                    </as-path-options>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
                                     <graceful-restart>
                                         <state>
                                             <enabled>false</enabled>
-                                            <helper-only>false</helper-only>
-                                            <restart-time>120</restart-time>
-                                            <stale-routes-time>300</stale-routes-time>
                                         </state>
                                     </graceful-restart>
-                                    <config>
-                                        <description/>
-                                        <peer-as>888</peer-as>
-                                        <remove-private-as/>
-                                        <send-community>BOTH</send-community>
-                                        <peer-group/>
-                                        <neighbor-address>fec1::2002</neighbor-address>
-                                    </config>
-                                    <ebgp-multihop>
-                                        <config>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </config>
-                                        <state>
-                                            <enabled>false</enabled>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </state>
-                                    </ebgp-multihop>
-                                    <logging-options>
-                                        <config>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </config>
-                                        <state>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </state>
-                                    </logging-options>
-                                    <route-reflector>
-                                        <config>
-                                            <route-reflector-client>false</route-reflector-client>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </config>
-                                        <state>
-                                            <route-reflector-client>false</route-reflector-client>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </state>
-                                    </route-reflector>
                                     <state>
-                                        <description/>
-                                        <peer-as>888</peer-as>
-                                        <remove-private-as/>
-                                        <send-community>BOTH</send-community>
-                                        <peer-group/>
-                                        <neighbor-address>fec1::2002</neighbor-address>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
                                     </state>
-                                    <timers>
-                                        <config>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                            <minimum-advertisement-interval>0</minimum-advertisement-interval>
-                                        </config>
-                                        <state>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                            <minimum-advertisement-interval>0</minimum-advertisement-interval>
-                                        </state>
-                                    </timers>
-                                    <transport>
-                                        <config>
-                                            <passive-mode>false</passive-mode>
-                                        </config>
-                                        <state>
-                                            <local-address>::</local-address>
-                                            <passive-mode>false</passive-mode>
-                                            <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                            <remote-address xmlns="http://openconfig.net/yang/bgp-operational">fec1::2002</remote-address>
-                                            <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
-                                        </state>
-                                    </transport>
-                                    <neighbor-address>fec1::2002</neighbor-address>
-                                </neighbor>
-                                <neighbor>
-                                    <afi-safis>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <ipv4-unicast>
-                                                <config>
-                                                    <send-default-route>false</send-default-route>
-                                                </config>
-                                                <state>
-                                                    <send-default-route>false</send-default-route>
-                                                </state>
-                                            </ipv4-unicast>
-                                            <state>
-                                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                    </afi-safis>
-                                    <as-path-options>
-                                        <config>
-                                            <allow-own-as>0</allow-own-as>
-                                        </config>
-                                        <state>
-                                            <allow-own-as>0</allow-own-as>
-                                        </state>
-                                    </as-path-options>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
                                     <graceful-restart>
                                         <state>
                                             <enabled>false</enabled>
-                                            <helper-only>false</helper-only>
-                                            <restart-time>120</restart-time>
-                                            <stale-routes-time>300</stale-routes-time>
                                         </state>
                                     </graceful-restart>
-                                    <config>
-                                        <description/>
-                                        <peer-as>333</peer-as>
-                                        <remove-private-as/>
-                                        <send-community>BOTH</send-community>
-                                        <peer-group/>
-                                        <neighbor-address>fec1::1002</neighbor-address>
-                                    </config>
-                                    <ebgp-multihop>
-                                        <config>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </config>
-                                        <state>
-                                            <enabled>false</enabled>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </state>
-                                    </ebgp-multihop>
-                                    <logging-options>
-                                        <config>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </config>
-                                        <state>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </state>
-                                    </logging-options>
-                                    <route-reflector>
-                                        <config>
-                                            <route-reflector-client>true</route-reflector-client>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </config>
-                                        <state>
-                                            <route-reflector-client>true</route-reflector-client>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </state>
-                                    </route-reflector>
                                     <state>
-                                        <description/>
-                                        <peer-as>333</peer-as>
-                                        <remove-private-as/>
-                                        <send-community>BOTH</send-community>
-                                        <peer-group/>
-                                        <neighbor-address>fec1::1002</neighbor-address>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
                                     </state>
-                                    <timers>
-                                        <config>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                            <minimum-advertisement-interval>0</minimum-advertisement-interval>
-                                        </config>
-                                        <state>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                            <minimum-advertisement-interval>0</minimum-advertisement-interval>
-                                        </state>
-                                    </timers>
-                                    <transport>
-                                        <config>
-                                            <passive-mode>false</passive-mode>
-                                        </config>
-                                        <state>
-                                            <local-address>::</local-address>
-                                            <passive-mode>false</passive-mode>
-                                            <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                            <remote-address xmlns="http://openconfig.net/yang/bgp-operational">fec1::1002</remote-address>
-                                            <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
-                                        </state>
-                                    </transport>
-                                    <neighbor-address>fec1::1002</neighbor-address>
-                                </neighbor>
-                                <neighbor>
-                                    <afi-safis>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <ipv4-unicast>
-                                                <config>
-                                                    <send-default-route>false</send-default-route>
-                                                </config>
-                                                <state>
-                                                    <send-default-route>false</send-default-route>
-                                                </state>
-                                            </ipv4-unicast>
-                                            <state>
-                                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                    </afi-safis>
-                                    <as-path-options>
-                                        <config>
-                                            <allow-own-as>0</allow-own-as>
-                                        </config>
-                                        <state>
-                                            <allow-own-as>0</allow-own-as>
-                                        </state>
-                                    </as-path-options>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
                                     <graceful-restart>
                                         <state>
                                             <enabled>false</enabled>
-                                            <helper-only>false</helper-only>
-                                            <restart-time>120</restart-time>
-                                            <stale-routes-time>300</stale-routes-time>
                                         </state>
                                     </graceful-restart>
-                                    <config>
-                                        <description/>
-                                        <peer-as>333</peer-as>
-                                        <remove-private-as/>
-                                        <send-community>BOTH</send-community>
-                                        <peer-group/>
-                                        <neighbor-address>21.0.101.1</neighbor-address>
-                                    </config>
-                                    <ebgp-multihop>
-                                        <config>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </config>
-                                        <state>
-                                            <enabled>false</enabled>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </state>
-                                    </ebgp-multihop>
-                                    <logging-options>
-                                        <config>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </config>
-                                        <state>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </state>
-                                    </logging-options>
-                                    <route-reflector>
-                                        <config>
-                                            <route-reflector-client>true</route-reflector-client>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </config>
-                                        <state>
-                                            <route-reflector-client>true</route-reflector-client>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </state>
-                                    </route-reflector>
                                     <state>
-                                        <description/>
-                                        <peer-as>333</peer-as>
-                                        <remove-private-as/>
-                                        <send-community>BOTH</send-community>
-                                        <peer-group/>
-                                        <neighbor-address>21.0.101.1</neighbor-address>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
                                     </state>
-                                    <timers>
-                                        <config>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                            <minimum-advertisement-interval>0</minimum-advertisement-interval>
-                                        </config>
-                                        <state>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                            <minimum-advertisement-interval>0</minimum-advertisement-interval>
-                                        </state>
-                                    </timers>
-                                    <transport>
-                                        <config>
-                                            <passive-mode>false</passive-mode>
-                                        </config>
-                                        <state>
-                                            <local-address>0.0.0.0</local-address>
-                                            <passive-mode>false</passive-mode>
-                                            <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                            <remote-address xmlns="http://openconfig.net/yang/bgp-operational">21.0.101.1</remote-address>
-                                            <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
-                                        </state>
-                                    </transport>
-                                    <neighbor-address>21.0.101.1</neighbor-address>
-                                </neighbor>
-                                <neighbor>
-                                    <afi-safis>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <ipv6-unicast>
-                                                <config>
-                                                    <send-default-route>false</send-default-route>
-                                                </config>
-                                                <state>
-                                                    <send-default-route>false</send-default-route>
-                                                </state>
-                                            </ipv6-unicast>
-                                            <state>
-                                                <afi-safi-name>IPV6_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>none</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>none</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>none</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <ipv4-unicast>
-                                                <config>
-                                                    <send-default-route>false</send-default-route>
-                                                </config>
-                                                <state>
-                                                    <send-default-route>false</send-default-route>
-                                                </state>
-                                            </ipv4-unicast>
-                                            <state>
-                                                <afi-safi-name>IPV4_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                        <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
-                                            <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                            <config>
-                                                <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                            </config>
-                                            <graceful-restart>
-                                                <state>
-                                                    <enabled>false</enabled>
-                                                </state>
-                                            </graceful-restart>
-                                            <state>
-                                                <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
-                                                <enabled>true</enabled>
-                                            </state>
-                                        </afi-safi>
-                                    </afi-safis>
-                                    <as-path-options>
-                                        <config>
-                                            <allow-own-as>0</allow-own-as>
-                                        </config>
-                                        <state>
-                                            <allow-own-as>0</allow-own-as>
-                                        </state>
-                                    </as-path-options>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    </config>
                                     <graceful-restart>
                                         <state>
                                             <enabled>false</enabled>
-                                            <helper-only>false</helper-only>
-                                            <restart-time>120</restart-time>
-                                            <stale-routes-time>300</stale-routes-time>
                                         </state>
                                     </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
                                     <config>
-                                        <description/>
-                                        <peer-as>888</peer-as>
-                                        <remove-private-as/>
-                                        <send-community>BOTH</send-community>
-                                        <peer-group/>
-                                        <neighbor-address>21.0.201.1</neighbor-address>
+                                        <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
                                     </config>
-                                    <ebgp-multihop>
-                                        <config>
-                                            <multihop-ttl>0</multihop-ttl>
-                                        </config>
+                                    <graceful-restart>
                                         <state>
                                             <enabled>false</enabled>
-                                            <multihop-ttl>0</multihop-ttl>
                                         </state>
-                                    </ebgp-multihop>
-                                    <logging-options>
-                                        <config>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </config>
-                                        <state>
-                                            <log-neighbor-state-changes>true</log-neighbor-state-changes>
-                                        </state>
-                                    </logging-options>
-                                    <route-reflector>
-                                        <config>
-                                            <route-reflector-client>false</route-reflector-client>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </config>
-                                        <state>
-                                            <route-reflector-client>false</route-reflector-client>
-                                            <route-reflector-cluster-id>3</route-reflector-cluster-id>
-                                        </state>
-                                    </route-reflector>
+                                    </graceful-restart>
                                     <state>
-                                        <description/>
-                                        <peer-as>888</peer-as>
-                                        <remove-private-as/>
-                                        <send-community>BOTH</send-community>
-                                        <peer-group/>
-                                        <neighbor-address>21.0.201.1</neighbor-address>
+                                        <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
                                     </state>
-                                    <timers>
+                                </afi-safi>
+                            </afi-safis>
+                            <as-path-options>
+                                <config>
+                                    <allow-own-as>0</allow-own-as>
+                                </config>
+                                <state>
+                                    <allow-own-as>0</allow-own-as>
+                                </state>
+                            </as-path-options>
+                            <graceful-restart>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <helper-only>false</helper-only>
+                                    <restart-time>120</restart-time>
+                                    <stale-routes-time>300</stale-routes-time>
+                                </state>
+                            </graceful-restart>
+                            <config>
+                                <description/>
+                                <peer-as>333</peer-as>
+                                <remove-private-as/>
+                                <send-community>BOTH</send-community>
+                                <peer-group/>
+                                <neighbor-address>21.0.102.1</neighbor-address>
+                            </config>
+                            <ebgp-multihop>
+                                <config>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </config>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </state>
+                            </ebgp-multihop>
+                            <logging-options>
+                                <config>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </config>
+                                <state>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </state>
+                            </logging-options>
+                            <route-reflector>
+                                <config>
+                                    <route-reflector-client>true</route-reflector-client>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </config>
+                                <state>
+                                    <route-reflector-client>true</route-reflector-client>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </state>
+                            </route-reflector>
+                            <state>
+                                <description/>
+                                <peer-as>333</peer-as>
+                                <remove-private-as/>
+                                <send-community>BOTH</send-community>
+                                <peer-group/>
+                                <neighbor-address>21.0.102.1</neighbor-address>
+                            </state>
+                            <timers>
+                                <config>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                    <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                </config>
+                                <state>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                    <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                </state>
+                            </timers>
+                            <transport>
+                                <config>
+                                    <passive-mode>false</passive-mode>
+                                </config>
+                                <state>
+                                    <local-address>0.0.0.0</local-address>
+                                    <passive-mode>false</passive-mode>
+                                    <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
+                                    <remote-address xmlns="http://openconfig.net/yang/bgp-operational">21.0.102.1</remote-address>
+                                    <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
+                                </state>
+                            </transport>
+                            <neighbor-address>21.0.102.1</neighbor-address>
+                        </neighbor>
+                        <neighbor>
+                            <afi-safis>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <ipv6-unicast>
                                         <config>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                            <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                            <send-default-route>false</send-default-route>
                                         </config>
                                         <state>
-                                            <hold-time>180</hold-time>
-                                            <keepalive-interval>60</keepalive-interval>
-                                            <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                            <send-default-route>false</send-default-route>
                                         </state>
-                                    </timers>
-                                    <transport>
+                                    </ipv6-unicast>
+                                    <state>
+                                        <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <ipv4-unicast>
                                         <config>
-                                            <passive-mode>false</passive-mode>
+                                            <send-default-route>false</send-default-route>
                                         </config>
                                         <state>
-                                            <local-address>0.0.0.0</local-address>
-                                            <passive-mode>false</passive-mode>
-                                            <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
-                                            <remote-address xmlns="http://openconfig.net/yang/bgp-operational">21.0.201.1</remote-address>
-                                            <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
+                                            <send-default-route>false</send-default-route>
                                         </state>
-                                    </transport>
-                                    <neighbor-address>21.0.201.1</neighbor-address>
-                                </neighbor>
-                            </neighbors>
-                        </bgp>
-                    </data>
-                </rpc-reply>
+                                    </ipv4-unicast>
+                                    <state>
+                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                            </afi-safis>
+                            <as-path-options>
+                                <config>
+                                    <allow-own-as>0</allow-own-as>
+                                </config>
+                                <state>
+                                    <allow-own-as>0</allow-own-as>
+                                </state>
+                            </as-path-options>
+                            <graceful-restart>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <helper-only>false</helper-only>
+                                    <restart-time>120</restart-time>
+                                    <stale-routes-time>300</stale-routes-time>
+                                </state>
+                            </graceful-restart>
+                            <config>
+                                <description/>
+                                <peer-as>888</peer-as>
+                                <remove-private-as/>
+                                <send-community>BOTH</send-community>
+                                <peer-group/>
+                                <neighbor-address>fec1::2002</neighbor-address>
+                            </config>
+                            <ebgp-multihop>
+                                <config>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </config>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </state>
+                            </ebgp-multihop>
+                            <logging-options>
+                                <config>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </config>
+                                <state>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </state>
+                            </logging-options>
+                            <route-reflector>
+                                <config>
+                                    <route-reflector-client>false</route-reflector-client>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </config>
+                                <state>
+                                    <route-reflector-client>false</route-reflector-client>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </state>
+                            </route-reflector>
+                            <state>
+                                <description/>
+                                <peer-as>888</peer-as>
+                                <remove-private-as/>
+                                <send-community>BOTH</send-community>
+                                <peer-group/>
+                                <neighbor-address>fec1::2002</neighbor-address>
+                            </state>
+                            <timers>
+                                <config>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                    <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                </config>
+                                <state>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                    <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                </state>
+                            </timers>
+                            <transport>
+                                <config>
+                                    <passive-mode>false</passive-mode>
+                                </config>
+                                <state>
+                                    <local-address>::</local-address>
+                                    <passive-mode>false</passive-mode>
+                                    <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
+                                    <remote-address xmlns="http://openconfig.net/yang/bgp-operational">fec1::2002</remote-address>
+                                    <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
+                                </state>
+                            </transport>
+                            <neighbor-address>fec1::2002</neighbor-address>
+                        </neighbor>
+                        <neighbor>
+                            <afi-safis>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <ipv4-unicast>
+                                        <config>
+                                            <send-default-route>false</send-default-route>
+                                        </config>
+                                        <state>
+                                            <send-default-route>false</send-default-route>
+                                        </state>
+                                    </ipv4-unicast>
+                                    <state>
+                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                            </afi-safis>
+                            <as-path-options>
+                                <config>
+                                    <allow-own-as>0</allow-own-as>
+                                </config>
+                                <state>
+                                    <allow-own-as>0</allow-own-as>
+                                </state>
+                            </as-path-options>
+                            <graceful-restart>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <helper-only>false</helper-only>
+                                    <restart-time>120</restart-time>
+                                    <stale-routes-time>300</stale-routes-time>
+                                </state>
+                            </graceful-restart>
+                            <config>
+                                <description/>
+                                <peer-as>333</peer-as>
+                                <remove-private-as/>
+                                <send-community>BOTH</send-community>
+                                <peer-group/>
+                                <neighbor-address>fec1::1002</neighbor-address>
+                            </config>
+                            <ebgp-multihop>
+                                <config>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </config>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </state>
+                            </ebgp-multihop>
+                            <logging-options>
+                                <config>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </config>
+                                <state>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </state>
+                            </logging-options>
+                            <route-reflector>
+                                <config>
+                                    <route-reflector-client>true</route-reflector-client>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </config>
+                                <state>
+                                    <route-reflector-client>true</route-reflector-client>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </state>
+                            </route-reflector>
+                            <state>
+                                <description/>
+                                <peer-as>333</peer-as>
+                                <remove-private-as/>
+                                <send-community>BOTH</send-community>
+                                <peer-group/>
+                                <neighbor-address>fec1::1002</neighbor-address>
+                            </state>
+                            <timers>
+                                <config>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                    <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                </config>
+                                <state>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                    <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                </state>
+                            </timers>
+                            <transport>
+                                <config>
+                                    <passive-mode>false</passive-mode>
+                                </config>
+                                <state>
+                                    <local-address>::</local-address>
+                                    <passive-mode>false</passive-mode>
+                                    <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
+                                    <remote-address xmlns="http://openconfig.net/yang/bgp-operational">fec1::1002</remote-address>
+                                    <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
+                                </state>
+                            </transport>
+                            <neighbor-address>fec1::1002</neighbor-address>
+                        </neighbor>
+                        <neighbor>
+                            <afi-safis>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <ipv4-unicast>
+                                        <config>
+                                            <send-default-route>false</send-default-route>
+                                        </config>
+                                        <state>
+                                            <send-default-route>false</send-default-route>
+                                        </state>
+                                    </ipv4-unicast>
+                                    <state>
+                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                            </afi-safis>
+                            <as-path-options>
+                                <config>
+                                    <allow-own-as>0</allow-own-as>
+                                </config>
+                                <state>
+                                    <allow-own-as>0</allow-own-as>
+                                </state>
+                            </as-path-options>
+                            <graceful-restart>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <helper-only>false</helper-only>
+                                    <restart-time>120</restart-time>
+                                    <stale-routes-time>300</stale-routes-time>
+                                </state>
+                            </graceful-restart>
+                            <config>
+                                <description/>
+                                <peer-as>333</peer-as>
+                                <remove-private-as/>
+                                <send-community>BOTH</send-community>
+                                <peer-group/>
+                                <neighbor-address>21.0.101.1</neighbor-address>
+                            </config>
+                            <ebgp-multihop>
+                                <config>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </config>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </state>
+                            </ebgp-multihop>
+                            <logging-options>
+                                <config>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </config>
+                                <state>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </state>
+                            </logging-options>
+                            <route-reflector>
+                                <config>
+                                    <route-reflector-client>true</route-reflector-client>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </config>
+                                <state>
+                                    <route-reflector-client>true</route-reflector-client>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </state>
+                            </route-reflector>
+                            <state>
+                                <description/>
+                                <peer-as>333</peer-as>
+                                <remove-private-as/>
+                                <send-community>BOTH</send-community>
+                                <peer-group/>
+                                <neighbor-address>21.0.101.1</neighbor-address>
+                            </state>
+                            <timers>
+                                <config>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                    <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                </config>
+                                <state>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                    <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                </state>
+                            </timers>
+                            <transport>
+                                <config>
+                                    <passive-mode>false</passive-mode>
+                                </config>
+                                <state>
+                                    <local-address>0.0.0.0</local-address>
+                                    <passive-mode>false</passive-mode>
+                                    <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
+                                    <remote-address xmlns="http://openconfig.net/yang/bgp-operational">21.0.101.1</remote-address>
+                                    <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
+                                </state>
+                            </transport>
+                            <neighbor-address>21.0.101.1</neighbor-address>
+                        </neighbor>
+                        <neighbor>
+                            <afi-safis>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <ipv6-unicast>
+                                        <config>
+                                            <send-default-route>false</send-default-route>
+                                        </config>
+                                        <state>
+                                            <send-default-route>false</send-default-route>
+                                        </state>
+                                    </ipv6-unicast>
+                                    <state>
+                                        <afi-safi-name>IPV6_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>L3VPN_IPV6_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>none</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>none</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>none</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <ipv4-unicast>
+                                        <config>
+                                            <send-default-route>false</send-default-route>
+                                        </config>
+                                        <state>
+                                            <send-default-route>false</send-default-route>
+                                        </state>
+                                    </ipv4-unicast>
+                                    <state>
+                                        <afi-safi-name>IPV4_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                                <afi-safi xmlns="http://openconfig.net/yang/bgp-multiprotocol">
+                                    <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
+                                    <config>
+                                        <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
+                                    </config>
+                                    <graceful-restart>
+                                        <state>
+                                            <enabled>false</enabled>
+                                        </state>
+                                    </graceful-restart>
+                                    <state>
+                                        <afi-safi-name>L3VPN_IPV4_UNICAST</afi-safi-name>
+                                        <enabled>true</enabled>
+                                    </state>
+                                </afi-safi>
+                            </afi-safis>
+                            <as-path-options>
+                                <config>
+                                    <allow-own-as>0</allow-own-as>
+                                </config>
+                                <state>
+                                    <allow-own-as>0</allow-own-as>
+                                </state>
+                            </as-path-options>
+                            <graceful-restart>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <helper-only>false</helper-only>
+                                    <restart-time>120</restart-time>
+                                    <stale-routes-time>300</stale-routes-time>
+                                </state>
+                            </graceful-restart>
+                            <config>
+                                <description/>
+                                <peer-as>888</peer-as>
+                                <remove-private-as/>
+                                <send-community>BOTH</send-community>
+                                <peer-group/>
+                                <neighbor-address>21.0.201.1</neighbor-address>
+                            </config>
+                            <ebgp-multihop>
+                                <config>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </config>
+                                <state>
+                                    <enabled>false</enabled>
+                                    <multihop-ttl>0</multihop-ttl>
+                                </state>
+                            </ebgp-multihop>
+                            <logging-options>
+                                <config>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </config>
+                                <state>
+                                    <log-neighbor-state-changes>true</log-neighbor-state-changes>
+                                </state>
+                            </logging-options>
+                            <route-reflector>
+                                <config>
+                                    <route-reflector-client>false</route-reflector-client>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </config>
+                                <state>
+                                    <route-reflector-client>false</route-reflector-client>
+                                    <route-reflector-cluster-id>3</route-reflector-cluster-id>
+                                </state>
+                            </route-reflector>
+                            <state>
+                                <description/>
+                                <peer-as>888</peer-as>
+                                <remove-private-as/>
+                                <send-community>BOTH</send-community>
+                                <peer-group/>
+                                <neighbor-address>21.0.201.1</neighbor-address>
+                            </state>
+                            <timers>
+                                <config>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                    <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                </config>
+                                <state>
+                                    <hold-time>180</hold-time>
+                                    <keepalive-interval>60</keepalive-interval>
+                                    <minimum-advertisement-interval>0</minimum-advertisement-interval>
+                                </state>
+                            </timers>
+                            <transport>
+                                <config>
+                                    <passive-mode>false</passive-mode>
+                                </config>
+                                <state>
+                                    <local-address>0.0.0.0</local-address>
+                                    <passive-mode>false</passive-mode>
+                                    <local-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</local-port>
+                                    <remote-address xmlns="http://openconfig.net/yang/bgp-operational">21.0.201.1</remote-address>
+                                    <remote-port xmlns="http://openconfig.net/yang/bgp-operational">unspecified</remote-port>
+                                </state>
+                            </transport>
+                            <neighbor-address>21.0.201.1</neighbor-address>
+                        </neighbor>
+                    </neighbors>
+                </bgp>
+            </data>
             ''')
 
-    yang_output = {'get.return_value': etree_holder()}
+    yang_output = etree_holder()
 
-    # def test_show_bgp_vrf_all_neighbors_golden_yang(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.yang_output)
-    #     obj = ShowBgpVrfAllNeighbors(device=self.device, context='yang')
-    #     try:
-    #         parsed_output = obj.parse(vrf='default')
-    #         self.assertEqual(parsed_output,self.golden_parsed_output)
-    #     except SchemaMissingKeyError:
-    #         pass
-
-
+    def test_show_bgp_vrf_all_neighbors_golden_yang(self):
+        self.maxDiff = None
+        self.device = Mock()
+        # YANG output
+        self.device.get = Mock()
+        self.device.get.side_effect = [self.yang_output]
+        # CLI output to complete it
+        self.device.execute = Mock()
+        self.device.execute.side_effect = [self.cli_output]
+        obj = ShowBgpVrfAllNeighbors(device=self.device, context=['yang', 'cli'])
+        parsed_output = obj.parse(vrf='default')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+        
 # ======================================================
 #  Unit test for 'show bgp vrf all all nexthop-database'       
 # ======================================================
@@ -9015,7 +10225,20 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
                                 '(Admin)',
                                 'tbl_ver': 0,
                                 'up_down': '5w6d',
-                                'v': 4}}}}}}}
+                                'v': 4}}},
+                    'fec::db8::20:1::5::5': 
+                        {'address_family': 
+                            {'ipv4 unicast': 
+                                {'as': 200,
+                                'inq': 0,
+                                'msg_rcvd': 0,
+                                'msg_sent': 0,
+                                'outq': 0,
+                                'state_pfxrcd': 'Shut '
+                                               '(Admin)',
+                                'tbl_ver': 0,
+                                'up_down': '5w5d',
+                                'v': 3}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         BGP summary information for VRF VRF1, address family IPv4 Unicast
@@ -9041,6 +10264,8 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
 
         Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
         2.2.2.5         4   200       0       0        0    0    0     5w6d Shut (Admin)
+        fec::db8::20:1::5::5
+                        3   200       0       0        0    0    0     5w5d Shut (Admin)
 
         BGP summary information for VRF default, address family IPv6 Unicast
 
@@ -9122,6 +10347,31 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
                                 'state_pfxrcd': '3',
                                 'tbl_ver': 25,
                                 'up_down': '00:08:22',
+                                'v': 4}}},
+                    'fec1::112': 
+                        {'address_family': 
+                            {'ipv4 unicast': 
+                                {'as': 333,
+                                'as_path_entries': '[0/0]',
+                                'attribute_entries': '[3/468]',
+                                'bgp_table_version': 25,
+                                'capable_peers': 2,
+                                'clusterlist_entries': '[0/0]',
+                                'community_entries': '[1/32]',
+                                'config_peers': 2,
+                                'inq': 0,
+                                'local_as': 333,
+                                'msg_rcvd': 16,
+                                'msg_sent': 13,
+                                'outq': 0,
+                                'path': {'memory_usage': 1524,
+                                         'total_entries': 6},
+                                'prefixes': {'memory_usage': 1524,
+                                             'total_entries': 6},
+                                'route_identifier': '21.0.101.1',
+                                'state_pfxrcd': '3',
+                                'tbl_ver': 25,
+                                'up_down': '00:08:17',
                                 'v': 4}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
@@ -9191,86 +10441,53 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
                 {'neighbor': 
                     {'19.0.101.1': 
                         {'address_family': 
-                            {'ipv4 unicast': 
-                                {'as': 333,
-                                'as_path_entries': '[4/144]',
-                                'attribute_entries': '[4/640]',
-                                'bgp_table_version': 174,
-                                'capable_peers': 3,
-                                'clusterlist_entries': '[7/28]',
-                                'community_entries': '[2/96]',
-                                'config_peers': 3,
-                                'dampened_paths': 2,
-                                'dampening': True,
-                                'history_paths': 0,
-                                'inq': 0,
-                                'local_as': 333,
-                                'msg_rcvd': 29,
-                                'msg_sent': 31,
-                                'outq': 0,
-                                'path': {'memory_usage': 1424,
-                                      'total_entries': 5},
-                                'prefixes': {'memory_usage': 1424,
-                                          'total_entries': 5},
-                                'route_identifier': '20.0.0.6',
-                                'state_pfxrcd': '3',
-                                'tbl_ver': 174,
-                                'up_down': '00:20:33',
-                                'v': 4}}},
-                    '19.0.102.3': 
-                        {'address_family': 
-                            {'ipv4 unicast': 
-                                {'as': 888,
-                                'inq': 0,
-                                'msg_rcvd': 841,
-                                'msg_sent': 28,
-                                'outq': 0,
-                                'path': {'memory_usage': 1424,
-                                'total_entries': 5},
-                                'prefixes': {'memory_usage': 1424,
-                                  'total_entries': 5},
-                                'state_pfxrcd': '2',
-                                'tbl_ver': 174,
-                                'up_down': '00:20:33',
-                                'v': 4}}},
-                    '19.0.102.4': 
-                        {'address_family': 
-                            {'ipv4 multicast': 
-                                {'as': 333,
-                                'as_path_entries': '[2/56]',
-                                'attribute_entries': '[3/480]',
-                                'bgp_table_version': 175,
-                                'capable_peers': 3,
-                                'clusterlist_entries': '[7/28]',
-                                'community_entries': '[2/96]',
-                                'config_peers': 3,
-                                'dampened_paths': 2,
-                                'dampening': True,
-                                'history_paths': 0,
-                                'inq': 0,
-                                'local_as': 333,
-                                'msg_rcvd': 27,
-                                'msg_sent': 31,
-                                'outq': 0,
-                                'path': {'memory_usage': 1392,
-                                        'total_entries': 6},
-                                'prefixes': {'memory_usage': 1392,
-                                            'total_entries': 6},
-                                'route_identifier': '20.0.0.6',
-                                'state_pfxrcd': '2',
-                                'tbl_ver': 175,
-                                'up_down': '00:20:33',
-                                'v': 4},
+                            {'ipv4 multicast': {'as': 333,
+                                               'as_path_entries': '[2/56]',
+                                               'attribute_entries': '[3/480]',
+                                               'bgp_table_version': 175,
+                                               'capable_peers': 3,
+                                               'clusterlist_entries': '[7/28]',
+                                               'community_entries': '[2/96]',
+                                               'config_peers': 3,
+                                               'dampened_paths': 2,
+                                               'dampening': True,
+                                               'history_paths': 0,
+                                               'inq': 0,
+                                               'local_as': 333,
+                                               'msg_rcvd': 29,
+                                               'msg_sent': 31,
+                                               'outq': 0,
+                                               'path': {'memory_usage': 1392,
+                                                        'total_entries': 6},
+                                               'prefixes': {'memory_usage': 1392,
+                                                            'total_entries': 6},
+                                               'route_identifier': '20.0.0.6',
+                                               'state_pfxrcd': '2',
+                                               'tbl_ver': 175,
+                                               'up_down': '00:20:33',
+                                               'v': 4},
                             'ipv4 unicast': {'as': 333,
+                                             'as_path_entries': '[4/144]',
+                                             'attribute_entries': '[4/640]',
+                                             'bgp_table_version': 174,
+                                             'capable_peers': 3,
+                                             'clusterlist_entries': '[7/28]',
+                                             'community_entries': '[2/96]',
+                                             'config_peers': 3,
+                                             'dampened_paths': 2,
+                                             'dampening': True,
+                                             'history_paths': 0,
                                              'inq': 0,
-                                             'msg_rcvd': 27,
+                                             'local_as': 333,
+                                             'msg_rcvd': 29,
                                              'msg_sent': 31,
                                              'outq': 0,
                                              'path': {'memory_usage': 1424,
                                                       'total_entries': 5},
                                              'prefixes': {'memory_usage': 1424,
                                                           'total_entries': 5},
-                                             'state_pfxrcd': '2',
+                                             'route_identifier': '20.0.0.6',
+                                             'state_pfxrcd': '3',
                                              'tbl_ver': 174,
                                              'up_down': '00:20:33',
                                              'v': 4},
@@ -9287,7 +10504,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
                                                'history_paths': 0,
                                                'inq': 0,
                                                'local_as': 333,
-                                               'msg_rcvd': 27,
+                                               'msg_rcvd': 29,
                                                'msg_sent': 31,
                                                'outq': 0,
                                                'path': {'memory_usage': 488,
@@ -9314,7 +10531,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
                                              'history_paths': 0,
                                              'inq': 0,
                                              'local_as': 333,
-                                             'msg_rcvd': 27,
+                                             'msg_rcvd': 29,
                                              'msg_sent': 31,
                                              'outq': 0,
                                              'path': {'memory_usage': 1220,
@@ -9328,6 +10545,21 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
                                              'tbl_ver': 0,
                                              'up_down': '00:20:33',
                                              'v': 4},
+                            'link-state': {'as': 333,
+                                           'inq': 0,
+                                           'local_as': 333,
+                                           'msg_rcvd': 29,
+                                           'msg_sent': 31,
+                                           'outq': 0,
+                                           'path': {'memory_usage': 928,
+                                                    'total_entries': 4},
+                                           'prefixes': {'memory_usage': 928,
+                                                        'total_entries': 4},
+                                           'route_identifier': '20.0.0.6',
+                                           'state_pfxrcd': '2',
+                                           'tbl_ver': 173,
+                                           'up_down': '00:20:33',
+                                           'v': 4},
                             'vpnv4 unicast': {'as': 333,
                                               'as_path_entries': '[4/140]',
                                               'attribute_entries': '[4/640]',
@@ -9341,7 +10573,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
                                               'history_paths': 0,
                                               'inq': 0,
                                               'local_as': 333,
-                                              'msg_rcvd': 27,
+                                              'msg_rcvd': 29,
                                               'msg_sent': 31,
                                               'outq': 0,
                                               'path': {'memory_usage': 1656,
@@ -9349,7 +10581,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
                                               'prefixes': {'memory_usage': 1656,
                                                            'total_entries': 6},
                                               'route_identifier': '20.0.0.6',
-                                              'state_pfxrcd': '4',
+                                              'state_pfxrcd': '2',
                                               'tbl_ver': 183,
                                               'up_down': '00:20:33',
                                               'v': 4},
@@ -9366,18 +10598,307 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
                                               'history_paths': 0,
                                               'inq': 0,
                                               'local_as': 333,
+                                              'msg_rcvd': 29,
+                                              'msg_sent': 31,
+                                              'outq': 0,
+                                              'path': {'memory_usage': 976,
+                                                       'total_entries': 4},
+                                              'prefixes': {'memory_usage': 976,
+                                                           'total_entries': 4},
+                                              'route_identifier': '20.0.0.6',
+                                              'state_pfxrcd': '2',
+                                              'tbl_ver': 13,
+                                              'up_down': '00:20:33',
+                                              'v': 4}}},
+                    '19.0.102.3': 
+                        {'address_family': 
+                            {'ipv4 multicast': {'as': 888,
+                                               'inq': 0,
+                                               'msg_rcvd': 841,
+                                               'msg_sent': 28,
+                                               'outq': 0,
+                                               'path': {'memory_usage': 1392,
+                                                        'total_entries': 6},
+                                               'prefixes': {'memory_usage': 1392,
+                                                            'total_entries': 6},
+                                               'state_pfxrcd': '2',
+                                               'tbl_ver': 175,
+                                               'up_down': '00:20:33',
+                                               'v': 4},
+                            'ipv4 unicast': {'as': 888,
+                                             'inq': 0,
+                                             'msg_rcvd': 841,
+                                             'msg_sent': 28,
+                                             'outq': 0,
+                                             'path': {'memory_usage': 1424,
+                                                      'total_entries': 5},
+                                             'prefixes': {'memory_usage': 1424,
+                                                          'total_entries': 5},
+                                             'state_pfxrcd': '2',
+                                             'tbl_ver': 174,
+                                             'up_down': '00:20:33',
+                                             'v': 4},
+                            'ipv6 multicast': {'as': 888,
+                                               'inq': 0,
+                                               'msg_rcvd': 841,
+                                               'msg_sent': 28,
+                                               'outq': 0,
+                                               'path': {'memory_usage': 488,
+                                                        'total_entries': 2},
+                                               'prefixes': {'memory_usage': 488,
+                                                            'total_entries': 2},
+                                               'state_pfxrcd': '0 '
+                                                               '(No '
+                                                               'Cap)',
+                                               'tbl_ver': 0,
+                                               'up_down': '00:20:33',
+                                               'v': 4},
+                            'ipv6 unicast': {'as': 888,
+                                             'inq': 0,
+                                             'msg_rcvd': 841,
+                                             'msg_sent': 28,
+                                             'outq': 0,
+                                             'path': {'memory_usage': 1220,
+                                                      'total_entries': 5},
+                                             'prefixes': {'memory_usage': 1220,
+                                                          'total_entries': 5},
+                                             'state_pfxrcd': '0 '
+                                                             '(No '
+                                                             'Cap)',
+                                             'tbl_ver': 0,
+                                             'up_down': '00:20:33',
+                                             'v': 4},
+                            'link-state': {'as': 888,
+                                           'inq': 0,
+                                           'local_as': 333,
+                                           'msg_rcvd': 841,
+                                           'msg_sent': 28,
+                                           'outq': 0,
+                                           'path': {'memory_usage': 928,
+                                                    'total_entries': 4},
+                                           'prefixes': {'memory_usage': 928,
+                                                        'total_entries': 4},
+                                           'route_identifier': '20.0.0.6',
+                                           'state_pfxrcd': '2',
+                                           'tbl_ver': 173,
+                                           'up_down': '00:20:33',
+                                           'v': 4},
+                            'vpnv4 unicast': {'as': 888,
+                                              'inq': 0,
+                                              'msg_rcvd': 841,
+                                              'msg_sent': 28,
+                                              'outq': 0,
+                                              'path': {'memory_usage': 1656,
+                                                       'total_entries': 6},
+                                              'prefixes': {'memory_usage': 1656,
+                                                           'total_entries': 6},
+                                              'state_pfxrcd': '2',
+                                              'tbl_ver': 183,
+                                              'up_down': '00:20:33',
+                                              'v': 4},
+                            'vpnv6 unicast': {'as': 888,
+                                              'inq': 0,
+                                              'msg_rcvd': 841,
+                                              'msg_sent': 28,
+                                              'outq': 0,
+                                              'path': {'memory_usage': 976,
+                                                       'total_entries': 4},
+                                              'prefixes': {'memory_usage': 976,
+                                                           'total_entries': 4},
+                                              'state_pfxrcd': '2',
+                                              'tbl_ver': 13,
+                                              'up_down': '00:20:33',
+                                              'v': 4}}},
+                    '19.0.102.4': 
+                        {'address_family': 
+                            {'ipv4 multicast': {'as': 333,
+                                               'inq': 0,
+                                               'msg_rcvd': 27,
+                                               'msg_sent': 31,
+                                               'outq': 0,
+                                               'path': {'memory_usage': 1392,
+                                                        'total_entries': 6},
+                                               'prefixes': {'memory_usage': 1392,
+                                                            'total_entries': 6},
+                                               'state_pfxrcd': '2',
+                                               'tbl_ver': 175,
+                                               'up_down': '00:20:33',
+                                               'v': 4},
+                            'ipv4 unicast': {'as': 333,
+                                             'inq': 0,
+                                             'msg_rcvd': 27,
+                                             'msg_sent': 31,
+                                             'outq': 0,
+                                             'path': {'memory_usage': 1424,
+                                                      'total_entries': 5},
+                                             'prefixes': {'memory_usage': 1424,
+                                                          'total_entries': 5},
+                                             'state_pfxrcd': '2',
+                                             'tbl_ver': 174,
+                                             'up_down': '00:20:33',
+                                             'v': 4},
+                            'ipv6 multicast': {'as': 333,
+                                               'inq': 0,
+                                               'msg_rcvd': 27,
+                                               'msg_sent': 31,
+                                               'outq': 0,
+                                               'path': {'memory_usage': 488,
+                                                        'total_entries': 2},
+                                               'prefixes': {'memory_usage': 488,
+                                                            'total_entries': 2},
+                                               'state_pfxrcd': '0 '
+                                                               '(No '
+                                                               'Cap)',
+                                               'tbl_ver': 0,
+                                               'up_down': '00:20:33',
+                                               'v': 4},
+                            'ipv6 unicast': {'as': 333,
+                                             'inq': 0,
+                                             'msg_rcvd': 27,
+                                             'msg_sent': 31,
+                                             'outq': 0,
+                                             'path': {'memory_usage': 1220,
+                                                      'total_entries': 5},
+                                             'prefixes': {'memory_usage': 1220,
+                                                          'total_entries': 5},
+                                             'state_pfxrcd': '0 '
+                                                             '(No '
+                                                             'Cap)',
+                                             'tbl_ver': 0,
+                                             'up_down': '00:20:33',
+                                             'v': 4},
+                            'link-state': {'as': 333,
+                                           'inq': 0,
+                                           'local_as': 333,
+                                           'msg_rcvd': 27,
+                                           'msg_sent': 31,
+                                           'outq': 0,
+                                           'path': {'memory_usage': 928,
+                                                    'total_entries': 4},
+                                           'prefixes': {'memory_usage': 928,
+                                                        'total_entries': 4},
+                                           'route_identifier': '20.0.0.6',
+                                           'state_pfxrcd': '0',
+                                           'tbl_ver': 173,
+                                           'up_down': '00:20:33',
+                                           'v': 4},
+                            'vpnv4 unicast': {'as': 333,
+                                              'inq': 0,
                                               'msg_rcvd': 27,
                                               'msg_sent': 31,
                                               'outq': 0,
-                                              'path': {'memory_usage': 928,
-                                                       'total_entries': 4},
-                                              'prefixes': {'memory_usage': 928,
-                                                           'total_entries': 4},
-                                              'route_identifier': '20.0.0.6',
-                                              'state_pfxrcd': '0',
-                                              'tbl_ver': 173,
+                                              'path': {'memory_usage': 1656,
+                                                       'total_entries': 6},
+                                              'prefixes': {'memory_usage': 1656,
+                                                           'total_entries': 6},
+                                              'state_pfxrcd': '4',
+                                              'tbl_ver': 183,
                                               'up_down': '00:20:33',
-                                              'v': 4}}}}},
+                                              'v': 4},
+                            'vpnv6 unicast': {'as': 333,
+                                              'inq': 0,
+                                              'msg_rcvd': 27,
+                                              'msg_sent': 31,
+                                              'outq': 0,
+                                              'path': {'memory_usage': 976,
+                                                       'total_entries': 4},
+                                              'prefixes': {'memory_usage': 976,
+                                                           'total_entries': 4},
+                                              'state_pfxrcd': '0',
+                                              'tbl_ver': 13,
+                                              'up_down': '00:20:33',
+                                              'v': 4}}},
+                    'fec0::1002': 
+                        {'address_family': 
+                            {'ipv6 multicast': 
+                                {'as': 333,
+                                'inq': 0,
+                                'msg_rcvd': 26,
+                                'msg_sent': 26,
+                                'outq': 0,
+                                'path': {'memory_usage': 488,
+                                        'total_entries': 2},
+                                'prefixes': {'memory_usage': 488,
+                                            'total_entries': 2},
+                                'state_pfxrcd': '2',
+                                'tbl_ver': 6,
+                                'up_down': '00:20:33',
+                                'v': 4},
+                            'ipv6 unicast': {'as': 333,
+                                             'inq': 0,
+                                             'msg_rcvd': 26,
+                                             'msg_sent': 26,
+                                             'outq': 0,
+                                             'path': {'memory_usage': 1220,
+                                                      'total_entries': 5},
+                                             'prefixes': {'memory_usage': 1220,
+                                                          'total_entries': 5},
+                                             'state_pfxrcd': '3',
+                                             'tbl_ver': 173,
+                                             'up_down': '00:20:33',
+                                             'v': 4},
+                            'link-state': {'as': 333,
+                                           'inq': 0,
+                                           'local_as': 333,
+                                           'msg_rcvd': 26,
+                                           'msg_sent': 26,
+                                           'outq': 0,
+                                           'path': {'memory_usage': 928,
+                                                    'total_entries': 4},
+                                           'prefixes': {'memory_usage': 928,
+                                                        'total_entries': 4},
+                                           'route_identifier': '20.0.0.6',
+                                           'state_pfxrcd': '0 '
+                                                           '(No '
+                                                           'Cap)',
+                                           'tbl_ver': 0,
+                                           'up_down': '00:20:33',
+                                           'v': 4}}},
+                    'fec0::2002': 
+                        {'address_family': 
+                            {'ipv6 multicast': {'as': 888,
+                                               'inq': 0,
+                                               'msg_rcvd': 187,
+                                               'msg_sent': 25,
+                                               'outq': 0,
+                                               'path': {'memory_usage': 488,
+                                                        'total_entries': 2},
+                                               'prefixes': {'memory_usage': 488,
+                                                            'total_entries': 2},
+                                               'state_pfxrcd': '0',
+                                               'tbl_ver': 6,
+                                               'up_down': '00:20:33',
+                                               'v': 4},
+                            'ipv6 unicast': {'as': 888,
+                                             'inq': 0,
+                                             'msg_rcvd': 187,
+                                             'msg_sent': 25,
+                                             'outq': 0,
+                                             'path': {'memory_usage': 1220,
+                                                      'total_entries': 5},
+                                             'prefixes': {'memory_usage': 1220,
+                                                          'total_entries': 5},
+                                             'state_pfxrcd': '2',
+                                             'tbl_ver': 173,
+                                             'up_down': '00:20:33',
+                                             'v': 4},
+                            'link-state': {'as': 888,
+                                           'inq': 0,
+                                           'local_as': 333,
+                                           'msg_rcvd': 187,
+                                           'msg_sent': 25,
+                                           'outq': 0,
+                                           'path': {'memory_usage': 928,
+                                                    'total_entries': 4},
+                                           'prefixes': {'memory_usage': 928,
+                                                        'total_entries': 4},
+                                           'route_identifier': '20.0.0.6',
+                                           'state_pfxrcd': '0 '
+                                                           '(No '
+                                                           'Cap)',
+                                           'tbl_ver': 0,
+                                           'up_down': '00:20:33',
+                                           'v': 4}}}}},
             'vpn1': 
                 {'neighbor': 
                     {'19.0.103.1': 
@@ -9757,7 +11278,8 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                         {'address_family':
                             {'ipv4 label unicast': 
                                 {'bgp_table_version': 28,
-                                'local_router_id': '21.0.101.1'},
+                                'local_router_id': '21.0.101.1',
+                                'advertised': {}},
                             'ipv4 multicast':
                                 {'advertised':
                                     {'1.1.1.0/24':
@@ -9814,7 +11336,8 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                 'local_router_id': '21.0.101.1'},
                             'ipv4 mvpn': 
                                 {'bgp_table_version': 2,
-                                'local_router_id': '21.0.101.1'},
+                                'local_router_id': '21.0.101.1',
+                                'advertised': {}},
                             'ipv4 unicast':
                                 {'advertised':
                                     {'1.1.1.0/24':
@@ -9870,16 +11393,24 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                 'local_router_id': '21.0.101.1'},
                             'ipv6 multicast': 
                                 {'bgp_table_version': 2,
-                                'local_router_id': '21.0.101.1'},
+                                'local_router_id': '21.0.101.1',
+                                'advertised': {}},
                             'ipv6 mvpn': 
                                 {'bgp_table_version': 2,
-                                'local_router_id': '21.0.101.1'},
+                                'local_router_id': '21.0.101.1',
+                                'advertised': {}},
                             'ipv6 unicast': 
                                 {'bgp_table_version': 7,
-                                'local_router_id': '21.0.101.1'},
+                                'local_router_id': '21.0.101.1',
+                                'advertised': {}},
                             'link-state': 
                                 {'bgp_table_version': 2,
-                                'local_router_id': '21.0.101.1'},
+                                'local_router_id': '21.0.101.1',
+                                'advertised': {}},
+                            'vpnv4 unicast': 
+                                {'bgp_table_version': 23,
+                                'local_router_id': '21.0.101.1',
+                                'advertised': {}},
                             'vpnv4 unicast RD 1:100': {
                                 'bgp_table_version': 23,
                                 'default_vrf': 'vpn1',
@@ -9932,16 +11463,22 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'path_type': 'r',
                                                 'status_codes': '*>',
                                                 'weight': 32768}}}}},
+                            'vpnv6 unicast': 
+                                {'bgp_table_version': 7,
+                                'local_router_id': '21.0.101.1',
+                                'advertised': {}},
                             'vpnv6 unicast RD 1:100': 
                                 {'bgp_table_version': 7,
                                 'default_vrf': 'vpn1',
                                 'local_router_id': '21.0.101.1',
-                                'route_distinguisher': '1:100'},
+                                'route_distinguisher': '1:100',
+                                'advertised': {}},
                             'vpnv6 unicast RD 2:100': 
                                 {'bgp_table_version': 7,
                                 'default_vrf': 'vpn2',
                                 'local_router_id': '21.0.101.1',
-                                'route_distinguisher': '2:100'}}}}}}}
+                                'route_distinguisher': '2:100',
+                                'advertised': {}}}}}}}}
 
     golden_output = {'execute.return_value': '''
         pinxdt-n9kv-2# show bgp vrf default all neighbors 2.2.2.10 advertised-routes 
@@ -10189,10 +11726,12 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                 'local_router_id': '20.0.0.6'},
                             'ipv6 multicast': 
                                 {'bgp_table_version': 6,
-                                'local_router_id': '20.0.0.6'},
+                                'local_router_id': '20.0.0.6',
+                                'advertised': {}},
                             'ipv6 unicast': 
                                 {'bgp_table_version': 173,
-                                'local_router_id': '20.0.0.6'},
+                                'local_router_id': '20.0.0.6',
+                                'advertised': {}},
                             'link-state': 
                                 {'advertised': 
                                     {'[2]:[77][7,0][9.9.9.9,1,151587081][29.1.1.1,22][19.0.101.1,29.0.1.30]/616': 
@@ -10255,26 +11794,39 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'weight': 0}}}},
                                 'bgp_table_version': 173,
                                 'local_router_id': '20.0.0.6'},
+                            'vpnv4 unicast': 
+                                {'bgp_table_version': 183,
+                                'local_router_id': '20.0.0.6',
+                                'advertised': {}},
                             'vpnv4 unicast RD 0:0': 
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
-                                'route_distinguisher': '0:0'},
+                                'route_distinguisher': '0:0',
+                                'advertised': {}},
                             'vpnv4 unicast RD 101:100': 
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
-                                'route_distinguisher': '101:100'},
+                                'route_distinguisher': '101:100',
+                                'advertised': {}},
                             'vpnv4 unicast RD 102:100': 
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
-                                'route_distinguisher': '102:100'},
+                                'route_distinguisher': '102:100',
+                                'advertised': {}},
+                            'vpnv6 unicast': 
+                                {'bgp_table_version': 13,
+                                'local_router_id': '20.0.0.6',
+                                'advertised': {}},
                             'vpnv6 unicast RD 0xbb00010000000000': 
                                 {'bgp_table_version': 13,
                                 'local_router_id': '20.0.0.6',
-                                'route_distinguisher': '0xbb00010000000000'},
+                                'route_distinguisher': '0xbb00010000000000',
+                                'advertised': {}},
                             'vpnv6 unicast RD 100:200': 
                                 {'bgp_table_version': 13,
                                 'local_router_id': '20.0.0.6',
-                                'route_distinguisher': '100:200'}}}}}}}
+                                'route_distinguisher': '100:200',
+                                'advertised': {}}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
         show bgp vrf default all neighbors 19.0.102.3 advertised-routes
@@ -10365,6 +11917,211 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
                               19.0.103.2            555        200          0 3 10 20 30 40 50 60 70 80 90 i
         '''}
 
+    golden_parsed_output3 = {
+        'vrf': 
+            {'default': 
+                {'neighbor': 
+                    {'10.4.6.6': 
+                        {'address_family': 
+                            {'ipv4 unicast': 
+                                {'advertised': 
+                                    {'15.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'metric': 2219,
+                                                'next_hop': '1.1.1.1',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'path_type': 'i',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '15.1.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'metric': 2219,
+                                                'next_hop': '1.1.1.1',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'path_type': 'i',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '15.1.3.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'metric': 2219,
+                                                'next_hop': '1.1.1.1',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'path_type': 'i',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '15.1.4.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'metric': 2219,
+                                                'next_hop': '1.1.1.1',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'path_type': 'i',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '15.1.5.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'metric': 2219,
+                                                'next_hop': '1.1.1.1',
+                                                'origin_codes': 'e',
+                                                'path': '200 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'path_type': 'i',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '46.2.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': 100,
+                                                'next_hop': '20.4.6.6',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '{47751}',
+                                                'path_type': 'e',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '46.2.3.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': 100,
+                                                'next_hop': '20.4.6.6',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '{47751}',
+                                                'path_type': 'e',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '46.2.4.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': 100,
+                                                'next_hop': '20.4.6.6',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '{47751}',
+                                                'path_type': 'e',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '46.2.5.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': 100,
+                                                'next_hop': '20.4.6.6',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '{47751}',
+                                                'path_type': 'e',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '46.2.6.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': 100,
+                                                'next_hop': '20.4.6.6',
+                                                'origin_codes': 'e',
+                                                'path': '400 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '{47751}',
+                                                'path_type': 'e',
+                                                'status_codes': '*>',
+                                                'weight': 0}}}},
+                                'bgp_table_version': 648438,
+                                'local_router_id': '44.44.44.44'},
+                            'ipv6 unicast': 
+                                {'advertised': {},
+                                'bgp_table_version': 256028,
+                                'local_router_id': '44.44.44.44'}}}}}}}
+
+    golden_output3 = {'execute.return_value': '''\
+        R4# show bgp vrf VRF1 all neighbors 10.4.6.6 advertised-routes
+
+        Peer 10.4.6.6 routes for address family IPv4 Unicast:
+        BGP table version is 648438, local router ID is 44.44.44.44
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        *>i15.1.1.0/24        1.1.1.1               2219        100          0 200 33299 51178 47751 {27016} e
+        *>i15.1.2.0/24        1.1.1.1               2219        100          0 200 33299 51178 47751 {27016} e
+        *>i15.1.3.0/24        1.1.1.1               2219        100          0 200 33299 51178 47751 {27016} e
+        *>i15.1.4.0/24        1.1.1.1               2219        100          0 200 33299 51178 47751 {27016} e
+        *>i15.1.5.0/24        1.1.1.1               2219        100          0 200 33299 51178 47751 {27016} e
+        *>e46.2.2.0/24        20.4.6.6               100                     0 400 33299 51178 {47751} e
+        *>e46.2.3.0/24        20.4.6.6               100                     0 400 33299 51178 {47751} e
+        *>e46.2.4.0/24        20.4.6.6               100                     0 400 33299 51178 {47751} e
+        *>e46.2.5.0/24        20.4.6.6               100                     0 400 33299 51178 {47751} e
+        *>e46.2.6.0/24        20.4.6.6               100                     0 400 33299 51178 {47751} e
+
+        Peer 10.4.6.6 routes for address family IPv4 Multicast:
+
+        Peer 10.4.6.6 routes for address family IPv6 Unicast:
+        BGP table version is 256028, local router ID is 44.44.44.44
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+
+        Peer 10.4.6.6 routes for address family IPv6 Multicast:
+
+        Peer 10.4.6.6 routes for address family VPNv4 Unicast:
+
+        Peer 10.4.6.6 routes for address family VPNv6 Unicast:
+
+        Peer 10.4.6.6 routes for address family IPv4 MDT:
+
+        Peer 10.4.6.6 routes for address family IPv6 Label Unicast:
+
+        Peer 10.4.6.6 routes for address family L2VPN VPLS:
+
+        Peer 10.4.6.6 routes for address family IPv4 MVPN:
+
+        Peer 10.4.6.6 routes for address family IPv6 MVPN:
+
+        Peer 10.4.6.6 routes for address family IPv4 Label Unicast:
+        '''}
+
     def test_show_bgp_vrf_all_neighbors_advertised_routes_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -10379,11 +12136,18 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
         parsed_output = obj.parse(vrf='default', neighbor='19.0.102.3')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
+    def test_show_bgp_vrf_all_neighbors_advertised_routes_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowBgpVrfAllNeighborsAdvertisedRoutes(device=self.device)
+        parsed_output = obj.parse(vrf='default', neighbor='10.4.6.6')
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
+
     def test_show_bgp_vrf_all_neighbors_advertised_routes_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpVrfAllNeighborsAdvertisedRoutes(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf='all', neighbor='21.0.0.2')
+            parsed_output = obj.parse(vrf='all', neighbor='10.4.6.6')
 
 # ===============================================================
 # Unit test for 'show bgp vrf <WORD> all neighbors <WORD> routes'
@@ -10470,7 +12234,8 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'weight': 0}}}}},
                             'ipv4 mvpn': 
                                 {'bgp_table_version': 2,
-                                'local_router_id': '21.0.101.1'},
+                                'local_router_id': '21.0.101.1',
+                                'routes': {}},
                             'ipv4 unicast':
                                 {'bgp_table_version': 25,
                                 'local_router_id': '21.0.101.1',
@@ -10507,16 +12272,24 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'weight': 0}}}}},
                             'ipv6 multicast': 
                                 {'bgp_table_version': 2,
-                                'local_router_id': '21.0.101.1'},
+                                'local_router_id': '21.0.101.1',
+                                'routes': {}},
                             'ipv6 mvpn': 
                                 {'bgp_table_version': 2,
-                                'local_router_id': '21.0.101.1'},
+                                'local_router_id': '21.0.101.1',
+                                'routes': {}},
                             'ipv6 unicast': 
                                 {'bgp_table_version': 7,
-                                'local_router_id': '21.0.101.1'},
+                                'local_router_id': '21.0.101.1',
+                                'routes': {}},
                             'link-state': 
                                 {'bgp_table_version': 2,
-                                'local_router_id': '21.0.101.1'},
+                                'local_router_id': '21.0.101.1',
+                                'routes': {}},
+                            'vpnv4 unicast': 
+                                {'bgp_table_version': 23,
+                                'local_router_id': '21.0.101.1',
+                                'routes': {}},
                             'vpnv4 unicast RD 2:100':
                                 {'bgp_table_version': 23,
                                 'default_vrf': 'vpn2',
@@ -10549,16 +12322,22 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}}}},
+                            'vpnv6 unicast': 
+                                {'bgp_table_version': 7,
+                                'local_router_id': '21.0.101.1',
+                                'routes': {}},
                             'vpnv6 unicast RD 1:100': 
                                 {'bgp_table_version': 7,
                                 'default_vrf': 'vpn1',
                                 'local_router_id': '21.0.101.1',
-                                'route_distinguisher': '1:100'},
+                                'route_distinguisher': '1:100',
+                                'routes': {}},
                             'vpnv6 unicast RD 2:100': 
                                 {'bgp_table_version': 7,
                                 'default_vrf': 'vpn2',
                                 'local_router_id': '21.0.101.1',
-                                'route_distinguisher': '2:100'}}}}}}}
+                                'route_distinguisher': '2:100',
+                                'routes': {}}}}}}}}
 
     golden_output = {'execute.return_value': '''
         pinxdt-n9kv-2# show bgp vrf default all neighbors 21.0.0.2 routes 
@@ -10757,10 +12536,12 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'weight': 0}}}}},
                             'ipv6 multicast': 
                                 {'bgp_table_version': 6,
-                                'local_router_id': '20.0.0.6'},
+                                'local_router_id': '20.0.0.6',
+                                'routes': {}},
                             'ipv6 unicast': 
                                 {'bgp_table_version': 173,
-                                'local_router_id': '20.0.0.6'},
+                                'local_router_id': '20.0.0.6',
+                                'routes': {}},
                             'link-state': 
                                 {'bgp_table_version': 173,
                                 'local_router_id': '20.0.0.6',
@@ -10805,10 +12586,15 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}}}},
+                            'vpnv4 unicast': 
+                                {'bgp_table_version': 183,
+                                'local_router_id': '20.0.0.6',
+                                'routes': {}},
                             'vpnv4 unicast RD 0:0': 
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
-                                'route_distinguisher': '0:0'},
+                                'route_distinguisher': '0:0',
+                                'routes': {}},
                             'vpnv4 unicast RD 101:100': 
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
@@ -10861,11 +12647,17 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                             'vpnv4 unicast RD 102:100': 
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
-                                'route_distinguisher': '102:100'},
+                                'route_distinguisher': '102:100',
+                                'routes': {}},
+                            'vpnv6 unicast': 
+                                {'bgp_table_version': 13,
+                                'local_router_id': '20.0.0.6',
+                                'routes': {}},
                             'vpnv6 unicast RD 0xbb00010000000000': 
                                 {'bgp_table_version': 13,
                                 'local_router_id': '20.0.0.6',
-                                'route_distinguisher': '0xbb00010000000000'},
+                                'route_distinguisher': '0xbb00010000000000',
+                                'routes': {}},
                             'vpnv6 unicast RD 100:200': 
                                 {'bgp_table_version': 13,
                                 'local_router_id': '20.0.0.6',
@@ -10978,6 +12770,136 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
                               19.0.101.1            4444        100          0 3 10 20 30 40 50 60 70 80 90 i
         '''}
 
+    golden_parsed_output3 = {
+        'vrf': 
+            {'default': 
+                {'neighbor': 
+                    {'10.4.6.6': 
+                        {'address_family': 
+                            {'ipv4 unicast': 
+                                {'bgp_table_version': 773961,
+                                'local_router_id': '44.44.44.44',
+                                'routes': 
+                                    {'46.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': 2219,
+                                                'next_hop': '10.4.6.6',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'path_type': 'e',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '46.1.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': 2219,
+                                                'next_hop': '10.4.6.6',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'path_type': 'e',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '46.1.3.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': 2219,
+                                                'next_hop': '10.4.6.6',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'path_type': 'e',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '46.1.4.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': 2219,
+                                                'next_hop': '10.4.6.6',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'path_type': 'e',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '46.1.5.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'metric': 2219,
+                                                'next_hop': '10.4.6.6',
+                                                'origin_codes': 'e',
+                                                'path': '300 '
+                                                        '33299 '
+                                                        '51178 '
+                                                        '47751 '
+                                                        '{27016}',
+                                                'path_type': 'e',
+                                                'status_codes': '*>',
+                                                'weight': 0}}}}},
+                            'ipv6 unicast': 
+                                {'bgp_table_version': 256033,
+                                'local_router_id': '44.44.44.44',
+                                'routes': {}}}}}}}}
+
+    golden_output3 = {'execute.return_value': '''
+        R4# show bgp vrf VRF1 all neighbors 10.4.6.6 routes 
+
+        Peer 10.4.6.6 routes for address family IPv4 Unicast:
+        BGP table version is 773961, local router ID is 44.44.44.44
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        *>e46.1.1.0/24        10.4.6.6              2219                     0 300 33299 51178 47751 {27016} e
+        *>e46.1.2.0/24        10.4.6.6              2219                     0 300 33299 51178 47751 {27016} e
+        *>e46.1.3.0/24        10.4.6.6              2219                     0 300 33299 51178 47751 {27016} e
+        *>e46.1.4.0/24        10.4.6.6              2219                     0 300 33299 51178 47751 {27016} e
+        *>e46.1.5.0/24        10.4.6.6              2219                     0 300 33299 51178 47751 {27016} e
+
+        Peer 10.4.6.6 routes for address family IPv4 Multicast:
+
+        Peer 10.4.6.6 routes for address family IPv6 Unicast:
+        BGP table version is 256033, local router ID is 44.44.44.44
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+
+        Peer 10.4.6.6 routes for address family IPv6 Multicast:
+
+        Peer 10.4.6.6 routes for address family VPNv4 Unicast:
+
+        Peer 10.4.6.6 routes for address family VPNv6 Unicast:
+
+        Peer 10.4.6.6 routes for address family IPv4 MDT:
+
+        Peer 10.4.6.6 routes for address family IPv6 Label Unicast:
+
+        Peer 10.4.6.6 routes for address family L2VPN VPLS:
+
+        Peer 10.4.6.6 routes for address family IPv4 MVPN:
+
+        Peer 10.4.6.6 routes for address family IPv6 MVPN:
+
+        Peer 10.4.6.6 routes for address family IPv4 Label Unicast:
+        '''}
+
     def test_show_bgp_vrf_all_neighbors_routes_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -10991,6 +12913,13 @@ class test_show_bgp_vrf_all_neighbors_routes(unittest.TestCase):
         obj = ShowBgpVrfAllNeighborsRoutes(device=self.device)
         parsed_output = obj.parse(vrf='default', neighbor='19.0.101.1')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+    def test_show_bgp_vrf_all_neighbors_routes_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowBgpVrfAllNeighborsRoutes(device=self.device)
+        parsed_output = obj.parse(vrf='default', neighbor='10.4.6.6')
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
 
     def test_show_bgp_vrf_all_neighbors_routes_empty(self):
         self.device = Mock(**self.empty_output)
@@ -11048,6 +12977,10 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}}}},
+                            'vpnv4 unicast': 
+                                {'bgp_table_version': 23,
+                                'local_router_id': '21.0.101.1',
+                                'received_routes': {}},
                             'vpnv4 unicast RD 1:100': {
                                 'bgp_table_version': 23,
                                 'local_router_id': '21.0.101.1',
@@ -11242,10 +13175,12 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                                 'weight': 0}}}}},
                             'ipv6 multicast': 
                                 {'bgp_table_version': 6,
-                                'local_router_id': '20.0.0.6'},
+                                'local_router_id': '20.0.0.6',
+                                'received_routes': {}},
                             'ipv6 unicast': 
                                 {'bgp_table_version': 173,
-                                'local_router_id': '20.0.0.6'},
+                                'local_router_id': '20.0.0.6',
+                                'received_routes': {}},
                             'link-state': 
                                 {'bgp_table_version': 173,
                                 'local_router_id': '20.0.0.6',
@@ -11290,10 +13225,15 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                                                 'path_type': 'i',
                                                 'status_codes': '*>',
                                                 'weight': 0}}}}},
+                            'vpnv4 unicast': 
+                                {'bgp_table_version': 183,
+                                'local_router_id': '20.0.0.6',
+                                'received_routes': {}},
                             'vpnv4 unicast RD 0:0': 
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
-                                'route_distinguisher': '0:0'},
+                                'route_distinguisher': '0:0',
+                                'received_routes': {}},
                             'vpnv4 unicast RD 101:100': 
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
@@ -11346,11 +13286,17 @@ class test_show_bgp_vrf_all_neighbors_received_routes(unittest.TestCase):
                             'vpnv4 unicast RD 102:100': 
                                 {'bgp_table_version': 183,
                                 'local_router_id': '20.0.0.6',
-                                'route_distinguisher': '102:100'},
+                                'route_distinguisher': '102:100',
+                                'received_routes': {}},
+                            'vpnv6 unicast': 
+                                {'bgp_table_version': 13,
+                                'local_router_id': '20.0.0.6',
+                                'received_routes': {}},
                             'vpnv6 unicast RD 0xbb00010000000000': 
                                 {'bgp_table_version': 13,
                                 'local_router_id': '20.0.0.6',
-                                'route_distinguisher': '0xbb00010000000000'},
+                                'route_distinguisher': '0xbb00010000000000',
+                                'received_routes': {}},
                             'vpnv6 unicast RD 100:200': 
                                 {'bgp_table_version': 13,
                                 'local_router_id': '20.0.0.6',
@@ -11493,13 +13439,19 @@ class test_show_running_config_bgp(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        "bgp": {
+  "bgp": {
+    "instance": {
+        "default": {
             "bgp_id": 333,
             "protocol_shutdown": True,
             "vrf": {
               "management": {
                 "graceful_restart": True,
                 "log_neighbor_changes": False,
+                "enforce_first_as": True,
+                "flush_routes": False,
+                "fast_external_fallover": True,
+                "isolate": False,
                 "neighbor_id": {
                   "5.5.5.5": {'nbr_disable_connected_check': False,
                               'nbr_ebgp_multihop': False,
@@ -11511,13 +13463,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                                                    '386c0565965f89de',
                               'nbr_remove_private_as': False,
                               'nbr_shutdown': False,
-                              'nbr_suppress_four_byte_as_capability': False}
-                },
-                "enforce_first_as": True,
-                "flush_routes": False,
-                "fast_external_fallover": True,
-                "isolate": False
-              },
+                              'nbr_suppress_four_byte_as_capability': False}}},
               "ac": {
                 "log_neighbor_changes": False,
                 "bestpath_cost_community_ignore": False,
@@ -11553,7 +13499,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                     "nbr_ebgp_multihop": False,
                     "nbr_suppress_four_byte_as_capability": True,
                     "nbr_fall_over_bfd": True,
-                    "nbr_local_as_as_no": "222"
+                    "nbr_local_as_as_no": 222
                   }
                 },
                 "fast_external_fallover": True,
@@ -11680,6 +13626,16 @@ class test_show_running_config_bgp(unittest.TestCase):
                 "neighbor_id": {
                   "fec1::2002": {
                     "nbr_local_as_replace_as": False,
+                    "nbr_disable_connected_check": False,
+                    "nbr_remove_private_as": False,
+                    "nbr_local_as_dual_as": False,
+                    "nbr_ebgp_multihop": False,
+                    "nbr_local_as_no_prepend": False,
+                    "nbr_shutdown": False,
+                    "nbr_suppress_four_byte_as_capability": False,
+                    "nbr_fall_over_bfd": False,
+                    "nbr_remote_as": 888,
+                    'nbr_update_source': 'loopback0',
                     "nbr_af_name": {
                       "ipv4 unicast": {
                         "nbr_af_soft_reconfiguration": True,
@@ -11704,16 +13660,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                         "nbr_af_send_community": "both",
                         "nbr_af_allowas_in": False
                       }
-                    },
-                    "nbr_disable_connected_check": False,
-                    "nbr_remove_private_as": False,
-                    "nbr_local_as_dual_as": False,
-                    "nbr_ebgp_multihop": False,
-                    "nbr_local_as_no_prepend": False,
-                    "nbr_shutdown": False,
-                    "nbr_suppress_four_byte_as_capability": False,
-                    "nbr_fall_over_bfd": False,
-                    "nbr_remote_as": 888
+                    }
                   },
                   "21.0.102.1": {
                     "nbr_local_as_replace_as": False,
@@ -11915,9 +13862,11 @@ class test_show_running_config_bgp(unittest.TestCase):
                 "ps_suppress_four_byte_as_capability": False,
                 "ps_local_as_no_prepend": False,
                 "ps_disable_connected_check": False
-                }
+              }
             }
+          }
         }
+      }
     }
 
 
@@ -11976,6 +13925,7 @@ class test_show_running_config_bgp(unittest.TestCase):
               soft-reconfiguration inbound always
           neighbor fec1::2002
             remote-as 888
+            update-source loopback0
             address-family ipv4 unicast
               send-community
               send-community extended
@@ -12148,7 +14098,6 @@ class test_show_running_config_bgp(unittest.TestCase):
         obj = ShowRunningConfigBgp(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
-
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)

@@ -33,7 +33,7 @@ class ShowHsrpSummarySchema(MetaParser):
 
     schema = {'hsrp_summary':
                     {'nsf': str,
-                     'nsf_time': int,
+                     Optional('nsf_time'): int,
                      'global_hsrp_bfd': str,
                      'total_groups': int,
                      'v1_ipv4': int,
@@ -68,9 +68,10 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
         for line in out.splitlines():
             line = line.rstrip()
             
-            # Extended-hold (NSF) enabled, 10 seconds 
-            p1 = re.compile(r'\s*Extended-hold +\(NSF\) +(?P<nsf>[a-zA-Z]+),'
-                             ' +(?P<nsf_time>[0-9]+) seconds$')
+            # Extended-hold (NSF) enabled, 10 seconds
+            # Extended-hold (NSF) disabled
+            p1 = re.compile(r'\s*Extended-hold +\(NSF\) +(?P<nsf>[a-zA-Z]+)'
+                             '(, +(?P<nsf_time>[0-9]+) seconds)?$')
             m = p1.match(line)
             if m:
                 if 'hsrp_summary' not in hsrp_summary_dict:
@@ -78,7 +79,8 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
                     hsrp_summary = hsrp_summary_dict['hsrp_summary']
 
                 hsrp_summary['nsf'] = m.groupdict()['nsf']
-                hsrp_summary['nsf_time'] = int(m.groupdict()['nsf_time'])
+                if m.groupdict()['nsf_time']:
+                    hsrp_summary['nsf_time'] = int(m.groupdict()['nsf_time'])
                 continue
 
             # Global HSRP-BFD enabled
@@ -185,33 +187,41 @@ class ShowHsrpAllSchema(MetaParser):
                         {Any():
                             {'interface':
                                 {Any():
-                                    {'address_family': str,
-                                     'version': int,
-                                     Optional('local_state'): str,
-                                     Optional('priority'): int,
-                                     Optional('configured_priority'): int,
-                                     Optional('preempt'): bool,
-                                     Optional('preempt_reload_delay'): int,
-                                     Optional('preempt_min_delay'): int,
-                                     Optional('preempt_sync_delay'): int,
-                                     'upper_fwd_threshold': int,
-                                     'lower_fwd_threshold': int,
-                                     'hellotime': int,
-                                     'holdtime': int,
-                                     Optional('virtual_ip_address'): str,
-                                     'active_router': str,
-                                     'standby_router': str,
-                                     'virtual_mac_addr': str,
-                                     Optional('authentication_text'): str,
-                                     'num_state_changes': int,
-                                     'last_state_change': str,
-                                     'ip_redundancy_name': str,
-                                    },
-                                 },
-                             },
-                         },
-                     },
-             }
+                                    {'address_family':
+                                        {Any():
+                                            {'version': int,
+                                             Optional('local_state'): str,
+                                             Optional('priority'): int,
+                                             Optional('configured_priority'): int,
+                                             Optional('preempt'): bool,
+                                             Optional('preempt_reload_delay'): int,
+                                             Optional('preempt_min_delay'): int,
+                                             Optional('preempt_sync_delay'): int,
+                                             'upper_fwd_threshold': int,
+                                             'lower_fwd_threshold': int,
+                                             'hellotime': int,
+                                             'holdtime': int,
+                                             Optional('virtual_ip_address'): str,
+                                             'active_router': str,
+                                             'standby_router': str,
+                                             'virtual_mac_addr': str,
+                                             Optional('authentication_text'): str,
+                                             'num_state_changes': int,
+                                             'last_state_change': str,
+                                             'ip_redundancy_name': str,
+                                             Optional('active_priority'): int,
+                                             Optional('standby_priority'): int,
+                                             Optional('active_expire'): float,
+                                             Optional('standby_expire'): float,
+                                             Optional('secondary_vips'): str,
+                                            }
+                                        },
+                                    }
+                                },
+                            },
+                        },
+                    }
+                }
 
 class ShowHsrpAll(ShowHsrpAllSchema):
 
@@ -221,6 +231,7 @@ class ShowHsrpAll(ShowHsrpAllSchema):
         
         # Init vars
         hsrp_all_dict = {}
+        secondary_vip_exists = False
         
         for line in out.splitlines():
             line = line.rstrip()
@@ -246,10 +257,26 @@ class ShowHsrpAll(ShowHsrpAllSchema):
                         [group]['interface']:
                     hsrp_all_dict['hsrp_all']['group'][group]\
                         ['interface'][interface] = {}
+
+                if 'address_family' not in hsrp_all_dict['hsrp_all']\
+                    ['group'][group]['interface'][interface]:
+                    hsrp_all_dict['hsrp_all']['group'][group]['interface']\
+                        [interface]['address_family'] = {}
+
+                af = m.groupdict()['af'].lower()
+
+                if af not in hsrp_all_dict['hsrp_all']\
+                    ['group'][group]['interface'][interface]['address_family']:
+                    hsrp_all_dict['hsrp_all']['group'][group]\
+                        ['interface'][interface]['address_family'][af] = {}
+
                     intf_key = hsrp_all_dict['hsrp_all']['group'][group]\
-                        ['interface'][interface]
-                    intf_key['address_family'] = m.groupdict()['af'].lower()
+                        ['interface'][interface]['address_family'][af]
+
                     intf_key['version'] = int(m.groupdict()['version'])
+
+                    # reset secondary flag
+                    secondary_vip_exists = False
                     continue
 
             # Local state is Initial(Interface Down), priority 110 \
@@ -262,7 +289,8 @@ class ShowHsrpAll(ShowHsrpAllSchema):
             m = p2.match(line)
             if m:
                 intf_key['local_state'] = m.groupdict()['local_state'].lower()
-                intf_key['priority'] = int(m.groupdict()['priority'])
+                priority = int(m.groupdict()['priority'])
+                intf_key['priority'] = priority
                 intf_key['configured_priority'] = \
                     int(m.groupdict()['configured_priority'])
                 if m.groupdict()['preempt'] is not None:
@@ -307,7 +335,7 @@ class ShowHsrpAll(ShowHsrpAllSchema):
 
             # Virtual IP address is 192.168.1.254 (Cfged)
             p6 = re.compile(r'\s*Virtual +IP +address +is'
-                             ' +(?P<virtual_ip_address>[0-9\.]+) +\(Cfged\)$')
+                             ' +(?P<virtual_ip_address>[\w\:\.]+) +\([\w]+\)$')
             m = p6.match(line)
             if m:
                 intf_key['virtual_ip_address'] = \
@@ -315,19 +343,56 @@ class ShowHsrpAll(ShowHsrpAllSchema):
                 continue
 
             # Active router is unknown
+            # Active router is 192.168.1.1, priority 110 expires in 2.662000 sec(s)
             p7 = re.compile(r'\s*Active +router +is'
-                             ' +(?P<active_router>[a-zA-Z\s]+)$')
+                             ' +(?P<active_router>[\w\.\:]+)'
+                             '( *, *priority *(?P<active_priority>\d+) expires *'
+                             'in *(?P<expire>[\w\.]+) *sec\(s\))?$')
             m = p7.match(line)
             if m:
-                intf_key['active_router'] = m.groupdict()['active_router']
+                role = m.groupdict()['active_router']
+                if role == 'local':
+                    try:
+                        priority
+                    except:
+                        pass
+                    else:
+                        active_priority = priority
+                else:
+                    active_priority = m.groupdict()['active_priority']
+                intf_key['active_router'] = role
+                if active_priority:
+                    intf_key['active_priority'] = int(active_priority)
+                if m.groupdict()['expire']:
+                    intf_key['active_expire'] = \
+                        float(m.groupdict()['expire'])
                 continue
 
-            # Standby router is unknown 
+            # Standby router is unknown
+            # Standby router is 192.168.1.2 , priority 90 expires in 2.426000 sec(s)
             p8 = re.compile(r'\s*Standby +router +is'
-                             ' +(?P<standby_router>[a-zA-Z\s]+)$')
+                             ' +(?P<standby_router>[\w\.\:]+)'
+                             '( *, *priority *(?P<standby_priority>\d+) expires *'
+                             'in *(?P<expire>[\w\.]+) *sec\(s\))?$')
             m = p8.match(line)
             if m:
-                intf_key['standby_router'] = m.groupdict()['standby_router']
+                role = m.groupdict()['standby_router']
+                if role == 'local':
+                    try:
+                        priority
+                    except:
+                        pass
+                    else:
+                        standby_priority = priority
+                else:
+                    standby_priority = m.groupdict()['standby_priority']
+
+                intf_key['standby_router'] = role
+                if standby_priority:
+                    intf_key['standby_priority'] = int(standby_priority)
+                if m.groupdict()['expire']:
+                    intf_key['standby_expire'] = \
+                        float(m.groupdict()['expire'])
                 continue
 
             # Authentication text "cisco123"
@@ -350,9 +415,10 @@ class ShowHsrpAll(ShowHsrpAllSchema):
                 continue
 
             # 0 state changes, last state change never
+            # 4 state changes, last state change 01:42:05
             p11 = re.compile(r'\s*(?P<num_state_changes>[0-9]+) +state'
                               ' +changes, +last +state +change'
-                              ' +(?P<last_state_change>[a-zA-Z0-9]+)$')
+                              ' +(?P<last_state_change>[\w\.\:]+)$')
             m = p11.match(line)
             if m:
                 intf_key['num_state_changes'] = \
@@ -369,6 +435,21 @@ class ShowHsrpAll(ShowHsrpAllSchema):
             if m:
                 intf_key['ip_redundancy_name'] = \
                     m.groupdict()['ip_redundancy_name']
+                continue
+
+            # Secondary VIP(s):
+            p12 = re.compile(r'\s*Secondary +VIP\(s\):$')
+            m = p12.match(line)
+            if m:
+                secondary_vip_exists = True
+                continue
+
+            # 192:168::1
+            p13 = re.compile(r'\s*(?P<secondary_vips>[\w\:]+)+$')
+            m = p13.match(line)
+            if m and secondary_vip_exists:
+                intf_key['secondary_vips'] = \
+                    m.groupdict()['secondary_vips']
                 continue
 
         return hsrp_all_dict

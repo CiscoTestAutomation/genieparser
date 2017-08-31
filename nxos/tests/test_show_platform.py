@@ -7,17 +7,17 @@ from ats.topology import Device
 
 from metaparser.util.exceptions import SchemaEmptyParserError
 
-from parser.nxos.show_platform import ShowVersion,\
-                                                 ShowInventory,\
-                                                 ShowInstallActive,\
-                                                 ShowSystemRedundancyStatus,\
-                                                 ShowRedundancyStatus,\
-                                                 ShowBoot,\
-                                                 ShowModule,\
-                                                 Dir, \
-                                                 ShowVdcDetail, \
-                                                 ShowVdcCurrent, \
-                                                 ShowVdcMembershipStatus
+from parser.nxos.show_platform import  ShowBoot,\
+                                         ShowInventory,\
+                                         ShowInstallActive,\
+                                         ShowSystemRedundancyStatus,\
+                                         ShowRedundancyStatus,\
+                                         ShowVersion,\
+                                         ShowModule,\
+                                         Dir, \
+                                         ShowVdcDetail, \
+                                         ShowVdcCurrent, \
+                                         ShowVdcMembershipStatus
 ats_mock = Mock()
 
 
@@ -25,35 +25,62 @@ class test_show_version(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
     device2 = Device(name='cDevice')
-    empty_output = {'execute.return_value': ''}
-    semi_empty_output = {'execute.return_value': 'Cisco Nexus Operating System (NX-OS) Software'}
+    empty_output = {'execute.return_value': '', 'os': 'nxos'}
+    semi_empty_output = {'execute.return_value': 'Cisco Nexus Operating System (NX-OS) Software', 'os': 'nxos'}
     golden_parsed_output = {'platform':
-                              {'reason': 'Reset Requested by CLI command reload',
+                              {'name': 'Nexus',
+                               'reason': 'Reset Requested by CLI command reload',
                                'system_version': '6.2(6)',
                                'os': 'NX-OS',
-                               'hardware': 
-                                {'bootflash': '2007040',
-                                 'chassis': '("Supervisor Module-2")',
-                                 'cpu': 'Intel(R) Xeon(R)',
+                               'hardware':
+                                {'bootflash': '2007040 kB',
+                                 'cpu': None,
+                                 'chassis': 'Supervisor Module-2',
                                  'device_name': 'PE1',
-                                 'memory': '32938744',
+                                 'memory': '32938744 kB',
                                  'model': 'Nexus7000 C7009',
                                  'processor_board_id': 'JAF1708AAKL',
+                                 'slot0': '7989768 kB',
                                  'slots': '9'}, 
-                              'kernel_uptime': 
-                                {'days': '0',
-                                 'hours': '0',
-                                 'minutes': '53',
-                                 'seconds': '5'},
-                              'software': 
-                                {'bios': 'version 2.12.0',
+                              'kernel_uptime':
+                                {'days': 0,
+                                 'hours': 0,
+                                 'minutes': 53,
+                                 'seconds': 5},
+                              'software':
+                                {'bios_version': '2.12.0',
                                  'bios_compile_time': '05/29/2013',
-                                 'kickstart': 'version 8.1(1) [build 8.1(0.129)] [gdb]',
+                                 'kickstart_version': '8.1(1) [build 8.1(0.129)] [gdb]',
                                  'kickstart_compile_time': '4/30/2017 23:00:00 [04/15/2017 ''04:34:05]',
                                  'kickstart_image_file': 'slot0:///n7000-s2-kickstart.8.1.0.129.gbin',
-                                 'system': 'version 8.1(1) [build 8.1(0.129)] [gdb]',
+                                 'system_version': '8.1(1) [build 8.1(0.129)] [gdb]',
                                  'system_compile_time': '4/30/2017 23:00:00 [04/15/2017 ''06:43:41]',
                                  'system_image_file': 'slot0:///n7000-s2-dk9.8.1.0.129.gbin'}
+                              }
+                            }
+
+    golden_parsed_output2 = {'platform':
+                              {'reason': 'Unknown',
+                               'os': 'NX-OS',
+                               'name': 'Nexus',
+                               'hardware':
+                                {'bootflash': '3509454 kB',
+                                 'chassis': 'None',
+                                 'slots': 'None',
+                                 'cpu': 'E5-2699 v3 @ 2.30GHz',
+                                 'device_name': 'N95_2',
+                                 'memory': '10214428 kB',
+                                 'model': 'NX-OSv',
+                                 'processor_board_id': '9YH2MQQB30N'}, 
+                              'kernel_uptime':
+                                {'days': 0,
+                                 'hours': 18,
+                                 'minutes': 29,
+                                 'seconds': 37},
+                              'software':
+                                {'system_version': '7.0(3)I5(2) [build 7.0(3)I5(1.145)]',
+                                 'system_compile_time': '1/4/2017 20:00:00 [01/04/2017 21:47:15]',
+                                 'system_image_file': 'bootflash:///ISSUCleanGolden.system.gbin'}
                               }
                             }
 
@@ -104,8 +131,51 @@ plugin
   Core Plugin, Ethernet Plugin
 
 Active Package(s)
+
+''', 'os': 'nxos'}
+
+    golden_output2 = {'execute.return_value': '''
+
+Cisco Nexus Operating System (NX-OS) Software
+TAC support: http://www.cisco.com/tac
+Documents: http://www.cisco.com/en/US/products/ps9372/tsd_products_support_series_home.html
+Copyright (c) 2002-2017, Cisco Systems, Inc. All rights reserved.
+The copyrights to certain works contained herein are owned by
+other third parties and are used and distributed under license.
+Some parts of this software are covered under the GNU Public
+License. A copy of the license is available at
+http://www.gnu.org/licenses/gpl.html.
+
+NX-OSv9K is a demo version of the Nexus Operating System
+
+Software
+  BIOS: version 
+  NXOS: version 7.0(3)I5(2) [build 7.0(3)I5(1.145)]
+  BIOS compile time:  
+  NXOS image file is: bootflash:///ISSUCleanGolden.system.gbin
+  NXOS compile time:  1/4/2017 20:00:00 [01/04/2017 21:47:15]
+
+
+Hardware
+  cisco NX-OSv Chassis 
+  Intel(R) Xeon(R) CPU E5-2699 v3 @ 2.30GHz with 10214428 kB of memory.
+  Processor Board ID 9YH2MQQB30N
+
+  Device name: N95_2
+  bootflash:    3509454 kB
+Kernel uptime is 0 day(s), 18 hour(s), 29 minute(s), 37 second(s)
+
+Last reset 
+  Reason: Unknown
+  System version: 
+  Service: 
+
+plugin
+  Core Plugin, Ethernet Plugin
+
+Active Package(s):
  
-'''}
+''', 'os': 'nxos'}
 
     ats_mock.tcl.eval.return_value = 'nxos'
 
@@ -116,32 +186,18 @@ Active Package(s)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-    def test_semi_empty(self):
-        self.device1 = Mock(**self.semi_empty_output)
-        version_obj = ShowVersion(device=self.device1)
-        with self.assertRaises(KeyError):
-            parsed_output = version_obj.parse()
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        version_obj = ShowVersion(device=self.device)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
     def test_empty(self):
         self.device2 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.device2)
-        with self.assertRaises(IndexError):
+        with self.assertRaises(SchemaEmptyParserError):
             parsed_output = version_obj.parse()
-
-    # Can't test empty parser with non-tabular parsergen due to below limitation
-    # needs a fix.
-        # attributes = list(self._attributes)
-        # attribute_n = attributes[0]
-        # attribute_n_idx = 0
-        # none_wild_match = []
-        # [pyats] ssr-sucs-lnx7:/auto/nostgAuto/USERS/karmoham/pyats>:python parser/nxos/tests/test_show_version.py
-        # > /auto/nostgAuto/USERS/karmoham/pyats/lib/python3.4/site-packages/parsercore/__init__.py(1211)_parser()
-        # -> attribute_n = attributes[0]
-        # (Pdb) attributes
-        # []
-        # (Pdb) self._attributes
-        # []
-        # (Pdb) 
 
 
 class test_show_inventory(unittest.TestCase):
@@ -196,26 +252,26 @@ class test_show_inventory(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
  
-NAME: "Chassis",  DESCR: "Nexus7000 C7009 (9 Slot) Chassis "     
-PID: N7K-C7009           ,  VID: V01 ,  SN: JAF1704ARQG          
+    NAME: "Chassis",  DESCR: "Nexus7000 C7009 (9 Slot) Chassis "     
+    PID: N7K-C7009           ,  VID: V01 ,  SN: JAF1704ARQG          
 
-NAME: "Slot 1",  DESCR: "Supervisor Module-2"                   
-PID: N7K-SUP2            ,  VID: V01 ,  SN: JAF1708AGTH          
+    NAME: "Slot 1",  DESCR: "Supervisor Module-2"                   
+    PID: N7K-SUP2            ,  VID: V01 ,  SN: JAF1708AGTH          
 
-NAME: "Slot 2",  DESCR: "Supervisor Module-2"                   
-PID: N7K-SUP2            ,  VID: V01 ,  SN: JAF1708AGQH          
+    NAME: "Slot 2",  DESCR: "Supervisor Module-2"                   
+    PID: N7K-SUP2            ,  VID: V01 ,  SN: JAF1708AGQH          
 
-NAME: "Slot 3",  DESCR: "1/10 Gbps Ethernet Module"             
-PID: N7K-F248XP-25E      ,  VID: V01 ,  SN: JAF1717AAND          
+    NAME: "Slot 3",  DESCR: "1/10 Gbps Ethernet Module"             
+    PID: N7K-F248XP-25E      ,  VID: V01 ,  SN: JAF1717AAND          
 
-NAME: "Slot 4",  DESCR: "10/40 Gbps Ethernet Module"            
-PID: N7K-F312FQ-25       ,  VID: V01 ,  SN: JAE18120FLU      
+    NAME: "Slot 4",  DESCR: "10/40 Gbps Ethernet Module"            
+    PID: N7K-F312FQ-25       ,  VID: V01 ,  SN: JAE18120FLU      
 
-NAME: "Slot 33",  DESCR: "Nexus7000 C7009 (9 Slot) Chassis Power Supply"
-PID: N7K-AC-6.0KW        ,  VID: V03 ,  SN: DTM171300QB                   
+    NAME: "Slot 33",  DESCR: "Nexus7000 C7009 (9 Slot) Chassis Power Supply"
+    PID: N7K-AC-6.0KW        ,  VID: V03 ,  SN: DTM171300QB                   
 
-NAME: "Slot 35",  DESCR: "Nexus7000 C7009 (9 Slot) Chassis Fan Module"
-PID: N7K-C7009-FAN       ,  VID: V01 ,  SN: JAF1702AEBE
+    NAME: "Slot 35",  DESCR: "Nexus7000 C7009 (9 Slot) Chassis Fan Module"
+    PID: N7K-C7009-FAN       ,  VID: V01 ,  SN: JAF1702AEBE
  
 '''}
 
@@ -249,28 +305,28 @@ class test_show_install_active(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
  
-Boot Images:
-        Kickstart Image: slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
-        System Image: slot0:/n7000-s2-dk9.8.3.0.CV.0.658.gbin
+    Boot Images:
+            Kickstart Image: slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
+            System Image: slot0:/n7000-s2-dk9.8.3.0.CV.0.658.gbin
 
-Active Packages:
+    Active Packages:
 
-        n7700-s2-dk9.7.2.0.D1.1.CSCuo7721.bin
+            n7700-s2-dk9.7.2.0.D1.1.CSCuo7721.bin
 
-Active Packages on Module #3:
+    Active Packages on Module #3:
 
-        n7700-s2-dk9.7.2.0.D1.1.CSCuo7721.bin
+            n7700-s2-dk9.7.2.0.D1.1.CSCuo7721.bin
 
-Active Packages on Module #4:
-
-
-Active Packages on Module #6:
+    Active Packages on Module #4:
 
 
-Active Packages on Module #7:
+    Active Packages on Module #6:
 
 
-Active Packages on Module #8:
+    Active Packages on Module #7:
+
+
+    Active Packages on Module #8:
  
 '''}
 
@@ -306,22 +362,22 @@ class test_show_system_redundancy_status(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
  
-Redundancy mode
----------------
-      administrative:   HA
-         operational:   HA
+    Redundancy mode
+    ---------------
+          administrative:   HA
+             operational:   HA
 
-This supervisor (sup-1)
------------------------
-    Redundancy state:   Active
-    Supervisor state:   Active
-      Internal state:   Active with HA standby
+    This supervisor (sup-1)
+    -----------------------
+        Redundancy state:   Active
+        Supervisor state:   Active
+          Internal state:   Active with HA standby
 
-Other supervisor (sup-2)
-------------------------
-    Redundancy state:   Standby
-    Supervisor state:   HA standby
-      Internal state:   HA standby
+    Other supervisor (sup-2)
+    ------------------------
+        Redundancy state:   Standby
+        Supervisor state:   HA standby
+          Internal state:   HA standby
  
 '''}
 
@@ -360,29 +416,29 @@ class test_show_redundancy_status(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
  
-Redundancy mode
----------------
-      administrative:   HA
-         operational:   HA
+    Redundancy mode
+    ---------------
+          administrative:   HA
+             operational:   HA
 
-This supervisor (sup-1)
------------------------
-    Redundancy state:   Active
-    Supervisor state:   Active
-      Internal state:   Active with HA standby
+    This supervisor (sup-1)
+    -----------------------
+        Redundancy state:   Active
+        Supervisor state:   Active
+          Internal state:   Active with HA standby
 
-Other supervisor (sup-2)
-------------------------
-    Redundancy state:   Standby
+    Other supervisor (sup-2)
+    ------------------------
+        Redundancy state:   Standby
 
-    Supervisor state:   HA standby
-      Internal state:   HA standby
+        Supervisor state:   HA standby
+          Internal state:   HA standby
 
-System start time:          Fri Apr 21 01:53:24 2017
+    System start time:          Fri Apr 21 01:53:24 2017
 
-System uptime:              0 days, 7 hours, 57 minutes, 30 seconds
-Kernel uptime:              0 days, 8 hours, 0 minutes, 56 seconds
-Active supervisor uptime:   0 days, 7 hours, 57 minutes, 30 seconds
+    System uptime:              0 days, 7 hours, 57 minutes, 30 seconds
+    Kernel uptime:              0 days, 8 hours, 0 minutes, 56 seconds
+    Active supervisor uptime:   0 days, 7 hours, 57 minutes, 30 seconds
 
 '''}
 
@@ -431,29 +487,29 @@ class test_show_boot(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
  
-Current Boot Variables:
+    Current Boot Variables:
 
-sup-1
-kickstart variable = slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
-system variable = slot0:/n7000-s2-dk9.8.3.0.CV.0.658.gbin
-Boot POAP Disabled
-sup-2
-kickstart variable = slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
-system variable = slot0:/n7000-s2-dk9.8.3.0.CV.0.658.gbin
-Boot POAP Disabled
-No module boot variable set
+    sup-1
+    kickstart variable = slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
+    system variable = slot0:/n7000-s2-dk9.8.3.0.CV.0.658.gbin
+    Boot POAP Disabled
+    sup-2
+    kickstart variable = slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
+    system variable = slot0:/n7000-s2-dk9.8.3.0.CV.0.658.gbin
+    Boot POAP Disabled
+    No module boot variable set
 
-Boot Variables on next reload:
+    Boot Variables on next reload:
 
-sup-1
-kickstart variable = slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
-system variable = slot0:/n7000-s2-dk9.8.3.0.CV.0.658.gbin
-Boot POAP Disabled
-sup-2
-kickstart variable = slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
-system variable = slot0:/n7000-s2-dk9.8.3.0.CV.0.658.gbin
-Boot POAP Disabled
-No module boot variable set
+    sup-1
+    kickstart variable = slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
+    system variable = slot0:/n7000-s2-dk9.8.3.0.CV.0.658.gbin
+    Boot POAP Disabled
+    sup-2
+    kickstart variable = slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
+    system variable = slot0:/n7000-s2-dk9.8.3.0.CV.0.658.gbin
+    Boot POAP Disabled
+    No module boot variable set
 
 '''}
 
@@ -487,19 +543,19 @@ class test_show_boot_without_sup(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
  
-Current Boot Variables:
+    Current Boot Variables:
 
 
-kickstart variable = bootflash:/n6000-uk9-kickstart.7.3.2.N1.0.420.bin
-system variable = bootflash:/n6000-uk9.7.3.2.N1.0.420.bin
-Boot POAP Disabled
+    kickstart variable = bootflash:/n6000-uk9-kickstart.7.3.2.N1.0.420.bin
+    system variable = bootflash:/n6000-uk9.7.3.2.N1.0.420.bin
+    Boot POAP Disabled
 
-Boot Variables on next reload:
+    Boot Variables on next reload:
 
 
-kickstart variable = bootflash:/n6000-uk9-kickstart.7.3.2.N1.0.420.bin
-system variable = bootflash:/n6000-uk9.7.3.2.N1.0.420.bin
-Boot POAP Disabled
+    kickstart variable = bootflash:/n6000-uk9-kickstart.7.3.2.N1.0.420.bin
+    system variable = bootflash:/n6000-uk9.7.3.2.N1.0.420.bin
+    Boot POAP Disabled
 
 '''}
 
@@ -654,75 +710,75 @@ class test_show_module(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
  
-Mod  Ports  Module-Type                         Model              Status
----  -----  ----------------------------------- ------------------ ----------
-1    0      Supervisor Module-2                 N7K-SUP2           active *
-2    0      Supervisor Module-2                 N7K-SUP2           ha-standby
-3    48     1/10 Gbps Ethernet Module           N7K-F248XP-25E     ok
-4    12     10/40 Gbps Ethernet Module          N7K-F312FQ-25      ok
-6    32     10 Gbps Ethernet XL Module          N7K-M132XP-12L     ok
-7    24     10 Gbps Ethernet Module             N7K-M224XP-23L     ok
-8    48     10/100/1000 Mbps Ethernet XL Module N7K-M148GT-11L     ok
+    Mod  Ports  Module-Type                         Model              Status
+    ---  -----  ----------------------------------- ------------------ ----------
+    1    0      Supervisor Module-2                 N7K-SUP2           active *
+    2    0      Supervisor Module-2                 N7K-SUP2           ha-standby
+    3    48     1/10 Gbps Ethernet Module           N7K-F248XP-25E     ok
+    4    12     10/40 Gbps Ethernet Module          N7K-F312FQ-25      ok
+    6    32     10 Gbps Ethernet XL Module          N7K-M132XP-12L     ok
+    7    24     10 Gbps Ethernet Module             N7K-M224XP-23L     ok
+    8    48     10/100/1000 Mbps Ethernet XL Module N7K-M148GT-11L     ok
 
-Mod  Sw               Hw
----  ---------------  ------
-1    8.3(0)CV(0.658)  1.0     
-2    8.3(0)CV(0.658)  1.0     
-3    8.3(0)CV(0.658)  1.0     
-4    8.3(0)CV(0.658)  1.0     
-6    8.3(0)CV(0.658)  2.0     
-7    8.3(0)CV(0.658)  1.0     
-8    8.3(0)CV(0.658)  2.1     
-
-
-
-Mod  MAC-Address(es)                         Serial-Num
----  --------------------------------------  ----------
-1    84-78-ac-0f-c4-cd to 84-78-ac-0f-c4-df  JAF1708AGTH
-2    84-78-ac-0f-b9-00 to 84-78-ac-0f-b9-12  JAF1708AGQH
-3    84-78-ac-18-dd-30 to 84-78-ac-18-dd-63  JAF1717AAND
-4    54-4a-00-ad-19-40 to 54-4a-00-ad-19-7b  JAE18120FLU
-6    bc-16-65-54-af-64 to bc-16-65-54-af-87  JAF1719AHMB
-7    d8-67-d9-0e-91-c8 to d8-67-d9-0e-91-e3  JAF1641APPF
-8    bc-16-65-3a-b8-d0 to bc-16-65-3a-b9-03  JAF1717BEAT
-
-Mod  Online Diag Status
----  ------------------
-1    Pass
-2    Pass
-3    Pass
-4    Pass
-6    Pass
-7    Pass
-8    Pass
-
-Xbar Ports  Module-Type                         Model              Status
----  -----  ----------------------------------- ------------------ ----------
-1    0      Fabric Module 2                     N7K-C7009-FAB-2    ok
-2    0      Fabric Module 2                     N7K-C7009-FAB-2    ok
-3    0      Fabric Module 2                     N7K-C7009-FAB-2    ok
-4    0      Fabric Module 2                     N7K-C7009-FAB-2    ok
-5    0      Fabric Module 2                     N7K-C7009-FAB-2    ok
-
-Xbar Sw               Hw
----  ---------------  ------
-1    NA               3.1     
-2    NA               3.1     
-3    NA               3.1     
-4    NA               3.1     
-5    NA               3.1     
+    Mod  Sw               Hw
+    ---  ---------------  ------
+    1    8.3(0)CV(0.658)  1.0     
+    2    8.3(0)CV(0.658)  1.0     
+    3    8.3(0)CV(0.658)  1.0     
+    4    8.3(0)CV(0.658)  1.0     
+    6    8.3(0)CV(0.658)  2.0     
+    7    8.3(0)CV(0.658)  1.0     
+    8    8.3(0)CV(0.658)  2.1     
 
 
 
-Xbar MAC-Address(es)                         Serial-Num
----  --------------------------------------  ----------
-1    NA                                      JAF1705AEEF
-2    NA                                      JAF1705BFBM
-3    NA                                      JAF1705AELK
-4    NA                                      JAF1705BFCF
-5    NA                                      JAF1704APQH
+    Mod  MAC-Address(es)                         Serial-Num
+    ---  --------------------------------------  ----------
+    1    84-78-ac-0f-c4-cd to 84-78-ac-0f-c4-df  JAF1708AGTH
+    2    84-78-ac-0f-b9-00 to 84-78-ac-0f-b9-12  JAF1708AGQH
+    3    84-78-ac-18-dd-30 to 84-78-ac-18-dd-63  JAF1717AAND
+    4    54-4a-00-ad-19-40 to 54-4a-00-ad-19-7b  JAE18120FLU
+    6    bc-16-65-54-af-64 to bc-16-65-54-af-87  JAF1719AHMB
+    7    d8-67-d9-0e-91-c8 to d8-67-d9-0e-91-e3  JAF1641APPF
+    8    bc-16-65-3a-b8-d0 to bc-16-65-3a-b9-03  JAF1717BEAT
 
-* this terminal session 
+    Mod  Online Diag Status
+    ---  ------------------
+    1    Pass
+    2    Pass
+    3    Pass
+    4    Pass
+    6    Pass
+    7    Pass
+    8    Pass
+
+    Xbar Ports  Module-Type                         Model              Status
+    ---  -----  ----------------------------------- ------------------ ----------
+    1    0      Fabric Module 2                     N7K-C7009-FAB-2    ok
+    2    0      Fabric Module 2                     N7K-C7009-FAB-2    ok
+    3    0      Fabric Module 2                     N7K-C7009-FAB-2    ok
+    4    0      Fabric Module 2                     N7K-C7009-FAB-2    ok
+    5    0      Fabric Module 2                     N7K-C7009-FAB-2    ok
+
+    Xbar Sw               Hw
+    ---  ---------------  ------
+    1    NA               3.1     
+    2    NA               3.1     
+    3    NA               3.1     
+    4    NA               3.1     
+    5    NA               3.1     
+
+
+
+    Xbar MAC-Address(es)                         Serial-Num
+    ---  --------------------------------------  ----------
+    1    NA                                      JAF1705AEEF
+    2    NA                                      JAF1705BFBM
+    3    NA                                      JAF1705AELK
+    4    NA                                      JAF1705BFCF
+    5    NA                                      JAF1704APQH
+
+    * this terminal session 
 
 
 '''}
@@ -867,58 +923,58 @@ class test_show_vdc_detail(unittest.TestCase):
     golden_output = {'execute.return_value': '''
  
 
-Switchwide mode is m1 f1 m1xl f2 m2xl f2e f3 m3 
+    Switchwide mode is m1 f1 m1xl f2 m2xl f2e f3 m3 
 
-vdc id: 1
-vdc name: PE1
-vdc state: active
-vdc mac address: 84:78:ac:5a:86:c1
-vdc ha policy: RELOAD
-vdc dual-sup ha policy: SWITCHOVER
-vdc boot Order: 1
-CPU Share: 5
-CPU Share Percentage: 33%
-vdc create time: Fri Apr 28 03:36:26 2017
-vdc reload count: 0
-vdc uptime: 0 day(s), 10 hour(s), 35 minute(s), 47 second(s)
-vdc restart count: 1
-vdc restart time: Fri Apr 28 03:36:26 2017
-vdc type: Ethernet
-vdc supported linecards: f3 
+    vdc id: 1
+    vdc name: PE1
+    vdc state: active
+    vdc mac address: 84:78:ac:5a:86:c1
+    vdc ha policy: RELOAD
+    vdc dual-sup ha policy: SWITCHOVER
+    vdc boot Order: 1
+    CPU Share: 5
+    CPU Share Percentage: 33%
+    vdc create time: Fri Apr 28 03:36:26 2017
+    vdc reload count: 0
+    vdc uptime: 0 day(s), 10 hour(s), 35 minute(s), 47 second(s)
+    vdc restart count: 1
+    vdc restart time: Fri Apr 28 03:36:26 2017
+    vdc type: Ethernet
+    vdc supported linecards: f3 
 
-vdc id: 2
-vdc name: PE2
-vdc state: active
-vdc mac address: 84:78:ac:5a:86:c2
-vdc ha policy: RESTART
-vdc dual-sup ha policy: SWITCHOVER
-vdc boot Order: 1
-CPU Share: 5
-CPU Share Percentage: 33%
-vdc create time: Fri Apr 28 03:48:01 2017
-vdc reload count: 0
-vdc uptime: 0 day(s), 10 hour(s), 25 minute(s), 2 second(s)
-vdc restart count: 1
-vdc restart time: Fri Apr 28 03:48:01 2017
-vdc type: Ethernet
-vdc supported linecards: f3 
+    vdc id: 2
+    vdc name: PE2
+    vdc state: active
+    vdc mac address: 84:78:ac:5a:86:c2
+    vdc ha policy: RESTART
+    vdc dual-sup ha policy: SWITCHOVER
+    vdc boot Order: 1
+    CPU Share: 5
+    CPU Share Percentage: 33%
+    vdc create time: Fri Apr 28 03:48:01 2017
+    vdc reload count: 0
+    vdc uptime: 0 day(s), 10 hour(s), 25 minute(s), 2 second(s)
+    vdc restart count: 1
+    vdc restart time: Fri Apr 28 03:48:01 2017
+    vdc type: Ethernet
+    vdc supported linecards: f3 
 
-vdc id: 3
-vdc name: CORE
-vdc state: active
-vdc mac address: 84:78:ac:5a:86:c3
-vdc ha policy: RESTART
-vdc dual-sup ha policy: SWITCHOVER
-vdc boot Order: 1
-CPU Share: 5
-CPU Share Percentage: 33%
-vdc create time: Fri Apr 28 03:49:33 2017
-vdc reload count: 0
-vdc uptime: 0 day(s), 10 hour(s), 23 minute(s), 39 second(s)
-vdc restart count: 1
-vdc restart time: Fri Apr 28 03:49:33 2017
-vdc type: Ethernet
-vdc supported linecards: f3 
+    vdc id: 3
+    vdc name: CORE
+    vdc state: active
+    vdc mac address: 84:78:ac:5a:86:c3
+    vdc ha policy: RESTART
+    vdc dual-sup ha policy: SWITCHOVER
+    vdc boot Order: 1
+    CPU Share: 5
+    CPU Share Percentage: 33%
+    vdc create time: Fri Apr 28 03:49:33 2017
+    vdc reload count: 0
+    vdc uptime: 0 day(s), 10 hour(s), 23 minute(s), 39 second(s)
+    vdc restart count: 1
+    vdc restart time: Fri Apr 28 03:49:33 2017
+    vdc type: Ethernet
+    vdc supported linecards: f3 
 
 '''}
 
@@ -1021,32 +1077,32 @@ class test_show_vdc_membership_status(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
  
-Flags : b - breakout port
----------------------------------
+    Flags : b - breakout port
+    ---------------------------------
 
-vdc_id: 0 vdc_name: Unallocated interfaces:
-Port        Status      
-----        ----------  
-Eth3/1      OK
-Eth3/2      OK
+    vdc_id: 0 vdc_name: Unallocated interfaces:
+    Port        Status      
+    ----        ----------  
+    Eth3/1      OK
+    Eth3/2      OK
 
-vdc_id: 1 vdc_name: PE1 interfaces:
-Port        Status      
-----        ----------  
-Eth4/5      OK
-Eth4/6      OK
+    vdc_id: 1 vdc_name: PE1 interfaces:
+    Port        Status      
+    ----        ----------  
+    Eth4/5      OK
+    Eth4/6      OK
 
-vdc_id: 2 vdc_name: PE2 interfaces:
-Port        Status      
-----        ----------  
-Eth4/3      OK
-Eth4/4      OK
+    vdc_id: 2 vdc_name: PE2 interfaces:
+    Port        Status      
+    ----        ----------  
+    Eth4/3      OK
+    Eth4/4      OK
 
-vdc_id: 3 vdc_name: CORE interfaces:
-Port        Status      
-----        ----------  
-Eth4/1      OK
-Eth4/2(b)   OK
+    vdc_id: 3 vdc_name: CORE interfaces:
+    Port        Status      
+    ----        ----------  
+    Eth4/1      OK
+    Eth4/2(b)   OK
 
 '''}
 

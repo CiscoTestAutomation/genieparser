@@ -565,7 +565,7 @@ class ShowInventory(ShowInventorySchema):
             # NAME: "module 0/RSP0/CPU0", DESCR: "ASR9K Route Switch Processor with 440G/slot Fabric and 6GB"
             # NAME: "Rack 0", DESCR: "Cisco XRv9K Centralized Virtual Router"
             p1 = re.compile(r'\s*NAME: +\"(?P<module_name>[a-zA-Z0-9\/\s]+)\",'
-                             ' +DESCR: +\"(?P<descr>[a-zA-Z0-9\/\s]+)\"$')
+                             ' +DESCR: +\"(?P<descr>[\w\-\.\:\/\s]+)\"$')
             m = p1.match(line)
             if m:
                 if 'module_name' not in inventory_dict:
@@ -820,8 +820,9 @@ class ShowRedundancySchema(MetaParser):
         'node': 
             {Any(): 
                 {'role': str,
-                 'valid_partner': str,
-                 'group': 
+                 Optional('valid_partner'): str,
+                 Optional('ready'): str,
+                 Optional('group'): 
                     {Any():
                         {'primary': str,
                          'backup': str,
@@ -834,9 +835,15 @@ class ShowRedundancySchema(MetaParser):
                  'time_since_last_reload': str,
                  'node_uptime': str,
                  'node_uptime_timestamp': str,
-                 'last_switchover_timepstamp': str,
-                 'time_since_last_switchover': str,
-                 Optional('reload_cause'): str,
+                 Optional('last_switchover_timepstamp'): str,
+                 Optional('time_since_last_switchover'): str,
+                 Optional('standby_node_timestamp'): str,
+                 Optional('time_since_standby_boot'): str,
+                 Optional('standby_node_not_ready'): str,
+                 Optional('time_since_standby_node_not_ready'): str,
+                 Optional('standby_node_ready'):str,
+                 Optional('time_since_standby_node_ready'): str,
+                 Optional('reload_cause'): str
                 },
             },
         }
@@ -874,12 +881,33 @@ class ShowRedundancy(ShowRedundancySchema):
                     str(m.groupdict()['role'])
                 continue
 
+            #Node Redundancy Partner (0/RSP1/CPU0) is in STANDBY role
+            p3_1 =  re.compile(r'\s*(Node|Process) *Redundancy *Partner'
+                                ' *\(([a-zA-Z0-9\/]+)\) *is *in'
+                                ' *(?P<role>[a-zA-Z]+) *role$')
+            m = p3_1.match(line)
+            if m:
+                redundancy_dict['node'][node]['role'] = \
+                    str(m.groupdict()['role'])
+                continue
+
+            # Standby node in 0/RSP1/CPU0 is ready
+            # Standby node in 0/RSP1/CPU0 is NSR-ready
+            p3_2 = re.compile(r'\s*Standby *node *in *([a-zA-Z0-9\/]+)'
+                               ' *is *(?P<ready>[a-zA-Z\-]+)$')
+            m = p3_2.match(line)
+            if m:
+                redundancy_dict['node'][node]['ready'] = \
+                    str(m.groupdict()['ready'])
+                continue
+
             # Node 0/RP0/CPU0 has no valid partner
-            p3 = re.compile(r'\s*Node +([a-zA-Z0-9\/]+) +has +no'
+            p3 = re.compile(r'\s*Node +([a-zA-Z0-9\/]+) +has +(?P<valid_partner>\S+)'
                              ' +valid +partner$')
             m = p3.match(line)
             if m:
-                redundancy_dict['node'][node]['valid_partner'] = ''
+                redundancy_dict['node'][node]['valid_partner'] = \
+                str(m.groupdict()['valid_partner'])
                 continue
 
             # v6-routing       0/RSP0/CPU0     N/A             Not Ready
@@ -937,6 +965,52 @@ class ShowRedundancy(ShowRedundancySchema):
                     str(m.groupdict()['node_uptime_timestamp'])
                 redundancy_dict['node'][node]['node_uptime'] = \
                     str(m.groupdict()['node_uptime'])
+                continue
+
+            # Standby node boot Thu Aug 10 08:29:18 2017: 1 day, 32 minutes ago
+            p7_1 = re.compile(r'\s*Standby +node +boot'
+                               ' +(?P<standby_node_timestamp>[a-zA-Z0-9\:\s]+):'
+                               ' +(?P<time_since_standby_boot>[a-zA-Z0-9\,\s]+)$')
+            m = p7_1.match(line)
+            if m:
+                standby_node_timestamp = str(m.groupdict()['standby_node_timestamp'])
+                time_since_standby_boot = str(m.groupdict()['time_since_standby_boot'])
+
+                redundancy_dict['node'][node]['standby_node_timestamp'] = \
+                standby_node_timestamp
+                redundancy_dict['node'][node]['time_since_standby_boot'] = \
+                time_since_standby_boot
+                continue
+
+            # Standby node last went not ready Fri Aug 11 07:13:26 2017: 1 hour, 48 minutes ago
+            # Standby node last went ready Fri Aug 11 07:13:26 2017: 1 hour, 48 minutes ago
+
+            p7_2 = re.compile(r'\s*Standby *node *last *went *not *ready'
+                               ' *(?P<standby_node_not_ready>[a-zA-Z0-9\:\s]+):'
+                               ' *(?P<time_since_standby_node_not_ready>[a-zA-Z0-9\,\s]+)$')
+            m = p7_2.match(line)
+            if m:
+                standby_node_not_ready = str(m.groupdict()['standby_node_not_ready'])
+                time_since_standby_node_not_ready = str(m.groupdict()['time_since_standby_node_not_ready'])
+
+                redundancy_dict['node'][node]['standby_node_not_ready'] = \
+                standby_node_not_ready
+                redundancy_dict['node'][node]['time_since_standby_node_not_ready'] = \
+                time_since_standby_node_not_ready
+                continue
+
+            p7_3 = re.compile(r'\s*Standby *node *last *went *ready'
+                               ' *(?P<standby_node_ready>[a-zA-Z0-9\:\s]+):'
+                               ' *(?P<time_since_standby_node_ready>[a-zA-Z0-9\,\s]+)$')
+            m = p7_3.match(line)
+            if m:
+                standby_node_ready = str(m.groupdict()['standby_node_ready'])
+                time_since_standby_node_ready = str(m.groupdict()['time_since_standby_node_ready'])
+
+                redundancy_dict['node'][node]['standby_node_ready'] = \
+                standby_node_ready
+                redundancy_dict['node'][node]['time_since_standby_node_ready'] = \
+                time_since_standby_node_ready
                 continue
 
             # Last switch-over Thu Apr 27 03:29:57 2017: 1 minute ago

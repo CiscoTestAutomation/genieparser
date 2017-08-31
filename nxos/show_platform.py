@@ -8,10 +8,6 @@ import xmltodict
 from ats import tcl
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any, Optional, Or, And, Default, Use
-# from cnetconf import testmodel
-import parsergen as pg
-from parsergen import oper_fill
-from .tests import test_show_platform_mrkup_package
 
 
 def regexp(expression):
@@ -26,32 +22,34 @@ def regexp(expression):
 
 class ShowVersionSchema(MetaParser):
     schema = {'platform':
-                  {'reason': str,
-                   'system_version': str,
-                   'os': str,
+                  {Optional('name'): str,
+                   Optional('reason'): str,
+                   Optional('system_version'): str,
+                   Optional('os'): str,
                    'hardware':
-                      {'bootflash': str,
-                      'chassis': str,
-                      'cpu': str,
-                      'device_name': str,
-                      'memory': str,
-                      'model': str,
-                      'processor_board_id': str,
-                      'slots': str},
+                      {Optional('bootflash'): str,
+                       Optional('slot0'): str,
+                       Optional('chassis'): str,
+                       Optional('cpu'): Or(str, None),
+                       Optional('device_name'): str,
+                       Optional('memory'): str,
+                       Optional('model'): str,
+                       Optional('processor_board_id'): str,
+                       Optional('slots'): str},
                   'kernel_uptime':
-                      {'days': str,
-                      'hours': str,
-                      'minutes': str,
-                      'seconds': str},
+                      {Optional('days'): int,
+                       Optional('hours'): int,
+                       Optional('minutes'): int,
+                       Optional('seconds'): int},
                   'software':
-                      {'bios': str,
-                      'bios_compile_time': str,
-                      'kickstart': str,
-                      'kickstart_compile_time': str,
-                      'kickstart_image_file': str,
-                      'system': str,
-                      'system_compile_time': str,
-                      'system_image_file': str}
+                      {Optional('bios_version'): str,
+                       Optional('bios_compile_time'): str,
+                       Optional('kickstart_version'): str,
+                       Optional('kickstart_compile_time'): str,
+                       Optional('kickstart_image_file'): str,
+                       Optional('system_version'): str,
+                       Optional('system_compile_time'): str,
+                       Optional('system_image_file'): str}
                   }
               }
 
@@ -73,60 +71,269 @@ class ShowVersion(ShowVersionSchema):
         typically contains 3 steps: executing, transforming, returning
         '''
         cmd = 'show version'.format()
-        self.device.execute(cmd)
-
-        attrValPairsToParse = [
-          ('show.version.platform', 'Nexus'),
-        ]
-
-        pgfill = oper_fill (
-                  self.device,
-                  ('show_version'),
-                  attrValPairsToParse,
-                  refresh_cache=True,
-                  regex_tag_fill_pattern='show\.version',
-                  skip=True)
-
-        result = pgfill.parse()
-        out = pg.ext_dictio[self.device.name]
+        output = self.device.execute(cmd)
         version_dict = {}
 
-        if 'platform' not in version_dict:
-            version_dict['platform'] = {}
+        for line in output.splitlines():
+            line = line.rstrip()
+            p1 = re.compile(r'^\s*Cisco +(?P<platform>[a-zA-Z]+) +Operating +System +\((?P<os>[A-Z\-]+)\)? +Software$')
+            m = p1.match(line)
+            if m:
+                name = str(m.groupdict()['platform'])
+                os = str(m.groupdict()['os'])
 
-        if 'hardware' not in version_dict['platform']:
-            version_dict['platform']['hardware'] = {}
-        version_dict['platform']['hardware']['bootflash'] = out['show.version.bootflash']
-        version_dict['platform']['hardware']['chassis'] = out['show.version.chassis']
-        version_dict['platform']['hardware']['cpu'] = out['show.version.cpu']
-        version_dict['platform']['hardware']['device_name'] = out['show.version.device_name']
-        version_dict['platform']['hardware']['memory'] = out['show.version.memory']
-        version_dict['platform']['hardware']['model'] = out['show.version.model']
-        version_dict['platform']['hardware']['processor_board_id'] = out['show.version.processor_board_id']
-        version_dict['platform']['hardware']['slots'] = out['show.version.slots']
+                if 'platform' not in version_dict:
+                    version_dict['platform'] = {}
+                if 'name' not in version_dict['platform']:
+                    version_dict['platform']['name'] = name
+                if 'os' not in version_dict['platform']:
+                    version_dict['platform']['os'] = os
+                continue
 
-        if 'kernel_uptime' not in version_dict['platform']:
-            version_dict['platform']['kernel_uptime'] = {}
-        version_dict['platform']['kernel_uptime']['days'] = out['show.version.days']
-        version_dict['platform']['kernel_uptime']['hours'] = out['show.version.hours']
-        version_dict['platform']['kernel_uptime']['minutes'] = out['show.version.minutes']
-        version_dict['platform']['kernel_uptime']['seconds'] = out['show.version.seconds']
+            p2 = re.compile(r'^\s*Software$')
+            m = p2.match(line)
+            if m:
 
-        version_dict['platform']['reason'] = out['show.version.reason']
+                if 'software' not in version_dict['platform']:
+                    version_dict['platform']['software'] = {}
+                continue
 
-        if 'software' not in version_dict['platform']:
-            version_dict['platform']['software'] = {}
-        version_dict['platform']['software']['bios'] = out['show.version.bios']
-        version_dict['platform']['software']['bios_compile_time'] = out['show.version.bios_compile_time']
-        version_dict['platform']['software']['kickstart'] = out['show.version.kickstart']
-        version_dict['platform']['software']['kickstart_compile_time'] = out['show.version.kickstart_compile_time']
-        version_dict['platform']['software']['kickstart_image_file'] = out['show.version.kickstart_image_file']
-        version_dict['platform']['software']['system'] = out['show.version.system']
-        version_dict['platform']['software']['system_compile_time'] = out['show.version.system_compile_time']
-        version_dict['platform']['software']['system_image_file'] = out['show.version.system_image_file']
+            p3 = re.compile(r'^\s*BIOS: +version +(?P<bios_version>[0-9\.]+)?$')
+            m = p3.match(line)
+            if m:
 
-        version_dict['platform']['system_version'] = out['show.version.system_version']
-        version_dict['platform']['os'] = out['show.version.os']
+                bios_version = str(m.groupdict()['bios_version'])
+
+                if 'bios_version' not in version_dict['platform']['software']:
+                    version_dict['platform']['software']['bios_version'] = bios_version
+                continue
+
+            p4 = re.compile(r'^\s*kickstart: +version +(?P<kickstart_version>[a-z0-9\.\(\)\[\]\s]+)$')
+            m = p4.match(line)
+            if m:
+                kickstart_version = str(m.groupdict()['kickstart_version'])
+
+                if 'kickstart_version' not in version_dict['platform']['software']:
+                    version_dict['platform']['software']['kickstart_version'] = kickstart_version
+                continue
+
+            p5 = re.compile(r'^\s*system: +version +(?P<system_version>[a-z0-9\.\(\)\[\]\s]+)$')
+            m = p5.match(line)
+            if m:
+                system_version = str(m.groupdict()['system_version'])
+
+                if 'system_version' not in version_dict['platform']['software']:
+                    version_dict['platform']['software']['system_version'] = system_version
+                continue
+
+            p6 = re.compile(r'^\s*NXOS: +version +(?P<system_version>[A-Za-z0-9\.\(\)\[\]\s]+)$')
+            m = p6.match(line)
+            if m:
+                system_version = str(m.groupdict()['system_version'])
+
+                if 'system_version' not in version_dict['platform']['software']:
+                    version_dict['platform']['software']['system_version'] = system_version
+                continue
+
+            p7 = re.compile(r'^\s*BIOS +compile +time: +(?P<bios_compile_time>[0-9\/]+)?$')
+            m = p7.match(line)
+            if m:
+                bios_compile_time = str(m.groupdict()['bios_compile_time'])
+
+                if 'bios_compile_time' not in version_dict['platform']['software']:
+                    version_dict['platform']['software']['bios_compile_time'] = bios_compile_time
+                continue
+
+            p8 = re.compile(r'^\s*kickstart +image +file +is: +(?P<kickstart_image_file>[a-z\:\/0-9\-\.]+)$')
+            m = p8.match(line)
+            if m:
+                kickstart_image_file = str(m.groupdict()['kickstart_image_file'])
+
+                if 'kickstart_image_file' not in version_dict['platform']['software']:
+                    version_dict['platform']['software']['kickstart_image_file'] = kickstart_image_file
+                continue
+
+            p9 = re.compile(r'^\s*kickstart +compile +time: +(?P<kickstart_compile_time>[0-9\/\s\:\[\]]+)$')
+            m = p9.match(line)
+            if m:
+                kickstart_compile_time = str(m.groupdict()['kickstart_compile_time'])
+
+                if 'kickstart_compile_time' not in version_dict['platform']['software']:
+                    version_dict['platform']['software']['kickstart_compile_time'] = kickstart_compile_time
+                continue
+
+            p10 = re.compile(r'^\s*system +image +file +is: +(?P<system_image_file>[a-z\:\/0-9\-\.]+)$')
+            m = p10.match(line)
+            if m:
+                system_image_file = str(m.groupdict()['system_image_file'])
+
+                if 'system_image_file' not in version_dict['platform']['software']:
+                    version_dict['platform']['software']['system_image_file'] = system_image_file
+                continue
+
+            p11 = re.compile(r'^\s*system +compile +time: +(?P<system_compile_time>[0-9\/\s\:\[\]]+)$')
+            m = p11.match(line)
+            if m:
+                system_compile_time = str(m.groupdict()['system_compile_time'])
+
+                if 'system_compile_time' not in version_dict['platform']['software']:
+                    version_dict['platform']['software']['system_compile_time'] = system_compile_time
+                continue
+
+            p12 = re.compile(r'^\s*NXOS +image +file +is: +(?P<system_image_file>[a-zA-Z\:\/0-9\-\.]+)$')
+            m = p12.match(line)
+            if m:
+                system_image_file = str(m.groupdict()['system_image_file'])
+
+                if 'system_image_file' not in version_dict['platform']['software']:
+                    version_dict['platform']['software']['system_image_file'] = system_image_file
+                continue
+
+            p13 = re.compile(r'^\s*NXOS +compile +time: +(?P<system_compile_time>[0-9\/\s\:\[\]]+)$')
+            m = p13.match(line)
+            if m:
+                system_compile_time = str(m.groupdict()['system_compile_time'])
+
+                if 'system_compile_time' not in version_dict['platform']['software']:
+                    version_dict['platform']['software']['system_compile_time'] = system_compile_time
+                continue
+
+            p14 = re.compile(r'^\s*Hardware$')
+            m = p14.match(line)
+            if m:
+
+                if 'hardware' not in version_dict['platform']:
+                    version_dict['platform']['hardware'] = {}
+                continue
+
+            p15 = re.compile(r'^\s*cisco +(?P<model>[a-zA-Z0-9\-\s]+)( +\((?P<slot>[0-9]+) Slot\))? +Chassis( +\(\"(?P<chassis>[a-zA-Z0-9\s\-]+)\"\))?(\s)?$')
+            m = p15.match(line)
+            if m:
+
+                model = str(m.groupdict()['model'])
+                slot = str(m.groupdict()['slot'])
+                chassis = str(m.groupdict()['chassis'])
+
+                if 'model' not in version_dict['platform']['hardware']:
+                    version_dict['platform']['hardware']['model'] = model
+
+                if 'slots' not in version_dict['platform']['hardware']:
+                    version_dict['platform']['hardware']['slots'] = slot
+
+                if 'chassis' not in version_dict['platform']['hardware']:
+                    version_dict['platform']['hardware']['chassis'] = chassis
+
+                continue
+
+            p16 = re.compile(r'^\s*Intel\(R\) +Xeon\(R\) +CPU +(?P<cpu>[a-zA-Z0-9\s\@\.\-]+) +with +(?P<memory>[0-9a-zA-Z\s]+) +of +memory\.$')
+            m = p16.match(line)
+            if m:
+
+                cpu = str(m.groupdict()['cpu'])
+                memory = str(m.groupdict()['memory'])
+
+                if cpu == ' ':
+                    cpu = None
+
+                if 'cpu' not in version_dict['platform']['hardware']:
+                    version_dict['platform']['hardware']['cpu'] = cpu
+
+                if 'memory' not in version_dict['platform']['hardware']:
+                    version_dict['platform']['hardware']['memory'] = memory
+
+                continue
+
+            p17 = re.compile(r'^\s*Processor +Board +ID +(?P<processor_board_id>[A-Z0-9]+)$')
+            m = p17.match(line)
+            if m:
+
+                processor_board_id = str(m.groupdict()['processor_board_id'])
+
+                if 'processor_board_id' not in version_dict['platform']['hardware']:
+                    version_dict['platform']['hardware']['processor_board_id'] = processor_board_id
+
+                continue
+
+            p18 = re.compile(r'^\s*Device name: +(?P<device_name>[a-zA-Z0-9\-\_]+)$')
+            m = p18.match(line)
+            if m:
+
+                device_name = str(m.groupdict()['device_name'])
+
+                if 'device_name' not in version_dict['platform']['hardware']:
+                    version_dict['platform']['hardware']['device_name'] = device_name
+
+                continue
+
+            p19 = re.compile(r'^\s*bootflash: +(?P<bootflash>[a-zA-Z0-9\s]+)$')
+            m = p19.match(line)
+            if m:
+
+                bootflash = str(m.groupdict()['bootflash'])
+
+                if 'bootflash' not in version_dict['platform']['hardware']:
+                    version_dict['platform']['hardware']['bootflash'] = bootflash
+
+                continue
+
+            p20 = re.compile(r'^\s*slot0: +(?P<slot0>[a-zA-Z0-9\s]+) +\(expansion flash\)$')
+            m = p20.match(line)
+            if m:
+
+                slot0 = str(m.groupdict()['slot0'])
+
+                if 'slot0' not in version_dict['platform']['hardware']:
+                    version_dict['platform']['hardware']['slot0'] = slot0
+
+                continue
+
+            p21 = re.compile(r'^\s*Kernel +uptime +is +(?P<days>[0-9]+) +day\(s\), +(?P<hours>[0-9]+) +hour\(s\), +(?P<minutes>[0-9]+) +minute\(s\), +(?P<seconds>[0-9]+) +second\(s\)$')
+            m = p21.match(line)
+            if m:
+
+                if 'kernel_uptime' not in version_dict['platform']:
+                    version_dict['platform']['kernel_uptime'] = {}
+
+                days = int(m.groupdict()['days'])
+                hours = int(m.groupdict()['hours'])
+                minutes = int(m.groupdict()['minutes'])
+                seconds = int(m.groupdict()['seconds'])
+
+                if 'days' not in version_dict['platform']['kernel_uptime']:
+                    version_dict['platform']['kernel_uptime']['days'] = days
+
+                if 'hours' not in version_dict['platform']['kernel_uptime']:
+                    version_dict['platform']['kernel_uptime']['hours'] = hours
+
+                if 'minutes' not in version_dict['platform']['kernel_uptime']:
+                    version_dict['platform']['kernel_uptime']['minutes'] = minutes
+
+                if 'seconds' not in version_dict['platform']['kernel_uptime']:
+                    version_dict['platform']['kernel_uptime']['seconds'] = seconds
+
+                continue
+
+            p22 = re.compile(r'^\s*Reason: +(?P<reason>[a-zA-Z0-9\s]+)$')
+            m = p22.match(line)
+            if m:
+
+                reason = str(m.groupdict()['reason'])
+
+                if 'reason' not in version_dict['platform']:
+                    version_dict['platform']['reason'] = reason
+
+                continue
+
+            p23 = re.compile(r'^\s*System version: +(?P<system_version>[0-9\(\)\.]+)?$')
+            m = p23.match(line)
+            if m:
+
+                system_version = str(m.groupdict()['system_version'])
+
+                if 'system_version' not in version_dict['platform']:
+                    version_dict['platform']['system_version'] = system_version
+
+                continue
 
         return version_dict
 
@@ -196,9 +403,9 @@ class ShowInventorySchema(MetaParser):
                 {Any():
                     {'description': str,
                      'slot': str,
-                     'pid': str,
-                     'vid': str,
-                     'serial_number': str}
+                     Optional('pid'): str,
+                     Optional('vid'): str,
+                     Optional('serial_number'): str}
                 },
             }
 
@@ -243,23 +450,26 @@ class ShowInventory(ShowInventorySchema):
                 inventory_dict['name'][name]['slot'] = slot_number
                 continue
 
-            p2 = re.compile(r'^\s*PID: +(?P<pid>[a-zA-z0-9\-\.]+) +\, +VID: +(?P<vid>[A-Z0-9\/]+) +\, +SN: +(?P<serial_number>[A-Z0-9\/]+)$')
+            p2 = re.compile(r'^\s*PID: +(?P<pid>[a-zA-z0-9\-\.]+)? +\, +VID: +(?P<vid>[A-Z0-9\/]+) +\, +SN: *(?P<serial_number>[A-Z0-9\/]+)?$')
             m = p2.match(line)
             if m:
-                inventory_dict['name'][name]['pid'] = m.groupdict()['pid']
-                inventory_dict['name'][name]['vid'] = m.groupdict()['vid']
-                inventory_dict['name'][name]['serial_number'] = m.groupdict()['serial_number']
+                if m.groupdict()['pid']:
+                    inventory_dict['name'][name]['pid'] = m.groupdict()['pid']
+                if m.groupdict()['vid']:
+                    inventory_dict['name'][name]['vid'] = m.groupdict()['vid']
+                if m.groupdict()['serial_number']:
+                    inventory_dict['name'][name]['serial_number'] = m.groupdict()['serial_number']
                 continue
 
         return inventory_dict
 
 class ShowInstallActiveSchema(MetaParser):
     schema = {'boot_images':
-                {'kickstart_image': str,
-                 'system_image': str},
+                {Optional('kickstart_image'): str,
+                 Optional('system_image'): str},
               'active_packages':
                 {Any():
-                  {'active_package_name': str}
+                  {Optional('active_package_name'): str}
                 },
               }
 
@@ -287,12 +497,12 @@ class ShowInstallActive(ShowInstallActiveSchema):
         active_package_module_number = 0
         for line in out.splitlines():
             line = line.rstrip()
-            p1 = re.compile(r'^\s*Boot Images:$')
+            p1 = re.compile(r'^\s*(?P<boot_images>[a-zA-Z\s]+):$')
             m = p1.match(line)
             if m:
-                if 'Boot Images' not in active_dict:
+                if 'boot_images' not in active_dict:
                     active_dict['boot_images'] = {}
-                continue
+                    continue
 
             p2 = re.compile(r'^\s*Kickstart Image: +(?P<kickstart_image>[a-zA-z0-9\:\/\-\.]+)$')
             m = p2.match(line)
@@ -332,144 +542,47 @@ class ShowInstallActive(ShowInstallActiveSchema):
 
         return active_dict
 
-class ShowSystemRedundancyStatusSchema(MetaParser):
-    schema = {'redundancy_mode':
-                  {'administrative': str,
-                   'operational': str},
-              'supervisor_1':
-                  {'redundancy_state': str,
-                   'supervisor_state': str,
-                   'internal_state':str},
-              'supervisor_2':
-                  {'redundancy_state': str,
-                   'supervisor_state': str,
-                   'internal_state':str},
-            }
 
-
-class ShowSystemRedundancyStatus(ShowSystemRedundancyStatusSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
-
-    def cli(self):
-        ''' parsing mechanism: cli
-
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
-        '''
-        cmd = 'show system redundancy status'.format()
-        out = self.device.execute(cmd)
-        redundancy_dict = {}
-        sup_number = None
-        for line in out.splitlines():
-            line = line.rstrip()
-            p1 = re.compile(r'^\s*Redundancy mode$')
-            m = p1.match(line)
-            if m:
-                if 'redundancy_mode' not in redundancy_dict:
-                    redundancy_dict['redundancy_mode'] = {}
-                continue
-
-            p2 = re.compile(r'^\s*administrative: +(?P<administrative>[a-zA-z\s]+)$')
-            m = p2.match(line)
-            if m:
-                redundancy_dict['redundancy_mode']['administrative'] = m.groupdict()['administrative']
-                continue
-
-            p3 = re.compile(r'^\s*operational: +(?P<operational>[a-zA-z\s]+)$')
-            m = p3.match(line)
-            if m:
-                redundancy_dict['redundancy_mode']['operational'] = m.groupdict()['operational']
-                continue
-
-            p4 = re.compile(r'^\s*This supervisor \(sup-1\)$')
-            m = p4.match(line)
-            if m:
-                sup_number = 'sup-1'
-                if 'supervisor_1' not in redundancy_dict:
-                    redundancy_dict['supervisor_1'] = {}
-                continue
-
-            p5 = re.compile(r'^\s*Other supervisor \(sup-2\)$')
-            m = p5.match(line)
-            if m:
-                sup_number = 'sup-2'
-                if 'supervisor_2' not in redundancy_dict:
-                    redundancy_dict['supervisor_2'] = {}
-                continue
-
-            p6 = re.compile(r'^\s*Redundancy state: +(?P<redundancy_state>[a-zA-z\s]+)$')
-            m = p6.match(line)
-            if m:
-                if sup_number is 'sup-1':
-                  redundancy_dict['supervisor_1']['redundancy_state'] = m.groupdict()['redundancy_state']
-                elif sup_number is 'sup-2':
-                  redundancy_dict['supervisor_2']['redundancy_state'] = m.groupdict()['redundancy_state']
-                continue
-
-            p7 = re.compile(r'^\s*Supervisor state: +(?P<supervisor_state>[a-zA-z\s]+)$')
-            m = p7.match(line)
-            if m:
-                if sup_number is 'sup-1':
-                  redundancy_dict['supervisor_1']['supervisor_state'] = m.groupdict()['supervisor_state']
-                elif sup_number is 'sup-2':
-                  redundancy_dict['supervisor_2']['supervisor_state'] = m.groupdict()['supervisor_state']
-                continue
-
-            p8 = re.compile(r'^\s*Internal state: +(?P<internal_state>[a-zA-z\s]+)$')
-            m = p8.match(line)
-            if m:
-                if sup_number is 'sup-1':
-                  redundancy_dict['supervisor_1']['internal_state'] = m.groupdict()['internal_state']
-                elif sup_number is 'sup-2':
-                  redundancy_dict['supervisor_2']['internal_state'] = m.groupdict()['internal_state']
-                continue
-
-        return redundancy_dict
+# =====================================
+# Parser for 'show redundancy status'
+# =====================================
 
 class ShowRedundancyStatusSchema(MetaParser):
+    
+    '''Schema for show redundancy status and 
+                  show system redundancy status'''
+
     schema = {'redundancy_mode':
                   {'administrative': str,
                    'operational': str},
-              'supervisor_1':
+              Optional('supervisor_1'):
                   {'redundancy_state': str,
                    'supervisor_state': str,
                    'internal_state':str},
-              'supervisor_2':
-                  {'redundancy_state': str,
-                   'supervisor_state': str,
-                   'internal_state':str},
-              'system_start_time': str,
-              'system_uptime': str,
-              'kernel_uptime': str,
-              'active_supervisor_time': str}
+              Optional('supervisor_2'):
+                  {Optional('redundancy_state'): str,
+                   Optional('supervisor_state'): str,
+                   Optional('internal_state'):str},
+              Optional('supervisor_3'):
+                  {Optional('redundancy_state'): str,
+                   Optional('supervisor_state'): str,
+                   Optional('internal_state'):str},
+              Optional('supervisor_4'):
+                  {Optional('redundancy_state'): str,
+                   Optional('supervisor_state'): str,
+                   Optional('internal_state'):str},
+              Optional('system_start_time'): str,
+              Optional('system_uptime'): str,
+              Optional('kernel_uptime'): str,
+              Optional('active_supervisor_time'): str}
 
 
 class ShowRedundancyStatus(ShowRedundancyStatusSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
 
-    def cli(self):
-        ''' parsing mechanism: cli
+    '''Parser for show redundancy status'''
 
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
-        '''
-        cmd = 'show redundancy status'.format()
+    def cli(self, cmd='show redundancy status'):
+
         out = self.device.execute(cmd)
         redundancy_dict = {}
         sup_number = None
@@ -480,6 +593,16 @@ class ShowRedundancyStatus(ShowRedundancyStatusSchema):
             if m:
                 if 'redundancy_mode' not in redundancy_dict:
                     redundancy_dict['redundancy_mode'] = {}
+                continue
+
+            # Redundancy information not available for this platform
+            p1 = re.compile(r'^\s*Redundancy +information +not +available +for +this +platform$')
+            m = p1.match(line)
+            if m:
+                if 'redundancy_mode' not in redundancy_dict:
+                    redundancy_dict['redundancy_mode'] = {}
+                    redundancy_dict['redundancy_mode']['administrative'] = 'none'
+                    redundancy_dict['redundancy_mode']['operational'] = 'none'
                 continue
 
             p2 = re.compile(r'^\s*administrative: +(?P<administrative>[a-zA-z\s]+)$')
@@ -494,48 +617,29 @@ class ShowRedundancyStatus(ShowRedundancyStatusSchema):
                 redundancy_dict['redundancy_mode']['operational'] = m.groupdict()['operational']
                 continue
 
-            p4 = re.compile(r'^\s*This supervisor \(sup-1\)$')
+            p4 = re.compile(r'^\s*(This|Other) +supervisor +\(sup-(?P<sup_num>\d+)\)$')
             m = p4.match(line)
             if m:
-                sup_number = 'sup-1'
-                if 'supervisor_1' not in redundancy_dict:
-                    redundancy_dict['supervisor_1'] = {}
+                sup_num = m.groupdict()['sup_num']
+                key = 'supervisor_{}'.format(sup_num)
+                if key not in redundancy_dict:
+                    redundancy_dict[key] = {}
                 continue
 
-            p5 = re.compile(r'^\s*Other supervisor \(sup-2\)$')
-            m = p5.match(line)
-            if m:
-                sup_number = 'sup-2'
-                if 'supervisor_2' not in redundancy_dict:
-                    redundancy_dict['supervisor_2'] = {}
-                continue
-
-            p6 = re.compile(r'^\s*Redundancy state: +(?P<redundancy_state>[a-zA-z\s]+)$')
+            p6 = re.compile(r'^\s*Redundancy state: +(?P<redundancy_state>[a-zA-z\W\s]+)$')
             m = p6.match(line)
             if m:
-                if sup_number is 'sup-1':
-                  redundancy_dict['supervisor_1']['redundancy_state'] = m.groupdict()['redundancy_state']
-                elif sup_number is 'sup-2':
-                  redundancy_dict['supervisor_2']['redundancy_state'] = m.groupdict()['redundancy_state']
-                continue
+                redundancy_dict[key]['redundancy_state'] = m.groupdict()['redundancy_state']
 
             p7 = re.compile(r'^\s*Supervisor state: +(?P<supervisor_state>[a-zA-z\s]+)$')
             m = p7.match(line)
             if m:
-                if sup_number is 'sup-1':
-                  redundancy_dict['supervisor_1']['supervisor_state'] = m.groupdict()['supervisor_state']
-                elif sup_number is 'sup-2':
-                  redundancy_dict['supervisor_2']['supervisor_state'] = m.groupdict()['supervisor_state']
-                continue
+                redundancy_dict[key]['supervisor_state'] = m.groupdict()['supervisor_state']
 
             p8 = re.compile(r'^\s*Internal state: +(?P<internal_state>[a-zA-z\s]+)$')
             m = p8.match(line)
             if m:
-                if sup_number is 'sup-1':
-                  redundancy_dict['supervisor_1']['internal_state'] = m.groupdict()['internal_state']
-                elif sup_number is 'sup-2':
-                  redundancy_dict['supervisor_2']['internal_state'] = m.groupdict()['internal_state']
-                continue
+                redundancy_dict[key]['internal_state'] = m.groupdict()['internal_state']
 
             p9 = re.compile(r'^\s*System start time: +(?P<system_start_time>[a-zA-z0-9\:\s]+)$')
             m = p9.match(line)
@@ -564,23 +668,34 @@ class ShowRedundancyStatus(ShowRedundancyStatusSchema):
         return redundancy_dict
 
 
+# ==========================================
+# Parser for 'show system redundancy status'
+# ==========================================
+class ShowSystemRedundancyStatus(ShowRedundancyStatus):
+
+    '''Parser for show system redundancy status'''
+
+    def cli(self):
+        return(super().cli(cmd='show system redundancy status'))
+
+
 class ShowBootSchema(MetaParser):
     schema = {'current_boot_variable':
                   {Optional('sup_number'):
-                      {Optional(Any()):
-                          {'kickstart_variable': str,
-                           'system_variable': str,
-                           'boot_poap':str}
+                      {Any():
+                          {Optional('kickstart_variable'): str,
+                           Optional('system_variable'): str,
+                           Optional('boot_poap'):str}
                       },
                   Optional('kickstart_variable'): str,
                   Optional('system_variable'): str,
                   Optional('boot_poap'):str},
               'next_reload_boot_variable':
                   {Optional('sup_number'):
-                      {Optional(Any()):
-                          {'kickstart_variable': str,
-                           'system_variable': str,
-                           'boot_poap':str}
+                      {Any():
+                          {Optional('kickstart_variable'): str,
+                           Optional('system_variable'): str,
+                           Optional('boot_poap'):str}
                       },
                   Optional('kickstart_variable'): str,
                   Optional('system_variable'): str,
@@ -738,7 +853,7 @@ class ShowModuleSchema(MetaParser):
                          'hardware': str,
                          'mac_address': str,
                          'serial_number': str,
-                         'online_diag_status': str,
+                         Optional('online_diag_status'): str,
                          Optional('slot/world_wide_name'): str}
                       },
                     },
@@ -1053,7 +1168,7 @@ class ShowVdcDetail(ShowVdcDetailSchema):
                     vdc_dict['vdc'][identity] = {}
                 continue
 
-            p2 = re.compile(r'^\s*vdc +name: +(?P<name>[a-zA-Z0-9\-]+)$')
+            p2 = re.compile(r'^\s*vdc +name: +(?P<name>\S+)$')
             m = p2.match(line)
             if m:
                 vdc_dict['vdc'][identity]['name'] = m.groupdict()['name']
@@ -1139,7 +1254,7 @@ class ShowVdcDetail(ShowVdcDetailSchema):
                 vdc_dict['vdc'][identity]['type'] = m.groupdict()['type']
                 continue
 
-            p16 = re.compile(r'^\s*vdc +supported +linecards: +(?P<linecards>[a-zA-Z0-9]+)$')
+            p16 = re.compile(r'^\s*vdc +supported +linecards: +(?P<linecards>[a-zA-Z0-9\s]+)$')
             m = p16.match(line)
             if m:
                 if 'vdc' not in vdc_dict:
@@ -1232,7 +1347,7 @@ class ShowVdcMembershipStatus(ShowVdcMembershipStatusSchema):
             if m:
                 continue
 
-            p2 = re.compile(r'^\s*vdc_id: +(?P<id>[0-9]+) +vdc_name: +(?P<name>[a-zA-Z0-9]+) +interfaces:$')
+            p2 = re.compile(r'^\s*vdc_id: +(?P<id>[0-9]+) +vdc_name: +(?P<name>\S+) +interfaces:$')
             m = p2.match(line)
             if m:
                 identity = m.groupdict()['id']
