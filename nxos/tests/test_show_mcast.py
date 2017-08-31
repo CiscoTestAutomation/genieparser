@@ -28,10 +28,10 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
         'vrf': 
             {'VRF': 
                 {'address_family': 
-                    {'ip multicast': {}}},
+                    {'ipv4': {}}},
             'VRF1': 
                 {'address_family': 
-                    {'ip multicast': 
+                    {'ipv4': 
                         {'multicast_group': 
                             {'232.0.0.0/8': 
                                 {'source_address': 
@@ -60,7 +60,7 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
                                         'uptime': '3d11h'}}}}}}},
             'VRF2': 
                 {'address_family': 
-                    {'ip multicast': 
+                    {'ipv4': 
                         {'multicast_group': 
                             {'224.192.1.10/32': 
                                 {'source_address': 
@@ -109,7 +109,7 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
                                         'uptime': '09:31:16'}}}}}}},
             'default': 
                 {'address_family': 
-                    {'ip multicast': 
+                    {'ipv4': 
                         {'multicast_group': 
                             {'232.0.0.0/8': 
                                 {'source_address': 
@@ -215,10 +215,10 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
         'vrf': 
             {'VRF': 
                 {'address_family': 
-                    {'ipv6 multicast': {}}},
+                    {'ipv6': {}}},
             'VRF1': 
                 {'address_family': 
-                    {'ipv6 multicast': 
+                    {'ipv6': 
                         {'multicast_group': 
                             {'ff1e:1111::1:0/128': 
                                 {'source_address': 
@@ -394,7 +394,7 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
                                         'uptime': '19:55:47'}}}}}}},
             'default': 
                 {'address_family': 
-                    {'ipv6 multicast': 
+                    {'ipv6': 
                         {'multicast_group': 
                             {'ff30::/12': 
                                 {'source_address': 

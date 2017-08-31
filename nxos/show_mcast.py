@@ -67,13 +67,15 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
             line = line.rstrip()
 
             # IP Multicast Routing Table for VRF "default 
-            p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) +Routing +Table'
-                             ' +for +VRF +(?P<vrf>[a-zA-Z0-9\"]+)$')
+            p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) [mM]ulticast'
+                             ' +[rR]outing +[tT]able +for +VRF '
+                            '+(?P<vrf>[a-zA-Z0-9\"]+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
                 vrf = vrf.replace('"',"")
                 address_family = m.groupdict()['address_family'].lower()
+                address_family += 'v4'
 
                 if 'vrf' not in mroute_dict:
                     mroute_dict['vrf'] = {}
@@ -229,7 +231,8 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
             line = line.rstrip()
 
             ''' IPv6 Multicast Routing Table for VRF "default '''
-            p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) +Routing +Table +for +VRF'
+            p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) [mM]ulticast'
+                             ' +[rR]outing +[tT]able +for +VRF'
                              ' +(?P<vrf>[a-zA-Z0-9\"]+)$')
             m = p1.match(line)
             if m:
@@ -406,7 +409,7 @@ class ShowIpStaticRouteMulticast(ShowIpStaticRouteMulticastSchema):
 
     def cli(self):
         # cli implemetation of parsers
-        out = self.device.execute('show ip static-route multicast')
+        out = self.device.execute('show ip static-route multicast vrf all')
         static_routemulticast_dict = {}
 
         for line in out.splitlines():
@@ -569,7 +572,7 @@ class ShowIpv6StaticRouteMulticast(ShowIpv6StaticRouteMulticastSchema):
     def cli(self):
         # cli implementation of parsers '''
 
-        out = self.device.execute('show ipv6 static-route multicast')
+        out = self.device.execute('show ipv6 static-route multicast vrf all')
         ipv6_multicast_dict = {}
 
         for line in out.splitlines():
