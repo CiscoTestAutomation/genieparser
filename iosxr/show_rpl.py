@@ -1,6 +1,6 @@
-##########################################################################
+###########################################################################
 # Parser For Show PRL ROUTE POLICY
-##########################################################################
+###########################################################################
 
 import re
 from metaparser import MetaParser   
@@ -211,7 +211,7 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
             # set community test additive
             p7_1 = re.compile(r'^\s*set +community +(?P<set_community_list>\S+)'
                              ' *(?P<set_community_additive>(additive))$')
-            m = p7.match(line)
+            m = p7_1.match(line)
             if m:
                 set_community_list = m.groupdict()['set_community_list']
                 set_community_list = set_community_list.replace("(","")
@@ -289,10 +289,10 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                 continue
 
             # set community (100:1, 200:1, 300:1, no-export, no-advertise)
-            p8 = re.compile(r'^\s*set +community +\((?P<set_community>[0-9\:\s\,]+),'
+            p8_3 = re.compile(r'^\s*set +community +\((?P<set_community>[0-9\:\s\,]+),'
                              ' *(?P<set_community_no_export>(no-export)),'
                              ' *(?P<set_community_no_advertise>(no-advertise))\)$')
-            m = p8.match(line)
+            m = p8_3.match(line)
             if m:
                 set_community_no_export = m.groupdict()['set_community_no_export']
                 set_community_no_advertise = m.groupdict()['set_community_no_advertise']
@@ -309,11 +309,11 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                 continue
 
             # set community (100:100, no-export, no-advertise) additive
-            p8 = re.compile(r'^\s*set +community +\((?:(?P<set_community>[0-9\:\s\,]+),)?'
+            p8_4 = re.compile(r'^\s*set +community +\((?:(?P<set_community>[0-9\:\s\,]+),)?'
                              '(?: *(?P<set_community_no_export>(no-export)),)?'
                              '(?: *(?P<set_community_no_advertise>(no-advertise)))?\)'
                              '(?: *(?P<set_community_additive>(additive)))?$')
-            m = p8.match(line)
+            m = p8_4.match(line)
             if m:
                 set_community_no_export = m.groupdict()['set_community_no_export']
                 set_community_no_advertise = m.groupdict()['set_community_no_advertise']
@@ -447,10 +447,10 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
             # if med eq 100 and local-preference eq 100 and ospf-area is 0 then
             # m.groupdict()[cond] == None - set to none if there is no parsed condition
             p19 = re.compile(r'^\s*(if|elseif|else) *(?P<condition1>\S+ \S+ \S+)'
-                              '( *and)?(?:(?P<condition2>\S+ \S+ \S+))?( *and)?'
-                              '(?:(?P<condition3>\S+ \S+ \S+))?( *and)?(?:'
-                              '(?P<condition4>\S+ \S+ \S+))?( *and)?(?:'
-                              '(?P<condition5>\S+ \S+ \S+))? *then$')
+                              '( *and)?(?: *(?P<condition2>\S+ \S+ \S+))?( *and)?'
+                              '(?: *(?P<condition3>\S+ \S+ \S+))?( *and)?(?:'
+                              ' *(?P<condition4>\S+ \S+ \S+))?( *and)?(?:'
+                              ' *(?P<condition5>\S+ \S+ \S+))? *then$')
             m = p19.match(line)
             if m:
                 for cond in m.groupdict().keys():
@@ -487,7 +487,7 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                         ['match_nexthop_in'] = match_nexthop_in
 
                     if 'community matches-any' in m.groupdict()[cond]:
-                        v = re.match('community matches-any (?P<match_community_list>[\w\W]+)', m.groupdict()[cond])
+                        v = re.match('community matches-any (?P<match_ext_community_list>\S+)', m.groupdict()[cond])
                         match_ext_community_list = v.groupdict()['match_ext_community_list']
                         rpl_route_policy_dict[name]['statements'][statements]['conditions']\
                         ['match_ext_community_list'] = match_ext_community_list

@@ -1,6 +1,6 @@
 ############################################################################
 # Unitest For Show PRL ROUTE POLICY PARSER
-###########################################################################
+############################################################################
 
 import unittest
 from unittest.mock import Mock
@@ -38,7 +38,7 @@ class test_show_rpl_route_policy(unittest.TestCase):
                                                                       '300:1'],
                                                     'set_community_no_advertise': True,
                                                     'set_community_no_export': True},
-                                        'conditions': {}},
+                                        'conditions': {'match_med_eq': 90}},
                                    20: {'actions': {'set_community': ['111:1',
                                                                       '222:1'],
                                                     'set_community_additive': True,
@@ -46,19 +46,23 @@ class test_show_rpl_route_policy(unittest.TestCase):
                                                     'set_ext_community_rt': ['100:1',
                                                                              '200:1'],
                                                     'set_ext_community_rt_additive': True},
-                                        'conditions': {}}}},
+                                        'conditions': {'match_local_pref_eq': '30'}}}},
  'test2': {'statements': {10: {'actions': {'actions': 'pass'},
-                               'conditions': {'match_origin_eq': 'eg'}},
+                               'conditions': {'match_med_eq': 100,
+                                              'match_origin_eq': 'egp'}},
                           20: {'actions': {'actions': 'pass'},
-                               'conditions': {'match_nexthop_in': 'prefix-set'}},
+                               'conditions': {'match_nexthop_in': 'prefix-set1'}},
                           30: {'actions': {'actions': 'pass'},
-                               'conditions': {'match_local_pref_eq': '13'}}}},
+                               'conditions': {'match_ext_community_list': 'test',
+                                              'match_local_pref_eq': '130'}}}},
  'test3': {'statements': {10: {'actions': {'actions': 'pass'},
                                'conditions': {}},
                           20: {'actions': {'actions': 'pass'},
-                               'conditions': {'match_area_eq': '1'}},
+                               'conditions': {'match_area_eq': '1',
+                                              'match_level_eq': 'level-2'}},
                           30: {'actions': {'actions': 'pass'},
-                               'conditions': {'match_prefix_list': 'prefix-set'}},
+                               'conditions': {'match_as_path_list': 'test',
+                                              'match_prefix_list': 'prefix-set1'}},
                           40: {'actions': {'actions': 'pass'},
                                'conditions': {}},
                           50: {'actions': {'set_as_path_prepend': 100,
@@ -89,7 +93,14 @@ class test_show_rpl_route_policy(unittest.TestCase):
                                               'set_med': 111,
                                               'set_metric_type': 'type-1',
                                               'set_next_hop': '192.168.1.1'},
-                                  'conditions': {'match_med_eq': 10}}}}}
+                                  'conditions': {'match_area_eq': '0',
+                                                 'match_local_pref_eq': '100',
+                                                 'match_med_eq': 100}}}},
+ 'testtest2': {'statements': {10: {'actions': {'set_community_additive': True,
+                                               'set_community_list': 'no-export',
+                                               'set_med': 222},
+                                   'conditions': {'match_local_pref_eq': '99',
+                                                  'match_med_eq': 88}}}}}
     
     golden_output = {'execute.return_value': '''
         Listing for all Route Policy objects
@@ -113,7 +124,7 @@ class test_show_rpl_route_policy(unittest.TestCase):
     route-policy test2
       if origin is egp and med eq 100 then
         pass
-      elseif next-hop in prefix-set1 and next-hop in test6 then
+      elseif next-hop in prefix-set1 then
         pass
       elseif local-preference eq 130 and community matches-any test then
         pass
@@ -195,11 +206,18 @@ class test_show_rpl_route_policy(unittest.TestCase):
     end-policy
     !
     route-policy test-community
-      if med ge 90 then
+      if med eq 90 then
         set community (100:1, 200:1, 300:1, no-export, no-advertise)
-      elseif local-preference le 30 then
+      elseif local-preference eq 30 then
         set community (111:1, 222:1, no-advertise) additive
         set extcommunity rt (100:1, 200:1) additive
+      endif
+    end-policy
+    !
+    route-policy testtest2
+      if local-preference eq 99 and med eq 88 then
+        set community (no-export) additive
+        set med 222
       endif
     end-policy
       '''}
