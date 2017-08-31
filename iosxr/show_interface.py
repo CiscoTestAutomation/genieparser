@@ -3,22 +3,12 @@
 Example parser class
 
 '''
-from collections import defaultdict
 
-    import iptools
-    from cnetconf import testmodel
-except ImportError:
-    pass
-
+# python
+import re
 import logging
-import os
-import pprint
-import xmltodict
-
-from ats.log.utils import banner
 
 from metaparser import MetaParser
-from metaparser.util import merge_dict, keynames_convert
 from metaparser.util.schemaengine import Schema, \
                                          Any, \
                                          Optional, \
@@ -464,21 +454,6 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
 # show vrf all detail
 # show ipv4 vrf all interface
 # show ipv6 vrf all interface
-
-
-
-# python
-import re
-
-# metaparser
-from metaparser import MetaParser
-from metaparser.util.schemaengine import Schema, \
-                                         Any, \
-                                         Optional, \
-                                         Or, \
-                                         And, \
-                                         Default, \
-                                         Use
 
 
 #############################################################################
