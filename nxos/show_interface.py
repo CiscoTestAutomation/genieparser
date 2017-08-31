@@ -1112,7 +1112,8 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
             m = p4.match(line)
             if m:
                 broadcast_address = str(m.groupdict()['broadcast_address'])
-                ip_interface_vrf_all_dict[interface]['ipv4'][address]['broadcast_address'] = broadcast_address
+                if 'ipv4' in ip_interface_vrf_all_dict[interface]:
+                    ip_interface_vrf_all_dict[interface]['ipv4'][address]['broadcast_address'] = broadcast_address
                 continue
             
             #IP multicast groups locally joined: none
@@ -1298,177 +1299,182 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
             # Broadcast bytes    : 0/0/0/0/0
             # Labeled packets    : 0/0/0/0/0
             # Labeled bytes      : 0/0/0/0/0
-
-            #Unicast packets    : 0/0/0/0/0
-            p20 = re.compile(r'^\s*Unicast *packets *:'
-                              ' *(?P<unicast_packets_sent>[0-9]+)\/'
-                              '(?P<unicast_packets_received>[0-9]+)\/'
-                              '(?P<unicast_packets_forwarded>[0-9]+)\/'
-                              '(?P<unicast_packets_originated>[0-9]+)\/'
-                              '(?P<unicast_packets_consumed>[0-9]+)$')
-            m = p20.match(line)
-            if m:
-                if 'counters' not in ip_interface_vrf_all_dict[interface]['ipv4'][address]:
-                    ip_interface_vrf_all_dict[interface]['ipv4']['counters'] = {}
-
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['unicast_packets_sent']= int(m.groupdict()['unicast_packets_sent'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['unicast_packets_received']= int(m.groupdict()['unicast_packets_received'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['unicast_packets_forwarded']= int(m.groupdict()['unicast_packets_forwarded'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['unicast_packets_originated']= int(m.groupdict()['unicast_packets_originated'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['unicast_packets_consumed']= int(m.groupdict()['unicast_packets_consumed'])
+            try:
+                interface
+            except:
                 continue
 
-            #Unicast bytes      : 0/0/0/0/0
-            p21 = re.compile(r'^\s*Unicast *bytes *:'
-                              ' *(?P<unicast_bytes_sent>[0-9]+)\/'
-                              '(?P<unicast_bytes_received>[0-9]+)\/'
-                              '(?P<unicast_bytes_forwarded>[0-9]+)\/'
-                              '(?P<unicast_bytes_originated>[0-9]+)\/'
-                              '(?P<unicast_bytes_consumed>[0-9]+)$')
-            m = p21.match(line)
-            if m:
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['unicast_bytes_sent']= int(m.groupdict()['unicast_bytes_sent'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['unicast_bytes_received']= int(m.groupdict()['unicast_bytes_received'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['unicast_bytes_forwarded']= int(m.groupdict()['unicast_bytes_forwarded'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['unicast_bytes_originated']= int(m.groupdict()['unicast_bytes_originated'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['unicast_bytes_consumed']= int(m.groupdict()['unicast_bytes_consumed'])
-                continue
+            if 'ipv4' in ip_interface_vrf_all_dict[interface]:
+                #Unicast packets    : 0/0/0/0/0
+                p20 = re.compile(r'^\s*Unicast *packets *:'
+                                  ' *(?P<unicast_packets_sent>[0-9]+)\/'
+                                  '(?P<unicast_packets_received>[0-9]+)\/'
+                                  '(?P<unicast_packets_forwarded>[0-9]+)\/'
+                                  '(?P<unicast_packets_originated>[0-9]+)\/'
+                                  '(?P<unicast_packets_consumed>[0-9]+)$')
+                m = p20.match(line)
+                if m:
+                    if 'counters' not in ip_interface_vrf_all_dict[interface]['ipv4'][address]:
+                        ip_interface_vrf_all_dict[interface]['ipv4']['counters'] = {}
 
-            #Multicast packets  : 0/0/0/0/0
-            p22 = re.compile(r'^\s*Multicast *packets *:'
-                              ' *(?P<multicast_packets_sent>[0-9]+)\/'
-                              '(?P<multicast_packets_received>[0-9]+)\/'
-                              '(?P<multicast_packets_forwarded>[0-9]+)\/'
-                              '(?P<multicast_packets_originated>[0-9]+)\/'
-                              '(?P<multicast_packets_consumed>[0-9]+)$')
-            m = p22.match(line)
-            if m:
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['multicast_packets_sent']= int(m.groupdict()['multicast_packets_sent'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['multicast_packets_received']= int(m.groupdict()['multicast_packets_received'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['multicast_packets_forwarded']= int(m.groupdict()['multicast_packets_forwarded'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['multicast_packets_originated']= int(m.groupdict()['multicast_packets_originated'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['multicast_packets_consumed']= int(m.groupdict()['multicast_packets_consumed'])
-                continue
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['unicast_packets_sent']= int(m.groupdict()['unicast_packets_sent'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['unicast_packets_received']= int(m.groupdict()['unicast_packets_received'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['unicast_packets_forwarded']= int(m.groupdict()['unicast_packets_forwarded'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['unicast_packets_originated']= int(m.groupdict()['unicast_packets_originated'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['unicast_packets_consumed']= int(m.groupdict()['unicast_packets_consumed'])
+                    continue
 
-            #Multicast bytes    : 0/0/0/0/0
-            p23 = re.compile(r'^\s*Multicast *bytes *:'
-                              ' *(?P<multicast_bytes_sent>[0-9]+)\/'
-                              '(?P<multicast_bytes_received>[0-9]+)\/'
-                              '(?P<multicast_bytes_forwarded>[0-9]+)\/'
-                              '(?P<multicast_bytes_originated>[0-9]+)\/'
-                              '(?P<multicast_bytes_consumed>[0-9]+)$')
-            m = p23.match(line)
-            if m:
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['multicast_bytes_sent']= int(m.groupdict()['multicast_bytes_sent'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['multicast_bytes_received']= int(m.groupdict()['multicast_bytes_received'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['multicast_bytes_forwarded']= int(m.groupdict()['multicast_bytes_forwarded'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['multicast_bytes_originated']= int(m.groupdict()['multicast_bytes_originated'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['multicast_bytes_consumed']= int(m.groupdict()['multicast_bytes_consumed'])
-                continue
+                #Unicast bytes      : 0/0/0/0/0
+                p21 = re.compile(r'^\s*Unicast *bytes *:'
+                                  ' *(?P<unicast_bytes_sent>[0-9]+)\/'
+                                  '(?P<unicast_bytes_received>[0-9]+)\/'
+                                  '(?P<unicast_bytes_forwarded>[0-9]+)\/'
+                                  '(?P<unicast_bytes_originated>[0-9]+)\/'
+                                  '(?P<unicast_bytes_consumed>[0-9]+)$')
+                m = p21.match(line)
+                if m:
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['unicast_bytes_sent']= int(m.groupdict()['unicast_bytes_sent'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['unicast_bytes_received']= int(m.groupdict()['unicast_bytes_received'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['unicast_bytes_forwarded']= int(m.groupdict()['unicast_bytes_forwarded'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['unicast_bytes_originated']= int(m.groupdict()['unicast_bytes_originated'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['unicast_bytes_consumed']= int(m.groupdict()['unicast_bytes_consumed'])
+                    continue
 
-            #Broadcast packets  : 0/0/0/0/0
-            p24 = re.compile(r'^\s*Broadcast *packets *:'
-                              ' *(?P<broadcast_packets_sent>[0-9]+)\/'
-                              '(?P<broadcast_packets_received>[0-9]+)\/'
-                              '(?P<broadcast_packets_forwarded>[0-9]+)\/'
-                              '(?P<broadcast_packets_originated>[0-9]+)\/'
-                              '(?P<broadcast_packets_consumed>[0-9]+)$')
-            m = p24.match(line)
-            if m:
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['broadcast_packets_sent']= int(m.groupdict()['broadcast_packets_sent'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['broadcast_packets_received']= int(m.groupdict()['broadcast_packets_received'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['broadcast_packets_forwarded']= int(m.groupdict()['broadcast_packets_forwarded'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['broadcast_packets_originated']= int(m.groupdict()['broadcast_packets_originated'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['broadcast_packets_consumed']= int(m.groupdict()['broadcast_packets_consumed'])
-                continue
+                #Multicast packets  : 0/0/0/0/0
+                p22 = re.compile(r'^\s*Multicast *packets *:'
+                                  ' *(?P<multicast_packets_sent>[0-9]+)\/'
+                                  '(?P<multicast_packets_received>[0-9]+)\/'
+                                  '(?P<multicast_packets_forwarded>[0-9]+)\/'
+                                  '(?P<multicast_packets_originated>[0-9]+)\/'
+                                  '(?P<multicast_packets_consumed>[0-9]+)$')
+                m = p22.match(line)
+                if m:
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['multicast_packets_sent']= int(m.groupdict()['multicast_packets_sent'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['multicast_packets_received']= int(m.groupdict()['multicast_packets_received'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['multicast_packets_forwarded']= int(m.groupdict()['multicast_packets_forwarded'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['multicast_packets_originated']= int(m.groupdict()['multicast_packets_originated'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['multicast_packets_consumed']= int(m.groupdict()['multicast_packets_consumed'])
+                    continue
 
-            #Broadcast bytes    : 0/0/0/0/0
-            p25 = re.compile(r'^\s*Broadcast *bytes *:'
-                              ' *(?P<broadcast_bytes_sent>[0-9]+)\/'
-                              '(?P<broadcast_bytes_received>[0-9]+)\/'
-                              '(?P<broadcast_bytes_forwarded>[0-9]+)\/'
-                              '(?P<broadcast_bytes_originated>[0-9]+)\/'
-                              '(?P<broadcast_bytes_consumed>[0-9]+)$')
-            m = p25.match(line)
-            if m:
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['broadcast_bytes_sent']= int(m.groupdict()['broadcast_bytes_sent'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['broadcast_bytes_received']= int(m.groupdict()['broadcast_bytes_received'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['broadcast_bytes_forwarded']= int(m.groupdict()['broadcast_bytes_forwarded'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['broadcast_bytes_originated']= int(m.groupdict()['broadcast_bytes_originated'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['broadcast_bytes_consumed']= int(m.groupdict()['broadcast_bytes_consumed'])
-                continue
+                #Multicast bytes    : 0/0/0/0/0
+                p23 = re.compile(r'^\s*Multicast *bytes *:'
+                                  ' *(?P<multicast_bytes_sent>[0-9]+)\/'
+                                  '(?P<multicast_bytes_received>[0-9]+)\/'
+                                  '(?P<multicast_bytes_forwarded>[0-9]+)\/'
+                                  '(?P<multicast_bytes_originated>[0-9]+)\/'
+                                  '(?P<multicast_bytes_consumed>[0-9]+)$')
+                m = p23.match(line)
+                if m:
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['multicast_bytes_sent']= int(m.groupdict()['multicast_bytes_sent'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['multicast_bytes_received']= int(m.groupdict()['multicast_bytes_received'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['multicast_bytes_forwarded']= int(m.groupdict()['multicast_bytes_forwarded'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['multicast_bytes_originated']= int(m.groupdict()['multicast_bytes_originated'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['multicast_bytes_consumed']= int(m.groupdict()['multicast_bytes_consumed'])
+                    continue
 
-            #Labeled packets    : 0/0/0/0/0
-            p26 = re.compile(r'^\s*Labeled *packets *:'
-                              ' *(?P<labeled_packets_sent>[0-9]+)\/'
-                              '(?P<labeled_packets_received>[0-9]+)\/'
-                              '(?P<labeled_packets_forwarded>[0-9]+)\/'
-                              '(?P<labeled_packets_originated>[0-9]+)\/'
-                              '(?P<labeled_packets_consumed>[0-9]+)$')
-            m = p26.match(line)
-            if m:
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['labeled_packets_sent']= int(m.groupdict()['labeled_packets_sent'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['labeled_packets_received']= int(m.groupdict()['labeled_packets_received'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['labeled_packets_forwarded']= int(m.groupdict()['labeled_packets_forwarded'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['labeled_packets_originated']= int(m.groupdict()['labeled_packets_originated'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['labeled_packets_consumed']= int(m.groupdict()['labeled_packets_consumed'])
-                continue
+                #Broadcast packets  : 0/0/0/0/0
+                p24 = re.compile(r'^\s*Broadcast *packets *:'
+                                  ' *(?P<broadcast_packets_sent>[0-9]+)\/'
+                                  '(?P<broadcast_packets_received>[0-9]+)\/'
+                                  '(?P<broadcast_packets_forwarded>[0-9]+)\/'
+                                  '(?P<broadcast_packets_originated>[0-9]+)\/'
+                                  '(?P<broadcast_packets_consumed>[0-9]+)$')
+                m = p24.match(line)
+                if m:
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['broadcast_packets_sent']= int(m.groupdict()['broadcast_packets_sent'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['broadcast_packets_received']= int(m.groupdict()['broadcast_packets_received'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['broadcast_packets_forwarded']= int(m.groupdict()['broadcast_packets_forwarded'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['broadcast_packets_originated']= int(m.groupdict()['broadcast_packets_originated'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['broadcast_packets_consumed']= int(m.groupdict()['broadcast_packets_consumed'])
+                    continue
 
-            #Labeled bytes      : 0/0/0/0/0
-            p27 = re.compile(r'^\s*Labeled *bytes *:'
-                              ' *(?P<labeled_bytes_sent>[0-9]+)\/'
-                              '(?P<labeled_bytes_received>[0-9]+)\/'
-                              '(?P<labeled_bytes_forwarded>[0-9]+)\/'
-                              '(?P<labeled_bytes_originated>[0-9]+)\/'
-                              '(?P<labeled_bytes_consumed>[0-9]+)$')
-            m = p27.match(line)
-            if m:
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['labeled_bytes_sent']= int(m.groupdict()['labeled_bytes_sent'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['labeled_bytes_received']= int(m.groupdict()['labeled_bytes_received'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['labeled_bytes_forwarded']= int(m.groupdict()['labeled_bytes_forwarded'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['labeled_bytes_originated']= int(m.groupdict()['labeled_bytes_originated'])
-                ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
-                ['labeled_bytes_consumed']= int(m.groupdict()['labeled_bytes_consumed'])
-                continue
+                #Broadcast bytes    : 0/0/0/0/0
+                p25 = re.compile(r'^\s*Broadcast *bytes *:'
+                                  ' *(?P<broadcast_bytes_sent>[0-9]+)\/'
+                                  '(?P<broadcast_bytes_received>[0-9]+)\/'
+                                  '(?P<broadcast_bytes_forwarded>[0-9]+)\/'
+                                  '(?P<broadcast_bytes_originated>[0-9]+)\/'
+                                  '(?P<broadcast_bytes_consumed>[0-9]+)$')
+                m = p25.match(line)
+                if m:
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['broadcast_bytes_sent']= int(m.groupdict()['broadcast_bytes_sent'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['broadcast_bytes_received']= int(m.groupdict()['broadcast_bytes_received'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['broadcast_bytes_forwarded']= int(m.groupdict()['broadcast_bytes_forwarded'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['broadcast_bytes_originated']= int(m.groupdict()['broadcast_bytes_originated'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['broadcast_bytes_consumed']= int(m.groupdict()['broadcast_bytes_consumed'])
+                    continue
+
+                #Labeled packets    : 0/0/0/0/0
+                p26 = re.compile(r'^\s*Labeled *packets *:'
+                                  ' *(?P<labeled_packets_sent>[0-9]+)\/'
+                                  '(?P<labeled_packets_received>[0-9]+)\/'
+                                  '(?P<labeled_packets_forwarded>[0-9]+)\/'
+                                  '(?P<labeled_packets_originated>[0-9]+)\/'
+                                  '(?P<labeled_packets_consumed>[0-9]+)$')
+                m = p26.match(line)
+                if m:
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['labeled_packets_sent']= int(m.groupdict()['labeled_packets_sent'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['labeled_packets_received']= int(m.groupdict()['labeled_packets_received'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['labeled_packets_forwarded']= int(m.groupdict()['labeled_packets_forwarded'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['labeled_packets_originated']= int(m.groupdict()['labeled_packets_originated'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['labeled_packets_consumed']= int(m.groupdict()['labeled_packets_consumed'])
+                    continue
+
+                #Labeled bytes      : 0/0/0/0/0
+                p27 = re.compile(r'^\s*Labeled *bytes *:'
+                                  ' *(?P<labeled_bytes_sent>[0-9]+)\/'
+                                  '(?P<labeled_bytes_received>[0-9]+)\/'
+                                  '(?P<labeled_bytes_forwarded>[0-9]+)\/'
+                                  '(?P<labeled_bytes_originated>[0-9]+)\/'
+                                  '(?P<labeled_bytes_consumed>[0-9]+)$')
+                m = p27.match(line)
+                if m:
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['labeled_bytes_sent']= int(m.groupdict()['labeled_bytes_sent'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['labeled_bytes_received']= int(m.groupdict()['labeled_bytes_received'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['labeled_bytes_forwarded']= int(m.groupdict()['labeled_bytes_forwarded'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['labeled_bytes_originated']= int(m.groupdict()['labeled_bytes_originated'])
+                    ip_interface_vrf_all_dict[interface]['ipv4']['counters']\
+                    ['labeled_bytes_consumed']= int(m.groupdict()['labeled_bytes_consumed'])
+                    continue
 
             #WCCP Redirect outbound: disabled
             p28 = re.compile(r'^\s*WCCP *Redirect *outbound:'
@@ -1508,9 +1514,10 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
             m = p31.match(line)
             if m:
                 unnum_intf = m.groupdict()['unnum_intf']
-                ip_interface_vrf_all_dict[interface]['ipv4']['unnumbered'] = {}
-                ip_interface_vrf_all_dict[interface]['ipv4']['unnumbered']['interface_ref']\
-                 = unnum_intf
+                if 'ipv4' in ip_interface_vrf_all_dict[interface]:
+                    ip_interface_vrf_all_dict[interface]['ipv4']['unnumbered'] = {}
+                    ip_interface_vrf_all_dict[interface]['ipv4']['unnumbered']['interface_ref']\
+                         = unnum_intf
                 continue
 
         return ip_interface_vrf_all_dict
