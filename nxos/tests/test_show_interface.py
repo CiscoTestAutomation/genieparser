@@ -537,7 +537,7 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
                                        'unicast_packets_sent': 0}},
                  'load_sharing': 'none',
                  'local_proxy_arp': 'disabled',
-                 'multicast_groups': ['224.0.0.6', '224.0.0.5', '224.0.0.2'],
+                 'multicast_groups': ['224.0.0.2', '224.0.0.5', '224.0.0.6'],
                  'multicast_routing': 'disabled',
                  'proxy_arp': 'disabled',
                  'unicast_reverse_path': 'none',
@@ -966,9 +966,9 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
           "ip_forwarding": "disabled",
           "int_stat_last_reset": "never",
           "multicast_groups": [
-               "224.0.0.6",
+               "224.0.0.2",
                "224.0.0.5",
-               "224.0.0.2"
+               "224.0.0.6"
           ]
      },
      "Ethernet2/10.12": {
@@ -1375,11 +1375,11 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
             "ip_forwarding": "disabled",
             "wccp_redirect_inbound": "disabled",
             "multicast_groups": [
-                 "224.0.1.40",
-                 "224.0.1.39",
+                 "224.0.0.1",
                  "224.0.0.13",
                  "224.0.0.2",
-                 "224.0.0.1"
+                 "224.0.1.39",
+                 "224.0.1.40"
             ],
             "wccp_redirect_outbound": "disabled",
             "multicast_routing": "enabled",
@@ -1757,9 +1757,9 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
             "ip_forwarding": "disabled",
             "wccp_redirect_inbound": "disabled",
             "multicast_groups": [
+                 "224.0.0.1",
                  "224.0.0.13",
-                 "224.0.0.2",
-                 "224.0.0.1"
+                 "224.0.0.2"
             ],
             "wccp_redirect_outbound": "disabled",
             "multicast_routing": "enabled",
@@ -2265,14 +2265,14 @@ class test_show_ipv6_interface_vrf_all(unittest.TestCase):
                           'ipv6_load_sharing': 'none',
                           'ipv6_mtu': 1600,
                           'ipv6_multicast_entries': 'none',
-                          'ipv6_multicast_groups': ['ff02::1:ffbb:cccc',
-                                                    'ff02::1:ff00:3',
-                                                    'ff02::1:ff00:2',
-                                                    'ff02::2',
-                                                    'ff02::1',
+                          'ipv6_multicast_groups': ['ff02::1',
+                                                    'ff02::1:ff00:0',
                                                     'ff02::1:ff00:1',
+                                                    'ff02::1:ff00:2',
+                                                    'ff02::1:ff00:3',
                                                     'ff02::1:ffbb:cccc',
-                                                    'ff02::1:ff00:0'],
+                                                    'ff02::1:ffbb:cccc',
+                                                    'ff02::2'],
                           'ipv6_multicast_routing': 'disabled',
                           'ipv6_report_link_local': 'disabled',
                           'ipv6_subnet': '2001:db8:1:1::/64',

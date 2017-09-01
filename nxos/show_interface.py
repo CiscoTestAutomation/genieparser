@@ -28,6 +28,20 @@ from metaparser.util.schemaengine import Schema, \
 #############################################################################
 
 
+def convert_intf_name(intf):
+    # Please add more when face other type of interface
+    convert = {'Eth': 'Ethernet',
+               'Lo': 'Loopback',
+               'Po': 'port-channel',
+               'Null': 'Null',
+               'mgmt': 'mgmt'}
+    int_type = re.search('([a-zA-Z]+)', intf).group(0)
+    int_port = re.search('([\d\/\.]+)', intf).group(0)
+    if int_type in convert.keys():
+        return(convert[int_type] + int_port)
+    else:
+        return(intf)
+
 class ShowInterfaceSchema(MetaParser):
 
     #schema for show interface
@@ -275,7 +289,7 @@ class ShowInterface(ShowInterfaceSchema):
                 interface_dict[interface]['port_channel']\
                     ['port_channel_member'] = True
                 interface_dict[interface]['port_channel']\
-                    ['port_channel_int'] = port_channel_int
+                    ['port_channel_int'] = convert_intf_name(port_channel_int)
                 continue
 
             # Hardware: Ethernet, address: 5254.00c9.d26e (bia 5254.00c9.d26e)
@@ -543,6 +557,8 @@ class ShowInterface(ShowInterfaceSchema):
                 interface_dict[interface]['ethertype'] = ethertype
                 continue
 
+            # Members in this channel: Eth1/15, Eth1/16
+            
             #EEE (efficient-ethernet) : n/a
             p17 = re.compile(r'^\s*EEE *\(efficient-ethernet\) *:'
                               ' *(?P<efficient_ethernet>[A-Za-z\/]+)$')
@@ -1142,7 +1158,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     multicast_groups.append(mgroup)
 
                 ip_interface_vrf_all_dict[interface]['multicast_groups']\
-                 = multicast_groups
+                 = sorted(multicast_groups)
                 continue
 
             #IP MTU: 1600 bytes (using link MTU)
@@ -2119,7 +2135,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
                         ipv6_multicast_groups.append(address)
 
                     ipv6_interface_dict[interface]['ipv6']['ipv6_multicast_groups']\
-                     = ipv6_multicast_groups
+                     = sorted(ipv6_multicast_groups)
                     continue
 
             #IPv6 multicast (S,G) entries joined: none
