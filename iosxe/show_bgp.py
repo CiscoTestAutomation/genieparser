@@ -455,7 +455,6 @@ class ShowBgpAllClusterIds(ShowBgpAllClusterIdsSchema):
                 line = line.rstrip()
 
             # VRF VRF1 (VRF Id = 1); default RD 300:1; default VPNID <not set>
-            # VRF VRF2 (VRF Id = 2); default RD 400:1; default VPNID <not set>
             p = re.compile(r'^\s*VRF +(?P<vrf_name>[0-9a-zA-Z]+)'
                             ' +\(+VRF +Id += +(?P<vrf_id>[0-9]+)+\)+;'
                             ' +default +(?P<other_data>.+)$')
@@ -501,8 +500,8 @@ class ShowBgpAllClusterIds(ShowBgpAllClusterIdsSchema):
                             ' +(?P<reflection_type>[a-zA-Z]+)$')
             m = p2.match(line)
             if m:
-                reflection_status = str(m.groupdict()['reflection_status'])
-                reflection_type = str(m.groupdict()['reflection_type'])
+                reflection_status = str(m.groupdict()['reflection_status']).lower()
+                reflection_type = str(m.groupdict()['reflection_type']).lower()
                 continue
 
             #   all (inter-cluster and intra-cluster): ENABLED
@@ -510,7 +509,7 @@ class ShowBgpAllClusterIds(ShowBgpAllClusterIdsSchema):
                             ' +(?P<inter_intra_cluster_status>[a-zA-Z]+)$')
             m = p3.match(line)
             if m:
-                inter_intra_cluster_status = str(m.groupdict()['inter_intra_cluster_status'])
+                inter_intra_cluster_status = str(m.groupdict()['inter_intra_cluster_status']).lower()
                 continue
 
             # intra-cluster:                         ENABLED       ENABLED

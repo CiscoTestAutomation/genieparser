@@ -883,25 +883,25 @@ class test_show_bgp_all_cluster_ids(unittest.TestCase):
                 {
                     'cluster_id': '4.4.4.4',
                     'configured_id': '0.0.0.0',
-                    'reflection_status': 'Configured',
-                    'reflection_type': 'Used',
-                    'cluster_status': 'ENABLED',
+                    'reflection_status': 'configured',
+                    'reflection_type': 'used',
+                    'cluster_status': 'enabled',
                 },
                 'vrf1':
                 {
                     'cluster_id': '4.4.4.4',
                     'configured_id': '0.0.0.0',
-                    'reflection_status': 'Configured',
-                    'reflection_type': 'Used',
-                    'cluster_status': 'ENABLED',
+                    'reflection_status': 'configured',
+                    'reflection_type': 'used',
+                    'cluster_status': 'enabled',
                 },
                 'vrf2':
                     {
-                        'cluster_id': '4.4.4.4',
-                        'configured_id': '0.0.0.0',
-                        'reflection_status': 'Configured',
-                        'reflection_type': 'Used',
-                        'cluster_status': 'ENABLED',
+                    'cluster_id': '4.4.4.4',
+                    'configured_id': '0.0.0.0',
+                    'reflection_status': 'configured',
+                    'reflection_type': 'used',
+                    'cluster_status': 'enabled',
                     }
             }
     }
@@ -927,9 +927,9 @@ class test_show_bgp_all_cluster_ids(unittest.TestCase):
                 {
                     'cluster_id': '4.4.4.4',
                     'configured_id': '0.0.0.0',
-                    'reflection_status': 'Configured',
-                    'reflection_type': 'Used',
-                    'cluster_status': 'ENABLED',
+                    'reflection_status': 'configured',
+                    'reflection_type': 'used',
+                    'cluster_status': 'enabled',
                 }
             }
     }
