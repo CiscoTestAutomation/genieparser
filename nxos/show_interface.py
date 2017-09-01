@@ -1930,7 +1930,8 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
                 continue
 
             #Ethernet2/1, Interface status: protocol-up/link-up/admin-up, iod: 36
-            p2 = re.compile(r'^\s*(?:(?P<interface>[a-zA-Z0-9\/]+)), Interface'
+            #port-channel2.101, Interface status: protocol-down/link-down/admin-up, iod: 71
+            p2 = re.compile(r'^\s*(?:(?P<interface>[a-zA-Z0-9\/\-\.]+)), Interface'
                              ' *status: *(?P<interface_status>[a-z\-\/]+),'
                              ' *iod: *(?P<iod>[0-9]+)$')
             m = p2.match(line)
