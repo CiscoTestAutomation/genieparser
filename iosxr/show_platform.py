@@ -17,9 +17,6 @@ IOSXR parsers for the following show commands:
 import re
 import xmltodict
 
-# ATS
-from ats import tcl
-
 # Metaparser
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\

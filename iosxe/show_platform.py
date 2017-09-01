@@ -14,7 +14,10 @@ from metaparser.util.schemaengine import Schema, \
                                          And, \
                                          Default, \
                                          Use
-import parsergen
+try:
+    import parsergen
+except ImportError:
+    pass
 
 logger = logging.getLogger(__name__)
 

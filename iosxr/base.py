@@ -2,8 +2,11 @@ __all__ = (
         'IosxrCaasMetaParser',
 )
 
-from ats import tcl
-from ats.tcl import tclobj, tclstr
+try:
+    from ats import tcl
+except ImportError:
+    pass
+
 from parser import CaasMetaParser
 
 class IosxrCaasMetaParser(CaasMetaParser):

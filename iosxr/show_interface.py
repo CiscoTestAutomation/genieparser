@@ -4,25 +4,11 @@ Example parser class
 
 '''
 
-import os
-import logging
-import pprint
+# python
 import re
-import unittest
-from collections import defaultdict
-
-from ats import tcl
-from ats.tcl.keyedlist import KeyedList
-from ats.log.utils import banner
-import xmltodict
-try:
-    import iptools
-    from cnetconf import testmodel
-except ImportError:
-    pass
+import logging
 
 from metaparser import MetaParser
-from metaparser.util import merge_dict, keynames_convert
 from metaparser.util.schemaengine import Schema, \
                                          Any, \
                                          Optional, \
@@ -468,21 +454,6 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
 # show vrf all detail
 # show ipv4 vrf all interface
 # show ipv6 vrf all interface
-
-
-
-# python
-import re
-
-# metaparser
-from metaparser import MetaParser
-from metaparser.util.schemaengine import Schema, \
-                                         Any, \
-                                         Optional, \
-                                         Or, \
-                                         And, \
-                                         Default, \
-                                         Use
 
 
 #############################################################################

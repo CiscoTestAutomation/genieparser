@@ -4,11 +4,12 @@ Example parser class
 
 '''
 import xmltodict
-from ats import tcl
+
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
 try:
     import iptools
+    from ats import tcl
     from cnetconf import testmodel
 except ImportError:
     pass
