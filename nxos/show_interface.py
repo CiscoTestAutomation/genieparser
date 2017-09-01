@@ -1281,7 +1281,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
             #IP interface statistics last reset: never
             p18 = re.compile(r'^\s*IP *interface *statistics *last *reset:'
-                              ' *(?P<int_stat_last_reset>[a-z]+)')
+                              ' *(?P<int_stat_last_reset>[a-zA-Z0-9\:]+)')
             m = p18.match(line)
             if m:
                 int_stat_last_reset = m.groupdict()['int_stat_last_reset']
