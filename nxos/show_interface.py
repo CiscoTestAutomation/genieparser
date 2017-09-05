@@ -34,6 +34,7 @@ def convert_intf_name(intf):
                'Lo': 'Loopback',
                'Po': 'port-channel',
                'Null': 'Null',
+               'Gi': 'GigabitEthernet',
                'mgmt': 'mgmt'}
     int_type = re.search('([a-zA-Z]+)', intf).group(0)
     int_port = re.search('([\d\/\.]+)', intf).group(0)
