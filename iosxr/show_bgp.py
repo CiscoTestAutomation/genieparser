@@ -104,7 +104,7 @@ class ShowBgpInstances(ShowBgpInstancesSchema):
                              ' +(?P<instance>[\w\-]+)'
                              ' +(?P<bgp_id>\d+)'
                              ' +(?P<num_vrfs>\d+)'
-                             ' +(?P<address_family>[\w\s\,]+)$')
+                             ' +(?P<address_family>[\w\s\,\-]+)$')
             m = p1.match(line)
             if m:
                 instance_id = m.groupdict()['instance_id']
