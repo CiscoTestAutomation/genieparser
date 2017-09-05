@@ -4920,7 +4920,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         bgp_dict['bgp']['instance']['default']['vrf'][vrf]['log_neighbor_changes'] = False
 
                     #   router-id <router-id>
-                    p11 = re.compile(r'^\s*router-id +(?P<router_id>[0-9]+)$')
+                    p11 = re.compile(r'^\s*router-id +(?P<router_id>[0-9\.]+)$')
                     m = p11.match(line)
                     if m:
                         bgp_dict['bgp']['instance']['default']['vrf'][vrf]['router_id'] = \

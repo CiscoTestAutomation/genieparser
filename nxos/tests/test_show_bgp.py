@@ -13551,6 +13551,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                 "isolate": False
               },
               "default": {
+                "router_id": '100.1.1.1',
                 "dynamic_med_interval": 70,
                 "graceful_restart": False,
                 "log_neighbor_changes": False,
