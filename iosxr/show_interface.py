@@ -488,7 +488,8 @@ class ShowInterfacesDetailSchema(MetaParser):
              Optional('phys_address'): str,
              Optional('port_speed'): str,          
              Optional('mtu'): int,
-             Optional('line_protocol'): str,                   
+             Optional('line_protocol'): str,   
+             Optional('oper_status'): str,                 
              Optional('enabled'): bool,          
              Optional('mac_address'): str,
              Optional('auto_negotiate'): bool,
@@ -589,7 +590,8 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
 
                 if interface not in interface_detail_dict:
                     interface_detail_dict[interface] = {}
-                interface_detail_dict[interface]['line_protocol'] = line_protocol                
+                interface_detail_dict[interface]['line_protocol'] = line_protocol
+                interface_detail_dict[interface]['oper_status'] = 'down'            
                 interface_detail_dict[interface]['enabled'] = False
                 continue
 
@@ -606,6 +608,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                 if interface not in interface_detail_dict:
                     interface_detail_dict[interface] = {}
                 interface_detail_dict[interface]['line_protocol'] = line_protocol
+                interface_detail_dict[interface]['oper_status'] = 'up'
                 interface_detail_dict[interface]['enabled'] = True
                 continue
 
