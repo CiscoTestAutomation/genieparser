@@ -7,7 +7,7 @@ from ats.topology import Device
 from metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from parser.iosxe.show_bgp import ShowBgpAllSummary
+from parser.iosxe.show_bgp import ShowBgpAllSummary, ShowBgpAllClusterIds
 
 
 class test_show_bgp_all_summary(unittest.TestCase):
@@ -867,6 +867,206 @@ class test_show_bgp_all_summary(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
         obj = ShowBgpAllSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+
+class test_show_bgp_all_cluster_ids(unittest.TestCase):
+    '''
+        unit test for  show bgp all cluster_ids
+    '''
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {
+        'vrf':
+            {'default':
+                {
+                    'cluster_id': '4.4.4.4',
+                    'configured_id': '0.0.0.0',
+                    'reflection_all_configured': 'enabled',
+                    'reflection_intra_cluster_configured': 'enabled',
+                    'reflection_intra_cluster_used': 'enabled',
+                },
+                'vrf1':
+                {
+                    'cluster_id': '4.4.4.4',
+                    'configured_id': '0.0.0.0',
+                    'reflection_all_configured': 'enabled',
+                    'reflection_intra_cluster_configured': 'enabled',
+                    'reflection_intra_cluster_used': 'enabled',
+
+                },
+                'vrf2':
+                    {
+                    'cluster_id': '4.4.4.4',
+                    'configured_id': '0.0.0.0',
+                    'reflection_all_configured': 'enabled',
+                    'reflection_intra_cluster_configured': 'enabled',
+                    'reflection_intra_cluster_used': 'enabled',
+
+                    }
+            }
+    }
+
+    golden_output = {'execute.return_value': '''
+        R4_iosv#show vrf detail | inc \(VRF
+        VRF VRF1 (VRF Id = 1); default RD 300:1; default VPNID <not set>
+        VRF VRF2 (VRF Id = 2); default RD 400:1; default VPNID <not set>
+
+        R4_iosv#show bgp all cluster-ids
+        Global cluster-id: 4.4.4.4 (configured: 0.0.0.0)
+        BGP client-to-client reflection:         Configured    Used
+         all (inter-cluster and intra-cluster): ENABLED
+         intra-cluster:                         ENABLED       ENABLED
+
+        List of cluster-ids:
+        Cluster-id     #-neighbors C2C-rfl-CFG C2C-rfl-USE
+        '''}
+
+    golden_parsed_output_1 = {
+        'vrf':
+            {'default':
+                {
+                    'cluster_id': '4.4.4.4',
+                    'configured_id': '0.0.0.0',
+                    'reflection_all_configured': 'enabled',
+                    'reflection_intra_cluster_configured': 'enabled',
+                    'reflection_intra_cluster_used': 'enabled',
+                }
+            }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+           R4_iosv#show vrf detail | inc \(VRF
+           % unmatched ()
+           % Failed to compile regular expression.
+
+           R4_iosv#show bgp all cluster-ids
+           Global cluster-id: 4.4.4.4 (configured: 0.0.0.0)
+           BGP client-to-client reflection:         Configured    Used
+            all (inter-cluster and intra-cluster): ENABLED
+            intra-cluster:                         ENABLED       ENABLED
+
+           List of cluster-ids:
+           Cluster-id     #-neighbors C2C-rfl-CFG C2C-rfl-USE
+           '''}
+
+    golden_parsed_output_2 = {
+        'vrf':
+            {'default':
+                {
+                    'cluster_id': '4.4.4.4',
+                    'configured_id': '0.0.0.0',
+                    'reflection_all_configured': 'enabled',
+                    'reflection_intra_cluster_configured': 'enabled',
+                    'reflection_intra_cluster_used': 'enabled',
+                    'list_of_cluster_ids':
+                        {
+                           '192.168.1.1':
+                               {
+                                   'num_neighbors': 2,
+                                   'client_to_client_reflection_configured': 'disabled',
+                                   'client_to_client_reflection_used': 'disabled',
+                               },
+                            '192.168.2.2':
+                                {
+                                    'num_neighbors': 2,
+                                    'client_to_client_reflection_configured': 'disabled',
+                                    'client_to_client_reflection_used': 'disabled',
+                                },
+
+                        }
+                },
+                'vrf1':
+                    {
+                        'cluster_id': '4.4.4.4',
+                        'configured_id': '0.0.0.0',
+                        'reflection_all_configured': 'enabled',
+                        'reflection_intra_cluster_configured': 'enabled',
+                        'reflection_intra_cluster_used': 'enabled',
+                        'list_of_cluster_ids':
+                            {
+                                '192.168.1.1':
+                                    {
+                                        'num_neighbors': 2,
+                                        'client_to_client_reflection_configured': 'disabled',
+                                        'client_to_client_reflection_used': 'disabled',
+                                    },
+                                '192.168.2.2':
+                                    {
+                                        'num_neighbors': 2,
+                                        'client_to_client_reflection_configured': 'disabled',
+                                        'client_to_client_reflection_used': 'disabled',
+                                    },
+
+                            }
+                    },
+                'vrf2':
+                    {
+                        'cluster_id': '4.4.4.4',
+                        'configured_id': '0.0.0.0',
+                        'reflection_all_configured': 'enabled',
+                        'reflection_intra_cluster_configured': 'enabled',
+                        'reflection_intra_cluster_used': 'enabled',
+                        'list_of_cluster_ids':
+                            {
+                                '192.168.1.1':
+                                    {
+                                        'num_neighbors': 2,
+                                        'client_to_client_reflection_configured': 'disabled',
+                                        'client_to_client_reflection_used': 'disabled',
+                                    },
+                                '192.168.2.2':
+                                    {
+                                        'num_neighbors': 2,
+                                        'client_to_client_reflection_configured': 'disabled',
+                                        'client_to_client_reflection_used': 'disabled',
+                                    },
+
+                            }
+                    }
+            }
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+               R4_iosv#show vrf detail | inc \(VRF
+               VRF VRF1 (VRF Id = 1); default RD 300:1; default VPNID <not set>
+               VRF VRF2 (VRF Id = 2); default RD 400:1; default VPNID <not set>
+
+               R4_iosv#show bgp all cluster-ids
+               Global cluster-id: 4.4.4.4 (configured: 0.0.0.0)
+               BGP client-to-client reflection:         Configured    Used
+                all (inter-cluster and intra-cluster): ENABLED
+                intra-cluster:                         ENABLED       ENABLED
+
+               List of cluster-ids:
+               Cluster-id     #-neighbors C2C-rfl-CFG C2C-rfl-USE
+               192.168.1.1                2 DISABLED    DISABLED
+               192.168.2.2                2 DISABLED    DISABLED
+               '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpAllClusterIds(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpAllClusterIds(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowBgpAllClusterIds(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowBgpAllClusterIds(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 

@@ -414,3 +414,161 @@ class ShowBgpAllSummary(ShowBgpAllSummarySchema):
                 continue
 
         return sum_dict
+
+
+class ShowBgpAllClusterIdsSchema(MetaParser):
+    '''
+        Schema for show bgp all cluster-ids
+    '''
+    schema = {
+              'vrf':
+                    {Any():
+                        {
+                           Optional('cluster_id'): str,
+                           Optional('configured_id'): str,
+                           Optional('reflection_all_configured'): str,
+                           Optional('reflection_intra_cluster_configured'): str,
+                           Optional('reflection_intra_cluster_used'): str,
+                           Optional('list_of_cluster_ids'):
+                               {Any():
+                                    {
+                                        Optional('num_neighbors'): int,
+                                        Optional('client_to_client_reflection_configured'): str,
+                                        Optional('client_to_client_reflection_used'): str,
+
+                                    }
+
+                               }
+                        }
+                    },
+
+                }
+
+class ShowBgpAllClusterIds(ShowBgpAllClusterIdsSchema):
+    '''
+       Parser for show bgp all cluster-ids
+       Executing 'show vrf detail | inc \(VRF' to collect vrf names.
+
+    '''
+
+    def cli(self):
+        # find vrf names
+        # show vrf detail | inc \(VRF
+        cmd_vrfs = 'show vrf detail | inc \(VRF'
+        out_vrf = self.device.execute(cmd_vrfs)
+        vrf_dict = {'0':'default'}
+
+        for line in out_vrf.splitlines():
+            if not line:
+                continue
+            else:
+                line = line.rstrip()
+
+            # VRF VRF1 (VRF Id = 1); default RD 300:1; default VPNID <not set>
+            p = re.compile(r'^\s*VRF +(?P<vrf_name>[0-9a-zA-Z]+)'
+                            ' +\(+VRF +Id += +(?P<vrf_id>[0-9]+)+\)+;'
+                            ' +default +(?P<other_data>.+)$')
+            m = p.match(line)
+            if m:
+                # Save variables for use later
+                vrf_name = str(m.groupdict()['vrf_name'])
+                vrf_id = str(m.groupdict()['vrf_id'])
+                vrf_dict[vrf_id] = vrf_name.lower()
+                continue
+
+
+        # show bgp all cluster-ids
+        cmd = 'show bgp all cluster-ids'
+        out = self.device.execute(cmd)
+
+        # Init vars
+        sum_dict = {}
+        cluster_id = None
+        list_of_cluster_ids = dict()
+        configured_id = ""
+        reflection_all_configured = ""
+        reflection_intra_cluster_configured = ""
+        reflection_intra_cluster_used = ""
+
+
+        for line in out.splitlines():
+            if line.strip():
+                line = line.rstrip()
+            else:
+                continue
+
+            # Global cluster-id: 4.4.4.4 (configured: 0.0.0.0)
+            p1 = re.compile(r'^\s*Global +cluster-id: +(?P<cluster_id>[0-9\.]+)'
+                            ' +\(+configured: +(?P<configured>[0-9\.]+)+\)$')
+            m = p1.match(line)
+            if m:
+                # Save variables for use later
+                cluster_id = str(m.groupdict()['cluster_id'])
+                configured_id = str(m.groupdict()['configured'])
+
+                if 'vrf' not in sum_dict:
+                    sum_dict['vrf'] = {}
+
+                continue
+
+            #   all (inter-cluster and intra-cluster): ENABLED
+            p3 = re.compile(r'^\s*all +\(+inter-cluster +and +intra-cluster+\):'
+                            ' +(?P<all_configured>[a-zA-Z]+)$')
+            m = p3.match(line)
+            if m:
+                reflection_all_configured = m.groupdict()['all_configured'].lower()
+                continue
+
+            # intra-cluster:                         ENABLED       ENABLED
+            p4 = re.compile(r'^\s*intra-cluster:\s+(?P<intra_cluster_configured>[a-zA-Z]+)'
+                            ' +(?P<intra_cluster_used>[a-zA-Z]+)$')
+            m = p4.match(line)
+            if m:
+                reflection_intra_cluster_configured = m.groupdict()['intra_cluster_configured'].lower()
+                reflection_intra_cluster_used = m.groupdict()['intra_cluster_used'].lower()
+                continue
+
+            # List of cluster-ids
+            # Cluster-id  #-neighbors C2C-rfl-CFG C2C-rfl-USE
+            # 192.168.1.1                2 DISABLED    DISABLED
+            p5 = re.compile(r'^\s*(?P<cluster_ids>[0-9\.]+)'
+                        ' +(?P<num_neighbors>[0-9]+)'
+                        ' +(?P<client_to_client_ref_configured>[a-zA-Z]+)'
+                        ' +(?P<client_to_client_ref_used>[a-zA-Z]+)$')
+            m = p5.match(line)
+            if m:
+                cluster_ids = m.groupdict()['cluster_ids']
+                list_of_cluster_ids[cluster_ids] = cluster_ids
+                list_of_cluster_ids[cluster_ids] = {}
+                list_of_cluster_ids[cluster_ids]['num_neighbors'] = int(m.groupdict()['num_neighbors'])
+                list_of_cluster_ids[cluster_ids]['client_to_client_reflection_configured'] = \
+                    m.groupdict()['client_to_client_ref_configured'].lower()
+                list_of_cluster_ids[cluster_ids]['client_to_client_reflection_used'] = \
+                    m.groupdict()['client_to_client_ref_used'].lower()
+
+                continue
+
+        for vrf_id, vrf_name in vrf_dict.items():
+            if 'vrf' not in sum_dict:
+                sum_dict['vrf'] = {}
+            if vrf_name not in sum_dict['vrf']:
+                sum_dict['vrf'][vrf_name] = {}
+            if 'cluster_id' not in sum_dict['vrf'][vrf_name]:
+                if not cluster_id:
+                    del sum_dict['vrf']
+                if cluster_id:
+                    sum_dict['vrf'][vrf_name]['cluster_id'] = cluster_id
+                if configured_id:
+                    sum_dict['vrf'][vrf_name]['configured_id'] = configured_id
+                if reflection_all_configured:
+                    sum_dict['vrf'][vrf_name]['reflection_all_configured'] = \
+                        reflection_all_configured
+                if reflection_intra_cluster_configured:
+                    sum_dict['vrf'][vrf_name]['reflection_intra_cluster_configured'] = \
+                        reflection_intra_cluster_configured
+                if reflection_intra_cluster_used:
+                    sum_dict['vrf'][vrf_name]['reflection_intra_cluster_used'] = \
+                        reflection_intra_cluster_used
+                if list_of_cluster_ids:
+                    sum_dict['vrf'][vrf_name]['list_of_cluster_ids'] = list_of_cluster_ids
+        return sum_dict
