@@ -511,22 +511,12 @@ class ShowBgpAllClusterIds(ShowBgpAllClusterIdsSchema):
 
                 continue
 
-            # BGP client-to-client reflection:         Configured    Used
-            p2 = re.compile(r'^\s*BGP +client-to-client +reflection:'
-                            '\s+(?P<reflection_status>[a-zA-Z]+)'
-                            ' +(?P<reflection_type>[a-zA-Z]+)$')
-            m = p2.match(line)
-            if m:
-                reflection_status = str(m.groupdict()['reflection_status'])
-                reflection_type = str(m.groupdict()['reflection_type'])
-                continue
-
             #   all (inter-cluster and intra-cluster): ENABLED
             p3 = re.compile(r'^\s*all +\(+inter-cluster +and +intra-cluster+\):'
                             ' +(?P<all_configured>[a-zA-Z]+)$')
             m = p3.match(line)
             if m:
-                reflection_all_configured = str(m.groupdict()['all_configured']).lower()
+                reflection_all_configured = m.groupdict()['all_configured'].lower()
                 continue
 
             # intra-cluster:                         ENABLED       ENABLED
@@ -534,8 +524,8 @@ class ShowBgpAllClusterIds(ShowBgpAllClusterIdsSchema):
                             ' +(?P<intra_cluster_used>[a-zA-Z]+)$')
             m = p4.match(line)
             if m:
-                reflection_intra_cluster_configured = str(m.groupdict()['intra_cluster_configured']).lower()
-                reflection_intra_cluster_used = str(m.groupdict()['intra_cluster_used']).lower()
+                reflection_intra_cluster_configured = m.groupdict()['intra_cluster_configured'].lower()
+                reflection_intra_cluster_used = m.groupdict()['intra_cluster_used'].lower()
                 continue
 
             # List of cluster-ids
@@ -547,14 +537,14 @@ class ShowBgpAllClusterIds(ShowBgpAllClusterIdsSchema):
                         ' +(?P<client_to_client_ref_used>[a-zA-Z]+)$')
             m = p5.match(line)
             if m:
-                cluster_ids = str(m.groupdict()['cluster_ids'])
+                cluster_ids = m.groupdict()['cluster_ids']
                 list_of_cluster_ids[cluster_ids] = cluster_ids
                 list_of_cluster_ids[cluster_ids] = {}
                 list_of_cluster_ids[cluster_ids]['num_neighbors'] = int(m.groupdict()['num_neighbors'])
                 list_of_cluster_ids[cluster_ids]['client_to_client_reflection_configured'] = \
-                    str(m.groupdict()['client_to_client_ref_configured']).lower()
+                    m.groupdict()['client_to_client_ref_configured'].lower()
                 list_of_cluster_ids[cluster_ids]['client_to_client_reflection_used'] = \
-                    str(m.groupdict()['client_to_client_ref_used']).lower()
+                    m.groupdict()['client_to_client_ref_used'].lower()
 
                 continue
 
