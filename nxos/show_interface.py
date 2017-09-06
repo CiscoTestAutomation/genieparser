@@ -58,7 +58,7 @@ class ShowInterfaceSchema(MetaParser):
             Optional('link_state'): str,
             Optional('phys_address'): str,
             Optional('port_speed'): str,
-            'mtu': int,
+            Optional('mtu'): int,
             'enabled': bool,
             Optional('mac_address'): str,
             Optional('auto_negotiate'): bool,
@@ -84,7 +84,7 @@ class ShowInterfaceSchema(MetaParser):
                 {Optional('port_channel_member'): bool,
                 Optional('port_channel_int'): str,
             },
-            'bandwidth': int,
+            Optional('bandwidth'): int,
             Optional('counters'):
                 {Optional('rate'):
                    {Optional('load_interval'): int,
@@ -176,7 +176,7 @@ class ShowInterface(ShowInterfaceSchema):
             # Ethernet2/1.10 is down (Administratively down)
             p1 =  re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
                               ' *(?P<enabled>(down))'
-                              '( *\((?P<link_state>[a-zA-Z\s]+)\))?$')
+                              '( *\((?P<link_state>[a-zA-Z0-9\-\s]+)\))?$')
             m = p1.match(line)
             if m:
                 interface = m.groupdict()['interface']
@@ -232,10 +232,10 @@ class ShowInterface(ShowInterfaceSchema):
                 continue
 
             # Ethernet2/2 is up
-            p1_1 =  re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
+            p1_2 =  re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
                               ' *(?P<enabled>(up))'
                               '( *\((?P<link_state>[a-zA-Z\s]+)\))?$')
-            m = p1_1.match(line)
+            m = p1_2.match(line)
             if m:
                 interface = m.groupdict()['interface']
                 enabled = m.groupdict()['enabled']

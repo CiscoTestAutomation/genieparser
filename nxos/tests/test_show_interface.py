@@ -242,7 +242,77 @@ class test_show_interface(unittest.TestCase):
            'reliability': '255/255',
            'rxload': '1/255',
            'txload': '1/255',
-           'types': 'Ethernet'}}
+           'types': 'Ethernet'},
+  'Ethernet1/1': {'bandwidth': 10000000,
+                   'beacon': 'off',
+                   'counters': {'in_bad_etype_drop': 0,
+                                'in_broadcast_pkts': 0,
+                                'in_discard': 0,
+                                'in_errors': 0,
+                                'in_if_down_drop': 0,
+                                'in_ignored': 0,
+                                'in_mac_pause_frames': 0,
+                                'in_multicast_pkts': 260,
+                                'in_octets': 35017,
+                                'in_overrun': 0,
+                                'in_pkts': 260,
+                                'in_short_frame': 0,
+                                'in_underrun': 0,
+                                'in_unicast_pkts': 0,
+                                'in_unknown_protos': 0,
+                                'in_watchdog': 0,
+                                'in_with_dribble': 0,
+                                'last_clear': '13:44:29',
+                                'out_babble': 0,
+                                'out_broadcast_pkts': 0,
+                                'out_collision': 0,
+                                'out_deferred': 0,
+                                'out_discard': 0,
+                                'out_errors': 0,
+                                'out_jumbo_packets': 0,
+                                'out_late_collision': 0,
+                                'out_lost_carrier': 0,
+                                'out_mac_pause_frames': 0,
+                                'out_multicast_pkts': 0,
+                                'out_no_carrier': 0,
+                                'out_octets': 0,
+                                'out_pkts': 0,
+                                'out_unicast_pkts': 0,
+                                'rate': {'in_rate': 0,
+                                         'in_rate_bps': 0,
+                                         'in_rate_pkts': 0,
+                                         'in_rate_pps': 0,
+                                         'load_interval': 30,
+                                         'out_rate': 0,
+                                         'out_rate_bps': 0,
+                                         'out_rate_pkts': 0,
+                                         'out_rate_pps': 0},
+                                'rx': True,
+                                'tx': True},
+                   'delay': 10,
+                   'enabled': False,
+                   'encapsulations': {'encapsulation': 'arpa'},
+                   'ethertype': '0x8100',
+                   'flow_control': {'receive': False, 'send': False},
+                   'interface_reset': 0,
+                   'ipv4': {'111.122.1.112/16': {'ip': '111.122.1.112',
+                                                 'prefix_length': '16'}},
+                   'last_link_flapped': '13:23:37',
+                   'link_state': 'DCX-No ACK in 100 PDUs',
+                   'mac_address': '002a.6ab4.90bc',
+                   'medium': 'broadcast',
+                   'mtu': 1500,
+                   'oper_status': 'down',
+                   'phys_address': '002a.6ab4.9068',
+                   'port_channel': {'port_channel_member': False},
+                   'reliability': '255/255',
+                   'rxload': '1/255',
+                   'switchport_monitor': 'off',
+                   'txload': '1/255',
+                   'types': '1000/10000 Ethernet'},
+ 'nve1': {'enabled': True,
+          'oper_status': 'up',
+          'port_channel': {'port_channel_member': False}}}
 
     golden_output = {'execute.return_value': '''
        
@@ -374,6 +444,48 @@ class test_show_interface(unittest.TestCase):
         0 lost carrier  0 no carrier  0 babble  0 output discard
         0 Tx pause
 
+    Ethernet1/1 is down (DCX-No ACK in 100 PDUs)
+     Dedicated Interface 
+
+      Hardware: 1000/10000 Ethernet, address: 002a.6ab4.90bc (bia 002a.6ab4.9068)
+      Description: Connection to pe1
+      Internet Address is 111.122.1.112/16
+      MTU 1500 bytes,  BW 10000000 Kbit, DLY 10 usec
+      reliability 255/255, txload 1/255, rxload 1/255
+      Encapsulation ARPA, medium is broadcast
+      auto-duplex, 10 Gb/s, media type is 10G
+      Beacon is turned off
+      Input flow-control is off, output flow-control is off
+      Rate mode is dedicated
+      Switchport monitor is off 
+      EtherType is 0x8100 
+      Last link flapped 13:23:37
+      Last clearing of "show interface" counters 13:44:29
+      0 interface resets
+      30 seconds input rate 0 bits/sec, 0 packets/sec
+      30 seconds output rate 0 bits/sec, 0 packets/sec
+      Load-Interval #2: 5 minute (300 seconds)
+        input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
+      RX
+        0 unicast packets  260 multicast packets  0 broadcast packets
+        260 input packets  35017 bytes
+        0 jumbo packets  0 storm suppression bytes
+        0 runts  0 giants  0 CRC  0 no buffer
+        0 input error  0 short frame  0 overrun   0 underrun  0 ignored
+        0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
+        0 input with dribble  0 input discard
+        0 Rx pause
+      TX
+        0 unicast packets  0 multicast packets  0 broadcast packets
+        0 output packets  0 bytes
+        0 jumbo packets
+        0 output error  0 collision  0 deferred  0 late collision
+        0 lost carrier  0 no carrier  0 babble 0 output discard
+        0 Tx pause
+
+    nve1 is up
+      Hardware: NVE
+      BW 0 Kbit,
 
         '''}
 
