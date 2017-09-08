@@ -91,15 +91,17 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('arp_timeout'): str,
                 Optional('last_input'): str,
                 Optional('last_output'): str,
-                Optional('output_hange'): str,              
-                Optional('input_queue_size'): int,
-                Optional('input_queue_max'): int,
-                Optional('input_queue_drops'): int,
-                Optional('input_queue_flushes'): int,
-                Optional('total_output_drop'): int,
-                Optional('queue_strategy'): str,
-                Optional('output_queue_size'): int,
-                Optional('output_queue_max'): int,
+                Optional('output_hang'): str, 
+                Optional('queues'): {             
+                    Optional('input_queue_size'): int,
+                    Optional('input_queue_max'): int,
+                    Optional('input_queue_drops'): int,
+                    Optional('input_queue_flushes'): int,
+                    Optional('total_output_drop'): int,
+                    Optional('queue_strategy'): str,
+                    Optional('output_queue_size'): int,
+                    Optional('output_queue_max'): int
+                },
                 Optional('flow_control'):
                     {Optional('receive'): bool,
                     Optional('send'): bool,
@@ -168,7 +170,10 @@ class ShowInterfacesSchema(MetaParser):
                         {Optional('ip'): str,
                          Optional('prefix_length'): str,
                          Optional('secondary'): bool
-                }
+                	},
+                	Optional('unnumbered'): {
+		                'interface_ref': str,
+		        },
             },
         },
     }
@@ -181,6 +186,7 @@ class ShowInterfaces(ShowInterfacesSchema):
     def cli(self):
         out = self.device.execute('show interfaces')
         interface_dict = {}
+        unnumbered_dict = {}
         rx = False
         tx = False
         for line in out.splitlines():
@@ -189,13 +195,13 @@ class ShowInterfaces(ShowInterfacesSchema):
             # GigabitEthernet1 is up, line protocol is up 
             # Port-channel12 is up, line protocol is up (connected)
             p1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
-                              ' +(?P<oper_status>[\w\s]+),'
+                              ' +(?P<enabled>[\w\s]+),'
                               ' +line +protocol +is +(?P<line_protocol>\w+)'
                               '( *\((?P<attribute>\S+)\))?$')
             m = p1.match(line)
             if m:
                 interface = m.groupdict()['interface']
-                oper_status = m.groupdict()['oper_status']
+                enabled = m.groupdict()['enabled']
                 line_protocol = m.groupdict()['line_protocol']
                 connected = m.groupdict()['attribute']
 
@@ -205,16 +211,16 @@ class ShowInterfaces(ShowInterfacesSchema):
                     interface_dict[interface]['port_channel']\
                         ['port_channel_member'] = False
 
-                if oper_status and 'down' in oper_status:
-                    interface_dict[interface]['oper_status'] = 'down'
+                if enabled and 'down' in enabled:
                     interface_dict[interface]['enabled'] = False
-                elif oper_status and 'up' in oper_status:
-                    interface_dict[interface]['oper_status'] = 'up'
+                elif enabled and 'up' in enabled:
                     interface_dict[interface]['enabled'] = True
 
                 if line_protocol:
                     interface_dict[interface]\
                                 ['line_protocol'] = line_protocol
+                    interface_dict[interface]\
+                                ['oper_status'] = line_protocol
 
                 if connected:
                     if connected == 'connected':
@@ -272,7 +278,8 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Internet Address is 10.4.4.4/24
-            p5 = re.compile(r'^Internet +Address +is +(?P<ipv4>(?P<ip>[0-9\.]+)'
+            # Internet address is 10.4.4.4/24
+            p5 = re.compile(r'^Internet +[A|a]ddress +is +(?P<ipv4>(?P<ip>[0-9\.]+)'
                              '\/(?P<prefix_length>[0-9]+))$')
             m = p5.match(line)
             if m:
@@ -308,9 +315,9 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # reliability 255/255, txload 1/255, rxload 1/255
-            p7 = re.compile(r'^reliability +(?P<reliability>[0-9]+),'
-                             ' +txload +(?P<txload>[0-9]+), +rxload'
-                             ' +(?P<rxload>[0-9]+)$')
+            p7 = re.compile(r'^reliability +(?P<reliability>[\d\/]+),'
+                             ' +txload +(?P<txload>[\d\/]+), +rxload'
+                             ' +(?P<rxload>[\d\/]+)$')
             m = p7.match(line)
             if m:
                 reliability = m.groupdict()['reliability']
@@ -376,7 +383,7 @@ class ShowInterfaces(ShowInterfacesSchema):
 
             # Auto-duplex, 1000Mb/s, media type is 10/100/1000BaseTX
             # Full-duplex, 1000Mb/s, link type is auto, media type is
-            p11 = re.compile(r'^(?P<duplex_mode>\w+)-duplex, +'
+            p11 = re.compile(r'^(?P<duplex_mode>\w+)[\-\s]+duplex, +'
                               '(?P<port_speed>[0-9]+)(?: *Mb/s)?,'
                               '( *link +type +is +(?P<link_type>\w+),)?'
                               ' *media +type +is *(?P<media_type>[\w\/]+)?$')
@@ -399,8 +406,8 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # input flow-control is off, output flow-control is unsupported
-            p12 = re.compile(r'^input +flow-control +is +(?P<receive>\w+), +'
-                              'output +flow-control +is +(?P<send>\w+)$')
+            p12 = re.compile(r'^(input|output) +flow-control +is +(?P<receive>\w+), +'
+                              '(output|input) +flow-control +is +(?P<send>\w+)$')
             m = p12.match(line)
             if m:
                 receive = m.groupdict()['receive'].lower()
@@ -409,7 +416,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                     interface_dict[interface]['flow_control'] = {}
                 if 'on' in receive:
                     interface_dict[interface]['flow_control']['receive'] = True
-                elif 'off' in receive or 'unsupported' in reveive:
+                elif 'off' in receive or 'unsupported' in receive:
                     interface_dict[interface]['flow_control']['receive'] = False
 
                 if 'on' in send:
@@ -423,7 +430,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                               'ARP +Timeout +(?P<arp_timeout>[\w\:\.]+)$')
             m = p13.match(line)
             if m:
-                arp_type = m.groupdict()['arp_type']
+                arp_type = m.groupdict()['arp_type'].lower()
                 arp_timeout = m.groupdict()['arp_timeout']
                 interface_dict[interface]['arp_type'] = arp_type
                 interface_dict[interface]['arp_timeout'] = arp_timeout
@@ -432,15 +439,15 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Last input never, output 00:01:05, output hang never
             p14 = re.compile(r'^Last +input +(?P<last_input>[\w\.\:]+), +'
                               'output +(?P<last_output>[\w\.\:]+), '
-                              'output +hang +(?P<output_hange>[\w\.\:]+)$')
+                              'output +hang +(?P<output_hang>[\w\.\:]+)$')
             m = p14.match(line)
             if m:
                 last_input = m.groupdict()['last_input']
                 last_output = m.groupdict()['last_output']
-                output_hange = m.groupdict()['output_hange']
+                output_hang = m.groupdict()['output_hang']
                 interface_dict[interface]['last_input'] = last_input
                 interface_dict[interface]['last_output'] = last_output
-                interface_dict[interface]['output_hange'] = output_hange
+                interface_dict[interface]['output_hang'] = output_hang
                 continue
 
             # Members in this channel: Gi1/0/2
@@ -465,18 +472,29 @@ class ShowInterfaces(ShowInterfacesSchema):
                               'Total +output +drops: +(?P<output_drop>\d+)$')
             m = p17.match(line)
             if m:
-                interface_dict[interface]['input_queue_size'] = int(m.groupdict()['size'])
-                interface_dict[interface]['input_queue_max'] = int(m.groupdict()['max'])
-                interface_dict[interface]['input_queue_drops'] = int(m.groupdict()['drops'])
-                interface_dict[interface]['input_queue_flushes'] = int(m.groupdict()['flushes'])
-                interface_dict[interface]['total_output_drop'] = int(m.groupdict()['output_drop'])
+                if 'queues' not in interface_dict[interface]:
+                    interface_dict[interface]['queues'] = {}
+
+                interface_dict[interface]['queues']['input_queue_size'] = \
+                    int(m.groupdict()['size'])
+                interface_dict[interface]['queues']['input_queue_max'] = \
+                    int(m.groupdict()['max'])
+                interface_dict[interface]['queues']['input_queue_drops'] = \
+                    int(m.groupdict()['drops'])
+                interface_dict[interface]['queues']['input_queue_flushes'] = \
+                    int(m.groupdict()['flushes'])
+                interface_dict[interface]['queues']['total_output_drop'] = \
+                    int(m.groupdict()['output_drop'])
                 continue
 
             # Queueing strategy: fifo
             p18 = re.compile(r'^Queueing +strategy: +(?P<queue_strategy>\w+)$')
             m = p18.match(line)
             if m:
-                interface_dict[interface]['queue_strategy'] = m.groupdict()['queue_strategy']
+                if 'queues' not in interface_dict[interface]:
+                    interface_dict[interface]['queues'] = {}
+                interface_dict[interface]['queues']['queue_strategy'] = \
+                    m.groupdict()['queue_strategy']
                 continue
 
             # Output queue: 0/0 (size/max)
@@ -484,13 +502,17 @@ class ShowInterfaces(ShowInterfacesSchema):
                               ' +\(size\/max\)$')
             m = p19.match(line)
             if m:
-                interface_dict[interface]['output_queue_size'] = int(m.groupdict()['size'])
-                interface_dict[interface]['output_queue_max'] = int(m.groupdict()['size'])
+                if 'queues' not in interface_dict[interface]:
+                    interface_dict[interface]['queues'] = {}
+                interface_dict[interface]['queues']['output_queue_size'] = \
+                    int(m.groupdict()['size'])
+                interface_dict[interface]['queues']['output_queue_max'] = \
+                    int(m.groupdict()['max'])
                 continue
 
             # 5 minute input rate 0 bits/sec, 0 packets/sec
             p20 = re.compile(r'^(?P<load_interval>[0-9\#]+)'
-                              ' *(minute|second|minutes|seconds) *input *rate'
+                              ' *(?P<unit>(minute|second|minutes|seconds)) *input *rate'
                               ' *(?P<in_rate>[0-9]+) *bits/sec,'
                               ' *(?P<in_rate_pkts>[0-9]+) *packets/sec$')
             m = p20.match(line)
@@ -498,6 +520,11 @@ class ShowInterfaces(ShowInterfacesSchema):
                 load_interval = int(m.groupdict()['load_interval'])
                 in_rate = int(m.groupdict()['in_rate'])
                 in_rate_pkts = int(m.groupdict()['in_rate_pkts'])
+                unit = m.groupdict()['unit']
+
+                # covert minutes to seconds
+                if 'minute' in unit:
+                    load_interval = load_interval * 60
 
                 if 'counters' not in interface_dict[interface]:
                     interface_dict[interface]['counters'] = {}
@@ -596,6 +623,8 @@ class ShowInterfaces(ShowInterfacesSchema):
             if m:
                 interface_dict[interface]['counters']['in_errors'] = \
                     int(m.groupdict()['in_errors'])
+                interface_dict[interface]['counters']['in_crc_errors'] = \
+                    int(m.groupdict()['in_crc_errors'])
                 interface_dict[interface]['counters']['in_frame'] = \
                     int(m.groupdict()['in_frame'])
                 interface_dict[interface]['counters']['in_overrun'] = \
@@ -720,6 +749,38 @@ class ShowInterfaces(ShowInterfacesSchema):
                     int(m.groupdict()['out_buffers_swapped'])
                 continue
 
+            # Interface is unnumbered. Using address of Loopback0 (1.1.1.1)
+            p35 = re.compile(r'^Interface +is +unnumbered. +Using +address +of +'
+                              '(?P<unnumbered_intf>[\w\/\.]+) +'
+                              '\((?P<unnumbered_ip>[\w\.\:]+)\)$')
+            m = p35.match(line)
+            if m:
+                unnumbered_dict[interface] = {}
+                unnumbered_dict[interface]['unnumbered_intf'] = m.groupdict()['unnumbered_intf']
+                unnumbered_dict[interface]['unnumbered_ip'] = m.groupdict()['unnumbered_ip']
+                continue
+
+        # create strucutre for unnumbered interface
+        if not unnumbered_dict:
+            return(interface_dict)
+
+        for intf in unnumbered_dict:
+            unnumbered_intf = unnumbered_dict[intf]['unnumbered_intf']
+            unnumbered_ip = unnumbered_dict[intf]['unnumbered_ip']
+            if unnumbered_intf in interface_dict:
+                if 'ipv4' in interface_dict[unnumbered_intf]:
+                    for ip in interface_dict[unnumbered_intf]['ipv4']:
+                        if unnumbered_ip in ip:
+                            if 'ipv4' not in interface_dict[intf]:
+                                interface_dict[intf]['ipv4'] = {}
+                            if ip not in interface_dict[intf]['ipv4']:
+                                interface_dict[intf]['ipv4'][ip] = {}
+                            m = re.search('([\w\.\:]+)\/(\d+)', ip)
+                            interface_dict[intf]['ipv4'][ip]['ip'] = m.groups()[0]
+                            interface_dict[intf]['ipv4'][ip]['prefix_length'] = m.groups()[1]
+                            interface_dict[intf]['ipv4']['unnumbered'] = {}
+                            interface_dict[intf]['ipv4']['unnumbered']\
+                                ['interface_ref'] = unnumbered_intf
         return(interface_dict)
 
 
