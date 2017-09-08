@@ -210,7 +210,9 @@ class test_show_interfaces_switchport(unittest.TestCase):
             "capture_mode": False,
             "private_vlan": {
                  "native_vlan_tagging": True,
-                 "encapsulation": "dot1q"
+                 "encapsulation": "dot1q",
+                 "operational": "10 (VLAN0010) 100 (VLAN0100)",
+                 "trunk_mappings": "10 (VLAN0010) 100 (VLAN0100)"
             },
             "encapsulation": {
                  "operational_encapsulation": "dot1q",
@@ -271,8 +273,10 @@ class test_show_interfaces_switchport(unittest.TestCase):
         Administrative private-vlan trunk encapsulation: dot1q
         Administrative private-vlan trunk normal VLANs: none
         Administrative private-vlan trunk associations: none
-        Administrative private-vlan trunk mappings: none
-        Operational private-vlan: none
+        Administrative private-vlan trunk mappings:
+          10 (VLAN0010) 100 (VLAN0100)
+        Operational private-vlan:
+          10 (VLAN0010) 100 (VLAN0100)
         Trunking VLANs Enabled: 100-110
         Pruning VLANs Enabled: 2-1001
         Capture Mode Disabled
@@ -351,6 +355,8 @@ class test_show_interfaces_switchport(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowInterfacesSwitchport(device=self.device)
         parsed_output = intf_obj.parse()
+        import pdb; pdb.set_trace()
+        self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_empty(self):

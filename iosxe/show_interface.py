@@ -988,6 +988,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
     def cli(self):
         out = self.device.execute('show interfaces switchport')
         ret_dict = {}
+        private_trunk_mappings = None
+        private_operational = None
         for line in out.splitlines():
             line = line.strip()
 
@@ -1024,7 +1026,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
             if m:
                 ret_dict[intf]['operational_mode'] = m.groupdict()['operational_mode']
                 ret_dict[intf]['port_channel_int'] = \
-                	convert_intf_name(m.groupdict()['port_channel_int'])
+                    convert_intf_name(m.groupdict()['port_channel_int'])
                 continue
 
             # Administrative Trunking Encapsulation: dot1q
@@ -1183,26 +1185,55 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Administrative private-vlan trunk mappings: none
+            # Administrative private-vlan trunk mappings:
             p19 =  re.compile(r'^Administrative +private-vlan +'
-                               'trunk +mappings: +(?P<ret>[\w\-]+)$')
+                               'trunk +mappings:( *(?P<ret>[\w\-]+))?$')
             m = p19.match(line)
             if m:
                 if 'private_vlan' not in ret_dict[intf]:
                     ret_dict[intf]['private_vlan'] = {}
-                ret = m.groupdict()['ret'].lower()
-                if ret != 'none':
-                    ret_dict[intf]['private_vlan']['trunk_mappings'] = m.groupdict()['ret']
+                private_trunk_mappings = m.groupdict()['ret']
+                if private_trunk_mappings and private_trunk_mappings.lower() != 'none':
+                    ret_dict[intf]['private_vlan']['trunk_mappings'] = private_trunk_mappings
+                private_trunk_mappings = ''
+                continue
+
+            # 10 (VLAN0010) 100 (VLAN0100)
+            if isinstance(private_trunk_mappings, str):
+                p19_1 =  re.compile(r'^(?P<mappings>[\w\(\)\s]+)$')
+                m = p19_1.match(line)
+                if m:
+                    ret = m.groupdict()['mappings']
+                    private_trunk_mappings += ' {}'.format(ret)
+                    ret_dict[intf]['private_vlan']['trunk_mappings'] = private_trunk_mappings.strip()
+                # reset private_trunk_mappings
+                private_trunk_mappings = None
                 continue
 
             # Operational private-vlan: none
-            p20 =  re.compile(r'^Operational +private-vlan: +(?P<ret>[\w\-]+)$')
+            # Operational private-vlan:
+            p20 =  re.compile(r'^Operational +private-vlan:'
+                               '( *(?P<private_operational>[\w\-]+))?$')
             m = p20.match(line)
             if m:
                 if 'private_vlan' not in ret_dict[intf]:
                     ret_dict[intf]['private_vlan'] = {}
-                ret = m.groupdict()['ret'].lower()
-                if ret != 'none':
-                    ret_dict[intf]['private_vlan']['operational'] = m.groupdict()['ret']
+                private_operational = m.groupdict()['private_operational']
+                if private_operational and private_operational.lower() != 'none':
+                    ret_dict[intf]['private_vlan']['operational'] = private_operational
+                private_operational = ''
+                continue
+
+            # 10 (VLAN0010) 100 (VLAN0100)
+            if isinstance(private_operational, str):
+                p20_1 =  re.compile(r'^(?P<private_operational>[\w\(\)\s]+)$')
+                m = p20_1.match(line)
+                if m:
+                    ret = m.groupdict()['private_operational']
+                    private_operational += ' {}'.format(ret)
+                    ret_dict[intf]['private_vlan']['operational'] = private_operational.strip()
+                # reset private_trunk_mappings
+                private_operational = None
                 continue
 
             # Trunking VLANs Enabled: 200-211
