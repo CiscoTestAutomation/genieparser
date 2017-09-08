@@ -170,10 +170,10 @@ class ShowInterfacesSchema(MetaParser):
                         {Optional('ip'): str,
                          Optional('prefix_length'): str,
                          Optional('secondary'): bool
-                	},
-                	Optional('unnumbered'): {
-		                'interface_ref': str,
-		        },
+                    },
+                    Optional('unnumbered'): {
+                        'interface_ref': str,
+                },
             },
         },
     }
@@ -944,199 +944,334 @@ class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
         super(ShowIpInterfaceBriefPipeVlan, self).yang_cli()
 
 
-# switchport administrative mode is what's configured on the switch port while operational mode is what is actually functioning at the moment.
 class ShowInterfacesSwitchportSchema(MetaParser):
-    schema = {'interface':
-                {Any():
-                    {Optional('switchport_mode'):
-                        {Optional(Any()):
-                            {Optional('vlan_id'):
-                                {Optional(Any()):
-                                    {Optional('admin_trunking_encapsulation'): str,
-                                     Optional('allowed_vlans'): str}
-                                },
-                            }
-                        },
+    schema = {
+                Any(): {
+                    'switchport_enable': bool,
+                    'swichport_mode': str,
+                    Optional('operational_mode'): str,
+                    Optional('port_channel_int'): str,
+                    Optional('encapsulation'): {
+                        Optional('encapsulation'): str,
+                        Optional('operational_encapsulation'): str,
+                        Optional('native_vlan'): str,
                     },
+                    Optional('negotiation_of_trunk'): bool,
+                    Optional('access_vlan'): str,
+                    Optional('native_vlan_tagging'): bool,
+                    Optional('private_vlan'): {
+                        Optional('host_association'): str,
+                        Optional('mapping'): str,
+                        Optional('native_vlan'): str,
+                        Optional('native_vlan_tagging'): bool,
+                        Optional('encapsulation'): str,
+                        Optional('normal_vlans'): str,
+                        Optional('associations'): str,
+                        Optional('trunk_mappings'): str,
+                        Optional('operational'): str,
+                    },
+                    Optional('trunk_vlans'): str,
+                    Optional('pruning_vlans'): str,
+                    Optional('capture_mode'): bool,
+                    Optional('capture_vlans'): str,
+                    Optional('protected'): bool,
+                    Optional('unknown_unicast_blocked'): bool,
+                    Optional('unknown_multicast_blocked'): bool,
+                    Optional('appliance_trust'): str,
                 },
             }
 
-class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema, MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
+class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
+
+    #parser for show interfaces switchport
 
     def cli(self):
-        ''' parsing mechanism: cli
-
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: exe
-        cuting, transforming, returning
-        '''
-        cmd = 'show interfaces switchport'.format()
-        out = self.device.execute(cmd)
-        intf_dict = {}
-        trunk_section = False
-        access_section = False
-        trunk_encapsulation = ''
+        out = self.device.execute('show interfaces switchport')
+        ret_dict = {}
         for line in out.splitlines():
-            line = line.rstrip()
-            p1 = re.compile(r'^\s*Name:\s*(?P<interface_name>[a-zA-Z0-9\/]+)$')
+            line = line.strip()
+
+            # Name: Gi1/0/2
+            p1 =  re.compile(r'^Name: +(?P<intf>[\w\/\.\-]+)$')
             m = p1.match(line)
             if m:
-                interface_name = m.groupdict()['interface_name']
-                if 'interface' not in intf_dict:
-                    intf_dict['interface'] = {}
-                if interface_name not in intf_dict['interface']:
-                    intf_dict['interface'][interface_name] = {}
+                intf = convert_intf_name(m.groupdict()['intf'])
+                if intf not in ret_dict:
+                    ret_dict[intf] = {}
                 continue
 
-            p2 = re.compile(r'^\s*Administrative Mode:\s*(?P<admin_mode>[a-z\s*]+)$')
+            # Switchport: Enabled
+            p2 =  re.compile(r'^Switchport: +(?P<switchport_enable>\w+)$')
             m = p2.match(line)
             if m:
-                admin_mode = m.groupdict()['admin_mode']
-                if any(word in admin_mode for word in ['trunk', 'access']):
-                    if 'switchport_mode' not in intf_dict['interface']:
-                        intf_dict['interface'][interface_name]['switchport_mode'] = {}
-                    if admin_mode not in intf_dict['interface'][interface_name]['switchport_mode']:
-                        intf_dict['interface'][interface_name]['switchport_mode'][admin_mode] = {}
-
-                if 'trunk' in admin_mode:
-                    trunk_section = True
-                    access_section = False
-                elif 'access' in admin_mode:
-                    access_section = True
-                    trunk_section = False
+                if m.groupdict()['switchport_enable'].lower() == 'enabled':
+                    ret_dict[intf]['switchport_enable'] = True
+                else:
+                    ret_dict[intf]['switchport_enable'] = False
                 continue
 
-            p3 = re.compile(r'^\s*Trunking Native Mode VLAN:\s*(?P<trunking_native_vlan>[0-9]+)( \([a-zA-Z]+\))*$')
+            # Administrative Mode: trunk
+            p3 =  re.compile(r'^Administrative +Mode: +(?P<swichport_mode>[\w\s]+)$')
             m = p3.match(line)
             if m:
-                vlan_id = m.groupdict()['trunking_native_vlan']
-                if any(word in admin_mode for word in ['trunk', 'access']):
-                    if 'vlan_id' not in intf_dict['interface'][interface_name]['switchport_mode'][admin_mode]:
-                        intf_dict['interface'][interface_name]['switchport_mode'][admin_mode]['vlan_id'] = {}
-                    if vlan_id not in intf_dict['interface'][interface_name]['switchport_mode'][admin_mode]['vlan_id']:
-                        intf_dict['interface'][interface_name]['switchport_mode'][admin_mode]['vlan_id'][vlan_id] = {}
-                    if trunk_encapsulation:
-                        intf_dict['interface'][interface_name]['switchport_mode'][admin_mode]\
-                            ['vlan_id'][vlan_id]['admin_trunking_encapsulation'] = trunk_encapsulation
+                ret_dict[intf]['swichport_mode'] = m.groupdict()['swichport_mode']
                 continue
 
-            p4 = re.compile(r'^\s*Access Mode VLAN:\s*(?P<access_mode_vlan_id>[a-z0-9]+)( \([a-zA-Z]+\))*$')
+            # Operational Mode: trunk (member of bundle Po12)
+            p4 =  re.compile(r'^Operational +Mode: +(?P<operational_mode>\w+) +'
+                              '(\(member +of +bundle +(?P<port_channel_int>[\w\/\.\-]+)\))?$')
             m = p4.match(line)
             if m:
-                vlan_id = m.groupdict()['access_mode_vlan_id']
-                if any(word in admin_mode for word in ['trunk', 'access']):
-                    if 'vlan_id' not in intf_dict['interface'][interface_name]['switchport_mode'][admin_mode]:
-                        intf_dict['interface'][interface_name]['switchport_mode'][admin_mode]['vlan_id'] = {}
-                    if vlan_id not in intf_dict['interface'][interface_name]['switchport_mode'][admin_mode]['vlan_id']:
-                        intf_dict['interface'][interface_name]['switchport_mode'][admin_mode]['vlan_id'][vlan_id] = {}
+                ret_dict[intf]['operational_mode'] = m.groupdict()['operational_mode']
+                ret_dict[intf]['port_channel_int'] = \
+                	convert_intf_name(m.groupdict()['port_channel_int'])
                 continue
 
-            if trunk_section:
-                p5 = re.compile(r'^\s*Administrative Trunking Encapsulation:\s*(?P<admin_trunking_encapsulation>[a-z0-9]+)$')
-                m = p5.match(line)
-                if m:
-                    trunk_encapsulation = m.groupdict()['admin_trunking_encapsulation']
-                    continue
+            # Administrative Trunking Encapsulation: dot1q
+            p5 =  re.compile(r'^Administrative +Trunking +Encapsulation: +'
+                              '(?P<encapsulation>\w+)$')
+            m = p5.match(line)
+            if m:
+                if 'encapsulation' not in ret_dict[intf]:
+                    ret_dict[intf]['encapsulation'] = {}
+                ret_dict[intf]['encapsulation']['encapsulation'] = \
+                    m.groupdict()['encapsulation'].lower()
+                continue
 
-        return intf_dict
+            # Operational Trunking Encapsulation: dot1q
+            p6 =  re.compile(r'^Operational +Trunking +Encapsulation: +'
+                              '(?P<encapsulation>\w+)$')
+            m = p6.match(line)
+            if m:
+                if 'encapsulation' not in ret_dict[intf]:
+                    ret_dict[intf]['encapsulation'] = {}
+                ret_dict[intf]['encapsulation']['operational_encapsulation'] = \
+                    m.groupdict()['encapsulation'].lower()
+                continue
 
-    def yang(self):
-        ''' parsing mechanism: yang
+            # Negotiation of Trunking: On
+            p7 =  re.compile(r'^Negotiation +of +Trunking: +(?P<negotiation_of_trunk>\w+)$')
+            m = p7.match(line)
+            if m:
+                negotiation_of_trunk = m.groupdict()['negotiation_of_trunk'].lower()
+                if 'on' in negotiation_of_trunk:
+                    ret_dict[intf]['negotiation_of_trunk'] = True
+                elif 'off' in negotiation_of_trunk:
+                    ret_dict[intf]['negotiation_of_trunk'] = False                    
+                continue
 
-        Function yang() defines the yang type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
-        '''
-        ret = {}
-        cmd = '''<native><interface><GigabitEthernet/></interface></native>'''
-        output = self.device.get(('subtree', cmd))
+            # Access Mode VLAN: 1 (default)
+            p8 =  re.compile(r'^Access +Mode +VLAN: +(?P<access_vlan>[\d\-]+)'
+                              '( *\((?P<dummy>\w+)\))?$')
+            m = p8.match(line)
+            if m:
+                ret_dict[intf]['access_vlan'] = m.groupdict()['access_vlan']
+                continue
 
-        for data in output.data:
-            for native in data:
-                for interface in native:
-                    gig_number = None
-                    interface_name = None
-                    admin_mode = None
-                    vlan_id = None
-                    allowed_vlans = None
-                    for gigabitethernet in interface:
-                        # Remove the namespace
-                        text = gigabitethernet.tag[gigabitethernet.tag.find('}')+1:]
-                        if text == 'name':
-                            gig_number = gigabitethernet.text
-                            interface_name = 'Gigabitethernet' + str(gig_number)
-                            continue
-                        if text == 'switchport':
-                            for switchport in gigabitethernet:
-                                # admin_mode = None
-                                text = switchport.tag[switchport.tag.find('}')+1:]
-                                #ydk.models.ned_edison.ned.Native.Interface.Gigabitethernet.Switchport.Trunk
-                                #ydk.models.xe_recent_edison.Cisco_IOS_XE_native.Native.Interface.Gigabitethernet.Switchport.Trunk
-                                if text == 'trunk':
-                                    admin_mode = 'trunk'
-                                    for vlan in switchport:
-                                        # vlan_id = None
-                                        text = vlan.tag[vlan.tag.find('}')+1:]
-                                        #ydk.models.ned_edison.ned.Native.Interface.Gigabitethernet.Switchport.Trunk.Native_
-                                        #ydk.models.xe_recent_edison.Cisco_IOS_XE_native.Native.Interface.Gigabitethernet.Switchport.Trunk.Native_
-                                        if text == 'native':
-                                            for item in vlan:
-                                                text = item.tag[item.tag.find('}')+1:]
-                                                vlan_id = item.text
-                                        #ydk.models.ned_edison.ned.Native.Interface.Gigabitethernet.Switchport.Trunk.Allowed
-                                        #ydk.models.xe_recent_edison.Cisco_IOS_XE_native.Native.Interface.Gigabitethernet.Switchport.Trunk.Allowed
-                                        # allowed_vlans = None
-                                        if text == 'allowed':
-                                            #ydk.models.ned_edison.ned.Native.Interface.Gigabitethernet.Switchport.Trunk.Allowed.Vlan
-                                            #ydk.models.xe_recent_edison.Cisco_IOS_XE_native.Native.Interface.Gigabitethernet.Switchport.Trunk.Allowed.Vlan
-                                            for item in vlan:
-                                                # Remove the namespace
-                                                text = item.tag[item.tag.find('}')+1:]
-                                                if text == 'vlan':
-                                                    for stuff in item:
-                                                        text = stuff.tag[stuff.tag.find('}')+1:]
-                                                        if text == 'vlans':
-                                                            allowed_vlans = stuff.text
-                                                        continue
-                                #ydk.models.ned_edison.ned.Native.Interface.Gigabitethernet.Switchport.Access
-                                #ydk.models.xe_recent_edison.Cisco_IOS_XE_native.Native.Interface.Gigabitethernet.Switchport.Access
-                                if text == 'access':
-                                    admin_mode = 'access'
-                                    for vlan in switchport:
-                                        vlan_id = None
-                                        for item in vlan:
-                                            text = item.tag[item.tag.find('}')+1:]
-                                            vlan_id = item.text
-                                            continue
-                    # Let's build it now
-                    if 'interface' not in ret:
-                        ret['interface'] = {}
-                    if interface_name is not None:
-                        ret['interface'][interface_name] = {}
-                        if admin_mode is not None:
-                            if 'switchport_mode' not in ret['interface'][interface_name]:
-                                ret['interface'][interface_name]['switchport_mode'] = {}
-                            ret['interface'][interface_name]['switchport_mode'][admin_mode] = {}
-                            if vlan_id is not None:
-                                if 'vlan_id' not in ret['interface'][interface_name]['switchport_mode'][admin_mode]:
-                                    ret['interface'][interface_name]['switchport_mode'][admin_mode]['vlan_id'] = {}
-                                ret['interface'][interface_name]['switchport_mode'][admin_mode]['vlan_id'][vlan_id] = {}
-                                if allowed_vlans is not None:
-                                    ret['interface'][interface_name]['switchport_mode'][admin_mode]['vlan_id'][vlan_id]['allowed_vlans'] = allowed_vlans
+            # Trunking Native Mode VLAN: 1 (default)
+            p9 =  re.compile(r'^Trunking +Native +Mode +VLAN: +(?P<native_vlan>[\d\-]+)'
+                              '( *\((?P<dummy>\w+)\))?$')
+            m = p9.match(line)
+            if m:
+                if 'encapsulation' not in ret_dict[intf]:
+                    ret_dict[intf]['encapsulation'] = {}
+                ret_dict[intf]['encapsulation']['native_vlan'] = m.groupdict()['native_vlan']
+                continue
 
-        return ret
+            # Administrative Native VLAN tagging: enabled
+            p10 =  re.compile(r'^Administrative +Native +VLAN +tagging: +'
+                               '(?P<tagging>\w+)$')
+            m = p10.match(line)
+            if m:
+                if 'enable' in m.groupdict()['tagging'].lower():
+                    ret_dict[intf]['native_vlan_tagging'] = True
+                else:
+                    ret_dict[intf]['native_vlan_tagging'] = False
+                continue
 
-    def yang_cli(self):
-        cli_output = self.cli()
-        yang_output = self.yang()
-        merged_output = _merge_dict(yang_output,cli_output)
-        return merged_output
-        
+            # Voice VLAN: none
+            p11 =  re.compile(r'^Voice +VLAN: +(?P<vlan>[\d\-]+)$')
+            m = p11.match(line)
+            if m:
+                ret_dict[intf]['voice_vlan'] = m.groupdict()['vlan']
+                continue
+
+            # Administrative private-vlan host-association: none 
+            p12 =  re.compile(r'^Administrative +private-vlan +'
+                               'host-association: +(?P<ret>[\w\-]+)$')
+            m = p12.match(line)
+            if m:
+                if 'private_vlan' not in ret_dict[intf]:
+                    ret_dict[intf]['private_vlan'] = {}
+                ret = m.groupdict()['ret'].lower()
+                if ret != 'none':
+                    ret_dict[intf]['private_vlan']['host_association'] = m.groupdict()['ret']
+                continue
+
+            # Administrative private-vlan mapping: none 
+            p13 =  re.compile(r'^Administrative +private-vlan +'
+                               'mapping: +(?P<ret>[\w\-]+)$')
+            m = p13.match(line)
+            if m:
+                if 'private_vlan' not in ret_dict[intf]:
+                    ret_dict[intf]['private_vlan'] = {}
+                ret = m.groupdict()['ret'].lower()
+                if ret != 'none':
+                    ret_dict[intf]['private_vlan']['mapping'] = m.groupdict()['ret']
+                continue
+
+            # Administrative private-vlan trunk native VLAN: none
+            p14 =  re.compile(r'^Administrative +private-vlan +'
+                               'trunk +native +VLAN: +(?P<ret>[\w\-]+)$')
+            m = p14.match(line)
+            if m:
+                if 'private_vlan' not in ret_dict[intf]:
+                    ret_dict[intf]['private_vlan'] = {}
+                ret = m.groupdict()['ret'].lower()
+                if ret != 'none':
+                    ret_dict[intf]['private_vlan']['native_vlan'] = m.groupdict()['ret']
+                continue
+
+            # Administrative private-vlan trunk Native VLAN tagging: enabled
+            p15 =  re.compile(r'^Administrative +private-vlan +'
+                               'trunk +Native +VLAN +tagging: +(?P<ret>[\w\-]+)$')
+            m = p15.match(line)
+            if m:
+                if 'private_vlan' not in ret_dict[intf]:
+                    ret_dict[intf]['private_vlan'] = {}
+                ret = m.groupdict()['ret'].lower()
+                if 'enable' in ret:
+                    ret_dict[intf]['private_vlan']['native_vlan_tagging'] = True
+                else:
+                    ret_dict[intf]['private_vlan']['native_vlan_tagging'] = False                    
+                continue
+
+            # Administrative private-vlan trunk encapsulation: dot1q
+            p16 =  re.compile(r'^Administrative +private-vlan +'
+                               'trunk +encapsulation: +(?P<ret>[\w\-]+)$')
+            m = p16.match(line)
+            if m:
+                if 'private_vlan' not in ret_dict[intf]:
+                    ret_dict[intf]['private_vlan'] = {}
+                ret = m.groupdict()['ret'].lower()
+                if ret != 'none':
+                    ret_dict[intf]['private_vlan']['encapsulation'] = m.groupdict()['ret']
+                continue
+
+            # Administrative private-vlan trunk normal VLANs: none
+            p17 =  re.compile(r'^Administrative +private-vlan +'
+                               'trunk +normal +VLANs: +(?P<ret>[\w\-]+)$')
+            m = p17.match(line)
+            if m:
+                if 'private_vlan' not in ret_dict[intf]:
+                    ret_dict[intf]['private_vlan'] = {}
+                ret = m.groupdict()['ret'].lower()
+                if ret != 'none':
+                    ret_dict[intf]['private_vlan']['normal_vlans'] = m.groupdict()['ret']
+                continue
+
+            # Administrative private-vlan trunk associations: none
+            p18 =  re.compile(r'^Administrative +private-vlan +'
+                               'trunk +associations: +(?P<ret>[\w\-]+)$')
+            m = p18.match(line)
+            if m:
+                if 'private_vlan' not in ret_dict[intf]:
+                    ret_dict[intf]['private_vlan'] = {}
+                ret = m.groupdict()['ret'].lower()
+                if ret != 'none':
+                    ret_dict[intf]['private_vlan']['associations'] = m.groupdict()['ret']
+                continue
+
+            # Administrative private-vlan trunk mappings: none
+            p19 =  re.compile(r'^Administrative +private-vlan +'
+                               'trunk +mappings: +(?P<ret>[\w\-]+)$')
+            m = p19.match(line)
+            if m:
+                if 'private_vlan' not in ret_dict[intf]:
+                    ret_dict[intf]['private_vlan'] = {}
+                ret = m.groupdict()['ret'].lower()
+                if ret != 'none':
+                    ret_dict[intf]['private_vlan']['trunk_mappings'] = m.groupdict()['ret']
+                continue
+
+            # Operational private-vlan: none
+            p20 =  re.compile(r'^Operational +private-vlan: +(?P<ret>[\w\-]+)$')
+            m = p20.match(line)
+            if m:
+                if 'private_vlan' not in ret_dict[intf]:
+                    ret_dict[intf]['private_vlan'] = {}
+                ret = m.groupdict()['ret'].lower()
+                if ret != 'none':
+                    ret_dict[intf]['private_vlan']['operational'] = m.groupdict()['ret']
+                continue
+
+            # Trunking VLANs Enabled: 200-211
+            p21 =  re.compile(r'^Trunking +VLANs +Enabled: +(?P<trunk_vlans>[\w\-]+)$')
+            m = p21.match(line)
+            if m:
+                ret_dict[intf]['trunk_vlans'] = m.groupdict()['trunk_vlans'].lower()
+                continue
+
+            # Pruning VLANs Enabled: 2-1001
+            p22 =  re.compile(r'^Pruning +VLANs +Enabled: +(?P<pruning_vlans>[\w\-]+)$')
+            m = p22.match(line)
+            if m:
+                ret_dict[intf]['pruning_vlans'] = m.groupdict()['pruning_vlans'].lower()
+                continue
+
+            # Capture Mode Disabled
+            p23 =  re.compile(r'^Capture +Mode +(?P<mode>\w+)$')
+            m = p23.match(line)
+            if m:
+                mode = m.groupdict()['mode'].lower()
+                if 'disabled' in mode:
+                    ret_dict[intf]['capture_mode'] = False
+                else:
+                    ret_dict[intf]['capture_mode'] = True
+                continue
+
+            # Capture VLANs Allowed: ALL
+            p24 =  re.compile(r'^Capture +VLANs +Allowed: +(?P<capture_vlans>[\w\-]+)$')
+            m = p24.match(line)
+            if m:
+                ret_dict[intf]['capture_vlans'] = m.groupdict()['capture_vlans'].lower()
+                continue
+
+            # Protected: false
+            p25 =  re.compile(r'^Protected: +(?P<protected>\w+)$')
+            m = p25.match(line)
+            if m:
+                if 'false' in m.groupdict()['protected'].lower():
+                    ret_dict[intf]['protected'] = False
+                else:
+                    ret_dict[intf]['protected'] = True
+                continue
+
+            # Unknown unicast blocked: disabled
+            p26 =  re.compile(r'^Unknown +unicast +blocked: +(?P<block>\w+)$')
+            m = p26.match(line)
+            if m:
+                if 'disabled' in m.groupdict()['block'].lower():
+                    ret_dict[intf]['unknown_unicast_blocked'] = False
+                else:
+                    ret_dict[intf]['unknown_unicast_blocked'] = True
+                continue
+
+            # Unknown multicast blocked: disabled
+            p21 =  re.compile(r'^Unknown +multicast +blocked: +(?P<block>\w+)$')
+            m = p21.match(line)
+            if m:
+                if 'disabled' in m.groupdict()['block'].lower():
+                    ret_dict[intf]['unknown_multicast_blocked'] = False
+                else:
+                    ret_dict[intf]['unknown_multicast_blocked'] = True
+                continue
+
+            # Appliance trust: none
+            p21 =  re.compile(r'^Appliance +trust: +(?P<trust>[\w\-]+)$')
+            m = p21.match(line)
+            if m:
+                if  m.groupdict()['trust'] != 'none':
+                    ret_dict[intf]['appliance_trust'] = m.groupdict()['trust']
+                continue
+        return ret_dict

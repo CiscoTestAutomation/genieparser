@@ -175,43 +175,80 @@ class test_show_interfaces_switchport(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
-        "interface": {
-          "Gi1/0/4": {
-               "switchport_mode": {
-                    "trunk": {
-                         "vlan_id": {
-                              "1": {
-                                   "admin_trunking_encapsulation": "dot1q"
-                              }
-                         }
-                    }
-               }
-          },
-          "Gi1/0/2": {
-               "switchport_mode": {
-                    "trunk": {
-                         "vlan_id": {
-                              "1": {
-                                   "admin_trunking_encapsulation": "dot1q"
-                              }
-                         }
-                    }
-               }
-          },
-          "Gi1/0/5": {
-               "switchport_mode": {
-                    "static access": {
-                         "vlan_id": {
-                              "1": {
-                                   "admin_trunking_encapsulation": "dot1q"
-                              }
-                         }
-                    }
-               }
-          },
-          "Gi1/1/1": {}
-     }
-
+        "GigabitEthernet1/0/4": {
+            "swichport_mode": "trunk",
+            "pruning_vlans": "2-1001",
+            "switchport_enable": True,
+            "trunk_vlans": "200-211",
+            "capture_mode": False,
+            "private_vlan": {
+                 "native_vlan_tagging": True,
+                 "encapsulation": "dot1q"
+            },
+            "access_vlan": "1",
+            "unknown_unicast_blocked": False,
+            "native_vlan_tagging": True,
+            "unknown_multicast_blocked": False,
+            "protected": False,
+            "negotiation_of_trunk": True,
+            "capture_vlans": "all",
+            "encapsulation": {
+                 "operational_encapsulation": "dot1q",
+                 "native_vlan": "1",
+                 "encapsulation": "dot1q"
+            }
+       },
+       "GigabitEthernet1/0/2": {
+            "pruning_vlans": "2-1001",
+            "switchport_enable": True,
+            "unknown_multicast_blocked": False,
+            "trunk_vlans": "100-110",
+            "port_channel_int": "Port-channel12",
+            "access_vlan": "1",
+            "operational_mode": "trunk",
+            "unknown_unicast_blocked": False,
+            "capture_mode": False,
+            "private_vlan": {
+                 "native_vlan_tagging": True,
+                 "encapsulation": "dot1q"
+            },
+            "encapsulation": {
+                 "operational_encapsulation": "dot1q",
+                 "native_vlan": "1",
+                 "encapsulation": "dot1q"
+            },
+            "protected": False,
+            "native_vlan_tagging": True,
+            "negotiation_of_trunk": True,
+            "capture_vlans": "all",
+            "swichport_mode": "trunk"
+       },
+       "GigabitEthernet1/0/5": {
+            "swichport_mode": "static access",
+            "pruning_vlans": "2-1001",
+            "switchport_enable": True,
+            "trunk_vlans": "all",
+            "capture_mode": False,
+            "private_vlan": {
+                 "native_vlan_tagging": True,
+                 "encapsulation": "dot1q"
+            },
+            "access_vlan": "1",
+            "unknown_unicast_blocked": False,
+            "native_vlan_tagging": True,
+            "unknown_multicast_blocked": False,
+            "protected": False,
+            "negotiation_of_trunk": False,
+            "capture_vlans": "all",
+            "encapsulation": {
+                 "native_vlan": "1",
+                 "encapsulation": "dot1q"
+            }
+       },
+       "GigabitEthernet1/1/1": {
+            "switchport_enable": True,
+            "swichport_mode": "dynamic auto"
+       }
     }
 
 
@@ -253,7 +290,7 @@ class test_show_interfaces_switchport(unittest.TestCase):
         Administrative Trunking Encapsulation: dot1q
         Operational Trunking Encapsulation: dot1q
         Negotiation of Trunking: On
-        Access Mode VLAN: 1 ( default)
+        Access Mode VLAN: 1 (default)
         Trunking Native Mode VLAN: 1 (default)
         Administrative Native VLAN tagging: enabled
         Voice VLAN: none
