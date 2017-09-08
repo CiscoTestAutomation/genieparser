@@ -177,7 +177,98 @@ class test_show_interfaces_switchport(unittest.TestCase):
 
 
     golden_output = {'execute.return_value': '''
+        Name: Gi1/0/2
+        Switchport: Enabled
+        Administrative Mode: trunk
+        Operational Mode: trunk (member of bundle Po12)
+        Administrative Trunking Encapsulation: dot1q
+        Operational Trunking Encapsulation: dot1q
+        Negotiation of Trunking: On
+        Access Mode VLAN: 1 (default)
+        Trunking Native Mode VLAN: 1 (default)
+        Administrative Native VLAN tagging: enabled
+        Voice VLAN: none
+        Administrative private-vlan host-association: none 
+        Administrative private-vlan mapping: none 
+        Administrative private-vlan trunk native VLAN: none
+        Administrative private-vlan trunk Native VLAN tagging: enabled
+        Administrative private-vlan trunk encapsulation: dot1q
+        Administrative private-vlan trunk normal VLANs: none
+        Administrative private-vlan trunk associations: none
+        Administrative private-vlan trunk mappings: none
+        Operational private-vlan: none
+        Trunking VLANs Enabled: 100-110
+        Pruning VLANs Enabled: 2-1001
+        Capture Mode Disabled
+        Capture VLANs Allowed: ALL
 
+        Protected: false
+        Unknown unicast blocked: disabled
+        Unknown multicast blocked: disabled
+        Appliance trust: none
+
+        Name: Gi1/0/4
+        Switchport: Enabled
+        Administrative Mode: trunk
+        Operational Mode: trunk
+        Administrative Trunking Encapsulation: dot1q
+        Operational Trunking Encapsulation: dot1q
+        Negotiation of Trunking: On
+        Access Mode VLAN: 1 ( default)
+        Trunking Native Mode VLAN: 1 (default)
+        Administrative Native VLAN tagging: enabled
+        Voice VLAN: none
+        Administrative private-vlan host-association: none 
+        Administrative private-vlan mapping: none 
+        Administrative private-vlan trunk native VLAN: none
+        Administrative private-vlan trunk Native VLAN tagging: enabled
+        Administrative private-vlan trunk encapsulation: dot1q
+        Administrative private-vlan trunk normal VLANs: none
+        Administrative private-vlan trunk associations: none
+        Administrative private-vlan trunk mappings: none
+        Operational private-vlan: none
+        Trunking VLANs Enabled: 200-211
+        Pruning VLANs Enabled: 2-1001
+        Capture Mode Disabled
+        Capture VLANs Allowed: ALL
+
+        Protected: false
+        Unknown unicast blocked: disabled
+        Unknown multicast blocked: disabled
+        Appliance trust: none
+
+        Name: Gi1/0/5
+        Switchport: Enabled
+        Administrative Mode: static access
+        Operational Mode: down
+        Administrative Trunking Encapsulation: dot1q
+        Negotiation of Trunking: Off
+        Access Mode VLAN: 1 (default)
+        Trunking Native Mode VLAN: 1 (default)
+        Administrative Native VLAN tagging: enabled
+        Voice VLAN: none
+        Administrative private-vlan host-association: none 
+        Administrative private-vlan mapping: none 
+        Administrative private-vlan trunk native VLAN: none
+        Administrative private-vlan trunk Native VLAN tagging: enabled
+        Administrative private-vlan trunk encapsulation: dot1q
+        Administrative private-vlan trunk normal VLANs: none
+        Administrative private-vlan trunk associations: none
+        Administrative private-vlan trunk mappings: none
+        Operational private-vlan: none
+        Trunking VLANs Enabled: ALL
+        Pruning VLANs Enabled: 2-1001
+        Capture Mode Disabled
+        Capture VLANs Allowed: ALL
+                  
+        Protected: false
+        Unknown unicast blocked: disabled
+        Unknown multicast blocked: disabled
+        Appliance trust: none
+
+        Name: Gi1/1/1
+        Switchport: Enabled
+        Administrative Mode: dynamic auto
     '''}
 
     def test_golden(self):
