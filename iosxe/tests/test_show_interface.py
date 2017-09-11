@@ -195,7 +195,7 @@ class test_show_interfaces_switchport(unittest.TestCase):
             "encapsulation": {
                  "operational_encapsulation": "dot1q",
                  "native_vlan": "1",
-                 "encapsulation": "dot1q"
+                 "administrative_encapsulation": "dot1q"
             }
        },
        "GigabitEthernet1/0/2": {
@@ -203,7 +203,10 @@ class test_show_interfaces_switchport(unittest.TestCase):
             "switchport_enable": True,
             "unknown_multicast_blocked": False,
             "trunk_vlans": "100-110",
-            "port_channel_int": "Port-channel12",
+            "port_channel": {
+                "port_channel_int": "Port-channel12",
+                "port_channel_member": True
+            },
             "access_vlan": "1",
             "operational_mode": "trunk",
             "unknown_unicast_blocked": False,
@@ -217,7 +220,7 @@ class test_show_interfaces_switchport(unittest.TestCase):
             "encapsulation": {
                  "operational_encapsulation": "dot1q",
                  "native_vlan": "1",
-                 "encapsulation": "dot1q"
+                 "administrative_encapsulation": "dot1q"
             },
             "protected": False,
             "native_vlan_tagging": True,
@@ -244,7 +247,7 @@ class test_show_interfaces_switchport(unittest.TestCase):
             "capture_vlans": "all",
             "encapsulation": {
                  "native_vlan": "1",
-                 "encapsulation": "dot1q"
+                 "administrative_encapsulation": "dot1q"
             }
        },
        "GigabitEthernet1/1/1": {
@@ -355,7 +358,6 @@ class test_show_interfaces_switchport(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowInterfacesSwitchport(device=self.device)
         parsed_output = intf_obj.parse()
-        import pdb; pdb.set_trace()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
 

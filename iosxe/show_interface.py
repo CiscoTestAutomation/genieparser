@@ -950,9 +950,12 @@ class ShowInterfacesSwitchportSchema(MetaParser):
                     'switchport_enable': bool,
                     'swichport_mode': str,
                     Optional('operational_mode'): str,
-                    Optional('port_channel_int'): str,
+                    Optional('port_channel'): {
+	                    Optional('port_channel_int'): str,
+	                    Optional('port_channel_member'): bool,
+	                },
                     Optional('encapsulation'): {
-                        Optional('encapsulation'): str,
+                        Optional('administrative_encapsulation'): str,
                         Optional('operational_encapsulation'): str,
                         Optional('native_vlan'): str,
                     },
@@ -1025,8 +1028,12 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
             m = p4.match(line)
             if m:
                 ret_dict[intf]['operational_mode'] = m.groupdict()['operational_mode']
-                ret_dict[intf]['port_channel_int'] = \
+                if 'port_channel' not in ret_dict[intf]:
+                	ret_dict[intf]['port_channel'] = {}
+
+                ret_dict[intf]['port_channel']['port_channel_int'] = \
                     convert_intf_name(m.groupdict()['port_channel_int'])
+                ret_dict[intf]['port_channel']['port_channel_member'] = True
                 continue
 
             # Administrative Trunking Encapsulation: dot1q
@@ -1036,7 +1043,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
             if m:
                 if 'encapsulation' not in ret_dict[intf]:
                     ret_dict[intf]['encapsulation'] = {}
-                ret_dict[intf]['encapsulation']['encapsulation'] = \
+                ret_dict[intf]['encapsulation']['administrative_encapsulation'] = \
                     m.groupdict()['encapsulation'].lower()
                 continue
 
