@@ -951,9 +951,9 @@ class ShowInterfacesSwitchportSchema(MetaParser):
                     'swichport_mode': str,
                     Optional('operational_mode'): str,
                     Optional('port_channel'): {
-	                    Optional('port_channel_int'): str,
-	                    Optional('port_channel_member'): bool,
-	                },
+                        Optional('port_channel_int'): str,
+                        Optional('port_channel_member'): bool,
+                    },
                     Optional('encapsulation'): {
                         Optional('administrative_encapsulation'): str,
                         Optional('operational_encapsulation'): str,
@@ -1029,7 +1029,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
             if m:
                 ret_dict[intf]['operational_mode'] = m.groupdict()['operational_mode']
                 if 'port_channel' not in ret_dict[intf]:
-                	ret_dict[intf]['port_channel'] = {}
+                    ret_dict[intf]['port_channel'] = {}
 
                 ret_dict[intf]['port_channel']['port_channel_int'] = \
                     convert_intf_name(m.groupdict()['port_channel_int'])
@@ -1312,4 +1312,731 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 if  m.groupdict()['trust'] != 'none':
                     ret_dict[intf]['appliance_trust'] = m.groupdict()['trust']
                 continue
+        return ret_dict
+
+
+class ShowIpInterfaceSchema(MetaParser):
+    schema = {
+                Any(): {
+                    'enabled': bool,
+                    'line_protocol': str,
+                    Optional('ipv4'): {
+                        Any(): {
+                            'ip': str,
+                            'prefix_length': str,
+                            'secondary': bool,
+                            Optional('broadcase_address'): str,
+                        },
+                    },
+                    Optional('mtu'): int,
+                    Optional('helper_address'): str,
+                    Optional('directed_broadcast_forwarding'): bool,
+                    Optional('out_common_access_list'): str,
+                    Optional('out_access_list'): str,
+                    Optional('inbound_common_access_list'): str,
+                    Optional('inbound_access_list'): str,
+                    Optional('proxy_arp'): bool,
+                    Optional('local_proxy_arp'): bool,
+                    Optional('sevurity_level'): str,
+                    Optional('split_horizon'): bool,
+                    Optional('icmp'): {
+	                    Optional('redirects'): str,
+	                    Optional('unreachables'): str,
+	                    Optional('mask_replies'): str,
+	                },
+                    Optional('ip_fast_switching'): bool,
+                    Optional('ip_flow_switching'): bool,
+                    Optional('ip_cef_switching'): bool,
+                    Optional('ip_cef_switching_turbo_vector'): bool,
+                    Optional('ip_null_turbo_vector'): bool,
+                    Optional('vpn_routing_vrf'): str,
+                    Optional('unicast_routing_topologies'): {
+                        'topology': str,
+                        'status': str,
+                    },
+                    Optional('ip_multicast_fast_switching'): bool,
+                    Optional('ip_multicast_distributed_fast_switching'): bool,
+                    Optional('ip_route_cache_flags'): list,
+                    Optional('router_discovery'): bool,
+                    Optional('ip_output_packet_accounting'): bool,
+                    Optional('ip_access_violation_accounting'): bool,
+                    Optional('tcp_ip_header_compression'): bool,
+                    Optional('rtp_ip_header_compression'): bool,
+                    Optional('probe_proxy_name_replies'): bool,
+                    Optional('policy_routing'): bool,
+                    Optional('network_address_translation'): bool,
+                    Optional('bgp_policy_mapping'): bool,
+                    Optional('input_feature'): str,
+                },
+            }
+
+class ShowIpInterface(ShowIpInterfaceSchema):
+
+    #parser for show ip interface
+
+    def cli(self):
+        out = self.device.execute('show ip interface')
+        interface_dict = {}
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Vlan211 is up, line protocol is up
+            # GigabitEthernet2 is administratively down, line protocol is down
+            p1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
+                              ' +(?P<enabled>[\w\s]+),'
+                              ' +line +protocol +is +(?P<line_protocol>\w+)$')
+            m = p1.match(line)
+            if m:
+                interface = m.groupdict()['interface']
+                enabled = m.groupdict()['enabled'].lower()
+                if interface not in interface_dict:
+                    interface_dict[interface] = {}
+                if 'down' in enabled:
+                    interface_dict[interface]['enabled'] = False
+                else:
+                    interface_dict[interface]['enabled'] = True
+                interface_dict[interface]['line_protocol'] = \
+                    m.groupdict()['line_protocol'].lower()
+                continue
+
+            # Internet address is 201.11.14.1/24
+            p2 = re.compile(r'^Internet +[A|a]ddress +is +(?P<ipv4>(?P<ip>[0-9\.]+)'
+                             '\/(?P<prefix_length>[0-9]+))$')
+            m = p2.match(line)
+            if m:
+                ip = m.groupdict()['ip']
+                prefix_length = m.groupdict()['prefix_length']
+                address = m.groupdict()['ipv4']
+
+                if 'ipv4' not in interface_dict[interface]:
+                    interface_dict[interface]['ipv4'] = {}
+                if address not in interface_dict[interface]['ipv4']:
+                    interface_dict[interface]['ipv4'][address] = {}
+
+                interface_dict[interface]['ipv4'][address]\
+                    ['ip'] = ip
+                interface_dict[interface]['ipv4'][address]\
+                    ['prefix_length'] = prefix_length
+                interface_dict[interface]['ipv4'][address]\
+                    ['secondary'] = False
+                continue
+
+            # Secondary address 10.2.2.2/24
+            p2_1 = re.compile(r'^Secondary +address +(?P<ipv4>(?P<ip>[0-9\.]+)'
+                             '\/(?P<prefix_length>[0-9]+))$')
+            m = p2_1.match(line)
+            if m:
+                ip = m.groupdict()['ip']
+                prefix_length = m.groupdict()['prefix_length']
+                address = m.groupdict()['ipv4']
+
+                if 'ipv4' not in interface_dict[interface]:
+                    interface_dict[interface]['ipv4'] = {}
+                if address not in interface_dict[interface]['ipv4']:
+                    interface_dict[interface]['ipv4'][address] = {}
+
+                interface_dict[interface]['ipv4'][address]\
+                    ['ip'] = ip
+                interface_dict[interface]['ipv4'][address]\
+                    ['prefix_length'] = prefix_length
+                interface_dict[interface]['ipv4'][address]\
+                    ['secondary'] = True
+                continue
+
+            # Broadcast address is 255.255.255.255
+            p3 = re.compile(r'^Broadcast +address +is +(?P<address>[\w\.\:]+)$')
+            m = p3.match(line)
+            if m:
+                interface_dict[interface]['ipv4'][address]['broadcase_address'] = \
+                    m.groupdict()['address']
+                continue
+
+            # Address determined by configuration file
+
+            # MTU is 1500 bytes
+            p4 = re.compile(r'^MTU +is +(?P<mtu>\d+) +bytes$')
+            m = p4.match(line)
+            if m:
+                interface_dict[interface]['mtu'] = \
+                    int(m.groupdict()['mtu'])
+                continue
+
+            # Helper address is not set
+            p5 = re.compile(r'^Helper +address +is +(?P<address>[\w\.\:\s]+)$')
+            m = p5.match(line)
+            if m:
+                if 'not set' not in m.groupdict()['address']:
+                    interface_dict[interface]['helper_address'] = \
+                        m.groupdict()['address']
+                continue
+
+            # Directed broadcast forwarding is disabled
+            p6 = re.compile(r'^Directed +broadcast +forwarding +is +(?P<status>\w+)$')
+            m = p6.match(line)
+            if m:
+                if 'disabled' in m.groupdict()['status']:
+                    interface_dict[interface]['directed_broadcast_forwarding'] = False
+                else:
+                    interface_dict[interface]['directed_broadcast_forwarding'] = True                    
+                continue
+
+            # Outgoing Common access list is not set 
+            p7 = re.compile(r'^Outgoing +Common +access +list +is +'
+                             '(?P<access_list>[\w\s]+)$')
+            m = p7.match(line)
+            if m:
+                if 'not set' not in m.groupdict()['access_list']:
+                    interface_dict[interface]['out_common_access_list'] = \
+                        m.groupdict()['access_list']
+                continue
+
+            # Outgoing access list is not set
+            p8 = re.compile(r'^Outgoing +access +list +is +'
+                             '(?P<access_list>[\w\s]+)$')
+            m = p8.match(line)
+            if m:
+                if 'not set' not in m.groupdict()['access_list']:
+                    interface_dict[interface]['out_access_list'] = \
+                        m.groupdict()['access_list']
+                continue
+
+            # Inbound Common access list is not set
+            p9 = re.compile(r'^Inbound +Common +access +list +is +'
+                             '(?P<access_list>[\w\s]+)$')
+            m = p9.match(line)
+            if m:
+                if 'not set' not in m.groupdict()['access_list']:
+                    interface_dict[interface]['inbound_common_access_list'] = \
+                        m.groupdict()['access_list']
+                continue
+
+            # Inbound  access list is not set
+            p10 = re.compile(r'^Outgoing +access +list +is +'
+                             '(?P<access_list>[\w\s]+)$')
+            m = p10.match(line)
+            if m:
+                if 'not set' not in m.groupdict()['access_list']:
+                    interface_dict[interface]['inbound_access_list'] = \
+                        m.groupdict()['access_list']
+                continue
+
+            # Proxy ARP is enabled
+            p11 = re.compile(r'^Proxy +ARP +is +'
+                             '(?P<status>\w+)$')
+            m = p11.match(line)
+            if m:
+                if 'disabled' in m.groupdict()['status']:
+                    interface_dict[interface]['proxy_arp'] = False
+                else:
+                    interface_dict[interface]['proxy_arp'] = True
+                continue
+
+            # Local Proxy ARP is disabled
+            p12 = re.compile(r'^Local +Proxy +ARP +is +'
+                             '(?P<status>\w+)$')
+            m = p12.match(line)
+            if m:
+                if 'disabled' in m.groupdict()['status']:
+                    interface_dict[interface]['local_proxy_arp'] = False
+                else:
+                    interface_dict[interface]['local_proxy_arp'] = True
+                continue
+
+            # Security level is default
+            p13 = re.compile(r'^Security +level +is +'
+                             '(?P<level>\w+)$')
+            m = p13.match(line)
+            if m:
+                interface_dict[interface]['sevurity_level'] = m.groupdict()['level']
+                continue
+
+            # Split horizon is enabled
+            p14 = re.compile(r'^Split +horizon +is +'
+                             '(?P<status>\w+)$')
+            m = p14.match(line)
+            if m:
+                if 'disabled' in m.groupdict()['status']:
+                    interface_dict[interface]['split_horizon'] = False
+                else:
+                    interface_dict[interface]['split_horizon'] = True
+                continue
+
+            # ICMP redirects are always sent
+            p15 = re.compile(r'^ICMP +redirects +are +'
+                             '(?P<sent>[\w\s]+)$')
+            m = p15.match(line)
+            if m:
+                if 'icmp' not in interface_dict[interface]:
+                    interface_dict[interface]['icmp'] = {}
+                if 'not set' not in m.groupdict()['sent']:
+                    interface_dict[interface]['icmp']['redirects'] = \
+                        m.groupdict()['sent']
+                continue
+
+            # ICMP unreachables are always sent
+            p16 = re.compile(r'^ICMP +unreachables +are +'
+                             '(?P<sent>[\w\s]+)$')
+            m = p16.match(line)
+            if m:
+                if 'icmp' not in interface_dict[interface]:
+                    interface_dict[interface]['icmp'] = {}
+                if 'not set' not in m.groupdict()['sent']:
+                    interface_dict[interface]['icmp']['unreachables'] = \
+                        m.groupdict()['sent']
+                continue
+
+            # ICMP mask replies are never sent
+            p17 = re.compile(r'^ICMP +mask +replies +are +'
+                             '(?P<sent>[\w\s]+)$')
+            m = p17.match(line)
+            if m:
+                if 'icmp' not in interface_dict[interface]:
+                    interface_dict[interface]['icmp'] = {}
+                if 'not set' not in m.groupdict()['sent']:
+                    interface_dict[interface]['icmp']['mask_replies'] = \
+                        m.groupdict()['sent']
+                continue
+
+            # IP fast switching is enabled
+            p18 = re.compile(r'^IP +fast +switching +is +'
+                             '(?P<status>\w+)$')
+            m = p18.match(line)
+            if m:
+                if 'disabled' in m.groupdict()['status']:
+                    interface_dict[interface]['ip_fast_switching'] = False
+                else:
+                    interface_dict[interface]['ip_fast_switching'] = True
+                continue
+
+            # IP Flow switching is disabled
+            p19 = re.compile(r'^IP +Flow +switching +is +'
+                             '(?P<status>\w+)$')
+            m = p19.match(line)
+            if m:
+                if 'disabled' in m.groupdict()['status']:
+                    interface_dict[interface]['ip_flow_switching'] = False
+                else:
+                    interface_dict[interface]['ip_flow_switching'] = True
+                continue
+
+            # IP CEF switching is enabled
+            p20 = re.compile(r'^IP +CEF +switching +is +'
+                             '(?P<status>\w+)$')
+            m = p20.match(line)
+            if m:
+                if 'disabled' in m.groupdict()['status']:
+                    interface_dict[interface]['ip_cef_switching'] = False
+                else:
+                    interface_dict[interface]['ip_cef_switching'] = True
+                continue
+
+            # IP CEF switching turbo vector
+            p21 = re.compile(r'^IP +CEF +switching +turbo +vector$')
+            m = p21.match(line)
+            if m:
+                interface_dict[interface]['ip_cef_switching_turbo_vector'] = True
+                continue
+
+            # IP Null turbo vector
+            p22 = re.compile(r'^IP +Null +turbo +vector$')
+            m = p22.match(line)
+            if m:
+                interface_dict[interface]['ip_null_turbo_vector'] = True
+                continue
+
+            # VPN Routing/Forwarding "Mgmt-vrf"
+            p23 = re.compile(r'^VPN +Routing\/Forwarding +\"(?P<vrf>[\w\-]+)\"$')
+            m = p23.match(line)
+            if m:
+                interface_dict[interface]['vpn_routing_vrf'] = m.groupdict()['vrf']
+                continue
+
+            # Associated unicast routing topologies:
+            #     Topology "base", operation state is UP
+            p24 = re.compile(r'^Associated +unicast +routing +topologies:$')
+            m = p24.match(line)
+            if m:
+                if 'unicast_routing_topologies' not in interface_dict[interface]:
+                    interface_dict[interface]['unicast_routing_topologies'] = {}
+                continue
+
+            p24_1 = re.compile(r'^Topology +\"(?P<topo>\w+)\", +'
+                                'operation +state +is +(?P<topo_status>\w+)$')
+            m = p24_1.match(line)
+            if m:
+                if 'unicast_routing_topologies' in interface_dict[interface]:
+                    interface_dict[interface]['unicast_routing_topologies']\
+                        ['topology'] = m.groupdict()['topo']
+                    interface_dict[interface]['unicast_routing_topologies']\
+                        ['status'] = m.groupdict()['topo_status'].lower()
+                continue
+
+            # IP multicast fast switching is disabled
+            p25 = re.compile(r'^IP +multicast +fast +switching +is +'
+                             '(?P<status>\w+)$')
+            m = p25.match(line)
+            if m:
+                if 'disabled' in m.groupdict()['status']:
+                    interface_dict[interface]['ip_multicast_fast_switching'] = False
+                else:
+                    interface_dict[interface]['ip_multicast_fast_switching'] = True
+                continue
+
+            # IP multicast distributed fast switching is disabled
+            p25 = re.compile(r'^IP +multicast +distributed +fast +switching +is +'
+                             '(?P<status>\w+)$')
+            m = p25.match(line)
+            if m:
+                if 'disabled' in m.groupdict()['status']:
+                    interface_dict[interface]['ip_multicast_distributed_fast_switching'] = False
+                else:
+                    interface_dict[interface]['ip_multicast_distributed_fast_switching'] = True
+                continue
+
+            # IP route-cache flags are Fast, CEF
+            p26 = re.compile(r'^IP +route\-cache +flags +are +(?P<flags>[\w\s\,]+)$')
+            m = p26.match(line)
+            if m:
+                ret = m.groupdict()['flags'].split(',')
+                ret = [i.strip() for i in ret]
+                interface_dict[interface]['ip_route_cache_flags'] = sorted(ret)                    
+                continue
+
+            # Router Discovery is disabled
+            p27 = re.compile(r'^Router +Discovery +is +'
+                             '(?P<status>\w+)$')
+            m = p27.match(line)
+            if m:
+                if 'disabled' in m.groupdict()['status']:
+                    interface_dict[interface]['router_discovery'] = False
+                else:
+                    interface_dict[interface]['router_discovery'] = True
+                continue
+
+            # IP output packet accounting is disabled
+            p28 = re.compile(r'^IP +output +packet +accounting +is +'
+                             '(?P<status>\w+)$')
+            m = p28.match(line)
+            if m:
+                if 'disabled' in m.groupdict()['status']:
+                    interface_dict[interface]['ip_output_packet_accounting'] = False
+                else:
+                    interface_dict[interface]['ip_output_packet_accounting'] = True
+                continue
+
+            # IP access violation accounting is disabled
+            p29 = re.compile(r'^IP +access +violation +accounting +is +'
+                             '(?P<status>\w+)$')
+            m = p29.match(line)
+            if m:
+                if 'disabled' in m.groupdict()['status']:
+                    interface_dict[interface]['ip_access_violation_accounting'] = False
+                else:
+                    interface_dict[interface]['ip_access_violation_accounting'] = True
+                continue
+
+            # TCP/IP header compression is disabled
+            p30 = re.compile(r'^TCP\/IP +header +compression +is +'
+                             '(?P<status>\w+)$')
+            m = p30.match(line)
+            if m:
+                if 'disabled' in m.groupdict()['status']:
+                    interface_dict[interface]['tcp_ip_header_compression'] = False
+                else:
+                    interface_dict[interface]['tcp_ip_header_compression'] = True
+                continue
+
+            # RTP/IP header compression is disabled
+            p31 = re.compile(r'^RTP\/IP +header +compression +is +'
+                             '(?P<status>\w+)$')
+            m = p31.match(line)
+            if m:
+                if 'disabled' in m.groupdict()['status']:
+                    interface_dict[interface]['rtp_ip_header_compression'] = False
+                else:
+                    interface_dict[interface]['rtp_ip_header_compression'] = True
+                continue
+
+            # Probe proxy name replies are disabled
+            p32 = re.compile(r'^Probe +proxy +name +replies +are +'
+                             '(?P<status>\w+)$')
+            m = p32.match(line)
+            if m:
+                if 'disabled' in m.groupdict()['status']:
+                    interface_dict[interface]['probe_proxy_name_replies'] = False
+                else:
+                    interface_dict[interface]['probe_proxy_name_replies'] = True
+                continue
+
+            # Policy routing is disabled
+            p33 = re.compile(r'^Policy +routing +is +'
+                             '(?P<status>\w+)$')
+            m = p33.match(line)
+            if m:
+                if 'disabled' in m.groupdict()['status']:
+                    interface_dict[interface]['policy_routing'] = False
+                else:
+                    interface_dict[interface]['policy_routing'] = True
+                continue
+
+            # Network address translation is disabled
+            p34 = re.compile(r'^Network +address +translation +is +'
+                             '(?P<status>\w+)$')
+            m = p34.match(line)
+            if m:
+                if 'disabled' in m.groupdict()['status']:
+                    interface_dict[interface]['network_address_translation'] = False
+                else:
+                    interface_dict[interface]['network_address_translation'] = True
+                continue
+
+            # BGP Policy Mapping is disabled
+            p35 = re.compile(r'^BGP +Policy +Mapping +is +'
+                             '(?P<status>\w+)$')
+            m = p35.match(line)
+            if m:
+                if 'disabled' in m.groupdict()['status']:
+                    interface_dict[interface]['bgp_policy_mapping'] = False
+                else:
+                    interface_dict[interface]['bgp_policy_mapping'] = True
+                continue
+
+            # Input features: MCI Check
+            p36 = re.compile(r'^Input +features: +(?P<input_feature>[\w\s]+)$')
+            m = p36.match(line)
+            if m:
+                interface_dict[interface]['input_feature'] = m.groupdict()['input_feature']
+                continue
+
+        return interface_dict
+
+
+
+class ShowIpv6InterfaceSchema(MetaParser):
+    schema = {
+                Any(): {
+                    'line_protocol': str,
+                    'ipv6': {
+                        Any(): {
+                            'ip': str,
+                            'prefix_length': str,
+                            'status': str,
+                            Optional('anycast'): bool,
+                            Optional('eui_64'): bool,
+                        },
+                        'enabled': bool,
+                    },
+                    Optional('link_local'): {
+                        'physical': str,
+                        Optional('physical_link_type'): str,
+                        Optional('virtual'): str,
+                    },
+                    Optional('mtu'): int,
+                    Optional('joined_group_addresses'): list,
+                    Optional('icmp'): {
+	                    Optional('error_messages_limited'): int,
+	                    Optional('redirects'): bool,
+	                    Optional('unreachables'): str,
+	                },
+                    Optional('nd'): {
+                        Optional('dad_enabled'): bool,
+                        Optional('dad_attempts'): int,
+                        Optional('reachable_time'): int,
+                        Optional('using_time'): int,
+                        Optional('ns_retransmit_interval'): int,
+                    },
+                },
+            }
+
+class ShowIpv6Interface(ShowIpv6InterfaceSchema):
+
+    #parser for show ipv6 interface
+
+    def cli(self):
+        out = self.device.execute('show ipv6 interface')
+        ret_dict = {}
+        ipv6 = False
+        joined_group = []
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Vlan211 is up, line protocol is up
+            # GigabitEthernet1/0/1 is administratively down, line protocol is down
+            p1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
+                              ' +(?P<enabled>[\w\s]+),'
+                              ' +line +protocol +is +(?P<line_protocol>\w+)$')
+            m = p1.match(line)
+            if m:
+                intf = m.groupdict()['interface']
+                enabled = m.groupdict()['enabled'].lower()
+                if intf not in ret_dict:
+                    ret_dict[intf] = {}
+                if 'down' in enabled:
+                    enabled = False
+                else:
+                    enabled = True
+                ret_dict[intf]['line_protocol'] = \
+                    m.groupdict()['line_protocol'].lower()
+
+                # initial list variable again for new interface
+                joined_group = []
+                continue
+
+            # IPv6 is enabled, link-local address is FE80::257:D2FF:FE28:
+            # IPv6 is tentative, link-local address is FE80::257:D2FF:FE28:1A64 [TEN]
+            p2 =  re.compile(r'^IPv6 +is +(?P<status>\w+), +'
+                              'link-local +address +is +(?P<link_local>[\w\:]+)'
+                              '( *\[(?P<type>\w+)\])?$')
+            m = p2.match(line)
+            if m:
+                status = m.groupdict()['status']
+                if 'link_local' not in ret_dict[intf]:
+                    ret_dict[intf]['link_local'] = {}
+                ret_dict[intf]['link_local']['physical'] = m.groupdict()['link_local']
+                if m.groupdict()['type']: 
+                    ret_dict[intf]['link_local']['physical_link_type'] = \
+                        m.groupdict()['type']
+                continue
+
+            # No Virtual link-local address(es):
+            # todo when has virtual link-local
+
+            # Stateless address autoconfig enabled
+            p3 =  re.compile(r'^Stateless +address +autoconfig +enabled$')
+            m = p3.match(line)
+            if m:
+                autoconf = True
+                continue
+
+            # Global unicast address(es):
+            #   2001:10::14:1, subnet is 2001:10::14:0/112 
+            #   2001:DB8:3:3::3, subnet is 2001:DB8:3:3::/64 [ANY/TEN]
+            p4 =  re.compile(r'^Global +unicast +address\(es\):$')
+            m = p4.match(line)
+            if m:
+                ipv6 = True
+                continue
+
+            p4_1 =  re.compile(r'^(?P<ipv6>[\w\:]+), +subnet +is +(?P<dum1>(?P<dum2>[\w\:]+)'
+                             '\/(?P<prefix_length>[0-9]+))'
+                             '( *\[(?P<type>[\w\/]+)\])?$')
+            m = p4_1.match(line)
+            if m and ipv6:
+                if 'ipv6' not in ret_dict[intf]:
+                    ret_dict[intf]['ipv6'] = {}
+                address = '{ip}/{mask}'.format(ip=m.groupdict()['ipv6'],
+                                               mask=m.groupdict()['prefix_length'])
+                if address not in ret_dict[intf]['ipv6']:
+                    ret_dict[intf]['ipv6'][address] = {}
+                ret_dict[intf]['ipv6'][address]['ip'] = m.groupdict()['ipv6']
+                ret_dict[intf]['ipv6'][address]['prefix_length'] = \
+                    m.groupdict()['prefix_length']
+                ret_dict[intf]['ipv6']['enabled'] = enabled
+                try:
+                    status
+                except:
+                    pass
+                else:
+                    ret_dict[intf]['ipv6'][address]['status'] = status
+                ip_type = m.groupdict()['type']
+                if ip_type and 'any' in ip_type.lower():
+                    ret_dict[intf]['ipv6'][address]['anycast'] = True
+                elif ip_type and 'eui' in ip_type.lower():
+                    ret_dict[intf]['ipv6'][address]['eui_64'] = True                    
+                continue
+
+            # Joined group address(es):
+            #   FF02::1
+            #   FF02::1:FF14:1
+            #   FF02::1:FF28:1A71
+            p5 =  re.compile(r'^Joined +group +address\(es\):$')
+            m = p5.match(line)
+            if m:
+                ipv6 = False
+                continue
+
+            p5_1 =  re.compile(r'^(?P<address>[\w\:]+)$')
+            m = p5_1.match(line)
+            if m and not ipv6:
+                joined_group.append(m.groupdict()['address'])
+                ret_dict[intf]['joined_group_addresses'] = sorted(joined_group)
+                continue
+
+            # MTU is 1500 bytes
+            p6 =  re.compile(r'^MTU +is +(?P<mtu>\d+) +bytes$')
+            m = p6.match(line)
+            if m:
+                ret_dict[intf]['mtu'] = int(m.groupdict()['mtu'])                    
+                continue
+
+            # ICMP error messages limited to one every 100 milliseconds
+            p7 =  re.compile(r'^ICMP +error +messages +limited +to +one +'
+                              'every +(?P<limited>\d+) +milliseconds$')
+            m = p7.match(line)
+            if m:
+                if 'icmp' not in ret_dict[intf]:
+                    ret_dict[intf]['icmp'] = {}
+                ret_dict[intf]['icmp']['error_messages_limited'] = \
+                    int(m.groupdict()['limited'])                    
+                continue
+
+            # ICMP redirects are enabled
+            p8 =  re.compile(r'^ICMP +redirects +are +(?P<status>\w+)$')
+            m = p8.match(line)
+            if m:
+                if 'icmp' not in ret_dict[intf]:
+                    ret_dict[intf]['icmp'] = {}
+                if 'enabled' in m.groupdict()['status']:
+                    ret_dict[intf]['icmp']['redirects'] = True
+                else:
+                    ret_dict[intf]['icmp']['redirects'] = False
+                continue
+
+            # ICMP unreachables are sent
+            p9 =  re.compile(r'^ICMP +unreachables +are +(?P<status>[\w\s]+)$')
+            m = p9.match(line)
+            if m:
+                if 'icmp' not in ret_dict[intf]:
+                    ret_dict[intf]['icmp'] = {}
+                if 'not sent' not in m.groupdict()['status']:
+                    ret_dict[intf]['icmp']['unreachables'] = m.groupdict()['status']
+                continue
+
+            # ND DAD is enabled, number of DAD attempts: 1
+            p10 =  re.compile(r'^ND +DAD +is +(?P<status>\w+), +'
+                               'number +of +DAD +attempts: +(?P<attempts>\d+)$')
+            m = p10.match(line)
+            if m:
+                if 'nd' not in ret_dict[intf]:
+                    ret_dict[intf]['nd'] = {}
+                if 'enabled' in m.groupdict()['status']:
+                    ret_dict[intf]['nd']['dad_enabled'] = True
+                else:
+                    ret_dict[intf]['nd']['dad_enabled'] = False
+
+                ret_dict[intf]['nd']['dad_attempts'] = int(m.groupdict()['attempts'])
+                continue
+
+            # ND reachable time is 30000 milliseconds (using 30000)
+            p11 =  re.compile(r'^ND +reachable +time +is (?P<time>\d+) +milliseconds'
+                               ' +\(using +(?P<use>\d+)\)$')
+            m = p11.match(line)
+            if m:
+                if 'nd' not in ret_dict[intf]:
+                    ret_dict[intf]['nd'] = {}
+                ret_dict[intf]['nd']['reachable_time'] = int(m.groupdict()['time'])
+                ret_dict[intf]['nd']['using_time'] = int(m.groupdict()['use'])
+                continue
+            # ND NS retransmit interval is 1000 milliseconds
+            p11 =  re.compile(r'^ND +NS +retransmit +interval +is'
+                               ' +(?P<interval>\d+) +milliseconds$')
+            m = p11.match(line)
+            if m:
+                if 'nd' not in ret_dict[intf]:
+                    ret_dict[intf]['nd'] = {}
+                ret_dict[intf]['nd']['ns_retransmit_interval'] = \
+                    int(m.groupdict()['interval'])
+                continue
+
+
         return ret_dict
