@@ -391,7 +391,7 @@ class test_show_interfaces(unittest.TestCase):
                  "in_ignored": 0,
                  "last_clear": "1d23h",
                  "out_interface_resets": 2,
-                 "in_pause_input": 0,
+                 "in_mac_pause_frames": 0,
                  "out_collision": 0,
                  "rate": {
                       "out_rate_pkts": 0,
@@ -402,7 +402,7 @@ class test_show_interfaces(unittest.TestCase):
                  },
                  "in_watchdog": 0,
                  "out_deferred": 0,
-                 "out_pause_output": 0,
+                 "out_mac_pause_frames": 0,
                  "in_pkts": 961622,
                  "in_multicast_pkts": 4286699522,
                  "in_runts": 0,
@@ -444,7 +444,9 @@ class test_show_interfaces(unittest.TestCase):
                  "queue_strategy": "fifo"
             },
             "encapsulations": {
-                 "encapsulation": "arpa"
+                 "encapsulation": "qinq virtual lan",
+                 "first_dot1q": "10",
+                 "second_dot1q": "20",
             },
             "last_input": "never",
             "last_output": "1d22h",
@@ -452,7 +454,8 @@ class test_show_interfaces(unittest.TestCase):
             "mac_address": "0057.d228.1a02",
             "connected": True,
             "port_channel": {
-                 "port_channel_member": False
+                 "port_channel_member": True,
+                 "port_channel_member_intfs": ['GigabitEthernet1/0/2'],
             },
             "arp_timeout": "04:00:00",
             "bandwidth": 1000000,
@@ -477,7 +480,7 @@ class test_show_interfaces(unittest.TestCase):
                  "in_ignored": 0,
                  "last_clear": "1d02h",
                  "out_interface_resets": 2,
-                 "in_pause_input": 0,
+                 "in_mac_pause_frames": 0,
                  "out_collision": 0,
                  "rate": {
                       "out_rate_pkts": 0,
@@ -488,7 +491,7 @@ class test_show_interfaces(unittest.TestCase):
                  },
                  "in_watchdog": 0,
                  "out_deferred": 0,
-                 "out_pause_output": 0,
+                 "out_mac_pause_frames": 0,
                  "in_pkts": 12127,
                  "in_multicast_pkts": 4171,
                  "in_runts": 0,
@@ -574,7 +577,7 @@ class test_show_interfaces(unittest.TestCase):
                  "in_ignored": 0,
                  "last_clear": "never",
                  "out_interface_resets": 1,
-                 "in_pause_input": 0,
+                 "in_mac_pause_frames": 0,
                  "out_collision": 0,
                  "in_crc_errors": 0,
                  "rate": {
@@ -586,7 +589,7 @@ class test_show_interfaces(unittest.TestCase):
                  },
                  "in_watchdog": 0,
                  "out_deferred": 0,
-                 "out_pause_output": 0,
+                 "out_mac_pause_frames": 0,
                  "in_pkts": 6,
                  "in_multicast_pkts": 0,
                  "in_runts": 0,
@@ -806,7 +809,7 @@ class test_show_interfaces(unittest.TestCase):
                  "in_ignored": 0,
                  "last_clear": "1d02h",
                  "out_interface_resets": 5,
-                 "in_pause_input": 0,
+                 "in_mac_pause_frames": 0,
                  "out_collision": 0,
                  "rate": {
                       "out_rate_pkts": 0,
@@ -817,7 +820,7 @@ class test_show_interfaces(unittest.TestCase):
                  },
                  "in_watchdog": 0,
                  "out_deferred": 0,
-                 "out_pause_output": 0,
+                 "out_mac_pause_frames": 0,
                  "in_pkts": 545526,
                  "in_multicast_pkts": 535961,
                  "in_runts": 0,
@@ -1014,7 +1017,7 @@ class test_show_interfaces(unittest.TestCase):
           Hardware is EtherChannel, address is 0057.d228.1a02 (bia 0057.d228.1a02)
           MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
              reliability 255/255, txload 1/255, rxload 1/255
-          Encapsulation ARPA, loopback not set
+          Encapsulation QinQ Virtual LAN, outer ID  10, inner ID 20
           Keepalive set (10 sec)
           Full-duplex, 1000Mb/s, link type is auto, media type is 
           input flow-control is off, output flow-control is unsupported 
@@ -1070,7 +1073,8 @@ class test_show_ip_interface(unittest.TestCase):
                  "Fast"
             ],
             "enabled": True,
-            "line_protocol": "up",
+            "oper_status": "up",
+            "address_determined_by": "configuration file",
             "router_discovery": False,
             "ip_multicast_fast_switching": False,
             "split_horizon": True,
@@ -1098,8 +1102,11 @@ class test_show_ip_interface(unittest.TestCase):
             "ip_access_violation_accounting": False,
             "ip_cef_switching": True,
             "unicast_routing_topologies": {
-                 "topology": "base",
-                 "status": "up"
+                 "topology": {
+                     "base": {
+                         "status": "up"
+                      }
+                  },
             },
             "ip_null_turbo_vector": True,
             "probe_proxy_name_replies": False,
@@ -1107,18 +1114,19 @@ class test_show_ip_interface(unittest.TestCase):
             "ip_multicast_distributed_fast_switching": False,
             "tcp_ip_header_compression": False,
             "rtp_ip_header_compression": False,
-            "input_feature": "MCI Check",
+            "input_features": ["MCI Check"],
             "directed_broadcast_forwarding": False,
             "ip_flow_switching": False
        },
        "GigabitEthernet0/0": {
             "sevurity_level": "default",
+            'address_determined_by': 'setup command',
             "ip_route_cache_flags": [
                  "CEF",
                  "Fast"
             ],
             "enabled": True,
-            "line_protocol": "up",
+            "oper_status": "up",
             "router_discovery": False,
             "ip_multicast_fast_switching": False,
             "split_horizon": True,
@@ -1127,7 +1135,7 @@ class test_show_ip_interface(unittest.TestCase):
             "mtu": 1500,
             "policy_routing": False,
             "local_proxy_arp": False,
-            "vpn_routing_vrf": "Mgmt-vrf",
+            "vrf": "Mgmt-vrf",
             "proxy_arp": True,
             "network_address_translation": False,
             "ip_cef_switching_turbo_vector": True,
@@ -1147,8 +1155,11 @@ class test_show_ip_interface(unittest.TestCase):
             "ip_access_violation_accounting": False,
             "ip_cef_switching": True,
             "unicast_routing_topologies": {
-                 "topology": "base",
-                 "status": "up"
+                 "topology": {
+                     "base": {
+                         "status": "up"
+                      }
+                  },
             },
             "ip_null_turbo_vector": True,
             "probe_proxy_name_replies": False,
@@ -1156,22 +1167,23 @@ class test_show_ip_interface(unittest.TestCase):
             "ip_multicast_distributed_fast_switching": False,
             "tcp_ip_header_compression": False,
             "rtp_ip_header_compression": False,
-            "input_feature": "MCI Check",
+            "input_features": ["MCI Check"],
             "directed_broadcast_forwarding": False,
             "ip_flow_switching": False
        },
        "GigabitEthernet2": {
             "enabled": False,
-            "line_protocol": "down"
+            "oper_status": "down"
        },
        "GigabitEthernet1/0/1": {
             "sevurity_level": "default",
+            'address_determined_by': 'setup command',
             "ip_route_cache_flags": [
                  "CEF",
                  "Fast"
             ],
             "enabled": False,
-            "line_protocol": "down",
+            "oper_status": "down",
             "router_discovery": False,
             "ip_multicast_fast_switching": False,
             "split_horizon": True,
@@ -1199,13 +1211,21 @@ class test_show_ip_interface(unittest.TestCase):
                       "prefix_length": "24",
                       "ip": "10.2.2.2",
                       "secondary": True
-                 }
+                 },
             },
             "ip_access_violation_accounting": False,
             "ip_cef_switching": True,
             "unicast_routing_topologies": {
-                 "topology": "base",
-                 "status": "up"
+                 "topology": {
+                     "base": {
+                         "status": "up"
+                      }
+                  },
+            },
+            'wccp': {
+              'redirect_outbound': False,
+              'redirect_inbound': False,
+              'redirect_exclude': False,
             },
             "ip_null_turbo_vector": True,
             "probe_proxy_name_replies": False,
@@ -1214,7 +1234,8 @@ class test_show_ip_interface(unittest.TestCase):
             "tcp_ip_header_compression": False,
             "rtp_ip_header_compression": False,
             "directed_broadcast_forwarding": False,
-            "ip_flow_switching": False
+            "ip_flow_switching": False,
+            "input_features": ["MCI Check", "QoS Classification", "QoS Marking"],
         }
     }
     golden_output = {'execute.return_value': '''
@@ -1336,6 +1357,9 @@ class test_show_ip_interface(unittest.TestCase):
         Network address translation is disabled
         BGP Policy Mapping is disabled
         Input features: QoS Classification, QoS Marking, MCI Check
+        IPv4 WCCP Redirect outbound is disabled
+        IPv4 WCCP Redirect inbound is disabled
+        IPv4 WCCP Redirect exclude is disabled
 
 
         GigabitEthernet2 is administratively down, line protocol is down
@@ -1364,13 +1388,6 @@ class test_show_ipv6_interface(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
         "GigabitEthernet1/0/1": {
-            "nd": {
-                 "dad_attempts": 1,
-                 "ns_retransmit_interval": 1000,
-                 "dad_enabled": True,
-                 "reachable_time": 30000,
-                 "using_time": 30000
-            },
             "joined_group_addresses": [
                  "FF02::1"
             ],
@@ -1406,24 +1423,25 @@ class test_show_ipv6_interface(unittest.TestCase):
                       "status": "tentative",
                       "anycast": True
                  },
-                 "enabled": False
+                 "enabled": True,
+                 "nd": {
+                      "dad_attempts": 1,
+                      "ns_retransmit_interval": 1000,
+                      "dad_enabled": True,
+                      "reachable_time": 30000,
+                      "using_time": 30000
+                 },
+                 "icmp": {
+                      "error_messages_limited": 100,
+                      "redirects": True,
+                      "unreachables": "sent"
+                 },
             },
-            "line_protocol": "down",
-            "icmp": {
-                 "error_messages_limited": 100,
-                 "redirects": True,
-                 "unreachables": "sent"
-            },
+            "oper_status": "down",
+            "enabled": False,
             "mtu": 1500
        },
-       "Vlan210": {
-            "nd": {
-                 "dad_attempts": 1,
-                 "ns_retransmit_interval": 1000,
-                 "dad_enabled": True,
-                 "reachable_time": 30000,
-                 "using_time": 30000
-            },
+       "Vlan211": {
             "joined_group_addresses": [
                  "FF02::1",
                  "FF02::1:FF14:1",
@@ -1436,27 +1454,67 @@ class test_show_ipv6_interface(unittest.TestCase):
                  "2001:10::14:1/112": {
                       "ip": "2001:10::14:1",
                       "prefix_length": "112",
-                      "status": "enabled"
+                      'autoconf': {
+                          'preferred_lifetime': 604711,
+                          'valid_lifetime': 2591911,
+                      },
                  },
-                 "enabled": True
+                 "enabled": True,
+                 "nd": {
+                      "dad_attempts": 1,
+                      "ns_retransmit_interval": 1000,
+                      "dad_enabled": True,
+                      "reachable_time": 30000,
+                      "using_time": 30000
+                 },
+                 "icmp": {
+                      "error_messages_limited": 100,
+                      "redirects": True,
+                      "unreachables": "sent"
+                 },
             },
-            "line_protocol": "up",
-            "icmp": {
-                 "error_messages_limited": 100,
-                 "redirects": True,
-                 "unreachables": "sent"
+            "oper_status": "up",
+            "enabled": True,
+            "autoconf": True,
+            "mtu": 1500
+       },
+       "GigabitEthernet3": {
+            "enabled": True,
+            "joined_group_addresses": [
+                 "FF02::1",
+                 "FF02::1:FF1E:4F2",
+                 "FF02::2"
+            ],
+            "ipv6": {
+                 "enabled": False,
+                 "nd": {
+                      "dad_attempts": 1,
+                      "reachable_time": 30000,
+                      "using_time": 30000,
+                      "dad_enabled": True
+                 },
+                 "icmp": {
+                      "unreachables": "sent",
+                      "redirects": True,
+                      "error_messages_limited": 100
+                 }
             },
+            "link_local": {
+                 "physical": "FE80::5054:FF:FE1E:4F2"
+            },
+            "oper_status": "up",
             "mtu": 1500
        }
     }
 
     golden_output = {'execute.return_value': '''
-        Vlan210 is up, line protocol is up
+        Vlan211 is up, line protocol is up
         IPv6 is enabled, link-local address is FE80::257:D2FF:FE28:1A71 
         No Virtual link-local address(es):
         Stateless address autoconfig enabled
         Global unicast address(es):
           2001:10::14:1, subnet is 2001:10::14:0/112 
+            valid lifetime 2591911 preferred lifetime 604711
         Joined group address(es):
           FF02::1
           FF02::1:FF14:1
@@ -1488,6 +1546,28 @@ class test_show_ipv6_interface(unittest.TestCase):
         ND DAD is enabled, number of DAD attempts: 1
         ND reachable time is 30000 milliseconds (using 30000)
         ND NS retransmit interval is 1000 milliseconds
+
+        GigabitEthernet3 is up, line protocol is up
+          IPv6 is enabled, link-local address is FE80::5054:FF:FE1E:4F2 
+          No Virtual link-local address(es):
+          Interface is unnumbered. Using address of Loopback0
+          No global unicast address is configured
+          Joined group address(es):
+            FF02::1
+            FF02::2
+            FF02::1:FF1E:4F2
+          MTU is 1500 bytes
+          ICMP error messages limited to one every 100 milliseconds
+          ICMP redirects are enabled
+          ICMP unreachables are sent
+          ND DAD is enabled, number of DAD attempts: 1
+          ND reachable time is 30000 milliseconds (using 30000)
+          ND advertised reachable time is 0 (unspecified)
+          ND advertised retransmit interval is 0 (unspecified)
+          ND router advertisements are sent every 200 seconds
+          ND router advertisements live for 1800 seconds
+          ND advertised default router preference is Medium
+          Hosts use stateless autoconfig for addresses.
     '''}
 
     def test_empty(self):
