@@ -22,7 +22,8 @@ from parser.nxos.show_bgp import ShowBgpProcessVrfAll, ShowBgpPeerSession,\
                                  ShowBgpVrfAllNeighborsAdvertisedRoutes,\
                                  ShowBgpVrfAllNeighborsRoutes,\
                                  ShowBgpVrfAllNeighborsReceivedRoutes,\
-                                 ShowRunningConfigBgp
+                                 ShowRunningConfigBgp, \
+                                 ShowBgpAllDampeningFlapStatistics
 
 
 # =========================================
@@ -13551,7 +13552,6 @@ class test_show_running_config_bgp(unittest.TestCase):
                 "isolate": False
               },
               "default": {
-                "router_id": '100.1.1.1',
                 "dynamic_med_interval": 70,
                 "graceful_restart": False,
                 "log_neighbor_changes": False,
@@ -14105,6 +14105,813 @@ class test_show_running_config_bgp(unittest.TestCase):
         obj = ShowRunningConfigBgp(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+
+
+
+# =======================================================
+#  Unit test for 'show bgp all dampening flap statistics'
+# =======================================================
+
+class test_show_bgp_all_dampening_flap_statistics_cli(unittest.TestCase):
+
+   '''Unit test for show bgp all dampening flap statistics - CLI'''
+    
+   device = Device(name='aDevice')
+   empty_output = {'execute.return_value': ''}
+
+   golden_parsed_output = {
+      "vrf": {
+          "default": {
+               "address_family": {
+                    "ipv6 multicast": {
+                         "history_paths": 0,
+                         "dampened_paths": 0,
+                         'dampening_enabled': True
+                    },
+                    "vpnv4 unicast": {
+                         "route_identifier": {
+                              "101:100": {
+                                   "history_paths": 0,
+                                   "dampened_paths": 2,
+                                   'dampening_enabled': True
+                              },
+                              "0:0": {
+                                   "history_paths": 0,
+                                   "network": {
+                                        "2.3.2.0/24": {
+                                             "reuse_limit": 10,
+                                             "suppress_limit": 30,
+                                             "flaps": 38,
+                                             "reuse_time": "00:01:40",
+                                             "pathtype": 'e',
+                                             "status": 'd',
+                                             "best": False,
+                                             "peer": "19.0.102.3",
+                                             "duration": "00:09:36",
+                                             "current_penalty": 35
+                                        },
+                                        "2.3.1.0/24": {
+                                             "reuse_limit": 10,
+                                             "suppress_limit": 30,
+                                             "flaps": 38,
+                                             "reuse_time": "00:01:40",
+                                             "pathtype": 'e',
+                                             "status": 'd',
+                                             "best": False,
+                                             "peer": "19.0.102.3",
+                                             "duration": "00:09:36",
+                                             "current_penalty": 35
+                                        }
+                                   },
+                                   "dampened_paths": 2,
+                                   'dampening_enabled': True
+                              },
+                              "102:100": {
+                                   "history_paths": 0,
+                                   "dampened_paths": 2,
+                                   'dampening_enabled': True
+                              }
+                         },
+                         "history_paths": 0,
+                         "dampened_paths": 2,
+                         'dampening_enabled': True
+                    },
+                    "ipv4 unicast": {
+                         "history_paths": 0,
+                         "network": {
+                              "2.0.1.0/24": {
+                                   "reuse_limit": 10,
+                                   "suppress_limit": 30,
+                                   "flaps": 38,
+                                   "reuse_time": "00:01:40",
+                                   "pathtype": 'e',
+                                   "status": 'd',
+                                   "best": False,
+                                   "peer": "19.0.102.3",
+                                   "duration": "00:09:36",
+                                   "current_penalty": 34
+                              },
+                              "2.0.0.0/24": {
+                                   "reuse_limit": 10,
+                                   "suppress_limit": 30,
+                                   "flaps": 38,
+                                   "reuse_time": "00:01:40",
+                                   "pathtype": 'e',
+                                   "status": 'd',
+                                   "best": False,
+                                   "peer": "19.0.102.3",
+                                   "duration": "00:09:36",
+                                   "current_penalty": 34
+                              }
+                         },
+                         "dampened_paths": 2,
+                         'dampening_enabled': True
+                    },
+                    "ipv4 multicast": {
+                         "history_paths": 0,
+                         "network": {
+                              "2.1.1.0/24": {
+                                   "reuse_limit": 10,
+                                   "suppress_limit": 30,
+                                   "flaps": 38,
+                                   "reuse_time": "00:01:40",
+                                   "pathtype": 'e',
+                                   "status": 'd',
+                                   "best": False,
+                                   "peer": "19.0.102.3",
+                                   "duration": "00:09:36",
+                                   "current_penalty": 34
+                              },
+                              "2.1.0.0/24": {
+                                   "reuse_limit": 10,
+                                   "suppress_limit": 30,
+                                   "flaps": 38,
+                                   "reuse_time": "00:01:40",
+                                   "pathtype": 'e',
+                                   "status": 'd',
+                                   "best": False,
+                                   "peer": "19.0.102.3",
+                                   "duration": "00:09:36",
+                                   "current_penalty": 34
+                              }
+                         },
+                         "dampened_paths": 2,
+                         'dampening_enabled': True
+                    },
+                    "vpnv6 unicast": {
+                         "route_identifier": {
+                              "100:200": {
+                                   "history_paths": 0,
+                                   "dampened_paths": 0,
+                                   'dampening_enabled': True
+                              },
+                              "0xbb00010000000000": {
+                                   "history_paths": 0,
+                                   "dampened_paths": 0,
+                                   'dampening_enabled': True
+                              }
+                         },
+                         "history_paths": 0,
+                         "dampened_paths": 0,
+                         'dampening_enabled': True
+                    },
+                    "link-state": {
+                         "history_paths": 0,
+                         "network": {
+                              "[2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/616": {
+                                   "reuse_limit": 10,
+                                   "suppress_limit": 30,
+                                   "flaps": 38,
+                                   "reuse_time": "00:01:40",
+                                   "pathtype": 'e',
+                                   "status": 'd',
+                                   "best": False,
+                                   "peer": "19.0.102.3",
+                                   "duration": "00:09:36",
+                                   "current_penalty": 34
+                              },
+                              "[2]:[77][7,0][39.39.39.39,1,656877351][39.1.1.1,22][19.0.102.3,39.0.1.30]/616": {
+                                   "reuse_limit": 10,
+                                   "suppress_limit": 30,
+                                   "flaps": 38,
+                                   "reuse_time": "00:01:40",
+                                   "pathtype": 'e',
+                                   "status": 'd',
+                                   "best": False,
+                                   "peer": "19.0.102.3",
+                                   "duration": "00:09:36",
+                                   "current_penalty": 34
+                              }
+                         },
+                         "dampened_paths": 2,
+                         'dampening_enabled': True
+                    },
+                    "ipv6 unicast": {
+                         "history_paths": 0,
+                         'dampening_enabled': True,
+                         "network": {
+                              "2001::/112": {
+                                   "reuse_limit": 10,
+                                   "suppress_limit": 30,
+                                   "flaps": 38,
+                                   "reuse_time": "00:01:40",
+                                   "pathtype": 'e',
+                                   "status": 'd',
+                                   "peer": "fec0::2002",
+                                   "best": False,
+                                   "duration": "00:09:36",
+                                   "current_penalty": 34
+                              },
+                              "2001::1:0/112": {
+                                   "reuse_limit": 10,
+                                   "suppress_limit": 30,
+                                   "flaps": 38,
+                                   "reuse_time": "00:01:40",
+                                   "pathtype": 'e',
+                                   "status": 'd',
+                                   "best": False,
+                                   "peer": "fec0::2002",
+                                   "duration": "00:09:36",
+                                   "current_penalty": 34
+                              }
+                         },
+                         "dampened_paths": 2}}}}}
+
+   golden_output = {'execute.return_value': '''
+         Flap Statistics for VRF default, address family IPv4 Unicast:
+         Flaps - Flap count of prefix, Duration - Duration of flap statistics
+         ReuseTime - Time after which a dampened path will be reused
+         P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+         Dampening configured, 0 history paths, 2 dampened paths
+
+             Network                Peer             Flaps Duration ReuseTime P / S / R
+         d e 2.0.0.0/24       19.0.102.3                38   00:09:36 00:01:40 34/30/10
+         d e 2.0.1.0/24       19.0.102.3                38   00:09:36 00:01:40 34/30/10
+
+         Flap Statistics for VRF default, address family IPv4 Multicast:
+         Flaps - Flap count of prefix, Duration - Duration of flap statistics
+         ReuseTime - Time after which a dampened path will be reused
+         P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+         Dampening configured, 0 history paths, 2 dampened paths
+
+             Network                Peer             Flaps Duration ReuseTime P / S / R
+         d e 2.1.0.0/24       19.0.102.3                38   00:09:36 00:01:40 34/30/10
+         d e 2.1.1.0/24       19.0.102.3                38   00:09:36 00:01:40 34/30/10
+
+         Flap Statistics for VRF default, address family IPv6 Unicast:
+         Flaps - Flap count of prefix, Duration - Duration of flap statistics
+         ReuseTime - Time after which a dampened path will be reused
+         P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+         Dampening configured, 0 history paths, 2 dampened paths
+
+             Network                Peer             Flaps Duration ReuseTime P / S / R
+         d e 2001::/112       fec0::2002                38   00:09:36 00:01:40 34/30/10
+         d e 2001::1:0/112    fec0::2002                38   00:09:36 00:01:40 34/30/10
+
+         Flap Statistics for VRF default, address family IPv6 Multicast:
+         Flaps - Flap count of prefix, Duration - Duration of flap statistics
+         ReuseTime - Time after which a dampened path will be reused
+         P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+         Dampening configured, 0 history paths, 0 dampened paths
+
+             Network                Peer             Flaps Duration ReuseTime P / S / R
+
+         Flap Statistics for VRF default, address family VPNv4 Unicast:
+         Flaps - Flap count of prefix, Duration - Duration of flap statistics
+         ReuseTime - Time after which a dampened path will be reused
+         P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+         Dampening configured, 0 history paths, 2 dampened paths
+
+         Route Distinguisher: 0:0
+             Network                Peer             Flaps Duration ReuseTime P / S / R
+         d e 2.3.1.0/24       19.0.102.3                38   00:09:36 00:01:40 35/30/10
+         d e 2.3.2.0/24       19.0.102.3                38   00:09:36 00:01:40 35/30/10
+
+         Flap Statistics for VRF default, address family VPNv4 Unicast:
+         Flaps - Flap count of prefix, Duration - Duration of flap statistics
+         ReuseTime - Time after which a dampened path will be reused
+         P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+         Dampening configured, 0 history paths, 2 dampened paths
+
+         Route Distinguisher: 101:100
+             Network                Peer             Flaps Duration ReuseTime P / S / R
+
+         Flap Statistics for VRF default, address family VPNv4 Unicast:
+         Flaps - Flap count of prefix, Duration - Duration of flap statistics
+         ReuseTime - Time after which a dampened path will be reused
+         P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+         Dampening configured, 0 history paths, 2 dampened paths
+
+         Route Distinguisher: 102:100
+             Network                Peer             Flaps Duration ReuseTime P / S / R
+
+         Flap Statistics for VRF default, address family VPNv6 Unicast:
+         Flaps - Flap count of prefix, Duration - Duration of flap statistics
+         ReuseTime - Time after which a dampened path will be reused
+         P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+         Dampening configured, 0 history paths, 0 dampened paths
+
+         Route Distinguisher: 100:200
+             Network                Peer             Flaps Duration ReuseTime P / S / R
+
+         Flap Statistics for VRF default, address family VPNv6 Unicast:
+         Flaps - Flap count of prefix, Duration - Duration of flap statistics
+         ReuseTime - Time after which a dampened path will be reused
+         P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+         Dampening configured, 0 history paths, 0 dampened paths
+
+         Route Distinguisher: 0xbb00010000000000
+             Network                Peer             Flaps Duration ReuseTime P / S / R
+
+         Flap Statistics for VRF default, address family Link-State:
+         Flaps - Flap count of prefix, Duration - Duration of flap statistics
+         ReuseTime - Time after which a dampened path will be reused
+         P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+         Dampening configured, 0 history paths, 2 dampened paths
+
+             Network                Peer             Flaps Duration ReuseTime P / S / R
+         d e [2]:[77][7,0][39.39.39.39,1,656877351][39.1.1.1,22][19.0.102.3,39.0.1.30]/61619.0.102.3                38   00:09:36 00:01:40 34/30/10
+         d e [2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/61619.0.102.3                38   00:09:36 00:01:40 34/30/10
+
+   '''}
+
+   def test_golden(self):
+      self.maxDiff = None
+      self.device = Mock(**self.golden_output)
+      obj = ShowBgpAllDampeningFlapStatistics(device=self.device)
+      parsed_output = obj.parse()
+      self.assertEqual(parsed_output,self.golden_parsed_output)
+
+   def test_empty(self):
+      self.device = Mock(**self.empty_output)
+      obj = ShowBgpAllDampeningFlapStatistics(device=self.device)
+      with self.assertRaises(SchemaEmptyParserError):
+         parsed_output = obj.parse()
+
+
+class test_show_bgp_all_dampening_flap_statistics_xml(unittest.TestCase):
+
+   '''Unit test for show bgp all dampening flap statistics - XML'''
+    
+   device = Device(name='aDevice')
+   golden_parsed_output = {
+      "vrf": {
+          "default": {
+               "address_family": {
+                    "vpnv4 unicast": {
+                         "dampened_paths": 0,
+                         "network": {
+                              "2.3.2.0/24": {
+                                   "peer": "19.0.102.3",
+                                   "suppress_limit": 30,
+                                   "current_penalty": 35,
+                                   "duration": "00:09:53",
+                                   "reuse_limit": 10,
+                                   "reuse_time": "00:01:40",
+                                   "best": False,
+                                   "status": "d",
+                                   "pathtype": "e",
+                                   "flaps": 39
+                              },
+                              "2.3.1.0/24": {
+                                   "peer": "19.0.102.3",
+                                   "suppress_limit": 30,
+                                   "current_penalty": 35,
+                                   "duration": "00:09:53",
+                                   "reuse_limit": 10,
+                                   "reuse_time": "00:01:40",
+                                   "best": False,
+                                   "status": "d",
+                                   "pathtype": "e",
+                                   "flaps": 39
+                              }
+                         },
+                         "history_paths": 2,
+                         "dampening_enabled": True
+                    },
+                    "ipv6 unicast": {
+                         "dampened_paths": 2,
+                         "network": {
+                              "2001::/112": {
+                                   "peer": "fec0::2002",
+                                   "suppress_limit": 30,
+                                   "current_penalty": 34,
+                                   "duration": "00:09:53",
+                                   "reuse_limit": 10,
+                                   "reuse_time": "00:01:40",
+                                   "best": False,
+                                   "status": "d",
+                                   "pathtype": "e",
+                                   "flaps": 39
+                              },
+                              "2001::1:0/112": {
+                                   "peer": "fec0::2002",
+                                   "suppress_limit": 30,
+                                   "current_penalty": 34,
+                                   "duration": "00:09:53",
+                                   "reuse_limit": 10,
+                                   "reuse_time": "00:01:40",
+                                   "best": False,
+                                   "status": "d",
+                                   "pathtype": "e",
+                                   "flaps": 39
+                              }
+                         },
+                         "history_paths": 0,
+                         "dampening_enabled": True
+                    },
+                    "ipv6 multicast": {
+                         "dampened_paths": 0,
+                         "history_paths": 0,
+                         "dampening_enabled": True
+                    },
+                    "vpnv6 unicast": {
+                         "dampened_paths": 0,
+                         "history_paths": 0,
+                         "dampening_enabled": True
+                    },
+                    "link-state": {
+                         "dampened_paths": 0,
+                         "network": {
+                              "[2]:[77][7,0][39.39.39.39,1,656877351][39.1.1.1,22][19.0.102.3,39.0.1.30]/616": {
+                                   "peer": "19.0.102.3",
+                                   "suppress_limit": 30,
+                                   "current_penalty": 38,
+                                   "duration": "00:09:57",
+                                   "reuse_limit": 10,
+                                   "best": False,
+                                   "status": "h",
+                                   "pathtype": "e",
+                                   "flaps": 40
+                              },
+                              "[2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/616": {
+                                   "peer": "19.0.102.3",
+                                   "suppress_limit": 30,
+                                   "current_penalty": 38,
+                                   "duration": "00:09:57",
+                                   "reuse_limit": 10,
+                                   "best": False,
+                                   "status": "h",
+                                   "pathtype": "e",
+                                   "flaps": 40
+                              }
+                         },
+                         "history_paths": 2,
+                         "dampening_enabled": True
+                    },
+                    "ipv4 multicast": {
+                         "dampened_paths": 2,
+                         "network": {
+                              "2.1.1.0/24": {
+                                   "peer": "19.0.102.3",
+                                   "suppress_limit": 30,
+                                   "current_penalty": 34,
+                                   "duration": "00:09:53",
+                                   "reuse_limit": 10,
+                                   "reuse_time": "00:01:40",
+                                   "best": False,
+                                   "status": "d",
+                                   "pathtype": "e",
+                                   "flaps": 39
+                              },
+                              "2.1.0.0/24": {
+                                   "peer": "19.0.102.3",
+                                   "suppress_limit": 30,
+                                   "current_penalty": 34,
+                                   "duration": "00:09:53",
+                                   "reuse_limit": 10,
+                                   "reuse_time": "00:01:40",
+                                   "best": False,
+                                   "status": "d",
+                                   "pathtype": "e",
+                                   "flaps": 39
+                              }
+                         },
+                         "history_paths": 0,
+                         "dampening_enabled": True
+                    },
+                    "ipv4 unicast": {
+                         "dampened_paths": 2,
+                         "network": {
+                              "2.0.0.0/24": {
+                                   "peer": "19.0.102.3",
+                                   "suppress_limit": 30,
+                                   "current_penalty": 34,
+                                   "duration": "00:09:53",
+                                   "reuse_limit": 10,
+                                   "reuse_time": "00:01:40",
+                                   "best": False,
+                                   "status": "d",
+                                   "pathtype": "e",
+                                   "flaps": 39
+                              },
+                              "2.0.1.0/24": {
+                                   "peer": "19.0.102.3",
+                                   "suppress_limit": 30,
+                                   "current_penalty": 34,
+                                   "duration": "00:09:53",
+                                   "reuse_limit": 10,
+                                   "reuse_time": "00:01:40",
+                                   "best": False,
+                                   "status": "d",
+                                   "pathtype": "e",
+                                   "flaps": 39
+                              }
+                         },
+                         "history_paths": 0,
+                         "dampening_enabled": True
+                    }
+               }
+         }
+      }
+   }
+
+   golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
+         <nf:rpc-reply xmlns="http://www.cisco.com/nxos:7.0.3.I7.1.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+          <nf:data>
+           <show>
+            <bgp>
+             <all>
+              <dampening>
+               <flap-statistics>
+                <__readonly__>
+                 <TABLE_vrf>
+                  <ROW_vrf>
+                   <vrf-name-out>default</vrf-name-out>
+                   <TABLE_afi>
+                    <ROW_afi>
+                     <afi>1</afi>
+                     <TABLE_safi>
+                      <ROW_safi>
+                       <safi>1</safi>
+                       <af-name>IPv4 Unicast</af-name>
+                       <TABLE_rd>
+                        <ROW_rd>
+                         <dampeningenabled>true</dampeningenabled>
+                         <historypaths>0</historypaths>
+                         <dampenedpaths>2</dampenedpaths>
+                         <TABLE_prefix>
+                          <ROW_prefix>
+                           <ipprefix>2.0.0.0/24</ipprefix>
+                           <status>d</status>
+                           <pathtype>e</pathtype>
+                           <peer>19.0.102.3</peer>
+                           <flapcount>39</flapcount>
+                           <duration>00:09:53</duration>
+                           <reuse>00:01:40</reuse>
+                           <penalty>34</penalty>
+                           <suppresslimit>30</suppresslimit>
+                           <reuselimit>10</reuselimit>
+                           <best>false</best>
+                          </ROW_prefix>
+                          <ROW_prefix>
+                           <ipprefix>2.0.1.0/24</ipprefix>
+                           <status>d</status>
+                           <pathtype>e</pathtype>
+                           <peer>19.0.102.3</peer>
+                           <flapcount>39</flapcount>
+                           <duration>00:09:53</duration>
+                           <reuse>00:01:40</reuse>
+                           <penalty>34</penalty>
+                           <suppresslimit>30</suppresslimit>
+                           <reuselimit>10</reuselimit>
+                           <best>false</best>
+                          </ROW_prefix>
+                         </TABLE_prefix>
+                        </ROW_rd>
+                       </TABLE_rd>
+                      </ROW_safi>
+                     </TABLE_safi>
+                    </ROW_afi>
+                    <ROW_afi>
+                     <afi>1</afi>
+                     <TABLE_safi>
+                      <ROW_safi>
+                       <safi>2</safi>
+                       <af-name>IPv4 Multicast</af-name>
+                       <TABLE_rd>
+                        <ROW_rd>
+                         <dampeningenabled>true</dampeningenabled>
+                         <historypaths>0</historypaths>
+                         <dampenedpaths>2</dampenedpaths>
+                         <TABLE_prefix>
+                          <ROW_prefix>
+                           <ipprefix>2.1.0.0/24</ipprefix>
+                           <status>d</status>
+                           <pathtype>e</pathtype>
+                           <peer>19.0.102.3</peer>
+                           <flapcount>39</flapcount>
+                           <duration>00:09:53</duration>
+                           <reuse>00:01:40</reuse>
+                           <penalty>34</penalty>
+                           <suppresslimit>30</suppresslimit>
+                           <reuselimit>10</reuselimit>
+                           <best>false</best>
+                          </ROW_prefix>
+                          <ROW_prefix>
+                           <ipprefix>2.1.1.0/24</ipprefix>
+                           <status>d</status>
+                           <pathtype>e</pathtype>
+                           <peer>19.0.102.3</peer>
+                           <flapcount>39</flapcount>
+                           <duration>00:09:53</duration>
+                           <reuse>00:01:40</reuse>
+                           <penalty>34</penalty>
+                           <suppresslimit>30</suppresslimit>
+                           <reuselimit>10</reuselimit>
+                           <best>false</best>
+                          </ROW_prefix>
+                         </TABLE_prefix>
+                        </ROW_rd>
+                       </TABLE_rd>
+                      </ROW_safi>
+                     </TABLE_safi>
+                    </ROW_afi>
+                    <ROW_afi>
+                     <afi>2</afi>
+                     <TABLE_safi>
+                      <ROW_safi>
+                       <safi>1</safi>
+                       <af-name>IPv6 Unicast</af-name>
+                       <TABLE_rd>
+                        <ROW_rd>
+                         <dampeningenabled>true</dampeningenabled>
+                         <historypaths>0</historypaths>
+                         <dampenedpaths>2</dampenedpaths>
+                         <TABLE_prefix>
+                          <ROW_prefix>
+                           <ipv6prefix>2001::/112</ipv6prefix>
+                           <status>d</status>
+                           <pathtype>e</pathtype>
+                           <ipv6peer>fec0::2002</ipv6peer>
+                           <flapcount>39</flapcount>
+                           <duration>00:09:53</duration>
+                           <reuse>00:01:40</reuse>
+                           <penalty>34</penalty>
+                           <suppresslimit>30</suppresslimit>
+                           <reuselimit>10</reuselimit>
+                           <best>false</best>
+                          </ROW_prefix>
+                          <ROW_prefix>
+                           <ipv6prefix>2001::1:0/112</ipv6prefix>
+                           <status>d</status>
+                           <pathtype>e</pathtype>
+                           <ipv6peer>fec0::2002</ipv6peer>
+                           <flapcount>39</flapcount>
+                           <duration>00:09:53</duration>
+                           <reuse>00:01:40</reuse>
+                           <penalty>34</penalty>
+                           <suppresslimit>30</suppresslimit>
+                           <reuselimit>10</reuselimit>
+                           <best>false</best>
+                          </ROW_prefix>
+                         </TABLE_prefix>
+                        </ROW_rd>
+                       </TABLE_rd>
+                      </ROW_safi>
+                     </TABLE_safi>
+                    </ROW_afi>
+                    <ROW_afi>
+                     <afi>2</afi>
+                     <TABLE_safi>
+                      <ROW_safi>
+                       <safi>2</safi>
+                       <af-name>IPv6 Multicast</af-name>
+                       <TABLE_rd>
+                        <ROW_rd>
+                         <dampeningenabled>true</dampeningenabled>
+                         <historypaths>0</historypaths>
+                         <dampenedpaths>0</dampenedpaths>
+                        </ROW_rd>
+                       </TABLE_rd>
+                      </ROW_safi>
+                     </TABLE_safi>
+                    </ROW_afi>
+                    <ROW_afi>
+                     <afi>1</afi>
+                     <TABLE_safi>
+                      <ROW_safi>
+                       <safi>128</safi>
+                       <af-name>VPNv4 Unicast</af-name>
+                       <TABLE_rd>
+                        <ROW_rd>
+                         <rd_val>0:0</rd_val>
+                         <dampeningenabled>true</dampeningenabled>
+                         <historypaths>0</historypaths>
+                         <dampenedpaths>2</dampenedpaths>
+                         <TABLE_prefix>
+                          <ROW_prefix>
+                           <ipprefix>2.3.1.0/24</ipprefix>
+                           <status>d</status>
+                           <pathtype>e</pathtype>
+                           <peer>19.0.102.3</peer>
+                           <flapcount>39</flapcount>
+                           <duration>00:09:53</duration>
+                           <reuse>00:01:40</reuse>
+                           <penalty>35</penalty>
+                           <suppresslimit>30</suppresslimit>
+                           <reuselimit>10</reuselimit>
+                           <best>false</best>
+                          </ROW_prefix>
+                          <ROW_prefix>
+                           <ipprefix>2.3.2.0/24</ipprefix>
+                           <status>d</status>
+                           <pathtype>e</pathtype>
+                           <peer>19.0.102.3</peer>
+                           <flapcount>39</flapcount>
+                           <duration>00:09:53</duration>
+                           <reuse>00:01:40</reuse>
+                           <penalty>35</penalty>
+                           <suppresslimit>30</suppresslimit>
+                           <reuselimit>10</reuselimit>
+                           <best>false</best>
+                          </ROW_prefix>
+                         </TABLE_prefix>
+                        </ROW_rd>
+                        <ROW_rd>
+                         <rd_val>101:100</rd_val>
+                         <dampeningenabled>true</dampeningenabled>
+                         <historypaths>0</historypaths>
+                         <dampenedpaths>2</dampenedpaths>
+                        </ROW_rd>
+                        <ROW_rd>
+                         <rd_val>102:100</rd_val>
+                         <dampeningenabled>true</dampeningenabled>
+                         <historypaths>2</historypaths>
+                         <dampenedpaths>0</dampenedpaths>
+                        </ROW_rd>
+                       </TABLE_rd>
+                      </ROW_safi>
+                     </TABLE_safi>
+                    </ROW_afi>
+                    <ROW_afi>
+                     <afi>2</afi>
+                     <TABLE_safi>
+                      <ROW_safi>
+                       <safi>128</safi>
+                       <af-name>VPNv6 Unicast</af-name>
+                       <TABLE_rd>
+                        <ROW_rd>
+                         <rd_val>100:200</rd_val>
+                         <dampeningenabled>true</dampeningenabled>
+                         <historypaths>0</historypaths>
+                         <dampenedpaths>0</dampenedpaths>
+                        </ROW_rd>
+                        <ROW_rd>
+                         <rd_val>0xbb00010000000000</rd_val>
+                         <dampeningenabled>true</dampeningenabled>
+                         <historypaths>0</historypaths>
+                         <dampenedpaths>0</dampenedpaths>
+                        </ROW_rd>
+                       </TABLE_rd>
+                      </ROW_safi>
+                     </TABLE_safi>
+                    </ROW_afi>
+                    <ROW_afi>
+                     <afi>16388</afi>
+                     <TABLE_safi>
+                      <ROW_safi>
+                       <safi>71</safi>
+                       <af-name>Link-State</af-name>
+                       <TABLE_rd>
+                        <ROW_rd>
+                         <dampeningenabled>true</dampeningenabled>
+                         <historypaths>2</historypaths>
+                         <dampenedpaths>0</dampenedpaths>
+                         <TABLE_prefix>
+                          <ROW_prefix>
+                           <ipprefix>[2]:[77][7,0][39.39.39.39,1,656877351][39.1.1.1,22][19.0.102.3,39.0.1.30]/616</ipprefix>
+                           <status>h</status>
+                           <pathtype>e</pathtype>
+                           <peer>19.0.102.3</peer>
+                           <flapcount>40</flapcount>
+                           <duration>00:09:57</duration>
+                           <reuse></reuse>
+                           <penalty>38</penalty>
+                           <suppresslimit>30</suppresslimit>
+                           <reuselimit>10</reuselimit>
+                           <best>false</best>
+                          </ROW_prefix>
+                          <ROW_prefix>
+                           <ipprefix>[2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/616</ipprefix>
+                           <status>h</status>
+                           <pathtype>e</pathtype>
+                           <peer>19.0.102.3</peer>
+                           <flapcount>40</flapcount>
+                           <duration>00:09:57</duration>
+                           <reuse></reuse>
+                           <penalty>38</penalty>
+                           <suppresslimit>30</suppresslimit>
+                           <reuselimit>10</reuselimit>
+                           <best>false</best>
+                          </ROW_prefix>
+                         </TABLE_prefix>
+                        </ROW_rd>
+                       </TABLE_rd>
+                      </ROW_safi>
+                     </TABLE_safi>
+                    </ROW_afi>
+                   </TABLE_afi>
+                  </ROW_vrf>
+                 </TABLE_vrf>
+                </__readonly__>
+               </flap-statistics>
+              </dampening>
+             </all>
+            </bgp>
+           </show>
+          </nf:data>
+         </nf:rpc-reply>
+         ]]>]]>
+        '''}
+
+   def test_golden_xml(self):
+      self.maxDiff = None
+      self.device = Mock(**self.golden_output)
+      obj = ShowBgpAllDampeningFlapStatistics(device=self.device, context='xml')
+      parsed_output = obj.parse()
+      self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
 if __name__ == '__main__':

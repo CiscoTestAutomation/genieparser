@@ -5901,4 +5901,377 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
         return bgp_dict
 
 
+# ===================================================
+# Parser for 'show bgp all dampening flap statistics'
+# ===================================================
+def retrieve_xml_child(root, key):
+    '''return the root which contains the key from xml'''
+    for item in root:
+        if key in item.tag:
+            return item
+        else:
+            root = item
+            return retrieve_xml_child(root, key)
+
+
+class ShowBgpAllDampeningFlapStatisticsSchema(MetaParser):
+    
+    '''Schema for show bgp vrf all all summary'''
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        Optional('network'): {
+                            Any(): {
+                                'peer': str,
+                                'flaps': int,
+                                'duration': str,
+                                'current_penalty': int,
+                                'suppress_limit': int,
+                                'reuse_limit': int,
+                                'best': bool,
+                                Optional('status'): str,
+                                Optional('reuse_time'): str,
+                                Optional('pathtype'): str,
+                            },
+                        },
+                        Optional('history_paths'): int,
+                        Optional('dampened_paths'): int,
+                        Optional('dampening_enabled'): bool,
+                        Optional('route_identifier'): {
+                            Any(): {
+                                Optional('network'): {
+                                    Any(): {
+                                        'peer': str,
+                                        'flaps': int,
+                                        'duration': str,
+                                        'reuse_time': str,
+                                        'current_penalty': int,
+                                        'suppress_limit': int,
+                                        'reuse_limit': int,
+                                        'best': bool,
+                                        Optional('status'): str,
+                                        Optional('pathtype'): str,
+                                    },
+                                },
+                                'history_paths': int,
+                                'dampened_paths': int,
+                                'dampening_enabled': bool,
+                            },
+                        }
+                    },                            
+                },
+            },
+        }
+    }
+
+
+class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema):
+    
+    '''Parser for show bgp all dampening flap statistics'''
+
+    def cli(self):
+        cmd = 'show bgp all dampening flap statistics'
+        out = self.device.execute(cmd)
+        
+        # Init vars
+        ret_dict = {}
+        sub_dict = {}
+        history_paths = None
+        dampened_paths = None
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # build keys for dampened_paths and history_paths
+            if isinstance(dampened_paths, int):
+                sub_dict['dampened_paths'] = dampened_paths
+                sub_dict['dampening_enabled'] = True
+                
+            if isinstance(history_paths, int):
+                sub_dict['history_paths'] = history_paths
+
+            # Flap Statistics for VRF default, address family IPv4 Unicast:
+            p1 = re.compile(r'^Flap +Statistics +for +VRF +'
+                             '(?P<vrf_name>[\w\-]+), +address +family +'
+                             '(?P<address_family>[\w\s\-]+):$')
+            m = p1.match(line)
+            if m:
+                address_family = m.groupdict()['address_family'].lower()
+                vrf = m.groupdict()['vrf_name']
+
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+
+                if 'address_family' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['address_family'] = {}
+
+                if address_family not in ret_dict['vrf'][vrf]['address_family']:
+                    ret_dict['vrf'][vrf]['address_family'][address_family] = {}
+                    sub_dict = ret_dict['vrf'][vrf]['address_family'][address_family]
+                        
+                # reset variable
+                dampened_paths = None
+                history_paths = None
+                continue
+
+            # Dampening configured, 0 history paths, 2 dampened paths
+            p2 = re.compile(r'^Dampening +configured, +'
+                             '(?P<history_paths>\d+) +history +paths, +'
+                             '(?P<dampened_paths>\d+) +dampened +paths$')
+            m = p2.match(line)
+            if m:
+                history_paths = int(m.groupdict()['history_paths'])
+                dampened_paths = int(m.groupdict()['dampened_paths'])
+                continue
+
+            # Route Distinguisher: 0:0
+            p3 = re.compile(r'^Route +Distinguisher: +'
+                             '(?P<route_identifier>[\w\.\:]+)$')
+            m = p3.match(line)
+            if m:
+                route_identifier = m.groupdict()['route_identifier']
+                if 'route_identifier' not in ret_dict['vrf'][vrf]\
+                    ['address_family'][address_family]:
+                    ret_dict['vrf'][vrf]['address_family'][address_family]\
+                        ['route_identifier'] = {}
+
+                if route_identifier not in ret_dict['vrf'][vrf]\
+                    ['address_family'][address_family]['route_identifier']:
+                    ret_dict['vrf'][vrf]['address_family'][address_family]\
+                        ['route_identifier'][route_identifier] = {}
+
+                    sub_dict = ret_dict['vrf'][vrf]['address_family'][address_family]\
+                        ['route_identifier'][route_identifier]
+                continue
+
+            # d e 2.3.1.0/24       19.0.102.3                38   00:09:36 00:01:40 35/30/10
+            p4 = re.compile(r'^(?P<best>[\*])?(?P<status>\w+)'
+                             ' +(?P<pathtype>[e|i])'
+                             ' +(?P<network>[\w\/\.\:]+)'
+                             ' +(?P<peer>[\w\/\.\:]+)'
+                             ' +(?P<flaps>\d+)'
+                             ' +(?P<duration>[\w\:\.]+)'
+                             '( +(?P<reuse_time>[\w\:\.]+))?'
+                             ' +(?P<current_penalty>\d+)\/'
+                             '(?P<suppress_limit>\d+)\/(?P<reuse_limit>\d+)$')
+            m = p4.match(line)
+
+            # d e [2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/61619.0.102.3                38   00:09:36 00:01:40 34/30/10
+            p4_1 = re.compile(r'^(?P<best>[\*])?(?P<status>\w+)'
+                             ' +(?P<pathtype>[e|i])'
+                             ' +(?P<network>\S+\/\d{1,3})'
+                             '(?P<peer>[1|2][\d\.\:]+)'
+                             ' +(?P<flaps>\d+)'
+                             ' +(?P<duration>[\w\:\.]+)'
+                             ' +(?P<reuse_time>[\w\:\.]+)'
+                             ' +(?P<current_penalty>\d+)\/'
+                             '(?P<suppress_limit>\d+)\/(?P<reuse_limit>\d+)$')
+            m1 = p4_1.match(line)
+            m = m if m else m1
+            if m:
+                network = m.groupdict()['network']
+                if 'network' not in sub_dict:
+                    sub_dict['network'] = {}
+                if network not in sub_dict['network']:
+                    sub_dict['network'][network] = {}
+
+                if m.groupdict()['best']:
+                    sub_dict['network'][network]['best'] = True
+                else:
+                    sub_dict['network'][network]['best'] = False
+                sub_dict['network'][network]['status'] = m.groupdict()['status']
+                sub_dict['network'][network]['pathtype'] = m.groupdict()['pathtype']
+                sub_dict['network'][network]['peer'] = m.groupdict()['peer']
+                sub_dict['network'][network]['flaps'] = int(m.groupdict()['flaps'])
+                sub_dict['network'][network]['duration'] = m.groupdict()['duration']
+                if m.groupdict()['reuse_time']:
+                    sub_dict['network'][network]['reuse_time'] = m.groupdict()['reuse_time']
+                sub_dict['network'][network]['current_penalty'] = \
+                    int(m.groupdict()['current_penalty'])
+                sub_dict['network'][network]['suppress_limit'] = \
+                    int(m.groupdict()['suppress_limit'])
+                sub_dict['network'][network]['reuse_limit'] = \
+                    int(m.groupdict()['reuse_limit'])
+                continue
+        return ret_dict
+
+
+    def xml(self):
+        out = self.device.execute('show bgp all dampening flap statistics | xml')
+
+        etree_dict = {}
+        sub_dict = {}
+        # Remove junk characters returned by the device
+        out = out.replace("]]>]]>", "")
+        root = ET.fromstring(out)
+
+        # top table root
+        vrf_root = retrieve_xml_child(root, 'TABLE_vrf')
+
+        # get xml namespace
+        # {http://www.cisco.com/nxos:7.0.3.I7.1.:bgp}
+        line = vrf_root.getchildren()[0].tag
+        m = re.compile(r'(?P<name>\{[\S]+\})').match(line)
+        namespace = m.groupdict()['name']
+
+        # -----   loop vrf  -----
+        for vrf_tree in vrf_root.findall('{}ROW_vrf'.format(namespace)):
+            # vrf
+            try:
+                vrf = vrf_tree.find('{}vrf-name-out'.format(namespace)).text
+            except:
+                break
+
+            if 'vrf' not in etree_dict:
+                etree_dict['vrf'] = {}
+            if vrf not in etree_dict['vrf']:
+                etree_dict['vrf'][vrf] = {}
+
+            # address_family table
+            afi = vrf_tree.find('{}TABLE_afi'.format(namespace))
+
+            # -----   loop address_family  -----
+            for af_root in afi.findall('{}ROW_afi'.format(namespace)):
+
+                # address_family
+                row_safi = af_root.find('{}TABLE_safi'.format(namespace))
+                row_safi = row_safi.find('{}ROW_safi'.format(namespace))
+
+                try:
+                    af = row_safi.find('{}af-name'.format(namespace)).text.lower()
+                except:
+                    continue
+
+                if 'address_family' not in etree_dict['vrf'][vrf]:
+                    etree_dict['vrf'][vrf]['address_family'] = {}
+                if af not in etree_dict['vrf'][vrf]['address_family']:
+                    etree_dict['vrf'][vrf]['address_family'][af] = {}
+
+                # rd table
+                rd = row_safi.find('{}TABLE_rd'.format(namespace))
+
+                # -----   loop rd  -----
+                for rd_root in rd.findall('{}ROW_rd'.format(namespace)):
+                    # rd
+                    try:
+                        rd = row_safi.find('{}rd_val'.format(namespace)).text
+                    except:
+                        rd = None
+
+                    if rd:                        
+                        if 'route_identifier' not in etree_dict['vrf'][vrf]\
+                            ['address_family'][af]:
+                            etree_dict['vrf'][vrf]['address_family'][af]\
+                                ['route_identifier'] = {}
+
+                        if rd not in etree_dict['vrf'][vrf]\
+                            ['address_family'][af]['route_identifier']:
+                            etree_dict['vrf'][vrf]['address_family'][af]\
+                                ['route_identifier'][rd] = {}
+
+                        sub_dict = etree_dict['vrf'][vrf]['address_family'][af]\
+                            ['route_identifier'][rd]
+                    else:
+                        sub_dict = etree_dict['vrf'][vrf]['address_family'][af]
+
+                    # <dampeningenabled>true</dampeningenabled>
+                    if rd_root.find('{}dampeningenabled'.format(namespace)).text == 'true':
+                        sub_dict['dampening_enabled'] = True
+
+                    # <historypaths>0</historypaths>
+                    sub_dict['history_paths'] = int(rd_root.find('{}historypaths'
+                                                                 .format(namespace)).text)
+                    # <dampenedpaths>2</dampenedpaths>
+                    sub_dict['dampened_paths'] = int(rd_root.find('{}dampenedpaths'
+                                                                 .format(namespace)).text)
+
+                    # prefix table
+                    prefix = rd_root.find('{}TABLE_prefix'.format(namespace))
+                    if not prefix:
+                        continue
+
+                    # -----   loop prefix  -----
+                    for prefix_root in prefix.findall('{}ROW_prefix'.format(namespace)):
+
+                        # <ipprefix>2.3.1.0/24</ipprefix>
+                        try:
+                            network = prefix_root.find('{}ipprefix'.format(namespace)).text
+                        except:
+                            pass
+
+                        # ipv6prefix>2001::/112</ipv6prefix>
+                        try:
+                            network = prefix_root.find('{}ipv6prefix'.format(namespace)).text
+                        except:
+                            pass
+                           
+                        if 'network' not in sub_dict:
+                            sub_dict['network'] = {}
+
+                        if network not in sub_dict['network']:
+                            sub_dict['network'][network] = {}
+
+                        # <status>d</status>
+                        sub_dict['network'][network]['status'] = \
+                            prefix_root.find('{}status'.format(namespace)).text
+
+                        # <pathtype>e</pathtype>
+                        sub_dict['network'][network]['pathtype'] = \
+                            prefix_root.find('{}pathtype'.format(namespace)).text
+
+                        # <peer>19.0.102.3</peer>
+                        try:
+                            sub_dict['network'][network]['peer'] = \
+                                prefix_root.find('{}peer'.format(namespace)).text
+                        except:
+                            pass
+
+                        # <ipv6peer>fec0::2002</ipv6peer>
+                        try:
+                            sub_dict['network'][network]['peer'] = \
+                                prefix_root.find('{}ipv6peer'.format(namespace)).text
+                        except:
+                            pass
+
+                        # <flapcount>39</flapcount>
+                        sub_dict['network'][network]['flaps'] = \
+                            int(prefix_root.find('{}flapcount'.format(namespace)).text)
+                            
+                        # <duration>00:09:53</duration>
+                        sub_dict['network'][network]['duration'] = \
+                            prefix_root.find('{}duration'.format(namespace)).text
+                            
+                        # <reuse>00:01:40</reuse>
+                        reuse = prefix_root.find('{}reuse'.format(namespace)).text
+                        if reuse:
+                            sub_dict['network'][network]['reuse_time'] = reuse
+                            
+                            
+                        # <penalty>34</penalty>
+                        penalty = prefix_root.find('{}penalty'.format(namespace)).text
+                        if penalty:
+                            sub_dict['network'][network]['current_penalty'] = int(penalty)
+                            
+                        # <suppresslimit>30</suppresslimit>
+                        sub_dict['network'][network]['suppress_limit'] = \
+                            int(prefix_root.find('{}suppresslimit'.format(namespace)).text)
+
+                       # <reuselimit>10</reuselimit>
+                        sub_dict['network'][network]['reuse_limit'] = \
+                            int(prefix_root.find('{}reuselimit'.format(namespace)).text)
+
+                       # <best>false</best>
+                        if prefix_root.find('{}best'.format(namespace)).text == 'false':
+                            sub_dict['network'][network]['best'] = False
+                        else:
+                            sub_dict['network'][network]['best'] = True                                                                                    
+        return etree_dict
+
+
 # vim: ft=python et sw=4
