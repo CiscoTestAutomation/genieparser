@@ -1454,6 +1454,7 @@ class test_show_ipv6_interface(unittest.TestCase):
                  "2001:10::14:1/112": {
                       "ip": "2001:10::14:1",
                       "prefix_length": "112",
+                      "status": "valid",
                       'autoconf': {
                           'preferred_lifetime': 604711,
                           'valid_lifetime': 2591911,
@@ -1497,13 +1498,25 @@ class test_show_ipv6_interface(unittest.TestCase):
                       "unreachables": "sent",
                       "redirects": True,
                       "error_messages_limited": 100
-                 }
+                 },
+                 "nd": {
+                      "dad_attempts": 1,
+                      "dad_enabled": True,
+                      "reachable_time": 30000,
+                      "using_time": 30000,
+                      "advertised_reachable_time": 0,
+                      "advertised_retransmit_interval": 0,
+                      "router_advertisements_interval": 200,
+                      "router_advertisements_live": 1800,
+                      "advertised_default_router_preference": 'Medium',
+                 },
             },
             "link_local": {
                  "physical": "FE80::5054:FF:FE1E:4F2"
             },
             "oper_status": "up",
-            "mtu": 1500
+            "mtu": 1500,
+            "addresses_config_method": 'stateless autoconfig',
        }
     }
 
