@@ -1932,7 +1932,10 @@ class ShowIpv6InterfaceSchema(MetaParser):
                             Optional('advertised_retransmit_interval'): int,
                             Optional('router_advertisements_interval'): int,
                             Optional('router_advertisements_live'): int,
-                            Optional('advertised_default_router_preference'): str,                        },
+                            Optional('advertised_default_router_preference'): str, 
+                            Optional('advertised_retransmit_interval_unspecified'): bool,
+                            Optional('advertised_reachable_time_unspecified'): bool,
+                        },
                         Optional('unnumbered'): {
                             'interface_ref': str,
                         },
@@ -2045,7 +2048,7 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                                           'duplicate', 'optimistic']:
                         ret_dict[intf]['ipv6'][address]['status'] = status.lower()
                     else:
-                    	ret_dict[intf]['ipv6'][address]['status'] = 'valid'
+                        ret_dict[intf]['ipv6'][address]['status'] = 'valid'
                     ret_dict[intf]['ipv6']['enabled'] = True
 
                 ip_type = m.groupdict()['type']
@@ -2196,7 +2199,13 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 if 'nd' not in ret_dict[intf]['ipv6']:
                     ret_dict[intf]['ipv6']['nd'] = {}
                 ret_dict[intf]['ipv6']['nd']['advertised_reachable_time'] = \
-                	int(m.groupdict()['time'])
+                    int(m.groupdict()['time'])
+                if m.groupdict()['dummy'] == 'unspecified':
+                    ret_dict[intf]['ipv6']['nd']\
+                        ['advertised_reachable_time_unspecified'] = False
+                else:
+                    ret_dict[intf]['ipv6']['nd']\
+                        ['advertised_reachable_time_unspecified'] = True
                 continue
 
             # ND advertised retransmit interval is 0 (unspecified)
@@ -2209,12 +2218,18 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 if 'nd' not in ret_dict[intf]['ipv6']:
                     ret_dict[intf]['ipv6']['nd'] = {}
                 ret_dict[intf]['ipv6']['nd']['advertised_retransmit_interval'] = \
-                	int(m.groupdict()['time'])
+                    int(m.groupdict()['time'])
+                if m.groupdict()['dummy'] == 'unspecified':
+                    ret_dict[intf]['ipv6']['nd']\
+                        ['advertised_retransmit_interval_unspecified'] = False
+                else:
+                    ret_dict[intf]['ipv6']['nd']\
+                        ['advertised_retransmit_interval_unspecified'] = True
                 continue
 
             # ND router advertisements are sent every 200 seconds
             p15 =  re.compile(r'^ND +router +advertisements +are +sent +'
-            	               'every +(?P<time>\d+) +seconds$')
+                               'every +(?P<time>\d+) +seconds$')
             m = p15.match(line)
             if m:
                 if 'ipv6' not in ret_dict[intf]:
@@ -2222,12 +2237,12 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 if 'nd' not in ret_dict[intf]['ipv6']:
                     ret_dict[intf]['ipv6']['nd'] = {}
                 ret_dict[intf]['ipv6']['nd']['router_advertisements_interval'] = \
-                	int(m.groupdict()['time'])
+                    int(m.groupdict()['time'])
                 continue
 
             # ND router advertisements live for 1800 seconds
             p16 =  re.compile(r'^ND +router +advertisements +live +for +'
-            	               '(?P<time>\d+) +seconds$')
+                               '(?P<time>\d+) +seconds$')
             m = p16.match(line)
             if m:
                 if 'ipv6' not in ret_dict[intf]:
@@ -2235,12 +2250,12 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 if 'nd' not in ret_dict[intf]['ipv6']:
                     ret_dict[intf]['ipv6']['nd'] = {}
                 ret_dict[intf]['ipv6']['nd']['router_advertisements_live'] = \
-                	int(m.groupdict()['time'])
+                    int(m.groupdict()['time'])
                 continue
 
             # ND advertised default router preference is Medium
             p17 =  re.compile(r'^ND +advertised +default +router +preference +'
-            	               'is +(?P<prefer>\w+)$')
+                               'is +(?P<prefer>\w+)$')
             m = p17.match(line)
             if m:
                 if 'ipv6' not in ret_dict[intf]:
@@ -2248,7 +2263,7 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 if 'nd' not in ret_dict[intf]['ipv6']:
                     ret_dict[intf]['ipv6']['nd'] = {}
                 ret_dict[intf]['ipv6']['nd']['advertised_default_router_preference'] = \
-                	m.groupdict()['prefer']
+                    m.groupdict()['prefer']
                 continue
 
             # Hosts use stateless autoconfig for addresses.
@@ -2256,7 +2271,7 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
             m = p18.match(line)
             if m:
                 ret_dict[intf]['addresses_config_method'] = \
-                	m.groupdict()['addr_conf_method']
+                    m.groupdict()['addr_conf_method']
                 continue
 
             # Interface is unnumbered. Using address of Loopback0

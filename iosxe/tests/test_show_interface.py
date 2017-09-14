@@ -1509,6 +1509,8 @@ class test_show_ipv6_interface(unittest.TestCase):
                       "router_advertisements_interval": 200,
                       "router_advertisements_live": 1800,
                       "advertised_default_router_preference": 'Medium',
+                      "advertised_reachable_time_unspecified": False,
+                      "advertised_retransmit_interval_unspecified": False,
                  },
             },
             "link_local": {
