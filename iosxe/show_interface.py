@@ -1044,17 +1044,19 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Operational Mode: trunk (member of bundle Po12)
-            p4 =  re.compile(r'^Operational +Mode: +(?P<operational_mode>\w+) +'
-                              '(\(member +of +bundle +(?P<port_channel_int>[\w\/\.\-]+)\))?$')
+            p4 =  re.compile(r'^Operational +Mode: +(?P<operational_mode>\w+)'
+                              '( +\(member +of +bundle +(?P<port_channel_int>[\w\/\.\-]+)\))?$')
             m = p4.match(line)
             if m:
                 ret_dict[intf]['operational_mode'] = m.groupdict()['operational_mode']
-                if 'port_channel' not in ret_dict[intf]:
-                    ret_dict[intf]['port_channel'] = {}
 
-                ret_dict[intf]['port_channel']['port_channel_int'] = \
-                    convert_intf_name(m.groupdict()['port_channel_int'])
-                ret_dict[intf]['port_channel']['port_channel_member'] = True
+                bundle_intf = m.groupdict()['port_channel_int']
+                if bundle_intf:
+	                if 'port_channel' not in ret_dict[intf]:
+	                    ret_dict[intf]['port_channel'] = {}
+	                ret_dict[intf]['port_channel']['port_channel_int'] = \
+	                    convert_intf_name(bundle_intf)
+	                ret_dict[intf]['port_channel']['port_channel_member'] = True
                 continue
 
             # Administrative Trunking Encapsulation: dot1q
@@ -2209,10 +2211,10 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                     int(m.groupdict()['time'])
                 if m.groupdict()['dummy'] == 'unspecified':
                     ret_dict[intf]['ipv6']['nd']\
-                        ['advertised_reachable_time_unspecified'] = False
+                        ['advertised_reachable_time_unspecified'] = True
                 else:
                     ret_dict[intf]['ipv6']['nd']\
-                        ['advertised_reachable_time_unspecified'] = True
+                        ['advertised_reachable_time_unspecified'] = False
                 continue
 
             # ND advertised retransmit interval is 0 (unspecified)
@@ -2228,10 +2230,10 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                     int(m.groupdict()['time'])
                 if m.groupdict()['dummy'] == 'unspecified':
                     ret_dict[intf]['ipv6']['nd']\
-                        ['advertised_retransmit_interval_unspecified'] = False
+                        ['advertised_retransmit_interval_unspecified'] = True
                 else:
                     ret_dict[intf]['ipv6']['nd']\
-                        ['advertised_retransmit_interval_unspecified'] = True
+                        ['advertised_retransmit_interval_unspecified'] = False
                 continue
 
             # ND router advertisements are sent every 200 seconds

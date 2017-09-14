@@ -179,6 +179,7 @@ class test_show_interfaces_switchport(unittest.TestCase):
         "GigabitEthernet1/0/4": {
             "swichport_mode": "trunk",
             "pruning_vlans": "2-1001",
+            'operational_mode': 'trunk',
             "switchport_enable": True,
             "trunk_vlans": "200-211",
             "capture_mode": False,
@@ -234,6 +235,7 @@ class test_show_interfaces_switchport(unittest.TestCase):
             "pruning_vlans": "2-1001",
             "switchport_enable": True,
             "trunk_vlans": "all",
+            'operational_mode': 'down',
             "capture_mode": False,
             "private_vlan": {
                  "native_vlan_tagging": True,
@@ -1520,8 +1522,8 @@ class test_show_ipv6_interface(unittest.TestCase):
                       "router_advertisements_interval": 200,
                       "router_advertisements_live": 1800,
                       "advertised_default_router_preference": 'Medium',
-                      "advertised_reachable_time_unspecified": False,
-                      "advertised_retransmit_interval_unspecified": False,
+                      "advertised_reachable_time_unspecified": True,
+                      "advertised_retransmit_interval_unspecified": True,
                  },
             },
             "oper_status": "up",
