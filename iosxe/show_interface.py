@@ -2282,7 +2282,7 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             # Interface is unnumbered. Using address of Loopback0
-            p19 =  re.compile(r'^Interface +is +unnumbered. +Using +address +of +'
+            p19 =  re.compile(r'^Interface +is +unnumbered. +Using +address +of'
                                ' +(?P<unnumbered_intf>[\w\/\.]+)$')
             m = p19.match(line)
             if m:

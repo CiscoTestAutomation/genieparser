@@ -1496,6 +1496,9 @@ class test_show_ipv6_interface(unittest.TestCase):
                       "status": "valid",
                       "origin": "link_layer",
                  },
+                 "unnumbered": {
+                      "interface_ref": "Loopback0",
+                 },
                  "nd": {
                       "dad_attempts": 1,
                       "reachable_time": 30000,
