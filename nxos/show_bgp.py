@@ -2884,30 +2884,41 @@ class ShowBgpVrfAllAllNextHopDatabaseSchema(MetaParser):
                         {'af_nexthop_trigger_enable': bool,
                          'nexthop_trigger_delay_critical': int,
                          'nexthop_trigger_delay_non_critical': int,
-                         Optional('next_hop'): str,
-                         Optional('refcount'): int,
-                         Optional('igp_cost'): int,
-                         Optional('igp_route_type'): int,
-                         Optional('igp_preference'): int,
-                         Optional('nexthop_type'): str,
-                         Optional('nexthop_last_resolved'): str,
-                         Optional('nexthop_resolved_using'): str,
-                         Optional('metric_next_advertise'): str,
-                         Optional('rnh_epoch'): int,
-                         Optional('attached_nexthop'): str,
-                         Optional('attached_nexthop_interface'): str,
+                         Optional('next_hop'): {
+                            Any(): {                                
+                                 Optional('refcount'): int,
+                                 Optional('flags'): str,
+                                 Optional('igp_cost'): int,
+                                 Optional('igp_route_type'): int,
+                                 Optional('igp_preference'): int,
+                                 Optional('attached'): bool,
+                                 Optional('local'): bool,
+                                 Optional('reachable'): bool,
+                                 Optional('labeled'): bool,
+                                 Optional('filtered'): bool,
+                                 Optional('pending_update'): bool,
+                                 Optional('resolve_time'): str,
+                                 Optional('rib_route'): str,
+                                 Optional('metric_next_advertise'): str,
+                                 Optional('rnh_epoch'): int,
+                                 Optional('attached_nexthop'): {
+                                    Any(): {
+                                        'attached_nexthop_interface': str,
+                                        },
+                                    },
+                                },
+                            }
+                         }
                         },
                     },
                 },
-            },
-        }
+            }
 
 class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
     
     '''Parser for show bgp vrf all all nexthop-database'''
 
-    def cli(self):
-        cmd = 'show bgp vrf all all nexthop-database'
+    def cli(self, cmd='show bgp vrf all all nexthop-database'):
         out = self.device.execute(cmd)
         
         # Init vars
@@ -2952,14 +2963,23 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
                 continue
 
             # Nexthop: 0.0.0.0, Refcount: 4, IGP cost: 0
+            # Nexthop: 200.0.3.1, Flags: 0x41, Refcount: 1, IGP cost: 3
             p3 = re.compile(r'^\s*Nexthop *: +(?P<nh>[a-zA-Z0-9\.\:]+),'
+                             '( +Flags *: +(?P<flags>\w+),)?'
                              ' +Refcount *: +(?P<refcount>[0-9]+), +IGP'
                              ' +cost *: +(?P<igp_cost>[0-9]+)$')
             m = p3.match(line)
             if m:
-                af_dict['next_hop'] = str(m.groupdict()['nh'])
-                af_dict['refcount'] = int(m.groupdict()['refcount'])
-                af_dict['igp_cost'] = int(m.groupdict()['igp_cost'])
+                nexthop = m.groupdict()['nh']
+                if 'next_hop' not in af_dict:
+                    af_dict['next_hop'] = {}
+                if nexthop not in af_dict['next_hop']:
+                    af_dict['next_hop'][nexthop] = {}
+
+                af_dict['next_hop'][nexthop]['refcount'] = int(m.groupdict()['refcount'])
+                af_dict['next_hop'][nexthop]['igp_cost'] = int(m.groupdict()['igp_cost'])
+                if m.groupdict()['flags']:
+                    af_dict['next_hop'][nexthop]['flags'] = m.groupdict()['flags']
                 continue
 
             # IGP Route type: 0, IGP preference: 0
@@ -2968,27 +2988,51 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
                              ' +(?P<igp_preference>[0-9]+)$')
             m = p4.match(line)
             if m:
-                af_dict['igp_route_type'] = int(m.groupdict()['igp_route_type'])
-                af_dict['igp_preference'] = int(m.groupdict()['igp_preference'])
+                af_dict['next_hop'][nexthop]['igp_route_type'] = int(m.groupdict()['igp_route_type'])
+                af_dict['next_hop'][nexthop]['igp_preference'] = int(m.groupdict()['igp_preference'])
                 continue
 
             # Nexthop is not-attached local unreachable not-labeled
             # Nexthop is not-attached not-local reachable labeled
-            p5 = re.compile(r'^\s*Nexthop +is +(?P<nexthop_type>[a-zA-Z\s\-]+)$')
+            p5 = re.compile(r'^\s*Nexthop +is +(?P<attached>[\w\-]+) +'
+                             '(?P<local>[\w\-]+) +(?P<reachable>[\w\-]+) +'
+                             '(?P<labeled>[\w\-]+)$')
             m = p5.match(line)
             if m:
-                af_dict['nexthop_type'] = str(m.groupdict()['nexthop_type'])
+                if m.groupdict()['attached'] == 'not-attached':
+                    af_dict['next_hop'][nexthop]['attached'] = False
+                else:
+                    af_dict['next_hop'][nexthop]['attached'] = True
+
+                if m.groupdict()['local'] == 'not-local':
+                    af_dict['next_hop'][nexthop]['local'] = False
+                else:
+                    af_dict['next_hop'][nexthop]['local'] = True
+
+                if m.groupdict()['reachable'] == 'unreachable':
+                    af_dict['next_hop'][nexthop]['reachable'] = False
+                else:
+                    af_dict['next_hop'][nexthop]['reachable'] = True
+
+                if m.groupdict()['labeled'] == 'not-labeled':
+                    af_dict['next_hop'][nexthop]['labeled'] = False
+                else:
+                    af_dict['next_hop'][nexthop]['labeled'] = True
+
+                af_dict['next_hop'][nexthop]['filtered'] = False
+                af_dict['next_hop'][nexthop]['pending_update'] = False
+
                 continue
 
             # Nexthop last resolved: never, using 0.0.0.0/0
             p6 = re.compile(r'^\s*Nexthop +last +resolved *:'
                              ' +(?P<nexthop_last_resolved>[a-zA-Z0-9\:]+),'
-                             ' +using +(?P<nexthop_resolved_using>[0-9\.\/]+)$')
+                             ' +using +(?P<nexthop_resolved_using>[\w\:\-\.\/]+)$')
             m = p6.match(line)
             if m:
-                af_dict['nexthop_last_resolved'] = \
+                af_dict['next_hop'][nexthop]['resolve_time'] = \
                     str(m.groupdict()['nexthop_last_resolved'])
-                af_dict['nexthop_resolved_using'] = \
+                af_dict['next_hop'][nexthop]['rib_route'] = \
                     str(m.groupdict()['nexthop_resolved_using'])
                 continue
 
@@ -2997,7 +3041,7 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
                              ' +(?P<metric_next_advertise>[a-zA-Z0-9]+)$')
             m = p7.match(line)
             if m:
-                af_dict['metric_next_advertise'] = \
+                af_dict['next_hop'][nexthop]['metric_next_advertise'] = \
                     str(m.groupdict()['metric_next_advertise']).lower()
                 continue
 
@@ -3005,19 +3049,25 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
             p8 = re.compile(r'^\s*RNH +epoch *: +(?P<rnh_epoch>[0-9]+)$')
             m = p8.match(line)
             if m:
-                af_dict['rnh_epoch'] = int(m.groupdict()['rnh_epoch'])
+                af_dict['next_hop'][nexthop]['rnh_epoch'] = int(m.groupdict()['rnh_epoch'])
                 continue
 
             # Attached nexthop: 10.1.3.3, Interface: Ethernet4/2
             p8 = re.compile(r'^\s*Attached +nexthop *:'
-                             ' +(?P<attached_nexthop>[0-9\.\:]+), +Interface *:'
-                             ' +(?P<attached_nexthop_interface>[a-zA-Z0-9\/]+)$')
+                             ' +(?P<attached_nexthop>[\w\.\:]+), +Interface *:'
+                             ' +(?P<attached_nexthop_interface>[\w\-\.\/]+)$')
             m = p8.match(line)
             if m:
-                af_dict['attached_nexthop'] = \
-                    str(m.groupdict()['attached_nexthop'])
-                af_dict['attached_nexthop_interface'] = \
-                    str(m.groupdict()['attached_nexthop_interface'])
+                if 'attached_nexthop' not in af_dict['next_hop'][nexthop]:
+                    af_dict['next_hop'][nexthop]['attached_nexthop'] = {}
+
+                at_nexthop = m.groupdict()['attached_nexthop']
+
+                if at_nexthop not in af_dict['next_hop'][nexthop]['attached_nexthop']:
+                    af_dict['next_hop'][nexthop]['attached_nexthop'][at_nexthop] = {}
+                af_dict['next_hop'][nexthop]['attached_nexthop'][at_nexthop]\
+                    ['attached_nexthop_interface'] = \
+                        m.groupdict()['attached_nexthop_interface']
                 continue
 
         return nh_dict
@@ -6271,6 +6321,226 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
                             sub_dict['network'][network]['best'] = False
                         else:
                             sub_dict['network'][network]['best'] = True                                                                                    
+        return etree_dict
+
+
+# ===================================================
+# Parser for 'show bgp all nexthop-database'
+# ===================================================
+class ShowBgpAllNexthopDatabase(ShowBgpVrfAllAllNextHopDatabase):
+    
+    '''Parser for show bgp all nexthop-database'''
+
+    def cli(self):
+        cmd = 'show bgp all nexthop-database'
+        return super().cli(cmd)
+
+
+    def xml(self):
+        out = self.device.execute('show bgp all nexthop-database | xml')
+
+        etree_dict = {}
+        sub_dict = {}
+        # Remove junk characters returned by the device
+        out = out.replace("]]>]]>", "")
+        root = ET.fromstring(out)
+
+        # top table root
+        vrf_root = retrieve_xml_child(root, 'TABLE_nhvrf')
+
+        # get xml namespace
+        # {http://www.cisco.com/nxos:7.0.3.I7.1.:bgp}
+        line = vrf_root.getchildren()[0].tag
+        m = re.compile(r'(?P<name>\{[\S]+\})').match(line)
+        namespace = m.groupdict()['name']
+
+        # -----   loop vrf  -----
+        for vrf_tree in vrf_root.findall('{}ROW_nhvrf'.format(namespace)):
+            # vrf
+            try:
+                vrf = vrf_tree.find('{}nhvrf-name-out'.format(namespace)).text
+            except:
+                break
+
+            if 'vrf' not in etree_dict:
+                etree_dict['vrf'] = {}
+            if vrf not in etree_dict['vrf']:
+                etree_dict['vrf'][vrf] = {}
+
+            # address_family table
+            afi = vrf_tree.find('{}TABLE_nhafi'.format(namespace))
+
+            # -----   loop address_family  -----
+            for af_root in afi.findall('{}ROW_nhafi'.format(namespace)):
+
+                # address_family
+                row_safi = af_root.find('{}TABLE_nhsafi'.format(namespace))
+                af_root = row_safi.find('{}ROW_nhsafi'.format(namespace))
+                try:
+                    af = af_root.find('{}af-name'.format(namespace)).text.lower()
+                except:
+                    continue
+
+                if 'address_family' not in etree_dict['vrf'][vrf]:
+                    etree_dict['vrf'][vrf]['address_family'] = {}
+                if af not in etree_dict['vrf'][vrf]['address_family']:
+                    etree_dict['vrf'][vrf]['address_family'][af] = {}
+
+                # af_nexthop_trigger_enable
+                etree_dict['vrf'][vrf]['address_family'][af]\
+                    ['af_nexthop_trigger_enable'] = True
+
+                # <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                etree_dict['vrf'][vrf]['address_family'][af]\
+                    ['nexthop_trigger_delay_non_critical'] = int(af_root.find('{}nhnoncriticaldelay'
+                                                             .format(namespace)).text)
+                # <nhcriticaldelay>3000</nhcriticaldelay>
+                etree_dict['vrf'][vrf]['address_family'][af]\
+                    ['nexthop_trigger_delay_critical'] = int(af_root.find('{}nhcriticaldelay'
+                                                             .format(namespace)).text)
+
+                # nexthop table
+                next_hop = af_root.find('{}TABLE_nexthop'.format(namespace))
+                if not next_hop:
+                    continue
+
+                # -----   loop nexthop  -----
+                for nexthop_root in next_hop.findall('{}ROW_nexthop'.format(namespace)):
+                    # nexthop
+                    # <ipnexthop-out>200.0.3.1</ipnexthop-out>
+                    try:
+                        nexthop = nexthop_root.find('{}ipnexthop-out'.format(namespace)).text
+                    except:
+                        pass
+
+                    # <ipv6nexthop-out>2000::3:1</ipv6nexthop-out>
+                    try:
+                        nexthop = nexthop_root.find('{}ipv6nexthop-out'.format(namespace)).text
+                    except:
+                        pass
+
+                    if 'next_hop' not in etree_dict['vrf'][vrf]\
+                        ['address_family'][af]:
+                        etree_dict['vrf'][vrf]['address_family'][af]\
+                            ['next_hop'] = {}
+
+                    if nexthop not in etree_dict['vrf'][vrf]\
+                        ['address_family'][af]['next_hop']:
+                        etree_dict['vrf'][vrf]['address_family'][af]\
+                            ['next_hop'][nexthop] = {}
+
+                    sub_dict = etree_dict['vrf'][vrf]['address_family'][af]\
+                        ['next_hop'][nexthop]
+
+                    # <refcount>1</refcount>
+                    sub_dict['refcount'] = int(nexthop_root.find(
+                                                '{}refcount'.format(namespace)).text)
+
+                    # <igpmetric>3</igpmetric>
+                    sub_dict['igp_cost'] = \
+                        int(nexthop_root.find('{}igpmetric'.format(namespace)).text)
+
+                    # <igptype>0</igptype>
+                    sub_dict['igp_route_type'] = \
+                        int(nexthop_root.find('{}igptype'.format(namespace)).text)
+
+                    # <igppref>110</igppref>
+                    sub_dict['igp_preference'] = \
+                        int(nexthop_root.find('{}igppref'.format(namespace)).text)
+
+                    # <attached>false</attached>
+                    if nexthop_root.find('{}attached'.format(namespace)).text == 'false':
+                        sub_dict['attached'] = False
+                    else:
+                        sub_dict['attached'] = True
+
+
+                    # <local>false</local>
+                    if nexthop_root.find('{}local'.format(namespace)).text == 'false':
+                        sub_dict['local'] = False
+                    else:
+                        sub_dict['local'] = True
+
+                    # <reachable>true</reachable>
+                    if nexthop_root.find('{}reachable'.format(namespace)).text == 'false':
+                        sub_dict['reachable'] = False
+                    else:
+                        sub_dict['reachable'] = True
+
+                    # <labeled>true</labeled>
+                    if nexthop_root.find('{}labeled'.format(namespace)).text == 'false':
+                        sub_dict['labeled'] = False
+                    else:
+                        sub_dict['labeled'] = True
+
+                    # <filtered>false</filtered>
+                    if nexthop_root.find('{}filtered'.format(namespace)).text == 'false':
+                        sub_dict['filtered'] = False
+                    else:
+                        sub_dict['filtered'] = True
+
+                    # <pendingupdate>false</pendingupdate>
+                    if nexthop_root.find('{}pendingupdate'.format(namespace)).text == 'false':
+                        sub_dict['pending_update'] = False
+                    else:
+                        sub_dict['pending_update'] = True
+
+                    # <resolvetime>18:38:21</resolvetime>
+                    sub_dict['resolve_time'] = \
+                        nexthop_root.find('{}resolvetime'.format(namespace)).text
+
+                    # <ribroute>200.0.3.1/32</ribroute>
+                    try:
+                        sub_dict['rib_route'] = \
+                            nexthop_root.find('{}ribroute'.format(namespace)).text
+                    except:
+                        pass                    
+
+                    # <ipv6ribroute>0::/0</ipv6ribroute>
+                    try:
+                        sub_dict['rib_route'] = \
+                            nexthop_root.find('{}ipv6ribroute'.format(namespace)).text
+                    except:
+                        pass
+
+                    # <nextadvertise>Never</nextadvertise>
+                    sub_dict['metric_next_advertise'] = \
+                        nexthop_root.find('{}nextadvertise'.format(namespace)).text.lower()
+
+                    # <rnhepoch>1</rnhepoch>
+                    sub_dict['rnh_epoch'] = \
+                        int(nexthop_root.find('{}rnhepoch'.format(namespace)).text)
+
+
+                    # attachedhops table
+                    attached = nexthop_root.find('{}TABLE_attachedhops'.format(namespace))
+                    if not attached:
+                        continue
+
+                    # -----   loop attachedhops  -----
+                    for attach_root in attached.findall('{}ROW_attachedhops'.format(namespace)):
+
+                        # <attachedhop>201.7.23.2</attachedhop>
+                        try:
+                            att_hop = attach_root.find('{}attachedhop'.format(namespace)).text
+                        except:
+                            pass
+
+                        # <ipv6attachedhop>fe80::6e9c:edff:fe4d:ff41</ipv6attachedhop>
+                        try:
+                            att_hop = attach_root.find('{}ipv6attachedhop'.format(namespace)).text
+                        except:
+                            pass
+                           
+                        if 'attached_nexthop' not in sub_dict:
+                            sub_dict['attached_nexthop'] = {}
+
+                        if att_hop not in sub_dict['attached_nexthop']:
+                            sub_dict['attached_nexthop'][att_hop] = {}
+
+                        # <interface>port-channel2.100</interface>
+                        sub_dict['attached_nexthop'][att_hop]['attached_nexthop_interface'] = \
+                            attach_root.find('{}interface'.format(namespace)).text                                                                                                          
         return etree_dict
 
 

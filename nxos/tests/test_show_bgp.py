@@ -23,7 +23,8 @@ from parser.nxos.show_bgp import ShowBgpProcessVrfAll, ShowBgpPeerSession,\
                                  ShowBgpVrfAllNeighborsRoutes,\
                                  ShowBgpVrfAllNeighborsReceivedRoutes,\
                                  ShowRunningConfigBgp, \
-                                 ShowBgpAllDampeningFlapStatistics
+                                 ShowBgpAllDampeningFlapStatistics, \
+                                 ShowBgpAllNexthopDatabase
 
 
 # =========================================
@@ -9949,36 +9950,44 @@ class test_show_bgp_vrf_all_all_nexthop_database(unittest.TestCase):
                 {'address_family':
                     {'ipv4 unicast':
                         {'af_nexthop_trigger_enable': True,
-                        'igp_cost': 0,
-                        'igp_preference': 0,
-                        'igp_route_type': 0,
-                        'metric_next_advertise': 'never',
-                        'next_hop': '0.0.0.0',
-                        'nexthop_last_resolved': 'never',
-                        'nexthop_resolved_using': '0.0.0.0/0',
                         'nexthop_trigger_delay_critical': 2222,
                         'nexthop_trigger_delay_non_critical': 3333,
-                        'nexthop_type': 'not-attached '
-                                        'local '
-                                        'unreachable '
-                                        'not-labeled',
-                        'refcount': 4,
-                        'rnh_epoch': 0},
+                        'next_hop': {
+                            '0.0.0.0': {
+                                'igp_cost': 0,
+                                'igp_preference': 0,
+                                'igp_route_type': 0,
+                                'metric_next_advertise': 'never',
+                                'resolve_time': 'never',
+                                'rib_route': '0.0.0.0/0',
+                                 'attached': False,
+                                 'local': True,
+                                 'reachable': False,
+                                 'labeled': False,
+                                 'filtered': False,
+                                 'pending_update': False,
+                                'refcount': 4,
+                                'rnh_epoch': 0}}},
                     'ipv6 unicast':
                         {'af_nexthop_trigger_enable': True,
-                        'igp_cost': 0,
-                        'igp_preference': 0,
-                        'igp_route_type': 0,
-                        'metric_next_advertise': 'never',
-                        'next_hop': '0::',
                         'nexthop_trigger_delay_critical': 3000,
                         'nexthop_trigger_delay_non_critical': 10000,
-                        'nexthop_type': 'not-attached '
-                                        'local '
-                                        'unreachable '
-                                        'not-labeled',
-                        'refcount': 3,
-                        'rnh_epoch': 0}}},
+                        'next_hop': {
+                            '0::': {
+                                'igp_cost': 0,
+                                'igp_preference': 0,
+                                'igp_route_type': 0,
+                                'resolve_time': 'never',
+                                'rib_route': '0::/0',
+                                'metric_next_advertise': 'never',
+                                 'attached': False,
+                                 'local': True,
+                                 'reachable': False,
+                                 'labeled': False,
+                                 'filtered': False,
+                                 'pending_update': False,
+                                'refcount': 3,
+                                'rnh_epoch': 0}}}}},
             'default':
                 {'address_family':
                     {'ipv4 unicast':
@@ -9995,42 +10004,54 @@ class test_show_bgp_vrf_all_all_nexthop_database(unittest.TestCase):
                         'nexthop_trigger_delay_non_critical': 10000},
                     'vpnv4 unicast':
                         {'af_nexthop_trigger_enable': True,
-                        'attached_nexthop': '10.1.3.3',
-                        'attached_nexthop_interface': 'Ethernet4/2',
-                        'igp_cost': 41,
-                        'igp_preference': 110,
-                        'igp_route_type': 0,
-                        'metric_next_advertise': 'never',
-                        'next_hop': '3.3.3.3',
-                        'nexthop_last_resolved': '5w0d',
-                        'nexthop_resolved_using': '3.3.3.3/32',
                         'nexthop_trigger_delay_critical': 3000,
                         'nexthop_trigger_delay_non_critical': 10000,
-                        'nexthop_type': 'not-attached '
-                                        'not-local '
-                                        'reachable '
-                                        'labeled',
-                        'refcount': 1,
-                        'rnh_epoch': 1},
+                        'next_hop': {
+                            '3.3.3.3': {
+                                'attached_nexthop': {
+                                    '10.1.3.3': {
+                                        'attached_nexthop_interface': 'Ethernet4/2',
+                                    }
+                                },
+                                'igp_cost': 41,
+                                'igp_preference': 110,
+                                'igp_route_type': 0,
+                                'metric_next_advertise': 'never',
+                                'resolve_time': '5w0d',
+                                'rib_route': '3.3.3.3/32',
+                                 'attached': False,
+                                 'local': False,
+                                 'reachable': True,
+                                 'labeled': True,
+                                 'filtered': False,
+                                 'pending_update': False,
+                                'refcount': 1,
+                                'rnh_epoch': 1}}},
                     'vpnv6 unicast':
                         {'af_nexthop_trigger_enable': True,
-                        'attached_nexthop': '10.1.3.3',
-                        'attached_nexthop_interface': 'Ethernet4/2',
-                        'igp_cost': 41,
-                        'igp_preference': 110,
-                        'igp_route_type': 0,
-                        'metric_next_advertise': 'never',
-                        'next_hop': '::ffff:3.3.3.3',
-                        'nexthop_last_resolved': '5w0d',
-                        'nexthop_resolved_using': '3.3.3.3/32',
                         'nexthop_trigger_delay_critical': 3000,
                         'nexthop_trigger_delay_non_critical': 10000,
-                        'nexthop_type': 'not-attached '
-                                        'not-local '
-                                        'reachable '
-                                        'labeled',
-                        'refcount': 1,
-                        'rnh_epoch': 1}}}}}
+                        'next_hop': {
+                            '::ffff:3.3.3.3': {
+                                'attached_nexthop': {
+                                    '10.1.3.3': {
+                                        'attached_nexthop_interface': 'Ethernet4/2',
+                                    }
+                                },
+                                'igp_cost': 41,
+                                'igp_preference': 110,
+                                'igp_route_type': 0,
+                                'metric_next_advertise': 'never',
+                                'resolve_time': '5w0d',
+                                'rib_route': '3.3.3.3/32',
+                                 'attached': False,
+                                 'local': False,
+                                 'reachable': True,
+                                 'labeled': True,
+                                 'filtered': False,
+                                 'pending_update': False,
+                                'refcount': 1,
+                                'rnh_epoch': 1}}}}}}}
 
     golden_output = {'execute.return_value': '''
         Next Hop table for VRF VRF1, address family IPv4 Unicast:
@@ -14107,20 +14128,18 @@ class test_show_running_config_bgp(unittest.TestCase):
             parsed_output = obj.parse()
 
 
-
-
 # =======================================================
 #  Unit test for 'show bgp all dampening flap statistics'
 # =======================================================
 
 class test_show_bgp_all_dampening_flap_statistics_cli(unittest.TestCase):
 
-   '''Unit test for show bgp all dampening flap statistics - CLI'''
+    '''Unit test for show bgp all dampening flap statistics - CLI'''
     
-   device = Device(name='aDevice')
-   empty_output = {'execute.return_value': ''}
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
 
-   golden_parsed_output = {
+    golden_parsed_output = {
       "vrf": {
           "default": {
                "address_family": {
@@ -14318,7 +14337,7 @@ class test_show_bgp_all_dampening_flap_statistics_cli(unittest.TestCase):
                          },
                          "dampened_paths": 2}}}}}
 
-   golden_output = {'execute.return_value': '''
+    golden_output = {'execute.return_value': '''
          Flap Statistics for VRF default, address family IPv4 Unicast:
          Flaps - Flap count of prefix, Duration - Duration of flap statistics
          ReuseTime - Time after which a dampened path will be reused
@@ -14414,28 +14433,28 @@ class test_show_bgp_all_dampening_flap_statistics_cli(unittest.TestCase):
          d e [2]:[77][7,0][39.39.39.39,1,656877351][39.1.1.1,22][19.0.102.3,39.0.1.30]/61619.0.102.3                38   00:09:36 00:01:40 34/30/10
          d e [2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/61619.0.102.3                38   00:09:36 00:01:40 34/30/10
 
-   '''}
+    '''}
 
-   def test_golden(self):
-      self.maxDiff = None
-      self.device = Mock(**self.golden_output)
-      obj = ShowBgpAllDampeningFlapStatistics(device=self.device)
-      parsed_output = obj.parse()
-      self.assertEqual(parsed_output,self.golden_parsed_output)
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpAllDampeningFlapStatistics(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
-   def test_empty(self):
-      self.device = Mock(**self.empty_output)
-      obj = ShowBgpAllDampeningFlapStatistics(device=self.device)
-      with self.assertRaises(SchemaEmptyParserError):
-         parsed_output = obj.parse()
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpAllDampeningFlapStatistics(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
 
 class test_show_bgp_all_dampening_flap_statistics_xml(unittest.TestCase):
 
-   '''Unit test for show bgp all dampening flap statistics - XML'''
+    '''Unit test for show bgp all dampening flap statistics - XML'''
     
-   device = Device(name='aDevice')
-   golden_parsed_output = {
+    device = Device(name='aDevice')
+    golden_parsed_output = {
       "vrf": {
           "default": {
                "address_family": {
@@ -14603,11 +14622,11 @@ class test_show_bgp_all_dampening_flap_statistics_xml(unittest.TestCase):
                          "dampening_enabled": True
                     }
                }
-         }
-      }
-   }
+            }
+        }
+    }
 
-   golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
+    golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
          <nf:rpc-reply xmlns="http://www.cisco.com/nxos:7.0.3.I7.1.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
           <nf:data>
            <show>
@@ -14906,12 +14925,906 @@ class test_show_bgp_all_dampening_flap_statistics_xml(unittest.TestCase):
          ]]>]]>
         '''}
 
-   def test_golden_xml(self):
-      self.maxDiff = None
-      self.device = Mock(**self.golden_output)
-      obj = ShowBgpAllDampeningFlapStatistics(device=self.device, context='xml')
-      parsed_output = obj.parse()
-      self.assertEqual(parsed_output,self.golden_parsed_output)
+    def test_golden_xml(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpAllDampeningFlapStatistics(device=self.device, context='xml')
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+# =======================================================
+#  Unit test for 'show bgp all nexthop-database'
+# =======================================================
+
+class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
+
+    '''Unit test for show bgp all nexthop-database - CLI'''
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_1 = {
+        "vrf": {
+          "default": {
+               "address_family": {
+                    "vpnv6 unicast": {
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000
+                    },
+                    "vpnv4 unicast": {
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000
+                    },
+                    "ipv4 mdt": {
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000,
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "next_hop": {
+                            "0.0.0.0": {
+                                 "resolve_time": "never",
+                                 "igp_cost": 0,
+                                 "rnh_epoch": 0,
+                                 "igp_route_type": 0,
+                                 "refcount": 1,
+                                 "metric_next_advertise": "never",
+                                 "rib_route": "0.0.0.0/0",
+                                 "igp_preference": 0,
+                                 'attached': False,
+                                 'local': True,
+                                 'reachable': False,
+                                 'labeled': False,
+                                 'filtered': False,
+                                 'pending_update': False,
+                                 "flags": "0x2",
+                            },
+                        },
+                    },
+                    "ipv4 unicast": {
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000,
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "next_hop": {
+                            "200.0.3.1": {
+                                 "resolve_time": "18:37:36",
+                                 "igp_cost": 3,
+                                 "attached_nexthop": {
+                                      "201.0.23.2": {
+                                           "attached_nexthop_interface": "port-channel2.100"
+                                      },
+                                      "201.7.23.2": {
+                                           "attached_nexthop_interface": "port-channel2.107"
+                                      }
+                                 },
+                                 "rnh_epoch": 1,
+                                 "igp_route_type": 0,
+                                 "refcount": 1,
+                                 "metric_next_advertise": "never",
+                                 "rib_route": "200.0.3.1/32",
+                                 "igp_preference": 110,
+                                 'attached': False,
+                                 'local': False,
+                                 'reachable': True,
+                                 'labeled': True,
+                                 'filtered': False,
+                                 'pending_update': False,
+                                 "flags": "0x41",
+                            },
+                        },                         
+                    },
+                    "ipv6 unicast": {
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000,
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "next_hop": {
+                            "2000::3:1": {
+                                 "resolve_time": "18:37:36",
+                                 "igp_cost": 2,
+                                 "attached_nexthop": {
+                                      "fe80::6e9c:edff:fe4d:ff41": {
+                                           "attached_nexthop_interface": "port-channel2.100"
+                                      }
+                                 },
+                                 "rnh_epoch": 1,
+                                 "igp_route_type": 0,
+                                 "refcount": 1,
+                                 "metric_next_advertise": "never",
+                                 "rib_route": "2000::3:1/128",
+                                 "igp_preference": 110,
+                                 'attached': False,
+                                 'local': False,
+                                 'reachable': True,
+                                 'labeled': False,
+                                 'filtered': False,
+                                 'pending_update': False,
+                                 "flags": "0x1",
+                            },
+                        },
+                    }
+               }
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+        Next Hop table for VRF default, address family IPv4 Unicast:
+        Next-hop trigger-delay(miliseconds)
+          Critical: 3000 Non-critical: 10000
+        IPv4 Next-hop table
+
+        IPv4 Unicast Next-hops:
+
+        Nexthop: 200.0.3.1, Flags: 0x41, Refcount: 1, IGP cost: 3
+        IGP Route type: 0, IGP preference: 110
+        Attached nexthop: 201.7.23.2, Interface: port-channel2.107
+        Attached nexthop: 201.0.23.2, Interface: port-channel2.100
+        Nexthop is not-attached not-local reachable labeled
+        Nexthop last resolved: 18:37:36, using 200.0.3.1/32
+        Metric next advertise: Never
+        RNH epoch: 1
+        IPv6 Next-hop table
+
+        IPv6 Unicast Next-hops:
+
+        Next Hop table for VRF default, address family IPv6 Unicast:
+        Next-hop trigger-delay(miliseconds)
+          Critical: 3000 Non-critical: 10000
+        IPv4 Next-hop table
+
+        IPv4 Unicast Next-hops:
+        IPv6 Next-hop table
+
+        IPv6 Unicast Next-hops:
+
+        Nexthop: 2000::3:1, Flags: 0x1, Refcount: 1, IGP cost: 2
+        IGP Route type: 0, IGP preference: 110
+        Attached nexthop: fe80::6e9c:edff:fe4d:ff41, Interface: port-channel2.100
+        Nexthop is not-attached not-local reachable not-labeled
+        Nexthop last resolved: 18:37:36, using 2000::3:1/128
+        Metric next advertise: Never
+        RNH epoch: 1
+
+        Next Hop table for VRF default, address family VPNv4 Unicast:
+        Next-hop trigger-delay(miliseconds)
+          Critical: 3000 Non-critical: 10000
+        IPv4 Next-hop table
+
+        IPv4 Unicast Next-hops:
+        IPv6 Next-hop table
+
+        IPv6 Unicast Next-hops:
+
+        Next Hop table for VRF default, address family VPNv6 Unicast:
+        Next-hop trigger-delay(miliseconds)
+          Critical: 3000 Non-critical: 10000
+        IPv4 Next-hop table
+
+        IPv4 Unicast Next-hops:
+        IPv6 Next-hop table
+
+        IPv6 Unicast Next-hops:
+
+        Next Hop table for VRF default, address family IPv4 MDT:
+        Next-hop trigger-delay(miliseconds)
+          Critical: 3000 Non-critical: 10000
+        IPv4 Next-hop table
+
+        IPv4 Unicast Next-hops:
+
+        Nexthop: 0.0.0.0, Flags: 0x2, Refcount: 1, IGP cost: 0
+        IGP Route type: 0, IGP preference: 0
+        Nexthop is not-attached local unreachable not-labeled
+        Nexthop last resolved: never, using 0.0.0.0/0
+        Metric next advertise: Never
+        RNH epoch: 0
+        IPv6 Next-hop table
+
+        IPv6 Unicast Next-hops:
+    '''}
+
+    
+    golden_parsed_output_2 = {
+        "vrf": {
+            "default": {
+               "address_family": {
+                    "vpnv4 unicast": {
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "nexthop_trigger_delay_critical": 3000
+                    },
+                    "ipv6 unicast": {
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "nexthop_trigger_delay_critical": 3000,
+                         "next_hop": {
+                            "0::": {
+                                 'attached': False,
+                                 'local': True,
+                                 'reachable': False,
+                                 'labeled': False,
+                                 'filtered': False,
+                                 'pending_update': False,
+                                 "resolve_time": "never",
+                                 "igp_preference": 0,
+                                 "igp_cost": 0,
+                                 "metric_next_advertise": "never",
+                                 "rib_route": "0::/0",
+                                 "igp_route_type": 0,
+                                 "refcount": 3,
+                                 "rnh_epoch": 0,
+                                 "flags": "0x2",
+                            },
+                        },
+                    },
+                    "ipv4 multicast": {
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "nexthop_trigger_delay_critical": 3000
+                    },
+                    "vpnv6 unicast": {
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "nexthop_trigger_delay_critical": 3000
+                    },
+                    "ipv4 unicast": {
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "nexthop_trigger_delay_critical": 3000
+                    },
+                    "ipv6 multicast": {
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "nexthop_trigger_delay_critical": 3000,
+                         "next_hop": {
+                            "0::": {
+                                 'attached': False,
+                                 'local': True,
+                                 'reachable': False,
+                                 'labeled': False,
+                                 'filtered': False,
+                                 'pending_update': False,
+                                 "resolve_time": "never",
+                                 "igp_preference": 0,
+                                 "igp_cost": 0,
+                                 "metric_next_advertise": "never",
+                                 "rib_route": "0::/0",
+                                 "igp_route_type": 0,
+                                 "refcount": 3,
+                                 "rnh_epoch": 0,
+                                 "flags": "0x2",}}}}}}}
+
+    golden_output_2 = {'execute.return_value': '''
+        Next Hop table for VRF default, address family IPv4 Unicast:
+        Next-hop trigger-delay(miliseconds)
+          Critical: 3000 Non-critical: 10000
+        IPv4 Next-hop table
+        IPv6 Next-hop table
+
+        IPv6 Unicast Next-hops:
+
+        Next Hop table for VRF default, address family IPv4 Multicast:
+        Next-hop trigger-delay(miliseconds)
+          Critical: 3000 Non-critical: 10000
+        IPv4 Next-hop table
+        IPv6 Next-hop table
+
+        IPv6 Multicast Next-hops:
+
+        Next Hop table for VRF default, address family IPv6 Unicast:
+        Next-hop trigger-delay(miliseconds)
+          Critical: 3000 Non-critical: 10000
+        IPv4 Next-hop table
+        IPv6 Next-hop table
+
+        IPv6 Unicast Next-hops:
+
+        Nexthop: 0::, Flags: 0x2, Refcount: 3, IGP cost: 0
+        IGP Route type: 0, IGP preference: 0
+        Nexthop is not-attached local unreachable not-labeled
+        Nexthop last resolved: never, using 0::/0
+        Metric next advertise: Never
+        RNH epoch: 0
+
+        Next Hop table for VRF default, address family IPv6 Multicast:
+        Next-hop trigger-delay(miliseconds)
+          Critical: 3000 Non-critical: 10000
+        IPv4 Next-hop table
+        IPv6 Next-hop table
+
+        IPv6 Multicast Next-hops:
+
+        Nexthop: 0::, Flags: 0x2, Refcount: 3, IGP cost: 0
+        IGP Route type: 0, IGP preference: 0
+        Nexthop is not-attached local unreachable not-labeled
+        Nexthop last resolved: never, using 0::/0
+        Metric next advertise: Never
+        RNH epoch: 0
+
+        Next Hop table for VRF default, address family VPNv4 Unicast:
+        Next-hop trigger-delay(miliseconds)
+          Critical: 3000 Non-critical: 10000
+        IPv4 Next-hop table
+        IPv6 Next-hop table
+
+        IPv6 Unicast Next-hops:
+
+        Next Hop table for VRF default, address family VPNv6 Unicast:
+        Next-hop trigger-delay(miliseconds)
+          Critical: 3000 Non-critical: 10000
+        IPv4 Next-hop table
+        IPv6 Next-hop table
+
+        IPv6 Unicast Next-hops:
+
+        Next Hop table for VRF default, address family Link-State:
+        Next-hop trigger-delay(miliseconds)
+          Critical: 3000 Non-critical: 10000
+        IPv4 Next-hop table
+        IPv6 Next-hop table
+
+        IPv6 Unicast Next-hops:
+    '''
+    }
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowBgpAllNexthopDatabase(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowBgpAllNexthopDatabase(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpAllNexthopDatabase(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
+class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
+
+    '''Unit test for show bgp all nexthop-database - XML'''
+
+    device = Device(name='aDevice')
+    golden_parsed_output_1 = {
+        "vrf": {
+          "default": {
+               "address_family": {
+                    "vpnv6 unicast": {
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000
+                    },
+                    "vpnv4 unicast": {
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000
+                    },
+                    "ipv4 mdt": {
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000,
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "next_hop": {
+                            "0.0.0.0": {
+                                 "resolve_time": "never",
+                                 "igp_cost": 0,
+                                 "rnh_epoch": 0,
+                                 "igp_route_type": 0,
+                                 "refcount": 1,
+                                 "metric_next_advertise": "never",
+                                 "rib_route": "0.0.0.0/0",
+                                 "igp_preference": 0,
+                                 'attached': False,
+                                 'local': True,
+                                 'reachable': False,
+                                 'labeled': False,
+                                 'filtered': False,
+                                 'pending_update': False,
+                            },
+                        },
+                    },
+                    "ipv4 unicast": {
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000,
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "next_hop": {
+                            "200.0.3.1": {
+                                 "resolve_time": "18:38:21",
+                                 "igp_cost": 3,
+                                 "attached_nexthop": {
+                                      "201.0.23.2": {
+                                           "attached_nexthop_interface": "port-channel2.100"
+                                      },
+                                      "201.7.23.2": {
+                                           "attached_nexthop_interface": "port-channel2.107"
+                                      }
+                                 },
+                                 "rnh_epoch": 1,
+                                 "igp_route_type": 0,
+                                 "refcount": 1,
+                                 "metric_next_advertise": "never",
+                                 "rib_route": "200.0.3.1/32",
+                                 "igp_preference": 110,
+                                 'attached': False,
+                                 'local': False,
+                                 'reachable': True,
+                                 'labeled': True,
+                                 'filtered': False,
+                                 'pending_update': False,
+                            },
+                        },                         
+                    },
+                    "ipv6 unicast": {
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000,
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "next_hop": {
+                            "2000::3:1": {
+                                 "resolve_time": "18:38:21",
+                                 "igp_cost": 2,
+                                 "attached_nexthop": {
+                                      "fe80::6e9c:edff:fe4d:ff41": {
+                                           "attached_nexthop_interface": "port-channel2.100"
+                                      }
+                                 },
+                                 "rnh_epoch": 1,
+                                 "igp_route_type": 0,
+                                 "refcount": 1,
+                                 "metric_next_advertise": "never",
+                                 "rib_route": "2000::3:1/128",
+                                 "igp_preference": 110,
+                                 'attached': False,
+                                 'local': False,
+                                 'reachable': True,
+                                 'labeled': False,
+                                 'filtered': False,
+                                 'pending_update': False,
+                            },
+                        },
+                    }
+               }
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
+        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:8.2.0.SK.1.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+         <nf:data>
+          <show>
+           <bgp>
+            <all>
+             <nexthop-database>
+              <__readonly__>
+               <TABLE_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>1</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>1</nhsafi>
+                     <af-name>IPv4 Unicast</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                     <TABLE_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>200.0.3.1</ipnexthop-out>
+                       <refcount>1</refcount>
+                       <igpmetric>3</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>201.7.23.2</attachedhop>
+                         <interface>port-channel2.107</interface>
+                        </ROW_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>201.0.23.2</attachedhop>
+                         <interface>port-channel2.100</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>true</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>18:38:21</resolvetime>
+                       <ribroute>200.0.3.1/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                     </TABLE_nexthop>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>2</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>1</nhsafi>
+                     <af-name>IPv6 Unicast</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                     <TABLE_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>2000::3:1</ipv6nexthop-out>
+                       <refcount>1</refcount>
+                       <igpmetric>2</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>110</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <ipv6attachedhop>fe80::6e9c:edff:fe4d:ff41</ipv6attachedhop>
+                         <interface>port-channel2.100</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>18:38:21</resolvetime>
+                       <ipv6ribroute>2000::3:1/128</ipv6ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                     </TABLE_nexthop>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>1</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>128</nhsafi>
+                     <af-name>VPNv4 Unicast</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>2</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>128</nhsafi>
+                     <af-name>VPNv6 Unicast</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>1</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>66</nhsafi>
+                     <af-name>IPv4 MDT</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                     <TABLE_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>0.0.0.0</ipnexthop-out>
+                       <refcount>1</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>0</igppref>
+                       <attached>false</attached>
+                       <local>true</local>
+                       <reachable>false</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>never</resolvetime>
+                       <ribroute>0.0.0.0/0</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>0</rnhepoch>
+                      </ROW_nexthop>
+                     </TABLE_nexthop>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+               </TABLE_nhvrf>
+              </__readonly__>
+             </nexthop-database>
+            </all>
+           </bgp>
+          </show>
+         </nf:data>
+        </nf:rpc-reply>
+     ]]>]]>
+    '''}
+
+
+    golden_parsed_output_2 = {
+        "vrf": {
+            "default": {
+               "address_family": {
+                    "ipv4 unicast": {
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000
+                    },
+                    "vpnv6 unicast": {
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000
+                    },
+                    "ipv4 multicast": {
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000
+                    },
+                    "vpnv4 unicast": {
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000
+                    },
+                    "link-state": {
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000
+                    },
+                    "ipv6 multicast": {
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000,
+                         "next_hop": {
+                              "0::": {
+                                   "refcount": 3,
+                                   "metric_next_advertise": "never",
+                                   "igp_preference": 0,
+                                   "igp_route_type": 0,
+                                   "labeled": False,
+                                   "rib_route": "0::/0",
+                                   "filtered": False,
+                                   "igp_cost": 0,
+                                   "pending_update": False,
+                                   "rnh_epoch": 0,
+                                   "reachable": False,
+                                   "local": True,
+                                   "attached": False,
+                                   "resolve_time": "never"
+                              }
+                         }
+                    },
+                    "ipv6 unicast": {
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000,
+                         "next_hop": {
+                              "0::": {
+                                   "refcount": 3,
+                                   "metric_next_advertise": "never",
+                                   "igp_preference": 0,
+                                   "igp_route_type": 0,
+                                   "labeled": False,
+                                   "rib_route": "0::/0",
+                                   "filtered": False,
+                                   "igp_cost": 0,
+                                   "pending_update": False,
+                                   "rnh_epoch": 0,
+                                   "reachable": False,
+                                   "local": True,
+                                   "attached": False,
+                                   "resolve_time": "never"}}}}}}}
+
+    golden_output_2 = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
+        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:7.0.3.I7.2.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+         <nf:data>
+          <show>
+           <bgp>
+            <all>
+             <nexthop-database>
+              <__readonly__>
+               <TABLE_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>1</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>1</nhsafi>
+                     <af-name>IPv4 Unicast</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>1</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>2</nhsafi>
+                     <af-name>IPv4 Multicast</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>2</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>1</nhsafi>
+                     <af-name>IPv6 Unicast</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                     <TABLE_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>0::</ipv6nexthop-out>
+                       <refcount>3</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>0</igppref>
+                       <attached>false</attached>
+                       <local>true</local>
+                       <reachable>false</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>never</resolvetime>
+                       <ipv6ribroute>0::/0</ipv6ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>0</rnhepoch>
+                      </ROW_nexthop>
+                     </TABLE_nexthop>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>2</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>2</nhsafi>
+                     <af-name>IPv6 Multicast</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                     <TABLE_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>0::</ipv6nexthop-out>
+                       <refcount>3</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>0</igppref>
+                       <attached>false</attached>
+                       <local>true</local>
+                       <reachable>false</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>never</resolvetime>
+                       <ipv6ribroute>0::/0</ipv6ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>0</rnhepoch>
+                      </ROW_nexthop>
+                     </TABLE_nexthop>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>1</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>128</nhsafi>
+                     <af-name>VPNv4 Unicast</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>2</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>128</nhsafi>
+                     <af-name>VPNv6 Unicast</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>16388</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>71</nhsafi>
+                     <af-name>Link-State</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+               </TABLE_nhvrf>
+              </__readonly__>
+             </nexthop-database>
+            </all>
+           </bgp>
+          </show>
+         </nf:data>
+        </nf:rpc-reply>
+        ]]>]]>
+    '''}
+
+    def test_golden_xml_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowBgpAllNexthopDatabase(device=self.device, context='xml')
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+    def test_golden_xml_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowBgpAllNexthopDatabase(device=self.device, context='xml')
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 
 if __name__ == '__main__':
