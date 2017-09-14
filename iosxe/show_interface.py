@@ -1907,8 +1907,9 @@ class ShowIpv6InterfaceSchema(MetaParser):
                     'ipv6': {
                         Any(): {
                             'ip': str,
-                            'prefix_length': str,
+                            Optional('prefix_length'): str,
                             Optional('status'): str,
+                            Optional('origin'): str,
                             Optional('anycast'): bool,
                             Optional('eui_64'): bool,
                             Optional('autoconf'): {
@@ -1939,11 +1940,6 @@ class ShowIpv6InterfaceSchema(MetaParser):
                         Optional('unnumbered'): {
                             'interface_ref': str,
                         },
-                    },
-                    Optional('link_local'): {
-                        'physical': str,
-                        Optional('physical_link_type'): str,
-                        Optional('virtual'): str,
                     },
                     Optional('mtu'): int,
                     Optional('vrf'): str,
@@ -1995,12 +1991,23 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
             m = p2.match(line)
             if m:
                 status = m.groupdict()['status']
-                if 'link_local' not in ret_dict[intf]:
-                    ret_dict[intf]['link_local'] = {}
-                ret_dict[intf]['link_local']['physical'] = m.groupdict()['link_local']
-                if m.groupdict()['type']: 
-                    ret_dict[intf]['link_local']['physical_link_type'] = \
-                        m.groupdict()['type']
+                link_addr = m.groupdict()['link_local']
+
+                if 'ipv6' not in ret_dict[intf]:
+                    ret_dict[intf]['ipv6'] = {}
+
+                if link_addr not in ret_dict[intf]['ipv6']:
+                    ret_dict[intf]['ipv6'][link_addr] = {}
+
+                ret_dict[intf]['ipv6'][link_addr]['ip'] = link_addr
+                ret_dict[intf]['ipv6'][link_addr]['origin'] = 'link_layer'
+
+                if status.lower() in ['preferred', 'deprecated', 'invalid',
+                                      'inaccessible', 'unknown', 'tentative',
+                                      'duplicate', 'optimistic']:
+                    ret_dict[intf]['ipv6'][link_addr]['status'] = status.lower()
+                else:
+                    ret_dict[intf]['ipv6'][link_addr]['status'] = 'valid'
                 continue
 
             # No Virtual link-local address(es):

@@ -1391,10 +1391,6 @@ class test_show_ipv6_interface(unittest.TestCase):
             "joined_group_addresses": [
                  "FF02::1"
             ],
-            "link_local": {
-                 "physical": "FE80::257:D2FF:FE28:1A64",
-                 "physical_link_type": "TEN"
-            },
             "ipv6": {
                  "2001:DB8:2:2::2/64": {
                       "ip": "2001:DB8:2:2::2",
@@ -1423,6 +1419,11 @@ class test_show_ipv6_interface(unittest.TestCase):
                       "status": "tentative",
                       "anycast": True
                  },
+                 "FE80::257:D2FF:FE28:1A64": {
+                      "ip": "FE80::257:D2FF:FE28:1A64",
+                      "status": "tentative",
+                      "origin": "link_layer",
+                 },
                  "enabled": True,
                  "nd": {
                       "dad_attempts": 1,
@@ -1447,9 +1448,6 @@ class test_show_ipv6_interface(unittest.TestCase):
                  "FF02::1:FF14:1",
                  "FF02::1:FF28:1A71"
             ],
-            "link_local": {
-                 "physical": "FE80::257:D2FF:FE28:1A71"
-            },
             "ipv6": {
                  "2001:10::14:1/112": {
                       "ip": "2001:10::14:1",
@@ -1459,6 +1457,11 @@ class test_show_ipv6_interface(unittest.TestCase):
                           'preferred_lifetime': 604711,
                           'valid_lifetime': 2591911,
                       },
+                 },
+                 "FE80::257:D2FF:FE28:1A71": {
+                      "ip": "FE80::257:D2FF:FE28:1A71",
+                      "status": "valid",
+                      "origin": "link_layer",
                  },
                  "enabled": True,
                  "nd": {
@@ -1488,6 +1491,11 @@ class test_show_ipv6_interface(unittest.TestCase):
             ],
             "ipv6": {
                  "enabled": False,
+                 "FE80::5054:FF:FE1E:4F2": {
+                      "ip": "FE80::5054:FF:FE1E:4F2",
+                      "status": "valid",
+                      "origin": "link_layer",
+                 },
                  "nd": {
                       "dad_attempts": 1,
                       "reachable_time": 30000,
@@ -1512,9 +1520,6 @@ class test_show_ipv6_interface(unittest.TestCase):
                       "advertised_reachable_time_unspecified": False,
                       "advertised_retransmit_interval_unspecified": False,
                  },
-            },
-            "link_local": {
-                 "physical": "FE80::5054:FF:FE1E:4F2"
             },
             "oper_status": "up",
             "mtu": 1500,
