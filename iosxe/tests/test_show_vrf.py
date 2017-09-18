@@ -31,13 +31,21 @@ class test_show_vrf_detail(unittest.TestCase):
               ],
               "address_family": {
                    "ipv4 unicast": {
-                        "table_id": "0x1"
+                        "table_id": "0x1",
+                        "flags": "0x0",
+                        "vrf_label": {
+                            'allocation_mode': 'per-prefix'
+                        }
                    },
                    "ipv6 unicast": {
-                        "table_id": "0x1E000001"
+                        "table_id": "0x1E000001",
+                        "flags": "0x0",
+                        "vrf_label": {
+                            'allocation_mode': 'per-prefix'
+                        }
                    }
               },
-              "flags": "0x0"
+              "flags": "0x1808"
          },
         "VRF1": {
               "interfaces": [
@@ -61,7 +69,7 @@ class test_show_vrf_detail(unittest.TestCase):
                                   }
                              }
                         },
-                        "route_target": {
+                        "route_targets": {
                              "200:1": {
                                   "rt_type": "both",
                                   "route_target": "200:1"
@@ -70,6 +78,10 @@ class test_show_vrf_detail(unittest.TestCase):
                                   "rt_type": "both",
                                   "route_target": "100:1"
                              }
+                        },
+                        "flags": "0x2100",
+                        "vrf_label": {
+                            'allocation_mode': 'per-prefix'
                         }
                    },
                    "ipv6 unicast": {
@@ -86,7 +98,7 @@ class test_show_vrf_detail(unittest.TestCase):
                              },
                              "routing_table_limit_number": 10000
                         },
-                        "route_target": {
+                        "route_targets": {
                              "200:1": {
                                   "rt_type": "import",
                                   "route_target": "200:1"
@@ -103,10 +115,14 @@ class test_show_vrf_detail(unittest.TestCase):
                                   "rt_type": "export",
                                   "route_target": "100:1"
                              }
+                        },
+                        "flags": "0x100",
+                        "vrf_label": {
+                            'allocation_mode': 'per-prefix'
                         }
                    }
               },
-              "flags": "0x100",
+              "flags": "0x180C",
               "route_distinguisher": "100:1",
               "vrf_id": 1
          }

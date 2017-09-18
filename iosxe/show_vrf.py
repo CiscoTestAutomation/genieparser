@@ -1,6 +1,6 @@
 ''' show_vrf.py
 
-NXOS parsers for the following show commands:
+IOSXE parsers for the following show commands:
     * 'show vrf detail'
 '''
 
@@ -33,7 +33,7 @@ def convert_intf_name(intf):
 
 class ShowVrfDetailSchema(MetaParser):
 
-    '''Schema for show vrf interface'''
+    '''Schema for show vrf detail'''
 
     schema = {Any():
                 {
@@ -50,7 +50,7 @@ class ShowVrfDetailSchema(MetaParser):
                             Optional('distribution_protocol'): str,
                             Optional('allocation_mode'): str
                         },
-                        Optional('route_target'): {
+                        Optional('route_targets'): {
                             Any(): {
                                 'route_target': str,
                                 'rt_type': str,
@@ -93,6 +93,7 @@ class ShowVrfDetail(ShowVrfDetailSchema):
         af_dict = {}
         intf_conf = False
         rt_type = None
+        af_flag = False
 
         for line in out.splitlines():
             line = line.strip()
@@ -113,6 +114,7 @@ class ShowVrfDetail(ShowVrfDetailSchema):
                     vrf_dict[vrf]['route_distinguisher'] = m.groupdict()['rd']
                 if 'not' not in m.groupdict()['vpn_id']:
                     vrf_dict[vrf]['vpn_id'] = m.groupdict()['vpn_id']
+                af_flag = False
 
                 continue
 
@@ -122,7 +124,11 @@ class ShowVrfDetail(ShowVrfDetailSchema):
             p2 = re.compile(r'^Flags: +(?P<flags>\w+)$')
             m = p2.match(line)
             if m:
-                vrf_dict[vrf]['flags'] = m.groupdict()['flags']
+                if not af_flag:
+                    vrf_dict[vrf]['flags'] = m.groupdict()['flags']
+                else:
+                    vrf_dict[vrf]["address_family"][af]['flags'] = \
+                        m.groupdict()['flags']
                 continue
 
             # Interfaces:
@@ -147,7 +153,7 @@ class ShowVrfDetail(ShowVrfDetailSchema):
                              '\(Table +ID +\= +(?P<table_id>\w+)\):$')
             m = p4.match(line)
             if m:
-                af = m.groupdict()['af']
+                af = m.groupdict()['af'].lower()
                 if 'address_family' not in vrf_dict[vrf]:
                     vrf_dict[vrf]['address_family'] = {}
                 if af not in vrf_dict[vrf]['address_family']:
@@ -156,13 +162,7 @@ class ShowVrfDetail(ShowVrfDetailSchema):
                 af_dict = vrf_dict[vrf]['address_family'][af]
 
                 af_dict['table_id'] = m.groupdict()['table_id']
-                continue
-
-            # Flags: 0x0
-            p5 = re.compile(r'^Flags: +(?P<flags>\w+)$')
-            m = p5.match(line)
-            if m:
-                af_dict['flags'] = m.groupdict()['flags']
+                af_flag = True
                 continue
 
             # No Export VPN route-target communities
@@ -171,8 +171,8 @@ class ShowVrfDetail(ShowVrfDetailSchema):
             m = p6.match(line)
             if m:
                 rt_type = 'export'
-                if 'route_target' not in af_dict:
-                    af_dict['route_target'] = {}
+                if 'route_targets' not in af_dict:
+                    af_dict['route_targets'] = {}
                 continue
 
             # No Import VPN route-target communities
@@ -181,8 +181,8 @@ class ShowVrfDetail(ShowVrfDetailSchema):
             m = p6_1.match(line)
             if m:
                 rt_type = 'import'
-                if 'route_target' not in af_dict:
-                    af_dict['route_target'] = {}
+                if 'route_targets' not in af_dict:
+                    af_dict['route_targets'] = {}
                 continue
 
             #     RT:100:1                 RT:200:1
@@ -190,13 +190,13 @@ class ShowVrfDetail(ShowVrfDetailSchema):
             m = p6_1.findall(line)
             if m and rt_type:
                 for rt in m:
-                    if rt not in af_dict['route_target']:
-                        af_dict['route_target'][rt] = {}
-                    af_dict['route_target'][rt]['route_target'] = rt
-                    if 'rt_type' in af_dict['route_target'][rt]:
-                        af_dict['route_target'][rt]['rt_type'] = 'both'
+                    if rt not in af_dict['route_targets']:
+                        af_dict['route_targets'][rt] = {}
+                    af_dict['route_targets'][rt]['route_target'] = rt
+                    if 'rt_type' in af_dict['route_targets'][rt]:
+                        af_dict['route_targets'][rt]['rt_type'] = 'both'
                     else:
-                        af_dict['route_target'][rt]['rt_type'] = rt_type.strip()
+                        af_dict['route_targets'][rt]['rt_type'] = rt_type.strip()
                 continue
 
             # No import route-map
@@ -284,7 +284,7 @@ class ShowVrfDetail(ShowVrfDetailSchema):
                 continue
 
             # VRF label allocation mode: per-prefix
-            p11 = re.compile(r'^VRF +label +allocation +mode: +(?P<mode>[\w\s\-]+)\)$')
+            p11 = re.compile(r'^VRF +label +allocation +mode: +(?P<mode>[\w\s\-]+)$')
             m = p11.match(line)
             if m:
                 if 'not' not in m.groupdict()['mode']:
