@@ -78,13 +78,11 @@ class ShowVrfAllDetail(ShowVrfAllDetailSchema):
 
                 continue
 
-            # New CLI format, supports multiple address-families
-
             # VRF mode: Regular
             p2 = re.compile(r'^VRF +mode: +(?P<mode>[\w\-]+)$')
             m = p2.match(line)
             if m:
-                vrf_dict[vrf]['vrf_mode'] = m.groupdict()['mode']
+                vrf_dict[vrf]['vrf_mode'] = m.groupdict()['mode'].lower()
                 continue
 
             # Description not set

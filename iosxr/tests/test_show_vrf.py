@@ -26,7 +26,7 @@ class test_show_vrf_all_detail(unittest.TestCase):
     golden_parsed_output = {
         "VRF1": {
             "description": "not set",
-            "vrf_mode": "Regular",
+            "vrf_mode": "regular",
             "address_family": {
                  "ipv6 unicast": {
                       "route_target": {
@@ -74,9 +74,9 @@ class test_show_vrf_all_detail(unittest.TestCase):
                  "GigabitEthernet0/0/0/1"
             ]
             },
-            "VRF2": {
+        "VRF2": {
             "description": "not set",
-            "vrf_mode": "Regular",
+            "vrf_mode": "regular",
             "address_family": {
                  "ipv6 unicast": {
                       "route_target": {
