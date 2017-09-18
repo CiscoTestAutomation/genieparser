@@ -1132,8 +1132,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                             'route_refresh': 0,
                                             'total':81,
                                          },
-                                       'input_queue': 0,
-                                       'output_queue': 0,
+                                       'in_queue_depth': 0,
+                                       'out_queue_depth': 0,
                                     },
 
                                },
@@ -1144,7 +1144,7 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                'graceful_restart': 'received',
                                'enhanced_refresh': 'advertised',
                                'four_octets_asn': 'advertised and received',
-                               'stateful_switchover': 'enabled',
+                               'stateful_switchover': 'NO for session 1',
                                },
                           'bgp_event_timer':
                                {
@@ -1192,7 +1192,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                               {'vpnv4 unicast':
                                    {
                                        'last_read': '00:00:04',
-                                       'last_written': '00:00:09',
+                                       'last_write': '00:00:09',
+                                       'session_state': 'established',
                                        'up_time': '01:10:35',
                                },
                           },
@@ -1340,8 +1341,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                                   'route_refresh': 0,
                                                   'total': 81,
                                               },
-                                          'input_queue': 0,
-                                          'output_queue': 0,
+                                          'in_queue_depth': 0,
+                                          'out_queue_depth': 0,
                                       },
 
                                   },
@@ -1352,7 +1353,7 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                    'graceful_restart': 'received',
                                    'enhanced_refresh': 'advertised',
                                    'four_octets_asn': 'advertised and received',
-                                   'stateful_switchover': 'enabled',
+                                   'stateful_switchover': 'NO for session 1',
                                    },
                               'bgp_event_timer':
                                   {
@@ -1400,13 +1401,15 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                   {'vpnv4 unicast':
                                       {
                                           'last_read': '00:00:04',
-                                          'last_written': '00:00:09',
+                                          'last_write': '00:00:09',
+                                          'session_state': 'established',
                                           'up_time': '01:10:35',
                                       },
                                   'vpnv6 unicast':
                                       {
                                           'last_read': '00:00:07',
-                                          'last_written': '00:00:12',
+                                          'last_write': '00:00:12',
+                                          'session_state': 'established',
                                           'up_time': '01:10:38',
                                       },
 
@@ -1422,16 +1425,13 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
 
                               'bgp_negotiated_keepalive_timers':
                                   {
-                                   #'last_read': '00:00:04',
                                    'keepalive_interval': 60,
                                    'hold_time': 180,
-                                   #'last_written': '00:00:43',
                                    },
                               'bgp_session_transport':
                                   {'connection':
                                       {
                                           'last_reset': 'never',
-                                          # 'reset_reason': str,
                                           'established': 1,
                                           'dropped': 0,
                                       },
@@ -1463,8 +1463,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                                   'route_refresh': 0,
                                                   'total': 81,
                                               },
-                                          'input_queue': 0,
-                                          'output_queue': 0,
+                                          'in_queue_depth': 0,
+                                          'out_queue_depth': 0,
                                       },
 
                                   },
@@ -1474,9 +1474,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                    'vpnv6_unicast': 'advertised and received',
                                    'graceful_restart': 'received',
                                    'enhanced_refresh': 'advertised',
-                                   # 'multisession': '',
                                    'four_octets_asn': 'advertised and received',
-                                   'stateful_switchover': 'enabled',
+                                   'stateful_switchover': 'NO for session 1',
                                    },
                               'bgp_event_timer':
                                   {
@@ -1524,13 +1523,15 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                   {'vpnv4 unicast':
                                       {
                                           'last_read': '00:00:04',
-                                          'last_written': '00:00:43',
+                                          'last_write': '00:00:43',
+                                          'session_state': 'established',
                                           'up_time': '01:10:41',
                                       },
                                   'vpnv6 unicast':
                                       {
                                           'last_read': '00:00:08',
-                                          'last_written': '00:00:47',
+                                          'last_write': '00:00:47',
+                                          'session_state': 'established',
                                           'up_time': '01:10:44',
                                       },
                                   },
@@ -1591,8 +1592,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                                   'route_refresh': 0,
                                                   'total': 66,
                                               },
-                                          'input_queue': 0,
-                                          'output_queue': 0,
+                                          'in_queue_depth': 0,
+                                          'out_queue_depth': 0,
                                       },
 
                                   },
@@ -1601,7 +1602,7 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                    'ipv4_unicast': 'advertised and received',
                                    'enhanced_refresh': 'advertised',
                                    'four_octets_asn': 'advertised',
-                                   'stateful_switchover': 'enabled',
+                                   'stateful_switchover': 'NO for session 1',
                                    },
                               'bgp_event_timer':
                                   {
@@ -1649,7 +1650,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                   {'vpnv4 unicast':
                                       {
                                           'last_read': '00:00:33',
-                                          'last_written': '00:00:30',
+                                          'last_write': '00:00:30',
+                                          'session_state': 'established',
                                           'up_time': '01:01:59',
                                       },
                                   },
@@ -1704,8 +1706,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                                   'route_refresh': 0,
                                                   'total': 66,
                                               },
-                                          'input_queue': 0,
-                                          'output_queue': 0,
+                                          'in_queue_depth': 0,
+                                          'out_queue_depth': 0,
                                       },
 
                                   },
@@ -1714,7 +1716,7 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                    'ipv6_unicast': 'advertised and received',
                                    'enhanced_refresh': 'advertised',
                                    'four_octets_asn': 'advertised',
-                                   'stateful_switchover': 'enabled',
+                                   'stateful_switchover': 'NO for session 1',
                                    },
                               'bgp_event_timer':
                                   {
@@ -1762,7 +1764,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                   {'vpnv6 unicast':
                                       {
                                           'last_read': '00:00:32',
-                                          'last_written': '00:00:06',
+                                          'last_write': '00:00:06',
+                                          'session_state': 'established',
                                           'up_time': '01:01:58',
                                       },
                                   },
@@ -1822,8 +1825,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                                   'route_refresh': 0,
                                                   'total': 66,
                                               },
-                                          'input_queue': 0,
-                                          'output_queue': 0,
+                                          'in_queue_depth': 0,
+                                          'out_queue_depth': 0,
                                       },
 
                                   },
@@ -1832,7 +1835,7 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                    'ipv4_unicast': 'advertised and received',
                                    'enhanced_refresh': 'advertised',
                                    'four_octets_asn': 'advertised',
-                                   'stateful_switchover': 'enabled',
+                                   'stateful_switchover': 'NO for session 1',
                                    },
                               'bgp_event_timer':
                                   {
@@ -1880,7 +1883,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                   {'vpnv4 unicast':
                                       {
                                           'last_read': '00:00:24',
-                                          'last_written': '00:00:21',
+                                          'last_write': '00:00:21',
+                                          'session_state': 'established',
                                           'up_time': '01:01:51',
                                       },
                                   },
@@ -1935,8 +1939,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                                   'route_refresh': 0,
                                                   'total': 66,
                                               },
-                                          'input_queue': 0,
-                                          'output_queue': 0,
+                                          'in_queue_depth': 0,
+                                          'out_queue_depth': 0,
                                       },
 
                                   },
@@ -1945,7 +1949,7 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                    'ipv6_unicast': 'advertised and received',
                                    'enhanced_refresh': 'advertised',
                                    'four_octets_asn': 'advertised',
-                                   'stateful_switchover': 'enabled',
+                                   'stateful_switchover': 'NO for session 1',
                                    },
                               'bgp_event_timer':
                                   {
@@ -1993,7 +1997,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                   {'vpnv6 unicast':
                                       {
                                           'last_read': '00:00:22',
-                                          'last_written': '00:00:01',
+                                          'last_write': '00:00:01',
+                                          'session_state': 'established',
                                           'up_time': '01:01:51',
                                       },
                                   },
@@ -2659,7 +2664,6 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                   {'connection':
                                       {
                                           'last_reset': 'never',
-                                          # 'reset_reason': str,
                                           'established': 1,
                                           'dropped': 0,
                                       },
@@ -2691,8 +2695,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                                   'route_refresh': 0,
                                                   'total': 81,
                                               },
-                                          'input_queue': 0,
-                                          'output_queue': 0,
+                                          'in_queue_depth': 0,
+                                          'out_queue_depth': 0,
                                       },
 
                                   },
@@ -2704,7 +2708,7 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                    'enhanced_refresh': 'advertised',
                                    # 'multisession': '',
                                    'four_octets_asn': 'advertised and received',
-                                   'stateful_switchover': 'enabled',
+                                   'stateful_switchover': 'NO for session 1',
                                    },
                               'bgp_event_timer':
                                   {
@@ -2752,13 +2756,15 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                   {'vpnv4 unicast':
                                       {
                                           'last_read': '00:00:04',
-                                          'last_written': '00:00:09',
+                                          'last_write': '00:00:09',
+                                          'session_state': 'established',
                                           'up_time': '01:10:35',
                                       },
                                       'vpnv6 unicast':
                                           {
                                               'last_read': '00:00:07',
-                                              'last_written': '00:00:12',
+                                              'last_write': '00:00:12',
+                                              'session_state': 'established',
                                               'up_time': '01:10:38',
                                           },
 
@@ -2773,16 +2779,13 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                               'shutdown': False,
                               'bgp_negotiated_keepalive_timers':
                                   {
-                                      # 'last_read': '00:00:04',
                                       'keepalive_interval': 60,
                                       'hold_time': 180,
-                                      # 'last_written': '00:00:43',
                                   },
                               'bgp_session_transport':
                                   {'connection':
                                       {
                                           'last_reset': 'never',
-                                          # 'reset_reason': str,
                                           'established': 1,
                                           'dropped': 0,
                                       },
@@ -2814,8 +2817,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                                   'route_refresh': 0,
                                                   'total': 81,
                                               },
-                                          'input_queue': 0,
-                                          'output_queue': 0,
+                                          'in_queue_depth': 0,
+                                          'out_queue_depth': 0,
                                       },
 
                                   },
@@ -2825,9 +2828,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                    'vpnv6_unicast': 'advertised and received',
                                    'graceful_restart': 'received',
                                    'enhanced_refresh': 'advertised',
-                                   # 'multisession': '',
                                    'four_octets_asn': 'advertised and received',
-                                   'stateful_switchover': 'enabled',
+                                   'stateful_switchover': 'NO for session 1',
                                    },
                               'bgp_event_timer':
                                   {
@@ -2875,13 +2877,15 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                   {'vpnv4 unicast':
                                       {
                                           'last_read': '00:00:04',
-                                          'last_written': '00:00:43',
+                                          'last_write': '00:00:43',
+                                          'session_state': 'established',
                                           'up_time': '01:10:41',
                                       },
                                       'vpnv6 unicast':
                                           {
                                               'last_read': '00:00:08',
-                                              'last_written': '00:00:47',
+                                              'last_write': '00:00:47',
+                                              'session_state': 'established',
                                               'up_time': '01:10:44',
                                           },
                                   },
@@ -3285,8 +3289,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                                       'route_refresh': 0,
                                                       'total': 66,
                                                   },
-                                              'input_queue': 0,
-                                              'output_queue': 0,
+                                              'in_queue_depth': 0,
+                                              'out_queue_depth': 0,
                                           },
 
                                       },
@@ -3295,7 +3299,7 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                        'ipv4_unicast': 'advertised and received',
                                        'enhanced_refresh': 'advertised',
                                        'four_octets_asn': 'advertised',
-                                       'stateful_switchover': 'enabled',
+                                       'stateful_switchover': 'NO for session 1',
                                        },
                                   'bgp_event_timer':
                                       {
@@ -3343,7 +3347,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                       {'vpnv4 unicast':
                                           {
                                               'last_read': '00:00:33',
-                                              'last_written': '00:00:30',
+                                              'last_write': '00:00:30',
+                                              'session_state': 'established',
                                               'up_time': '01:01:59',
                                           },
                                       },
@@ -3398,8 +3403,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                                       'route_refresh': 0,
                                                       'total': 66,
                                                   },
-                                              'input_queue': 0,
-                                              'output_queue': 0,
+                                              'in_queue_depth': 0,
+                                              'out_queue_depth': 0,
                                           },
 
                                       },
@@ -3408,7 +3413,7 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                        'ipv6_unicast': 'advertised and received',
                                        'enhanced_refresh': 'advertised',
                                        'four_octets_asn': 'advertised',
-                                       'stateful_switchover': 'enabled',
+                                       'stateful_switchover': 'NO for session 1',
                                        },
                                   'bgp_event_timer':
                                       {
@@ -3456,7 +3461,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                       {'vpnv6 unicast':
                                           {
                                               'last_read': '00:00:32',
-                                              'last_written': '00:00:06',
+                                              'last_write': '00:00:06',
+                                              'session_state': 'established',
                                               'up_time': '01:01:58',
                                           },
                                       },
@@ -3516,8 +3522,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                                       'route_refresh': 0,
                                                       'total': 66,
                                                   },
-                                              'input_queue': 0,
-                                              'output_queue': 0,
+                                              'in_queue_depth': 0,
+                                              'out_queue_depth': 0,
                                           },
 
                                       },
@@ -3526,7 +3532,7 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                        'ipv4_unicast': 'advertised and received',
                                        'enhanced_refresh': 'advertised',
                                        'four_octets_asn': 'advertised',
-                                       'stateful_switchover': 'enabled',
+                                       'stateful_switchover': 'NO for session 1',
                                        },
                                   'bgp_event_timer':
                                       {
@@ -3574,7 +3580,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                       {'vpnv4 unicast':
                                           {
                                               'last_read': '00:00:24',
-                                              'last_written': '00:00:21',
+                                              'last_write': '00:00:21',
+                                              'session_state': 'established',
                                               'up_time': '01:01:51',
                                           },
                                       },
@@ -3629,8 +3636,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                                       'route_refresh': 0,
                                                       'total': 66,
                                                   },
-                                              'input_queue': 0,
-                                              'output_queue': 0,
+                                              'in_queue_depth': 0,
+                                              'out_queue_depth': 0,
                                           },
 
                                       },
@@ -3639,7 +3646,7 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                        'ipv6_unicast': 'advertised and received',
                                        'enhanced_refresh': 'advertised',
                                        'four_octets_asn': 'advertised',
-                                       'stateful_switchover': 'enabled',
+                                       'stateful_switchover': 'NO for session 1',
                                        },
                                   'bgp_event_timer':
                                       {
@@ -3687,7 +3694,8 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                       {'vpnv6 unicast':
                                           {
                                               'last_read': '00:00:22',
-                                              'last_written': '00:00:01',
+                                              'last_write': '00:00:01',
+                                              'session_state': 'established',
                                               'up_time': '01:01:51',
                                           },
                                       },

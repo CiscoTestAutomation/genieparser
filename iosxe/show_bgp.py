@@ -590,8 +590,8 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                           Optional('link'): str,
                           Optional('bgp_version'): int,
                           Optional('router_id'): str,
-                          Optional('session_state'): str,
-                          Optional('shutdown'): bool,
+                          Optional('session_state'): str,   # will delete later due to exist in address family
+                          Optional('shutdown'): bool,    # keep here up to takashi find a good cli
                           Optional('bgp_negotiated_keepalive_timers'):
                               {
                                Optional('keepalive_interval'): int,
@@ -606,13 +606,18 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                                     Optional('established'): int,
                                     Optional('dropped'): int,
                                     },
-                               Optional('transport'):
+                              Optional('transport'):
                                    {Optional('local_port'): str,
                                     Optional('local_host'): str,
                                     Optional('foreign_port'): str,
                                     Optional('foreign_host'): str,
                                     },
-                               },
+                              #  Optional('counters'):
+                              #      {
+
+                              #      }
+
+                              },
                           Optional('bgp_neighbor_counters'):
                               {Optional('messages'):
                                    {Optional('sent'):
@@ -633,8 +638,8 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                                             Optional('route_refresh'): int,
                                             Optional('total'): int,
                                          },
-                                       Optional('input_queue'): int,
-                                       Optional('output_queue'): int,
+                                       Optional('in_queue_depth'): int,
+                                       Optional('out_queue_depth'): int,
                                     },
 
                                },
@@ -697,8 +702,10 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                               {Any():
                                    {
                                        Optional('last_read'): str,
-                                       Optional('last_written'): str,
+                                       Optional('last_write'): str,
                                        Optional('up_time'): str,
+                                       Optional('session_state'): str,
+                                       Optional('down_time'): str,
                                },
                           },
                      },
@@ -823,33 +830,42 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                 continue
 
             # BGP state = Established, up for 01:10:35
-            p4 = re.compile(r'^\s*BGP +state += +(?P<bgp_state>[a-zA-Z]+),'
-                            ' +(?P<shutdown>\w+) +for +(?P<uptime>[0-9\:]+)$')
+            # or
+            # BGP state = Idel, down for 01:10:35
+            p4 = re.compile(r'^\s*BGP +state += +(?P<session_state>[a-zA-Z]+),'
+                            ' +(?P<up_down>\w+) +for +(?P<time>[0-9\:]+)$')
             m = p4.match(line)
             if m:
-                bgp_state = m.groupdict()['bgp_state']
-                shutdown = True if m.groupdict()['shutdown'] == 'down' else False
-                uptime = m.groupdict()['uptime']
+                session_state = m.groupdict()['session_state']
+                up_down = m.groupdict()['up_down']
+                up_down_status = True if m.groupdict()['up_down'] == 'down' else False
+                up_down_time = m.groupdict()['time']
+
 
                 parsed_dict['vrf'][vrf_name]['neighbor']\
-                [neighbor_id]['session_state'] = bgp_state.lower()
+                [neighbor_id]['session_state'] = session_state.lower()
                 parsed_dict['vrf'][vrf_name]['neighbor']\
-                [neighbor_id]['shutdown'] = shutdown
+                [neighbor_id]['shutdown'] = up_down_status
 
-                if 'address_family' not in parsed_dict['vrf'] \
+                if 'address_family' not in parsed_dict['vrf']\
                         [vrf_name]['neighbor'][neighbor_id]:
-                    parsed_dict['vrf'][vrf_name]['neighbor'] \
+                    parsed_dict['vrf'][vrf_name]['neighbor']\
                         [neighbor_id]['address_family'] = {}
 
-                if af_name not in parsed_dict['vrf'][vrf_name]['neighbor'] \
+                if af_name not in parsed_dict['vrf'][vrf_name]['neighbor']\
                         [neighbor_id]['address_family']:
-                    parsed_dict['vrf'][vrf_name]['neighbor'] \
+                    parsed_dict['vrf'][vrf_name]['neighbor']\
                         [neighbor_id]['address_family'][af_name] = {}
 
                 parsed_dict['vrf'][vrf_name]['neighbor']\
-                    [neighbor_id]['address_family'][af_name]['up_time'] = uptime
+                    [neighbor_id]['address_family'][af_name]['session_state'] = session_state.lower()
+
+                parsed_dict['vrf'][vrf_name]['neighbor']\
+                    [neighbor_id]['address_family'][af_name][up_down+'_time'] = up_down_time
 
                 continue
+
+
 
             # Last read 00:00:04, last write 00:00:09, hold time is 180, keepalive interval is 60 seconds
             p6 = re.compile(r'^\s*Last +read +(?P<last_read>[0-9\:]+),'
@@ -888,7 +904,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                 parsed_dict['vrf'][vrf_name]['neighbor']\
                     [neighbor_id]['address_family'][af_name]['last_read'] = last_read
                 parsed_dict['vrf'][vrf_name]['neighbor'] \
-                    [neighbor_id]['address_family'][af_name]['last_written'] = last_write
+                    [neighbor_id]['address_family'][af_name]['last_write'] = last_write
 
 
                 continue
@@ -1050,8 +1066,8 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
 
             #  Stateful switchover support enabled: NO for session 1
             p15 = re.compile(r'^\s*Stateful +switchover +support'
-                             ' +(?P<stateful_switchover>[a-zA-Z]+):'
-                             ' +NO +for +session (?P<no_session>[0-9]+)$')
+                             ' +(?P<switchover>[a-zA-Z]+):'
+                             ' +(?P<stateful_switchover>[0-9a-zA-Z\s\S]+)$')
             m = p15.match(line)
             if m:
                 stateful_switchover = m.groupdict()['stateful_switchover']
@@ -1066,10 +1082,10 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             # Message statistics:
             #  InQ depth is 0
             p18 = re.compile(r'^\s*InQ +depth +is'
-                             ' +(?P<input_queue>[0-9]+)$')
+                             ' +(?P<in_queue_depth>[0-9]+)$')
             m = p18.match(line)
             if m:
-                message_input_queue = int(m.groupdict()['input_queue'])
+                message_input_queue = int(m.groupdict()['in_queue_depth'])
                 if 'bgp_neighbor_counters' not in \
                         parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
                         parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_neighbor_counters'] = {}
@@ -1077,19 +1093,19 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                         [neighbor_id]['bgp_neighbor_counters']: \
                     parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
                         ['bgp_neighbor_counters']['messages'] = {}
-                if 'input_queue' not in parsed_dict['vrf'][vrf_name]\
+                if 'in_queue_depth' not in parsed_dict['vrf'][vrf_name]\
                     ['neighbor'][neighbor_id]['bgp_neighbor_counters']['messages']:
                     parsed_dict['vrf'][vrf_name]\
                         ['neighbor'][neighbor_id]['bgp_neighbor_counters']['messages']\
-                        ['input_queue'] = message_input_queue
+                        ['in_queue_depth'] = message_input_queue
 
                 continue
             #  OutQ depth is 0
             p19 = re.compile(r'^\s*OutQ +depth +is'
-                             ' +(?P<output_queue>[0-9]+)$')
+                             ' +(?P<out_queue_depth>[0-9]+)$')
             m = p19.match(line)
             if m:
-                message_output_queue = int(m.groupdict()['output_queue'])
+                message_output_queue = int(m.groupdict()['out_queue_depth'])
                 if 'bgp_neighbor_counters' not in \
                         parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
                         parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_neighbor_counters'] = {}
@@ -1099,11 +1115,11 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                     parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
                         ['bgp_neighbor_counters']['messages'] = {}
 
-                if 'output_queue' not in parsed_dict['vrf'][vrf_name]\
+                if 'out_queue_depth' not in parsed_dict['vrf'][vrf_name]\
                     ['neighbor'][neighbor_id]['bgp_neighbor_counters']['messages']:
                     parsed_dict['vrf'][vrf_name]\
                         ['neighbor'][neighbor_id]['bgp_neighbor_counters']['messages']\
-                        ['output_queue'] = message_output_queue
+                        ['out_queue_depth'] = message_output_queue
                 continue
 
             #                     Sent       Rcvd
