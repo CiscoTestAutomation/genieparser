@@ -969,7 +969,7 @@ class ShowInterfacesSwitchportSchema(MetaParser):
     schema = {
                 Any(): {
                     'switchport_enable': bool,
-                    'swichport_mode': str,
+                    'switchport_mode': str,
                     Optional('operational_mode'): str,
                     Optional('port_channel'): {
                         Optional('port_channel_int'): str,
@@ -1037,10 +1037,10 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Administrative Mode: trunk
-            p3 =  re.compile(r'^Administrative +Mode: +(?P<swichport_mode>[\w\s]+)$')
+            p3 =  re.compile(r'^Administrative +Mode: +(?P<switchport_mode>[\w\s]+)$')
             m = p3.match(line)
             if m:
-                ret_dict[intf]['swichport_mode'] = m.groupdict()['swichport_mode']
+                ret_dict[intf]['switchport_mode'] = m.groupdict()['switchport_mode']
                 continue
 
             # Operational Mode: trunk (member of bundle Po12)
