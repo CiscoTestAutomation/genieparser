@@ -24,7 +24,8 @@ from parser.nxos.show_bgp import ShowBgpProcessVrfAll, ShowBgpPeerSession,\
                                  ShowBgpVrfAllNeighborsReceivedRoutes,\
                                  ShowRunningConfigBgp, \
                                  ShowBgpAllDampeningFlapStatistics, \
-                                 ShowBgpAllNexthopDatabase
+                                 ShowBgpAllNexthopDatabase, \
+                                 ShowBgpPeerTemplateCmd
 
 
 # =========================================
@@ -15825,6 +15826,2191 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
         obj = ShowBgpAllNexthopDatabase(device=self.device, context='xml')
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+
+# =======================================================
+#  Unit test for 'show bgp peer-template'
+# =======================================================
+
+class test_show_bgp_peer_template_cmd_cli(unittest.TestCase):
+
+    '''Unit test for show bgp peer-template - CLI'''
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "template": {
+            "PEER1": {
+               "remove_private_as": False,
+               "logging_neighbor_events": False,
+               "address_family": {
+                    "vpnv4 unicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         'as_override': False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ip prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ip prefix-list"
+                              }
+                         },
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "send_ext_community": True,
+                         "rr_configured": False
+                    },
+                    "link-state": {
+                         "in_soft_reconfig_allowed": False,
+                         "peer_as_check_disabled": False,
+                         'as_override': False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ip prefix-list"
+                              }
+                         },
+                         "third_party_nexthop": False,
+                         "max_pfx": 445566,
+                         "send_community": True,
+                         "allow_as_in": 10,
+                         "in_policy": {
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ip prefix-list"
+                              }
+                         },
+                         "send_ext_community": True,
+                         "rr_configured": False
+                    },
+                    "ipv4 multicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "advertise_map_status": "advertise",
+                         'soo': 'SOO:1.1.1.1:100',
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ip prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "default_originate_route_map": "PASS-ALL",
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ip prefix-list"
+                              }
+                         },
+                         "default_originate": True,
+                         "advertise_map": "BLOCK-ALL",
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "as_override": True,
+                         "send_ext_community": True,
+                         "condition_map": "DENY_ALL_RM",
+                         "rr_configured": False
+                    },
+                    "ipv6 multicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "advertise_map_status": "advertise",
+                         'soo': 'SOO:1.1.1.1:100',
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ipv6 prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "default_originate_route_map": "PASS-ALL",
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ipv6 prefix-list"
+                              }
+                         },
+                         "default_originate": True,
+                         "advertise_map": "BLOCK-ALL",
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "as_override": True,
+                         "send_ext_community": True,
+                         "condition_map": "DENY_ALL_RM",
+                         "rr_configured": False
+                    },
+                    "ipv4 unicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "advertise_map_status": "advertise",
+                         'soo': 'SOO:1.1.1.1:100',
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ip prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "default_originate_route_map": "PASS-ALL",
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ip prefix-list"
+                              }
+                         },
+                         "default_originate": True,
+                         "advertise_map": "BLOCK-ALL",
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "as_override": True,
+                         "send_ext_community": True,
+                         "condition_map": "DENY_ALL_RM",
+                         "rr_configured": False
+                    },
+                    "ipv6 unicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "advertise_map_status": "advertise",
+                         'soo': 'SOO:1.1.1.1:100',
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ipv6 prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "default_originate_route_map": "PASS-ALL",
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ipv6 prefix-list"
+                              }
+                         },
+                         "default_originate": True,
+                         "advertise_map": "BLOCK-ALL",
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "as_override": True,
+                         "send_ext_community": True,
+                         "condition_map": "DENY_ALL_RM",
+                         "rr_configured": False
+                    },
+                    "vpnv6 unicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         'as_override': False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ipv6 prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ipv6 prefix-list"
+                              }
+                         },
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "send_ext_community": True,
+                         "rr_configured": False
+                    }
+               },
+               "source_interface": "loopback1",
+               "low_mem_exempt": True,
+               "passive_only": True,
+               "vrf": {
+                    "default": {
+                         "inheriting_peer": {
+                              "21.0.201.1": {
+                                   "inheriting_peer": "21.0.201.1"
+                              }
+                         }
+                    }
+               },
+               "local_as_inactive": True,
+               "external_bgp_peer_hops_limit": 100
+            },
+            "PEER2": {
+               "remove_private_as": False,
+               "logging_neighbor_events": False,
+               "address_family": {
+                    "vpnv4 unicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         'as_override': False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ip prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ip prefix-list"
+                              }
+                         },
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "send_ext_community": True,
+                         "rr_configured": False
+                    },
+                    "link-state": {
+                         "in_soft_reconfig_allowed": False,
+                         "peer_as_check_disabled": False,
+                         'as_override': False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ip prefix-list"
+                              }
+                         },
+                         "third_party_nexthop": False,
+                         "max_pfx": 445566,
+                         "send_community": True,
+                         "allow_as_in": 10,
+                         "in_policy": {
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ip prefix-list"
+                              }
+                         },
+                         "send_ext_community": True,
+                         "rr_configured": False
+                    },
+                    "ipv4 multicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "advertise_map_status": "advertise",
+                         'soo': 'SOO:1.1.1.1:100',
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ip prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "default_originate_route_map": "PASS-ALL",
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ip prefix-list"
+                              }
+                         },
+                         "default_originate": True,
+                         "advertise_map": "BLOCK-ALL",
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "as_override": True,
+                         "send_ext_community": True,
+                         "condition_map": "DENY_ALL_RM",
+                         "rr_configured": False
+                    },
+                    "ipv6 multicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "advertise_map_status": "advertise",
+                         'soo': 'SOO:1.1.1.1:100',
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ipv6 prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "default_originate_route_map": "PASS-ALL",
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ipv6 prefix-list"
+                              }
+                         },
+                         "default_originate": True,
+                         "advertise_map": "BLOCK-ALL",
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "as_override": True,
+                         "send_ext_community": True,
+                         "condition_map": "DENY_ALL_RM",
+                         "rr_configured": False
+                    },
+                    "ipv4 unicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "advertise_map_status": "advertise",
+                         'soo': 'SOO:1.1.1.1:100',
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ip prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "default_originate_route_map": "PASS-ALL",
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ip prefix-list"
+                              }
+                         },
+                         "default_originate": True,
+                         "advertise_map": "BLOCK-ALL",
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "as_override": True,
+                         "send_ext_community": True,
+                         "condition_map": "DENY_ALL_RM",
+                         "rr_configured": False
+                    },
+                    "ipv6 unicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "advertise_map_status": "advertise",
+                         'soo': 'SOO:1.1.1.1:100',
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ipv6 prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "default_originate_route_map": "PASS-ALL",
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ipv6 prefix-list"
+                              }
+                         },
+                         "default_originate": True,
+                         "advertise_map": "BLOCK-ALL",
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "as_override": True,
+                         "send_ext_community": True,
+                         "condition_map": "DENY_ALL_RM",
+                         "rr_configured": False
+                    },
+                    "vpnv6 unicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         'as_override': False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ipv6 prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ipv6 prefix-list"
+                              }
+                         },
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "send_ext_community": True,
+                         "rr_configured": False
+                    }
+               },
+               "source_interface": "loopback1",
+               "low_mem_exempt": True,
+               "passive_only": True,
+               "local_as_inactive": False,
+               "external_bgp_peer_hops_limit": 100
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+         BGP peer-template is PEER2
+          Using loopback1 as update source for this peer
+          Peer is low-memory exempt
+          Disable logging neighbor events
+          External BGP peer might be up to 100 hops away
+          Only passive connection setup allowed
+
+          For address family: IPv4 Unicast
+          Condition-map DENY_ALL_RM, Advertise-map BLOCK-ALL, Status Advertise
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Nexthop always set to local peering address, 0.0.0.0
+          Third-party Nexthop will not be computed.
+          Maximum prefixes allowed 888888888
+          SOO Extcommunity: SOO:1.1.1.1:100
+          Weight: 9999
+          Allow my ASN 10 times
+          ASN override is enabled
+          Inbound ip prefix-list configured is LIST123
+          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
+          Outbound ip prefix-list configured is LIST456
+          Outbound route-map configured is PERMIT_IPV6_RM
+          Default information originate, route-map PASS-ALL  Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          Unsuppress-map ORIGINATE_IPV6 configured
+
+          For address family: IPv4 Multicast
+          Condition-map DENY_ALL_RM, Advertise-map BLOCK-ALL, Status Advertise
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Nexthop always set to local peering address, 0.0.0.0
+          Third-party Nexthop will not be computed.
+          Maximum prefixes allowed 888888888
+          SOO Extcommunity: SOO:1.1.1.1:100
+          Weight: 9999
+          Allow my ASN 10 times
+          ASN override is enabled
+          Inbound ip prefix-list configured is LIST123
+          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
+          Outbound ip prefix-list configured is LIST456
+          Outbound route-map configured is PERMIT_IPV6_RM
+          Default information originate, route-map PASS-ALL  Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          Unsuppress-map ORIGINATE_IPV6 configured
+
+          For address family: IPv6 Unicast
+          Condition-map DENY_ALL_RM, Advertise-map BLOCK-ALL, Status Advertise
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Nexthop always set to local peering address, 0.0.0.0
+          Third-party Nexthop will not be computed.
+          Maximum prefixes allowed 888888888
+          SOO Extcommunity: SOO:1.1.1.1:100
+          Weight: 9999
+          Allow my ASN 10 times
+          ASN override is enabled
+          Inbound ipv6 prefix-list configured is LIST123
+          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
+          Outbound ipv6 prefix-list configured is LIST456
+          Outbound route-map configured is PERMIT_IPV6_RM
+          Default information originate, route-map PASS-ALL  Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          Unsuppress-map ORIGINATE_IPV6 configured
+
+          For address family: IPv6 Multicast
+          Condition-map DENY_ALL_RM, Advertise-map BLOCK-ALL, Status Advertise
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Nexthop always set to local peering address, 0.0.0.0
+          Third-party Nexthop will not be computed.
+          Maximum prefixes allowed 888888888
+          SOO Extcommunity: SOO:1.1.1.1:100
+          Weight: 9999
+          Allow my ASN 10 times
+          ASN override is enabled
+          Inbound ipv6 prefix-list configured is LIST123
+          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
+          Outbound ipv6 prefix-list configured is LIST456
+          Outbound route-map configured is PERMIT_IPV6_RM
+          Default information originate, route-map PASS-ALL  Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          Unsuppress-map ORIGINATE_IPV6 configured
+
+          For address family: VPNv4 Unicast
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Nexthop always set to local peering address, 0.0.0.0
+          Third-party Nexthop will not be computed.
+          Maximum prefixes allowed 888888888
+          Weight: 9999
+          Allow my ASN 10 times
+          Inbound ip prefix-list configured is LIST123
+          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
+          Outbound ip prefix-list configured is LIST456
+          Outbound route-map configured is PERMIT_IPV6_RM
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          Unsuppress-map ORIGINATE_IPV6 configured
+
+          For address family: VPNv6 Unicast
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Nexthop always set to local peering address, 0.0.0.0
+          Third-party Nexthop will not be computed.
+          Maximum prefixes allowed 888888888
+          Weight: 9999
+          Allow my ASN 10 times
+          Inbound ipv6 prefix-list configured is LIST123
+          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
+          Outbound ipv6 prefix-list configured is LIST456
+          Outbound route-map configured is PERMIT_IPV6_RM
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          Unsuppress-map ORIGINATE_IPV6 configured
+
+          For address family: Link-State
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Third-party Nexthop will not be computed.
+          Maximum prefixes allowed 445566
+          Allow my ASN 10 times
+          Inbound ip prefix-list configured is LIST123
+          Outbound ip prefix-list configured is LIST456
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+        Members of peer-template PEER2:
+
+        BGP peer-template is PEER1
+          Using loopback1 as update source for this peer
+          Peer is low-memory exempt
+          Disable logging neighbor events
+          External BGP peer might be up to 100 hops away
+          Only passive connection setup allowed
+          Neighbor local-as command not active
+
+          For address family: IPv4 Unicast
+          Condition-map DENY_ALL_RM, Advertise-map BLOCK-ALL, Status Advertise
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Nexthop always set to local peering address, 0.0.0.0
+          Third-party Nexthop will not be computed.
+          Maximum prefixes allowed 888888888
+          SOO Extcommunity: SOO:1.1.1.1:100
+          Weight: 9999
+          Allow my ASN 10 times
+          ASN override is enabled
+          Inbound ip prefix-list configured is LIST123
+          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
+          Outbound ip prefix-list configured is LIST456
+          Outbound route-map configured is PERMIT_IPV6_RM
+          Default information originate, route-map PASS-ALL  Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          Unsuppress-map ORIGINATE_IPV6 configured
+
+          For address family: IPv4 Multicast
+          Condition-map DENY_ALL_RM, Advertise-map BLOCK-ALL, Status Advertise
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Nexthop always set to local peering address, 0.0.0.0
+          Third-party Nexthop will not be computed.
+          Maximum prefixes allowed 888888888
+          SOO Extcommunity: SOO:1.1.1.1:100
+          Weight: 9999
+          Allow my ASN 10 times
+          ASN override is enabled
+          Inbound ip prefix-list configured is LIST123
+          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
+          Outbound ip prefix-list configured is LIST456
+          Outbound route-map configured is PERMIT_IPV6_RM
+          Default information originate, route-map PASS-ALL  Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          Unsuppress-map ORIGINATE_IPV6 configured
+
+          For address family: IPv6 Unicast
+          Condition-map DENY_ALL_RM, Advertise-map BLOCK-ALL, Status Advertise
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Nexthop always set to local peering address, 0.0.0.0
+          Third-party Nexthop will not be computed.
+          Maximum prefixes allowed 888888888
+          SOO Extcommunity: SOO:1.1.1.1:100
+          Weight: 9999
+          Allow my ASN 10 times
+          ASN override is enabled
+          Inbound ipv6 prefix-list configured is LIST123
+          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
+          Outbound ipv6 prefix-list configured is LIST456
+          Outbound route-map configured is PERMIT_IPV6_RM
+          Default information originate, route-map PASS-ALL  Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          Unsuppress-map ORIGINATE_IPV6 configured
+
+          For address family: IPv6 Multicast
+          Condition-map DENY_ALL_RM, Advertise-map BLOCK-ALL, Status Advertise
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Nexthop always set to local peering address, 0.0.0.0
+          Third-party Nexthop will not be computed.
+          Maximum prefixes allowed 888888888
+          SOO Extcommunity: SOO:1.1.1.1:100
+          Weight: 9999
+          Allow my ASN 10 times
+          ASN override is enabled
+          Inbound ipv6 prefix-list configured is LIST123
+          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
+          Outbound ipv6 prefix-list configured is LIST456
+          Outbound route-map configured is PERMIT_IPV6_RM
+          Default information originate, route-map PASS-ALL  Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          Unsuppress-map ORIGINATE_IPV6 configured
+
+          For address family: VPNv4 Unicast
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Nexthop always set to local peering address, 0.0.0.0
+          Third-party Nexthop will not be computed.
+          Maximum prefixes allowed 888888888
+          Weight: 9999
+          Allow my ASN 10 times
+          Inbound ip prefix-list configured is LIST123
+          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
+          Outbound ip prefix-list configured is LIST456
+          Outbound route-map configured is PERMIT_IPV6_RM
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          Unsuppress-map ORIGINATE_IPV6 configured
+
+          For address family: VPNv6 Unicast
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Nexthop always set to local peering address, 0.0.0.0
+          Third-party Nexthop will not be computed.
+          Maximum prefixes allowed 888888888
+          Weight: 9999
+          Allow my ASN 10 times
+          Inbound ipv6 prefix-list configured is LIST123
+          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
+          Outbound ipv6 prefix-list configured is LIST456
+          Outbound route-map configured is PERMIT_IPV6_RM
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          Unsuppress-map ORIGINATE_IPV6 configured
+
+          For address family: Link-State
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Third-party Nexthop will not be computed.
+          Maximum prefixes allowed 445566
+          Allow my ASN 10 times
+          Inbound ip prefix-list configured is LIST123
+          Outbound ip prefix-list configured is LIST456
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+        Members of peer-template PEER1:
+        default: 21.0.201.1     
+
+    '''}
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpPeerTemplateCmd(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpPeerTemplateCmd(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
+class test_show_bgp_peer_template_xml(unittest.TestCase):
+
+    '''Unit test for show bgp peer-template - XML'''
+    
+    device = Device(name='aDevice')
+    golden_parsed_output = {
+        "template": {
+            "PEER1": {
+               "remove_private_as": False,
+               "logging_neighbor_events": False,
+               "address_family": {
+                    "vpnv4 unicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         'as_override': False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ip prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ip prefix-list"
+                              }
+                         },
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "send_ext_community": True,
+                         "rr_configured": False
+                    },
+                    "link-state": {
+                         "in_soft_reconfig_allowed": False,
+                         "peer_as_check_disabled": False,
+                         'as_override': False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ip prefix-list"
+                              }
+                         },
+                         "third_party_nexthop": False,
+                         "max_pfx": 445566,
+                         "send_community": True,
+                         "allow_as_in": 10,
+                         "in_policy": {
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ip prefix-list"
+                              }
+                         },
+                         "send_ext_community": True,
+                         "rr_configured": False
+                    },
+                    "ipv4 multicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "advertise_map_status": "advertise",
+                         'soo': 'SOO:1.1.1.1:100',
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ip prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "default_originate_route_map": "PASS-ALL",
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ip prefix-list"
+                              }
+                         },
+                         "default_originate": True,
+                         "advertise_map": "BLOCK-ALL",
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "as_override": True,
+                         "send_ext_community": True,
+                         "condition_map": "DENY_ALL_RM",
+                         "rr_configured": False
+                    },
+                    "ipv6 multicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "advertise_map_status": "advertise",
+                         'soo': 'SOO:1.1.1.1:100',
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ipv6 prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "default_originate_route_map": "PASS-ALL",
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ipv6 prefix-list"
+                              }
+                         },
+                         "default_originate": True,
+                         "advertise_map": "BLOCK-ALL",
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "as_override": True,
+                         "send_ext_community": True,
+                         "condition_map": "DENY_ALL_RM",
+                         "rr_configured": False
+                    },
+                    "ipv4 unicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "advertise_map_status": "advertise",
+                         'soo': 'SOO:1.1.1.1:100',
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ip prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "default_originate_route_map": "PASS-ALL",
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ip prefix-list"
+                              }
+                         },
+                         "default_originate": True,
+                         "advertise_map": "BLOCK-ALL",
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "as_override": True,
+                         "send_ext_community": True,
+                         "condition_map": "DENY_ALL_RM",
+                         "rr_configured": False
+                    },
+                    "ipv6 unicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "advertise_map_status": "advertise",
+                         'soo': 'SOO:1.1.1.1:100',
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ipv6 prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "default_originate_route_map": "PASS-ALL",
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ipv6 prefix-list"
+                              }
+                         },
+                         "default_originate": True,
+                         "advertise_map": "BLOCK-ALL",
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "as_override": True,
+                         "send_ext_community": True,
+                         "condition_map": "DENY_ALL_RM",
+                         "rr_configured": False
+                    },
+                    "vpnv6 unicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         'as_override': False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ipv6 prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ipv6 prefix-list"
+                              }
+                         },
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "send_ext_community": True,
+                         "rr_configured": False
+                    }
+               },
+               "source_interface": "loopback1",
+               "low_mem_exempt": True,
+               "passive_only": True,
+               "vrf": {
+                    "default": {
+                         "inheriting_peer": {
+                              "21.0.201.1": {
+                                   "inheriting_peer": "21.0.201.1"
+                              }
+                         }
+                    }
+               },
+               "local_as_inactive": True,
+               "external_bgp_peer_hops_limit": 100
+            },
+            "PEER2": {
+               "remove_private_as": False,
+               "logging_neighbor_events": False,
+               "address_family": {
+                    "vpnv4 unicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         'as_override': False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ip prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ip prefix-list"
+                              }
+                         },
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "send_ext_community": True,
+                         "rr_configured": False
+                    },
+                    "link-state": {
+                         "in_soft_reconfig_allowed": False,
+                         "peer_as_check_disabled": False,
+                         'as_override': False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ip prefix-list"
+                              }
+                         },
+                         "third_party_nexthop": False,
+                         "max_pfx": 445566,
+                         "send_community": True,
+                         "allow_as_in": 10,
+                         "in_policy": {
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ip prefix-list"
+                              }
+                         },
+                         "send_ext_community": True,
+                         "rr_configured": False
+                    },
+                    "ipv4 multicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "advertise_map_status": "advertise",
+                         'soo': 'SOO:1.1.1.1:100',
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ip prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "default_originate_route_map": "PASS-ALL",
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ip prefix-list"
+                              }
+                         },
+                         "default_originate": True,
+                         "advertise_map": "BLOCK-ALL",
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "as_override": True,
+                         "send_ext_community": True,
+                         "condition_map": "DENY_ALL_RM",
+                         "rr_configured": False
+                    },
+                    "ipv6 multicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "advertise_map_status": "advertise",
+                         'soo': 'SOO:1.1.1.1:100',
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ipv6 prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "default_originate_route_map": "PASS-ALL",
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ipv6 prefix-list"
+                              }
+                         },
+                         "default_originate": True,
+                         "advertise_map": "BLOCK-ALL",
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "as_override": True,
+                         "send_ext_community": True,
+                         "condition_map": "DENY_ALL_RM",
+                         "rr_configured": False
+                    },
+                    "ipv4 unicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "advertise_map_status": "advertise",
+                         'soo': 'SOO:1.1.1.1:100',
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ip prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "default_originate_route_map": "PASS-ALL",
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ip prefix-list"
+                              }
+                         },
+                         "default_originate": True,
+                         "advertise_map": "BLOCK-ALL",
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "as_override": True,
+                         "send_ext_community": True,
+                         "condition_map": "DENY_ALL_RM",
+                         "rr_configured": False
+                    },
+                    "ipv6 unicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "advertise_map_status": "advertise",
+                         'soo': 'SOO:1.1.1.1:100',
+                         "weight": 9999,
+                         "peer_as_check_disabled": False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ipv6 prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "default_originate_route_map": "PASS-ALL",
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ipv6 prefix-list"
+                              }
+                         },
+                         "default_originate": True,
+                         "advertise_map": "BLOCK-ALL",
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "as_override": True,
+                         "send_ext_community": True,
+                         "condition_map": "DENY_ALL_RM",
+                         "rr_configured": False
+                    },
+                    "vpnv6 unicast": {
+                         "unsuppress_map": "ORIGINATE_IPV6",
+                         "weight": 9999,
+                         'as_override': False,
+                         "peer_as_check_disabled": False,
+                         "out_policy": {
+                              "LIST456": {
+                                   "name": "LIST456",
+                                   "type": "ipv6 prefix-list"
+                              },
+                              "PERMIT_IPV6_RM": {
+                                   "name": "PERMIT_IPV6_RM",
+                                   "type": "route-map"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "send_community": True,
+                         "allow_as_in": 10,
+                         "local_nexthop": "0.0.0.0",
+                         "in_policy": {
+                              "PERMIT_ROUTE_IPV4_RM": {
+                                   "name": "PERMIT_ROUTE_IPV4_RM",
+                                   "type": "route-map"
+                              },
+                              "LIST123": {
+                                   "name": "LIST123",
+                                   "type": "ipv6 prefix-list"
+                              }
+                         },
+                         "third_party_nexthop": False,
+                         "max_pfx": 888888888,
+                         "send_ext_community": True,
+                         "rr_configured": False
+                    }
+               },
+               "source_interface": "loopback1",
+               "low_mem_exempt": True,
+               "passive_only": True,
+               "local_as_inactive": False,
+               "external_bgp_peer_hops_limit": 100
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
+        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:7.0.3.I7.2.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+         <nf:data>
+          <show>
+           <bgp>
+            <peer-template>
+             <__readonly__>
+              <TABLE_neighbor>
+               <ROW_neighbor>
+                <templatepeer>PEER2</templatepeer>
+                <sourceif>loopback1</sourceif>
+                <lowmemexempt>true</lowmemexempt>
+                <ttlsecurity>false</ttlsecurity>
+                <ttllimit>100</ttllimit>
+                <passiveonly>true</passiveonly>
+                <localas-inactive>false</localas-inactive>
+                <remove-privateas>false</remove-privateas>
+                <TABLE_peraf>
+                 <ROW_peraf>
+                  <per-afi>1</per-afi>
+                  <TABLE_persaf>
+                   <ROW_persaf>
+                    <per-safi>1</per-safi>
+                    <per-af-name>IPv4 Unicast</per-af-name>
+                    <conditionmap>DENY_ALL_RM</conditionmap>
+                    <advertisemap>BLOCK-ALL</advertisemap>
+                    <advertisemapstatus>Advertise</advertisemapstatus>
+                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <sendcommunity>true</sendcommunity>
+                    <sendextcommunity>true</sendextcommunity>
+                    <localnexthop>0.0.0.0</localnexthop>
+                    <thirdpartynexthop>false</thirdpartynexthop>
+                    <maxpfx>888888888</maxpfx>
+                    <soo>SOO:1.1.1.1:100</soo>
+                    <weight>9999</weight>
+                    <allowasin>10</allowasin>
+                    <asoverride>true</asoverride>
+                    <peerascheckdisabled>false</peerascheckdisabled>
+                    <TABLE_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>0</inpolicynr>
+                      <inpolicytype>ip prefix-list</inpolicytype>
+                      <inpolicyname>LIST123</inpolicyname>
+                     </ROW_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>2</inpolicynr>
+                      <inpolicytype>route-map</inpolicytype>
+                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
+                     </ROW_inpolicy>
+                    </TABLE_inpolicy>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>0</outpolicynr>
+                      <outpolicytype>ip prefix-list</outpolicytype>
+                      <outpolicyname>LIST456</outpolicyname>
+                     </ROW_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>2</outpolicynr>
+                      <outpolicytype>route-map</outpolicytype>
+                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <rrconfigured>false</rrconfigured>
+                    <defaultoriginate>true</defaultoriginate>
+                    <defaultoriginatermap>PASS-ALL</defaultoriginatermap>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicyname>0</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
+                   </ROW_persaf>
+                  </TABLE_persaf>
+                 </ROW_peraf>
+                 <ROW_peraf>
+                  <per-afi>1</per-afi>
+                  <TABLE_persaf>
+                   <ROW_persaf>
+                    <per-safi>2</per-safi>
+                    <per-af-name>IPv4 Multicast</per-af-name>
+                    <conditionmap>DENY_ALL_RM</conditionmap>
+                    <advertisemap>BLOCK-ALL</advertisemap>
+                    <advertisemapstatus>Advertise</advertisemapstatus>
+                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <sendcommunity>true</sendcommunity>
+                    <sendextcommunity>true</sendextcommunity>
+                    <localnexthop>0.0.0.0</localnexthop>
+                    <thirdpartynexthop>false</thirdpartynexthop>
+                    <maxpfx>888888888</maxpfx>
+                    <soo>SOO:1.1.1.1:100</soo>
+                    <weight>9999</weight>
+                    <allowasin>10</allowasin>
+                    <asoverride>true</asoverride>
+                    <peerascheckdisabled>false</peerascheckdisabled>
+                    <TABLE_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>0</inpolicynr>
+                      <inpolicytype>ip prefix-list</inpolicytype>
+                      <inpolicyname>LIST123</inpolicyname>
+                     </ROW_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>2</inpolicynr>
+                      <inpolicytype>route-map</inpolicytype>
+                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
+                     </ROW_inpolicy>
+                    </TABLE_inpolicy>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>0</outpolicynr>
+                      <outpolicytype>ip prefix-list</outpolicytype>
+                      <outpolicyname>LIST456</outpolicyname>
+                     </ROW_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>2</outpolicynr>
+                      <outpolicytype>route-map</outpolicytype>
+                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <rrconfigured>false</rrconfigured>
+                    <defaultoriginate>true</defaultoriginate>
+                    <defaultoriginatermap>PASS-ALL</defaultoriginatermap>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicyname>0</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
+                   </ROW_persaf>
+                  </TABLE_persaf>
+                 </ROW_peraf>
+                 <ROW_peraf>
+                  <per-afi>2</per-afi>
+                  <TABLE_persaf>
+                   <ROW_persaf>
+                    <per-safi>1</per-safi>
+                    <per-af-name>IPv6 Unicast</per-af-name>
+                    <conditionmap>DENY_ALL_RM</conditionmap>
+                    <advertisemap>BLOCK-ALL</advertisemap>
+                    <advertisemapstatus>Advertise</advertisemapstatus>
+                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <sendcommunity>true</sendcommunity>
+                    <sendextcommunity>true</sendextcommunity>
+                    <localnexthop>0.0.0.0</localnexthop>
+                    <thirdpartynexthop>false</thirdpartynexthop>
+                    <maxpfx>888888888</maxpfx>
+                    <soo>SOO:1.1.1.1:100</soo>
+                    <weight>9999</weight>
+                    <allowasin>10</allowasin>
+                    <asoverride>true</asoverride>
+                    <peerascheckdisabled>false</peerascheckdisabled>
+                    <TABLE_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>0</inpolicynr>
+                      <inpolicytype>ipv6 prefix-list</inpolicytype>
+                      <inpolicyname>LIST123</inpolicyname>
+                     </ROW_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>2</inpolicynr>
+                      <inpolicytype>route-map</inpolicytype>
+                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
+                     </ROW_inpolicy>
+                    </TABLE_inpolicy>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>0</outpolicynr>
+                      <outpolicytype>ipv6 prefix-list</outpolicytype>
+                      <outpolicyname>LIST456</outpolicyname>
+                     </ROW_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>2</outpolicynr>
+                      <outpolicytype>route-map</outpolicytype>
+                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <rrconfigured>false</rrconfigured>
+                    <defaultoriginate>true</defaultoriginate>
+                    <defaultoriginatermap>PASS-ALL</defaultoriginatermap>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicyname>0</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
+                   </ROW_persaf>
+                  </TABLE_persaf>
+                 </ROW_peraf>
+                 <ROW_peraf>
+                  <per-afi>2</per-afi>
+                  <TABLE_persaf>
+                   <ROW_persaf>
+                    <per-safi>2</per-safi>
+                    <per-af-name>IPv6 Multicast</per-af-name>
+                    <conditionmap>DENY_ALL_RM</conditionmap>
+                    <advertisemap>BLOCK-ALL</advertisemap>
+                    <advertisemapstatus>Advertise</advertisemapstatus>
+                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <sendcommunity>true</sendcommunity>
+                    <sendextcommunity>true</sendextcommunity>
+                    <localnexthop>0.0.0.0</localnexthop>
+                    <thirdpartynexthop>false</thirdpartynexthop>
+                    <maxpfx>888888888</maxpfx>
+                    <soo>SOO:1.1.1.1:100</soo>
+                    <weight>9999</weight>
+                    <allowasin>10</allowasin>
+                    <asoverride>true</asoverride>
+                    <peerascheckdisabled>false</peerascheckdisabled>
+                    <TABLE_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>0</inpolicynr>
+                      <inpolicytype>ipv6 prefix-list</inpolicytype>
+                      <inpolicyname>LIST123</inpolicyname>
+                     </ROW_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>2</inpolicynr>
+                      <inpolicytype>route-map</inpolicytype>
+                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
+                     </ROW_inpolicy>
+                    </TABLE_inpolicy>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>0</outpolicynr>
+                      <outpolicytype>ipv6 prefix-list</outpolicytype>
+                      <outpolicyname>LIST456</outpolicyname>
+                     </ROW_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>2</outpolicynr>
+                      <outpolicytype>route-map</outpolicytype>
+                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <rrconfigured>false</rrconfigured>
+                    <defaultoriginate>true</defaultoriginate>
+                    <defaultoriginatermap>PASS-ALL</defaultoriginatermap>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicyname>0</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
+                   </ROW_persaf>
+                  </TABLE_persaf>
+                 </ROW_peraf>
+                 <ROW_peraf>
+                  <per-afi>1</per-afi>
+                  <TABLE_persaf>
+                   <ROW_persaf>
+                    <per-safi>128</per-safi>
+                    <per-af-name>VPNv4 Unicast</per-af-name>
+                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <sendcommunity>true</sendcommunity>
+                    <sendextcommunity>true</sendextcommunity>
+                    <localnexthop>0.0.0.0</localnexthop>
+                    <thirdpartynexthop>false</thirdpartynexthop>
+                    <maxpfx>888888888</maxpfx>
+                    <weight>9999</weight>
+                    <allowasin>10</allowasin>
+                    <asoverride>false</asoverride>
+                    <peerascheckdisabled>false</peerascheckdisabled>
+                    <TABLE_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>0</inpolicynr>
+                      <inpolicytype>ip prefix-list</inpolicytype>
+                      <inpolicyname>LIST123</inpolicyname>
+                     </ROW_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>2</inpolicynr>
+                      <inpolicytype>route-map</inpolicytype>
+                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
+                     </ROW_inpolicy>
+                    </TABLE_inpolicy>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>0</outpolicynr>
+                      <outpolicytype>ip prefix-list</outpolicytype>
+                      <outpolicyname>LIST456</outpolicyname>
+                     </ROW_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>2</outpolicynr>
+                      <outpolicytype>route-map</outpolicytype>
+                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <rrconfigured>false</rrconfigured>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicyname>0</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
+                   </ROW_persaf>
+                  </TABLE_persaf>
+                 </ROW_peraf>
+                 <ROW_peraf>
+                  <per-afi>2</per-afi>
+                  <TABLE_persaf>
+                   <ROW_persaf>
+                    <per-safi>128</per-safi>
+                    <per-af-name>VPNv6 Unicast</per-af-name>
+                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <sendcommunity>true</sendcommunity>
+                    <sendextcommunity>true</sendextcommunity>
+                    <localnexthop>0.0.0.0</localnexthop>
+                    <thirdpartynexthop>false</thirdpartynexthop>
+                    <maxpfx>888888888</maxpfx>
+                    <weight>9999</weight>
+                    <allowasin>10</allowasin>
+                    <asoverride>false</asoverride>
+                    <peerascheckdisabled>false</peerascheckdisabled>
+                    <TABLE_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>0</inpolicynr>
+                      <inpolicytype>ipv6 prefix-list</inpolicytype>
+                      <inpolicyname>LIST123</inpolicyname>
+                     </ROW_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>2</inpolicynr>
+                      <inpolicytype>route-map</inpolicytype>
+                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
+                     </ROW_inpolicy>
+                    </TABLE_inpolicy>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>0</outpolicynr>
+                      <outpolicytype>ipv6 prefix-list</outpolicytype>
+                      <outpolicyname>LIST456</outpolicyname>
+                     </ROW_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>2</outpolicynr>
+                      <outpolicytype>route-map</outpolicytype>
+                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <rrconfigured>false</rrconfigured>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicyname>0</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
+                   </ROW_persaf>
+                  </TABLE_persaf>
+                 </ROW_peraf>
+                 <ROW_peraf>
+                  <per-afi>16388</per-afi>
+                  <TABLE_persaf>
+                   <ROW_persaf>
+                    <per-safi>71</per-safi>
+                    <per-af-name>Link-State</per-af-name>
+                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <sendcommunity>true</sendcommunity>
+                    <sendextcommunity>true</sendextcommunity>
+                    <thirdpartynexthop>false</thirdpartynexthop>
+                    <maxpfx>445566</maxpfx>
+                    <allowasin>10</allowasin>
+                    <asoverride>false</asoverride>
+                    <peerascheckdisabled>false</peerascheckdisabled>
+                    <TABLE_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>0</inpolicynr>
+                      <inpolicytype>ip prefix-list</inpolicytype>
+                      <inpolicyname>LIST123</inpolicyname>
+                     </ROW_inpolicy>
+                    </TABLE_inpolicy>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>0</outpolicynr>
+                      <outpolicytype>ip prefix-list</outpolicytype>
+                      <outpolicyname>LIST456</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <rrconfigured>false</rrconfigured>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicyname>0</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                   </ROW_persaf>
+                  </TABLE_persaf>
+                 </ROW_peraf>
+                </TABLE_peraf>
+                <TABLE_vrf>
+                 <ROW_vrf>
+                  <vrf-name>ac</vrf-name>
+                 </ROW_vrf>
+                 <ROW_vrf>
+                  <vrf-name>default</vrf-name>
+                 </ROW_vrf>
+                 <ROW_vrf>
+                  <vrf-name>vpn1</vrf-name>
+                 </ROW_vrf>
+                 <ROW_vrf>
+                  <vrf-name>vpn2</vrf-name>
+                 </ROW_vrf>
+                </TABLE_vrf>
+               </ROW_neighbor>
+               <ROW_neighbor>
+                <templatepeer>PEER1</templatepeer>
+                <sourceif>loopback1</sourceif>
+                <lowmemexempt>true</lowmemexempt>
+                <ttlsecurity>false</ttlsecurity>
+                <ttllimit>100</ttllimit>
+                <passiveonly>true</passiveonly>
+                <localas-inactive>true</localas-inactive>
+                <remove-privateas>false</remove-privateas>
+                <TABLE_peraf>
+                 <ROW_peraf>
+                  <per-afi>1</per-afi>
+                  <TABLE_persaf>
+                   <ROW_persaf>
+                    <per-safi>1</per-safi>
+                    <per-af-name>IPv4 Unicast</per-af-name>
+                    <conditionmap>DENY_ALL_RM</conditionmap>
+                    <advertisemap>BLOCK-ALL</advertisemap>
+                    <advertisemapstatus>Advertise</advertisemapstatus>
+                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <sendcommunity>true</sendcommunity>
+                    <sendextcommunity>true</sendextcommunity>
+                    <localnexthop>0.0.0.0</localnexthop>
+                    <thirdpartynexthop>false</thirdpartynexthop>
+                    <maxpfx>888888888</maxpfx>
+                    <soo>SOO:1.1.1.1:100</soo>
+                    <weight>9999</weight>
+                    <allowasin>10</allowasin>
+                    <asoverride>true</asoverride>
+                    <peerascheckdisabled>false</peerascheckdisabled>
+                    <TABLE_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>0</inpolicynr>
+                      <inpolicytype>ip prefix-list</inpolicytype>
+                      <inpolicyname>LIST123</inpolicyname>
+                     </ROW_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>2</inpolicynr>
+                      <inpolicytype>route-map</inpolicytype>
+                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
+                     </ROW_inpolicy>
+                    </TABLE_inpolicy>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>0</outpolicynr>
+                      <outpolicytype>ip prefix-list</outpolicytype>
+                      <outpolicyname>LIST456</outpolicyname>
+                     </ROW_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>2</outpolicynr>
+                      <outpolicytype>route-map</outpolicytype>
+                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <rrconfigured>false</rrconfigured>
+                    <defaultoriginate>true</defaultoriginate>
+                    <defaultoriginatermap>PASS-ALL</defaultoriginatermap>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicyname>0</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
+                   </ROW_persaf>
+                  </TABLE_persaf>
+                 </ROW_peraf>
+                 <ROW_peraf>
+                  <per-afi>1</per-afi>
+                  <TABLE_persaf>
+                   <ROW_persaf>
+                    <per-safi>2</per-safi>
+                    <per-af-name>IPv4 Multicast</per-af-name>
+                    <conditionmap>DENY_ALL_RM</conditionmap>
+                    <advertisemap>BLOCK-ALL</advertisemap>
+                    <advertisemapstatus>Advertise</advertisemapstatus>
+                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <sendcommunity>true</sendcommunity>
+                    <sendextcommunity>true</sendextcommunity>
+                    <localnexthop>0.0.0.0</localnexthop>
+                    <thirdpartynexthop>false</thirdpartynexthop>
+                    <maxpfx>888888888</maxpfx>
+                    <soo>SOO:1.1.1.1:100</soo>
+                    <weight>9999</weight>
+                    <allowasin>10</allowasin>
+                    <asoverride>true</asoverride>
+                    <peerascheckdisabled>false</peerascheckdisabled>
+                    <TABLE_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>0</inpolicynr>
+                      <inpolicytype>ip prefix-list</inpolicytype>
+                      <inpolicyname>LIST123</inpolicyname>
+                     </ROW_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>2</inpolicynr>
+                      <inpolicytype>route-map</inpolicytype>
+                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
+                     </ROW_inpolicy>
+                    </TABLE_inpolicy>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>0</outpolicynr>
+                      <outpolicytype>ip prefix-list</outpolicytype>
+                      <outpolicyname>LIST456</outpolicyname>
+                     </ROW_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>2</outpolicynr>
+                      <outpolicytype>route-map</outpolicytype>
+                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <rrconfigured>false</rrconfigured>
+                    <defaultoriginate>true</defaultoriginate>
+                    <defaultoriginatermap>PASS-ALL</defaultoriginatermap>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicyname>0</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
+                   </ROW_persaf>
+                  </TABLE_persaf>
+                 </ROW_peraf>
+                 <ROW_peraf>
+                  <per-afi>2</per-afi>
+                  <TABLE_persaf>
+                   <ROW_persaf>
+                    <per-safi>1</per-safi>
+                    <per-af-name>IPv6 Unicast</per-af-name>
+                    <conditionmap>DENY_ALL_RM</conditionmap>
+                    <advertisemap>BLOCK-ALL</advertisemap>
+                    <advertisemapstatus>Advertise</advertisemapstatus>
+                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <sendcommunity>true</sendcommunity>
+                    <sendextcommunity>true</sendextcommunity>
+                    <localnexthop>0.0.0.0</localnexthop>
+                    <thirdpartynexthop>false</thirdpartynexthop>
+                    <maxpfx>888888888</maxpfx>
+                    <soo>SOO:1.1.1.1:100</soo>
+                    <weight>9999</weight>
+                    <allowasin>10</allowasin>
+                    <asoverride>true</asoverride>
+                    <peerascheckdisabled>false</peerascheckdisabled>
+                    <TABLE_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>0</inpolicynr>
+                      <inpolicytype>ipv6 prefix-list</inpolicytype>
+                      <inpolicyname>LIST123</inpolicyname>
+                     </ROW_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>2</inpolicynr>
+                      <inpolicytype>route-map</inpolicytype>
+                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
+                     </ROW_inpolicy>
+                    </TABLE_inpolicy>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>0</outpolicynr>
+                      <outpolicytype>ipv6 prefix-list</outpolicytype>
+                      <outpolicyname>LIST456</outpolicyname>
+                     </ROW_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>2</outpolicynr>
+                      <outpolicytype>route-map</outpolicytype>
+                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <rrconfigured>false</rrconfigured>
+                    <defaultoriginate>true</defaultoriginate>
+                    <defaultoriginatermap>PASS-ALL</defaultoriginatermap>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicyname>0</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
+                   </ROW_persaf>
+                  </TABLE_persaf>
+                 </ROW_peraf>
+                 <ROW_peraf>
+                  <per-afi>2</per-afi>
+                  <TABLE_persaf>
+                   <ROW_persaf>
+                    <per-safi>2</per-safi>
+                    <per-af-name>IPv6 Multicast</per-af-name>
+                    <conditionmap>DENY_ALL_RM</conditionmap>
+                    <advertisemap>BLOCK-ALL</advertisemap>
+                    <advertisemapstatus>Advertise</advertisemapstatus>
+                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <sendcommunity>true</sendcommunity>
+                    <sendextcommunity>true</sendextcommunity>
+                    <localnexthop>0.0.0.0</localnexthop>
+                    <thirdpartynexthop>false</thirdpartynexthop>
+                    <maxpfx>888888888</maxpfx>
+                    <soo>SOO:1.1.1.1:100</soo>
+                    <weight>9999</weight>
+                    <allowasin>10</allowasin>
+                    <asoverride>true</asoverride>
+                    <peerascheckdisabled>false</peerascheckdisabled>
+                    <TABLE_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>0</inpolicynr>
+                      <inpolicytype>ipv6 prefix-list</inpolicytype>
+                      <inpolicyname>LIST123</inpolicyname>
+                     </ROW_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>2</inpolicynr>
+                      <inpolicytype>route-map</inpolicytype>
+                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
+                     </ROW_inpolicy>
+                    </TABLE_inpolicy>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>0</outpolicynr>
+                      <outpolicytype>ipv6 prefix-list</outpolicytype>
+                      <outpolicyname>LIST456</outpolicyname>
+                     </ROW_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>2</outpolicynr>
+                      <outpolicytype>route-map</outpolicytype>
+                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <rrconfigured>false</rrconfigured>
+                    <defaultoriginate>true</defaultoriginate>
+                    <defaultoriginatermap>PASS-ALL</defaultoriginatermap>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicyname>0</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
+                   </ROW_persaf>
+                  </TABLE_persaf>
+                 </ROW_peraf>
+                 <ROW_peraf>
+                  <per-afi>1</per-afi>
+                  <TABLE_persaf>
+                   <ROW_persaf>
+                    <per-safi>128</per-safi>
+                    <per-af-name>VPNv4 Unicast</per-af-name>
+                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <sendcommunity>true</sendcommunity>
+                    <sendextcommunity>true</sendextcommunity>
+                    <localnexthop>0.0.0.0</localnexthop>
+                    <thirdpartynexthop>false</thirdpartynexthop>
+                    <maxpfx>888888888</maxpfx>
+                    <weight>9999</weight>
+                    <allowasin>10</allowasin>
+                    <asoverride>false</asoverride>
+                    <peerascheckdisabled>false</peerascheckdisabled>
+                    <TABLE_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>0</inpolicynr>
+                      <inpolicytype>ip prefix-list</inpolicytype>
+                      <inpolicyname>LIST123</inpolicyname>
+                     </ROW_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>2</inpolicynr>
+                      <inpolicytype>route-map</inpolicytype>
+                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
+                     </ROW_inpolicy>
+                    </TABLE_inpolicy>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>0</outpolicynr>
+                      <outpolicytype>ip prefix-list</outpolicytype>
+                      <outpolicyname>LIST456</outpolicyname>
+                     </ROW_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>2</outpolicynr>
+                      <outpolicytype>route-map</outpolicytype>
+                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <rrconfigured>false</rrconfigured>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicyname>0</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
+                   </ROW_persaf>
+                  </TABLE_persaf>
+                 </ROW_peraf>
+                 <ROW_peraf>
+                  <per-afi>2</per-afi>
+                  <TABLE_persaf>
+                   <ROW_persaf>
+                    <per-safi>128</per-safi>
+                    <per-af-name>VPNv6 Unicast</per-af-name>
+                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <sendcommunity>true</sendcommunity>
+                    <sendextcommunity>true</sendextcommunity>
+                    <localnexthop>0.0.0.0</localnexthop>
+                    <thirdpartynexthop>false</thirdpartynexthop>
+                    <maxpfx>888888888</maxpfx>
+                    <weight>9999</weight>
+                    <allowasin>10</allowasin>
+                    <asoverride>false</asoverride>
+                    <peerascheckdisabled>false</peerascheckdisabled>
+                    <TABLE_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>0</inpolicynr>
+                      <inpolicytype>ipv6 prefix-list</inpolicytype>
+                      <inpolicyname>LIST123</inpolicyname>
+                     </ROW_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>2</inpolicynr>
+                      <inpolicytype>route-map</inpolicytype>
+                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
+                     </ROW_inpolicy>
+                    </TABLE_inpolicy>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>0</outpolicynr>
+                      <outpolicytype>ipv6 prefix-list</outpolicytype>
+                      <outpolicyname>LIST456</outpolicyname>
+                     </ROW_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>2</outpolicynr>
+                      <outpolicytype>route-map</outpolicytype>
+                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <rrconfigured>false</rrconfigured>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicyname>0</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
+                   </ROW_persaf>
+                  </TABLE_persaf>
+                 </ROW_peraf>
+                 <ROW_peraf>
+                  <per-afi>16388</per-afi>
+                  <TABLE_persaf>
+                   <ROW_persaf>
+                    <per-safi>71</per-safi>
+                    <per-af-name>Link-State</per-af-name>
+                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <sendcommunity>true</sendcommunity>
+                    <sendextcommunity>true</sendextcommunity>
+                    <thirdpartynexthop>false</thirdpartynexthop>
+                    <maxpfx>445566</maxpfx>
+                    <allowasin>10</allowasin>
+                    <asoverride>false</asoverride>
+                    <peerascheckdisabled>false</peerascheckdisabled>
+                    <TABLE_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>0</inpolicynr>
+                      <inpolicytype>ip prefix-list</inpolicytype>
+                      <inpolicyname>LIST123</inpolicyname>
+                     </ROW_inpolicy>
+                    </TABLE_inpolicy>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>0</outpolicynr>
+                      <outpolicytype>ip prefix-list</outpolicytype>
+                      <outpolicyname>LIST456</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <rrconfigured>false</rrconfigured>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicyname>0</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                   </ROW_persaf>
+                  </TABLE_persaf>
+                 </ROW_peraf>
+                </TABLE_peraf>
+                <TABLE_vrf>
+                 <ROW_vrf>
+                  <vrf-name>ac</vrf-name>
+                 </ROW_vrf>
+                 <ROW_vrf>
+                  <vrf-name>default</vrf-name>
+                  <TABLE_inheritingpeer>
+                   <ROW_inheritingpeer>
+                    <inheritingpeer>21.0.201.1</inheritingpeer>
+                   </ROW_inheritingpeer>
+                  </TABLE_inheritingpeer>
+                 </ROW_vrf>
+                 <ROW_vrf>
+                  <vrf-name>vpn1</vrf-name>
+                 </ROW_vrf>
+                 <ROW_vrf>
+                  <vrf-name>vpn2</vrf-name>
+                 </ROW_vrf>
+                </TABLE_vrf>
+               </ROW_neighbor>
+              </TABLE_neighbor>
+             </__readonly__>
+            </peer-template>
+           </bgp>
+          </show>
+         </nf:data>
+        </nf:rpc-reply>
+        ]]>]]>
+        '''}
+
+    def test_golden_xml(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpPeerTemplateCmd(device=self.device, context='xml')
+        parsed_output = obj.parse()
+        import pdb; pdb.set_trace()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
 if __name__ == '__main__':

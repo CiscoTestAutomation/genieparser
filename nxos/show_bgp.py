@@ -6544,4 +6544,649 @@ class ShowBgpAllNexthopDatabase(ShowBgpVrfAllAllNextHopDatabase):
         return etree_dict
 
 
+# ===================================================
+# Parser for 'show bgp peer-template'
+# ===================================================
+class ShowBgpPeerTemplateCmdSchema(MetaParser):
+    
+    '''Schema for show bgp peer-template'''
+
+    schema = {
+        'template': {
+            Any(): {
+                Optional('source_interface'): str,
+                Optional('low_mem_exempt'): bool,
+                Optional('logging_neighbor_events'): bool,
+                'external_bgp_peer_hops_limit': int,
+                'passive_only': bool,
+                Optional('local_as_inactive'): bool,
+                Optional('remove_private_as'): bool,
+                Optional('vrf'): {
+                    Any(): {
+                        'inheriting_peer': {
+                            Any(): {
+                                'inheriting_peer': str,
+                            },
+                        }
+                    },
+                },
+                'address_family': {
+                    Any(): {
+                        Optional('condition_map'): str,
+                        Optional('advertise_map'): str,
+                        Optional('advertise_map_status'): str,
+                        Optional('in_soft_reconfig_allowed'): bool,
+                        Optional('send_community'): bool,
+                        Optional('send_ext_community'): bool,
+                        Optional('local_nexthop'): str,
+                        Optional('third_party_nexthop'): bool,
+                        Optional('max_pfx'): int,
+                        Optional('soo'): str,
+                        Optional('weight'): int,
+                        Optional('allow_as_in'): int,
+                        Optional('as_override'): bool,
+                        Optional('peer_as_check_disabled'): bool,
+                        Optional('rr_configured'): bool,
+                        Optional('default_originate'): bool,
+                        Optional('default_originate_route_map'): str,
+                        Optional('unsuppress_map'): str,
+                        Optional('in_policy'): {
+                            Any(): {
+                                'type': str,
+                                'name': str,
+                            },
+                        },
+                        Optional('out_policy'): {
+                            Any(): {
+                                'type': str,
+                                'name': str,
+                            },
+                        },                        
+                    },                            
+                },
+            },
+        }
+    }
+class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
+    
+    '''Parser for show bgp peer-template'''
+
+    def cli(self):
+        cmd = 'show bgp peer-template'
+        out = self.device.execute(cmd)
+        
+        # Init vars
+        ret_dict = {}
+        sub_dict = {}
+        tem_peer = None
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # BGP peer-template is PEER2
+            p1 = re.compile(r'^BGP +peer\-template +is +'
+                             '(?P<template>[\w\-]+)$')
+            m = p1.match(line)
+            if m:
+                template = m.groupdict()['template']
+
+                if 'template' not in ret_dict:
+                    ret_dict['template'] = {}
+
+                if template not in ret_dict['template']:
+                    ret_dict['template'][template] = {}
+
+                # will enable regext when there is output
+                # initial the flag due to comparison with xml version
+                ret_dict['template'][template]['local_as_inactive'] = False
+                ret_dict['template'][template]['remove_private_as'] = False
+                continue
+
+            # Using loopback1 as update source for this peer
+            p2 = re.compile(r'^Using +(?P<intf>[\w\-\/\.]+) +as'
+                             ' +update +source +for +this +peer$')
+            m = p2.match(line)
+            if m:
+                ret_dict['template'][template]['source_interface'] = \
+                    m.groupdict()['intf']
+                continue
+
+            # Peer is low-memory exempt
+            p3 = re.compile(r'^Peer +is +low\-memory +exempt$')
+            m = p3.match(line)
+            if m:
+                ret_dict['template'][template]['low_mem_exempt'] = True
+                continue
+
+            # Disable logging neighbor events
+            p4 = re.compile(r'^Disable +logging +neighbor +events$')
+            m = p4.match(line)
+            if m:
+                ret_dict['template'][template]['logging_neighbor_events'] = False
+                continue
+
+            # External BGP peer might be up to 100 hops away
+            p5 = re.compile(r'^External +BGP +peer +might +be +up +to'
+                             ' +(?P<hops>\d+) +hops +away$')
+            m = p5.match(line)
+            if m:
+                ret_dict['template'][template]['external_bgp_peer_hops_limit'] = \
+                    int(m.groupdict()['hops'])
+                continue
+
+            # Only passive connection setup allowed
+            p6 = re.compile(r'^Only +passive +connection +setup +allowed$')
+            m = p6.match(line)
+            if m:
+                ret_dict['template'][template]['passive_only'] = True
+                continue
+
+            # Neighbor local-as command not active
+            p23 = re.compile(r'^Neighbor +local\-as +command +not +active$')
+            m = p23.match(line)
+            if m:
+                ret_dict['template'][template]['local_as_inactive'] = True
+                continue
+
+            # For address family: IPv4 Unicast
+            p7 = re.compile(r'^For +address +family: +(?P<af>[\w\s\-]+)$')
+            m = p7.match(line)
+            if m:
+                af = m.groupdict()['af'].lower()
+
+                if 'address_family' not in ret_dict['template'][template]:
+                    ret_dict['template'][template]['address_family'] = {}
+
+                if af not in ret_dict['template'][template]['address_family']:
+                    ret_dict['template'][template]['address_family'][af] = {}
+
+                sub_dict = ret_dict['template'][template]['address_family'][af]
+
+                # will enable regext when there is output
+                # initial the flag due to comparison with xml version
+                sub_dict['in_soft_reconfig_allowed'] = False
+                sub_dict['rr_configured'] = False
+                sub_dict['peer_as_check_disabled'] = False
+                sub_dict['as_override'] = False
+                continue
+
+            # Condition-map DENY_ALL_RM, Advertise-map BLOCK-ALL, Status Advertise
+            p8 = re.compile(r'^Condition\-map +(?P<con_map>[\w\-]+), +'
+                             'Advertise\-map +(?P<adv_map>[\w\-]+), +'
+                             'Status +(?P<status>[\w\-]+)$')
+            m = p8.match(line)
+            if m:
+                sub_dict['condition_map'] = m.groupdict()['con_map']
+                sub_dict['advertise_map'] = m.groupdict()['adv_map']
+                sub_dict['advertise_map_status'] = m.groupdict()['status'].lower()
+                continue
+
+            # Community attribute sent to this neighbor
+            p9 = re.compile(r'^Community +attribute +sent +to +this +neighbor$')
+            m = p9.match(line)
+            if m:
+                sub_dict['send_community'] = True
+                continue
+
+            # Extended community attribute sent to this neighbor
+            p10 = re.compile(r'^Extended +community +attribute +sent +'
+                              'to +this +neighbor$')
+            m = p10.match(line)
+            if m:
+                sub_dict['send_ext_community'] = True
+                continue
+
+            # Nexthop always set to local peering address, 0.0.0.0
+            p11 = re.compile(r'^Nexthop +always +set +to +local +'
+                              'peering +address, +(?P<local_nexthop>[\w\.\:]+)$')
+            m = p11.match(line)
+            if m:
+                sub_dict['local_nexthop'] = m.groupdict()['local_nexthop']
+                continue
+
+            # Third-party Nexthop will not be computed.
+            # will enhance this when output for third_party_nexthop is enabled
+            p12 = re.compile(r'^Third\-party +Nexthop +will +not +be +computed.$')
+            m = p12.match(line)
+            if m:
+                sub_dict['third_party_nexthop'] = False
+                continue
+
+            # Maximum prefixes allowed 888888888
+            p13 = re.compile(r'^Maximum +prefixes +allowed +(?P<max_pfx>\d+)$')
+            m = p13.match(line)
+            if m:
+                sub_dict['max_pfx'] = int(m.groupdict()['max_pfx'])
+                continue
+
+            # SOO Extcommunity: SOO:1.1.1.1:100
+            p14 = re.compile(r'^SOO +Extcommunity: +(?P<soo>[\w\:\.]+)$')
+            m = p14.match(line)
+            if m:
+                sub_dict['soo'] = m.groupdict()['soo']
+                continue
+
+            # Weight: 9999
+            p15 = re.compile(r'^Weight: +(?P<weight>\d+)$')
+            m = p15.match(line)
+            if m:
+                sub_dict['weight'] = int(m.groupdict()['weight'])
+                continue
+
+            # Allow my ASN 10 times
+            p16 = re.compile(r'^Allow +my +ASN +(?P<asn>\d+) +times$')
+            m = p16.match(line)
+            if m:
+                sub_dict['allow_as_in'] = int(m.groupdict()['asn'])
+                continue
+
+            # ASN override is enabled
+            p17 = re.compile(r'^ASN +override +is +(?P<status>\w+)$')
+            m = p17.match(line)
+            if m:
+                if m.groupdict()['status'] == 'enabled':
+                    sub_dict['as_override'] = True
+                else:
+                    sub_dict['as_override'] = False
+                continue
+
+            # Inbound ip prefix-list configured is LIST123
+            # Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
+            p18 = re.compile(r'^Inbound +(?P<type>[\w\-\s]+) +configured'
+                              ' +is +(?P<name>[\w\-]+)$')
+            m = p18.match(line)
+            if m:
+                name = m.groupdict()['name']
+                policy_type = m.groupdict()['type']
+
+                if 'in_policy' not in sub_dict:
+                    sub_dict['in_policy'] = {}
+
+                if name not in sub_dict['in_policy']:
+                    sub_dict['in_policy'][name] = {}
+
+                sub_dict['in_policy'][name]['name'] = name
+                sub_dict['in_policy'][name]['type'] = policy_type
+                continue
+
+            # Outbound ip prefix-list configured is LIST456
+            # Outbound route-map configured is PERMIT_IPV6_RM
+            p19 = re.compile(r'^Outbound +(?P<type>[\w\-\s]+) +configured'
+                              ' +is +(?P<name>[\w\-]+)$')
+            m = p19.match(line)
+            if m:
+                name = m.groupdict()['name']
+                policy_type = m.groupdict()['type']
+
+                if 'out_policy' not in sub_dict:
+                    sub_dict['out_policy'] = {}
+
+                if name not in sub_dict['out_policy']:
+                    sub_dict['out_policy'][name] = {}
+
+                sub_dict['out_policy'][name]['name'] = name
+                sub_dict['out_policy'][name]['type'] = policy_type
+                continue
+
+            # Default information originate, route-map PASS-ALL  Last End-of-RIB sent 0.000000 after session start
+            p20 = re.compile(r'^Default +information +originate, +'
+                              'route-map +(?P<map>[\w\-]+) +(?P<dummy>.*)$')
+            m = p20.match(line)
+            if m:
+                sub_dict['default_originate'] = True
+                sub_dict['default_originate_route_map'] = m.groupdict()['map']
+                continue
+
+            # First convergence 0.000000 after session start with 0 routes sent
+
+            # Unsuppress-map ORIGINATE_IPV6 configured
+            p21 = re.compile(r'^Unsuppress\-map +(?P<map>[\w\-]+) +configured$')
+            m = p21.match(line)
+            if m:
+                sub_dict['unsuppress_map'] = m.groupdict()['map']
+                continue
+
+            # Members of peer-template PEER1:
+            # default: 21.0.201.1
+            p22 = re.compile(r'^Members +of +peer\-template +(?P<peer>[\w\-]+):$')
+            m = p22.match(line)
+            if m:
+                tem_peer = m.groupdict()['peer']
+                continue
+
+            p22_1 = re.compile(r'^(?P<vrf>[\w\-]+): +(?P<neighbor>[\w\:\.]+)$')
+            m = p22_1.match(line)
+            if m and tem_peer:
+                if 'vrf' not in ret_dict['template'][tem_peer]:
+                    ret_dict['template'][tem_peer]['vrf'] = {}
+
+                vrf = m.groupdict()['vrf']
+
+                if vrf not in ret_dict['template'][tem_peer]['vrf']:
+                    ret_dict['template'][tem_peer]['vrf'][vrf] = {}
+
+                if 'inheriting_peer' not in ret_dict['template'][tem_peer]['vrf'][vrf]:
+                    ret_dict['template'][tem_peer]['vrf'][vrf]['inheriting_peer'] = {}
+
+                nei = m.groupdict()['neighbor']
+
+                if nei not in ret_dict['template'][tem_peer]['vrf'][vrf]['inheriting_peer']:
+                    ret_dict['template'][tem_peer]['vrf'][vrf]['inheriting_peer'][nei] = {}
+
+                ret_dict['template'][tem_peer]['vrf'][vrf]['inheriting_peer'][nei]\
+                    ['inheriting_peer'] = nei
+                    
+
+                # reset tem_peer
+                tem_peer = None
+                continue
+
+        return ret_dict
+
+
+    def xml(self):
+        out = self.device.execute('show bgp peer-template | xml')
+
+        etree_dict = {}
+        sub_dict = {}
+        # Remove junk characters returned by the device
+        out = out.replace("]]>]]>", "")
+        root = ET.fromstring(out)
+
+        # top table root
+        root = retrieve_xml_child(root, 'TABLE_neighbor')
+
+        # get xml namespace
+        # {http://www.cisco.com/nxos:7.0.3.I7.1.:bgp}
+        line = root.getchildren()[0].tag
+        m = re.compile(r'(?P<name>\{[\S]+\})').match(line)
+        namespace = m.groupdict()['name']
+
+        # -----   loop vrf  -----
+        for peer_tree in root.findall('{}ROW_neighbor'.format(namespace)):
+            # vrf
+            try:
+                template = peer_tree.find('{}templatepeer'.format(namespace)).text
+            except:
+                break
+
+            if 'template' not in etree_dict:
+                etree_dict['template'] = {}
+            if template not in etree_dict['template']:
+                etree_dict['template'][template] = {}
+
+            # <sourceif>loopback1</sourceif>
+            etree_dict['template'][template]['source_interface'] = \
+                peer_tree.find('{}sourceif'.format(namespace)).text
+
+            # <lowmemexempt>true</lowmemexempt>
+            if peer_tree.find('{}lowmemexempt'.format(namespace)).text == 'true':
+                etree_dict['template'][template]['low_mem_exempt'] = True
+            else:
+                etree_dict['template'][template]['low_mem_exempt'] = False
+                    
+
+            # <ttlsecurity>false</ttlsecurity>
+            if peer_tree.find('{}ttlsecurity'.format(namespace)).text == 'true':
+                etree_dict['template'][template]['logging_neighbor_events'] = True
+            else:
+                etree_dict['template'][template]['logging_neighbor_events'] = False
+
+            # <ttllimit>100</ttllimit>
+            etree_dict['template'][template]['external_bgp_peer_hops_limit'] = \
+                int(peer_tree.find('{}ttllimit'.format(namespace)).text)
+
+            # <passiveonly>true</passiveonly>
+            if peer_tree.find('{}passiveonly'.format(namespace)).text == 'true':
+                etree_dict['template'][template]['passive_only'] = True
+            else:
+                etree_dict['template'][template]['passive_only'] = False
+
+            # <localas-inactive>false</localas-inactive>
+            if peer_tree.find('{}localas-inactive'.format(namespace)).text == 'true':
+                etree_dict['template'][template]['local_as_inactive'] = True
+            else:
+                etree_dict['template'][template]['local_as_inactive'] = False
+
+            # <remove-privateas>false</remove-privateas>
+            if peer_tree.find('{}remove-privateas'.format(namespace)).text == 'true':
+                etree_dict['template'][template]['remove_private_as'] = True
+            else:
+                etree_dict['template'][template]['remove_private_as'] = False
+
+
+             # vrf table
+            vrf_tree = peer_tree.find('{}TABLE_vrf'.format(namespace))
+            if vrf_tree:
+                # -----   loop vrf  -----
+                for vrf_root in vrf_tree.findall('{}ROW_vrf'.format(namespace)):
+                    # <vrf-name>default</vrf-name>
+                    try:
+                        vrf = vrf_root.find('{}vrf-name'.format(namespace)).text.lower()
+                    except:
+                        continue
+
+                    # inheritingpeer table
+                    inherit_tree = vrf_root.find('{}TABLE_inheritingpeer'.format(namespace))
+                    if not inherit_tree:
+                        continue
+
+                    # -----   loop inheritingpeer  -----
+                    for inherit_root in inherit_tree.findall('{}ROW_inheritingpeer'
+                                                             .format(namespace)):
+
+                        # <inheritingpeer>21.0.201.1</inheritingpeer>
+                        try:
+                            inherit_peer = inherit_root.find('{}inheritingpeer'
+                                                             .format(namespace)).text.lower()
+                        except:
+                            continue
+                        if 'vrf' not in etree_dict['template'][template]:
+                            etree_dict['template'][template]['vrf'] = {}
+                        if vrf not in etree_dict['template'][template]['vrf']:
+                            etree_dict['template'][template]['vrf'][vrf] = {}
+
+                        if 'inheriting_peer' not in etree_dict['template']\
+                            [template]['vrf'][vrf]:
+                            etree_dict['template'][template]['vrf'][vrf]\
+                                ['inheriting_peer'] = {}
+                            
+                        if inherit_peer not in etree_dict['template']\
+                            [template]['vrf'][vrf]['inheriting_peer']:
+                            etree_dict['template'][template]['vrf'][vrf]\
+                                ['inheriting_peer'][inherit_peer] = {}
+
+                        etree_dict['template'][template]['vrf'][vrf]\
+                                ['inheriting_peer'][inherit_peer]['inheriting_peer'] = inherit_peer
+
+
+            # address_family table
+            afi = peer_tree.find('{}TABLE_peraf'.format(namespace))
+
+            # -----   loop address_family  -----
+            for af_root in afi.findall('{}ROW_peraf'.format(namespace)):
+
+                # address_family
+                row_safi = af_root.find('{}TABLE_persaf'.format(namespace))
+                af_root = row_safi.find('{}ROW_persaf'.format(namespace))
+                try:
+                    af = af_root.find('{}per-af-name'.format(namespace)).text.lower()
+                except:
+                    continue
+
+                if 'address_family' not in etree_dict['template'][template]:
+                    etree_dict['template'][template]['address_family'] = {}
+                if af not in etree_dict['template'][template]['address_family']:
+                    etree_dict['template'][template]['address_family'][af] = {}
+
+                sub_dict = etree_dict['template'][template]['address_family'][af]
+
+                # <conditionmap>DENY_ALL_RM</conditionmap>
+                try:
+                    sub_dict['condition_map'] = \
+                        af_root.find('{}conditionmap'.format(namespace)).text
+                except:
+                    pass
+
+                # <advertisemap>BLOCK-ALL</advertisemap>
+                try:
+                    sub_dict['advertise_map'] = \
+                        af_root.find('{}advertisemap'.format(namespace)).text
+                except:
+                    pass
+
+                # <advertisemapstatus>Advertise</advertisemapstatus>
+                try:
+                    sub_dict['advertise_map_status'] = \
+                        af_root.find('{}advertisemapstatus'.format(namespace)).text.lower()
+                except:
+                    pass
+
+                # <insoftreconfigallowed>false</insoftreconfigallowed>
+                if af_root.find('{}insoftreconfigallowed'.format(namespace)).text == 'true':
+                    sub_dict['in_soft_reconfig_allowed'] = True
+                else:
+                    sub_dict['in_soft_reconfig_allowed'] = False
+
+                # <sendcommunity>true</sendcommunity>
+                if af_root.find('{}sendcommunity'.format(namespace)).text == 'true':
+                    sub_dict['send_community'] = True
+                else:
+                    sub_dict['send_community'] = False
+
+                # <sendextcommunity>true</sendextcommunity>
+                if af_root.find('{}sendextcommunity'.format(namespace)).text == 'true':
+                    sub_dict['send_ext_community'] = True
+                else:
+                    sub_dict['send_ext_community'] = False
+
+                # <localnexthop>0.0.0.0</localnexthop>
+                try:
+                    sub_dict['local_nexthop'] = \
+                        af_root.find('{}localnexthop'.format(namespace)).text
+                except:
+                    pass
+
+                # <thirdpartynexthop>false</thirdpartynexthop>
+                if af_root.find('{}thirdpartynexthop'.format(namespace)).text == 'true':
+                    sub_dict['third_party_nexthop'] = True
+                else:
+                    sub_dict['third_party_nexthop'] = False
+
+                # <maxpfx>888888888</maxpfx>
+                try:
+                    sub_dict['max_pfx'] = \
+                        int(af_root.find('{}maxpfx'.format(namespace)).text)
+                except:
+                    pass
+
+                # <soo>SOO:1.1.1.1:100</soo>
+                try:
+                    sub_dict['soo'] = \
+                        af_root.find('{}soo'.format(namespace)).text
+                except:
+                    pass
+
+                # <weight>9999</weight>
+                try:
+                    sub_dict['weight'] = \
+                        int(af_root.find('{}weight'.format(namespace)).text)
+                except:
+                    pass
+
+                # <allowasin>10</allowasin>
+                try:
+                    sub_dict['allow_as_in'] = \
+                        int(af_root.find('{}allowasin'.format(namespace)).text)
+                except:
+                    pass
+
+                # <asoverride>true</asoverride>
+                if af_root.find('{}asoverride'.format(namespace)).text == 'true':
+                    sub_dict['as_override'] = True
+                else:
+                    sub_dict['as_override'] = False
+
+                # <peerascheckdisabled>false</peerascheckdisabled>
+                if af_root.find('{}peerascheckdisabled'.format(namespace)).text == 'true':
+                    sub_dict['peer_as_check_disabled'] = True
+                else:
+                    sub_dict['peer_as_check_disabled'] = False
+
+                # <rrconfigured>false</rrconfigured>
+                if af_root.find('{}rrconfigured'.format(namespace)).text == 'true':
+                    sub_dict['rr_configured'] = True
+                else:
+                    sub_dict['rr_configured'] = False
+
+                # <defaultoriginate>true</defaultoriginate>
+                try:
+                    if af_root.find('{}defaultoriginate'.format(namespace)).text == 'true':
+                        sub_dict['default_originate'] = True
+                    else:
+                        sub_dict['default_originate'] = False
+                except:
+                    pass
+
+                # <defaultoriginatermap>PASS-ALL</defaultoriginatermap>
+                try:
+                    sub_dict['default_originate_route_map'] = \
+                        af_root.find('{}defaultoriginatermap'.format(namespace)).text
+                except:
+                    pass
+
+                # <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
+                try:
+                    sub_dict['unsuppress_map'] = \
+                        af_root.find('{}unsuppress-map'.format(namespace)).text
+                except:
+                    pass
+                
+
+                # TABLE_inpolicy table
+                policy = af_root.find('{}TABLE_inpolicy'.format(namespace))
+
+                if policy:
+                    # -----   loop in policy  -----
+                    for policy_root in policy.findall('{}ROW_inpolicy'.format(namespace)):
+                        try:
+                            policy = policy_root.find('{}inpolicyname'.format(namespace)).text
+                        except:
+                            continue
+
+                        if 'in_policy' not in sub_dict:
+                            sub_dict['in_policy'] = {}
+                        if policy not in sub_dict['in_policy']:
+                            sub_dict['in_policy'][policy] = {}
+
+                        sub_dict['in_policy'][policy]['name'] = policy
+
+                        # <inpolicytype>route-map</inpolicytype>
+                        sub_dict['in_policy'][policy]['type'] = \
+                            policy_root.find('{}inpolicytype'.format(namespace)).text
+
+                # TABLE_outpolicy table
+                policy = af_root.find('{}TABLE_outpolicy'.format(namespace))
+
+                if policy:
+                    # -----   loop in policy  -----
+                    for policy_root in policy.findall('{}ROW_outpolicy'.format(namespace)):
+                        try:
+                            policy = policy_root.find('{}outpolicyname'.format(namespace)).text
+                        except:
+                            continue
+                        if 'out_policy' not in sub_dict:
+                            sub_dict['out_policy'] = {}
+                        if policy not in sub_dict['out_policy']:
+                            sub_dict['out_policy'][policy] = {}
+
+                        sub_dict['out_policy'][policy]['name'] = policy
+
+                        # <outpolicytype>route-map</outpolicytype>
+                        sub_dict['out_policy'][policy]['type'] = \
+                            policy_root.find('{}outpolicytype'.format(namespace)).text
+
+                                                                                                                         
+        return etree_dict
+
 # vim: ft=python et sw=4
