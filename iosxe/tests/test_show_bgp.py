@@ -7,7 +7,8 @@ from ats.topology import Device
 from metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from parser.iosxe.show_bgp import ShowBgpAllSummary, ShowBgpAllClusterIds
+from parser.iosxe.show_bgp import ShowBgpAllSummary, ShowBgpAllClusterIds, \
+                                  ShowBgpAllNeighborsReceivedRoutes
 
 
 class test_show_bgp_all_summary(unittest.TestCase):
@@ -1069,6 +1070,139 @@ class test_show_bgp_all_cluster_ids(unittest.TestCase):
         obj = ShowBgpAllClusterIds(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+# =============================================================
+# Unit test for 'show bgp all neighbors <WORD> received-routes'
+# =============================================================
+
+class test_show_bgp_neighbors_received_routes(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {'vrf':
+                            {'default':
+                              {'neighbor':
+                                {'21.0.0.2':
+                                  {'address_family':
+                                    {'vpnv4 unicast':
+                                      {'bgp_table_version': 66,
+                                       'local_router_id': '4.4.4.4',
+                                       'received_routes': {}},
+                                     'vpnv4 unicast RD 300:1':
+                                      {'bgp_table_version': 66,
+                                       'default_vrf': 'VRF1',
+                                       'local_router_id': '4.4.4.4',
+                                       'received_routes':
+                                        {'46.1.1.0/24':
+                                          {'index':
+                                            {1:
+                                              {'metric': 2219,
+                                               'next_hop': '10.4.6.6',
+                                               'origin_codes': 'e',
+                                               'path': '300 '
+                                                       '33299 '
+                                                       '51178 '
+                                                       '47751 '
+                                                       '{27016}',
+                                               'path_type': 'None',
+                                               'status_codes': '*   ',
+                                               'weight': 0}}},
+                                         '46.1.2.0/24':
+                                          {'index':
+                                            {1:
+                                              {'metric': 2219,
+                                               'next_hop': '10.4.6.6',
+                                               'origin_codes': 'e',
+                                               'path': '300 '
+                                                       '33299 '
+                                                       '51178 '
+                                                       '47751 '
+                                                       '{27016}',
+                                               'path_type': 'None',
+                                               'status_codes': '*   ',
+                                               'weight': 0}}},
+                                         '46.1.3.0/24':
+                                          {'index':
+                                            {1:
+                                              {'metric': 2219,
+                                               'next_hop': '10.4.6.6',
+                                               'origin_codes': 'e',
+                                               'path': '300 '
+                                                       '33299 '
+                                                       '51178 '
+                                                       '47751 '
+                                                       '{27016}',
+                                               'path_type': 'None',
+                                               'status_codes': '*   ',
+                                               'weight': 0}}},
+                                         '46.1.4.0/24':
+                                          {'index':
+                                            {1:
+                                              {'metric': 2219,
+                                               'next_hop': '10.4.6.6',
+                                               'origin_codes': 'e',
+                                               'path': '300 '
+                                                       '33299 '
+                                                       '51178 '
+                                                       '47751 '
+                                                       '{27016}',
+                                               'path_type': 'None',
+                                               'status_codes': '*   ',
+                                               'weight': 0}}},
+                                         '46.1.5.0/24':
+                                          {'index':
+                                            {1:
+                                              {'metric': 2219,
+                                               'next_hop': '10.4.6.6',
+                                               'origin_codes': 'e',
+                                               'path': '300 '
+                                                       '33299 '
+                                                       '51178 '
+                                                       '47751 '
+                                                       '{27016}',
+                                               'path_type': 'None',
+                                               'status_codes': '*   ',
+                                               'weight': 0}
+                                            }
+                                          }
+                                        },
+                                       'route_distinguisher': '300:1'}}}}}}}
+
+
+    golden_output = {'execute.return_value': '''
+        R4_iosv#show bgp all neighbors 10.4.6.6 received-routes 
+        For address family: VPNv4 Unicast
+        BGP table version is 66, local router ID is 4.4.4.4
+        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
+                      r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
+                      x best-external, a additional-path, c RIB-compressed, 
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        RPKI validation codes: V valid, I invalid, N Not found
+
+             Network          Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 300:1 (default for vrf VRF1) VRF Router ID 44.44.44.44
+         *   46.1.1.0/24      10.4.6.6              2219             0 300 33299 51178 47751 {27016} e
+         *   46.1.2.0/24      10.4.6.6              2219             0 300 33299 51178 47751 {27016} e
+         *   46.1.3.0/24      10.4.6.6              2219             0 300 33299 51178 47751 {27016} e
+         *   46.1.4.0/24      10.4.6.6              2219             0 300 33299 51178 47751 {27016} e
+         *   46.1.5.0/24      10.4.6.6              2219             0 300 33299 51178 47751 {27016} e
+
+        Total number of prefixes 5 
+        '''}
+
+    def test_show_bgp_vrf_all_neighbors_received_routes_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpAllNeighborsReceivedRoutes(device=self.device)
+        parsed_output = obj.parse(neighbor='21.0.0.2')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_show_bgp_vrf_all_neighbors_received_routes_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpAllNeighborsReceivedRoutes(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(neighbor='21.0.0.2')
 
 if __name__ == '__main__':
     unittest.main()
