@@ -177,7 +177,7 @@ class test_show_interfaces_switchport(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
         "GigabitEthernet1/0/4": {
-            "swichport_mode": "trunk",
+            "switchport_mode": "trunk",
             "pruning_vlans": "2-1001",
             'operational_mode': 'trunk',
             "switchport_enable": True,
@@ -228,10 +228,10 @@ class test_show_interfaces_switchport(unittest.TestCase):
             "native_vlan_tagging": True,
             "negotiation_of_trunk": True,
             "capture_vlans": "all",
-            "swichport_mode": "trunk"
+            "switchport_mode": "trunk"
        },
        "GigabitEthernet1/0/5": {
-            "swichport_mode": "static access",
+            "switchport_mode": "static access",
             "pruning_vlans": "2-1001",
             "switchport_enable": True,
             "trunk_vlans": "all",
@@ -255,7 +255,7 @@ class test_show_interfaces_switchport(unittest.TestCase):
        },
        "GigabitEthernet1/1/1": {
             "switchport_enable": True,
-            "swichport_mode": "dynamic auto"
+            "switchport_mode": "dynamic auto"
        }
     }
 
