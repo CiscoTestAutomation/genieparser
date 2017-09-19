@@ -1188,11 +1188,10 @@ class test_show_bgp_neighbors_received_routes(unittest.TestCase):
          *   46.1.4.0/24      10.4.6.6              2219             0 300 33299 51178 47751 {27016} e
          *   46.1.5.0/24      10.4.6.6              2219             0 300 33299 51178 47751 {27016} e
 
-        Total number of prefixes 5 
+        Total number of prefixes 5
         '''}
 
     def test_show_bgp_vrf_all_neighbors_received_routes_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpAllNeighborsReceivedRoutes(device=self.device)
         parsed_output = obj.parse(neighbor='21.0.0.2')

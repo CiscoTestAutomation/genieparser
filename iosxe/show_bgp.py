@@ -618,7 +618,7 @@ class ShowBgpAllNeighborsReceivedRoutesSchema(MetaParser):
 
 
 class ShowBgpAllNeighborsReceivedRoutes(ShowBgpAllNeighborsReceivedRoutesSchema):
-    
+
     '''Parser for show bgp all neighbors <WORD> received-routes'''
 
     def cli(self, neighbor):
@@ -649,11 +649,10 @@ class ShowBgpAllNeighborsReceivedRoutes(ShowBgpAllNeighborsReceivedRoutesSchema)
                 else:
                     continue
 
-
         # show bgp all neighbors {neighbor} received-routes
         cmd  = 'show bgp all neighbors {neighbor} received-routes'.format(neighbor=neighbor)
         out = self.device.execute(cmd)
-        
+
         # Init dictionary
         route_dict = {}
         af_dict = {}
@@ -706,7 +705,7 @@ class ShowBgpAllNeighborsReceivedRoutes(ShowBgpAllNeighborsReceivedRoutesSchema)
                 # Set af_dict
                 af_dict = route_dict['vrf'][vrf]['neighbor'][neighbor_id]\
                     ['address_family'][address_family]
-                
+
                 # Init received_routes dict
                 if 'received_routes' not in af_dict:
                     af_dict['received_routes'] = {}
@@ -889,7 +888,7 @@ class ShowBgpAllNeighborsReceivedRoutes(ShowBgpAllNeighborsReceivedRoutesSchema)
 
                 # Parse numbers
                 numbers = m.groupdict()['numbers']
-                
+
                 # Metric     LocPrf     Weight Path
                 #    4444       100          0  10 3 10 20 30 40 50 60 70 80 90
                 m1 = re.compile(r'^(?P<metric>[0-9]+)'
@@ -936,12 +935,11 @@ class ShowBgpAllNeighborsReceivedRoutes(ShowBgpAllNeighborsReceivedRoutesSchema)
                     af_dict['received_routes'][prefix]['index'][index]['path'] = m3.groupdict()['path'].strip()
                     continue
 
-            # Network            Next Hop            Metric     LocPrf     Weight Path
             # Route Distinguisher: 300:1 (default for vrf VRF1) VRF Router ID 44.44.44.44
-            p4 = re.compile(r'^\s*Route +Distinguisher *:'
-                             ' +(?P<route_distinguisher>(\S+)) '
-                             '+\(default for vrf +(?P<default_vrf>(\S+))\) '
-                             'VRF Router ID (?P<vrf_router_id>(\S+))$')
+            p4 = re.compile(r'^\s*Route +Distinguisher *: '
+                             '+(?P<route_distinguisher>(\S+))'
+                             '( +\(default for vrf +(?P<default_vrf>(\S+))\))?'
+                             '( +VRF Router ID (?P<vrf_router_id>(\S+)))?$')
             m = p4.match(line)
             if m:
                 route_distinguisher = str(m.groupdict()['route_distinguisher'])
