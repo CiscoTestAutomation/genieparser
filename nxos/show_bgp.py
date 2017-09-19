@@ -14,6 +14,17 @@ NXOS parsers for the following show commands:
     * 'show bgp vrf all all neighbors <WORD> advertised-routes'
     * 'show bgp vrf all all neighbors <WORD> routes'
     * 'show bgp vrf all all neighbors <WORD> received-routes'
+    * 'show bgp peer-template'
+    * 'show bgp peer-template | xml'
+    * 'show bgp all dampening flap statistics'
+    * 'show bgp all dampening flap statistics | xml'
+    * 'show bgp all nexthop-database'
+    * 'show bgp all nexthop-database | xml'
+    * 'show bgp peer-template'
+    * 'show bgp peer-template | xml'
+    * 'show bgp vrf <vrf> <address_family>  policy statistics redistribute | xml'
+    * 'show bgp vrf <vrf> <address_family>  policy statistics dampening | xml'
+    * 'show bgp vrf <vrf> <address_family>  policy statistics neighbor <neighbor> | xml'
 '''
 
 # Python
@@ -7188,5 +7199,435 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
 
                                                                                                                          
         return etree_dict
+
+
+# ================================================================================
+# common parse function for commands:
+#   'show bgp vrf <vrf> <address_family>  policy statistics redistribute'
+#   'show bgp vrf <vrf> <address_family>  policy statistics dampening'
+#   'show bgp vrf <vrf> <address_family>  policy statistics neighbor <neighbor>'
+# ================================================================================
+class ShowBgpUnicastPolicyStatisticsSchema(MetaParser):
+    
+    '''Schema for
+       show bgp [vrf <vrf>] <address_family>  policy statistics redistribute
+       show bgp [vrf <vrf>] <address_family>  policy statistics dampening
+       show bgp [vrf <vrf>] <address_family>  policy statistics neighbor <neighbor>
+
+       only for unicast address family output
+    '''
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'rpm_handle_count': int,
+                Optional('neighbor'): str,
+                Optional('route_map'): {
+                    Any():{
+                        Any(): {
+                            'action': str,
+                            'seq_num': int,
+                            'total_accept_count': int,
+                            'total_reject_count': int,
+                            Optional('command'): {
+                                'compare_count': int,
+                                'match_count': int,
+                                'command': str
+                            }
+                        },
+                    },
+                }
+            },
+        }
+    }
+class ShowBgpUnicastPolicyStatistics(ShowBgpUnicastPolicyStatisticsSchema):
+    
+    def cli(self, cmd):
+
+        out = self.device.execute(cmd)
+        
+        # Init vars
+        ret_dict = {}
+        nei_flag = False
+        index = 1
+
+        # extract vrf info if specified,
+        # if not, vrf is default
+        m = re.compile(r'^show +bgp +vrf +(?P<vrf>\w+)').match(cmd)
+        if m:
+            vrf = m.groupdict()['vrf']
+            if vrf == 'all':
+                vrf = ''
+        else:
+            vrf = 'default'
+
+        # extract neighbor info
+        m = re.compile(r'^[\s\S]+ +neighbor +(?P<nei>[\w\.\:]+)').match(cmd)
+        if m:
+            neighbor = m.groupdict()['nei']
+            nei_flag = True
+        else:
+            neighbor = None
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Details for VRF default
+            p1 = re.compile(r'^Details +for +VRF +'
+                             '(?P<vrf>[\w\-]+)$')
+            m = p1.match(line)
+            if m:
+                vrf = m.groupdict()['vrf']
+                nei_flag = True
+                continue
+
+            # No such neighbor
+            if re.compile(r'No +such +neighbor$').match(line):
+                nei_flag = False
+
+            # Total count for redistribute rpm handles: 1
+            # Total count for neighbor rpm handles: 1
+            # Total count for dampening rpm handles: 1
+            p2 = re.compile(r'^Total +count +for +(?P<type>\w+) +rpm +handles: +'
+                             '(?P<handles>\d+)$')
+            m = p2.match(line)
+
+            # BGP policy statistics not available
+            p3 = re.compile(r'^BGP +policy +statistics +not +available$')
+            m1 = p3.match(line)
+
+            if m or m1:
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+
+                if nei_flag and neighbor:
+                    ret_dict['vrf'][vrf]['neighbor'] = neighbor
+
+                ret_dict['vrf'][vrf]['rpm_handle_count'] = \
+                    int(m.groupdict()['handles']) if m else 0
+                continue
+
+            # C: No. of comparisions, M: No. of matches
+
+            # route-map Filter-pip deny 10
+            # route-map ADD_RT_400_400 permit 10
+            # route-map RMAP_DIRECT->BGP_IPV4 permit 10
+            p4 = re.compile(r'^route\-map +(?P<name>\S+) +'
+                             '(?P<action>\w+) +(?P<seqnum>\d+)$')
+            m = p4.match(line)
+            if m:
+                name = m.groupdict()['name']
+
+                if 'route_map' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['route_map'] = {}
+
+                if name not in ret_dict['vrf'][vrf]['route_map']:
+                    ret_dict['vrf'][vrf]['route_map'][name] = {}
+                    index = 1
+                else:
+                    index += 1
+
+                if index not in ret_dict['vrf'][vrf]['route_map'][name]:
+                    ret_dict['vrf'][vrf]['route_map'][name][index] = {}
+
+                ret_dict['vrf'][vrf]['route_map'][name][index]['action'] = \
+                    m.groupdict()['action']
+
+                ret_dict['vrf'][vrf]['route_map'][name][index]['seq_num'] = \
+                    int(m.groupdict()['seqnum'])
+                continue
+
+            #   match ip address prefix-list pip-prefix                    C: 0      M: 0 
+            #   match ip address prefix-list DIRECT->BGP_IPV4              C: 16     M: 0 
+            p5 = re.compile(r'^(?P<command>[\w\s\-\>]+) +'
+                             'C: +(?P<compare_count>\d+) +'
+                             'M: +(?P<match_count>\d+)$')
+            m = p5.match(line)
+            if m:
+                command = m.groupdict()['command'].strip()
+
+                if 'command' not in ret_dict['vrf'][vrf]['route_map'][name][index]:
+                    ret_dict['vrf'][vrf]['route_map'][name][index]['command'] = {}
+
+                ret_dict['vrf'][vrf]['route_map'][name][index]['command']\
+                    ['compare_count'] = int(m.groupdict()['compare_count'])
+
+                ret_dict['vrf'][vrf]['route_map'][name][index]['command']\
+                    ['match_count'] = int(m.groupdict()['match_count'])
+
+                ret_dict['vrf'][vrf]['route_map'][name][index]['command']\
+                    ['command'] = command
+                continue
+
+            # Total accept count for policy: 0
+            p6 = re.compile(r'^Total +accept +count +for +policy: +'
+                             '(?P<total_accept_count>\d+)$')
+            m = p6.match(line)
+            if m:
+                ret_dict['vrf'][vrf]['route_map'][name][index]['total_accept_count'] = \
+                    int(m.groupdict()['total_accept_count'])
+                continue
+
+            # Total reject count for policy: 0
+            p7 = re.compile(r'^Total +reject +count +for +policy: +'
+                             '(?P<total_reject_count>\d+)$')
+            m = p7.match(line)
+            if m:
+                ret_dict['vrf'][vrf]['route_map'][name][index]['total_reject_count'] = \
+                    int(m.groupdict()['total_reject_count'])
+                continue
+
+        return ret_dict
+
+
+    def xml(self, cmd):
+        out = self.device.execute('{} | xml'.format(cmd))
+
+        etree_dict = {}
+        neighbor = None
+        # Remove junk characters returned by the device
+        out = out.replace("]]>]]>", "")
+        root = ET.fromstring(out)
+
+        # get neighbor
+        nei = retrieve_xml_child(root, '__XML__PARAM__neighbor-id')
+        if hasattr(nei, 'tag'):            
+            # get xml namespace
+            # {http://www.cisco.com/nxos:7.0.3.I7.1.:bgp}
+            m = re.compile(r'(?P<name>\{[\S]+\})').match(nei.tag)
+            namespace = m.groupdict()['name']
+
+            for item in nei.getchildren():
+                if '__XML__value' in item.tag:
+                    neighbor = item.text
+                    continue
+
+                root = item.getchildren()[0]
+        else:
+            # top table root
+            root = retrieve_xml_child(root, 'TABLE_vrf')
+            # get xml namespace
+            # {http://www.cisco.com/nxos:7.0.3.I7.1.:bgp}
+            line = root.getchildren()[0].tag
+            m = re.compile(r'(?P<name>\{[\S]+\})').match(line)
+            namespace = m.groupdict()['name']
+
+        # -----   loop vrf  -----
+        for vrf_tree in root.findall('{}ROW_vrf'.format(namespace)):
+            # vrf
+            try:
+                vrf = vrf_tree.find('{}vrf-name-polstats'.format(namespace)).text
+            except:
+                break
+
+            if 'vrf' not in etree_dict:
+                etree_dict['vrf'] = {}
+            if vrf not in etree_dict['vrf']:
+                etree_dict['vrf'][vrf] = {}
+
+            # <rpm-handle-count>1</rpm-handle-count>
+            etree_dict['vrf'][vrf]['rpm_handle_count'] = \
+                int(vrf_tree.find('{}rpm-handle-count'.format(namespace)).text)
+
+             # route_map table
+            rpm_tree = vrf_tree.find('{}TABLE_rmap'.format(namespace))
+            if not rpm_tree:
+                continue
+
+            # -----   loop route_map  -----
+            for rmp_root in rpm_tree.findall('{}ROW_rmap'.format(namespace)):
+                # route map
+                try:
+                    name = rmp_root.find('{}name'.format(namespace)).text
+                    name = name.replace('&gt;', '>')
+                except:
+                    continue
+
+                # neighbor
+                if neighbor:
+                    etree_dict['vrf'][vrf]['neighbor'] = neighbor
+
+                if 'route_map' not in etree_dict['vrf'][vrf]:
+                    etree_dict['vrf'][vrf]['route_map'] = {}
+
+                if name not in etree_dict['vrf'][vrf]['route_map']:
+                    etree_dict['vrf'][vrf]['route_map'][name] = {}
+                    # initial index
+                    index = 1
+                else:
+                    index += 1
+                    
+                if index not in etree_dict['vrf'][vrf]['route_map'][name]:
+                    etree_dict['vrf'][vrf]['route_map'][name][index] = {}
+
+
+                # <action>deny</action>
+                try:
+                    etree_dict['vrf'][vrf]['route_map'][name][index]['action'] = \
+                        rmp_root.find('{}action'.format(namespace)).text
+                except:
+                    pass
+
+                # <seqnum>10</seqnum>
+                try:
+                    etree_dict['vrf'][vrf]['route_map'][name][index]['seq_num'] = \
+                        int(rmp_root.find('{}seqnum'.format(namespace)).text)
+                except:
+                    pass
+
+                # <totalacceptcount>0</totalacceptcount>
+                try:
+                    etree_dict['vrf'][vrf]['route_map'][name][index]['total_accept_count'] = \
+                        int(rmp_root.find('{}totalacceptcount'.format(namespace)).text)
+                except:
+                    pass
+
+                # <totalrejectcount>2</totalrejectcount>
+                try:
+                    etree_dict['vrf'][vrf]['route_map'][name][index]['total_reject_count'] = \
+                        int(rmp_root.find('{}totalrejectcount'.format(namespace)).text)
+                except:
+                    pass
+
+
+                # TABLE_cmd table
+                command = rmp_root.find('{}TABLE_cmd'.format(namespace))
+
+                if not command:
+                    continue
+
+                # -----   loop command  -----
+                for command_root in command.findall('{}ROW_cmd'.format(namespace)):
+                    try:
+                        cmd_str = command_root.find('{}command'.format(namespace)).text.strip()
+                        cmd_str = cmd_str.replace('&gt;', '>')
+                    except:
+                        continue
+
+                    if 'command' not in etree_dict['vrf'][vrf]['route_map'][name][index]:
+                        etree_dict['vrf'][vrf]['route_map'][name][index]['command'] = {}
+
+                    # command
+                    etree_dict['vrf'][vrf]['route_map'][name][index]\
+                        ['command']['command'] = cmd_str
+
+                    # <comparecount>2</comparecount>
+                    try:
+                        etree_dict['vrf'][vrf]['route_map'][name][index]\
+                            ['command']['compare_count'] = \
+                                int(command_root.find('{}comparecount'.format(namespace)).text)
+                    except:
+                        pass
+                    
+                    # <matchcount>0</matchcount>
+                    try:
+                        etree_dict['vrf'][vrf]['route_map'][name][index]\
+                            ['command']['match_count'] = \
+                                int(command_root.find('{}matchcount'.format(namespace)).text)
+                    except:
+                        pass
+        return etree_dict
+
+
+# ================================================================================
+# 'show bgp vrf <vrf> <address_family> policy statistics redistribute'
+# 'show bgp <address_family> policy statistics redistribute'
+# ================================================================================
+class ShowBgpUnicastPolicyStatisticsRedistribute(ShowBgpUnicastPolicyStatistics):
+    
+    def cli(self, address_family, vrf=''):
+        # this parser only for unicast address family
+        assert 'unicast' in address_family, \
+            '{} is not unicast address family'.format(address_family)
+
+        if vrf:
+            cmd = 'show bgp vrf {vrf} {af} policy statistics redistribute'\
+                  .format(vrf=vrf, af=address_family)
+        else:
+            cmd = 'show bgp {af} policy statistics redistribute'\
+                  .format(af=address_family)
+        return super().cli(cmd)
+
+    def xml(self, address_family, vrf=''):
+        # this parser only for unicast address family
+        assert 'unicast' in address_family, \
+            '{} is not unicast address family'.format(address_family)
+
+        if vrf:
+            cmd = 'show bgp vrf {vrf} {af} policy statistics redistribute'\
+                  .format(vrf=vrf, af=address_family)
+        else:
+            cmd = 'show bgp {af} policy statistics redistribute'\
+                  .format(af=address_family)
+        return super().xml(cmd)
+
+
+# ================================================================================
+# 'show bgp vrf <vrf> <address_family> policy statistics neighbor <xxx>'
+# 'show bgp <address_family> policy statistics neighbor <xxx>'
+# ================================================================================
+class ShowBgpUnicastPolicyStatisticsNeighbor(ShowBgpUnicastPolicyStatistics):
+    
+    def cli(self, address_family, neighbor, vrf=''):
+        # this parser only for unicast address family
+        assert 'unicast' in address_family, \
+            '{} is not unicast address family'.format(address_family)
+
+        if vrf:
+            cmd = 'show bgp vrf {vrf} {af} policy statistics neighbor {nei}'\
+                  .format(vrf=vrf, af=address_family, nei=neighbor)
+        else:
+            cmd = 'show bgp {af} policy statistics neighbor {nei}'\
+                  .format(af=address_family, nei=neighbor)
+        return super().cli(cmd)
+
+    def xml(self, address_family, neighbor, vrf=''):
+        # this parser only for unicast address family
+        assert 'unicast' in address_family, \
+            '{} is not unicast address family'.format(address_family)
+
+        if vrf:
+            cmd = 'show bgp vrf {vrf} {af} policy statistics neighbor {nei}'\
+                  .format(vrf=vrf, af=address_family, nei=neighbor)
+        else:
+            cmd = 'show bgp {af} policy statistics neighbor {nei}'\
+                  .format(af=address_family, nei=neighbor)
+        return super().xml(cmd)
+
+
+# ================================================================================
+# 'show bgp vrf <vrf> <address_family> policy statistics dampening'
+# 'show bgp <address_family> policy statistics dampening'
+# ================================================================================
+class ShowBgpUnicastPolicyStatisticsDampening(ShowBgpUnicastPolicyStatistics):
+    
+    def cli(self, address_family, vrf=''):
+        # this parser only for unicast address family
+        assert 'unicast' in address_family, \
+            '{} is not unicast address family'.format(address_family)
+
+        if vrf:
+            cmd = 'show bgp vrf {vrf} {af} policy statistics dampening'\
+                  .format(vrf=vrf, af=address_family)
+        else:
+            cmd = 'show bgp {af} policy statistics dampening'\
+                  .format(af=address_family)
+        return super().cli(cmd)
+
+    def xml(self, address_family, vrf=''):
+        # this parser only for unicast address family
+        assert 'unicast' in address_family, \
+            '{} is not unicast address family'.format(address_family)
+
+        if vrf:
+            cmd = 'show bgp vrf {vrf} {af} policy statistics dampening'\
+                  .format(vrf=vrf, af=address_family)
+        else:
+            cmd = 'show bgp {af} policy statistics dampening'\
+                  .format(af=address_family)
+        return super().xml(cmd)
 
 # vim: ft=python et sw=4

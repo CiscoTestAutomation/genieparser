@@ -25,7 +25,10 @@ from parser.nxos.show_bgp import ShowBgpProcessVrfAll, ShowBgpPeerSession,\
                                  ShowRunningConfigBgp, \
                                  ShowBgpAllDampeningFlapStatistics, \
                                  ShowBgpAllNexthopDatabase, \
-                                 ShowBgpPeerTemplateCmd
+                                 ShowBgpPeerTemplateCmd, \
+                                 ShowBgpUnicastPolicyStatisticsRedistribute, \
+                                 ShowBgpUnicastPolicyStatisticsNeighbor, \
+                                 ShowBgpUnicastPolicyStatisticsDampening
 
 
 # =========================================
@@ -18009,6 +18012,878 @@ class test_show_bgp_peer_template_xml(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowBgpPeerTemplateCmd(device=self.device, context='xml')
         parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+# =============================================================================
+#  Unit test for 'show bgp [vrf xxx] xxx unicast policy statistics redistribute'
+# =============================================================================
+
+class test_show_bgp_unicast_ps_redistrubute_cli(unittest.TestCase):
+
+    '''Unit test for show bgp [vrf xxx] xxx unicast policy
+       statistics redistribute - CLI'''
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_1 = {
+        "vrf": {
+            "default": {
+               "route_map": {
+                    "RMAP_DIRECT->BGP_IPV4": {
+                          1: {
+                             "total_accept_count": 0,
+                             "total_reject_count": 16,
+                             "command": {
+                                   "compare_count": 16,
+                                   "match_count": 0,
+                                   "command": "match ip address prefix-list DIRECT->BGP_IPV4"
+                             },
+                             "action": "permit",
+                             "seq_num": 10
+                        }
+                    }
+               },
+               "rpm_handle_count": 1
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+        Total count for redistribute rpm handles: 1
+
+        C: No. of comparisions, M: No. of matches
+
+        route-map RMAP_DIRECT->BGP_IPV4 permit 10
+          match ip address prefix-list DIRECT->BGP_IPV4              C: 16     M: 0     
+
+        Total accept count for policy: 0     
+        Total reject count for policy: 16
+    '''}
+
+    golden_parsed_output_2 = {
+        "vrf": {
+            "default": {
+               "route_map": {
+                    "ADD_RT_400_400": {
+                        1: {
+                             "seq_num": 10,
+                             "action": "permit",
+                             "total_reject_count": 0,
+                             "total_accept_count": 0
+                        }
+                    }
+               },
+               "rpm_handle_count": 1
+            },
+            "vpn2": {
+               "rpm_handle_count": 0
+            },
+            "vpn1": {
+               "route_map": {
+                    "PERMIT_ALL_RM": {
+                        1: {
+                             "seq_num": 20,
+                             "action": "permit",
+                             "total_reject_count": 0,
+                             "total_accept_count": 0
+                        }
+                    }
+               },
+               "rpm_handle_count": 1
+            },
+            "ac": {
+               "rpm_handle_count": 0
+            }
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+        Details for VRF default
+        Total count for redistribute rpm handles: 1
+
+        C: No. of comparisions, M: No. of matches
+
+        route-map ADD_RT_400_400 permit 10
+
+        Total accept count for policy: 0     
+        Total reject count for policy: 0     
+        Details for VRF ac
+        BGP policy statistics not available
+        Details for VRF vpn1
+        Total count for redistribute rpm handles: 1
+
+        C: No. of comparisions, M: No. of matches
+
+        route-map PERMIT_ALL_RM permit 20
+
+        Total accept count for policy: 0     
+        Total reject count for policy: 0     
+        Details for VRF vpn2
+        BGP policy statistics not available
+
+    '''}
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowBgpUnicastPolicyStatisticsRedistribute(device=self.device)
+        parsed_output = obj.parse(address_family='ipv4 unicast')
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowBgpUnicastPolicyStatisticsRedistribute(device=self.device)
+        parsed_output = obj.parse(vrf='all', address_family='ipv4 unicast')
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpUnicastPolicyStatisticsRedistribute(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(address_family='ipv4 unicast')
+
+
+class test_show_bgp_unicast_ps_redistrubute_xml(unittest.TestCase):
+
+    '''Unit test for show bgp [vrf xxx] xxx unicast policy
+       statistics redistribute - XML'''
+    
+    device = Device(name='aDevice')
+    golden_parsed_output_1 = {
+        "vrf": {
+            "default": {
+               "route_map": {
+                    "RMAP_DIRECT->BGP_IPV4": {
+                        1: {
+                             "total_accept_count": 0,
+                             "total_reject_count": 16,
+                             "command": {
+                                   "compare_count": 16,
+                                   "match_count": 0,
+                                   "command": "match ip address prefix-list DIRECT->BGP_IPV4"
+                             },
+                             "action": "permit",
+                             "seq_num": 10
+                        }
+                    }
+               },
+               "rpm_handle_count": 1
+            },
+            "blue": {
+               "route_map": {
+                    "RMAP_DIR->BGP": {
+                        1: {
+                             "total_accept_count": 3,
+                             "total_reject_count": 0,
+                             "command": {
+                               "compare_count": 3,
+                               "match_count": 3,
+                               "command": "match ip address prefix-list DIR->BGP"
+                             },
+                             "action": "permit",
+                             "seq_num": 10
+                        },
+                        2: {
+                             "total_accept_count": 4,
+                             "total_reject_count": 0,
+                             "command": {
+                                "compare_count": 4,
+                                "match_count": 4,
+                                "command": "match ip address prefix-list DIR->BGP"
+                             },
+                             "action": "permit",
+                             "seq_num": 10
+                        },
+                    }
+               },
+               "rpm_handle_count": 2
+            },
+            "VRF1": {
+               "rpm_handle_count": 0
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
+        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:8.2.0.SK.1.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+         <nf:data>
+          <show>
+           <bgp>
+            <vrf>
+             <all>
+              <ipv4>
+               <unicast>
+                <policy>
+                 <statistics>
+                  <redistribute>
+                   <__readonly__>
+                    <TABLE_vrf>
+                     <ROW_vrf>
+                      <vrf-name-polstats>default</vrf-name-polstats>
+                      <rpm-handle-count>1</rpm-handle-count>
+                      <TABLE_rmap>
+                       <ROW_rmap>
+                        <name>RMAP_DIRECT-&gt;BGP_IPV4</name>
+                        <action>permit</action>
+                        <seqnum>10</seqnum>
+                        <TABLE_cmd>
+                         <ROW_cmd>
+                          <command>  match ip address prefix-list DIRECT-&gt;BGP_IPV4</command>
+                          <comparecount>16</comparecount>
+                          <matchcount>0</matchcount>
+                         </ROW_cmd>
+                        </TABLE_cmd>
+                        <totalacceptcount>0</totalacceptcount>
+                        <totalrejectcount>16</totalrejectcount>
+                       </ROW_rmap>
+                      </TABLE_rmap>
+                     </ROW_vrf>
+                     <ROW_vrf>
+                      <vrf-name-polstats>VRF1</vrf-name-polstats>
+                      <rpm-handle-count>0</rpm-handle-count>
+                     </ROW_vrf>
+                     <ROW_vrf>
+                      <vrf-name-polstats>blue</vrf-name-polstats>
+                      <rpm-handle-count>2</rpm-handle-count>
+                      <TABLE_rmap>
+                       <ROW_rmap>
+                        <name>RMAP_DIR-&gt;BGP</name>
+                        <action>permit</action>
+                        <seqnum>10</seqnum>
+                        <TABLE_cmd>
+                         <ROW_cmd>
+                          <command>  match ip address prefix-list DIR-&gt;BGP</command>
+                          <comparecount>3</comparecount>
+                          <matchcount>3</matchcount>
+                         </ROW_cmd>
+                        </TABLE_cmd>
+                        <totalacceptcount>3</totalacceptcount>
+                        <totalrejectcount>0</totalrejectcount>
+                       </ROW_rmap>
+                       <ROW_rmap>
+                        <name>RMAP_DIR-&gt;BGP</name>
+                        <action>permit</action>
+                        <seqnum>10</seqnum>
+                        <TABLE_cmd>
+                         <ROW_cmd>
+                          <command>  match ip address prefix-list DIR-&gt;BGP</command>
+                          <comparecount>4</comparecount>
+                          <matchcount>4</matchcount>
+                         </ROW_cmd>
+                        </TABLE_cmd>
+                        <totalacceptcount>4</totalacceptcount>
+                        <totalrejectcount>0</totalrejectcount>
+                       </ROW_rmap>
+                      </TABLE_rmap>
+                     </ROW_vrf>
+                    </TABLE_vrf>
+                   </__readonly__>
+                  </redistribute>
+                 </statistics>
+                </policy>
+               </unicast>
+              </ipv4>
+             </all>
+            </vrf>
+           </bgp>
+          </show>
+         </nf:data>
+        </nf:rpc-reply>
+        ]]>]]>
+    '''}
+
+    golden_parsed_output_2 = {
+        "vrf": {
+            "default": {
+               "route_map": {
+                    "ADD_RT_400_400": {
+                        1: {
+                            "seq_num": 10,
+                            "action": "permit",
+                            "total_reject_count": 0,
+                            "total_accept_count": 0
+                        }                         
+                    }
+               },
+               "rpm_handle_count": 1
+            },
+            "vpn2": {
+               "rpm_handle_count": 0
+            },
+            "vpn1": {
+               "route_map": {
+                    "PERMIT_ALL_RM": {
+                        1: {
+                             "seq_num": 20,
+                             "action": "permit",
+                             "total_reject_count": 0,
+                             "total_accept_count": 0
+                        }
+                    }
+               },
+               "rpm_handle_count": 1
+            },
+            "ac": {
+               "rpm_handle_count": 0
+            }
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
+        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:7.0.3.I7.2.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+         <nf:data>
+          <show>
+           <bgp>
+            <vrf>
+             <all>
+              <ipv4>
+               <unicast>
+                <policy>
+                 <statistics>
+                  <redistribute>
+                   <__readonly__>
+                    <TABLE_vrf>
+                     <ROW_vrf>
+                      <vrf-name-polstats>default</vrf-name-polstats>
+                      <rpm-handle-count>1</rpm-handle-count>
+                      <TABLE_rmap>
+                       <ROW_rmap>
+                        <name>ADD_RT_400_400</name>
+                        <action>permit</action>
+                        <seqnum>10</seqnum>
+                        <totalacceptcount>0</totalacceptcount>
+                        <totalrejectcount>0</totalrejectcount>
+                       </ROW_rmap>
+                      </TABLE_rmap>
+                     </ROW_vrf>
+                     <ROW_vrf>
+                      <vrf-name-polstats>ac</vrf-name-polstats>
+                      <rpm-handle-count>0</rpm-handle-count>
+                     </ROW_vrf>
+                     <ROW_vrf>
+                      <vrf-name-polstats>vpn1</vrf-name-polstats>
+                      <rpm-handle-count>1</rpm-handle-count>
+                      <TABLE_rmap>
+                       <ROW_rmap>
+                        <name>PERMIT_ALL_RM</name>
+                        <action>permit</action>
+                        <seqnum>20</seqnum>
+                        <totalacceptcount>0</totalacceptcount>
+                        <totalrejectcount>0</totalrejectcount>
+                       </ROW_rmap>
+                      </TABLE_rmap>
+                     </ROW_vrf>
+                     <ROW_vrf>
+                      <vrf-name-polstats>vpn2</vrf-name-polstats>
+                      <rpm-handle-count>0</rpm-handle-count>
+                     </ROW_vrf>
+                    </TABLE_vrf>
+                   </__readonly__>
+                  </redistribute>
+                 </statistics>
+                </policy>
+               </unicast>
+              </ipv4>
+             </all>
+            </vrf>
+           </bgp>
+          </show>
+         </nf:data>
+        </nf:rpc-reply>
+        ]]>]]>
+    '''}
+
+    def test_golden_xml_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowBgpUnicastPolicyStatisticsRedistribute(device=self.device, context='xml')
+        parsed_output = obj.parse(address_family='ipv4 unicast',
+                                  vrf='all')
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+    def test_golden_xml_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowBgpUnicastPolicyStatisticsRedistribute(device=self.device, context='xml')
+        parsed_output = obj.parse(address_family='ipv4 unicast',
+                                  vrf='all')
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+
+# =============================================================================
+#  Unit test for 'show bgp [vrf xxx] xxx unicast policy statistics neighbor xxx'
+# =============================================================================
+class test_show_bgp_unicast_ps_neighbor_cli(unittest.TestCase):
+
+    '''Unit test for show bgp [vrf xxx] xxx unicast policy
+       statistics neighbor xxx - CLI'''
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_1 = {
+        "vrf": {
+            "default": {
+               "neighbor": "21.0.101.1",
+               "route_map": {
+                    "Filter-pip": {
+                          1: {
+                             "action": "deny",
+                             "command": {
+                                   "compare_count": 2,
+                                   "match_count": 0,
+                                   "command": "match ip address prefix-list pip-prefix"
+                             },
+                             "total_accept_count": 0,
+                             "total_reject_count": 2,
+                             "seq_num": 10
+                        },
+                    }
+               },
+               "rpm_handle_count": 1
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+        Total count for neighbor rpm handles: 1
+
+        C: No. of comparisions, M: No. of matches
+
+        route-map Filter-pip deny 10
+          match ip address prefix-list pip-prefix                    C: 2      M: 0     
+
+        Total accept count for policy: 0     
+        Total reject count for policy: 2  
+    '''}
+
+    golden_parsed_output_2 = {
+        "vrf": {
+            "ac": {
+               "rpm_handle_count": 0
+            },
+            "vpn1": {
+               "rpm_handle_count": 0
+            },
+            "vpn2": {
+               "rpm_handle_count": 0
+            },
+            "default": {
+               "route_map": {
+                    "Filter-pip": {
+                          1: {
+                             "action": "deny",
+                             "command": {
+                                   "compare_count": 2,
+                                   "match_count": 0,
+                                   "command": "match ip address prefix-list pip-prefix"
+                             },
+                             "total_accept_count": 0,
+                             "total_reject_count": 2,
+                             "seq_num": 10
+                        }
+                    }
+               },
+               "rpm_handle_count": 1,
+               "neighbor": "21.0.101.1"
+            }
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+        Details for VRF default
+        Total count for neighbor rpm handles: 1
+
+        C: No. of comparisions, M: No. of matches
+
+        route-map Filter-pip deny 10
+          match ip address prefix-list pip-prefix                    C: 2      M: 0     
+
+        Total accept count for policy: 0     
+        Total reject count for policy: 2     
+        Details for VRF ac
+        No such neighbor
+        BGP policy statistics not available
+        Details for VRF vpn1
+        No such neighbor
+        BGP policy statistics not available
+        Details for VRF vpn2
+        No such neighbor
+        BGP policy statistics not available
+    '''}
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowBgpUnicastPolicyStatisticsNeighbor(device=self.device)
+        parsed_output = obj.parse(address_family='ipv4 unicast',
+                                  neighbor='21.0.101.1')
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowBgpUnicastPolicyStatisticsNeighbor(device=self.device)
+        parsed_output = obj.parse(vrf='all',
+                                  address_family='ipv4 unicast',
+                                  neighbor='21.0.101.1')
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpUnicastPolicyStatisticsNeighbor(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(address_family='ipv4 unicast',
+                                      neighbor='21.0.101.1')
+
+
+class test_show_bgp_unicast_ps_neighbor_xml(unittest.TestCase):
+
+    '''Unit test for show bgp [vrf xxx] xxx unicast policy
+       statistics neighbor xxx - XML'''
+    
+    device = Device(name='aDevice')
+    golden_parsed_output = {
+        "vrf": {
+            "ac": {
+               "rpm_handle_count": 0
+            },
+            "vpn1": {
+               "rpm_handle_count": 0
+            },
+            "vpn2": {
+               "rpm_handle_count": 0
+            },
+            "default": {
+               "route_map": {
+                    "Filter-pip": {
+                          1: {
+                             "action": "deny",
+                             "command": {
+                                   "compare_count": 2,
+                                   "match_count": 0,
+                                   "command": "match ip address prefix-list pip-prefix"
+                             },
+                             "total_accept_count": 0,
+                             "total_reject_count": 2,
+                             "seq_num": 10
+                        }
+                    }
+               },
+               "rpm_handle_count": 1,
+               "neighbor": "21.0.101.1"
+            }
+        }
+        
+    }
+
+    golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
+        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:7.0.3.I7.2.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+         <nf:data>
+          <show>
+           <bgp>
+            <vrf>
+             <all>
+              <ipv4>
+               <unicast>
+                <policy>
+                 <statistics>
+                  <neighbor>
+                   <__XML__PARAM__neighbor-id>
+                    <__XML__value>21.0.101.1</__XML__value>
+                    <__readonly__>
+                     <TABLE_vrf>
+                      <ROW_vrf>
+                       <vrf-name-polstats>default</vrf-name-polstats>
+                       <rpm-handle-count>1</rpm-handle-count>
+                       <TABLE_rmap>
+                        <ROW_rmap>
+                         <name>Filter-pip</name>
+                         <action>deny</action>
+                         <seqnum>10</seqnum>
+                         <TABLE_cmd>
+                          <ROW_cmd>
+                           <command>  match ip address prefix-list pip-prefix</command>
+                           <comparecount>2</comparecount>
+                           <matchcount>0</matchcount>
+                          </ROW_cmd>
+                         </TABLE_cmd>
+                         <totalacceptcount>0</totalacceptcount>
+                         <totalrejectcount>2</totalrejectcount>
+                        </ROW_rmap>
+                       </TABLE_rmap>
+                      </ROW_vrf>
+                      <ROW_vrf>
+                       <vrf-name-polstats>ac</vrf-name-polstats>
+                       <rpm-handle-count>0</rpm-handle-count>
+                      </ROW_vrf>
+                      <ROW_vrf>
+                       <vrf-name-polstats>vpn1</vrf-name-polstats>
+                       <rpm-handle-count>0</rpm-handle-count>
+                      </ROW_vrf>
+                      <ROW_vrf>
+                       <vrf-name-polstats>vpn2</vrf-name-polstats>
+                       <rpm-handle-count>0</rpm-handle-count>
+                      </ROW_vrf>
+                     </TABLE_vrf>
+                    </__readonly__>
+                   </__XML__PARAM__neighbor-id>
+                  </neighbor>
+                 </statistics>
+                </policy>
+               </unicast>
+              </ipv4>
+             </all>
+            </vrf>
+           </bgp>
+          </show>
+         </nf:data>
+        </nf:rpc-reply>
+        ]]>]]>
+    '''}
+
+    def test_golden_xml(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpUnicastPolicyStatisticsNeighbor(device=self.device, context='xml')
+        parsed_output = obj.parse(vrf='all',
+                                  address_family='ipv4 unicast',
+                                  neighbor='21.0.101.1')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+# =============================================================================
+#  Unit test for 'show bgp [vrf xxx] xxx unicast policy statistics dampening'
+# =============================================================================
+
+class test_show_bgp_unicast_ps_dampening_cli(unittest.TestCase):
+
+    '''Unit test for show bgp [vrf xxx] xxx unicast policy
+       statistics dampening - CLI'''
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_1 = {
+        "vrf": {
+            "default": {
+               "route_map": {
+                    "Filter-pip": {
+                          1: {
+                             "action": "deny",
+                             "command": {
+                                   "compare_count": 0,
+                                   "match_count": 0,
+                                   "command": "match ip address prefix-list pip-prefix"
+                             },
+                             "total_accept_count": 0,
+                             "total_reject_count": 0,
+                             "seq_num": 10
+                        }
+                    }
+               },
+               "rpm_handle_count": 1
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+        Total count for dampening rpm handles: 1
+
+        C: No. of comparisions, M: No. of matches
+
+        route-map Filter-pip deny 10
+          match ip address prefix-list pip-prefix                    C: 0      M: 0     
+
+        Total accept count for policy: 0     
+        Total reject count for policy: 0    
+    '''}
+
+    golden_parsed_output_2 = {
+        "vrf": {
+            "ac": {
+               "rpm_handle_count": 0
+            },
+            "vpn1": {
+               "rpm_handle_count": 0
+            },
+            "default": {
+               "route_map": {
+                    "Filter-pip": {
+                          1: {
+                             "action": "deny",
+                             "command": {
+                                   "compare_count": 0,
+                                   "match_count": 0,
+                                   "command": "match ip address prefix-list pip-prefix"
+                             },
+                             "total_accept_count": 0,
+                             "total_reject_count": 0,
+                             "seq_num": 10
+                        }
+                    }
+               },
+               "rpm_handle_count": 1
+            },
+            "vpn2": {
+               "rpm_handle_count": 0
+            }
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+        Details for VRF default
+        Total count for dampening rpm handles: 1
+
+        C: No. of comparisions, M: No. of matches
+
+        route-map Filter-pip deny 10
+          match ip address prefix-list pip-prefix                    C: 0      M: 0     
+
+        Total accept count for policy: 0     
+        Total reject count for policy: 0   
+
+        Details for VRF ac
+        BGP policy statistics not available
+
+        Details for VRF vpn1
+        BGP policy statistics not available
+
+        Details for VRF vpn2
+        BGP policy statistics not available
+    '''}
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowBgpUnicastPolicyStatisticsDampening(device=self.device)
+        parsed_output = obj.parse(address_family='ipv4 unicast')
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowBgpUnicastPolicyStatisticsDampening(device=self.device)
+        parsed_output = obj.parse(vrf='all',
+                                  address_family='ipv4 unicast')
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpUnicastPolicyStatisticsDampening(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(address_family='ipv4 unicast')
+
+
+class test_show_bgp_unicast_ps_dampening_xml(unittest.TestCase):
+
+    '''Unit test for show bgp [vrf xxx] xxx unicast policy
+       statistics dampening - XML'''
+    
+    device = Device(name='aDevice')
+    golden_parsed_output = {
+        "vrf": {
+            "ac": {
+               "rpm_handle_count": 0
+            },
+            "vpn1": {
+               "rpm_handle_count": 0
+            },
+            "default": {
+               "route_map": {
+                    "Filter-pip": {
+                          1: {
+                             "action": "deny",
+                             "command": {
+                                   "compare_count": 0,
+                                   "match_count": 0,
+                                   "command": "match ip address prefix-list pip-prefix"
+                             },
+                             "total_accept_count": 0,
+                             "total_reject_count": 0,
+                             "seq_num": 10
+                        }
+                    }
+               },
+               "rpm_handle_count": 1
+            },
+            "vpn2": {
+               "rpm_handle_count": 0
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
+        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:7.0.3.I7.2.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+         <nf:data>
+          <show>
+           <bgp>
+            <vrf>
+             <all>
+              <ipv4>
+               <unicast>
+                <policy>
+                 <statistics>
+                  <dampening>
+                   <__readonly__>
+                    <TABLE_vrf>
+                     <ROW_vrf>
+                      <vrf-name-polstats>default</vrf-name-polstats>
+                      <rpm-handle-count>1</rpm-handle-count>
+                      <TABLE_rmap>
+                       <ROW_rmap>
+                        <name>Filter-pip</name>
+                        <action>deny</action>
+                        <seqnum>10</seqnum>
+                        <TABLE_cmd>
+                         <ROW_cmd>
+                          <command>  match ip address prefix-list pip-prefix</command>
+                          <comparecount>0</comparecount>
+                          <matchcount>0</matchcount>
+                         </ROW_cmd>
+                        </TABLE_cmd>
+                        <totalacceptcount>0</totalacceptcount>
+                        <totalrejectcount>0</totalrejectcount>
+                       </ROW_rmap>
+                      </TABLE_rmap>
+                     </ROW_vrf>
+                     <ROW_vrf>
+                      <vrf-name-polstats>ac</vrf-name-polstats>
+                      <rpm-handle-count>0</rpm-handle-count>
+                     </ROW_vrf>
+                     <ROW_vrf>
+                      <vrf-name-polstats>vpn1</vrf-name-polstats>
+                      <rpm-handle-count>0</rpm-handle-count>
+                     </ROW_vrf>
+                     <ROW_vrf>
+                      <vrf-name-polstats>vpn2</vrf-name-polstats>
+                      <rpm-handle-count>0</rpm-handle-count>
+                     </ROW_vrf>
+                    </TABLE_vrf>
+                   </__readonly__>
+                  </dampening>
+                 </statistics>
+                </policy>
+               </unicast>
+              </ipv4>
+             </all>
+            </vrf>
+           </bgp>
+          </show>
+         </nf:data>
+        </nf:rpc-reply>
+        ]]>]]>
+    '''}
+
+    def test_golden_xml(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpUnicastPolicyStatisticsDampening(device=self.device, context='xml')
+        parsed_output = obj.parse(vrf='all',
+                                  address_family='ipv4 unicast')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
