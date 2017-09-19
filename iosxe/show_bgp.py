@@ -572,3 +572,187 @@ class ShowBgpAllClusterIds(ShowBgpAllClusterIdsSchema):
                 if list_of_cluster_ids:
                     sum_dict['vrf'][vrf_name]['list_of_cluster_ids'] = list_of_cluster_ids
         return sum_dict
+
+class ShowIpbgpTemplatePeerSessionSchema(MetaParser):
+    '''
+           Schema show ip bgp template peer-session
+    '''
+    schema = {
+                'peer_session':
+                    {Any():
+                         {
+                             Optional('local_policies'): str ,
+                             Optional('inherited_polices'): str ,
+                             Optional('fall_over_bfd'): bool ,
+                             Optional('suppress_four_byte_as_capability'): bool,
+                             Optional('description'): str,
+                             Optional('disable_connected_check'): bool,
+                             Optional('ebgp_multihop_enable'): bool,
+                             Optional('ebgp_multihop_max_hop'): int,
+                             Optional('local_as_as_no'): int,
+                             Optional('password_text'): str,
+                             Optional('remote_as'): int,
+                             Optional('shutdown'): bool,
+                             Optional('keepalive_interval'): int,
+                             Optional('holdtime'): int,
+                             Optional('transport_connection_mode'): str,
+                             Optional('update_source'): str,
+                             Optional('index'): int,
+                         },
+                    },
+                }
+
+class ShowIpBgpTemplatePeerSession(ShowIpbgpTemplatePeerSessionSchema):
+    '''
+        Parser for show ip bgp template peer-session
+    '''
+
+    def cli(self):
+        # show ip bgp template peer-session
+        cmd = 'show ip bgp template peer-session'
+        out = self.device.execute(cmd)
+
+        # Init vars
+        parsed_dict = {}
+
+
+        for line in out.splitlines():
+            if line.strip():
+                line = line.rstrip()
+            else:
+                continue
+
+            # Template:PEER-SESSION, index:1
+            p1 = re.compile(r'^\s*Template:+(?P<template_id>[0-9\s\S\w]+),'
+                            ' +index:(?P<index>[0-9]+)$')
+            m = p1.match(line)
+            if m:
+                template_id = m.groupdict()['template_id'].lower()
+                index = int(m.groupdict()['index'])
+
+                if 'peer_session' not in parsed_dict:
+                    parsed_dict['peer_session'] = {}
+
+                if template_id not in parsed_dict['peer_session']:
+                    parsed_dict['peer_session'][template_id] = {}
+
+                parsed_dict['peer_session'][template_id]['index'] = index
+                continue
+
+            #Local policies:0x5025FD, Inherited polices:0x0
+            p2 = re.compile(r'^\s*Local +policies:+(?P<local_policies>0x[0-9A-F]+),'
+                            ' +Inherited +polices:+(?P<inherited_polices>0x[0-9A-F]+)$')
+            m = p2.match(line)
+            if m:
+                local_policy = m.groupdict()['local_policies']
+                inherited_policy = m.groupdict()['inherited_polices']
+                parsed_dict['peer_session'][template_id]['local_policies'] = local_policy
+                parsed_dict['peer_session'][template_id]['inherited_polices'] = inherited_policy
+                continue
+
+            #Locally configured session commands:
+            p3 = re.compile(r'^\s*Locally +configured +session +commands:$')
+            m = p3.match(line)
+            if m:
+                continue
+
+            # remote-as 321
+            p4 = re.compile(r'^\s*remote-as +(?P<remote_as>[0-9]+)$')
+            m = p4.match(line)
+            if m:
+                remote_as = int(m.groupdict()['remote_as'])
+                parsed_dict['peer_session'][template_id]['remote_as'] = remote_as
+                continue
+            # password is configured
+            p5 = re.compile(r'^\s*password +(?P<password_text>[\w\s]+)$')
+            m = p5.match(line)
+            if m:
+                password_text = m.groupdict()['password_text']
+                parsed_dict['peer_session'][template_id]['password_text'] = password_text
+                continue
+            # shutdown
+            p6 = re.compile(r'^\s*shutdown$')
+            m = p6.match(line)
+            if m:
+                parsed_dict['peer_session'][template_id]['shutdown'] = True
+                continue
+
+            # ebgp-multihop 254
+            p7 = re.compile(r'^\s*ebgp-multihop +(?P<ebgp_multihop_max_no>[0-9]+)$')
+            m = p7.match(line)
+            if m:
+                ebgp_multihop_max_no = int(m.groupdict()['ebgp_multihop_max_no'])
+                parsed_dict['peer_session'][template_id]['ebgp_multihop_max_hop'] = ebgp_multihop_max_no
+                parsed_dict['peer_session'][template_id]['ebgp_multihop_enable'] = True
+                continue
+            # update-source Loopback0
+            p8 = re.compile(r'^\s*update-source +(?P<update_source>[\d\w]+)$')
+            m = p8.match(line)
+            if m:
+                update_source = m.groupdict()['update_source']
+                parsed_dict['peer_session'][template_id]['update_source'] = update_source
+                continue
+            # transport connection-mode passive
+            p9 = re.compile(r'^\s*transport +connection-mode +(?P<transport_connection_mode>[\s\w]+)$')
+            m = p9.match(line)
+            if m:
+                transport_connection_mode = m.groupdict()['transport_connection_mode']
+                parsed_dict['peer_session'][template_id]['transport_connection_mode']\
+                    = transport_connection_mode
+                continue
+
+            # description desc1!
+            p10 = re.compile(r'^\s*description +(?P<desc>[\d\S\s\w]+)$')
+            m = p10.match(line)
+            if m:
+                description = m.groupdict()['desc']
+                parsed_dict['peer_session'][template_id]['description'] \
+                    = description
+                continue
+            # dont-capability-negotiate four-octets-as
+            p11 = re.compile(r'^\s*dont-capability-negotiate +four-octets-as$')
+            m = p11.match(line)
+            if m:
+                parsed_dict['peer_session'][template_id]['suppress_four_byte_as_capability'] \
+                    = True
+                continue
+            # timers 10 30
+            p12 = re.compile(r'^\s*timers +(?P<keepalive_interval>[\d]+)'
+                             ' +(?P<holdtime>[\d]+)$')
+            m = p12.match(line)
+            if m:
+                keepalive_interval = int(m.groupdict()['keepalive_interval'])
+                holdtime = int(m.groupdict()['holdtime'])
+                parsed_dict['peer_session'][template_id]['keepalive_interval'] \
+                    = keepalive_interval
+                parsed_dict['peer_session'][template_id]['holdtime'] \
+                    = holdtime
+                continue
+
+            # local-as 255
+            p13 = re.compile(r'^\s*local-as +(?P<local_as_as_no>[\d]+)$')
+            m = p13.match(line)
+            if m:
+                local_as_as_no = int(m.groupdict()['local_as_as_no'])
+                parsed_dict['peer_session'][template_id]['local_as_as_no'] = local_as_as_no
+                continue
+
+            # disable-connected-check
+            p14 = re.compile(r'^\s*disable-connected-check$')
+            m = p14.match(line)
+            if m:
+                parsed_dict['peer_session'][template_id]['disable_connected_check'] = True
+                continue
+            # fall-over bfd
+            p15 = re.compile(r'^\s*fall-over +bfd$')
+            m = p15.match(line)
+            if m:
+                parsed_dict['peer_session'][template_id]['fall_over_bfd'] = True
+                continue
+            #Inherited session commands:
+            p16 = re.compile(r'^\s*Inherited +session +commands:$')
+            m = p16.match(line)
+            if m:
+                continue
+
+        return parsed_dict

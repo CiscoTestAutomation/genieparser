@@ -7,7 +7,8 @@ from ats.topology import Device
 from metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from parser.iosxe.show_bgp import ShowBgpAllSummary, ShowBgpAllClusterIds
+from parser.iosxe.show_bgp import ShowBgpAllSummary, ShowBgpAllClusterIds, \
+                                  ShowIpBgpTemplatePeerSession
 
 
 class test_show_bgp_all_summary(unittest.TestCase):
@@ -1069,6 +1070,82 @@ class test_show_bgp_all_cluster_ids(unittest.TestCase):
         obj = ShowBgpAllClusterIds(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+
+class test_show_ip_bgp_template_peer_session(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'peer_session':
+            {'peer-session':
+                {
+                    'local_policies' : '0x5025FD',
+                    'inherited_polices' : '0x0',
+                    'fall_over_bfd': True,
+                    'suppress_four_byte_as_capability': True,
+                    'description': 'desc1!',
+                    'disable_connected_check': True,
+                    'ebgp_multihop_enable': True,
+                    'ebgp_multihop_max_hop': 254,
+                    'local_as_as_no': 255,
+                    'password_text': 'is configured',
+                    'remote_as': 321,
+                    'shutdown': True,
+                    'keepalive_interval': 10,
+                    'holdtime': 30,
+                    'transport_connection_mode': 'passive',
+                    'update_source': 'Loopback0',
+                    'index': 1,
+                },
+            'peer-session2':
+                {
+                    'local_policies' : '0x100000',
+                    'inherited_polices' : '0x0',
+                    'fall_over_bfd': True,
+                    'index': 2,
+                }
+
+            },
+    }
+
+    golden_output = {'execute.return_value':'''
+            R4_iosv#show ip bgp template peer-session
+            Template:PEER-SESSION, index:1
+            Local policies:0x5025FD, Inherited polices:0x0
+            Locally configured session commands:
+             remote-as 321
+             password is configured
+             shutdown
+             ebgp-multihop 254
+             update-source Loopback0
+             transport connection-mode passive
+             description desc1!
+             dont-capability-negotiate four-octets-as
+             timers 10 30
+             local-as 255
+             disable-connected-check
+             fall-over bfd
+            Inherited session commands:
+
+            Template:PEER-SESSION2, index:2
+            Local policies:0x100000, Inherited polices:0x0
+            Locally configured session commands:
+             fall-over bfd
+            Inherited session commands:
+    '''}
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpAllClusterIds(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpBgpTemplatePeerSession(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()
