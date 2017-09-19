@@ -25,6 +25,9 @@ NXOS parsers for the following show commands:
     * 'show bgp vrf <vrf> <address_family>  policy statistics redistribute | xml'
     * 'show bgp vrf <vrf> <address_family>  policy statistics dampening | xml'
     * 'show bgp vrf <vrf> <address_family>  policy statistics neighbor <neighbor> | xml'
+    * 'show bgp <address_family>  policy statistics redistribute | xml'
+    * 'show bgp <address_family>  policy statistics dampening | xml'
+    * 'show bgp <address_family>  policy statistics neighbor <neighbor> | xml'
 '''
 
 # Python
