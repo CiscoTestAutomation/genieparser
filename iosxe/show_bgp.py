@@ -590,8 +590,9 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                           Optional('link'): str,
                           Optional('bgp_version'): int,
                           Optional('router_id'): str,
-                          Optional('session_state'): str,   # will delete later due to exist in address family
-                          Optional('shutdown'): bool,    # keep here up to takashi find a good cli
+                          Optional('session_state'): str,
+                          Optional('shutdown'): bool,
+
                           Optional('bgp_negotiated_keepalive_timers'):
                               {
                                Optional('keepalive_interval'): int,
@@ -612,10 +613,74 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                                     Optional('foreign_port'): str,
                                     Optional('foreign_host'): str,
                                     },
-                              #  Optional('counters'):
-                              #      {
+                              Optional('min_time_between_advertisement_runs'): int,
+                              Optional('address_tracking_status'): str,
+                              Optional('rib_route_ip'): str,
+                              Optional('path_mtu_discovery'): str,
+                              Optional('session_graceful_restart'): str,
+                              Optional('connection_state'): str,
+                              Optional('io_status'): int,
+                              Optional('unread_input'): int,
+                              Optional('ecn_connection'): str,
+                              Optional('incoming_ttl'): int,
+                              Optional('outgoing_ttl'): int,
+                              Optional('tableid'): int,
+                              Optional('segment_queue_size'): int,
+                              Optional('retransmit_packet'): int,
+                              Optional('input_packet'): int,
+                              Optional('mis_ordered_packet'): int,
+                              Optional('iss'): int,
+                              Optional('snduna'): int,
+                              Optional('sndnxt'): int,
+                              Optional('irs'): int,
+                              Optional('rcvnxt'): int,
+                              Optional('sndwnd'): int,
+                              Optional('snd_scale'): int,
+                              Optional('maxrcvwnd'): int,
+                              Optional('rcvwnd'): int,
+                              Optional('rcv_scale'): int,
+                              Optional('delrcvwnd'): int,
+                              Optional('srtt'): int,
+                              Optional('rtto'): int,
+                              Optional('rtv'): int,
+                              Optional('krtt'): int,
+                              Optional('min_rtt'): int,
+                              Optional('max_rtt'): int,
+                              Optional('ack_hold'): int,
+                              Optional('uptime'): int,
+                              Optional('sent_idletime'): int,
+                              Optional('receive_idletime'): int,
+                              Optional('status_flags'): str,
+                              Optional('option_flags'): str,
+                              Optional('ip_precedence_value'): int,
+                              Optional('datagram'):
+                                  {
+                                      Optional('datagram_sent'):
+                                          {
+                                              Optional('value'): int,
+                                              Optional('retransmit'): int,
+                                              Optional('fastretransmit'): int,
+                                              Optional('partialack'): int,
+                                              Optional('second_congestion'): int,
+                                              Optional('with_data'): int,
+                                              Optional('total_data'): int,
+                                          },
+                                      Optional('datagram_received'):
+                                          {
+                                              Optional('value'): int,
+                                              Optional('out_of_order'): int,
+                                              Optional('with_data'): int,
+                                              Optional('total_data'): int,
+                                          },
 
-                              #      }
+                                      },
+                                  Optional('packet_fast_path'): int,
+                                  Optional('packet_fast_processed'): int,
+                                  Optional('packet_slow_path'): int,
+                                  Optional('fast_lock_acquisition_failures'): int,
+                                  Optional('lock_slow_path'): int,
+                                  Optional('tcp_semaphore'): str,
+                                  Optional('tcp_semaphore_status'): str,
 
                               },
                           Optional('bgp_neighbor_counters'):
@@ -650,6 +715,8 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                                Optional('ipv4_unicast'): str,
                                Optional('ipv6_unicast'): str,
                                Optional('graceful_restart'): str,
+                               Optional('graceful_restart_af_advertised_by_peer'): str,
+                               Optional('graceful_remote_restart_timer'): int,
                                Optional('enhanced_refresh'): str,
                                Optional('multisession'): str,
                                Optional('four_octets_asn'): str,
@@ -696,6 +763,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                                            Optional('linger'): str,
                                            Optional('processq'): str,
                                        },
+
                                },
 
                           Optional('address_family'):
@@ -706,6 +774,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                                        Optional('up_time'): str,
                                        Optional('session_state'): str,
                                        Optional('down_time'): str,
+                                       Optional('current_time'): str,
                                },
                           },
                      },
@@ -728,7 +797,6 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
 
         # Init vars
         parsed_dict = {}
-        address_family_dict = {}
 
         for line in out.splitlines():
             if line:
@@ -816,6 +884,12 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                         [neighbor_id]['address_family'][af_name] = {}
                 continue
 
+            # Administratively shut down
+            p2_3 = re.compile(r'^\s*Administratively shut down$')
+            m = p2_3.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['shutdown'] = True
+                continue
 
             # BGP version 4, remote router ID 2.2.2.2
             p3 = re.compile(r'^\s*BGP +version +(?P<bgp_version>[0-9]+),'
@@ -838,14 +912,11 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             if m:
                 session_state = m.groupdict()['session_state']
                 up_down = m.groupdict()['up_down']
-                up_down_status = True if m.groupdict()['up_down'] == 'down' else False
                 up_down_time = m.groupdict()['time']
 
 
                 parsed_dict['vrf'][vrf_name]['neighbor']\
                 [neighbor_id]['session_state'] = session_state.lower()
-                parsed_dict['vrf'][vrf_name]['neighbor']\
-                [neighbor_id]['shutdown'] = up_down_status
 
                 if 'address_family' not in parsed_dict['vrf']\
                         [vrf_name]['neighbor'][neighbor_id]:
@@ -865,15 +936,12 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
 
                 continue
 
-
-
             # Last read 00:00:04, last write 00:00:09, hold time is 180, keepalive interval is 60 seconds
             p6 = re.compile(r'^\s*Last +read +(?P<last_read>[0-9\:]+),'
                             ' +last +write +(?P<last_write>[0-9\:]+),'
                             ' +hold +time +is +(?P<hold_time>[0-9]+),'
                             ' +keepalive +interval +is +(?P<keepalive_interval>[0-9]+)'
                             ' +seconds$')
-
             m = p6.match(line)
             if m:
                 last_read = m.groupdict()['last_read']
@@ -1021,7 +1089,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
 
             #   Remote Restart timer is 120 seconds
             p12 = re.compile(r'^\s*Remote +Restart +timer +is'
-                             ' +(?P<remote_restart_timer>[0-9]+)$ +seconds')
+                             ' +(?P<remote_restart_timer>[0-9]+) +seconds$')
             m = p12.match(line)
             if m:
                 remote_restart_timer = int(m.groupdict()['remote_restart_timer'])
@@ -1030,11 +1098,32 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                     parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_negotiated_capabilities'] = {}
 
                 parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
-                    ['bgp_negotiated_capabilities']['remote_restart_timer'] = remote_restart_timer
+                    ['bgp_negotiated_capabilities']['graceful_remote_restart_timer'] = remote_restart_timer
                 continue
 
             #   Address families advertised by peer:
+            p12_1 = re.compile(r'^\s*Address +families +advertised +by +peer:$')
+            m = p12_1.match(line)
+            if m:
+                continue
             #    VPNv4 Unicast (was not preserved, VPNv6 Unicast (was not preserved
+            p12_2 = re.compile(r'^\s*(?P<space>\s{8})+(?P<graceful_restart_af_advertised_by_peer>[0-9a-zA-Z\s\S]+)$')
+            m = p12_2.match(line)
+            if m:
+                if len(m.groupdict()['space']) == 8 :
+                    graceful_restart_af_advertised_by_peer = m.groupdict()['graceful_restart_af_advertised_by_peer']
+                    if 'Sent' not in graceful_restart_af_advertised_by_peer and \
+                        'Rcvd' not in graceful_restart_af_advertised_by_peer:
+
+                        if 'bgp_negotiated_capabilities' not in \
+                            parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:\
+                            parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                                ['bgp_negotiated_capabilities'] = {}
+
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                            ['bgp_negotiated_capabilities']['graceful_restart_af_advertised_by_peer'] =\
+                            graceful_restart_af_advertised_by_peer
+                continue
 
             #  Enhanced Refresh Capability: advertised
             p13 = re.compile(r'^\s*Enhanced +Refresh +Capability:'
@@ -1053,7 +1142,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             #  Multisession Capability:
             p14 = re.compile(r'^\s*Multisession +Capability:'
                              ' +(?P<multisession>[a-zA-Z\s]+)$')
-            m = p13.match(line)
+            m = p14.match(line)
             if m:
                 multisession_capability = m.groupdict()['multisession']
                 if 'bgp_negotiated_capabilities' not in \
@@ -1171,17 +1260,34 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             m = p26.match(line)
             if m:
                 minimum_time_between_advertisement = int(m.groupdict()['minimum_time_between_advertisement'])
+                if 'bgp_session_transport' not in \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                            ['bgp_session_transport'] = {}
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['min_time_between_advertisement_runs']\
+                    = minimum_time_between_advertisement
                 continue
 
             # Address tracking is enabled, the RIB does have a route to 2.2.2.2
             p27 = re.compile(r'^\s*Address +tracking +is'
                              ' +(?P<address_tracking_status>[a-zA-Z]+),'
                              ' +the +RIB +does +have +a +route +to'
-                             ' +(?P<rib_route_ip>[0-9\.]+)$')
+                             ' +(?P<rib_route_ip>[0-9\.\:\w]+)$')
             m = p27.match(line)
             if m:
                 address_tracking_status = m.groupdict()['address_tracking_status']
                 rib_route_ip = m.groupdict()['rib_route_ip']
+
+                if 'bgp_session_transport' not in \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                            ['bgp_session_transport'] = {}
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['address_tracking_status'] = address_tracking_status
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['rib_route_ip'] = rib_route_ip
+
                 continue
 
             # Connections established 1; dropped 0
@@ -1269,6 +1375,8 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             m = p30.match(line)
             if m:
                 path_mtu_discovery_status = m.groupdict()['path_mtu_discovery_status']
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['path_mtu_discovery'] = path_mtu_discovery_status
                 continue
 
             # Graceful-Restart is disabled
@@ -1277,19 +1385,30 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             m = p31.match(line)
             if m:
                 graceful_restart = m.groupdict()['graceful_restart']
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['session_graceful_restart'] = graceful_restart.lower()
                 continue
 
             # Connection state is ESTAB, I/O status: 1, unread input bytes: 0
             p32 = re.compile(r'^\s*Connection +state +is'
                              ' +(?P<connection_state>[a-zA-Z]+),'
-                             ' +I/O +status:(?P<num_io_status>[0-9]+),'
+                             ' +I/O +status: (?P<num_io_status>[0-9]+),'
                              ' +unread +input +bytes:'
                              ' +(?P<num_unread_input_bytes>[0-9]+)$')
             m = p32.match(line)
             if m:
                 connection_state = m.groupdict()['connection_state']
-                num_io_state = int(m.groupdict()['num_io_status'])
+                num_io_status = int(m.groupdict()['num_io_status'])
                 num_unread_input_bytes = int(m.groupdict()['num_unread_input_bytes'])
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['connection_state'] = connection_state.lower()
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['io_status'] = num_io_status
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['unread_input'] = num_unread_input_bytes
+
                 continue
             # Connection is ECN Disabled, Mininum incoming TTL 0, Outgoing TTL 255
             p33 = re.compile(r'^\s*Connection +is +ECN'
@@ -1302,6 +1421,13 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                 connection_ecn_state = m.groupdict()['connection_ecn_state']
                 minimum_incoming_ttl = int(m.groupdict()['minimum_incoming_ttl'])
                 minimum_outgoing_ttl = int(m.groupdict()['minimum_outgoing_ttl'])
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['ecn_connection'] = connection_ecn_state.lower()
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['incoming_ttl'] = minimum_incoming_ttl
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['outgoing_ttl'] = minimum_outgoing_ttl
                 continue
 
             # Local host: 4.4.4.4, Local port: 35281
@@ -1363,6 +1489,8 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             m = p36.match(line)
             if m:
                 num_connection_tableid = int(m.groupdict()['num_connection_tableid'])
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['tableid'] = num_connection_tableid
                 continue
 
             # Maximum output segment queue size: 50
@@ -1371,6 +1499,9 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             m = p37.match(line)
             if m:
                 num_max_output_seg_queue_size = int(m.groupdict()['num_max_output_seg_queue_size'])
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['segment_queue_size'] = num_max_output_seg_queue_size
+
                 continue
 
             # Enqueued packets for retransmit: 0, input: 0  mis-ordered: 0 (0 bytes)
@@ -1386,8 +1517,35 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                 enqueued_packets_for_input = int(m.groupdict()['enqueued_packets_for_input'])
                 enqueued_packets_for_mis_ordered = int(m.groupdict()['enqueued_packets_for_mis_ordered'])
                 num_bytes = int(m.groupdict()['num_bytes'])
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['retransmit_packet'] = enqueued_packets_for_retransmit
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['input_packet'] = enqueued_packets_for_input
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['mis_ordered_packet'] = enqueued_packets_for_mis_ordered
+
                 continue
             # Event Timers (current time is 0x530449):
+            p38_1 = re.compile(r'^\s*Event +Timers +\(+current +time +is +(?P<current_time>\S+)+\):$')
+            m = p38_1.match(line)
+            if m:
+                current_time = m.groupdict()['current_time']
+
+                if 'address_family' not in \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                            ['address_family'] = {}
+
+                if af_name not in parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['address_family']:
+                    parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['address_family'][af_name] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor']\
+                    [neighbor_id]['address_family'][af_name]['current_time'] = current_time
+
+                continue
             # Timer          Starts    Wakeups            Next
             # Retrans            86          0             0x0
             # TimeWait            0          0             0x0
@@ -1442,9 +1600,16 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                              '\s+sndnxt: +(?P<sndnxt>[0-9]+)$')
             m = p40.match(line)
             if m:
-                iss = m.groupdict()['iss']
-                snduna = m.groupdict()['snduna']
-                sndnxt = m.groupdict()['sndnxt']
+                iss = int(m.groupdict()['iss'])
+                snduna = int(m.groupdict()['snduna'])
+                sndnxt = int(m.groupdict()['sndnxt'])
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['iss'] = iss
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['snduna'] = snduna
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['sndnxt'] = sndnxt
                 continue
 
             # irs:  109992783  rcvnxt:  109995158
@@ -1453,19 +1618,29 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                              '\s+rcvnxt: +(?P<rcvnxt>[0-9]+)$')
             m = p41.match(line)
             if m:
-                irs = m.groupdict()['irs']
-                rcvnxt = m.groupdict()['rcvnxt']
+                irs = int(m.groupdict()['irs'])
+                rcvnxt = int(m.groupdict()['rcvnxt'])
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']['irs'] = irs
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']['rcvnxt'] = rcvnxt
                 continue
             # sndwnd:  16616  scale:      0  maxrcvwnd:  16384
             p42 = re.compile(r'^\s*sndwnd:'
                              '\s+(?P<sndwnd>[0-9]+)'
-                             '\s+scale: +(?P<send_scale>[0-9]+)'
+                             '\s+scale: +(?P<snd_scale>[0-9]+)'
                              '\s+maxrcvwnd: +(?P<maxrcvwnd>[0-9]+)$')
             m = p42.match(line)
             if m:
-                sndwnd = m.groupdict()['sndwnd']
-                send_scale = m.groupdict()['send_scale']
-                maxrcvwnd = m.groupdict()['maxrcvwnd']
+                sndwnd = int(m.groupdict()['sndwnd'])
+                send_scale = int(m.groupdict()['snd_scale'])
+                maxrcvwnd = int(m.groupdict()['maxrcvwnd'])
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['sndwnd'] = sndwnd
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['snd_scale'] = send_scale
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['maxrcvwnd'] = maxrcvwnd
+
                 continue
             # rcvwnd:  16327  scale:      0  delrcvwnd:     57
             p43 = re.compile(r'^\s*rcvwnd:'
@@ -1474,9 +1649,16 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                              '\s+delrcvwnd:\s+(?P<delrcvwnd>[0-9]+)$')
             m = p43.match(line)
             if m:
-                rcvwnd = m.groupdict()['rcvwnd']
-                rcv_scale = m.groupdict()['rcv_scale']
-                delrcvwnd = m.groupdict()['delrcvwnd']
+                rcvwnd = int(m.groupdict()['rcvwnd'])
+                rcv_scale = int(m.groupdict()['rcv_scale'])
+                delrcvwnd = int(m.groupdict()['delrcvwnd'])
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['rcvwnd'] = rcvwnd
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['rcv_scale'] = rcv_scale
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['delrcvwnd'] = delrcvwnd
                 continue
             # SRTT: 1000 ms, RTTO: 1003 ms, RTV: 3 ms, KRTT: 0 ms
             p44 = re.compile(r'^\s*SRTT:'
@@ -1486,10 +1668,15 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                              ' +KRTT: +(?P<krtt>[0-9]+) +ms$')
             m = p44.match(line)
             if m:
-                srtt = m.groupdict()['srtt']
-                rtto = m.groupdict()['rtto']
-                rtv = m.groupdict()['rtv']
-                krtt = m.groupdict()['krtt']
+                srtt = int(m.groupdict()['srtt'])
+                rtto = int(m.groupdict()['rtto'])
+                rtv = int(m.groupdict()['rtv'])
+                krtt = int(m.groupdict()['krtt'])
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']['srtt'] = srtt
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']['rtto'] = rtto
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']['rtv'] = rtv
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']['krtt'] = krtt
                 continue
 
             # minRTT: 4 ms, maxRTT: 1000 ms, ACK hold: 200 ms
@@ -1499,35 +1686,59 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                              ' +ACK +hold: +(?P<ack_hold>[0-9]+) +ms$')
             m = p45.match(line)
             if m:
-                min_rtt = m.groupdict()['min_rtt']
-                max_rtt = m.groupdict()['max_rtt']
-                ack_hold = m.groupdict()['ack_hold']
+                min_rtt = int(m.groupdict()['min_rtt'])
+                max_rtt = int(m.groupdict()['max_rtt'])
+                ack_hold = int(m.groupdict()['ack_hold'])
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['min_rtt'] = min_rtt
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['max_rtt'] = max_rtt
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['ack_hold'] = ack_hold
                 continue
             # uptime: 4236258 ms, Sent idletime: 4349 ms, Receive idletime: 4549 ms
             p46 = re.compile(r'^\s*uptime:'
                              ' +(?P<uptime>[0-9]+) +ms,'
-                             ' +Sent +idletime: +(?P<send_idletime>[0-9]+) +ms,'
+                             ' +Sent +idletime: +(?P<sent_idletime>[0-9]+) +ms,'
                              ' +Receive +idletime: +(?P<receive_idletime>[0-9]+) +ms$')
             m = p46.match(line)
             if m:
-                uptime = m.groupdict()['uptime']
-                send_idletime = m.groupdict()['send_idletime']
-                receive_idletime = m.groupdict()['receive_idletime']
+                uptime = int(m.groupdict()['uptime'])
+                sent_idletime = int(m.groupdict()['sent_idletime'])
+                receive_idletime = int(m.groupdict()['receive_idletime'])
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['uptime'] = uptime
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['sent_idletime'] = sent_idletime
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['receive_idletime'] = receive_idletime
                 continue
             # Status Flags: active open
             p47 = re.compile(r'^\s*Status +Flags:'
-                             ' +(?P<flag_status_1>[a-zA-Z]+) (?P<flag_status_2>[a-zA-Z]+)$')
+                             ' +(?P<status_flags>[a-zA-Z\s\S]+)$')
             m = p47.match(line)
             if m:
-                flag_status_1 = m.groupdict()['flag_status_1']
-                flag_status_2 = m.groupdict()['flag_status_2']
+                status_flags = m.groupdict()['status_flags']
+                if 'bgp_session_transport' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['status_flags'] = status_flags
                 continue
+
             # Option Flags: nagle, path mtu capable
             p48 = re.compile(r'^\s*Option +Flags:'
                              ' +(?P<option_flags>[a-zA-Z\s\,]+)$')
             m = p48.match(line)
             if m:
                 option_flags = m.groupdict()['option_flags']
+                if 'bgp_session_transport' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport'] = {}
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['option_flags'] = option_flags
                 continue
 
             # IP Precedence value : 6
@@ -1535,7 +1746,13 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                              ' +(?P<ip_precedence_value>[0-9]+)$')
             m = p49.match(line)
             if m:
-                ip_precedence_value = m.groupdict()['ip_precedence_value']
+                ip_precedence_value = int(m.groupdict()['ip_precedence_value'])
+                if 'bgp_session_transport' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['ip_precedence_value'] = ip_precedence_value
                 continue
             # Datagrams (max data segment is 536 bytes):
             p50 = re.compile(r'^\s*Datagrams +\(max +data +segment +is'
@@ -1543,6 +1760,14 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             m = p50.match(line)
             if m:
                 datagram = m.groupdict()['datagram']
+                if 'bgp_session_transport' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport'] = {}
+
+                if 'datagram' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_session_transport']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_session_transport']['datagram'] = {}
                 continue
             # Rcvd: 164 (out of order: 0), with data: 80, total data bytes: 2374
             p51 = re.compile(r'^\s*Rcvd: (?P<received>[0-9]+)'
@@ -1551,10 +1776,33 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                              ' +total +data +bytes: (?P<total_data>[0-9]+)$')
             m = p51.match(line)
             if m:
-                received = m.groupdict()['received']
-                out_of_order = m.groupdict()['out_of_order']
-                with_data = m.groupdict()['with_data']
-                total_data = m.groupdict()['total_data']
+                received = int(m.groupdict()['received'])
+                out_of_order = int(m.groupdict()['out_of_order'])
+                with_data = int(m.groupdict()['with_data'])
+                total_data = int(m.groupdict()['total_data'])
+
+                if 'bgp_session_transport' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport'] = {}
+
+
+                if 'datagram' not in parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['bgp_session_transport']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_session_transport']['datagram'] = {}
+                if 'datagram_received' not in parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['bgp_session_transport']['datagram']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['datagram']['datagram_received'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                    ['datagram']['datagram_received']['value'] = received
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                    ['datagram']['datagram_received']['out_of_order'] = out_of_order
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                    ['datagram']['datagram_received']['with_data'] = with_data
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                ['datagram']['datagram_received']['total_data'] = total_data
                 continue
             # Sent: 166 (retransmit: 0, fastretransmit: 0, partialack: 0, Second Congestion: 0),
             #       with data: 87, total data bytes: 3303
@@ -1567,24 +1815,65 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                              ' +total +data +bytes: (?P<sent_total_data>[0-9]+)$')
             m = p52.match(line)
             if m:
-                sent = m.groupdict()['sent']
-                retransmit = m.groupdict()['retransmit']
-                fastretransmit = m.groupdict()['fastretransmit']
-                partialack = m.groupdict()['partialack']
-                second_congestion = m.groupdict()['second_congestion']
-                sent_with_data = m.groupdict()['sent_with_data']
-                sent_total_data = m.groupdict()['sent_total_data']
+                sent = int(m.groupdict()['sent'])
+                retransmit = int(m.groupdict()['retransmit'])
+                fastretransmit = int(m.groupdict()['fastretransmit'])
+                partialack = int(m.groupdict()['partialack'])
+                second_congestion = int(m.groupdict()['second_congestion'])
+                sent_with_data = int(m.groupdict()['sent_with_data'])
+                sent_total_data = int(m.groupdict()['sent_total_data'])
+
+                if 'bgp_session_transport' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport'] = {}
+
+                if 'datagram' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_session_transport']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_session_transport']['datagram'] = {}
+                if 'datagram_sent' not in parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['bgp_session_transport']['datagram']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                        ['datagram']['datagram_sent'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                    ['datagram']['datagram_sent']['value'] = sent
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                    ['datagram']['datagram_sent']['retransmit'] = retransmit
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                    ['datagram']['datagram_sent']['fastretransmit'] = fastretransmit
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                    ['datagram']['datagram_sent']['partialack'] = partialack
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                    ['datagram']['datagram_sent']['second_congestion'] = second_congestion
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                    ['datagram']['datagram_sent']['with_data'] = sent_with_data
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                    ['datagram']['datagram_sent']['total_data'] = sent_total_data
                 continue
+
             # Packets received in fast path: 0, fast processed: 0, slow path: 0
             p53 = re.compile(r'^\s*Packets +received +in +fast +path:'
                              ' +(?P<packet_received_in_fast_path>[0-9]+),'
                              ' +fast +processed: +(?P<fast_processed>[0-9]+),'
-                             ' +slow +processed: +(?P<slow_processed>[0-9]+)$')
+                             ' +slow +path: +(?P<slow_path>[0-9]+)$')
             m = p53.match(line)
             if m:
-                packet_received_in_fast_path = m.groupdict()['packet_received_in_fast_path']
-                fast_processed = m.groupdict()['fast_processed']
-                slow_processed = m.groupdict()['slow_processed']
+                packet_received_in_fast_path = int(m.groupdict()['packet_received_in_fast_path'])
+                fast_processed = int(m.groupdict()['fast_processed'])
+                slow_path = int(m.groupdict()['slow_path'])
+
+                if 'bgp_session_transport' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['packet_fast_path'] = packet_received_in_fast_path
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['packet_fast_processed'] = fast_processed
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['packet_slow_path'] = slow_path
+
                 continue
             # fast lock acquisition failures: 0, slow path: 0
             p54 = re.compile(r'^\s*fast +lock +acquisition +failures:'
@@ -1592,8 +1881,16 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                              ' +slow +path: +(?P<slow_path>[0-9]+)$')
             m = p54.match(line)
             if m:
-                fast_lock_acquisition_failures = m.groupdict()['fast_lock_acquisition_failures']
-                slow_path = m.groupdict()['slow_path']
+                fast_lock_acquisition_failures = int(m.groupdict()['fast_lock_acquisition_failures'])
+                slow_path = int(m.groupdict()['slow_path'])
+
+                if 'bgp_session_transport' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport'] = {}
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['fast_lock_acquisition_failures'] = fast_lock_acquisition_failures
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['lock_slow_path'] = slow_path
                 continue
 
             # TCP Semaphore      0x1286E7EC  FREE 
@@ -1604,6 +1901,13 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             if m:
                 tcp_semaphore = m.groupdict()['tcp_semaphore']
                 tcp_status = m.groupdict()['tcp_status']
+                if 'bgp_session_transport' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport'] = {}
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['tcp_semaphore'] = tcp_semaphore
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['tcp_semaphore_status'] = tcp_status
                 continue
 
         return parsed_dict
