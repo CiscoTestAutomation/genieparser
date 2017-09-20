@@ -573,12 +573,1356 @@ class ShowBgpAllClusterIds(ShowBgpAllClusterIdsSchema):
                     sum_dict['vrf'][vrf_name]['list_of_cluster_ids'] = list_of_cluster_ids
         return sum_dict
 
+
+class ShowBgpAllNeighborsSchema(MetaParser):
+    """
+    Schema for:
+            * show bgp all neighbors
+    """
+    schema = {
+        'vrf':
+            {Any():
+                 {
+                 'neighbor':
+                      {Any():
+                          {Optional('remote_as'): int,
+                          Optional('link'): str,
+                          Optional('bgp_version'): int,
+                          Optional('router_id'): str,
+                          Optional('session_state'): str,
+                          Optional('shutdown'): bool,
+
+                          Optional('bgp_negotiated_keepalive_timers'):
+                              {
+                               Optional('keepalive_interval'): int,
+                               Optional('hold_time'): int,
+                               },
+
+                          Optional('bgp_session_transport'):
+                              {Optional('connection'):
+                                   {
+                                    Optional('last_reset'): str,
+                                    Optional('reset_reason'): str,
+                                    Optional('established'): int,
+                                    Optional('dropped'): int,
+                                    },
+                              Optional('transport'):
+                                   {Optional('local_port'): str,
+                                    Optional('local_host'): str,
+                                    Optional('foreign_port'): str,
+                                    Optional('foreign_host'): str,
+                                    },
+                              Optional('min_time_between_advertisement_runs'): int,
+                              Optional('address_tracking_status'): str,
+                              Optional('rib_route_ip'): str,
+                              Optional('tcp_path_mtu_discovery'): str,
+                              Optional('graceful_restart'): str,
+                              Optional('connection_state'): str,
+                              Optional('io_status'): int,
+                              Optional('unread_input_bytes'): int,
+                              Optional('ecn_connection'): str,
+                              Optional('minimum_incoming_ttl'): int,
+                              Optional('outgoing_ttl'): int,
+                              Optional('connection_tableid'): int,
+                              Optional('maximum_output_segment_queue_size'): int,
+                              Optional('enqueued_packets'):
+                                  {
+                                      Optional('retransmit_packet'): int,
+                                      Optional('input_packet'): int,
+                                      Optional('mis_ordered_packet'): int,
+                                  },
+                              Optional('iss'): int,
+                              Optional('snduna'): int,
+                              Optional('sndnxt'): int,
+                              Optional('irs'): int,
+                              Optional('rcvnxt'): int,
+                              Optional('sndwnd'): int,
+                              Optional('snd_scale'): int,
+                              Optional('maxrcvwnd'): int,
+                              Optional('rcvwnd'): int,
+                              Optional('rcv_scale'): int,
+                              Optional('delrcvwnd'): int,
+                              Optional('srtt'): int,
+                              Optional('rtto'): int,
+                              Optional('rtv'): int,
+                              Optional('krtt'): int,
+                              Optional('min_rtt'): int,
+                              Optional('max_rtt'): int,
+                              Optional('ack_hold'): int,
+                              Optional('uptime'): int,
+                              Optional('sent_idletime'): int,
+                              Optional('receive_idletime'): int,
+                              Optional('status_flags'): str,
+                              Optional('option_flags'): str,
+                              Optional('ip_precedence_value'): int,
+                              Optional('datagram'):
+                                  {
+                                      Optional('datagram_sent'):
+                                          {
+                                              Optional('value'): int,
+                                              Optional('retransmit'): int,
+                                              Optional('fastretransmit'): int,
+                                              Optional('partialack'): int,
+                                              Optional('second_congestion'): int,
+                                              Optional('with_data'): int,
+                                              Optional('total_data'): int,
+                                          },
+                                      Optional('datagram_received'):
+                                          {
+                                              Optional('value'): int,
+                                              Optional('out_of_order'): int,
+                                              Optional('with_data'): int,
+                                              Optional('total_data'): int,
+                                          },
+
+                                      },
+                                  Optional('packet_fast_path'): int,
+                                  Optional('packet_fast_processed'): int,
+                                  Optional('packet_slow_path'): int,
+                                  Optional('fast_lock_acquisition_failures'): int,
+                                  Optional('lock_slow_path'): int,
+                                  Optional('tcp_semaphore'): str,
+                                  Optional('tcp_semaphore_status'): str,
+
+                              },
+                          Optional('bgp_neighbor_counters'):
+                              {Optional('messages'):
+                                   {Optional('sent'):
+                                        {
+                                            Optional('opens'): int,
+                                            Optional('updates'): int,
+                                            Optional('notifications'): int,
+                                            Optional('keepalives'): int,
+                                            Optional('route_refresh'): int,
+                                            Optional('total'): int,
+                                         },
+                                    Optional('received'):
+                                        {
+                                            Optional('opens'): int,
+                                            Optional('updates'): int,
+                                            Optional('notifications'): int,
+                                            Optional('keepalives'): int,
+                                            Optional('route_refresh'): int,
+                                            Optional('total'): int,
+                                         },
+                                       Optional('in_queue_depth'): int,
+                                       Optional('out_queue_depth'): int,
+                                    },
+
+                               },
+                          Optional('bgp_negotiated_capabilities'):
+                              {Optional('route_refresh'): str,
+                               Optional('vpnv4_unicast'): str,
+                               Optional('vpnv6_unicast'): str,
+                               Optional('ipv4_unicast'): str,
+                               Optional('ipv6_unicast'): str,
+                               Optional('graceful_restart'): str,
+                               Optional('graceful_restart_af_advertised_by_peer'): str,
+                               Optional('graceful_remote_restart_timer'): int,
+                               Optional('enhanced_refresh'): str,
+                               Optional('multisession'): str,
+                               Optional('four_octets_asn'): str,
+                               Optional('stateful_switchover'): str,
+                               },
+                           Optional('bgp_event_timer'):
+                               {Optional('starts'):
+                                   {
+                                       Optional('retrans'): int,
+                                       Optional('timewait'): int,
+                                       Optional('ackhold'): int,
+                                       Optional('sendwnd'): int,
+                                       Optional('keepalive'): int,
+                                       Optional('giveup'): int,
+                                       Optional('pmtuager'): int,
+                                       Optional('deadwait'): int,
+                                       Optional('linger'): int,
+                                       Optional('processq'): int,
+                                   },
+                                   Optional('wakeups'):
+                                       {
+                                           Optional('retrans'): int,
+                                           Optional('timewait'): int,
+                                           Optional('ackhold'): int,
+                                           Optional('sendwnd'): int,
+                                           Optional('keepalive'): int,
+                                           Optional('giveup'): int,
+                                           Optional('pmtuager'): int,
+                                           Optional('deadwait'): int,
+                                           Optional('linger'): int,
+                                           Optional('processq'): int,
+
+                                       },
+                                   Optional('next'):
+                                       {
+                                           Optional('retrans'): str,
+                                           Optional('timewait'): str,
+                                           Optional('ackhold'): str,
+                                           Optional('sendwnd'): str,
+                                           Optional('keepalive'): str,
+                                           Optional('giveup'): str,
+                                           Optional('pmtuager'): str,
+                                           Optional('deadwait'): str,
+                                           Optional('linger'): str,
+                                           Optional('processq'): str,
+                                       },
+
+                               },
+
+                          Optional('address_family'):
+                              {Any():
+                                   {
+                                       Optional('last_read'): str,
+                                       Optional('last_write'): str,
+                                       Optional('up_time'): str,
+                                       Optional('session_state'): str,
+                                       Optional('down_time'): str,
+                                       Optional('current_time'): str,
+                               },
+                          },
+                     },
+                 },
+            },
+        },
+    }
+
+
+class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
+    '''
+    Parser for:
+         show bgp all neighbors
+    '''
+
+    def cli(self):
+
+        cmd = 'show bgp all neighbors'
+        out = self.device.execute(cmd)
+
+        # Init vars
+        parsed_dict = {}
+
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+            # For address family: IPv4 Unicast
+            p1 = re.compile(r'^\s*For +address +family:'
+                            ' +(?P<address_family>[a-zA-Z0-9\-\s]+)$')
+            m = p1.match(line)
+            if m:
+                af_name = m.groupdict()['address_family'].lower()
+                continue
+
+            # BGP neighbor is 2.2.2.2,  remote AS 100, internal link
+            p2 = re.compile(r'^\s*BGP +neighbor +is +(?P<neghibor>[0-9\S]+),'
+                            '\s+remote +AS +(?P<remote_as>[0-9]+),'
+                            ' +(?P<link>[a-zA-Z]+) +link$')
+            m = p2.match(line)
+            if m:
+                neighbor_id = m.groupdict()['neghibor']
+                vrf_name = 'default'
+                remote_as = int(m.groupdict()['remote_as'])
+                link = m.groupdict()['link']  # internal / external
+
+                if 'vrf' not in parsed_dict:
+                    parsed_dict['vrf'] = {}
+                if vrf_name not in parsed_dict['vrf']:
+                    parsed_dict['vrf'][vrf_name] = {}
+
+                if 'neighbor' not in parsed_dict['vrf']['default']:
+                    parsed_dict['vrf']['default']['neighbor'] = {}
+
+                if neighbor_id not in parsed_dict['vrf'][vrf_name]['neighbor']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] = {}
+                    if remote_as is not None:
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['remote_as'] = remote_as
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['link'] = link
+
+                if 'address_family' not in  parsed_dict['vrf']\
+                        [vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['address_family'] = {}
+
+                if af_name:
+                    parsed_dict['vrf'][vrf_name]['neighbor'] \
+                        [neighbor_id]['address_family'][af_name] = {}
+                continue
+
+            # BGP neighbor is 20.4.6.6,  vrf VRF2,  remote AS 400, external link
+            p2_2 = re.compile(r'^\s*BGP +neighbor +is +(?P<neghibor>[0-9\S]+),'
+                              ' +vrf +(?P<vrf_name>[a-zA-Z0-9]+),'
+                              '\s+remote +AS +(?P<remote_as>[0-9]+),'
+                              '\s+(?P<link>[a-zA-Z]+) +link$')
+            m = p2_2.match(line)
+            if m:
+                neighbor_id = m.groupdict()['neghibor']
+                vrf_name = m.groupdict()['vrf_name'].lower()
+                remote_as = int(m.groupdict()['remote_as'])
+                link = m.groupdict()['link']  # internal / external
+
+
+                if 'vrf' not in parsed_dict:
+                    parsed_dict['vrf'] = {}
+                if vrf_name not in parsed_dict['vrf']:
+                    parsed_dict['vrf'][vrf_name] = {}
+
+                if 'neighbor' not in parsed_dict['vrf'][vrf_name]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'] = {}
+
+                if neighbor_id not in parsed_dict['vrf'][vrf_name]['neighbor']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] = {}
+                    if remote_as is not None:
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['remote_as'] = remote_as
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['link'] = link
+
+                if 'address_family' not in  parsed_dict['vrf']\
+                        [vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['address_family'] = {}
+
+                if af_name:
+                    parsed_dict['vrf'][vrf_name]['neighbor'] \
+                        [neighbor_id]['address_family'][af_name] = {}
+                continue
+
+            # Administratively shut down
+            p2_3 = re.compile(r'^\s*Administratively shut down$')
+            m = p2_3.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['shutdown'] = True
+                continue
+
+            # BGP version 4, remote router ID 2.2.2.2
+            p3 = re.compile(r'^\s*BGP +version +(?P<bgp_version>[0-9]+),'
+                            ' +remote +router +ID +(?P<remote_id>[0-9\.]+)$')
+            m = p3.match(line)
+            if m:
+                bgp_version = int(m.groupdict()['bgp_version'])
+                remote_router_id = m.groupdict()['remote_id']
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_version'] = bgp_version
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['router_id'] = remote_router_id
+                continue
+
+            # BGP state = Established, up for 01:10:35
+            # or
+            # BGP state = Idel, down for 01:10:35
+            p4 = re.compile(r'^\s*BGP +state += +(?P<session_state>[a-zA-Z]+),'
+                            ' +(?P<up_down>\w+) +for +(?P<time>[0-9\:]+)$')
+            m = p4.match(line)
+            if m:
+                session_state = m.groupdict()['session_state']
+                up_down = m.groupdict()['up_down']
+                up_down_time = m.groupdict()['time']
+
+
+                parsed_dict['vrf'][vrf_name]['neighbor']\
+                [neighbor_id]['session_state'] = session_state.lower()
+
+                if 'address_family' not in parsed_dict['vrf']\
+                        [vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['address_family'] = {}
+
+                if af_name not in parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['address_family']:
+                    parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['address_family'][af_name] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor']\
+                    [neighbor_id]['address_family'][af_name]['session_state'] = session_state.lower()
+
+                parsed_dict['vrf'][vrf_name]['neighbor']\
+                    [neighbor_id]['address_family'][af_name][up_down+'_time'] = up_down_time
+
+                continue
+
+            # Last read 00:00:04, last write 00:00:09, hold time is 180, keepalive interval is 60 seconds
+            p6 = re.compile(r'^\s*Last +read +(?P<last_read>[0-9\:]+),'
+                            ' +last +write +(?P<last_write>[0-9\:]+),'
+                            ' +hold +time +is +(?P<hold_time>[0-9]+),'
+                            ' +keepalive +interval +is +(?P<keepalive_interval>[0-9]+)'
+                            ' +seconds$')
+            m = p6.match(line)
+            if m:
+                last_read = m.groupdict()['last_read']
+                last_write = m.groupdict()['last_write']
+                hold_time = int(m.groupdict()['hold_time'])
+                keepalive_interval = int(m.groupdict()['keepalive_interval'])
+
+                if 'bgp_negotiated_keepalive_timers' not in \
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_negotiated_keepalive_timers'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_negotiated_keepalive_timers']['hold_time'] = hold_time
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_negotiated_keepalive_timers']['keepalive_interval'] = keepalive_interval
+
+                if 'address_family' not in parsed_dict['vrf']\
+                        [vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['address_family'] = {}
+
+                if af_name not in parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['address_family']:
+                    parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['address_family'][af_name] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor']\
+                    [neighbor_id]['address_family'][af_name]['last_read'] = last_read
+                parsed_dict['vrf'][vrf_name]['neighbor'] \
+                    [neighbor_id]['address_family'][af_name]['last_write'] = last_write
+
+
+                continue
+
+            # Neighbor sessions:
+            #  1 active, is not multisession capable (disabled)
+            p7 = re.compile(r'^\s*(?P<num_neighbor_sessions>[0-9]+),'
+                            ' +(?P<multisession_capable>[a-zA-Z\s]+) +multisession +capable'
+                            ' +\(+(?P<multisession_status>[a-zA-Z])+\)$')
+            m = p7.match(line)
+            if m:
+                num_neighbor_sessions = int(m.groupdict()['num_neighbor_sessions'])
+                multisession_capable = m.groupdict()['multisession_capable']
+                multisession_status = m.groupdict()['multisession_status']
+                continue
+            # Neighbor capabilities:
+            #  Route refresh: advertised and received(new)
+            p8 = re.compile(r'^\s*Route +refresh:'
+                            ' +(?P<route_refresh>[\w\s\S]+)$')
+            m = p8.match(line)
+            if m:
+                route_refresh = m.groupdict()['route_refresh']
+                if 'bgp_negotiated_capabilities' not in \
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:\
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_negotiated_capabilities'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_negotiated_capabilities']['route_refresh'] = route_refresh
+                continue
+
+            #  Four-octets ASN Capability: advertised and received
+            p9 = re.compile(r'^\s*Four-octets +ASN +Capability:'
+                            ' +(?P<four_octets_asn_capability>[a-zA-Z\s]+)$')
+            m = p9.match(line)
+            if m:
+                four_octets_asn_capability = m.groupdict()['four_octets_asn_capability']
+                if 'bgp_negotiated_capabilities' not in \
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:\
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_negotiated_capabilities'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_negotiated_capabilities']['four_octets_asn'] = four_octets_asn_capability
+                continue
+
+            #  Address family VPNv4 Unicast: advertised and received
+            p10 = re.compile(r'^\s*Address +family'
+                             ' +VPNv4 +Unicast:'
+                             ' +(?P<address_family_status>[a-zA-Z\s]+)$')
+            m = p10.match(line)
+            if m:
+                address_family_status = m.groupdict()['address_family_status']
+                if 'bgp_negotiated_capabilities' not in \
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:\
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_negotiated_capabilities'] = {}
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_negotiated_capabilities']['vpnv4_unicast'] = address_family_status
+                continue
+
+            #  Address family VPNv6 Unicast: advertised and received
+            p10_1 = re.compile(r'^\s*Address +family'
+                             ' +VPNv6 +Unicast:'
+                             ' +(?P<address_family_status>[a-zA-Z\s]+)$')
+            m = p10_1.match(line)
+            if m:
+                address_family_status = m.groupdict()['address_family_status']
+                if 'bgp_negotiated_capabilities' not in \
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:\
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_negotiated_capabilities'] = {}
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_negotiated_capabilities']['vpnv6_unicast'] = address_family_status
+                continue
+            #  Address family IPv6 Unicast: advertised and received
+            p10_2 = re.compile(r'^\s*Address +family'
+                               ' +IPv6 +Unicast:'
+                               ' +(?P<address_family_status>[a-zA-Z\s]+)$')
+            m = p10_2.match(line)
+            if m:
+                address_family_status = m.groupdict()['address_family_status']
+                if 'bgp_negotiated_capabilities' not in \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_negotiated_capabilities'] = {}
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_negotiated_capabilities']['ipv6_unicast'] = address_family_status
+                continue
+
+            #  Address family IPv4 Unicast: advertised and received
+            p10_3 = re.compile(r'^\s*Address +family'
+                               ' +IPv4 +Unicast:'
+                               ' +(?P<address_family_status>[a-zA-Z\s]+)$')
+            m = p10_3.match(line)
+            if m:
+                address_family_status = m.groupdict()['address_family_status']
+                if 'bgp_negotiated_capabilities' not in \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_negotiated_capabilities'] = {}
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_negotiated_capabilities']['ipv4_unicast'] = address_family_status
+                continue
+
+            #  Graceful Restart Capability: received
+            p11 = re.compile(r'^\s*Graceful +Restart +Capability:'
+                             ' +(?P<graceful_restart_capability>[a-zA-Z\s]+)$')
+            m = p11.match(line)
+            if m:
+                graceful_restart_capability = \
+                    m.groupdict()['graceful_restart_capability']
+                if 'bgp_negotiated_capabilities' not in \
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:\
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_negotiated_capabilities'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_negotiated_capabilities']['graceful_restart'] = graceful_restart_capability
+                continue
+
+            #   Remote Restart timer is 120 seconds
+            p12 = re.compile(r'^\s*Remote +Restart +timer +is'
+                             ' +(?P<remote_restart_timer>[0-9]+) +seconds$')
+            m = p12.match(line)
+            if m:
+                remote_restart_timer = int(m.groupdict()['remote_restart_timer'])
+                if 'bgp_negotiated_capabilities' not in \
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:\
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_negotiated_capabilities'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_negotiated_capabilities']['graceful_remote_restart_timer'] = remote_restart_timer
+                continue
+
+            #   Address families advertised by peer:
+            p12_1 = re.compile(r'^\s*Address +families +advertised +by +peer:$')
+            m = p12_1.match(line)
+            if m:
+                continue
+            #    VPNv4 Unicast (was not preserved, VPNv6 Unicast (was not preserved
+            p12_2 = re.compile(r'^\s*(?P<space>\s{8})+(?P<graceful_restart_af_advertised_by_peer>[0-9a-zA-Z\s\S]+)$')
+            m = p12_2.match(line)
+            if m:
+                if len(m.groupdict()['space']) == 8 :
+                    graceful_restart_af_advertised_by_peer = m.groupdict()['graceful_restart_af_advertised_by_peer']
+                    if 'Sent' not in graceful_restart_af_advertised_by_peer and \
+                        'Rcvd' not in graceful_restart_af_advertised_by_peer:
+
+                        if 'bgp_negotiated_capabilities' not in \
+                            parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:\
+                            parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                                ['bgp_negotiated_capabilities'] = {}
+
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                            ['bgp_negotiated_capabilities']['graceful_restart_af_advertised_by_peer'] =\
+                            graceful_restart_af_advertised_by_peer
+                continue
+
+            #  Enhanced Refresh Capability: advertised
+            p13 = re.compile(r'^\s*Enhanced +Refresh +Capability:'
+                             ' +(?P<enhanced_refresh_capability>[a-zA-Z\s]+)$')
+            m = p13.match(line)
+            if m:
+                enhanced_refresh_capability = m.groupdict()['enhanced_refresh_capability']
+                if 'bgp_negotiated_capabilities' not in \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_negotiated_capabilities'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_negotiated_capabilities']['enhanced_refresh'] = enhanced_refresh_capability
+                continue
+
+            #  Multisession Capability:
+            p14 = re.compile(r'^\s*Multisession +Capability:'
+                             ' +(?P<multisession>[a-zA-Z\s]+)$')
+            m = p14.match(line)
+            if m:
+                multisession_capability = m.groupdict()['multisession']
+                if 'bgp_negotiated_capabilities' not in \
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_negotiated_capabilities'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                ['bgp_negotiated_capabilities']['multisession'] = multisession_capability
+                continue
+
+            #  Stateful switchover support enabled: NO for session 1
+            p15 = re.compile(r'^\s*Stateful +switchover +support'
+                             ' +(?P<switchover>[a-zA-Z]+):'
+                             ' +(?P<stateful_switchover>[0-9a-zA-Z\s\S]+)$')
+            m = p15.match(line)
+            if m:
+                stateful_switchover = m.groupdict()['stateful_switchover']
+                if 'bgp_negotiated_capabilities' not in \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_negotiated_capabilities'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_negotiated_capabilities']['stateful_switchover'] = stateful_switchover
+                continue
+
+            # Message statistics:
+            #  InQ depth is 0
+            p18 = re.compile(r'^\s*InQ +depth +is'
+                             ' +(?P<in_queue_depth>[0-9]+)$')
+            m = p18.match(line)
+            if m:
+                message_input_queue = int(m.groupdict()['in_queue_depth'])
+                if 'bgp_neighbor_counters' not in \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_neighbor_counters'] = {}
+                if 'messages' not in parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['bgp_neighbor_counters']: \
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_neighbor_counters']['messages'] = {}
+                if 'in_queue_depth' not in parsed_dict['vrf'][vrf_name]\
+                    ['neighbor'][neighbor_id]['bgp_neighbor_counters']['messages']:
+                    parsed_dict['vrf'][vrf_name]\
+                        ['neighbor'][neighbor_id]['bgp_neighbor_counters']['messages']\
+                        ['in_queue_depth'] = message_input_queue
+
+                continue
+            #  OutQ depth is 0
+            p19 = re.compile(r'^\s*OutQ +depth +is'
+                             ' +(?P<out_queue_depth>[0-9]+)$')
+            m = p19.match(line)
+            if m:
+                message_output_queue = int(m.groupdict()['out_queue_depth'])
+                if 'bgp_neighbor_counters' not in \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_neighbor_counters'] = {}
+
+                if 'messages' not in parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['bgp_neighbor_counters']: \
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_neighbor_counters']['messages'] = {}
+
+                if 'out_queue_depth' not in parsed_dict['vrf'][vrf_name]\
+                    ['neighbor'][neighbor_id]['bgp_neighbor_counters']['messages']:
+                    parsed_dict['vrf'][vrf_name]\
+                        ['neighbor'][neighbor_id]['bgp_neighbor_counters']['messages']\
+                        ['out_queue_depth'] = message_output_queue
+                continue
+
+            #                     Sent       Rcvd
+            #  Opens:                  1          1
+            #  Notifications:          0          0
+            #  Updates:               11          6
+            #  Keepalives:            75         74
+            #  Route Refresh:          0          0
+            #  Total:                 87         81
+            p19_1 = re.compile(
+                r'^\s*(?P<name>[a-zA-Z\s]+):\s+(?P<sent>[0-9]+) +(?P<received>[0-9]+)$')
+
+            m = p19_1.match(line)
+            if m:
+                name = m.groupdict()['name'].replace(" ","_").lower()
+                sent = int(m.groupdict()['sent'])
+                received = int(m.groupdict()['received'])
+
+                if 'bgp_neighbor_counters' not in \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_neighbor_counters'] = {}
+
+                if 'messages' not in parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['bgp_neighbor_counters']: \
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_neighbor_counters']['messages'] = {}
+
+                if 'sent' not in parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['bgp_neighbor_counters']['messages']: \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                            ['bgp_neighbor_counters']['messages']['sent'] = {}
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_neighbor_counters']['messages']['sent'][name] = sent
+
+
+                if 'received' not in parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['bgp_neighbor_counters']['messages']:\
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                            ['bgp_neighbor_counters']['messages']['received'] = {}
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_neighbor_counters']['messages']['received'][name] = received
+
+                continue
+
+            # Default minimum time between advertisement runs is 0 seconds
+            p26 = re.compile(r'^\s*Default +minimum +time +between +advertisement +runs +is'
+                             ' +(?P<minimum_time_between_advertisement>[0-9]+)'
+                             ' +seconds$')
+            m = p26.match(line)
+            if m:
+                minimum_time_between_advertisement = int(m.groupdict()['minimum_time_between_advertisement'])
+                if 'bgp_session_transport' not in \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                            ['bgp_session_transport'] = {}
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['min_time_between_advertisement_runs']\
+                    = minimum_time_between_advertisement
+                continue
+
+            # Address tracking is enabled, the RIB does have a route to 2.2.2.2
+            p27 = re.compile(r'^\s*Address +tracking +is'
+                             ' +(?P<address_tracking_status>[a-zA-Z]+),'
+                             ' +the +RIB +does +have +a +route +to'
+                             ' +(?P<rib_route_ip>[0-9\.\:\w]+)$')
+            m = p27.match(line)
+            if m:
+                address_tracking_status = m.groupdict()['address_tracking_status']
+                rib_route_ip = m.groupdict()['rib_route_ip']
+
+                if 'bgp_session_transport' not in \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                            ['bgp_session_transport'] = {}
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['address_tracking_status'] = address_tracking_status
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['rib_route_ip'] = rib_route_ip
+
+                continue
+
+            # Connections established 1; dropped 0
+            p28 = re.compile(r'^\s*Connections +established'
+                             ' +(?P<num_connection_established>[0-9]+);'
+                             ' +dropped +(?P<num_connection_dropped>[0-9]+)$')
+            m = p28.match(line)
+            if m:
+                num_connection_established = int(m.groupdict()['num_connection_established'])
+                num_connection_dropped = int(m.groupdict()['num_connection_dropped'])
+
+                if 'bgp_session_transport' not in \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                            ['bgp_session_transport'] = {}
+
+                if 'connection' not in parsed_dict['vrf'][vrf_name]\
+                        ['neighbor'][neighbor_id]['bgp_session_transport']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_session_transport']['connection'] = {}
+
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_session_transport']['connection']['established']\
+                        = num_connection_established
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport']['connection']['dropped'] \
+                        = num_connection_dropped
+                continue
+
+            # Last reset never
+            p29 = re.compile(r'^\s*Last +reset'
+                             ' +(?P<last_connection_reset>[a-zA-Z]+)$')
+            m = p29.match(line)
+            if m:
+                last_connection_reset = m.groupdict()['last_connection_reset']
+                if 'bgp_session_transport' not in \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                            ['bgp_session_transport'] = {}
+
+                if 'connection' not in parsed_dict['vrf'][vrf_name] \
+                        ['neighbor'][neighbor_id]['bgp_session_transport']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport']['connection'] = {}
+
+                if last_connection_reset:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport']['connection']['last_reset'] \
+                        = last_connection_reset
+                continue
+            #Last reset 01:05:09, due to Active open failed
+            p29_2 = re.compile(r'^\s*Last +reset'
+                               ' +(?P<last_connection_reset>[0-9\:]+)\S'
+                               ' +due +to (?P<reset_reason>[0-9a-zA-Z\s]+)$')
+            m = p29_2.match(line)
+            if m:
+                last_connection_reset = m.groupdict()['last_connection_reset']
+                reset_reason = m.groupdict()['reset_reason']
+                if 'bgp_session_transport' not in \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                            ['bgp_session_transport'] = {}
+
+                if 'connection' not in parsed_dict['vrf'][vrf_name] \
+                        ['neighbor'][neighbor_id]['bgp_session_transport']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_session_transport']['connection'] = {}
+
+                if last_connection_reset:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport']['connection']['last_reset'] \
+                        = last_connection_reset
+
+                if reset_reason:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport']['connection']['reset_reason'] \
+                        = reset_reason
+                continue
+
+            # Transport(tcp) path-mtu-discovery is enabled
+            p30 = re.compile(r'^\s*Transport\(tcp\) +path-mtu-discovery +is'
+                             ' +(?P<path_mtu_discovery_status>[a-zA-Z]+)$')
+            m = p30.match(line)
+            if m:
+                path_mtu_discovery_status = m.groupdict()['path_mtu_discovery_status']
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['tcp_path_mtu_discovery'] = path_mtu_discovery_status
+                continue
+
+            # Graceful-Restart is disabled
+            p31 = re.compile(r'^\s*Graceful-Restart +is'
+                             ' +(?P<graceful_restart>[a-zA-Z]+)$')
+            m = p31.match(line)
+            if m:
+                graceful_restart = m.groupdict()['graceful_restart']
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['graceful_restart'] = graceful_restart.lower()
+                continue
+
+            # Connection state is ESTAB, I/O status: 1, unread input bytes: 0
+            p32 = re.compile(r'^\s*Connection +state +is'
+                             ' +(?P<connection_state>[a-zA-Z]+),'
+                             ' +I/O +status: (?P<num_io_status>[0-9]+),'
+                             ' +unread +input +bytes:'
+                             ' +(?P<num_unread_input_bytes>[0-9]+)$')
+            m = p32.match(line)
+            if m:
+                connection_state = m.groupdict()['connection_state']
+                num_io_status = int(m.groupdict()['num_io_status'])
+                num_unread_input_bytes = int(m.groupdict()['num_unread_input_bytes'])
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['connection_state'] = connection_state.lower()
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['io_status'] = num_io_status
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['unread_input_bytes'] = num_unread_input_bytes
+
+                continue
+            # Connection is ECN Disabled, Mininum incoming TTL 0, Outgoing TTL 255
+            p33 = re.compile(r'^\s*Connection +is +ECN'
+                             ' +(?P<connection_ecn_state>[a-zA-Z]+),'
+                             ' +Mininum +incoming +TTL +(?P<minimum_incoming_ttl>[0-9]+),'
+                             ' +Outgoing +TTL'
+                             ' +(?P<minimum_outgoing_ttl>[0-9]+)$')
+            m = p33.match(line)
+            if m:
+                connection_ecn_state = m.groupdict()['connection_ecn_state']
+                minimum_incoming_ttl = int(m.groupdict()['minimum_incoming_ttl'])
+                minimum_outgoing_ttl = int(m.groupdict()['minimum_outgoing_ttl'])
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['ecn_connection'] = connection_ecn_state.lower()
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['minimum_incoming_ttl'] = minimum_incoming_ttl
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['outgoing_ttl'] = minimum_outgoing_ttl
+                continue
+
+            # Local host: 4.4.4.4, Local port: 35281
+            p34 = re.compile(r'^\s*Local +host:'
+                             ' +(?P<local_host>[0-9\S]+),'
+                             ' +Local +port: +(?P<local_port>[0-9]+)$')
+            m = p34.match(line)
+            if m:
+                local_host = m.groupdict()['local_host']
+                local_port = m.groupdict()['local_port']
+
+                if 'bgp_session_transport' not in \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                            ['bgp_session_transport'] = {}
+
+                if 'transport' not in parsed_dict['vrf'][vrf_name] \
+                        ['neighbor'][neighbor_id]['bgp_session_transport']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_session_transport']['transport'] = {}
+
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                   ['bgp_session_transport']['transport']['local_host'] = local_host
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                   ['bgp_session_transport']['transport']['local_port'] = local_port
+                continue
+
+            # Foreign host: 2.2.2.2, Foreign port: 179
+            p35 = re.compile(r'^\s*Foreign +host:'
+                             ' +(?P<foreign_host>[0-9\S]+),'
+                             ' +Foreign +port: +(?P<foreign_port>[0-9]+)$')
+            m = p35.match(line)
+            if m:
+                foreign_host = m.groupdict()['foreign_host']
+                foreign_port = m.groupdict()['foreign_port']
+
+                if 'bgp_session_transport' not in \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:\
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                            ['bgp_session_transport'] = {}
+
+                if 'transport' not in parsed_dict['vrf'][vrf_name]\
+                        ['neighbor'][neighbor_id]['bgp_session_transport']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_session_transport']['transport'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['transport']['foreign_host'] = foreign_host
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['transport']['foreign_port'] = foreign_port
+                continue
+
+            # Connection tableid (VRF): 0
+            p36 = re.compile(r'^\s*Connection +tableid +\(VRF\):'
+                             ' +(?P<num_connection_tableid>[0-9]+)$')
+            m = p36.match(line)
+            if m:
+                num_connection_tableid = int(m.groupdict()['num_connection_tableid'])
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['connection_tableid'] = num_connection_tableid
+                continue
+
+            # Maximum output segment queue size: 50
+            p37 = re.compile(r'^\s*Maximum +output +segment +queue +size:'
+                             ' +(?P<num_max_output_seg_queue_size>[0-9]+)$')
+            m = p37.match(line)
+            if m:
+                num_max_output_seg_queue_size = int(m.groupdict()['num_max_output_seg_queue_size'])
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['maximum_output_segment_queue_size'] = num_max_output_seg_queue_size
+
+                continue
+
+            # Enqueued packets for retransmit: 0, input: 0  mis-ordered: 0 (0 bytes)
+            p38 = re.compile(r'^\s*Enqueued +packets +for +retransmit:'
+                             ' +(?P<enqueued_packets_for_retransmit>[0-9]+),'
+                             ' +input: +(?P<enqueued_packets_for_input>[0-9]+)'
+                             '\s+mis-ordered: +(?P<enqueued_packets_for_mis_ordered>[0-9]+)'
+                             ' +\((?P<num_bytes>[0-9]+) +bytes+\)$')
+
+            m = p38.match(line)
+            if m:
+                enqueued_packets_for_retransmit = int(m.groupdict()['enqueued_packets_for_retransmit'])
+                enqueued_packets_for_input = int(m.groupdict()['enqueued_packets_for_input'])
+                enqueued_packets_for_mis_ordered = int(m.groupdict()['enqueued_packets_for_mis_ordered'])
+                num_bytes = int(m.groupdict()['num_bytes'])
+
+                if 'enqueued_packets' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport']['enqueued_packets'] = {}
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['enqueued_packets']['retransmit_packet'] = enqueued_packets_for_retransmit
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['enqueued_packets']['input_packet'] = enqueued_packets_for_input
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['enqueued_packets']['mis_ordered_packet'] = enqueued_packets_for_mis_ordered
+
+                continue
+            # Event Timers (current time is 0x530449):
+            p38_1 = re.compile(r'^\s*Event +Timers +\(+current +time +is +(?P<current_time>\S+)+\):$')
+            m = p38_1.match(line)
+            if m:
+                current_time = m.groupdict()['current_time']
+
+                if 'address_family' not in \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                            ['address_family'] = {}
+
+                if af_name not in parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['address_family']:
+                    parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['address_family'][af_name] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor']\
+                    [neighbor_id]['address_family'][af_name]['current_time'] = current_time
+
+                continue
+            # Timer          Starts    Wakeups            Next
+            # Retrans            86          0             0x0
+            # TimeWait            0          0             0x0
+            # AckHold            80         72             0x0
+            # SendWnd             0          0             0x0
+            # KeepAlive           0          0             0x0
+            # GiveUp              0          0             0x0
+            # PmtuAger            1          1             0x0
+            # DeadWait            0          0             0x0
+            # Linger              0          0             0x0
+            # ProcessQ            0          0             0x0
+            p39 = re.compile(
+                r'^\s*(?P<name>\S+) +(?P<starts>[0-9]+) +(?P<wakeups>[0-9]+) +(?P<next>0x[0-9a-f]+)$')
+            m = p39.match(line)
+            if m:
+                event_name = m.groupdict()['name'].lower()
+                event_starts = int(m.groupdict()['starts'])
+                event_wakeups = int(m.groupdict()['wakeups'])
+                event_next = m.groupdict()['next']
+
+                if 'bgp_event_timer' not in \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]: \
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                            ['bgp_event_timer'] = {}
+                if 'starts' not in parsed_dict['vrf'][vrf_name] \
+                        ['neighbor'][neighbor_id]['bgp_event_timer']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_event_timer']['starts'] = {}
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_event_timer']['starts'][event_name] = event_starts
+
+                if 'wakeups' not in parsed_dict['vrf'][vrf_name] \
+                        ['neighbor'][neighbor_id]['bgp_event_timer']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_event_timer']['wakeups'] = {}
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_event_timer']['wakeups'][event_name] = event_wakeups
+
+                if event_next:
+                    if 'next' not in parsed_dict['vrf'][vrf_name]\
+                            ['neighbor'][neighbor_id]['bgp_event_timer']:
+                        parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                            ['bgp_event_timer']['next'] = {}
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_event_timer']['next'][event_name] = event_next
+                continue
+
+            # iss:   55023811  snduna:   55027115  sndnxt:   55027115
+            p40 = re.compile(r'^\s*iss:'
+                             '\s+(?P<iss>[0-9]+)'
+                             '\s+snduna: +(?P<snduna>[0-9]+)'
+                             '\s+sndnxt: +(?P<sndnxt>[0-9]+)$')
+            m = p40.match(line)
+            if m:
+                iss = int(m.groupdict()['iss'])
+                snduna = int(m.groupdict()['snduna'])
+                sndnxt = int(m.groupdict()['sndnxt'])
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['iss'] = iss
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['snduna'] = snduna
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['sndnxt'] = sndnxt
+                continue
+
+            # irs:  109992783  rcvnxt:  109995158
+            p41 = re.compile(r'^\s*irs:'
+                             '\s+(?P<irs>[0-9]+)'
+                             '\s+rcvnxt: +(?P<rcvnxt>[0-9]+)$')
+            m = p41.match(line)
+            if m:
+                irs = int(m.groupdict()['irs'])
+                rcvnxt = int(m.groupdict()['rcvnxt'])
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']['irs'] = irs
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']['rcvnxt'] = rcvnxt
+                continue
+            # sndwnd:  16616  scale:      0  maxrcvwnd:  16384
+            p42 = re.compile(r'^\s*sndwnd:'
+                             '\s+(?P<sndwnd>[0-9]+)'
+                             '\s+scale: +(?P<snd_scale>[0-9]+)'
+                             '\s+maxrcvwnd: +(?P<maxrcvwnd>[0-9]+)$')
+            m = p42.match(line)
+            if m:
+                sndwnd = int(m.groupdict()['sndwnd'])
+                send_scale = int(m.groupdict()['snd_scale'])
+                maxrcvwnd = int(m.groupdict()['maxrcvwnd'])
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['sndwnd'] = sndwnd
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['snd_scale'] = send_scale
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['maxrcvwnd'] = maxrcvwnd
+
+                continue
+            # rcvwnd:  16327  scale:      0  delrcvwnd:     57
+            p43 = re.compile(r'^\s*rcvwnd:'
+                             '\s+(?P<rcvwnd>[0-9]+)'
+                             '\s+scale:\s+(?P<rcv_scale>[0-9]+)'
+                             '\s+delrcvwnd:\s+(?P<delrcvwnd>[0-9]+)$')
+            m = p43.match(line)
+            if m:
+                rcvwnd = int(m.groupdict()['rcvwnd'])
+                rcv_scale = int(m.groupdict()['rcv_scale'])
+                delrcvwnd = int(m.groupdict()['delrcvwnd'])
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['rcvwnd'] = rcvwnd
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['rcv_scale'] = rcv_scale
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['delrcvwnd'] = delrcvwnd
+                continue
+            # SRTT: 1000 ms, RTTO: 1003 ms, RTV: 3 ms, KRTT: 0 ms
+            p44 = re.compile(r'^\s*SRTT:'
+                             ' +(?P<srtt>[0-9]+) +ms,'
+                             ' +RTTO: +(?P<rtto>[0-9]+) +ms,'
+                             ' +RTV: +(?P<rtv>[0-9]+) +ms,'
+                             ' +KRTT: +(?P<krtt>[0-9]+) +ms$')
+            m = p44.match(line)
+            if m:
+                srtt = int(m.groupdict()['srtt'])
+                rtto = int(m.groupdict()['rtto'])
+                rtv = int(m.groupdict()['rtv'])
+                krtt = int(m.groupdict()['krtt'])
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']['srtt'] = srtt
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']['rtto'] = rtto
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']['rtv'] = rtv
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']['krtt'] = krtt
+                continue
+
+            # minRTT: 4 ms, maxRTT: 1000 ms, ACK hold: 200 ms
+            p45 = re.compile(r'^\s*minRTT:'
+                             ' +(?P<min_rtt>[0-9]+) +ms,'
+                             ' +maxRTT: +(?P<max_rtt>[0-9]+) +ms,'
+                             ' +ACK +hold: +(?P<ack_hold>[0-9]+) +ms$')
+            m = p45.match(line)
+            if m:
+                min_rtt = int(m.groupdict()['min_rtt'])
+                max_rtt = int(m.groupdict()['max_rtt'])
+                ack_hold = int(m.groupdict()['ack_hold'])
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['min_rtt'] = min_rtt
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['max_rtt'] = max_rtt
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['ack_hold'] = ack_hold
+                continue
+            # uptime: 4236258 ms, Sent idletime: 4349 ms, Receive idletime: 4549 ms
+            p46 = re.compile(r'^\s*uptime:'
+                             ' +(?P<uptime>[0-9]+) +ms,'
+                             ' +Sent +idletime: +(?P<sent_idletime>[0-9]+) +ms,'
+                             ' +Receive +idletime: +(?P<receive_idletime>[0-9]+) +ms$')
+            m = p46.match(line)
+            if m:
+                uptime = int(m.groupdict()['uptime'])
+                sent_idletime = int(m.groupdict()['sent_idletime'])
+                receive_idletime = int(m.groupdict()['receive_idletime'])
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['uptime'] = uptime
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['sent_idletime'] = sent_idletime
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['receive_idletime'] = receive_idletime
+                continue
+            # Status Flags: active open
+            p47 = re.compile(r'^\s*Status +Flags:'
+                             ' +(?P<status_flags>[a-zA-Z\s\S]+)$')
+            m = p47.match(line)
+            if m:
+                status_flags = m.groupdict()['status_flags']
+                if 'bgp_session_transport' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['status_flags'] = status_flags
+                continue
+
+            # Option Flags: nagle, path mtu capable
+            p48 = re.compile(r'^\s*Option +Flags:'
+                             ' +(?P<option_flags>[a-zA-Z\s\,]+)$')
+            m = p48.match(line)
+            if m:
+                option_flags = m.groupdict()['option_flags']
+                if 'bgp_session_transport' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport'] = {}
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['option_flags'] = option_flags
+                continue
+
+            # IP Precedence value : 6
+            p49 = re.compile(r'^\s*IP +Precedence +value :'
+                             ' +(?P<ip_precedence_value>[0-9]+)$')
+            m = p49.match(line)
+            if m:
+                ip_precedence_value = int(m.groupdict()['ip_precedence_value'])
+                if 'bgp_session_transport' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['ip_precedence_value'] = ip_precedence_value
+                continue
+            # Datagrams (max data segment is 536 bytes):
+            p50 = re.compile(r'^\s*Datagrams +\(max +data +segment +is'
+                             ' +(?P<datagram>[0-9]+) +bytes\):$')
+            m = p50.match(line)
+            if m:
+                datagram = m.groupdict()['datagram']
+                if 'bgp_session_transport' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport'] = {}
+
+                if 'datagram' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_session_transport']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_session_transport']['datagram'] = {}
+                continue
+            # Rcvd: 164 (out of order: 0), with data: 80, total data bytes: 2374
+            p51 = re.compile(r'^\s*Rcvd: (?P<received>[0-9]+)'
+                             ' \(out +of +order: +(?P<out_of_order>[0-9]+)\),'
+                             ' +with +data: (?P<with_data>[0-9]+),'
+                             ' +total +data +bytes: (?P<total_data>[0-9]+)$')
+            m = p51.match(line)
+            if m:
+                received = int(m.groupdict()['received'])
+                out_of_order = int(m.groupdict()['out_of_order'])
+                with_data = int(m.groupdict()['with_data'])
+                total_data = int(m.groupdict()['total_data'])
+
+                if 'bgp_session_transport' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport'] = {}
+
+
+                if 'datagram' not in parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['bgp_session_transport']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_session_transport']['datagram'] = {}
+                if 'datagram_received' not in parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['bgp_session_transport']['datagram']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                    ['bgp_session_transport']['datagram']['datagram_received'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                    ['datagram']['datagram_received']['value'] = received
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                    ['datagram']['datagram_received']['out_of_order'] = out_of_order
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                    ['datagram']['datagram_received']['with_data'] = with_data
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                ['datagram']['datagram_received']['total_data'] = total_data
+                continue
+            # Sent: 166 (retransmit: 0, fastretransmit: 0, partialack: 0, Second Congestion: 0),
+            #       with data: 87, total data bytes: 3303
+            p52 = re.compile(r'^\s*Sent: (?P<sent>[0-9]+)'
+                             ' \(retransmit: +(?P<retransmit>[0-9]+),'
+                             ' +fastretransmit: +(?P<fastretransmit>[0-9]+),'
+                             ' +partialack: +(?P<partialack>[0-9]+),'
+                             ' +Second +Congestion: +(?P<second_congestion>[0-9]+)\),'
+                             ' +with +data: (?P<sent_with_data>[0-9]+),'
+                             ' +total +data +bytes: (?P<sent_total_data>[0-9]+)$')
+            m = p52.match(line)
+            if m:
+                sent = int(m.groupdict()['sent'])
+                retransmit = int(m.groupdict()['retransmit'])
+                fastretransmit = int(m.groupdict()['fastretransmit'])
+                partialack = int(m.groupdict()['partialack'])
+                second_congestion = int(m.groupdict()['second_congestion'])
+                sent_with_data = int(m.groupdict()['sent_with_data'])
+                sent_total_data = int(m.groupdict()['sent_total_data'])
+
+                if 'bgp_session_transport' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport'] = {}
+
+                if 'datagram' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_session_transport']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_session_transport']['datagram'] = {}
+                if 'datagram_sent' not in parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['bgp_session_transport']['datagram']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                        ['datagram']['datagram_sent'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                    ['datagram']['datagram_sent']['value'] = sent
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                    ['datagram']['datagram_sent']['retransmit'] = retransmit
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                    ['datagram']['datagram_sent']['fastretransmit'] = fastretransmit
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                    ['datagram']['datagram_sent']['partialack'] = partialack
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                    ['datagram']['datagram_sent']['second_congestion'] = second_congestion
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                    ['datagram']['datagram_sent']['with_data'] = sent_with_data
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['bgp_session_transport']\
+                    ['datagram']['datagram_sent']['total_data'] = sent_total_data
+                continue
+
+            # Packets received in fast path: 0, fast processed: 0, slow path: 0
+            p53 = re.compile(r'^\s*Packets +received +in +fast +path:'
+                             ' +(?P<packet_received_in_fast_path>[0-9]+),'
+                             ' +fast +processed: +(?P<fast_processed>[0-9]+),'
+                             ' +slow +path: +(?P<slow_path>[0-9]+)$')
+            m = p53.match(line)
+            if m:
+                packet_received_in_fast_path = int(m.groupdict()['packet_received_in_fast_path'])
+                fast_processed = int(m.groupdict()['fast_processed'])
+                slow_path = int(m.groupdict()['slow_path'])
+
+                if 'bgp_session_transport' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['packet_fast_path'] = packet_received_in_fast_path
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['packet_fast_processed'] = fast_processed
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['packet_slow_path'] = slow_path
+
+                continue
+            # fast lock acquisition failures: 0, slow path: 0
+            p54 = re.compile(r'^\s*fast +lock +acquisition +failures:'
+                             ' +(?P<fast_lock_acquisition_failures>[0-9]+),'
+                             ' +slow +path: +(?P<slow_path>[0-9]+)$')
+            m = p54.match(line)
+            if m:
+                fast_lock_acquisition_failures = int(m.groupdict()['fast_lock_acquisition_failures'])
+                slow_path = int(m.groupdict()['slow_path'])
+
+                if 'bgp_session_transport' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport'] = {}
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['fast_lock_acquisition_failures'] = fast_lock_acquisition_failures
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['lock_slow_path'] = slow_path
+                continue
+
+            # TCP Semaphore      0x1286E7EC  FREE 
+            p55 = re.compile(r'^\s*TCP +Semaphore'
+                             ' +(?P<tcp_semaphore>0x[0-9a-fA-F]+)'
+                             ' +(?P<tcp_status>[a-zA-Z]+)$')
+            m = p55.match(line)
+            if m:
+                tcp_semaphore = m.groupdict()['tcp_semaphore']
+                tcp_status = m.groupdict()['tcp_status']
+                if 'bgp_session_transport' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport'] = {}
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['tcp_semaphore'] = tcp_semaphore
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']['tcp_semaphore_status'] = tcp_status
+                continue
+
+        return parsed_dict
+
 # ==========================================================
 # Parser for 'show bgp all neighbors <WORD> received-routes'
 # ==========================================================
 
 class ShowBgpAllNeighborsReceivedRoutesSchema(MetaParser):
-    
     '''Schema for show bgp all neighbors <WORD> received-routes'''
 
     schema = {
