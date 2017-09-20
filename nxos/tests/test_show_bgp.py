@@ -18427,7 +18427,6 @@ class test_show_bgp_unicast_ps_neighbor_cli(unittest.TestCase):
     golden_parsed_output_1 = {
         "vrf": {
             "default": {
-               "neighbor": "21.0.101.1",
                "route_map": {
                     "Filter-pip": {
                           1: {
@@ -18488,7 +18487,6 @@ class test_show_bgp_unicast_ps_neighbor_cli(unittest.TestCase):
                     }
                },
                "rpm_handle_count": 1,
-               "neighbor": "21.0.101.1"
             }
         }
     }
@@ -18574,7 +18572,6 @@ class test_show_bgp_unicast_ps_neighbor_xml(unittest.TestCase):
                     }
                },
                "rpm_handle_count": 1,
-               "neighbor": "21.0.101.1"
             }
         }
         

@@ -6195,11 +6195,6 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
             except:
                 break
 
-            if 'vrf' not in etree_dict:
-                etree_dict['vrf'] = {}
-            if vrf not in etree_dict['vrf']:
-                etree_dict['vrf'][vrf] = {}
-
             # address_family table
             afi = vrf_tree.find('{}TABLE_afi'.format(namespace))
 
@@ -6215,13 +6210,20 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
                 except:
                     continue
 
-                if 'address_family' not in etree_dict['vrf'][vrf]:
-                    etree_dict['vrf'][vrf]['address_family'] = {}
-                if af not in etree_dict['vrf'][vrf]['address_family']:
-                    etree_dict['vrf'][vrf]['address_family'][af] = {}
-
                 # rd table
                 rd = row_safi.find('{}TABLE_rd'.format(namespace))
+                if not rd:
+                    continue
+                else:
+                    if 'vrf' not in etree_dict:
+                        etree_dict['vrf'] = {}
+                    if vrf not in etree_dict['vrf']:
+                        etree_dict['vrf'][vrf] = {}
+
+                    if 'address_family' not in etree_dict['vrf'][vrf]:
+                        etree_dict['vrf'][vrf]['address_family'] = {}
+                    if af not in etree_dict['vrf'][vrf]['address_family']:
+                        etree_dict['vrf'][vrf]['address_family'][af] = {}
 
                 # -----   loop rd  -----
                 for rd_root in rd.findall('{}ROW_rd'.format(namespace)):
@@ -7233,7 +7235,6 @@ class ShowBgpUnicastPolicyStatisticsSchema(MetaParser):
         'vrf': {
             Any(): {
                 'rpm_handle_count': int,
-                Optional('neighbor'): str,
                 Optional('route_map'): {
                     Any():{
                         Any(): {
@@ -7260,7 +7261,6 @@ class ShowBgpUnicastPolicyStatistics(ShowBgpUnicastPolicyStatisticsSchema):
         
         # Init vars
         ret_dict = {}
-        nei_flag = False
         index = 1
 
         # extract vrf info if specified,
@@ -7272,14 +7272,6 @@ class ShowBgpUnicastPolicyStatistics(ShowBgpUnicastPolicyStatisticsSchema):
                 vrf = ''
         else:
             vrf = 'default'
-
-        # extract neighbor info
-        m = re.compile(r'^[\s\S]+ +neighbor +(?P<nei>[\w\.\:]+)').match(cmd)
-        if m:
-            neighbor = m.groupdict()['nei']
-            nei_flag = True
-        else:
-            neighbor = None
 
         for line in out.splitlines():
             line = line.strip()
@@ -7314,9 +7306,6 @@ class ShowBgpUnicastPolicyStatistics(ShowBgpUnicastPolicyStatisticsSchema):
 
                 if vrf not in ret_dict['vrf']:
                     ret_dict['vrf'][vrf] = {}
-
-                if nei_flag and neighbor:
-                    ret_dict['vrf'][vrf]['neighbor'] = neighbor
 
                 ret_dict['vrf'][vrf]['rpm_handle_count'] = \
                     int(m.groupdict()['handles']) if m else 0
@@ -7460,10 +7449,6 @@ class ShowBgpUnicastPolicyStatistics(ShowBgpUnicastPolicyStatisticsSchema):
                     name = name.replace('&gt;', '>')
                 except:
                     continue
-
-                # neighbor
-                if neighbor:
-                    etree_dict['vrf'][vrf]['neighbor'] = neighbor
 
                 if 'route_map' not in etree_dict['vrf'][vrf]:
                     etree_dict['vrf'][vrf]['route_map'] = {}
