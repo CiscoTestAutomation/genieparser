@@ -1105,8 +1105,7 @@ class test_show_bgp_neighbors_received_routes(unittest.TestCase):
                                                        '51178 '
                                                        '47751 '
                                                        '{27016}',
-                                               'path_type': 'None',
-                                               'status_codes': '*   ',
+                                               'status_codes': '*',
                                                'weight': 0}}},
                                          '46.1.2.0/24':
                                           {'index':
@@ -1119,8 +1118,7 @@ class test_show_bgp_neighbors_received_routes(unittest.TestCase):
                                                        '51178 '
                                                        '47751 '
                                                        '{27016}',
-                                               'path_type': 'None',
-                                               'status_codes': '*   ',
+                                               'status_codes': '*',
                                                'weight': 0}}},
                                          '46.1.3.0/24':
                                           {'index':
@@ -1133,8 +1131,7 @@ class test_show_bgp_neighbors_received_routes(unittest.TestCase):
                                                        '51178 '
                                                        '47751 '
                                                        '{27016}',
-                                               'path_type': 'None',
-                                               'status_codes': '*   ',
+                                               'status_codes': '*',
                                                'weight': 0}}},
                                          '46.1.4.0/24':
                                           {'index':
@@ -1147,8 +1144,7 @@ class test_show_bgp_neighbors_received_routes(unittest.TestCase):
                                                        '51178 '
                                                        '47751 '
                                                        '{27016}',
-                                               'path_type': 'None',
-                                               'status_codes': '*   ',
+                                               'status_codes': '*',
                                                'weight': 0}}},
                                          '46.1.5.0/24':
                                           {'index':
@@ -1161,8 +1157,7 @@ class test_show_bgp_neighbors_received_routes(unittest.TestCase):
                                                        '51178 '
                                                        '47751 '
                                                        '{27016}',
-                                               'path_type': 'None',
-                                               'status_codes': '*   ',
+                                               'status_codes': '*',
                                                'weight': 0}
                                             }
                                           }
@@ -1191,11 +1186,340 @@ class test_show_bgp_neighbors_received_routes(unittest.TestCase):
         Total number of prefixes 5
         '''}
 
+    golden_parsed_output2 = {
+        'vrf': 
+            {'default': 
+                {'neighbor': 
+                    {'19.0.101.1': 
+                        {'address_family': 
+                            {'ipv4 multicast': 
+                                {'bgp_table_version': 175,
+                                'local_router_id': '20.0.0.6',
+                                'received_routes': 
+                                    {'1.2.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'next_hop': '19.0.101.1',
+                                                'origin_codes': 'i',
+                                                'path': '2 '
+                                                        '3 '
+                                                        '4',
+                                                'path_type': 'i',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '1.2.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'next_hop': '19.0.101.1',
+                                                'origin_codes': 'i',
+                                                'path': '2 '
+                                                        '3 '
+                                                        '4',
+                                                'path_type': 'i',
+                                                'status_codes': '*>',
+                                                'weight': 0}}}}},
+                            'ipv4 unicast': 
+                                {'bgp_table_version': 174,
+                                'local_router_id': '20.0.0.6',
+                                'received_routes': 
+                                    {'1.1.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'metric': 2222,
+                                                'next_hop': '19.0.101.1',
+                                                'origin_codes': 'i',
+                                                'path': '1 '
+                                                        '2 '
+                                                        '3 '
+                                                        '65000 '
+                                                        '23',
+                                                'path_type': 'i',
+                                                'status_codes': '*',
+                                                'weight': 0}}},
+                                    '1.1.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'metric': 2222,
+                                                'next_hop': '19.0.101.1',
+                                                'origin_codes': 'i',
+                                                'path': '1 '
+                                                        '2 '
+                                                        '3 '
+                                                        '65000 '
+                                                        '23',
+                                                'path_type': 'i',
+                                                'status_codes': '*',
+                                                'weight': 0}}},
+                                    '1.6.0.0/16': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'next_hop': '19.0.101.1',
+                                                'origin_codes': 'i',
+                                                'path': '10 '
+                                                        '20 '
+                                                        '30 '
+                                                        '40 '
+                                                        '50 '
+                                                        '60 '
+                                                        '70 '
+                                                        '80 '
+                                                        '90',
+                                                'path_type': 'i',
+                                                'status_codes': '*>',
+                                                'weight': 0}}}}},
+                            'ipv6 multicast': 
+                                {'bgp_table_version': 6,
+                                'local_router_id': '20.0.0.6',
+                                'received_routes': {}},
+                            'ipv6 unicast': 
+                                {'bgp_table_version': 173,
+                                'local_router_id': '20.0.0.6',
+                                'received_routes': {}},
+                            'link-state': 
+                                {'bgp_table_version': 173,
+                                'local_router_id': '20.0.0.6',
+                                'received_routes': 
+                                    {'[2]:[77][7,0][9.9.9.9,1,151587081][29.1.1.1,22][19.0.101.1,29.0.1.30]/616': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'metric': 4444,
+                                                'next_hop': '19.0.101.1',
+                                                'origin_codes': 'i',
+                                                'path': '3 '
+                                                      '10 '
+                                                      '20 '
+                                                      '30 '
+                                                      '40 '
+                                                      '50 '
+                                                      '60 '
+                                                      '70 '
+                                                      '80 '
+                                                      '90',
+                                                'path_type': 'i',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    '[2]:[77][7,0][9.9.9.9,2,151587081][29.1.1.1,22][19.0.101.1,29.0.1.31]/616': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'metric': 4444,
+                                                'next_hop': '19.0.101.1',
+                                                'origin_codes': 'i',
+                                                'path': '3 '
+                                                      '10 '
+                                                      '20 '
+                                                      '30 '
+                                                      '40 '
+                                                      '50 '
+                                                      '60 '
+                                                      '70 '
+                                                      '80 '
+                                                      '90',
+                                                'path_type': 'i',
+                                                'status_codes': '*>',
+                                                'weight': 0}}}}},
+                            'vpnv4 unicast': 
+                                {'bgp_table_version': 183,
+                                'local_router_id': '20.0.0.6',
+                                'received_routes': {}},
+                            'vpnv4 unicast RD 0:0': 
+                                {'bgp_table_version': 183,
+                                'local_router_id': '20.0.0.6',
+                                'route_distinguisher': '0:0',
+                                'received_routes': {}},
+                            'vpnv4 unicast RD 101:100': 
+                                {'bgp_table_version': 183,
+                                'local_router_id': '20.0.0.6',
+                                'route_distinguisher': '101:100',
+                                'received_routes': 
+                                    {'1.3.1.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'metric': 4444,
+                                                'next_hop': '19.0.101.1',
+                                                'origin_codes': 'i',
+                                                'path': '3 '
+                                                        '10 '
+                                                        '20 '
+                                                        '4 '
+                                                        '5 '
+                                                        '6 '
+                                                        '3 '
+                                                        '10 '
+                                                        '20 '
+                                                        '4 '
+                                                        '5 '
+                                                        '6',
+                                                'path_type': 'i',
+                                                'status_codes': '*',
+                                                'weight': 0}}},
+                                    '1.3.2.0/24': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'metric': 4444,
+                                                'next_hop': '19.0.101.1',
+                                                'origin_codes': 'i',
+                                                'path': '3 '
+                                                     '10 '
+                                                     '20 '
+                                                     '4 '
+                                                     '5 '
+                                                     '6 '
+                                                     '3 '
+                                                     '10 '
+                                                     '20 '
+                                                     '4 '
+                                                     '5 '
+                                                     '6',
+                                                'path_type': 'i',
+                                                'status_codes': '*',
+                                                'weight': 0}}}}},
+                            'vpnv4 unicast RD 102:100': 
+                                {'bgp_table_version': 183,
+                                'local_router_id': '20.0.0.6',
+                                'route_distinguisher': '102:100',
+                                'received_routes': {}},
+                            'vpnv6 unicast': 
+                                {'bgp_table_version': 13,
+                                'local_router_id': '20.0.0.6',
+                                'received_routes': {}},
+                            'vpnv6 unicast RD 0xbb00010000000000': 
+                                {'bgp_table_version': 13,
+                                'local_router_id': '20.0.0.6',
+                                'route_distinguisher': '0xbb00010000000000',
+                                'received_routes': {}},
+                            'vpnv6 unicast RD 100:200': 
+                                {'bgp_table_version': 13,
+                                'local_router_id': '20.0.0.6',
+                                'route_distinguisher': '100:200',
+                                'received_routes': 
+                                    {'aaaa:1::/113': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'next_hop': '4444',
+                                                'origin_codes': 'i',
+                                                'path_type': 'i',
+                                                'status_codes': '*>',
+                                                'weight': 0}}},
+                                    'aaaa:1::8000/113': 
+                                        {'index': 
+                                            {1: 
+                                                {'localprf': 100,
+                                                'next_hop': '4444',
+                                                'origin_codes': 'i',
+                                                'path_type': 'i',
+                                                'status_codes': '*>',
+                                                'weight': 0}}}}}}}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        For address family: IPv4 Unicast
+        BGP table version is 174, Local Router ID is 20.0.0.6
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        * i1.1.1.0/24         19.0.101.1            2222        100          0 1 2 3 65000 23 i
+        * i1.1.2.0/24         19.0.101.1            2222        100          0 1 2 3 65000 23 i
+        *>i1.6.0.0/16         19.0.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
+
+
+        For address family: IPv4 Multicast
+        BGP table version is 175, Local Router ID is 20.0.0.6
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        *>i1.2.1.0/24         19.0.101.1                        100          0 2 3 4 i
+        *>i1.2.2.0/24         19.0.101.1                        100          0 2 3 4 i
+
+
+        For address family: IPv6 Unicast
+        BGP table version is 173, Local Router ID is 20.0.0.6
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+
+
+        For address family: IPv6 Multicast
+        BGP table version is 6, Local Router ID is 20.0.0.6
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+
+
+        For address family: VPNv4 Unicast
+        BGP table version is 183, Local Router ID is 20.0.0.6
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        Route Distinguisher: 0:0
+
+        Route Distinguisher: 101:100
+        * i1.3.1.0/24         19.0.101.1            4444        100          0 3 10 20 4 5 6 3 10 20 4 5 6 i
+        * i1.3.2.0/24         19.0.101.1            4444        100          0 3 10 20 4 5 6 3 10 20 4 5 6 i
+
+        Route Distinguisher: 102:100
+
+
+        For address family: VPNv6 Unicast
+        BGP table version is 13, Local Router ID is 20.0.0.6
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        Route Distinguisher: 100:200
+        *>iaaaa:1::/113       ::ffff:19.0.101.1
+                                                    4444        100          0 i
+        *>iaaaa:1::8000/113   ::ffff:19.0.101.1
+                                                    4444        100          0 i
+
+        Route Distinguisher: 0xbb00010000000000
+
+
+        For address family: Link-State
+        BGP table version is 173, Local Router ID is 20.0.0.6
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+        *>i[2]:[77][7,0][9.9.9.9,1,151587081][29.1.1.1,22][19.0.101.1,29.0.1.30]/616
+                              19.0.101.1            4444        100          0 3 10 20 30 40 50 60 70 80 90 i
+        *>i[2]:[77][7,0][9.9.9.9,2,151587081][29.1.1.1,22][19.0.101.1,29.0.1.31]/616
+                              19.0.101.1            4444        100          0 3 10 20 30 40 50 60 70 80 90 i
+        '''}
+
     def test_show_bgp_vrf_all_neighbors_received_routes_golden(self):
+        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpAllNeighborsReceivedRoutes(device=self.device)
         parsed_output = obj.parse(neighbor='21.0.0.2')
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_show_bgp_vrf_all_neighbors_received_routes_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowBgpAllNeighborsReceivedRoutes(device=self.device)
+        parsed_output = obj.parse(neighbor='19.0.101.1')
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
     def test_show_bgp_vrf_all_neighbors_received_routes_empty(self):
         self.device = Mock(**self.empty_output)
