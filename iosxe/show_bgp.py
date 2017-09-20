@@ -616,19 +616,22 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                               Optional('min_time_between_advertisement_runs'): int,
                               Optional('address_tracking_status'): str,
                               Optional('rib_route_ip'): str,
-                              Optional('path_mtu_discovery'): str,
-                              Optional('session_graceful_restart'): str,
+                              Optional('tcp_path_mtu_discovery'): str,
+                              Optional('graceful_restart'): str,
                               Optional('connection_state'): str,
                               Optional('io_status'): int,
-                              Optional('unread_input'): int,
+                              Optional('unread_input_bytes'): int,
                               Optional('ecn_connection'): str,
-                              Optional('incoming_ttl'): int,
+                              Optional('minimum_incoming_ttl'): int,
                               Optional('outgoing_ttl'): int,
-                              Optional('tableid'): int,
-                              Optional('segment_queue_size'): int,
-                              Optional('retransmit_packet'): int,
-                              Optional('input_packet'): int,
-                              Optional('mis_ordered_packet'): int,
+                              Optional('connection_tableid'): int,
+                              Optional('maximum_output_segment_queue_size'): int,
+                              Optional('enqueued_packets'):
+                                  {
+                                      Optional('retransmit_packet'): int,
+                                      Optional('input_packet'): int,
+                                      Optional('mis_ordered_packet'): int,
+                                  },
                               Optional('iss'): int,
                               Optional('snduna'): int,
                               Optional('sndnxt'): int,
@@ -1376,7 +1379,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             if m:
                 path_mtu_discovery_status = m.groupdict()['path_mtu_discovery_status']
                 parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
-                    ['bgp_session_transport']['path_mtu_discovery'] = path_mtu_discovery_status
+                    ['bgp_session_transport']['tcp_path_mtu_discovery'] = path_mtu_discovery_status
                 continue
 
             # Graceful-Restart is disabled
@@ -1386,7 +1389,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             if m:
                 graceful_restart = m.groupdict()['graceful_restart']
                 parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
-                    ['bgp_session_transport']['session_graceful_restart'] = graceful_restart.lower()
+                    ['bgp_session_transport']['graceful_restart'] = graceful_restart.lower()
                 continue
 
             # Connection state is ESTAB, I/O status: 1, unread input bytes: 0
@@ -1407,7 +1410,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                 parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
                     ['bgp_session_transport']['io_status'] = num_io_status
                 parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
-                    ['bgp_session_transport']['unread_input'] = num_unread_input_bytes
+                    ['bgp_session_transport']['unread_input_bytes'] = num_unread_input_bytes
 
                 continue
             # Connection is ECN Disabled, Mininum incoming TTL 0, Outgoing TTL 255
@@ -1425,7 +1428,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                 parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
                     ['bgp_session_transport']['ecn_connection'] = connection_ecn_state.lower()
                 parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
-                    ['bgp_session_transport']['incoming_ttl'] = minimum_incoming_ttl
+                    ['bgp_session_transport']['minimum_incoming_ttl'] = minimum_incoming_ttl
                 parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
                     ['bgp_session_transport']['outgoing_ttl'] = minimum_outgoing_ttl
                 continue
@@ -1490,7 +1493,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             if m:
                 num_connection_tableid = int(m.groupdict()['num_connection_tableid'])
                 parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
-                    ['bgp_session_transport']['tableid'] = num_connection_tableid
+                    ['bgp_session_transport']['connection_tableid'] = num_connection_tableid
                 continue
 
             # Maximum output segment queue size: 50
@@ -1500,7 +1503,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             if m:
                 num_max_output_seg_queue_size = int(m.groupdict()['num_max_output_seg_queue_size'])
                 parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
-                    ['bgp_session_transport']['segment_queue_size'] = num_max_output_seg_queue_size
+                    ['bgp_session_transport']['maximum_output_segment_queue_size'] = num_max_output_seg_queue_size
 
                 continue
 
@@ -1518,12 +1521,16 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                 enqueued_packets_for_mis_ordered = int(m.groupdict()['enqueued_packets_for_mis_ordered'])
                 num_bytes = int(m.groupdict()['num_bytes'])
 
+                if 'enqueued_packets' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                    ['bgp_session_transport']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
+                        ['bgp_session_transport']['enqueued_packets'] = {}
                 parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
-                    ['bgp_session_transport']['retransmit_packet'] = enqueued_packets_for_retransmit
+                    ['bgp_session_transport']['enqueued_packets']['retransmit_packet'] = enqueued_packets_for_retransmit
                 parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
-                    ['bgp_session_transport']['input_packet'] = enqueued_packets_for_input
+                    ['bgp_session_transport']['enqueued_packets']['input_packet'] = enqueued_packets_for_input
                 parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
-                    ['bgp_session_transport']['mis_ordered_packet'] = enqueued_packets_for_mis_ordered
+                    ['bgp_session_transport']['enqueued_packets']['mis_ordered_packet'] = enqueued_packets_for_mis_ordered
 
                 continue
             # Event Timers (current time is 0x530449):
