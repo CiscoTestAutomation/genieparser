@@ -16,8 +16,8 @@ NXOS parsers for the following show commands:
     * 'show bgp vrf all all neighbors <WORD> received-routes'
     * 'show bgp peer-template'
     * 'show bgp peer-template | xml'
-    * 'show bgp all dampening flap statistics'
-    * 'show bgp all dampening flap statistics | xml'
+    * 'show bgp all dampening flap-statistics'
+    * 'show bgp all dampening flap-statistics | xml'
     * 'show bgp all nexthop-database'
     * 'show bgp all nexthop-database | xml'
     * 'show bgp peer-template'
@@ -5966,7 +5966,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
 
 
 # ===================================================
-# Parser for 'show bgp all dampening flap statistics'
+# Parser for 'show bgp all dampening flap-statistics'
 # ===================================================
 def retrieve_xml_child(root, key):
     '''return the root which contains the key from xml'''
@@ -5980,7 +5980,7 @@ def retrieve_xml_child(root, key):
 
 class ShowBgpAllDampeningFlapStatisticsSchema(MetaParser):
     
-    '''Schema for show bgp vrf all all summary'''
+    '''Schema for show bgp all dampening flap-statistics'''
 
     schema = {
         'vrf': {
@@ -6034,10 +6034,10 @@ class ShowBgpAllDampeningFlapStatisticsSchema(MetaParser):
 
 class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema):
     
-    '''Parser for show bgp all dampening flap statistics'''
+    '''Parser for show bgp all dampening flap-statistics'''
 
     def cli(self):
-        cmd = 'show bgp all dampening flap statistics'
+        cmd = 'show bgp all dampening flap-statistics'
         out = self.device.execute(cmd)
         
         # Init vars
@@ -6167,7 +6167,7 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
 
 
     def xml(self):
-        out = self.device.execute('show bgp all dampening flap statistics | xml')
+        out = self.device.execute('show bgp all dampening flap-statistics | xml')
 
         etree_dict = {}
         sub_dict = {}
@@ -6180,9 +6180,12 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
 
         # get xml namespace
         # {http://www.cisco.com/nxos:7.0.3.I7.1.:bgp}
-        line = vrf_root.getchildren()[0].tag
-        m = re.compile(r'(?P<name>\{[\S]+\})').match(line)
-        namespace = m.groupdict()['name']
+        try:
+            line = vrf_root.getchildren()[0].tag
+            m = re.compile(r'(?P<name>\{[\S]+\})').match(line)
+            namespace = m.groupdict()['name']
+        except:
+            return etree_dict
 
         # -----   loop vrf  -----
         for vrf_tree in vrf_root.findall('{}ROW_vrf'.format(namespace)):
@@ -6364,9 +6367,12 @@ class ShowBgpAllNexthopDatabase(ShowBgpVrfAllAllNextHopDatabase):
 
         # get xml namespace
         # {http://www.cisco.com/nxos:7.0.3.I7.1.:bgp}
-        line = vrf_root.getchildren()[0].tag
-        m = re.compile(r'(?P<name>\{[\S]+\})').match(line)
-        namespace = m.groupdict()['name']
+        try:
+            line = vrf_root.getchildren()[0].tag
+            m = re.compile(r'(?P<name>\{[\S]+\})').match(line)
+            namespace = m.groupdict()['name']
+        except:
+            return etree_dict
 
         # -----   loop vrf  -----
         for vrf_tree in vrf_root.findall('{}ROW_nhvrf'.format(namespace)):
@@ -6912,9 +6918,12 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
 
         # get xml namespace
         # {http://www.cisco.com/nxos:7.0.3.I7.1.:bgp}
-        line = root.getchildren()[0].tag
-        m = re.compile(r'(?P<name>\{[\S]+\})').match(line)
-        namespace = m.groupdict()['name']
+        try:
+            line = root.getchildren()[0].tag
+            m = re.compile(r'(?P<name>\{[\S]+\})').match(line)
+            namespace = m.groupdict()['name']
+        except:
+            return etree_dict
 
         # -----   loop vrf  -----
         for peer_tree in root.findall('{}ROW_neighbor'.format(namespace)):
@@ -7414,9 +7423,12 @@ class ShowBgpUnicastPolicyStatistics(ShowBgpUnicastPolicyStatisticsSchema):
             root = retrieve_xml_child(root, 'TABLE_vrf')
             # get xml namespace
             # {http://www.cisco.com/nxos:7.0.3.I7.1.:bgp}
-            line = root.getchildren()[0].tag
-            m = re.compile(r'(?P<name>\{[\S]+\})').match(line)
-            namespace = m.groupdict()['name']
+            try:
+                line = root.getchildren()[0].tag
+                m = re.compile(r'(?P<name>\{[\S]+\})').match(line)
+                namespace = m.groupdict()['name']
+            except:
+                return etree_dict
 
         # -----   loop vrf  -----
         for vrf_tree in root.findall('{}ROW_vrf'.format(namespace)):
