@@ -14459,176 +14459,201 @@ class test_show_bgp_all_dampening_flap_statistics_xml(unittest.TestCase):
     
     device = Device(name='aDevice')
     golden_parsed_output = {
-      "vrf": {
-          "default": {
-               "address_family": {
-                    "vpnv4 unicast": {
-                         "dampened_paths": 0,
-                         "network": {
-                              "2.3.2.0/24": {
-                                   "peer": "19.0.102.3",
-                                   "suppress_limit": 30,
-                                   "current_penalty": 35,
-                                   "duration": "00:09:53",
-                                   "reuse_limit": 10,
-                                   "reuse_time": "00:01:40",
-                                   "best": False,
-                                   "status": "d",
-                                   "pathtype": "e",
-                                   "flaps": 39
-                              },
-                              "2.3.1.0/24": {
-                                   "peer": "19.0.102.3",
-                                   "suppress_limit": 30,
-                                   "current_penalty": 35,
-                                   "duration": "00:09:53",
-                                   "reuse_limit": 10,
-                                   "reuse_time": "00:01:40",
-                                   "best": False,
-                                   "status": "d",
-                                   "pathtype": "e",
-                                   "flaps": 39
-                              }
-                         },
-                         "history_paths": 2,
-                         "dampening_enabled": True
-                    },
-                    "ipv6 unicast": {
-                         "dampened_paths": 2,
-                         "network": {
-                              "2001::/112": {
-                                   "peer": "fec0::2002",
-                                   "suppress_limit": 30,
-                                   "current_penalty": 34,
-                                   "duration": "00:09:53",
-                                   "reuse_limit": 10,
-                                   "reuse_time": "00:01:40",
-                                   "best": False,
-                                   "status": "d",
-                                   "pathtype": "e",
-                                   "flaps": 39
-                              },
-                              "2001::1:0/112": {
-                                   "peer": "fec0::2002",
-                                   "suppress_limit": 30,
-                                   "current_penalty": 34,
-                                   "duration": "00:09:53",
-                                   "reuse_limit": 10,
-                                   "reuse_time": "00:01:40",
-                                   "best": False,
-                                   "status": "d",
-                                   "pathtype": "e",
-                                   "flaps": 39
-                              }
-                         },
-                         "history_paths": 0,
-                         "dampening_enabled": True
-                    },
-                    "ipv6 multicast": {
-                         "dampened_paths": 0,
-                         "history_paths": 0,
-                         "dampening_enabled": True
-                    },
-                    "vpnv6 unicast": {
-                         "dampened_paths": 0,
-                         "history_paths": 0,
-                         "dampening_enabled": True
-                    },
-                    "link-state": {
-                         "dampened_paths": 0,
-                         "network": {
-                              "[2]:[77][7,0][39.39.39.39,1,656877351][39.1.1.1,22][19.0.102.3,39.0.1.30]/616": {
-                                   "peer": "19.0.102.3",
-                                   "suppress_limit": 30,
-                                   "current_penalty": 38,
-                                   "duration": "00:09:57",
-                                   "reuse_limit": 10,
-                                   "best": False,
-                                   "status": "h",
-                                   "pathtype": "e",
-                                   "flaps": 40
-                              },
-                              "[2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/616": {
-                                   "peer": "19.0.102.3",
-                                   "suppress_limit": 30,
-                                   "current_penalty": 38,
-                                   "duration": "00:09:57",
-                                   "reuse_limit": 10,
-                                   "best": False,
-                                   "status": "h",
-                                   "pathtype": "e",
-                                   "flaps": 40
-                              }
-                         },
-                         "history_paths": 2,
-                         "dampening_enabled": True
-                    },
-                    "ipv4 multicast": {
-                         "dampened_paths": 2,
-                         "network": {
-                              "2.1.1.0/24": {
-                                   "peer": "19.0.102.3",
-                                   "suppress_limit": 30,
-                                   "current_penalty": 34,
-                                   "duration": "00:09:53",
-                                   "reuse_limit": 10,
-                                   "reuse_time": "00:01:40",
-                                   "best": False,
-                                   "status": "d",
-                                   "pathtype": "e",
-                                   "flaps": 39
-                              },
-                              "2.1.0.0/24": {
-                                   "peer": "19.0.102.3",
-                                   "suppress_limit": 30,
-                                   "current_penalty": 34,
-                                   "duration": "00:09:53",
-                                   "reuse_limit": 10,
-                                   "reuse_time": "00:01:40",
-                                   "best": False,
-                                   "status": "d",
-                                   "pathtype": "e",
-                                   "flaps": 39
-                              }
-                         },
-                         "history_paths": 0,
-                         "dampening_enabled": True
-                    },
-                    "ipv4 unicast": {
-                         "dampened_paths": 2,
-                         "network": {
-                              "2.0.0.0/24": {
-                                   "peer": "19.0.102.3",
-                                   "suppress_limit": 30,
-                                   "current_penalty": 34,
-                                   "duration": "00:09:53",
-                                   "reuse_limit": 10,
-                                   "reuse_time": "00:01:40",
-                                   "best": False,
-                                   "status": "d",
-                                   "pathtype": "e",
-                                   "flaps": 39
-                              },
-                              "2.0.1.0/24": {
-                                   "peer": "19.0.102.3",
-                                   "suppress_limit": 30,
-                                   "current_penalty": 34,
-                                   "duration": "00:09:53",
-                                   "reuse_limit": 10,
-                                   "reuse_time": "00:01:40",
-                                   "best": False,
-                                   "status": "d",
-                                   "pathtype": "e",
-                                   "flaps": 39
-                              }
-                         },
-                         "history_paths": 0,
-                         "dampening_enabled": True
-                    }
-               }
-            }
-        }
-    }
+        "vrf": {
+              "default": {
+                   "address_family": {
+                        "vpnv4 unicast": {
+                            "history_paths": 2,
+                            "dampened_paths": 0,
+                            "dampening_enabled": True,
+                             "route_identifier": {
+                                  "0:0": {
+                                       "history_paths": 0,
+                                       "dampened_paths": 2,
+                                       "dampening_enabled": True,
+                                       "network": {
+                                            "2.3.2.0/24": {
+                                                 "reuse_limit": 10,
+                                                 "reuse_time": "00:01:40",
+                                                 "duration": "00:09:53",
+                                                 "best": False,
+                                                 "flaps": 39,
+                                                 "pathtype": "e",
+                                                 "status": "d",
+                                                 "peer": "19.0.102.3",
+                                                 "suppress_limit": 30,
+                                                 "current_penalty": 35
+                                            },
+                                            "2.3.1.0/24": {
+                                                 "reuse_limit": 10,
+                                                 "reuse_time": "00:01:40",
+                                                 "duration": "00:09:53",
+                                                 "best": False,
+                                                 "flaps": 39,
+                                                 "pathtype": "e",
+                                                 "status": "d",
+                                                 "peer": "19.0.102.3",
+                                                 "suppress_limit": 30,
+                                                 "current_penalty": 35
+                                            }
+                                       }
+                                  },
+                                  "102:100": {
+                                       "history_paths": 2,
+                                       "dampened_paths": 0,
+                                       "dampening_enabled": True
+                                  },
+                                  "101:100": {
+                                       "history_paths": 0,
+                                       "dampened_paths": 2,
+                                       "dampening_enabled": True
+                                  }
+                             }
+                        },
+                        "link-state": {
+                             "history_paths": 2,
+                             "dampened_paths": 0,
+                             "network": {
+                                  "[2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/616": {
+                                       "reuse_limit": 10,
+                                       "peer": "19.0.102.3",
+                                       "duration": "00:09:57",
+                                       "best": False,
+                                       "flaps": 40,
+                                       "pathtype": "e",
+                                       "status": "h",
+                                       "current_penalty": 38,
+                                       "suppress_limit": 30
+                                  },
+                                  "[2]:[77][7,0][39.39.39.39,1,656877351][39.1.1.1,22][19.0.102.3,39.0.1.30]/616": {
+                                       "reuse_limit": 10,
+                                       "peer": "19.0.102.3",
+                                       "duration": "00:09:57",
+                                       "best": False,
+                                       "flaps": 40,
+                                       "pathtype": "e",
+                                       "status": "h",
+                                       "current_penalty": 38,
+                                       "suppress_limit": 30
+                                  }
+                             },
+                             "dampening_enabled": True
+                        },
+                        "vpnv6 unicast": {
+                            "history_paths": 0,
+                            "dampened_paths": 0,
+                            "dampening_enabled": True,
+                             "route_identifier": {
+                                  "0xbb00010000000000": {
+                                       "history_paths": 0,
+                                       "dampened_paths": 0,
+                                       "dampening_enabled": True
+                                  },
+                                  "100:200": {
+                                       "history_paths": 0,
+                                       "dampened_paths": 0,
+                                       "dampening_enabled": True
+                                  }
+                             }
+                        },
+                        "ipv4 unicast": {
+                             "history_paths": 0,
+                             "dampened_paths": 2,
+                             "network": {
+                                  "2.0.1.0/24": {
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:40",
+                                       "duration": "00:09:53",
+                                       "best": False,
+                                       "flaps": 39,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "peer": "19.0.102.3",
+                                       "suppress_limit": 30,
+                                       "current_penalty": 34
+                                  },
+                                  "2.0.0.0/24": {
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:40",
+                                       "duration": "00:09:53",
+                                       "best": False,
+                                       "flaps": 39,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "peer": "19.0.102.3",
+                                       "suppress_limit": 30,
+                                       "current_penalty": 34
+                                  }
+                             },
+                             "dampening_enabled": True
+                        },
+                        "ipv4 multicast": {
+                             "history_paths": 0,
+                             "dampened_paths": 2,
+                             "network": {
+                                  "2.1.1.0/24": {
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:40",
+                                       "duration": "00:09:53",
+                                       "best": False,
+                                       "flaps": 39,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "peer": "19.0.102.3",
+                                       "suppress_limit": 30,
+                                       "current_penalty": 34
+                                  },
+                                  "2.1.0.0/24": {
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:40",
+                                       "duration": "00:09:53",
+                                       "best": False,
+                                       "flaps": 39,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "peer": "19.0.102.3",
+                                       "suppress_limit": 30,
+                                       "current_penalty": 34
+                                  }
+                             },
+                             "dampening_enabled": True
+                        },
+                        "ipv6 unicast": {
+                             "history_paths": 0,
+                             "dampened_paths": 2,
+                             "network": {
+                                  "2001::/112": {
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:40",
+                                       "duration": "00:09:53",
+                                       "best": False,
+                                       "flaps": 39,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "peer": "fec0::2002",
+                                       "suppress_limit": 30,
+                                       "current_penalty": 34
+                                  },
+                                  "2001::1:0/112": {
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:40",
+                                       "duration": "00:09:53",
+                                       "best": False,
+                                       "flaps": 39,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "peer": "fec0::2002",
+                                       "suppress_limit": 30,
+                                       "current_penalty": 34
+                                  }
+                             },
+                             "dampening_enabled": True
+                        },
+                        "ipv6 multicast": {
+                             "history_paths": 0,
+                             "dampened_paths": 0,
+                             "dampening_enabled": True
+                        }}}}}
 
     golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
          <nf:rpc-reply xmlns="http://www.cisco.com/nxos:7.0.3.I7.1.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -15133,6 +15158,11 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
         "vrf": {
             "default": {
                "address_family": {
+                    'link-state': {
+                        'af_nexthop_trigger_enable': True,
+                        'nexthop_trigger_delay_critical': 3000,
+                        'nexthop_trigger_delay_non_critical': 10000
+                    },
                     "vpnv4 unicast": {
                          "af_nexthop_trigger_enable": True,
                          "nexthop_trigger_delay_non_critical": 10000,

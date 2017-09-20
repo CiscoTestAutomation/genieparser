@@ -2948,7 +2948,7 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
             # Next Hop table for VRF VRF1, address family IPv4 Unicast:
             p1 = re.compile(r'^\s*Next +Hop +table +for +VRF'
                              ' +(?P<vrf_name>[a-zA-Z0-9]+), +address +family'
-                             ' +(?P<af>[a-zA-Z0-9\s]+) *:$')
+                             ' +(?P<af>[a-zA-Z0-9\s\-]+) *:$')
             m = p1.match(line)
             if m:
                 if 'vrf' not in nh_dict:
@@ -6015,7 +6015,7 @@ class ShowBgpAllDampeningFlapStatisticsSchema(MetaParser):
                                         'peer': str,
                                         'flaps': int,
                                         'duration': str,
-                                        'reuse_time': str,
+                                        Optional('reuse_time'): str,
                                         'current_penalty': int,
                                         'suppress_limit': int,
                                         'reuse_limit': int,
@@ -6137,7 +6137,7 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
                              '(?P<peer>[1|2][\d\.\:]+)'
                              ' +(?P<flaps>\d+)'
                              ' +(?P<duration>[\w\:\.]+)'
-                             ' +(?P<reuse_time>[\w\:\.]+)'
+                             '( +(?P<reuse_time>[\w\:\.]+))?'
                              ' +(?P<current_penalty>\d+)\/'
                              '(?P<suppress_limit>\d+)\/(?P<reuse_limit>\d+)$')
             m1 = p4_1.match(line)
@@ -6233,11 +6233,32 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
                 for rd_root in rd.findall('{}ROW_rd'.format(namespace)):
                     # rd
                     try:
-                        rd = row_safi.find('{}rd_val'.format(namespace)).text
+                        rd = rd_root.find('{}rd_val'.format(namespace)).text
                     except:
                         rd = None
 
-                    if rd:                        
+                    # <dampeningenabled>true</dampeningenabled>
+                    dampeningenabled = rd_root.find('{}dampeningenabled'
+                                                    .format(namespace)).text
+                    # <historypaths>0</historypaths>
+                    historypaths = int(rd_root.find('{}historypaths'
+                                                    .format(namespace)).text)
+                    # <dampenedpaths>2</dampenedpaths>
+                    dampenedpaths = int(rd_root.find('{}dampenedpaths'
+                                                     .format(namespace)).text)
+
+                    if rd:
+                        # set default attributes under address family 
+                        # <dampeningenabled>true</dampeningenabled>
+                        if dampeningenabled == 'true':
+                            etree_dict['vrf'][vrf]['address_family'][af]['dampening_enabled'] = True
+
+                        # <historypaths>0</historypaths>
+                        etree_dict['vrf'][vrf]['address_family'][af]['history_paths'] = historypaths
+                        
+                        # <dampenedpaths>2</dampenedpaths>
+                        etree_dict['vrf'][vrf]['address_family'][af]['dampened_paths'] = dampenedpaths
+
                         if 'route_identifier' not in etree_dict['vrf'][vrf]\
                             ['address_family'][af]:
                             etree_dict['vrf'][vrf]['address_family'][af]\
@@ -6254,15 +6275,14 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
                         sub_dict = etree_dict['vrf'][vrf]['address_family'][af]
 
                     # <dampeningenabled>true</dampeningenabled>
-                    if rd_root.find('{}dampeningenabled'.format(namespace)).text == 'true':
+                    if dampeningenabled == 'true':
                         sub_dict['dampening_enabled'] = True
 
                     # <historypaths>0</historypaths>
-                    sub_dict['history_paths'] = int(rd_root.find('{}historypaths'
-                                                                 .format(namespace)).text)
+                    sub_dict['history_paths'] = historypaths
+
                     # <dampenedpaths>2</dampenedpaths>
-                    sub_dict['dampened_paths'] = int(rd_root.find('{}dampenedpaths'
-                                                                 .format(namespace)).text)
+                    sub_dict['dampened_paths'] = dampenedpaths
 
                     # prefix table
                     prefix = rd_root.find('{}TABLE_prefix'.format(namespace))
@@ -6583,8 +6603,8 @@ class ShowBgpPeerTemplateCmdSchema(MetaParser):
                 Optional('source_interface'): str,
                 Optional('low_mem_exempt'): bool,
                 Optional('logging_neighbor_events'): bool,
-                'external_bgp_peer_hops_limit': int,
-                'passive_only': bool,
+                Optional('external_bgp_peer_hops_limit'): int,
+                Optional('passive_only'): bool,
                 Optional('local_as_inactive'): bool,
                 Optional('remove_private_as'): bool,
                 Optional('vrf'): {
@@ -6666,6 +6686,8 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
                 # initial the flag due to comparison with xml version
                 ret_dict['template'][template]['local_as_inactive'] = False
                 ret_dict['template'][template]['remove_private_as'] = False
+                ret_dict['template'][template]['logging_neighbor_events'] = False
+                ret_dict['template'][template]['passive_only'] = False
                 continue
 
             # Using loopback1 as update source for this peer
@@ -6816,6 +6838,13 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
                     sub_dict['as_override'] = False
                 continue
 
+            # Peer ASN check is disabled
+            p24 = re.compile(r'^Peer +ASN +check +is +disabled$')
+            m = p24.match(line)
+            if m:
+                sub_dict['peer_as_check_disabled'] = True
+                continue
+
             # Inbound ip prefix-list configured is LIST123
             # Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
             p18 = re.compile(r'^Inbound +(?P<type>[\w\-\s]+) +configured'
@@ -6855,12 +6884,14 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
                 continue
 
             # Default information originate, route-map PASS-ALL  Last End-of-RIB sent 0.000000 after session start
-            p20 = re.compile(r'^Default +information +originate, +'
-                              'route-map +(?P<map>[\w\-]+) +(?P<dummy>.*)$')
+            # Default information originate  Last End-of-RIB sent 0.000000 after session start
+            p20 = re.compile(r'^Default +information +originate(, +'
+                              'route-map +(?P<map>[\w\-]+))? +(?P<dummy>.*)$')
             m = p20.match(line)
             if m:
                 sub_dict['default_originate'] = True
-                sub_dict['default_originate_route_map'] = m.groupdict()['map']
+                if m.groupdict()['map']:
+                    sub_dict['default_originate_route_map'] = m.groupdict()['map']
                 continue
 
             # First convergence 0.000000 after session start with 0 routes sent
@@ -6945,25 +6976,26 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
                 etree_dict['template'][template] = {}
 
             # <sourceif>loopback1</sourceif>
-            etree_dict['template'][template]['source_interface'] = \
-                peer_tree.find('{}sourceif'.format(namespace)).text
+            try:
+                etree_dict['template'][template]['source_interface'] = \
+                    peer_tree.find('{}sourceif'.format(namespace)).text
+            except:
+                pass
 
             # <lowmemexempt>true</lowmemexempt>
-            if peer_tree.find('{}lowmemexempt'.format(namespace)).text == 'true':
-                etree_dict['template'][template]['low_mem_exempt'] = True
-            else:
-                etree_dict['template'][template]['low_mem_exempt'] = False
-                    
+            try:
+                if peer_tree.find('{}lowmemexempt'.format(namespace)).text == 'true':
+                    etree_dict['template'][template]['low_mem_exempt'] = True
+                else:
+                    etree_dict['template'][template]['low_mem_exempt'] = False
+            except:
+                pass
 
             # <ttlsecurity>false</ttlsecurity>
             if peer_tree.find('{}ttlsecurity'.format(namespace)).text == 'true':
                 etree_dict['template'][template]['logging_neighbor_events'] = True
             else:
                 etree_dict['template'][template]['logging_neighbor_events'] = False
-
-            # <ttllimit>100</ttllimit>
-            etree_dict['template'][template]['external_bgp_peer_hops_limit'] = \
-                int(peer_tree.find('{}ttllimit'.format(namespace)).text)
 
             # <passiveonly>true</passiveonly>
             if peer_tree.find('{}passiveonly'.format(namespace)).text == 'true':
@@ -6983,6 +7015,12 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
             else:
                 etree_dict['template'][template]['remove_private_as'] = False
 
+            # <ttllimit>100</ttllimit>
+            try:
+                etree_dict['template'][template]['external_bgp_peer_hops_limit'] = \
+                    int(peer_tree.find('{}ttllimit'.format(namespace)).text)
+            except:
+                pass
 
              # vrf table
             vrf_tree = peer_tree.find('{}TABLE_vrf'.format(namespace))
@@ -7035,10 +7073,10 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
             # -----   loop address_family  -----
             for af_root in afi.findall('{}ROW_peraf'.format(namespace)):
 
-                # address_family
-                row_safi = af_root.find('{}TABLE_persaf'.format(namespace))
-                af_root = row_safi.find('{}ROW_persaf'.format(namespace))
                 try:
+                    # address_family
+                    row_safi = af_root.find('{}TABLE_persaf'.format(namespace))
+                    af_root = row_safi.find('{}ROW_persaf'.format(namespace))
                     af = af_root.find('{}per-af-name'.format(namespace)).text.lower()
                 except:
                     continue
@@ -7071,11 +7109,14 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
                 except:
                     pass
 
-                # <insoftreconfigallowed>false</insoftreconfigallowed>
-                if af_root.find('{}insoftreconfigallowed'.format(namespace)).text == 'true':
-                    sub_dict['in_soft_reconfig_allowed'] = True
-                else:
-                    sub_dict['in_soft_reconfig_allowed'] = False
+                try:
+                    # <insoftreconfigallowed>false</insoftreconfigallowed>
+                    if af_root.find('{}insoftreconfigallowed'.format(namespace)).text == 'true':
+                        sub_dict['in_soft_reconfig_allowed'] = True
+                    else:
+                        sub_dict['in_soft_reconfig_allowed'] = False
+                except:
+                    pass
 
                 # <sendcommunity>true</sendcommunity>
                 if af_root.find('{}sendcommunity'.format(namespace)).text == 'true':
@@ -7089,18 +7130,36 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
                 else:
                     sub_dict['send_ext_community'] = False
 
+                # <thirdpartynexthop>false</thirdpartynexthop>
+                if af_root.find('{}thirdpartynexthop'.format(namespace)).text == 'true':
+                    sub_dict['third_party_nexthop'] = True
+                else:
+                    sub_dict['third_party_nexthop'] = False
+
+                    # <asoverride>true</asoverride>
+                if af_root.find('{}asoverride'.format(namespace)).text == 'true':
+                    sub_dict['as_override'] = True
+                else:
+                    sub_dict['as_override'] = False
+
+                # <peerascheckdisabled>false</peerascheckdisabled>
+                if af_root.find('{}peerascheckdisabled'.format(namespace)).text == 'true':
+                    sub_dict['peer_as_check_disabled'] = True
+                else:
+                    sub_dict['peer_as_check_disabled'] = False
+
+                # <rrconfigured>false</rrconfigured>
+                if af_root.find('{}rrconfigured'.format(namespace)).text == 'true':
+                    sub_dict['rr_configured'] = True
+                else:
+                    sub_dict['rr_configured'] = False
+
                 # <localnexthop>0.0.0.0</localnexthop>
                 try:
                     sub_dict['local_nexthop'] = \
                         af_root.find('{}localnexthop'.format(namespace)).text
                 except:
                     pass
-
-                # <thirdpartynexthop>false</thirdpartynexthop>
-                if af_root.find('{}thirdpartynexthop'.format(namespace)).text == 'true':
-                    sub_dict['third_party_nexthop'] = True
-                else:
-                    sub_dict['third_party_nexthop'] = False
 
                 # <maxpfx>888888888</maxpfx>
                 try:
@@ -7129,24 +7188,6 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
                         int(af_root.find('{}allowasin'.format(namespace)).text)
                 except:
                     pass
-
-                # <asoverride>true</asoverride>
-                if af_root.find('{}asoverride'.format(namespace)).text == 'true':
-                    sub_dict['as_override'] = True
-                else:
-                    sub_dict['as_override'] = False
-
-                # <peerascheckdisabled>false</peerascheckdisabled>
-                if af_root.find('{}peerascheckdisabled'.format(namespace)).text == 'true':
-                    sub_dict['peer_as_check_disabled'] = True
-                else:
-                    sub_dict['peer_as_check_disabled'] = False
-
-                # <rrconfigured>false</rrconfigured>
-                if af_root.find('{}rrconfigured'.format(namespace)).text == 'true':
-                    sub_dict['rr_configured'] = True
-                else:
-                    sub_dict['rr_configured'] = False
 
                 # <defaultoriginate>true</defaultoriginate>
                 try:
