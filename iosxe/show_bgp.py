@@ -572,3 +572,117 @@ class ShowBgpAllClusterIds(ShowBgpAllClusterIdsSchema):
                 if list_of_cluster_ids:
                     sum_dict['vrf'][vrf_name]['list_of_cluster_ids'] = list_of_cluster_ids
         return sum_dict
+
+
+class ShowIpbgpTemplatePeerPolicySchema(MetaParser):
+    '''
+           Schema show ip bgp template peer-policy
+    '''
+    schema = {
+                'peer_policy':
+                    {Any():
+                         {
+                             Optional('allowas_in'): bool ,
+                             Optional('allowas_in_as_number'): int,
+                             Optional('as_override'): bool,
+                             Optional('default_originate'): bool,
+                             Optional('default_originate_route_map'): str,
+                             Optional('route_map_name_in'): str,
+                             Optional('route_map_name_out'): str,
+                             Optional('maximum_prefix_max_prefix_no'): int,
+                             Optional('maximum_prefix_threshold'): int,
+                             Optional('maximum_prefix_restart'): int,
+                             Optional('maximum_prefix_warning_only'): bool,
+                             Optional('next_hop_self'): bool,
+                             Optional('route_reflector_client'): bool,
+                             Optional('send_community'): str,
+                             Optional('soft_reconfiguration'): bool,
+                             Optional('soo'): str,
+                             Optional('index'): int,
+                         },
+                    },
+                }
+
+class ShowIpBgpTemplatePeerPolicy(ShowIpbgpTemplatePeerPolicySchema):
+    '''
+        Parser for show ip bgp template peer-policy
+    '''
+
+    def cli(self):
+        # show ip bgp template peer-policy
+        cmd = 'show ip bgp template peer-policy'
+        out = self.device.execute(cmd)
+
+        # Init vars
+        parsed_dict = {}
+
+        for line in out.splitlines():
+            if line.strip():
+                line = line.rstrip()
+            else:
+                continue
+
+            # Template:PEER-POLICY, index:1
+            p1 = re.compile(r'^\s*Template:+(?P<template_id>[0-9\s\S\w]+),'
+                            ' +index:(?P<index>[0-9]+)$')
+            m = p1.match(line)
+            if m:
+                template_id = m.groupdict()['template_id'].lower()
+                index = int(m.groupdict()['index'])
+
+                if 'peer_policy' not in parsed_dict:
+                    parsed_dict['peer_policy'] = {}
+
+                if template_id not in parsed_dict['peer_policy']:
+                    parsed_dict['peer_policy'][template_id] = {}
+
+                parsed_dict['peer_policy'][template_id]['index'] = index
+                continue
+
+            # Local policies:0x8002069C603, Inherited polices:0x0
+            p2 = re.compile(r'^\s*Local +policies:+(?P<local_policies>0x[0-9A-F]+),'
+                            ' +Inherited +polices:+(?P<inherited_polices>0x[0-9A-F]+)$')
+            m = p2.match(line)
+            if m:
+                local_policy = m.groupdict()['local_policies']
+                inherited_policy = m.groupdict()['inherited_polices']
+                parsed_dict['peer_policy'][template_id]['local_policies'] = local_policy
+                parsed_dict['peer_policy'][template_id]['inherited_polices'] = inherited_policy
+                continue
+
+            # Local disable policies:0x0, Inherited disable policies:0x0
+            p3 = re.compile(r'^\s*Local +disable +policies:+(?P<local_disable_policies>0x[0-9A-F]+),'
+                            ' +Inherited +disable +polices:+(?P<inherited_disable_polices>0x[0-9A-F]+)$')
+            m = p3.match(line)
+            if m:
+                local_policy = m.groupdict()['local_disable_policies']
+                inherited_policy = m.groupdict()['inherited_disable_polices']
+                parsed_dict['peer_policy'][template_id]['local_disable_policies'] = local_policy
+                parsed_dict['peer_policy'][template_id]['inherited_disable_polices'] = inherited_policy
+                continue
+
+            #Locally configured policies:
+            p4 = re.compile(r'^\s*Locally +configured +policies:$')
+            m = p4.match(line)
+            if m:
+                continue
+
+            # route-map test in
+            p5 = re.compile(r'^\s*remote-map +(?P<remote_map_in>[0-9a-zA_Z]+) +in$')
+            m = p5.match(line)
+            if m:
+                remote_map_in = m.groupdict()['remote_map_in']
+                parsed_dict['peer_policy'][template_id]['remote_map_in'] = remote_map_in
+                continue
+
+            # route-map test2 out
+            p6 = re.compile(r'^\s*remote-map +(?P<remote_map_out>[0-9a-zA_Z]+) +out$')
+            m = p6.match(line)
+            if m:
+                remote_map_out = m.groupdict()['remote_map_out']
+                parsed_dict['peer_policy'][template_id]['remote_map_out'] = remote_map_out
+                continue
+
+            # default-originate route-map test
+
+        return parsed_dict
