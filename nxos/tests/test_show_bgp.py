@@ -26,9 +26,9 @@ from parser.nxos.show_bgp import ShowBgpProcessVrfAll, ShowBgpPeerSession,\
                                  ShowBgpAllDampeningFlapStatistics, \
                                  ShowBgpAllNexthopDatabase, \
                                  ShowBgpPeerTemplateCmd, \
-                                 ShowBgpUnicastPolicyStatisticsRedistribute, \
-                                 ShowBgpUnicastPolicyStatisticsNeighbor, \
-                                 ShowBgpUnicastPolicyStatisticsDampening
+                                 ShowBgpPolicyStatisticsRedistribute, \
+                                 ShowBgpPolicyStatisticsNeighbor, \
+                                 ShowBgpPolicyStatisticsDampening
 
 
 # =========================================
@@ -18158,20 +18158,20 @@ class test_show_bgp_unicast_ps_redistrubute_cli(unittest.TestCase):
     def test_golden_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
-        obj = ShowBgpUnicastPolicyStatisticsRedistribute(device=self.device)
+        obj = ShowBgpPolicyStatisticsRedistribute(device=self.device)
         parsed_output = obj.parse(address_family='ipv4 unicast')
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
     def test_golden_2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
-        obj = ShowBgpUnicastPolicyStatisticsRedistribute(device=self.device)
+        obj = ShowBgpPolicyStatisticsRedistribute(device=self.device)
         parsed_output = obj.parse(vrf='all', address_family='ipv4 unicast')
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowBgpUnicastPolicyStatisticsRedistribute(device=self.device)
+        obj = ShowBgpPolicyStatisticsRedistribute(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(address_family='ipv4 unicast')
 
@@ -18429,7 +18429,7 @@ class test_show_bgp_unicast_ps_redistrubute_xml(unittest.TestCase):
     def test_golden_xml_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
-        obj = ShowBgpUnicastPolicyStatisticsRedistribute(device=self.device, context='xml')
+        obj = ShowBgpPolicyStatisticsRedistribute(device=self.device, context='xml')
         parsed_output = obj.parse(address_family='ipv4 unicast',
                                   vrf='all')
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
@@ -18437,7 +18437,7 @@ class test_show_bgp_unicast_ps_redistrubute_xml(unittest.TestCase):
     def test_golden_xml_2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
-        obj = ShowBgpUnicastPolicyStatisticsRedistribute(device=self.device, context='xml')
+        obj = ShowBgpPolicyStatisticsRedistribute(device=self.device, context='xml')
         parsed_output = obj.parse(address_family='ipv4 unicast',
                                   vrf='all')
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
@@ -18546,7 +18546,7 @@ class test_show_bgp_unicast_ps_neighbor_cli(unittest.TestCase):
     def test_golden_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
-        obj = ShowBgpUnicastPolicyStatisticsNeighbor(device=self.device)
+        obj = ShowBgpPolicyStatisticsNeighbor(device=self.device)
         parsed_output = obj.parse(address_family='ipv4 unicast',
                                   neighbor='21.0.101.1')
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
@@ -18554,7 +18554,7 @@ class test_show_bgp_unicast_ps_neighbor_cli(unittest.TestCase):
     def test_golden_2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
-        obj = ShowBgpUnicastPolicyStatisticsNeighbor(device=self.device)
+        obj = ShowBgpPolicyStatisticsNeighbor(device=self.device)
         parsed_output = obj.parse(vrf='all',
                                   address_family='ipv4 unicast',
                                   neighbor='21.0.101.1')
@@ -18562,7 +18562,7 @@ class test_show_bgp_unicast_ps_neighbor_cli(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowBgpUnicastPolicyStatisticsNeighbor(device=self.device)
+        obj = ShowBgpPolicyStatisticsNeighbor(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(address_family='ipv4 unicast',
                                       neighbor='21.0.101.1')
@@ -18675,7 +18675,7 @@ class test_show_bgp_unicast_ps_neighbor_xml(unittest.TestCase):
     def test_golden_xml(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
-        obj = ShowBgpUnicastPolicyStatisticsNeighbor(device=self.device, context='xml')
+        obj = ShowBgpPolicyStatisticsNeighbor(device=self.device, context='xml')
         parsed_output = obj.parse(vrf='all',
                                   address_family='ipv4 unicast',
                                   neighbor='21.0.101.1')
@@ -18786,21 +18786,21 @@ class test_show_bgp_unicast_ps_dampening_cli(unittest.TestCase):
     def test_golden_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
-        obj = ShowBgpUnicastPolicyStatisticsDampening(device=self.device)
+        obj = ShowBgpPolicyStatisticsDampening(device=self.device)
         parsed_output = obj.parse(address_family='ipv4 unicast')
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
     def test_golden_2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
-        obj = ShowBgpUnicastPolicyStatisticsDampening(device=self.device)
+        obj = ShowBgpPolicyStatisticsDampening(device=self.device)
         parsed_output = obj.parse(vrf='all',
                                   address_family='ipv4 unicast')
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowBgpUnicastPolicyStatisticsDampening(device=self.device)
+        obj = ShowBgpPolicyStatisticsDampening(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(address_family='ipv4 unicast')
 
@@ -18908,7 +18908,7 @@ class test_show_bgp_unicast_ps_dampening_xml(unittest.TestCase):
     def test_golden_xml(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
-        obj = ShowBgpUnicastPolicyStatisticsDampening(device=self.device, context='xml')
+        obj = ShowBgpPolicyStatisticsDampening(device=self.device, context='xml')
         parsed_output = obj.parse(vrf='all',
                                   address_family='ipv4 unicast')
         self.assertEqual(parsed_output,self.golden_parsed_output)

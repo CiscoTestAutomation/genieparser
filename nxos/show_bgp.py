@@ -7266,14 +7266,12 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
 #   'show bgp vrf <vrf> <address_family>  policy statistics dampening'
 #   'show bgp vrf <vrf> <address_family>  policy statistics neighbor <neighbor>'
 # ================================================================================
-class ShowBgpUnicastPolicyStatisticsSchema(MetaParser):
+class ShowBgpPolicyStatisticsSchema(MetaParser):
     
     '''Schema for
        show bgp [vrf <vrf>] <address_family>  policy statistics redistribute
        show bgp [vrf <vrf>] <address_family>  policy statistics dampening
        show bgp [vrf <vrf>] <address_family>  policy statistics neighbor <neighbor>
-
-       only for unicast address family output
     '''
 
     schema = {
@@ -7298,7 +7296,7 @@ class ShowBgpUnicastPolicyStatisticsSchema(MetaParser):
             },
         }
     }
-class ShowBgpUnicastPolicyStatistics(ShowBgpUnicastPolicyStatisticsSchema):
+class ShowBgpPolicyStatistics(ShowBgpPolicyStatisticsSchema):
     
     def cli(self, cmd):
 
@@ -7581,13 +7579,9 @@ class ShowBgpUnicastPolicyStatistics(ShowBgpUnicastPolicyStatisticsSchema):
 # 'show bgp vrf <vrf> <address_family> policy statistics redistribute'
 # 'show bgp <address_family> policy statistics redistribute'
 # ================================================================================
-class ShowBgpUnicastPolicyStatisticsRedistribute(ShowBgpUnicastPolicyStatistics):
+class ShowBgpPolicyStatisticsRedistribute(ShowBgpPolicyStatistics):
     
     def cli(self, address_family, vrf=''):
-        # this parser only for unicast address family
-        assert 'unicast' in address_family, \
-            '{} is not unicast address family'.format(address_family)
-
         if vrf:
             cmd = 'show bgp vrf {vrf} {af} policy statistics redistribute'\
                   .format(vrf=vrf, af=address_family)
@@ -7597,10 +7591,6 @@ class ShowBgpUnicastPolicyStatisticsRedistribute(ShowBgpUnicastPolicyStatistics)
         return super().cli(cmd)
 
     def xml(self, address_family, vrf=''):
-        # this parser only for unicast address family
-        assert 'unicast' in address_family, \
-            '{} is not unicast address family'.format(address_family)
-
         if vrf:
             cmd = 'show bgp vrf {vrf} {af} policy statistics redistribute'\
                   .format(vrf=vrf, af=address_family)
@@ -7614,13 +7604,9 @@ class ShowBgpUnicastPolicyStatisticsRedistribute(ShowBgpUnicastPolicyStatistics)
 # 'show bgp vrf <vrf> <address_family> policy statistics neighbor <xxx>'
 # 'show bgp <address_family> policy statistics neighbor <xxx>'
 # ================================================================================
-class ShowBgpUnicastPolicyStatisticsNeighbor(ShowBgpUnicastPolicyStatistics):
+class ShowBgpPolicyStatisticsNeighbor(ShowBgpPolicyStatistics):
     
     def cli(self, address_family, neighbor, vrf=''):
-        # this parser only for unicast address family
-        assert 'unicast' in address_family, \
-            '{} is not unicast address family'.format(address_family)
-
         if vrf:
             cmd = 'show bgp vrf {vrf} {af} policy statistics neighbor {nei}'\
                   .format(vrf=vrf, af=address_family, nei=neighbor)
@@ -7630,10 +7616,6 @@ class ShowBgpUnicastPolicyStatisticsNeighbor(ShowBgpUnicastPolicyStatistics):
         return super().cli(cmd)
 
     def xml(self, address_family, neighbor, vrf=''):
-        # this parser only for unicast address family
-        assert 'unicast' in address_family, \
-            '{} is not unicast address family'.format(address_family)
-
         if vrf:
             cmd = 'show bgp vrf {vrf} {af} policy statistics neighbor {nei}'\
                   .format(vrf=vrf, af=address_family, nei=neighbor)
@@ -7647,13 +7629,9 @@ class ShowBgpUnicastPolicyStatisticsNeighbor(ShowBgpUnicastPolicyStatistics):
 # 'show bgp vrf <vrf> <address_family> policy statistics dampening'
 # 'show bgp <address_family> policy statistics dampening'
 # ================================================================================
-class ShowBgpUnicastPolicyStatisticsDampening(ShowBgpUnicastPolicyStatistics):
+class ShowBgpPolicyStatisticsDampening(ShowBgpPolicyStatistics):
     
     def cli(self, address_family, vrf=''):
-        # this parser only for unicast address family
-        assert 'unicast' in address_family, \
-            '{} is not unicast address family'.format(address_family)
-
         if vrf:
             cmd = 'show bgp vrf {vrf} {af} policy statistics dampening'\
                   .format(vrf=vrf, af=address_family)
@@ -7663,10 +7641,6 @@ class ShowBgpUnicastPolicyStatisticsDampening(ShowBgpUnicastPolicyStatistics):
         return super().cli(cmd)
 
     def xml(self, address_family, vrf=''):
-        # this parser only for unicast address family
-        assert 'unicast' in address_family, \
-            '{} is not unicast address family'.format(address_family)
-
         if vrf:
             cmd = 'show bgp vrf {vrf} {af} policy statistics dampening'\
                   .format(vrf=vrf, af=address_family)
