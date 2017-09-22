@@ -3491,3 +3491,293 @@ class ShowBgpAllNeighborsRoutes(ShowBgpAllNeighborsRoutesSchema):
 
         return route_dict
 
+
+class ShowIpbgpTemplatePeerPolicySchema(MetaParser):
+    '''
+           Schema show ip bgp template peer-policy
+    '''
+    schema = {
+                'peer_policy':
+                    {Any():
+                         {
+                             Optional('local_policies'): str,
+                             Optional('inherited_polices'): str,
+                             Optional('local_disable_policies'): str,
+                             Optional('inherited_disable_polices'): str,
+                             Optional('allowas_in'): bool ,
+                             Optional('allowas_in_as_number'): int,
+                             Optional('as_override'): bool,
+                             Optional('default_originate'): bool,
+                             Optional('default_originate_route_map'): str,
+                             Optional('route_map_name_in'): str,
+                             Optional('route_map_name_out'): str,
+                             Optional('maximum_prefix_max_prefix_no'): int,
+                             Optional('maximum_prefix_threshold'): int,
+                             Optional('maximum_prefix_restart'): int,
+                             Optional('maximum_prefix_warning_only'): bool,
+                             Optional('next_hop_self'): bool,
+                             Optional('route_reflector_client'): bool,
+                             Optional('send_community'): str,
+                             Optional('soft_reconfiguration'): bool,
+                             Optional('soo'): str,
+                             Optional('index'): int,
+                             Optional('inherited_policies'):
+                                 {
+                                     Optional('allowas_in'): bool,
+                                     Optional('allowas_in_as_number'): int,
+                                     Optional('as_override'): bool,
+                                     Optional('default_originate'): bool,
+                                     Optional('default_originate_route_map'): str,
+                                     Optional('route_map_name_in'): str,
+                                     Optional('route_map_name_out'): str,
+                                     Optional('maximum_prefix_max_prefix_no'): int,
+                                     Optional('maximum_prefix_threshold'): int,
+                                     Optional('maximum_prefix_restart'): int,
+                                     Optional('maximum_prefix_warning_only'): bool,
+                                     Optional('next_hop_self'): bool,
+                                     Optional('route_reflector_client'): bool,
+                                     Optional('send_community'): str,
+                                     Optional('soft_reconfiguration'): bool,
+                                     Optional('soo'): str,
+                                 },
+                         },
+                    },
+                }
+
+class ShowIpBgpTemplatePeerPolicy(ShowIpbgpTemplatePeerPolicySchema):
+    '''
+        Parser for show ip bgp template peer-policy
+    '''
+
+    def cli(self):
+        # show ip bgp template peer-policy
+        cmd = 'show ip bgp template peer-policy'
+        out = self.device.execute(cmd)
+
+        # Init vars
+        parsed_dict = {}
+
+        for line in out.splitlines():
+            if line.strip():
+                line = line.rstrip()
+            else:
+                continue
+
+            # Template:PEER-POLICY, index:1.
+            p1 = re.compile(r'^\s*Template:+(?P<template_id>[0-9\s\S\w]+),'
+                            ' +index:(?P<index>[0-9]+).$')
+            m = p1.match(line)
+            if m:
+                template_id = m.groupdict()['template_id']
+                index = int(m.groupdict()['index'])
+
+                if 'peer_policy' not in parsed_dict:
+                    parsed_dict['peer_policy'] = {}
+
+                if template_id not in parsed_dict['peer_policy']:
+                    parsed_dict['peer_policy'][template_id] = {}
+
+                parsed_dict['peer_policy'][template_id]['index'] = index
+                continue
+
+            # Local policies:0x8002069C603, Inherited polices:0x0
+            p2 = re.compile(r'^\s*Local +policies:+(?P<local_policies>0x[0-9A-F]+),'
+                            ' +Inherited +polices:+(?P<inherited_polices>0x[0-9A-F]+)$')
+            m = p2.match(line)
+            if m:
+                local_policy = m.groupdict()['local_policies']
+                inherited_policy = m.groupdict()['inherited_polices']
+
+                parsed_dict['peer_policy'][template_id]['local_policies'] = local_policy
+                parsed_dict['peer_policy'][template_id]['inherited_polices'] = inherited_policy
+                continue
+
+            # Local disable policies:0x0, Inherited disable policies:0x0
+            p3 = re.compile(r'^\s*Local +disable +policies:+(?P<local_disable_policies>0x[0-9A-F]+),'
+                            ' +Inherited +disable +policies:+(?P<inherited_disable_polices>0x[0-9A-F]+)$')
+            m = p3.match(line)
+            if m:
+                local_policy = m.groupdict()['local_disable_policies']
+                inherited_policy = m.groupdict()['inherited_disable_polices']
+                parsed_dict['peer_policy'][template_id]['local_disable_policies'] = local_policy
+                parsed_dict['peer_policy'][template_id]['inherited_disable_polices'] = inherited_policy
+                continue
+
+            #Locally configured policies:
+            p4 = re.compile(r'^\s*Locally +configured +policies:$')
+            m = p4.match(line)
+            if m:
+                flag = False
+                continue
+
+            # route-map test in
+            p5 = re.compile(r'^\s*route-map +(?P<remote_map_in>[0-9a-zA-Z]+) +in$')
+            m = p5.match(line)
+            if m:
+                route_map_in = m.groupdict()['remote_map_in']
+                if flag:
+                    parsed_dict['peer_policy'][template_id]['inherited_policies'] \
+                        ['route_map_name_in'] = route_map_in
+                else:
+                    parsed_dict['peer_policy'][template_id]['route_map_name_in'] = route_map_in
+                continue
+
+            # route-map test2 out
+            p6 = re.compile(r'^\s*route-map +(?P<route_map_out>[0-9a-zA-Z]+) +out$')
+            m = p6.match(line)
+            if m:
+                route_map_out = m.groupdict()['route_map_out']
+                if flag:
+                    parsed_dict['peer_policy'][template_id]['inherited_policies']\
+                        ['route_map_name_out'] = route_map_out
+                else:
+                    parsed_dict['peer_policy'][template_id]['route_map_name_out'] = route_map_out
+                continue
+
+            # default-originate route-map test
+            p7 = re.compile(r'^\s*default-originate +route-map'
+                            ' +(?P<default_originate_route_map>[0-9a-zA-Z]+)$')
+            m = p7.match(line)
+            if m:
+                default_originate_route_map = m.groupdict()['default_originate_route_map']
+                if flag:
+                    parsed_dict['peer_policy'][template_id]['inherited_policies']\
+                        ['default_originate'] = True
+                    parsed_dict['peer_policy'][template_id]['inherited_policies']\
+                        ['default_originate_route_map'] = default_originate_route_map
+                else:
+                    parsed_dict['peer_policy'][template_id]['default_originate'] = True
+                    parsed_dict['peer_policy'][template_id]['default_originate_route_map'] = \
+                        default_originate_route_map
+                continue
+
+            # soft-reconfiguration inbound
+            p8 = re.compile(r'^\s*soft-reconfiguration'
+                            ' +(?P<soft_reconfiguration>[a-zA-Z]+)$')
+            m = p8.match(line)
+            if m:
+                default_originate = m.groupdict()['soft_reconfiguration']
+                if flag:
+                    parsed_dict['peer_policy'][template_id]['inherited_policies']['soft_reconfiguration'] \
+                        = True
+                else:
+                    parsed_dict['peer_policy'][template_id]['soft_reconfiguration'] \
+                    = True
+                continue
+
+            # maximum-prefix 5555 70 restart 300
+            p9 = re.compile(r'^\s*maximum-prefix'
+                            ' +(?P<maximum_prefix_max_prefix_no>[0-9]+)'
+                            ' ?(?P<maximum_prefix_threshold>[0-9]+)?'
+                            ' +restart +(?P<maximum_prefix_restart>[0-9]+)$')
+            m = p9.match(line)
+            if m:
+                maximum_prefix_max_prefix_no = int(m.groupdict()['maximum_prefix_max_prefix_no'])
+                maximum_prefix_restart = int(m.groupdict()['maximum_prefix_restart'])
+                maximum_prefix_threshold = m.groupdict()['maximum_prefix_threshold']
+                if flag:
+                    parsed_dict['peer_policy'][template_id]['inherited_policies']['maximum_prefix_max_prefix_no'] \
+                        = maximum_prefix_max_prefix_no
+                    if maximum_prefix_threshold:
+                        parsed_dict['peer_policy'][template_id]['inherited_policies']['maximum_prefix_threshold'] \
+                            = int(maximum_prefix_threshold)
+
+                    parsed_dict['peer_policy'][template_id]['inherited_policies']['maximum_prefix_restart'] \
+                        = maximum_prefix_restart
+                else:
+                    parsed_dict['peer_policy'][template_id]['maximum_prefix_max_prefix_no'] \
+                        = maximum_prefix_max_prefix_no
+                    if maximum_prefix_threshold:
+                        parsed_dict['peer_policy'][template_id]['maximum_prefix_threshold'] \
+                            = int(maximum_prefix_threshold)
+
+                    parsed_dict['peer_policy'][template_id]['maximum_prefix_restart'] \
+                        = maximum_prefix_restart
+                continue
+
+            # as-override
+            p10 = re.compile(r'^\s*as-override$')
+            m = p10.match(line)
+            if m:
+                if flag:
+                    parsed_dict['peer_policy'][template_id]['inherited_policies']['as_override'] = True
+                else:
+                    parsed_dict['peer_policy'][template_id]['as_override'] = True
+                continue
+
+            # allowas-in 9
+            p11 = re.compile(r'^\s*allowas-in +(?P<allowas_in_as_number>[0-9]+)$')
+            m = p11.match(line)
+            if m:
+                if flag:
+                    parsed_dict['peer_policy'][template_id]['inherited_policies']['allowas_in'] = True
+                    parsed_dict['peer_policy'][template_id]['inherited_policies']['allowas_in_as_number'] = \
+                         int(m.groupdict()['allowas_in_as_number'])
+                else:
+                    parsed_dict['peer_policy'][template_id]['allowas_in'] = True
+                    parsed_dict['peer_policy'][template_id]['allowas_in_as_number'] = \
+                        int(m.groupdict()['allowas_in_as_number'])
+                continue
+
+            # route-reflector-client
+            p12 = re.compile(r'^\s*route-reflector-client$')
+            m = p12.match(line)
+            if m:
+                if flag:
+                    parsed_dict['peer_policy'][template_id]['inherited_policies']\
+                        ['route_reflector_client'] = True
+                else:
+                    parsed_dict['peer_policy'][template_id]['route_reflector_client'] = True
+                continue
+
+            # next-hop-self
+            p13 = re.compile(r'^\s*next-hop-self$')
+            m = p13.match(line)
+            if m:
+                if flag:
+                    parsed_dict['peer_policy'][template_id]['inherited_policies']['next_hop_self'] = True
+                else:
+                    parsed_dict['peer_policy'][template_id]['next_hop_self'] = True
+                continue
+
+            # send-community both
+            p14 = re.compile(r'^\s*send-community +(?P<send_community>[\w]+)$')
+            m = p14.match(line)
+            if m:
+                send_community = m.groupdict()['send_community']
+                if flag:
+                    parsed_dict['peer_policy'][template_id]['inherited_policies']\
+                        ['send_community'] = send_community
+                else:
+                    parsed_dict['peer_policy'][template_id]['send_community'] = send_community
+                continue
+
+            # soo SoO:100:100
+            p15 = re.compile(r'^\s*soo +(?P<soo>[\w\:\d]+)$')
+            m = p15.match(line)
+            if m:
+                soo = m.groupdict()['soo']
+                if flag:
+                    parsed_dict['peer_policy'][template_id]['inherited_policies']['soo'] = soo
+                else:
+                    parsed_dict['peer_policy'][template_id]['soo'] = soo
+                continue
+            # Inherited policies:
+            p15 = re.compile(r'^\s*Inherited policies:$')
+            m = p15.match(line)
+            if m:
+                if 'inherited_policies' not in parsed_dict['peer_policy'][template_id]:
+                    parsed_dict['peer_policy'][template_id]['inherited_policies'] = {}
+                    flag = True
+
+                continue
+
+        if parsed_dict:
+            for key, value in parsed_dict['peer_policy'].items():
+                if 'inherited_policies' in parsed_dict['peer_policy'][key]:
+                    if not len(parsed_dict['peer_policy'][key]['inherited_policies']):
+                        del parsed_dict['peer_policy'][key]['inherited_policies']
+
+
+        return parsed_dict
+

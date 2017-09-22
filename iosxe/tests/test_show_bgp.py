@@ -10,6 +10,7 @@ from metaparser.util.exceptions import SchemaEmptyParserError, \
 from parser.iosxe.show_bgp import ShowBgpAllSummary, ShowBgpAllClusterIds, \
                                   ShowBgpAllNeighborsAdvertisedRoutes, \
                                   ShowBgpAllNeighborsReceivedRoutes, \
+                                  ShowIpBgpTemplatePeerPolicy, \
                                   ShowBgpAllNeighbors, \
                                   ShowIpBgpTemplatePeerSession, \
                                   ShowBgpAllNeighborsRoutes
@@ -1993,6 +1994,7 @@ class test_show_bgp_all_cluster_ids(unittest.TestCase):
         obj = ShowBgpAllClusterIds(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
 
 class test_show_bgp_all_neighbores(unittest.TestCase):
     '''
@@ -5487,6 +5489,169 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
         obj = ShowBgpAllNeighborsRoutes(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(neighbor='21.0.0.2')
+
+
+
+
+
+class test_show_ip_bgp_template_peer_policy(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'peer_policy':
+            {'PEER-POLICY':
+                {
+                    'local_policies' : '0x8002069C603',
+                    'inherited_polices' : '0x0',
+                    'local_disable_policies': '0x0',
+                    'inherited_disable_polices': '0x0',
+                    'allowas_in':True ,
+                    'allowas_in_as_number': 9,
+                    'as_override': True,
+                    'default_originate': True,
+                    'default_originate_route_map': 'test',
+                    'route_map_name_in': 'test',
+                    'route_map_name_out': 'test2',
+                    'maximum_prefix_max_prefix_no': 5555,
+                    'maximum_prefix_threshold': 70,
+                    'maximum_prefix_restart': 300,
+                    'next_hop_self': True,
+                    'route_reflector_client': True,
+                    'send_community': 'both',
+                    'soft_reconfiguration': True,
+                    'soo': 'SoO:100:100',
+                    'index': 1,
+                },
+            'PEER-POLICY2':
+                {
+                    'local_policies': '0x200000',
+                    'inherited_polices': '0x0',
+                    'local_disable_policies': '0x0',
+                    'inherited_disable_polices': '0x0',
+                    'allowas_in': True,
+                    'allowas_in_as_number': 10,
+                    'index': 2,
+                }
+
+            },
+    }
+
+    golden_output = {'execute.return_value':'''
+            R4_iosv#show ip bgp template peer-policy
+            Template:PEER-POLICY, index:1.
+            Local policies:0x8002069C603, Inherited polices:0x0
+            Local disable policies:0x0, Inherited disable policies:0x0
+            Locally configured policies:
+              route-map test in
+              route-map test2 out
+              default-originate route-map test
+              soft-reconfiguration inbound
+              maximum-prefix 5555 70 restart 300
+              as-override
+              allowas-in 9
+              route-reflector-client
+              next-hop-self
+              send-community both
+              soo SoO:100:100
+            Inherited policies:
+
+            Template:PEER-POLICY2, index:2.
+            Local policies:0x200000, Inherited polices:0x0
+            Local disable policies:0x0, Inherited disable policies:0x0
+            Locally configured policies:
+              allowas-in 10
+            Inherited policies:
+    '''}
+
+    golden_parsed_output_1 = {
+        'peer_policy':
+            {'PEER-POLICY':
+                {
+                    'local_policies': '0x8002069C603',
+                    'inherited_polices': '0x0',
+                    'local_disable_policies': '0x0',
+                    'inherited_disable_polices': '0x0',
+                    'default_originate': True,
+                    'allowas_in': True,
+                    'allowas_in_as_number': 9,
+                    'default_originate_route_map': 'test',
+                    'route_map_name_in': 'test',
+                    'route_map_name_out': 'test2',
+                    'maximum_prefix_max_prefix_no': 5555,
+                    'maximum_prefix_restart': 300,
+                    'next_hop_self': True,
+                    'route_reflector_client': True,
+                    'send_community': 'both',
+                    'soft_reconfiguration': True,
+                    'index': 1,
+                    'inherited_policies':
+                        {
+                            'as_override': True,
+                            'soo': 'SoO:100:100',
+                        },
+                },
+                'PEER-POLICY2':
+                    {
+                        'local_policies': '0x200000',
+                        'inherited_polices': '0x0',
+                        'local_disable_policies': '0x0',
+                        'inherited_disable_polices': '0x0',
+                        'allowas_in': True,
+                        'allowas_in_as_number': 10,
+                        'index': 2,
+                    }
+
+            },
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+               R4_iosv#show ip bgp template peer-policy
+               Template:PEER-POLICY, index:1.
+               Local policies:0x8002069C603, Inherited polices:0x0
+               Local disable policies:0x0, Inherited disable policies:0x0
+               Locally configured policies:
+                 allowas-in 9
+                 route-map test in
+                 route-map test2 out
+                 default-originate route-map test
+                 soft-reconfiguration inbound
+                 maximum-prefix 5555 restart 300
+                 route-reflector-client
+                 next-hop-self
+                 send-community both
+               Inherited policies:
+                 as-override
+                 soo SoO:100:100
+
+
+               Template:PEER-POLICY2, index:2.
+               Local policies:0x200000, Inherited polices:0x0
+               Local disable policies:0x0, Inherited disable policies:0x0
+               Locally configured policies:
+                 allowas-in 10
+               Inherited policies:
+       '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpBgpTemplatePeerPolicy(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpBgpTemplatePeerPolicy(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowIpBgpTemplatePeerPolicy(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 if __name__ == '__main__':
     unittest.main()
