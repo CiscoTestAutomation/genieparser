@@ -2797,7 +2797,7 @@ class ShowBgpAllNeighborsReceivedRoutes(ShowBgpAllNeighborsReceivedRoutesSchema)
 
 class ShowIpbgpTemplatePeerSessionSchema(MetaParser):
     '''
-           Schema show ip bgp template peer-session
+           Schema show ip bgp template peer-session <WORD>
     '''
     schema = {
                 'peer_session':
@@ -2844,12 +2844,12 @@ class ShowIpbgpTemplatePeerSessionSchema(MetaParser):
 
 class ShowIpBgpTemplatePeerSession(ShowIpbgpTemplatePeerSessionSchema):
     '''
-        Parser for show ip bgp template peer-session
+        Parser for show ip bgp template peer-session <WORD>
     '''
 
-    def cli(self):
-        # show ip bgp template peer-session
-        cmd = 'show ip bgp template peer-session'
+    def cli(self, template_name=""):
+        # show ip bgp template peer-session <WORD>
+        cmd = 'show ip bgp template peer-session {template_name}'.format(template_name=template_name)
         out = self.device.execute(cmd)
 
         # Init vars
@@ -2864,7 +2864,7 @@ class ShowIpBgpTemplatePeerSession(ShowIpbgpTemplatePeerSessionSchema):
                             ' +index:(?P<index>[0-9]+)$')
             m = p1.match(line)
             if m:
-                template_id = m.groupdict()['template_id'].lower()
+                template_id = m.groupdict()['template_id']
                 index = int(m.groupdict()['index'])
 
                 if 'peer_session' not in parsed_dict:
@@ -3494,7 +3494,7 @@ class ShowBgpAllNeighborsRoutes(ShowBgpAllNeighborsRoutesSchema):
 
 class ShowIpbgpTemplatePeerPolicySchema(MetaParser):
     '''
-           Schema show ip bgp template peer-policy
+           Schema show ip bgp template peer-policy <WORD>
     '''
     schema = {
                 'peer_policy':
@@ -3546,12 +3546,12 @@ class ShowIpbgpTemplatePeerPolicySchema(MetaParser):
 
 class ShowIpBgpTemplatePeerPolicy(ShowIpbgpTemplatePeerPolicySchema):
     '''
-        Parser for show ip bgp template peer-policy
+        Parser for show ip bgp template peer-policy  <WORD>
     '''
 
-    def cli(self):
-        # show ip bgp template peer-policy
-        cmd = 'show ip bgp template peer-policy'
+    def cli(self, template_name=""):
+        # show ip bgp template peer-policy <WORD>
+        cmd = 'show ip bgp template peer-policy {template_name}'.format(template_name=template_name)
         out = self.device.execute(cmd)
 
         # Init vars
