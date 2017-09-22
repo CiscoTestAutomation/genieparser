@@ -86,7 +86,7 @@ class ShowBgpAllNeighborsPolicy(ShowBgpAllNeighborsPolicySchema):
 
             # route-map test in
             # route-map test out
-            p2 = re.compile(r'^\s*route-map +(?P<route_map_name>[a-zA-Z0-9\-\_]+)'
+            p2 = re.compile(r'^\s*route-map +(?P<route_map_name>\S+)'
                              ' +(?P<route_map_direction>[a-zA-Z]+)$')
             m = p2.match(line)
             if m:
