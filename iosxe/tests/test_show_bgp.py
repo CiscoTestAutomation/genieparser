@@ -4422,7 +4422,7 @@ class test_show_ip_bgp_template_peer_session(unittest.TestCase):
     }
 
     golden_output_2 = {'execute.return_value': '''
-                    R4_iosv#show ip bgp template peer-session
+                    R4_iosv#show ip bgp template peer-session PEER-SESSION
                     Template:PEER-SESSION, index:1
                     Local policies:0x5025FD, Inherited polices:0x0
                     Locally configured session commands:
