@@ -11,7 +11,7 @@ from metaparser import MetaParser
 from metaparser.util.schemaengine import Any, Optional 
 
 
-class ShowIPRouteSchema(MetaParser):
+class ShowIpRouteSchema(MetaParser):
 
     ''' Schema for:
         # 'show ip route bgp'
@@ -50,23 +50,26 @@ class ShowIPRouteSchema(MetaParser):
         }
 
 
-class ShowIpRoute(ShowIPRouteSchema):
+class ShowIpRoute(ShowIpRouteSchema):
 
-    def cli(self, vrf='', ip=''):
+    def cli(self, protocol, vrf='', ip=''):
 
         # Calling the corresponding show command
         if ip:
             if vrf:
-                cmd = 'show {ip} route vrf {vrf} bgp'.format(ip=ip, vrf=vrf)
+                cmd = 'show {ip} route vrf {vrf} {protocol}'.format(ip=ip,
+                        vrf=vrf, protocol= protocol)
             else:
                 vrf = 'default'
-                cmd = 'show {ip} route bgp'.format(ip=ip)
+                cmd = 'show {ip} route {protocol}'.format(ip=ip,
+                        protocol= protocol)
         else:
             if vrf:
-                cmd = 'show ip route vrf {vrf} bgp'.format(vrf=vrf)
+                cmd = 'show ip route vrf {vrf} {protocol}'.format(vrf=vrf,
+                        protocol= protocol)
             else:
                 vrf = 'default'
-                cmd = 'show route bgp'
+                cmd = 'show route {protocol}'.format(protocol= protocol)
 
         out = self.device.execute(cmd)
 
@@ -204,5 +207,5 @@ class ShowIpRoute(ShowIPRouteSchema):
 
 
 class ShowIpv6Route(ShowIpRoute):
-    def cli(self, vrf = ''):
-        return(super().cli(ip='ipv6', vrf=vrf))
+    def cli(self, protocol, vrf = ''):
+        return(super().cli(protocol=protocol, ip='ipv6', vrf=vrf))

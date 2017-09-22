@@ -428,34 +428,34 @@ class test_show_ip_route(unittest.TestCase):
         self.device1 = Mock(**self.empty_output)
         route_map_obj = ShowIpRoute(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = route_map_obj.parse()
+            parsed_output = route_map_obj.parse(protocol='bgp')
 
     def test_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         route_map_obj = ShowIpRoute(device=self.device)
-        parsed_output = route_map_obj.parse()
+        parsed_output = route_map_obj.parse(protocol='bgp')
         self.assertEqual(parsed_output,self.golden_parsed_output1)
 
     def test_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         route_map_obj = ShowIpRoute(device=self.device)
-        parsed_output = route_map_obj.parse(vrf='VRF1')
+        parsed_output = route_map_obj.parse(protocol='bgp', vrf='VRF1')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
     def test_golden3(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
         route_map_obj = ShowIpv6Route(device=self.device)
-        parsed_output = route_map_obj.parse()
+        parsed_output = route_map_obj.parse(protocol='bgp')
         self.assertEqual(parsed_output,self.golden_parsed_output3)
 
     def test_golden4(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output4)
         route_map_obj = ShowIpv6Route(device=self.device)
-        parsed_output = route_map_obj.parse(vrf='VRF1')
+        parsed_output = route_map_obj.parse(protocol='bgp', vrf='VRF1')
         self.assertEqual(parsed_output,self.golden_parsed_output4)
 
 if __name__ == '__main__':
