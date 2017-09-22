@@ -25,8 +25,7 @@ class ShowIpRouteSchema(MetaParser):
             {Any():
                 {Optional('address_family'):
                     {Any():
-                        {Optional('bgp_distance'): int,
-                         'ip':
+                        {'ip':
                             {Any():
                                 {Optional('nexthop'):
                                     {Optional(Any()):
@@ -52,7 +51,7 @@ class ShowIpRouteSchema(MetaParser):
 
 class ShowIpRoute(ShowIpRouteSchema):
 
-    def cli(self, protocol, vrf='', ip=''):
+    def cli(self, protocol, ip, vrf=''):
 
         # Calling the corresponding show command
         if ip:
@@ -79,19 +78,32 @@ class ShowIpRoute(ShowIpRouteSchema):
         address_family = None
         preference = None
         metric = None
+        mask = ''
 
         # Setting the address_family
-        if vrf == 'default' and not ip:
+        if vrf == 'default' and ip =='ip':
             address_family = 'ipv4 unicast'
-        elif vrf != 'default' and not ip:
+        elif vrf != 'default' and ip =='ip':
             address_family = 'vpnv4 unicast'
-        elif vrf == 'default' and ip:
+        elif vrf == 'default' and ip =='ipv6':
             address_family = 'ipv6 unicast'
-        elif vrf != 'default' and ip:
+        elif vrf != 'default' and ip =='ipv6':
             address_family = 'vpnv6 unicast'
 
         for line in out.splitlines():
             line = line.strip()
+
+            # 15.0.0.0/24 is subnetted, 5 subnets
+            p1 = re.compile(r'^\s*(?P<address>[0-9\.]+)(?P<mask>[0-9\/]+)'
+                             ' +is +subnetted,'
+                             ' +(?P<subnets>[0-9]+) +subnets$')
+            m = p1.match(line)
+            if m:
+                address = str(m.groupdict()['address'])
+                mask = str(m.groupdict()['mask'])
+                subnets = int(m.groupdict()['subnets'])
+
+                continue
 
             # B   646:11:11:1::/64 [20/2219]
             # B   646:22:22::/64 [20/2219]
@@ -99,18 +111,20 @@ class ShowIpRoute(ShowIpRouteSchema):
             # B   2001:2:2:2::2/128 [200/0]
             # B        15.1.1.0 [200/2219] via 1.1.1.1, 01:40:40
             # B        46.2.2.0 [20/2219] via 20.4.6.6 (VRF2), 01:36:26
-            p1 = re.compile(r'^\s*(?P<protocol>[a-zA-Z0-9\+\%]+)'
+            p2 = re.compile(r'^\s*(?P<protocol>[a-zA-Z0-9\+\%]+)'
                              ' +(?P<ip_add>[0-9\.\:\/]+)'
                              ' +(\[(?P<preference>[0-9]+)/(?P<metric>[0-9]+)\])'
                              '( +via +(?P<next_hop>[0-9\.]+)(\s)?(\()?'
                              '(?P<table>[a-zA-Z0-9]+)?(\)?),'
                              ' +(?P<up_time>[0-9\:]+))?$')
-            m = p1.match(line)
+            m = p2.match(line)
             if m:
                 protocol = str(m.groupdict()['protocol'])
                 if protocol == 'B':
                     protocol = 'bgp'
                 ip_add = str(m.groupdict()['ip_add'])
+                if mask:
+                    ip_add = ip_add+mask
                 preference = m.groupdict()['preference']
                 metric = m.groupdict()['metric']
 
@@ -153,8 +167,6 @@ class ShowIpRoute(ShowIpRouteSchema):
                         prot_dict[protocol]['route_table'] = table
 
                     prot_dict[protocol]['preference'] = preference
-                    if protocol == 'bgp':
-                        sub_dict['bgp_distance'] = int(preference)
 
                     metric = m.groupdict()['metric']
                     prot_dict[protocol]['metric'] = metric
@@ -169,10 +181,10 @@ class ShowIpRoute(ShowIpRouteSchema):
             #      via 1.1.1.1%default, indirectly connected
             #      via 2001:DB8:4:6::6
             #      via 2001:DB8:20:4:6::6%VRF2
-            p2 = re.compile(r'^\s*via +(?P<next_hop>[a-zA-Z0-9\.\/\:]+)'
+            p3 = re.compile(r'^\s*via +(?P<next_hop>[a-zA-Z0-9\.\/\:]+)'
                              '(\%(?P<table>[a-zA-Z0-9]+))?'
                              '(,)?(\s+)?(?P<attribute>[a-zA-Z\s]+)?$')
-            m = p2.match(line)
+            m = p3.match(line)
             if m:
                 next_hop = str(m.groupdict()['next_hop'])
                 if 'nexthop' not in sub_dict['ip'][ip_add]:
@@ -197,8 +209,6 @@ class ShowIpRoute(ShowIpRouteSchema):
 
                 if preference:
                     prot_dict[protocol]['preference'] = preference
-                    if protocol == 'bgp':
-                        sub_dict['bgp_distance'] = int(preference)
 
                 if metric:
                     prot_dict[protocol]['metric'] = metric
@@ -207,5 +217,5 @@ class ShowIpRoute(ShowIpRouteSchema):
 
 
 class ShowIpv6Route(ShowIpRoute):
-    def cli(self, protocol, vrf = ''):
-        return(super().cli(protocol=protocol, ip='ipv6', vrf=vrf))
+    def cli(self, protocol, ip, vrf = ''):
+        return(super().cli(protocol=protocol, ip=ip, vrf=vrf))

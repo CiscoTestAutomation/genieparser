@@ -23,9 +23,8 @@ class test_show_ip_route(unittest.TestCase):
       {'default':
         {'address_family':
           {'ipv4 unicast':
-            {'bgp_distance': 200,
-             'ip':
-              {'15.1.1.0':
+            {'ip':
+              {'15.1.1.0/24':
                 {'nexthop':
                   {'1.1.1.1':
                     {'protocol':
@@ -53,9 +52,8 @@ class test_show_ip_route(unittest.TestCase):
       {'VRF1':
         {'address_family':
           {'vpnv4 unicast':
-            {'bgp_distance': 20,
-             'ip':
-              {'15.1.1.0':
+            {'ip':
+              {'15.1.1.0/24':
                 {'nexthop':
                   {'1.1.1.1':
                     {'protocol':
@@ -63,7 +61,7 @@ class test_show_ip_route(unittest.TestCase):
                         {'metric': '2219',
                          'preference': '200',
                          'uptime': '01:40:40'}}}}},
-              '15.1.2.0':
+              '15.1.2.0/24':
                 {'nexthop':
                   {'1.1.1.1':
                     {'protocol':
@@ -71,7 +69,7 @@ class test_show_ip_route(unittest.TestCase):
                         {'metric': '2219',
                          'preference': '200',
                          'uptime': '01:40:40'}}}}},
-              '15.1.3.0':
+              '15.1.3.0/24':
                 {'nexthop':
                   {'1.1.1.1':
                     {'protocol':
@@ -79,7 +77,7 @@ class test_show_ip_route(unittest.TestCase):
                         {'metric': '2219',
                          'preference': '200',
                          'uptime': '01:40:40'}}}}},
-              '15.1.4.0':
+              '15.1.4.0/24':
                 {'nexthop':
                   {'1.1.1.1':
                     {'protocol':
@@ -87,7 +85,7 @@ class test_show_ip_route(unittest.TestCase):
                         {'metric': '2219',
                          'preference': '200',
                          'uptime': '01:40:40'}}}}},
-              '15.1.5.0':
+              '15.1.5.0/24':
                 {'nexthop':
                   {'1.1.1.1':
                     {'protocol':
@@ -95,7 +93,7 @@ class test_show_ip_route(unittest.TestCase):
                         {'metric': '2219',
                          'preference': '200',
                          'uptime': '01:40:40'}}}}},
-              '46.1.1.0':
+              '46.1.1.0/24':
                 {'nexthop':
                   {'10.4.6.6':
                     {'protocol':
@@ -103,7 +101,7 @@ class test_show_ip_route(unittest.TestCase):
                         {'metric': '2219',
                          'preference': '20',
                          'uptime': '01:36:35'}}}}},
-              '46.1.2.0':
+              '46.1.2.0/24':
                 {'nexthop':
                   {'10.4.6.6':
                     {'protocol':
@@ -111,7 +109,7 @@ class test_show_ip_route(unittest.TestCase):
                         {'metric': '2219',
                          'preference': '20',
                          'uptime': '01:36:35'}}}}},
-              '46.1.3.0':
+              '46.1.3.0/24':
                 {'nexthop':
                   {'10.4.6.6':
                     {'protocol':
@@ -119,7 +117,7 @@ class test_show_ip_route(unittest.TestCase):
                         {'metric': '2219',
                          'preference': '20',
                          'uptime': '01:36:35'}}}}},
-              '46.1.4.0':
+              '46.1.4.0/24':
                 {'nexthop':
                   {'10.4.6.6':
                     {'protocol':
@@ -127,7 +125,7 @@ class test_show_ip_route(unittest.TestCase):
                         {'metric': '2219',
                          'preference': '20',
                          'uptime': '01:36:35'}}}}},
-              '46.1.5.0':
+              '46.1.5.0/24':
                 {'nexthop':
                   {'10.4.6.6':
                     {'protocol':
@@ -135,7 +133,7 @@ class test_show_ip_route(unittest.TestCase):
                         {'metric': '2219',
                          'preference': '20',
                          'uptime': '01:36:35'}}}}},
-              '46.2.2.0':
+              '46.2.2.0/24':
                 {'nexthop':
                   {'20.4.6.6':
                     {'protocol':
@@ -144,7 +142,7 @@ class test_show_ip_route(unittest.TestCase):
                          'preference': '20',
                          'route_table': 'VRF2',
                          'uptime': '01:36:26'}}}}},
-              '46.2.3.0':
+              '46.2.3.0/24':
                 {'nexthop':
                   {'20.4.6.6':
                     {'protocol':
@@ -153,7 +151,7 @@ class test_show_ip_route(unittest.TestCase):
                          'preference': '20',
                          'route_table': 'VRF2',
                          'uptime': '01:36:26'}}}}},
-              '46.2.4.0':
+              '46.2.4.0/24':
                 {'nexthop':
                   {'20.4.6.6':
                     {'protocol':
@@ -162,7 +160,7 @@ class test_show_ip_route(unittest.TestCase):
                          'preference': '20',
                          'route_table': 'VRF2',
                          'uptime': '01:36:26'}}}}},
-              '46.2.5.0':
+              '46.2.5.0/24':
                 {'nexthop':
                   {'20.4.6.6':
                     {'protocol':
@@ -171,7 +169,7 @@ class test_show_ip_route(unittest.TestCase):
                          'preference': '20',
                          'route_table': 'VRF2',
                          'uptime': '01:36:26'}}}}},
-              '46.2.6.0':
+              '46.2.6.0/24':
                 {'nexthop':
                   {'20.4.6.6':
                     {'protocol':
@@ -219,8 +217,7 @@ class test_show_ip_route(unittest.TestCase):
       {'default':
         {'address_family':
           {'ipv6 unicast':
-            {'bgp_distance': 200,
-             'ip':
+            {'ip':
               {'2001:2:2:2::2/128':
                 {'nexthop':
                   {'2001:DB8:1:1::2':
@@ -257,8 +254,7 @@ class test_show_ip_route(unittest.TestCase):
       {'VRF1':
         {'address_family':
           {'vpnv6 unicast':
-            {'bgp_distance': 20,
-             'ip':
+            {'ip':
               {'615:11:11:1::/64':
                 {'nexthop':
                   {'1.1.1.1':
@@ -428,34 +424,34 @@ class test_show_ip_route(unittest.TestCase):
         self.device1 = Mock(**self.empty_output)
         route_map_obj = ShowIpRoute(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = route_map_obj.parse(protocol='bgp')
+            parsed_output = route_map_obj.parse(protocol='bgp', ip='ip')
 
     def test_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         route_map_obj = ShowIpRoute(device=self.device)
-        parsed_output = route_map_obj.parse(protocol='bgp')
+        parsed_output = route_map_obj.parse(protocol='bgp', ip='ip')
         self.assertEqual(parsed_output,self.golden_parsed_output1)
 
     def test_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         route_map_obj = ShowIpRoute(device=self.device)
-        parsed_output = route_map_obj.parse(protocol='bgp', vrf='VRF1')
+        parsed_output = route_map_obj.parse(protocol='bgp', vrf='VRF1', ip='ip')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
     def test_golden3(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
         route_map_obj = ShowIpv6Route(device=self.device)
-        parsed_output = route_map_obj.parse(protocol='bgp')
+        parsed_output = route_map_obj.parse(protocol='bgp', ip='ipv6')
         self.assertEqual(parsed_output,self.golden_parsed_output3)
 
     def test_golden4(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output4)
         route_map_obj = ShowIpv6Route(device=self.device)
-        parsed_output = route_map_obj.parse(protocol='bgp', vrf='VRF1')
+        parsed_output = route_map_obj.parse(protocol='bgp', vrf='VRF1', ip='ipv6')
         self.assertEqual(parsed_output,self.golden_parsed_output4)
 
 if __name__ == '__main__':
