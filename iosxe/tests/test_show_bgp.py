@@ -11,7 +11,88 @@ from parser.iosxe.show_bgp import ShowBgpAllSummary, ShowBgpAllClusterIds, \
                                   ShowBgpAllNeighborsAdvertisedRoutes, \
                                   ShowBgpAllNeighborsReceivedRoutes, \
                                   ShowBgpAllNeighborsRoutes, \
-                                  ShowBgpAllNeighbors
+                                  ShowBgpAllNeighbors, \
+                                  ShowBgpAllNeighborsPolicy
+
+# ====================================================
+# Unit test for 'show bgp all neighbors <WORD> policy'
+# ====================================================
+
+class test_show_bgp_all_neighbors_policy(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {'vrf':
+      {'VRF1':
+        {'neighbor':
+          {'21.0.0.2':
+            {'address_family':
+              {'vpnv4 unicast':
+                {'nbr_af_route_map_name_in': 'test',
+                 'nbr_af_route_map_name_out': 'test'}}}}}}}
+
+    golden_output = {'execute.return_value': '''
+        R4_iosv#show bgp all neighbors 21.0.0.2 policy
+         Neighbor: 21.0.0.2, Address-Family: VPNv4 Unicast (VRF1)
+         Locally configured policies:
+          route-map test in
+          route-map test out
+        '''}
+
+    golden_parsed_output2 = {}
+
+    golden_output2 = {'execute.return_value': '''
+        R4_iosv#show bgp all neighbors 19.0.102.3 policy 
+         Neighbor: 19.0.102.3, Address-Family: VPNv4 Unicast
+
+         Neighbor: 19.0.102.3, Address-Family: VPNv6 Unicast
+
+        '''}
+
+    golden_parsed_output3 = {'vrf':
+      {'default':
+        {'neighbor':
+          {'10.4.6.6':
+            {'address_family':
+              {'vpnv4 unicast':
+                {'nbr_af_route_map_name_in': 'rmap1'}}}}}}}
+
+    golden_output3 = {'execute.return_value': '''
+        R4_iosv#show bgp all neighbors 10.4.6.6 policy 
+         Neighbor: 10.4.6.6, Address-Family: VPNv4 Unicast
+         Locally configured policies:
+          route-map rmap1 in
+         Neighbor: 10.4.6.6, Address-Family: VPNv6 Unicast
+
+        '''}
+
+    def test_show_bgp_all_neighbors_policy_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpAllNeighborsPolicy(device=self.device)
+        parsed_output = obj.parse(neighbor='21.0.0.2')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_show_bgp_vrf_all_neighbors_policy_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowBgpAllNeighborsPolicy(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+          parsed_output = obj.parse(neighbor='19.0.102.3')
+
+    def test_show_bgp_all_neighbors_policy_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowBgpAllNeighborsPolicy(device=self.device)
+        parsed_output = obj.parse(neighbor='10.4.6.6')
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
+
+    def test_show_bgp_all_neighbors_policy_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpAllNeighborsPolicy(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(neighbor='10.4.6.6')
 
 # ===============================================================
 # Unit test for 'show bgp all neighbors <WORD> advertised-routes'
