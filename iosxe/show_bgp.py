@@ -2462,6 +2462,7 @@ class ShowIpBgpTemplatePeerSession(ShowIpbgpTemplatePeerSessionSchema):
                 else:
                     parsed_dict['peer_session'][template_id]['remote_as'] = remote_as
                 continue
+
             # password is configured
             p5 = re.compile(r'^\s*password +(?P<password_text>[\w\s]+)$')
             m = p5.match(line)
@@ -2499,6 +2500,7 @@ class ShowIpBgpTemplatePeerSession(ShowIpbgpTemplatePeerSessionSchema):
                     parsed_dict['peer_session'][template_id]['ebgp_multihop_max_hop'] = ebgp_multihop_max_no
                     parsed_dict['peer_session'][template_id]['ebgp_multihop_enable'] = True
                 continue
+
             # update-source Loopback0
             p8 = re.compile(r'^\s*update-source +(?P<update_source>[\d\w]+)$')
             m = p8.match(line)
@@ -2535,6 +2537,7 @@ class ShowIpBgpTemplatePeerSession(ShowIpbgpTemplatePeerSessionSchema):
                     parsed_dict['peer_session'][template_id]['description'] \
                         = description
                 continue
+
             # dont-capability-negotiate four-octets-as
             p11 = re.compile(r'^\s*dont-capability-negotiate +four-octets-as$')
             m = p11.match(line)
@@ -2588,6 +2591,7 @@ class ShowIpBgpTemplatePeerSession(ShowIpbgpTemplatePeerSessionSchema):
                 else:
                     parsed_dict['peer_session'][template_id]['disable_connected_check'] = True
                 continue
+
             # fall-over bfd
             p15 = re.compile(r'^\s*fall-over +bfd$')
             m = p15.match(line)
@@ -2598,6 +2602,7 @@ class ShowIpBgpTemplatePeerSession(ShowIpbgpTemplatePeerSessionSchema):
                 else:
                     parsed_dict['peer_session'][template_id]['fall_over_bfd'] = True
                 continue
+
             # Inherited session commands:
             p16 = re.compile(r'^\s*Inherited +session +commands:$')
             m = p16.match(line)
@@ -2613,9 +2618,6 @@ class ShowIpBgpTemplatePeerSession(ShowIpbgpTemplatePeerSessionSchema):
                     if not len(parsed_dict['peer_session'][key]['inherited_session_commands']):
                         del parsed_dict['peer_session'][key]['inherited_session_commands']
         return parsed_dict
-
-
-
 
 # ==========================================================
 # Parser for 'show bgp all neighbors <WORD> routes'
