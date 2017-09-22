@@ -3393,7 +3393,7 @@ class ShowIpBgpTemplatePeerPolicy(ShowIpbgpTemplatePeerPolicySchema):
             if m:
                 default_originate = m.groupdict()['soft_reconfiguration']
                 if flag:
-                    parsed_dict['peer_policy'][template_id]['soft_reconfiguration']['inherited_policies'] \
+                    parsed_dict['peer_policy'][template_id]['inherited_policies']['soft_reconfiguration'] \
                         = True
                 else:
                     parsed_dict['peer_policy'][template_id]['soft_reconfiguration'] \
@@ -3403,48 +3403,33 @@ class ShowIpBgpTemplatePeerPolicy(ShowIpbgpTemplatePeerPolicySchema):
             # maximum-prefix 5555 70 restart 300
             p9 = re.compile(r'^\s*maximum-prefix'
                             ' +(?P<maximum_prefix_max_prefix_no>[0-9]+)'
-                            ' +(?P<maximum_prefix_threshold>[0-9]+)'
+                            ' ?(?P<maximum_prefix_threshold>[0-9]+)?'
                             ' +restart +(?P<maximum_prefix_restart>[0-9]+)$')
             m = p9.match(line)
             if m:
                 maximum_prefix_max_prefix_no = int(m.groupdict()['maximum_prefix_max_prefix_no'])
                 maximum_prefix_restart = int(m.groupdict()['maximum_prefix_restart'])
-                maximum_prefix_threshold = int(m.groupdict()['maximum_prefix_threshold'])
+                maximum_prefix_threshold = m.groupdict()['maximum_prefix_threshold']
                 if flag:
-                    parsed_dict['peer_policy'][template_id]['maximum_prefix_max_prefix_no']['inherited_policies'] \
+                    parsed_dict['peer_policy'][template_id]['inherited_policies']['maximum_prefix_max_prefix_no'] \
                         = maximum_prefix_max_prefix_no
-                    parsed_dict['peer_policy'][template_id]['maximum_prefix_threshold']['inherited_policies'] \
-                        = maximum_prefix_threshold
-                    parsed_dict['peer_policy'][template_id]['maximum_prefix_restart']['inherited_policies'] \
+                    if maximum_prefix_threshold:
+                        parsed_dict['peer_policy'][template_id]['inherited_policies']['maximum_prefix_threshold'] \
+                            = int(maximum_prefix_threshold)
+
+                    parsed_dict['peer_policy'][template_id]['inherited_policies']['maximum_prefix_restart'] \
                         = maximum_prefix_restart
                 else:
                     parsed_dict['peer_policy'][template_id]['maximum_prefix_max_prefix_no'] \
                         = maximum_prefix_max_prefix_no
-                    parsed_dict['peer_policy'][template_id]['maximum_prefix_threshold'] \
-                        = maximum_prefix_threshold
+                    if maximum_prefix_threshold:
+                        parsed_dict['peer_policy'][template_id]['maximum_prefix_threshold'] \
+                            = int(maximum_prefix_threshold)
+
                     parsed_dict['peer_policy'][template_id]['maximum_prefix_restart'] \
                         = maximum_prefix_restart
                 continue
 
-            # maximum-prefix 5555 restart 300
-            p9_1 = re.compile(r'^\s*maximum-prefix'
-                            ' +(?P<maximum_prefix_max_prefix_no>[0-9]+)'
-                            ' +restart +(?P<maximum_prefix_restart>[0-9]+)$')
-            m = p9_1.match(line)
-            if m:
-                maximum_prefix_max_prefix_no = int(m.groupdict()['maximum_prefix_max_prefix_no'])
-                maximum_prefix_restart = int(m.groupdict()['maximum_prefix_restart'])
-                if flag:
-                    parsed_dict['peer_policy'][template_id]['maximum_prefix_max_prefix_no']['inherited_policies'] \
-                        = maximum_prefix_max_prefix_no
-                    parsed_dict['peer_policy'][template_id]['maximum_prefix_restart']['inherited_policies'] \
-                        = maximum_prefix_restart
-                else:
-                    parsed_dict['peer_policy'][template_id]['maximum_prefix_max_prefix_no'] \
-                        = maximum_prefix_max_prefix_no
-                    parsed_dict['peer_policy'][template_id]['maximum_prefix_restart'] \
-                        = maximum_prefix_restart
-                continue
             # as-override
             p10 = re.compile(r'^\s*as-override$')
             m = p10.match(line)
