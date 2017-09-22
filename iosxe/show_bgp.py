@@ -3426,7 +3426,7 @@ class ShowIpBgpTemplatePeerPolicy(ShowIpbgpTemplatePeerPolicySchema):
                         = maximum_prefix_restart
                 continue
 
-            # maximum-prefix 5555 70 restart 300
+            # maximum-prefix 5555 restart 300
             p9_1 = re.compile(r'^\s*maximum-prefix'
                             ' +(?P<maximum_prefix_max_prefix_no>[0-9]+)'
                             ' +restart +(?P<maximum_prefix_restart>[0-9]+)$')
