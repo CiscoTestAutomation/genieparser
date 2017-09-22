@@ -3346,8 +3346,7 @@ class ShowIpBgpAllDampeningParameters(ShowIpBgpAllDampeningParametersSchema):
             p6 = re.compile(r'^\s*% +dampening +not +enabled +for +base$')
             m = p6.match(line)
             if m:
-                if af_name in parsed_dict['vrf'][vrf_name]['address_family']:
-                    del  parsed_dict['vrf'][vrf_name]['address_family'][af_name]
+
                 continue
             # For vrf: VRF1
             p7 = re.compile(r'^\s*For +vrf: +(?P<vrf_name>[\w\d]+)$')
@@ -3364,8 +3363,34 @@ class ShowIpBgpAllDampeningParameters(ShowIpBgpAllDampeningParametersSchema):
             p8 = re.compile(r'^\s*% +dampening +not +enabled +for +vrf +(?P<vrf_name>[\d\w]+)$')
             m = p8.match(line)
             if m:
-                if vrf_name in parsed_dict['vrf']:
-                    del parsed_dict['vrf'][vrf_name]
                 continue
+
+
+        if parsed_dict:
+            for key, value in parsed_dict['vrf'].items():
+                for key1, value1 in parsed_dict['vrf'][key].items():
+                    print (key1)
+
+
+
+
+        """
+        for key, value in parsed_dict['vrf'].items():
+                if 'address_family' in value:
+                    for k1, v1 in value['address_family'].items():
+                        for k2, v2 in v1.items():
+                            if  v2:
+                                print(k2)
+                                print(v2)
+
+
+        for key, value in parsed_dict.items():
+            for k1, v1 in value['vrf'].items():
+                for k2, v2 in v1.items():
+
+                if af_name in parsed_dict['vrf'][vrf_name]['address_family']:
+                    del parsed_dict['vrf'][vrf_name]['address_family'][af_name]
+                    del parsed_dict['vrf'][vrf_name]
+        """
 
         return parsed_dict

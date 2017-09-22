@@ -5353,6 +5353,7 @@ class test_show_ip_bgp_all_dampening_parameters(unittest.TestCase):
     '''
         unit test for show ip bgp all dampening parameters
     '''
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
@@ -5530,6 +5531,7 @@ class test_show_ip_bgp_all_dampening_parameters(unittest.TestCase):
                     },
             },
     }
+
     golden_output_1 = {'execute.return_value': '''
       R4_iosv#show ip bgp all dampening parameters
       For address family: IPv4 Unicast
@@ -5634,14 +5636,15 @@ class test_show_ip_bgp_all_dampening_parameters(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+    '''
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowIpBgpAllDampeningParameters(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
-
-    def test_golden(self):
+    '''
+    def test_golden_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
         obj = ShowIpBgpAllDampeningParameters(device=self.device)
