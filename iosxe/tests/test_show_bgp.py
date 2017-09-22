@@ -5357,7 +5357,7 @@ class test_show_ip_bgp_template_peer_policy(unittest.TestCase):
 
     golden_parsed_output = {
         'peer_policy':
-            {'peer-policy':
+            {'PEER-POLICY':
                 {
                     'local_policies' : '0x8002069C603',
                     'inherited_polices' : '0x0',
@@ -5380,7 +5380,7 @@ class test_show_ip_bgp_template_peer_policy(unittest.TestCase):
                     'soo': 'SoO:100:100',
                     'index': 1,
                 },
-            'peer-policy2':
+            'PEER-POLICY2':
                 {
                     'local_policies': '0x200000',
                     'inherited_polices': '0x0',
@@ -5423,7 +5423,7 @@ class test_show_ip_bgp_template_peer_policy(unittest.TestCase):
 
     golden_parsed_output_1 = {
         'peer_policy':
-            {'peer-policy':
+            {'PEER-POLICY':
                 {
                     'local_policies': '0x8002069C603',
                     'inherited_polices': '0x0',
@@ -5436,7 +5436,6 @@ class test_show_ip_bgp_template_peer_policy(unittest.TestCase):
                     'route_map_name_in': 'test',
                     'route_map_name_out': 'test2',
                     'maximum_prefix_max_prefix_no': 5555,
-                    'maximum_prefix_threshold': 70,
                     'maximum_prefix_restart': 300,
                     'next_hop_self': True,
                     'route_reflector_client': True,
@@ -5449,7 +5448,7 @@ class test_show_ip_bgp_template_peer_policy(unittest.TestCase):
                             'soo': 'SoO:100:100',
                         },
                 },
-                'peer-policy2':
+                'PEER-POLICY2':
                     {
                         'local_policies': '0x200000',
                         'inherited_polices': '0x0',
@@ -5474,7 +5473,7 @@ class test_show_ip_bgp_template_peer_policy(unittest.TestCase):
                  route-map test2 out
                  default-originate route-map test
                  soft-reconfiguration inbound
-                 maximum-prefix 5555 70 restart 300
+                 maximum-prefix 5555 restart 300
                  route-reflector-client
                  next-hop-self
                  send-community both
