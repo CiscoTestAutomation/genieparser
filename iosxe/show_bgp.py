@@ -28,6 +28,100 @@ from metaparser import MetaParser
 from metaparser.util.schemaengine import Schema, Any, Optional
 
 
+# =================================================
+# Parser for 'show bgp all neighbors <WORD> policy'
+# =================================================
+
+class ShowBgpAllNeighborsPolicySchema(MetaParser):
+
+    '''Schema for show bgp all neighbors <WORD> policy'''
+
+    schema = {
+        'vrf':
+            {Any():
+                {'neighbor':
+                    {Any():
+                        {'address_family':
+                            {Any():
+                                {Optional('nbr_af_route_map_name_in'): str,
+                                 Optional('nbr_af_route_map_name_out'): str,
+                                }
+                            },
+                        }
+                    },
+                }
+            },
+        }
+
+
+class ShowBgpAllNeighborsPolicy(ShowBgpAllNeighborsPolicySchema):
+
+    '''Parser for show bgp all neighbors <neighbor> policy'''
+
+    def cli(self, neighbor):
+
+        # show bgp all neighbors {neighbor} policy
+        cmd  = 'show bgp all neighbors {neighbor} policy'.format(neighbor=neighbor)
+        out = self.device.execute(cmd)
+
+        # Init dictionary
+        policy_dict = {}
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            # Neighbor: 10.4.6.6, Address-Family: VPNv4 Unicast (VRF1)
+            p1 = re.compile(r'^\s*Neighbor: +(?P<neighbor>[a-zA-Z0-9\.\:]+),'
+                             ' +Address-Family: +(?P<address_family>[a-zA-Z0-9\s\-\_]+)'
+                             '( +\((?P<vrf>[a-zA-Z0-9]+)\))?$')
+            m = p1.match(line)
+            if m:
+                neighbor_id = str(m.groupdict()['neighbor'])
+                address_family = str(m.groupdict()['address_family']).lower()
+                if m.groupdict()['vrf']:
+                    vrf = str(m.groupdict()['vrf'])
+                else:
+                    vrf = 'default'
+                continue
+
+            # route-map test in
+            # route-map test out
+            p2 = re.compile(r'^\s*route-map +(?P<route_map_name>\S+)'
+                             ' +(?P<route_map_direction>[a-zA-Z]+)$')
+            m = p2.match(line)
+            if m:
+                route_map_name = str(m.groupdict()['route_map_name'])
+                route_map_direction = str(m.groupdict()['route_map_direction'])
+
+                # Init dict
+                if 'vrf' not in policy_dict:
+                    policy_dict['vrf'] = {}
+                if vrf not in policy_dict['vrf']:
+                    policy_dict['vrf'][vrf] = {}
+                if 'neighbor' not in policy_dict['vrf'][vrf]:
+                    policy_dict['vrf'][vrf]['neighbor'] = {}
+                if neighbor_id not in policy_dict['vrf'][vrf]['neighbor']:
+                    policy_dict['vrf'][vrf]['neighbor'][neighbor_id] = {}
+                if 'address_family' not in policy_dict['vrf'][vrf]['neighbor']\
+                    [neighbor_id]:
+                    policy_dict['vrf'][vrf]['neighbor'][neighbor_id]\
+                        ['address_family'] = {}
+                if address_family not in policy_dict['vrf'][vrf]['neighbor']\
+                    [neighbor_id]['address_family']:
+                    policy_dict['vrf'][vrf]['neighbor'][neighbor_id]\
+                        ['address_family'][address_family] = {}
+
+                if route_map_direction == 'in':
+                    policy_dict['vrf'][vrf]['neighbor'][neighbor_id]\
+                        ['address_family'][address_family]['nbr_af_route_map_name_in'] = route_map_name
+                else:
+                    policy_dict['vrf'][vrf]['neighbor'][neighbor_id]\
+                        ['address_family'][address_family]['nbr_af_route_map_name_out'] = route_map_name
+
+                continue
+
+        return policy_dict
+
 # ============================================================
 # Parser for 'show bgp all neighbors <WORD> advertised-routes'
 # ============================================================
@@ -2797,7 +2891,7 @@ class ShowBgpAllNeighborsReceivedRoutes(ShowBgpAllNeighborsReceivedRoutesSchema)
 
 class ShowIpbgpTemplatePeerSessionSchema(MetaParser):
     '''
-           Schema show ip bgp template peer-session
+           Schema show ip bgp template peer-session <WORD>
     '''
     schema = {
                 'peer_session':
@@ -2844,12 +2938,12 @@ class ShowIpbgpTemplatePeerSessionSchema(MetaParser):
 
 class ShowIpBgpTemplatePeerSession(ShowIpbgpTemplatePeerSessionSchema):
     '''
-        Parser for show ip bgp template peer-session
+        Parser for show ip bgp template peer-session <WORD>
     '''
 
-    def cli(self):
-        # show ip bgp template peer-session
-        cmd = 'show ip bgp template peer-session'
+    def cli(self, template_name=""):
+        # show ip bgp template peer-session <WORD>
+        cmd = 'show ip bgp template peer-session {template_name}'.format(template_name=template_name)
         out = self.device.execute(cmd)
 
         # Init vars
@@ -2864,7 +2958,7 @@ class ShowIpBgpTemplatePeerSession(ShowIpbgpTemplatePeerSessionSchema):
                             ' +index:(?P<index>[0-9]+)$')
             m = p1.match(line)
             if m:
-                template_id = m.groupdict()['template_id'].lower()
+                template_id = m.groupdict()['template_id']
                 index = int(m.groupdict()['index'])
 
                 if 'peer_session' not in parsed_dict:
@@ -3494,7 +3588,7 @@ class ShowBgpAllNeighborsRoutes(ShowBgpAllNeighborsRoutesSchema):
 
 class ShowIpbgpTemplatePeerPolicySchema(MetaParser):
     '''
-           Schema show ip bgp template peer-policy
+           Schema show ip bgp template peer-policy <WORD>
     '''
     schema = {
                 'peer_policy':
@@ -3546,12 +3640,12 @@ class ShowIpbgpTemplatePeerPolicySchema(MetaParser):
 
 class ShowIpBgpTemplatePeerPolicy(ShowIpbgpTemplatePeerPolicySchema):
     '''
-        Parser for show ip bgp template peer-policy
+        Parser for show ip bgp template peer-policy  <WORD>
     '''
 
-    def cli(self):
-        # show ip bgp template peer-policy
-        cmd = 'show ip bgp template peer-policy'
+    def cli(self, template_name=""):
+        # show ip bgp template peer-policy <WORD>
+        cmd = 'show ip bgp template peer-policy {template_name}'.format(template_name=template_name)
         out = self.device.execute(cmd)
 
         # Init vars

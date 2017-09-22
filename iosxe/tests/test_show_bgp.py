@@ -13,8 +13,88 @@ from parser.iosxe.show_bgp import ShowBgpAllSummary, ShowBgpAllClusterIds, \
                                   ShowIpBgpTemplatePeerPolicy, \
                                   ShowBgpAllNeighbors, \
                                   ShowIpBgpTemplatePeerSession, \
-                                  ShowBgpAllNeighborsRoutes
+                                  ShowBgpAllNeighborsRoutes, \
+                                  ShowBgpAllNeighborsPolicy
 
+# ====================================================
+# Unit test for 'show bgp all neighbors <WORD> policy'
+# ====================================================
+
+class test_show_bgp_all_neighbors_policy(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {'vrf':
+      {'VRF1':
+        {'neighbor':
+          {'21.0.0.2':
+            {'address_family':
+              {'vpnv4 unicast':
+                {'nbr_af_route_map_name_in': 'test',
+                 'nbr_af_route_map_name_out': 'test'}}}}}}}
+
+    golden_output = {'execute.return_value': '''
+        R4_iosv#show bgp all neighbors 21.0.0.2 policy
+         Neighbor: 21.0.0.2, Address-Family: VPNv4 Unicast (VRF1)
+         Locally configured policies:
+          route-map test in
+          route-map test out
+        '''}
+
+    golden_parsed_output2 = {}
+
+    golden_output2 = {'execute.return_value': '''
+        R4_iosv#show bgp all neighbors 19.0.102.3 policy 
+         Neighbor: 19.0.102.3, Address-Family: VPNv4 Unicast
+
+         Neighbor: 19.0.102.3, Address-Family: VPNv6 Unicast
+
+        '''}
+
+    golden_parsed_output3 = {'vrf':
+      {'default':
+        {'neighbor':
+          {'10.4.6.6':
+            {'address_family':
+              {'vpnv4 unicast':
+                {'nbr_af_route_map_name_in': 'rmap1'}}}}}}}
+
+    golden_output3 = {'execute.return_value': '''
+        R4_iosv#show bgp all neighbors 10.4.6.6 policy 
+         Neighbor: 10.4.6.6, Address-Family: VPNv4 Unicast
+         Locally configured policies:
+          route-map rmap1 in
+         Neighbor: 10.4.6.6, Address-Family: VPNv6 Unicast
+
+        '''}
+
+    def test_show_bgp_all_neighbors_policy_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpAllNeighborsPolicy(device=self.device)
+        parsed_output = obj.parse(neighbor='21.0.0.2')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_show_bgp_vrf_all_neighbors_policy_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowBgpAllNeighborsPolicy(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+          parsed_output = obj.parse(neighbor='19.0.102.3')
+
+    def test_show_bgp_all_neighbors_policy_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowBgpAllNeighborsPolicy(device=self.device)
+        parsed_output = obj.parse(neighbor='10.4.6.6')
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
+
+    def test_show_bgp_all_neighbors_policy_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpAllNeighborsPolicy(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(neighbor='10.4.6.6')
 
 # ===============================================================
 # Unit test for 'show bgp all neighbors <WORD> advertised-routes'
@@ -4275,7 +4355,7 @@ class test_show_ip_bgp_template_peer_session(unittest.TestCase):
 
     golden_parsed_output = {
         'peer_session':
-            {'peer-session':
+            {'PEER-SESSION':
                 {
                     'local_policies' : '0x5025FD',
                     'inherited_polices' : '0x0',
@@ -4295,7 +4375,7 @@ class test_show_ip_bgp_template_peer_session(unittest.TestCase):
                     'update_source': 'Loopback0',
                     'index': 1,
                 },
-            'peer-session2':
+            'PEER-SESSION2':
                 {
                     'local_policies' : '0x100000',
                     'inherited_polices' : '0x0',
@@ -4333,7 +4413,7 @@ class test_show_ip_bgp_template_peer_session(unittest.TestCase):
     '''}
     golden_parsed_output_1 = {
         'peer_session':
-            {'peer-session':
+            {'PEER-SESSION':
                 {
                     'local_policies': '0x5025FD',
                     'inherited_polices': '0x0',
@@ -4356,7 +4436,7 @@ class test_show_ip_bgp_template_peer_session(unittest.TestCase):
                             'holdtime': 30,
                         },
                 },
-                'peer-session2':
+                'PEER-SESSION2':
                     {
                         'local_policies': '0x100000',
                         'inherited_polices': '0x0',
@@ -4392,6 +4472,54 @@ class test_show_ip_bgp_template_peer_session(unittest.TestCase):
                  fall-over bfd
                 Inherited session commands:
         '''}
+
+    golden_parsed_output_2 = {
+        'peer_session':
+            {'PEER-SESSION':
+                {
+                    'local_policies': '0x5025FD',
+                    'inherited_polices': '0x0',
+                    'fall_over_bfd': True,
+                    'suppress_four_byte_as_capability': True,
+                    'description': 'desc1!',
+                    'disable_connected_check': True,
+                    'ebgp_multihop_enable': True,
+                    'ebgp_multihop_max_hop': 254,
+                    'local_as_as_no': 255,
+                    'password_text': 'is configured',
+                    'remote_as': 321,
+                    'shutdown': True,
+                    'transport_connection_mode': 'passive',
+                    'update_source': 'Loopback0',
+                    'index': 1,
+                    'inherited_session_commands':
+                        {
+                            'keepalive_interval': 10,
+                            'holdtime': 30,
+                        },
+                }
+            },
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+                    R4_iosv#show ip bgp template peer-session PEER-SESSION
+                    Template:PEER-SESSION, index:1
+                    Local policies:0x5025FD, Inherited polices:0x0
+                    Locally configured session commands:
+                     remote-as 321
+                     password is configured
+                     shutdown
+                     ebgp-multihop 254
+                     update-source Loopback0
+                     transport connection-mode passive
+                     description desc1!
+                     dont-capability-negotiate four-octets-as
+                     local-as 255
+                     disable-connected-check
+                     fall-over bfd
+                    Inherited session commands:
+                    timers 10 30
+            '''}
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpBgpTemplatePeerSession(device=self.device)
@@ -4409,6 +4537,12 @@ class test_show_ip_bgp_template_peer_session(unittest.TestCase):
         obj = ShowIpBgpTemplatePeerSession(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIpBgpTemplatePeerSession(device=self.device)
+        parsed_output = obj.parse(template_name='PEER-SESSION')
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 # ====================================================
 # Unit test for 'show bgp all neighbors <WORD> routes'
@@ -5633,6 +5767,32 @@ class test_show_ip_bgp_template_peer_policy(unittest.TestCase):
                Inherited policies:
        '''}
 
+    golden_parsed_output_2 = {
+        'peer_policy':
+            {'PEER-POLICY2':
+                    {
+                        'local_policies': '0x200000',
+                        'inherited_polices': '0x0',
+                        'local_disable_policies': '0x0',
+                        'inherited_disable_polices': '0x0',
+                        'allowas_in': True,
+                        'allowas_in_as_number': 10,
+                        'index': 2,
+                    }
+
+            },
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+                   R4_iosv#show ip bgp template peer-policy PEER-POLICY2
+
+                   Template:PEER-POLICY2, index:2.
+                   Local policies:0x200000, Inherited polices:0x0
+                   Local disable policies:0x0, Inherited disable policies:0x0
+                   Locally configured policies:
+                     allowas-in 10
+                   Inherited policies:
+           '''}
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpBgpTemplatePeerPolicy(device=self.device)
@@ -5652,6 +5812,13 @@ class test_show_ip_bgp_template_peer_policy(unittest.TestCase):
         obj = ShowIpBgpTemplatePeerPolicy(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIpBgpTemplatePeerPolicy(device=self.device)
+        parsed_output = obj.parse(template_name='PEER-POLICY2')
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 if __name__ == '__main__':
     unittest.main()
