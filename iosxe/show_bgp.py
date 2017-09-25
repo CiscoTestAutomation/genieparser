@@ -4009,7 +4009,7 @@ class ShowIpBgpAllDampeningParameters(ShowIpBgpAllDampeningParametersSchema):
             p7 = re.compile(r'^\s*For +vrf: +(?P<vrf_name>[\w\d]+)$')
             m = p7.match(line)
             if m:
-                vrf_name = m.groupdict()['vrf_name'].lower()
+                vrf_name = m.groupdict()['vrf_name']
                 if 'vrf' not in parsed_dict:
                     parsed_dict['vrf'] = {}
                 if vrf_name not in parsed_dict['vrf']:

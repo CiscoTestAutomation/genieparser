@@ -5984,7 +5984,7 @@ class test_show_ip_bgp_all_dampening_parameters(unittest.TestCase):
                                 },
                         },
                 },
-                'vrf1':
+                'VRF1':
                     {
                         'address_family':
                             {
@@ -6038,6 +6038,73 @@ class test_show_ip_bgp_all_dampening_parameters(unittest.TestCase):
             % dampening not enabled for vrf VRF2
                           '''}
 
+    golden_parsed_output_3 = {
+        'vrf':
+            {'default':
+                {
+                    'address_family':
+                        {
+                            'ipv4 unicast':
+                                {
+                                    'dampening': True,
+                                    'dampening_decay_time': 4200,
+                                    'dampening_half_life_time': 2100,
+                                    'dampening_reuse_time': 200,
+                                    'dampening_max_suppress_time': 4200,
+                                    'dampening_suppress_time': 200,
+                                    'dampening_max_suppress_penalty': 800,
+                                },
+                        },
+                },
+                'VRF1':
+                    {
+                        'address_family':
+                            {
+                                'vpnv4 unicast':
+                                    {
+                                        'dampening': True,
+                                        'dampening_decay_time': 4240,
+                                        'dampening_half_life_time': 2160,
+                                        'dampening_reuse_time': 2001,
+                                        'dampening_max_suppress_time': 4260,
+                                        'dampening_suppress_time': 2001,
+                                        'dampening_max_suppress_penalty': 7850,
+                                    },
+                            },
+                    },
+            },
+    }
+    golden_output_3 = {'execute.return_value':'''
+        R4_iosv#show ip bgp all dampening parameters
+        For address family: IPv4 Unicast
+
+         dampening 35 200 200 70
+          Half-life time      : 35 mins       Decay Time       : 4200 secs
+          Max suppress penalty:   800         Max suppress time: 70 mins
+          Suppress penalty    :   200         Reuse penalty    : 200
+
+
+        For address family: IPv6 Unicast
+
+        % dampening not enabled for base
+
+        For address family: VPNv4 Unicast
+
+        % dampening not enabled for base
+
+        For vrf: VRF1
+
+         dampening 36 2001 2001 71
+          Half-life time      : 36 mins       Decay Time       : 4240 secs
+          Max suppress penalty:  7850         Max suppress time: 71 mins
+          Suppress penalty    :  2001         Reuse penalty    : 2001
+
+
+        For vrf: VRF2
+
+        % dampening not enabled for vrf VRF2
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpBgpAllDampeningParameters(device=self.device)
@@ -6058,6 +6125,13 @@ class test_show_ip_bgp_all_dampening_parameters(unittest.TestCase):
         obj = ShowIpBgpAllDampeningParameters(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowIpBgpAllDampeningParameters(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 
 if __name__ == '__main__':
