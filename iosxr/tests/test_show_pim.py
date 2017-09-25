@@ -11,7 +11,8 @@ from ats.topology import loader
 from metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # iosxr show_pim
-from parser.iosxr.show_pim import ShowPimVrfMstatic
+from parser.iosxr.show_pim import ShowPimVrfMstatic, ShowPimVrfRpfSummary,\
+                                  ShowPimVrfInterfaceDetail
 
 
 # ===================================================
@@ -164,10 +165,120 @@ class test_show_pim_vrf_mstatic(unittest.TestCase):
         parsed_output = obj.parse(vrf='default', af='ipv4')
         self.assertEqual(parsed_output,self.golden_parsed_output1)
 
-    def test_show_pim_vrf_default_ipv6_mstatic_golden1(self):
+    def test_show_pim_vrf_default_ipv6_mstatic_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowPimVrfMstatic(device=self.device)
+        parsed_output = obj.parse(vrf='default', af='ipv6')
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+
+# =======================================================
+#  Unit test for 'show pim vrf <WORD> <WORD> rpf summary'
+# =======================================================
+
+class test_show_pim_vrf_rpf_summary(unittest.TestCase):
+
+    '''Unit test for 'show pim vrf <WORD> <WORD> rpf summary'''
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'default_rpf_table': 'IPv4-Unicast-default',
+                        'isis_mcast_topology': 'not configured',
+                        'mo_frr_flow_based': 'not configured',
+                        'mo_frr_rib': 'not configured',
+                        'multipath_prf_selection': 'enabled',
+                        'pim_rpfs_registered': 'Unicast RIB table',
+                        'rib_convergence_time_left': '00:00:00',
+                        'rib_convergence_timeout': '00:30:00',
+                        'rump_mu_rib': 'not enabled',
+                        'table': 
+                            {'IPv4-Unicast-default': 
+                                {'pim_rpf_registrations': 1,
+                                'rib_table_status': 'converged'}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        RP/0/0/CPU0:R2#show pim vrf default ipv4 rpf summary 
+        Mon May 29 14:42:47.569 UTC
+            ISIS Mcast Topology Not configured
+            MoFRR Flow-based    Not configured
+            MoFRR RIB           Not configured
+            RUMP MuRIB          Not enabled
+
+        PIM RPFs registered with Unicast RIB table
+
+        Default RPF Table: IPv4-Unicast-default
+        RIB Convergence Timeout Value: 00:30:00
+        RIB Convergence Time Left:     00:00:00
+        Multipath RPF Selection is Enabled
+
+        Table: IPv4-Unicast-default
+            PIM RPF Registrations = 1
+            RIB Table converged
+        '''}
+
+    golden_parsed_output2 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv6': 
+                        {'default_rpf_table': 'IPv6-Unicast-default',
+                        'isis_mcast_topology': 'not configured',
+                        'mo_frr_flow_based': 'not configured',
+                        'mo_frr_rib': 'not configured',
+                        'multipath_prf_selection': 'enabled',
+                        'pim_rpfs_registered': 'Unicast RIB table',
+                        'rib_convergence_time_left': '00:00:00',
+                        'rib_convergence_timeout': '00:30:00',
+                        'rump_mu_rib': 'not enabled',
+                        'table': 
+                            {'IPv6-Unicast-default': 
+                                {'pim_rpf_registrations': 0,
+                                'rib_table_status': 'converged'}}}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        RP/0/0/CPU0:R2#show pim vrf default ipv6 rpf summary 
+        Mon May 29 14:42:53.538 UTC
+            ISIS Mcast Topology Not configured
+            MoFRR Flow-based    Not configured
+            MoFRR RIB           Not configured
+            RUMP MuRIB          Not enabled
+
+        PIM RPFs registered with Unicast RIB table
+
+        Default RPF Table: IPv6-Unicast-default
+        RIB Convergence Timeout Value: 00:30:00
+        RIB Convergence Time Left:     00:00:00
+        Multipath RPF Selection is Enabled
+
+        Table: IPv6-Unicast-default
+            PIM RPF Registrations = 0
+            RIB Table converged
+        '''}
+
+    def test_show_pim_vrf_rpf_summary_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowPimVrfRpfSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_pim_vrf_default_ipv4_rpf_summary_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowPimVrfRpfSummary(device=self.device)
+        parsed_output = obj.parse(vrf='default', af='ipv4')
+        self.assertEqual(parsed_output,self.golden_parsed_output1)
+
+    def test_show_pim_vrf_default_ipv6_rpf_summary_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowPimVrfRpfSummary(device=self.device)
         parsed_output = obj.parse(vrf='default', af='ipv6')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
