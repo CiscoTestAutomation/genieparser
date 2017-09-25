@@ -3997,12 +3997,6 @@ class ShowIpBgpAllDampeningParameters(ShowIpBgpAllDampeningParametersSchema):
             p6 = re.compile(r'^\s*% +dampening +not +enabled +for +base$')
             m = p6.match(line)
             if m:
-                if vrf_name in parsed_dict['vrf']:
-                    if 'address_family' in parsed_dict['vrf'][vrf_name]:
-                        if af_name  in parsed_dict['vrf'][vrf_name]['address_family']:
-                            if not parsed_dict['vrf'][vrf_name]['address_family'][af_name]:
-                                del parsed_dict['vrf'][vrf_name]['address_family'][af_name]
-
                 continue
 
             # For vrf: VRF1
@@ -4020,16 +4014,26 @@ class ShowIpBgpAllDampeningParameters(ShowIpBgpAllDampeningParametersSchema):
             p8 = re.compile(r'^\s*% +dampening +not +enabled +for +vrf +(?P<vrf_name>[\d\w]+)$')
             m = p8.match(line)
             if m:
-                if vrf_name in parsed_dict['vrf']:
-                    if 'address_family' in parsed_dict['vrf'][vrf_name]:
-                        if af_name in parsed_dict['vrf'][vrf_name]['address_family']:
-                            if not parsed_dict['vrf'][vrf_name]['address_family'][af_name]:
-                                del parsed_dict['vrf'][vrf_name]['address_family'][af_name]
-                                del parsed_dict['vrf'][vrf_name]
-                        else:
-                            del parsed_dict['vrf'][vrf_name]
-                    else:
-                        del parsed_dict['vrf'][vrf_name]
-
                 continue
+
+        if parsed_dict:
+            for vrf_name in parsed_dict['vrf'].keys():
+                if 'address_family' in parsed_dict['vrf'][vrf_name]:
+                    for i in parsed_dict['vrf'][vrf_name]['address_family'].copy():
+                        if not parsed_dict['vrf'][vrf_name]['address_family'][i]:
+                            parsed_dict['vrf'][vrf_name]['address_family'].pop(i)
+
+            for vrf_name in parsed_dict['vrf'].keys():
+                for i in parsed_dict['vrf'][vrf_name].copy():
+                    if not parsed_dict['vrf'][vrf_name][i]:
+                        parsed_dict['vrf'][vrf_name].pop(i)
+
+            for i in parsed_dict['vrf'].copy():
+                if not parsed_dict['vrf'][i]:
+                    parsed_dict['vrf'].pop(i)
+
+            for i in parsed_dict.copy():
+                if not parsed_dict[i]:
+                    parsed_dict.pop(i)
+
         return parsed_dict
