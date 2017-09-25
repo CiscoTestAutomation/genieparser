@@ -245,11 +245,170 @@ class test_show_ip_mroute(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowIpMroute(device=self.device)
         parsed_output = obj.parse()
+        self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_golden_vrf_non_default(self):
         self.device = Mock(**self.golden_output2)
         obj = ShowIpMroute(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1')
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+
+
+# =======================================
+# Unit test for 'show ipv6 mroute'
+# Unit test for 'show ipv6 mroute vrf xxx'
+# =======================================
+class test_show_ipv6_mroute(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+        "vrf": {
+            "default": {
+                 "address_family": {
+                      "ipv6": {
+                           "multicast_group": {
+                                "FF07::1": {
+                                     "source_address": {
+                                          "2001:DB8:999::99": {
+                                               "outgoing_interface_list": {
+                                                    "POS4/0": {
+                                                         "state_mode": "Forward",
+                                                         "uptime": "00:02:06",
+                                                         "expire": "00:03:27"
+                                                    }
+                                               },
+                                               "incoming_interface_list": {
+                                                    "POS1/0": {
+                                                         "rpf_nbr": "2001:DB8:999::99"
+                                                    }
+                                               },
+                                               "uptime": "00:02:06",
+                                               "flags": "SFT",
+                                               "expires": "00:01:23"
+                                          },
+                                          "*": {
+                                               "outgoing_interface_list": {
+                                                    "POS4/0": {
+                                                         "state_mode": "Forward",
+                                                         "uptime": "00:04:45",
+                                                         "expire": "00:02:47"
+                                                    }
+                                               },
+                                               "incoming_interface_list": {
+                                                    "Tunnel5": {
+                                                         "rpf_nbr": "6:6:6::6"
+                                                    }
+                                               },
+                                               "uptime": "00:04:45",
+                                               "rp": "2001:DB8:6::6",
+                                               "flags": "S",
+                                               "expires": "00:02:47"
+                                          }}}}}}}}}
+
+    golden_output = {'execute.return_value': '''\
+        Multicast Routing Table
+        Flags:D - Dense, S - Sparse, B - Bidir Group, s - SSM Group, 
+               C - Connected, L - Local, I - Received Source Specific Host Report,
+               P - Pruned, R - RP-bit set, F - Register flag, T - SPT-bit set,
+               J - Join SPT 
+        Timers:Uptime/Expires
+        Interface state:Interface, State
+        (*, FF07::1), 00:04:45/00:02:47, RP 2001:DB8:6::6, flags:S
+          Incoming interface:Tunnel5
+          RPF nbr:6:6:6::6
+          Outgoing interface list:
+            POS4/0, Forward, 00:04:45/00:02:47
+        (2001:DB8:999::99, FF07::1), 00:02:06/00:01:23, flags:SFT
+          Incoming interface:POS1/0
+          RPF nbr:2001:DB8:999::99
+          Outgoing interface list:
+            POS4/0, Forward, 00:02:06/00:03:27
+    '''}
+
+    golden_parsed_output2 = {
+        "vrf": {
+            "VRF1": {
+                 "address_family": {
+                      "ipv6": {
+                           "multicast_group": {
+                                "FF07::1": {
+                                     "source_address": {
+                                          "2001:DB8:999::99": {
+                                               "outgoing_interface_list": {
+                                                    "POS4/0": {
+                                                         "state_mode": "Forward",
+                                                         "uptime": "00:02:06",
+                                                         "expire": "00:03:27"
+                                                    }
+                                               },
+                                               "incoming_interface_list": {
+                                                    "POS1/0": {
+                                                         "rpf_nbr": "2001:DB8:999::99"
+                                                    }
+                                               },
+                                               "uptime": "00:02:06",
+                                               "flags": "SFT",
+                                               "expires": "00:01:23"
+                                          },
+                                          "*": {
+                                               "outgoing_interface_list": {
+                                                    "POS4/0": {
+                                                         "state_mode": "Forward",
+                                                         "uptime": "00:04:45",
+                                                         "expire": "00:02:47"
+                                                    }
+                                               },
+                                               "incoming_interface_list": {
+                                                    "Tunnel5": {
+                                                         "rpf_nbr": "6:6:6::6"
+                                                    }
+                                               },
+                                               "uptime": "00:04:45",
+                                               "rp": "2001:DB8:6::6",
+                                               "flags": "S",
+                                               "expires": "00:02:47"
+                                          }}}}}}}}}
+
+    golden_output2 = {'execute.return_value': '''\
+        Multicast Routing Table
+        Flags:D - Dense, S - Sparse, B - Bidir Group, s - SSM Group, 
+               C - Connected, L - Local, I - Received Source Specific Host Report,
+               P - Pruned, R - RP-bit set, F - Register flag, T - SPT-bit set,
+               J - Join SPT 
+        Timers:Uptime/Expires
+        Interface state:Interface, State
+        (*, FF07::1), 00:04:45/00:02:47, RP 2001:DB8:6::6, flags:S
+          Incoming interface:Tunnel5
+          RPF nbr:6:6:6::6
+          Outgoing interface list:
+            POS4/0, Forward, 00:04:45/00:02:47
+        (2001:DB8:999::99, FF07::1), 00:02:06/00:01:23, flags:SFT
+          Incoming interface:POS1/0
+          RPF nbr:2001:DB8:999::99
+          Outgoing interface list:
+            POS4/0, Forward, 00:02:06/00:03:27
+    '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowIpv6Mroute(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_vrf_default(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpv6Mroute(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_vrf_non_default(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIpv6Mroute(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 

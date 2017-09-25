@@ -90,13 +90,17 @@ class ShowIpMroute(ShowIpMrouteSchema):
             line = line.strip()
 
             # IP Multicast Routing Table
-            p1 = re.compile(r'^(?P<address_family>[\w\W]+) [mM]ulticast'
+            # Multicast Routing Table
+            p1 = re.compile(r'^(?P<address_family>[\w\W]+)? *[mM]ulticast'
                              ' +[rR]outing +[tT]able$')
             m = p1.match(line)
             if m:
-                address_family = m.groupdict()['address_family'].lower()
-                if address_family == 'ip':
-                    address_family = 'ipv4'
+                address_family = m.groupdict()['address_family']
+                if address_family:
+                    if address_family.strip().lower() == 'ip':
+                        address_family = 'ipv4'
+                else:
+                    address_family = 'ipv6'
 
                 if 'vrf' not in mroute_dict:
                     mroute_dict['vrf'] = {}
@@ -211,6 +215,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
             # Vlan5, Forward/Dense, 00:03:25/00:00:00, H
             # Vlan5, Forward/Dense, 00:04:35/00:02:30
             # ATM0/0, VCD 14, Forward/Sparse, 00:03:57/00:02:53
+            # POS4/0, Forward, 00:02:06/00:03:27
             p5 = re.compile(r'^(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+),'
                              '( +VCD +(?P<vcd>\d+),)?'
                              ' +(?P<state_mode>[\w\/]+),'
