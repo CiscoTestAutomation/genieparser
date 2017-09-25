@@ -6,6 +6,8 @@ IOSXE parsers for the following show commands:
     * show ipv6 mroute
     * show ip mroute vrf <vrf_name>
     * show ipv6 mroute vrf <vrf_name>
+    * show ip mroute static
+    * show ip mroute vrf <vrf_name> static
     * show ip multicast
     * show ip multicast vrf <vrf_name>
 
