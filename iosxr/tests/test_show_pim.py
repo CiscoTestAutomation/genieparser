@@ -190,18 +190,18 @@ class test_show_pim_vrf_rpf_summary(unittest.TestCase):
                 {'address_family': 
                     {'ipv4': 
                         {'default_rpf_table': 'IPv4-Unicast-default',
-                        'isis_mcast_topology': 'not configured',
-                        'mo_frr_flow_based': 'not configured',
-                        'mo_frr_rib': 'not configured',
-                        'multipath_prf_selection': 'enabled',
+                        'isis_mcast_topology': False,
+                        'mo_frr_flow_based': False,
+                        'mo_frr_rib': False,
+                        'multipath_prf_selection': True,
                         'pim_rpfs_registered': 'Unicast RIB table',
                         'rib_convergence_time_left': '00:00:00',
                         'rib_convergence_timeout': '00:30:00',
-                        'rump_mu_rib': 'not enabled',
+                        'rump_mu_rib': False,
                         'table': 
                             {'IPv4-Unicast-default': 
                                 {'pim_rpf_registrations': 1,
-                                'rib_table_status': 'converged'}}}}}}}
+                                'rib_table_converged': True}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         RP/0/0/CPU0:R2#show pim vrf default ipv4 rpf summary 
@@ -229,18 +229,18 @@ class test_show_pim_vrf_rpf_summary(unittest.TestCase):
                 {'address_family': 
                     {'ipv6': 
                         {'default_rpf_table': 'IPv6-Unicast-default',
-                        'isis_mcast_topology': 'not configured',
-                        'mo_frr_flow_based': 'not configured',
-                        'mo_frr_rib': 'not configured',
-                        'multipath_prf_selection': 'enabled',
+                        'isis_mcast_topology': False,
+                        'mo_frr_flow_based': False,
+                        'mo_frr_rib': False,
+                        'multipath_prf_selection': True,
                         'pim_rpfs_registered': 'Unicast RIB table',
                         'rib_convergence_time_left': '00:00:00',
                         'rib_convergence_timeout': '00:30:00',
-                        'rump_mu_rib': 'not enabled',
+                        'rump_mu_rib': False,
                         'table': 
                             {'IPv6-Unicast-default': 
                                 {'pim_rpf_registrations': 0,
-                                'rib_table_status': 'converged'}}}}}}}
+                                'rib_table_converged': True}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
         RP/0/0/CPU0:R2#show pim vrf default ipv6 rpf summary 
