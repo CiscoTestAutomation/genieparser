@@ -356,8 +356,7 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 set_as_path_prepend = set_as_path_group[0]
                 set_as_path_prepend_repeat_n = len(set_as_path_group)
 
-                route_m
-                ap_dict[name]['statements'][statements]['actions']\
+                route_map_dict[name]['statements'][statements]['actions']\
                 ['set_as_path_prepend'] = set_as_path_prepend
                 route_map_dict[name]['statements'][statements]['actions']\
                 ['set_as_path_prepend_repeat_n'] = set_as_path_prepend_repeat_n
