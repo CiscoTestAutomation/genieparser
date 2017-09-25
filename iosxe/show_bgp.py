@@ -3957,7 +3957,7 @@ class ShowIpBgpAllDampeningParameters(ShowIpBgpAllDampeningParametersSchema):
                             ' mins +Decay +Time +: +(?P<decay_time>[\d]+) +secs$')
             m = p3.match(line)
             if m:
-                half_life_time = int(m.groupdict()['half_life_time'])
+                half_life_time = int(m.groupdict()['half_life_time'])*60
                 decay_time = int(m.groupdict()['decay_time'])
                 parsed_dict['vrf'][vrf_name]['address_family'][af_name]\
                     ['dampening_half_life_time'] = half_life_time
@@ -3972,7 +3972,7 @@ class ShowIpBgpAllDampeningParameters(ShowIpBgpAllDampeningParametersSchema):
             m = p4.match(line)
             if m:
                 max_suppress_penalty = int(m.groupdict()['max_suppress_penalty'])
-                max_suppress_time = int(m.groupdict()['max_suppress_time'])
+                max_suppress_time = int(m.groupdict()['max_suppress_time'])*60
                 parsed_dict['vrf'][vrf_name]['address_family'][af_name] \
                     ['dampening_max_suppress_penalty'] = max_suppress_penalty
                 parsed_dict['vrf'][vrf_name]['address_family'][af_name] \
