@@ -148,7 +148,7 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
             m = p4.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
-                ['match_nexthop_in'] = [m.groupdict()['match_nexthop_in']]
+                ['match_nexthop_in'] = m.groupdict()['match_nexthop_in'].split()
                 continue
 
             # ipv6 address prefix-lists: test-test
