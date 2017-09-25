@@ -7,6 +7,7 @@ IOSXE parsers for the following show commands:
     * show ip mroute vrf <vrf_name>
     * show ipv6 mroute vrf <vrf_name>
     * show ip multicast
+    * show ip multicast vrf <vrf_name>
 
 '''
 
