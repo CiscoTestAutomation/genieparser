@@ -134,6 +134,29 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
         for line in out.splitlines():
             line = line.rstrip()
 
+            # PIM interfaces in VRF default
+
+            # IP PIM Multicast Interface State
+            # Flag: B - Bidir enabled, NB - Bidir disabled
+            #       P - PIM Proxy enabled, NP - PIM Proxy disabled
+            #       A - PIM Assert batching capable, NA - PIM Assert batching incapable
+            #       V - Virtual Interface
+            # Interface                  PIM  Nbr   Hello  DR
+            #                                 Count Intvl  Prior
+
+            # Loopback0                   on   1     30     1     
+
+            # Primary Address : fe80::85c6:bdff:fe62:61e
+            # Address : 2001:db8:2:2::2
+            # Flags : B P NA V
+            # BFD : Off/150 ms/3
+            # DR : this system
+
+            # Propagation delay : 500
+            # Override Interval : 2500
+            # Hello Timer : 00:00:19
+            # Neighbor Filter : -
+
         return parsed_dict
 
 
@@ -150,19 +173,19 @@ class ShowPimVrfRpfSummarySchema(MetaParser):
             {Any():
                 {'address_family': 
                     {Any(): 
-                        {'isis_mcast_topology': str,
-                        'mo_frr_flow_based': str,
-                        'mo_frr_rib': str,
-                        'rump_mu_rib': str,
+                        {'isis_mcast_topology': bool,
+                        'mo_frr_flow_based': bool,
+                        'mo_frr_rib': bool,
+                        'rump_mu_rib': bool,
                         'pim_rpfs_registered': str,
                         'default_rpf_table': str,
                         'rib_convergence_timeout': str,
                         'rib_convergence_time_left': str,
-                        'multipath_prf_selection': str,
+                        'multipath_prf_selection': bool,
                         Optional('table'): 
                             {Any(): 
                                 {'pim_rpf_registrations': int,
-                                'rib_table_status': str,
+                                'rib_table_converged': bool,
                                 },
                             },
                         },
@@ -202,9 +225,11 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
                              ' +(?P<status>[a-zA-Z0-9\s\_\-]+)$')
             m = p1.match(line)
             if m:
-                if m.groupdict()['status']:
-                    sub_dict['isis_mcast_topology'] = \
-                        str(m.groupdict()['status']).lower()
+                status = m.groupdict()['status']
+                if status == 'Not configured':
+                    sub_dict['isis_mcast_topology'] = False
+                else:
+                    sub_dict['isis_mcast_topology'] = True
                 continue
 
             # MoFRR Flow-based    Not configured
@@ -212,27 +237,33 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
                              ' +(?P<status>[a-zA-Z0-9\s\_\-]+)$')
             m = p2.match(line)
             if m:
-                if m.groupdict()['status']:
-                    sub_dict['mo_frr_flow_based'] = \
-                        str(m.groupdict()['status']).lower()
+                status = m.groupdict()['status']
+                if status == 'Not configured':
+                    sub_dict['mo_frr_flow_based'] = False
+                else:
+                    sub_dict['mo_frr_flow_based'] = True
                 continue
             
             # MoFRR RIB           Not configured
             p3 = re.compile(r'^\s*MoFRR +RIB +(?P<status>[a-zA-Z0-9\s\_\-]+)$')
             m = p3.match(line)
             if m:
-                if m.groupdict()['status']:
-                    sub_dict['mo_frr_rib'] = \
-                        str(m.groupdict()['status']).lower()
+                status = m.groupdict()['status']
+                if status == 'Not configured':
+                    sub_dict['mo_frr_rib'] = False
+                else:
+                    sub_dict['mo_frr_rib'] = True
                 continue
             
             # RUMP MuRIB          Not enabled
             p4 = re.compile(r'^\s*RUMP +MuRIB +(?P<status>[a-zA-Z0-9\s\_\-]+)$')
             m = p4.match(line)
             if m:
-                if m.groupdict()['status']:
-                    sub_dict['rump_mu_rib'] = \
-                        str(m.groupdict()['status']).lower()
+                status = m.groupdict()['status']
+                if status == 'Not enabled':
+                    sub_dict['rump_mu_rib'] = False
+                else:
+                    sub_dict['rump_mu_rib'] = True
                 continue
 
             # PIM RPFs registered with Unicast RIB table
@@ -241,7 +272,8 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
             m = p5.match(line)
             if m:
                 if m.groupdict()['table']:
-                    sub_dict['pim_rpfs_registered'] = str(m.groupdict()['table'])
+                    sub_dict['pim_rpfs_registered'] = \
+                        str(m.groupdict()['table'])
                 continue
 
             # Default RPF Table: IPv4-Unicast-default
@@ -278,9 +310,11 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
                              ' +(?P<status>[a-zA-Z0-9\s\_\-]+)$')
             m = p9.match(line)
             if m:
-                if m.groupdict()['status']:
-                    sub_dict['multipath_prf_selection'] = \
-                        str(m.groupdict()['status']).lower()
+                status = m.groupdict()['status']
+                if status == 'Enabled':
+                    sub_dict['multipath_prf_selection'] = True
+                else:
+                    sub_dict['multipath_prf_selection'] = False
                 continue
 
             # Table: IPv6-Unicast-default
@@ -305,11 +339,14 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
             
             # RIB Table converged
             p11 = re.compile(r'^\s*RIB +Table'
-                              ' +(?P<rib_table>[a-zA-Z0-9\s\_\-]+)$')
+                              ' +(?P<status>[a-zA-Z0-9\s\_\-]+)$')
             m = p11.match(line)
             if m:
-                sub_dict['table'][table]['rib_table_status'] = \
-                    str(m.groupdict()['rib_table']).lower()
+                status = m.groupdict()['status']
+                if status == 'converged':
+                    sub_dict['table'][table]['rib_table_converged'] = True
+                else:
+                    sub_dict['table'][table]['rib_table_converged'] = False
                 continue
 
         return parsed_dict
