@@ -12,7 +12,8 @@ from metaparser.util.exceptions import SchemaEmptyParserError, \
 # Parser
 from parser.iosxe.show_mcast import ShowIpMroute,\
                                     ShowIpv6Mroute, \
-                                    ShowIpMrouteStatic
+                                    ShowIpMrouteStatic, \
+                                    ShowIpMulticast
 
 
 # =======================================
@@ -319,6 +320,74 @@ class test_show_ip_mroute_static(unittest.TestCase):
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
+
+# =============================================
+# Unit test for 'show ip multicast'
+# Unit test for 'show ip multicast vrf xxx'
+# =============================================
+class test_show_ip_multicast(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+        "vrf": {
+            "default": {
+                 "routing": True,
+                 "route_limit": "no limit",
+                 "multipath": True,
+                 "mo_frr": False,
+                 "fallback_group_mode": "sparse",
+                 "multicast_bound_with_filter_autorp": 0
+            }}}
+
+    golden_output = {'execute.return_value': '''\
+        Multicast Routing: enabled
+        Multicast Multipath: enabled
+        Multicast Route limit: No limit
+        Multicast Fallback group mode: Sparse
+        Number of multicast boundaries configured with filter-autorp option: 0
+        MoFRR: Disabled
+    '''}
+
+    golden_parsed_output2 = {
+        "vrf": {
+            "VRF1": {
+                 "routing": True,
+                 "route_limit": "no limit",
+                 "multipath": False,
+                 "mo_frr": False,
+                 "fallback_group_mode": "sparse",
+                 "multicast_bound_with_filter_autorp": 0
+            }}}
+
+    golden_output2 = {'execute.return_value': '''\
+          Multicast Routing: enabled
+          Multicast Multipath: disabled
+          Multicast Route limit: No limit
+          Multicast Fallback group mode: Sparse
+          Number of multicast boundaries configured with filter-autorp option: 0
+          MoFRR: Disabled
+
+    '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowIpMulticast(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_vrf_default(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpMulticast(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_vrf_non_default(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIpMulticast(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 
 if __name__ == '__main__':
