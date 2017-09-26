@@ -50,7 +50,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                                "uptime": "00:00:03",
                                                "incoming_interface_list": {
                                                     "Loopback0": {
-                                                         "rpf_info": "Registering",
+                                                         "rpf_info": "registering",
                                                          "rpf_nbr": "0.0.0.0"
                                                     }
                                                }
@@ -61,7 +61,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                                "uptime": "00:00:03",
                                                "incoming_interface_list": {
                                                     "GigabitEthernet2": {
-                                                         "rpf_info": "Registering",
+                                                         "rpf_info": "registering",
                                                          "rpf_nbr": "0.0.0.0"
                                                     }
                                                }
@@ -76,7 +76,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                                     "Loopback0": {
                                                          "expire": "00:02:56",
                                                          "uptime": "2d09h",
-                                                         "state_mode": "Forward/Sparse"
+                                                         "state_mode": "forward/sparse"
                                                     }
                                                },
                                                "flags": "SCL",
@@ -99,7 +99,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                                          "expire": "00:02:53",
                                                          "uptime": "00:03:57",
                                                          "vcd": "14",
-                                                         "state_mode": "Forward/Sparse"
+                                                         "state_mode": "forward/sparse"
                                                     }
                                                },
                                                "flags": "SJ",
@@ -165,7 +165,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                                "flags": "PFT",
                                                "incoming_interface_list": {
                                                     "Loopback1": {
-                                                         "rpf_info": "Registering",
+                                                         "rpf_info": "registering",
                                                          "rpf_nbr": "0.0.0.0"
                                                     }
                                                }
@@ -195,7 +195,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                                },
                                                "outgoing_interface_list": {
                                                     "Loopback1": {
-                                                         "state_mode": "Forward/Sparse",
+                                                         "state_mode": "forward/sparse",
                                                          "uptime": "00:08:58",
                                                          "expire": "00:02:52"
                                                     }
@@ -277,7 +277,7 @@ class test_show_ipv6_mroute(unittest.TestCase):
                                           "2001:DB8:999::99": {
                                                "outgoing_interface_list": {
                                                     "POS4/0": {
-                                                         "state_mode": "Forward",
+                                                         "state_mode": "forward",
                                                          "uptime": "00:02:06",
                                                          "expire": "00:03:27"
                                                     }
@@ -294,7 +294,7 @@ class test_show_ipv6_mroute(unittest.TestCase):
                                           "*": {
                                                "outgoing_interface_list": {
                                                     "POS4/0": {
-                                                         "state_mode": "Forward",
+                                                         "state_mode": "forward",
                                                          "uptime": "00:04:45",
                                                          "expire": "00:02:47"
                                                     }
@@ -341,7 +341,7 @@ class test_show_ipv6_mroute(unittest.TestCase):
                                           "2001:DB8:999::99": {
                                                "outgoing_interface_list": {
                                                     "POS4/0": {
-                                                         "state_mode": "Forward",
+                                                         "state_mode": "forward",
                                                          "uptime": "00:02:06",
                                                          "expire": "00:03:27"
                                                     }
@@ -358,7 +358,7 @@ class test_show_ipv6_mroute(unittest.TestCase):
                                           "*": {
                                                "outgoing_interface_list": {
                                                     "POS4/0": {
-                                                         "state_mode": "Forward",
+                                                         "state_mode": "forward",
                                                          "uptime": "00:04:45",
                                                          "expire": "00:02:47"
                                                     }
@@ -492,7 +492,7 @@ class test_show_ip_multicast(unittest.TestCase):
     golden_parsed_output = {
         "vrf": {
             "default": {
-                 "routing": True,
+                 "enable": True,
                  "route_limit": "no limit",
                  "multipath": True,
                  "mo_frr": False,
@@ -512,7 +512,7 @@ class test_show_ip_multicast(unittest.TestCase):
     golden_parsed_output2 = {
         "vrf": {
             "VRF1": {
-                 "routing": True,
+                 "enable": True,
                  "route_limit": "no limit",
                  "multipath": False,
                  "mo_frr": False,

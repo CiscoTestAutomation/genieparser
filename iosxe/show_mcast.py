@@ -175,7 +175,8 @@ class ShowIpMroute(ShowIpMrouteSchema):
                     sub_dict['incoming_interface_list'][incoming_interface] = {}
                 sub_dict['incoming_interface_list'][incoming_interface]['rpf_nbr'] = rpf_nbr
                 if rpf_info:
-                    sub_dict['incoming_interface_list'][incoming_interface]['rpf_info'] = rpf_info
+                    sub_dict['incoming_interface_list'][incoming_interface]\
+                        ['rpf_info'] = rpf_info.lower()
                 continue
 
             # Incoming interface:Tunnel5
@@ -230,7 +231,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
                 outgoing_interface = m.groupdict()['outgoing_interface']
                 vcd = m.groupdict()['vcd']
                 uptime = m.groupdict()['uptime']
-                state_mode = m.groupdict()['state_mode']
+                state_mode = m.groupdict()['state_mode'].lower()
                 expire = m.groupdict()['expire']
                 flags = m.groupdict()['flags']
 
@@ -354,7 +355,7 @@ class ShowIpMulticastSchema(MetaParser):
     schema = {'vrf': 
                 {Any():
                     {
-                    'routing': bool,
+                    'enable': bool,
                     'multipath': bool,
                     'route_limit': str,
                     'fallback_group_mode': str,
@@ -393,9 +394,9 @@ class ShowIpMulticast(ShowIpMulticastSchema):
                     ret_dict['vrf'][vrf] = {}
 
                 if 'enabled' in status:
-                    ret_dict['vrf'][vrf]['routing'] = True
+                    ret_dict['vrf'][vrf]['enable'] = True
                 else:
-                    ret_dict['vrf'][vrf]['routing'] = False
+                    ret_dict['vrf'][vrf]['enable'] = False
                 continue
 
             # Multicast Multipath: enabled
