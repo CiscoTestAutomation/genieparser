@@ -173,13 +173,13 @@ class test_show_pim_vrf_mstatic(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 
-# ===================================================
-#  Unit test for 'show pim vrf <WORD> <WORD> mstatic'
-# ===================================================
+# ============================================================
+#  Unit test for 'show pim vrf <WORD> <WORD> interface detail'
+# ============================================================
 
-class test_show_pim_vrf_mstatic(unittest.TestCase):
+class test_show_pim_vrf_interface_detail(unittest.TestCase):
 
-    '''Unit test for 'show pim vrf <WORD> <WORD> mstatic'''
+    '''Unit test for 'show pim vrf <WORD> <WORD> interface detail'''
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -377,20 +377,20 @@ class test_show_pim_vrf_mstatic(unittest.TestCase):
             Neighbor Filter : -
         '''}
 
-    def test_show_pim_vrf_mstatic_empty(self):
+    def test_show_pim_vrf_interface_detail_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowPimVrfInterfaceDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    def test_show_pim_vrf_default_ipv4_mstatic_golden1(self):
+    def test_show_pim_vrf_default_ipv4_interface_detail_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowPimVrfInterfaceDetail(device=self.device)
         parsed_output = obj.parse(vrf='default', af='ipv4')
         self.assertEqual(parsed_output,self.golden_parsed_output1)
 
-    def test_show_pim_vrf_default_ipv6_mstatic_golden2(self):
+    def test_show_pim_vrf_default_ipv6_interface_detail_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowPimVrfInterfaceDetail(device=self.device)
