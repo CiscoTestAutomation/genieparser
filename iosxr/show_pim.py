@@ -118,7 +118,35 @@ class ShowPimVrfInterfaceDetailSchema(MetaParser):
 
     '''Schema for show pim vrf <WORD> <WORD> interface detail'''
 
-    schema = {}
+    schema = {
+        'vrf':
+            {Any():
+                {'address_family': 
+                    {Any(): 
+                        {'enable': bool,
+                        'interface': 
+                            {Any(): 
+                                {'pim_state': str,
+                                'nbr_count': int,
+                                'nbr_count': int,
+                                'hello_interval': int,
+                                'dr_prior': int,
+                                'primary_address': str,
+                                Optional('address'): str,
+                                'flags': str,
+                                'bfd': str,
+                                'dr': str,
+                                'propagation_delay': int,
+                                'override_interval': int,
+                                'hello_timer': str,
+                                'neighbor_filter': str,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
 
 class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
 
@@ -135,8 +163,31 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
             line = line.rstrip()
 
             # PIM interfaces in VRF default
+            p1 = re.compile(r'^\s*PIM +interfaces +in +VRF'
+                             ' +(?P<vrf_name>[a-zA-Z0-9\-]+)$')
+            m = p1.match(line)
+            if m:
+                vrf_name = str(m.groupdict()['vrf_name'])
+                if 'vrf' not in parsed_dict:
+                    parsed_dict['vrf'] = {}
+                if vrf == vrf_name and vrf_name not in parsed_dict['vrf']:
+                    parsed_dict['vrf'][vrf_name] = {}
+                if 'address_family' not in parsed_dict['vrf'][vrf_name]:
+                    parsed_dict['vrf'][vrf_name]['address_family'] = {}
+                if af not in parsed_dict['vrf'][vrf_name]['address_family']:
+                    parsed_dict['vrf'][vrf_name]['address_family'][af] = {}
+                # Set enable
+                parsed_dict['vrf'][vrf_name]['address_family'][af]['enable'] = False
+                continue
 
             # IP PIM Multicast Interface State
+            p2 = re.compile(r'^\s*IP +PIM +Multicast +Interface +State$')
+            m = p2.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family']\
+                    [af]['enable'] = True
+                continue
+
             # Flag: B - Bidir enabled, NB - Bidir disabled
             #       P - PIM Proxy enabled, NP - PIM Proxy disabled
             #       A - PIM Assert batching capable, NA - PIM Assert batching incapable
@@ -144,18 +195,117 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
             # Interface                  PIM  Nbr   Hello  DR
             #                                 Count Intvl  Prior
 
-            # Loopback0                   on   1     30     1     
+            # Loopback0                   on   1     30     1
+            p3 = re.compile(r'^\s*(?P<interface>(\S+)) +(?P<pim_state>(\S+))'
+                             ' +(?P<nbr_count>[0-9]+)'
+                             ' +(?P<hello_interval>[0-9]+)'
+                             ' +(?P<dr_prior>[0-9]+)$')
+            m = p3.match(line)
+            if m:
+                # Get values
+                interface = m.groupdict()['interface']
+                pim_state = m.groupdict()['pim_state']
+                nbr_count = int(m.groupdict()['nbr_count'])
+                hello_interval = int(m.groupdict()['hello_interval'])
+                dr_prior = int(m.groupdict()['dr_prior'])
+                if 'interface' not in parsed_dict['vrf'][vrf_name]\
+                        ['address_family'][af]:
+                    parsed_dict['vrf'][vrf_name]['address_family'][af]\
+                        ['interface'] = {}
+                if interface not in parsed_dict['vrf'][vrf_name]\
+                        ['address_family'][af]['interface']:
+                    parsed_dict['vrf'][vrf_name]['address_family'][af]\
+                        ['interface'][interface] = {}
+                # Set values
+                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
+                    [interface]['pim_state'] = pim_state
+                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
+                    [interface]['nbr_count'] = nbr_count
+                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
+                    [interface]['hello_interval'] = hello_interval
+                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
+                    [interface]['dr_prior'] = dr_prior
+                continue
 
             # Primary Address : fe80::85c6:bdff:fe62:61e
+            p4 = re.compile(r'^\s*Primary +Address *:'
+                             ' +(?P<primary_address>(\S+))$')
+            m = p4.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
+                    [interface]['primary_address'] = \
+                        m.groupdict()['primary_address']
+                continue
+            
             # Address : 2001:db8:2:2::2
+            p5 = re.compile(r'^\s*Address *: +(?P<address>(\S+))$')
+            m = p5.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
+                    [interface]['address'] = m.groupdict()['address']
+                continue
+
             # Flags : B P NA V
+            p6 = re.compile(r'^\s*Flags *: +(?P<flags>[a-zA-Z\s]+)$')
+            m = p6.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
+                    [interface]['flags'] = m.groupdict()['flags']
+                continue
+
             # BFD : Off/150 ms/3
+            p7 = re.compile(r'^\s*BFD *: (?P<bfd>[a-zA-Z0-9\/\s\-\_]+)$')
+            m = p7.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
+                    [interface]['bfd'] = m.groupdict()['bfd']
+                continue
+
             # DR : this system
+            p8 = re.compile(r'^\s*DR *: (?P<dr>[a-zA-Z\s]+)$')
+            m = p8.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
+                    [interface]['dr'] = m.groupdict()['dr']
+                continue
 
             # Propagation delay : 500
+            p9 = re.compile(r'^\s*Propagation +delay *:'
+                             ' +(?P<propagation_delay>[0-9]+)$')
+            m = p9.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
+                    [interface]['propagation_delay'] = \
+                        int(m.groupdict()['propagation_delay'])
+                continue
+
             # Override Interval : 2500
+            p10 = re.compile(r'^\s*Override +Interval *:'
+                              ' +(?P<override_interval>[0-9]+)$')
+            m = p10.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
+                    [interface]['override_interval'] = \
+                        int(m.groupdict()['override_interval'])
+                continue
+
             # Hello Timer : 00:00:19
+            p11 = re.compile(r'^\s*Hello +Timer *: +(?P<hello_timer>(\S+))$')
+            m = p11.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
+                    [interface]['hello_timer'] = m.groupdict()['hello_timer']
+                continue
+
             # Neighbor Filter : -
+            p12 = re.compile(r'^\s*Neighbor +Filter *:'
+                              ' +(?P<neighbor_filter>(\S+))$')
+            m = p12.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
+                    [interface]['neighbor_filter'] = \
+                        m.groupdict()['neighbor_filter']
+                continue
 
         return parsed_dict
 
