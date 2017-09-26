@@ -173,6 +173,231 @@ class test_show_pim_vrf_mstatic(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 
+# ===================================================
+#  Unit test for 'show pim vrf <WORD> <WORD> mstatic'
+# ===================================================
+
+class test_show_pim_vrf_mstatic(unittest.TestCase):
+
+    '''Unit test for 'show pim vrf <WORD> <WORD> mstatic'''
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'enable': True,
+                        'interface': 
+                            {'GigabitEthernet0/0/0/0': 
+                                {'bfd': 'Off/150 ms/3',
+                                'dr': 'this system',
+                                'dr_prior': 1,
+                                'flags': 'B P',
+                                'hello_interval': 30,
+                                'hello_timer': '00:00:01',
+                                'nbr_count': 1,
+                                'neighbor_filter': '-',
+                                'override_interval': 2500,
+                                'pim_state': 'on',
+                                'primary_address': '10.2.3.2',
+                                'propagation_delay': 500},
+                            'GigabitEthernet0/0/0/1': 
+                                {'bfd': 'Off/150 ms/3',
+                                'dr': 'this system',
+                                'dr_prior': 1,
+                                'flags': 'NB P',
+                                'hello_interval': 30,
+                                'hello_timer': '00:00:07',
+                                'nbr_count': 2,
+                                'neighbor_filter': '-',
+                                'override_interval': 2500,
+                                'pim_state': 'on',
+                                'primary_address': '10.1.2.2',
+                                'propagation_delay': 500},
+                            'Loopback0': 
+                                {'bfd': 'Off/150 ms/3',
+                                'dr': 'this system',
+                                'dr_prior': 1,
+                                'flags': 'B P V',
+                                'hello_interval': 30,
+                                'hello_timer': '00:00:15',
+                                'nbr_count': 1,
+                                'neighbor_filter': '-',
+                                'override_interval': 2500,
+                                'pim_state': 'on',
+                                'primary_address': '2.2.2.2',
+                                'propagation_delay': 500}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        RP/0/0/CPU0:R2#show pim vrf default ipv4 interface detail
+        Mon May 29 14:41:28.444 UTC
+
+        PIM interfaces in VRF default
+        IP PIM Multicast Interface State
+        Flag: B - Bidir enabled, NB - Bidir disabled
+              P - PIM Proxy enabled, NP - PIM Proxy disabled
+              V - Virtual Interface
+        BFD State - State/Interval/Multiplier
+
+        Interface                  PIM  Nbr   Hello  DR
+                                        Count Intvl  Prior
+
+        Loopback0                   on   1     30     1     
+            Primary Address : 2.2.2.2
+                      Flags : B P V
+                        BFD : Off/150 ms/3
+                         DR : this system
+          Propagation delay : 500
+          Override Interval : 2500
+                Hello Timer : 00:00:15
+            Neighbor Filter : -
+
+        GigabitEthernet0/0/0/0      on   1     30     1     
+            Primary Address : 10.2.3.2
+                      Flags : B P 
+                        BFD : Off/150 ms/3
+                         DR : this system
+          Propagation delay : 500
+          Override Interval : 2500
+                Hello Timer : 00:00:01
+            Neighbor Filter : -
+
+        GigabitEthernet0/0/0/1      on   2     30     1     
+            Primary Address : 10.1.2.2
+                      Flags : NB P 
+                        BFD : Off/150 ms/3
+                         DR : this system
+          Propagation delay : 500
+          Override Interval : 2500
+                Hello Timer : 00:00:07
+            Neighbor Filter : -
+        '''}
+
+    golden_parsed_output2 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv6': 
+                        {'enable': True,
+                        'interface': 
+                            {'GigabitEthernet0/0/0/0': 
+                                {'address': '2001:db8:2:3::2',
+                                'bfd': 'Off/150 ms/3',
+                                'dr': 'this system',
+                                'dr_prior': 1,
+                                'flags': 'B P NA',
+                                'hello_interval': 30,
+                                'hello_timer': '00:00:22',
+                                'nbr_count': 1,
+                                'neighbor_filter': '-',
+                                'override_interval': 2500,
+                                'pim_state': 'on',
+                                'primary_address': 'fe80::5054:ff:fee4:f669',
+                                'propagation_delay': 500},
+                            'GigabitEthernet0/0/0/1': 
+                                {'address': '2001:db8:1:2::2',
+                                'bfd': 'Off/150 ms/3',
+                                'dr': 'this system',
+                                'dr_prior': 1,
+                                'flags': 'B P NA',
+                                'hello_interval': 30,
+                                'hello_timer': '00:00:02',
+                                'nbr_count': 1,
+                                'neighbor_filter': '-',
+                                'override_interval': 2500,
+                                'pim_state': 'on',
+                                'primary_address': 'fe80::5054:ff:feac:64b3',
+                                'propagation_delay': 500},
+                            'Loopback0': 
+                                {'address': '2001:db8:2:2::2',
+                                'bfd': 'Off/150 ms/3',
+                                'dr': 'this system',
+                                'dr_prior': 1,
+                                'flags': 'B P NA V',
+                                'hello_interval': 30,
+                                'hello_timer': '00:00:19',
+                                'nbr_count': 1,
+                                'neighbor_filter': '-',
+                                'override_interval': 2500,
+                                'pim_state': 'on',
+                                'primary_address': 'fe80::85c6:bdff:fe62:61e',
+                                'propagation_delay': 500}}}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        RP/0/0/CPU0:R2#show pim vrf default ipv6 interface detail
+        Mon May 29 14:41:52.972 UTC
+
+        PIM interfaces in VRF default
+        IP PIM Multicast Interface State
+        Flag: B - Bidir enabled, NB - Bidir disabled
+              P - PIM Proxy enabled, NP - PIM Proxy disabled
+              A - PIM Assert batching capable, NA - PIM Assert batching incapable
+              V - Virtual Interface
+
+        Interface                  PIM  Nbr   Hello  DR
+                                        Count Intvl  Prior
+
+        Loopback0                   on   1     30     1     
+            Primary Address : fe80::85c6:bdff:fe62:61e
+                    Address : 2001:db8:2:2::2
+                      Flags : B P NA V
+                        BFD : Off/150 ms/3
+                         DR : this system
+
+          Propagation delay : 500
+          Override Interval : 2500
+                Hello Timer : 00:00:19
+            Neighbor Filter : -
+
+        GigabitEthernet0/0/0/0      on   1     30     1     
+            Primary Address : fe80::5054:ff:fee4:f669
+                    Address : 2001:db8:2:3::2
+                      Flags : B P NA 
+                        BFD : Off/150 ms/3
+                         DR : this system
+
+          Propagation delay : 500
+          Override Interval : 2500
+                Hello Timer : 00:00:22
+            Neighbor Filter : -
+
+        GigabitEthernet0/0/0/1      on   1     30     1     
+            Primary Address : fe80::5054:ff:feac:64b3
+                    Address : 2001:db8:1:2::2
+                      Flags : B P NA 
+                        BFD : Off/150 ms/3
+                         DR : this system
+
+          Propagation delay : 500
+          Override Interval : 2500
+                Hello Timer : 00:00:02
+            Neighbor Filter : -
+        '''}
+
+    def test_show_pim_vrf_mstatic_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowPimVrfInterfaceDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_pim_vrf_default_ipv4_mstatic_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowPimVrfInterfaceDetail(device=self.device)
+        parsed_output = obj.parse(vrf='default', af='ipv4')
+        self.assertEqual(parsed_output,self.golden_parsed_output1)
+
+    def test_show_pim_vrf_default_ipv6_mstatic_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowPimVrfInterfaceDetail(device=self.device)
+        parsed_output = obj.parse(vrf='default', af='ipv6')
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+
 # =======================================================
 #  Unit test for 'show pim vrf <WORD> <WORD> rpf summary'
 # =======================================================
