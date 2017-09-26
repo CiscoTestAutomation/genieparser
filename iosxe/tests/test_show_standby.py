@@ -9,7 +9,8 @@ from ats.topology import Device
 
 # Parser
 from parser.iosxe.show_standby import ShowStandbyInternal,\
-                                                 ShowStandbyAll
+                                      ShowStandbyAll,\
+                                      ShowStandbyDelay
 
 # Metaparser
 from metaparser.util.exceptions import SchemaEmptyParserError
@@ -314,6 +315,42 @@ class test_show_standby_all(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = standby_all_obj.parse()
 
+# =========================================
+#   Unit test for 'show standby delay'
+# =========================================
+
+class test_show_standby_delay(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = \
+    {
+      "GigabitEthernet1": {
+        "delay": {
+          "minimum_delay": 99,
+          "reload_delay": 888
+        }
+      }
+    }
+
+    golden_output = {'execute.return_value': '''
+    Interface          Minimum Reload 
+    GigabitEthernet1   99      888   
+    '''}
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        standby_delay_obj = ShowStandbyDelay(device=self.device)
+        parsed_output = standby_delay_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        standby_delay_obj = ShowStandbyDelay(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = standby_delay_obj.parse()
 
 if __name__ == '__main__':
     unittest.main()
