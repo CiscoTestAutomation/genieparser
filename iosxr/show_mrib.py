@@ -42,7 +42,6 @@ class ShowMribVrfRouteSchema(MetaParser):
                                                 {'uptime': str,
                                                 'flags': str,
                                                 Optional('rpf_nbr'): str,
-                                                Optional('rpf_info'): str,
                                                 },
                                             },
                                         Optional('outgoing_interface_list'): 
@@ -71,6 +70,7 @@ class ShowMribVrfRoute(ShowMribVrfRouteSchema):
         
         # Init vars
         parsed_dict = {}
+        rpf_nbr = ''
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -133,7 +133,8 @@ class ShowMribVrfRoute(ShowMribVrfRouteSchema):
                              ' +Flags: (?P<flags>[a-zA-Z\s]+)$')
             m = p2.match(line)
             if m:
-                sub_dict['rpf_nbr'] = m.groupdict()['rpf_nbr']
+                rpf_nbr = m.groupdict()['rpf_nbr']
+                sub_dict['rpf_nbr'] = rpf_nbr
                 sub_dict['flags'] = m.groupdict()['flags']
                 continue
 
@@ -224,6 +225,8 @@ class ShowMribVrfRoute(ShowMribVrfRouteSchema):
                     sub_dict[intf_list_type][interface]['flags'] = flags
                 if uptime:
                     sub_dict[intf_list_type][interface]['uptime'] = uptime
+                if intf_list_type == 'incoming_interface_list' and rpf_nbr:
+                    sub_dict[intf_list_type][interface]['rpf_nbr'] = rpf_nbr
                     continue
 
         return parsed_dict

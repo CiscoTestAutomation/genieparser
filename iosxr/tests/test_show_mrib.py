@@ -66,7 +66,8 @@ class test_show_mrib_vrf_route(unittest.TestCase):
                                         'incoming_interface_list': 
                                             {'Loopback0': 
                                                 {'flags': 'F NS',
-                                                'uptime': '00:00:58'}},
+                                                'uptime': '00:00:58',
+                                                'rpf_nbr': '192.168.0.12',}},
                                         'mdt_ifh': '0x803380',
                                         'mvpn_payload': 'IPv4',
                                         'mvpn_remote_tid': '0x0',
@@ -100,7 +101,8 @@ class test_show_mrib_vrf_route(unittest.TestCase):
                                         'incoming_interface_list': 
                                             {'Loopback0': 
                                                 {'flags': 'F A',
-                                                'uptime': '00:00:54'}},
+                                                'uptime': '00:00:54',
+                                                'rpf_nbr': '192.168.0.12',}},
                                         'mdt_ifh': '0x803480',
                                         'mvpn_remote_tid': '0xe0800018',
                                         'mvpn_tid': '0xe0000018',
@@ -252,7 +254,8 @@ class test_show_mrib_vrf_route(unittest.TestCase):
                                         'incoming_interface_list': 
                                             {'GigabitEthernet150/0/0/6': 
                                                 {'flags': 'A',
-                                                'uptime': '00:02:53'}},
+                                                'uptime': '00:02:53',
+                                                'rpf_nbr': '1::1:1:1:2'}},
                                         'mt_slot': '0/2/CPU0',
                                         'outgoing_interface_list': 
                                             {'mdtvpn1': 
@@ -267,7 +270,8 @@ class test_show_mrib_vrf_route(unittest.TestCase):
                                         'incoming_interface_list': 
                                             {'mdtvpn1': 
                                                 {'flags': 'A MI',
-                                                'uptime': '00:03:35'}},
+                                                'uptime': '00:03:35',
+                                                'rpf_nbr': '::ffff:200.200.200.200'}},
                                         'outgoing_interface_list': 
                                             {'GigabitEthernet150/0/0/6': 
                                                 {'flags': 'F NS',
