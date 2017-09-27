@@ -10,8 +10,7 @@ from metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
 # Parser
-from parser.iosxe.show_rpf import ShowIpRpf,\
-                                    ShowIpv6Rpf
+from parser.iosxe.show_rpf import ShowIpRpf, ShowIpv6Rpf
 
 
 # =============================================
@@ -36,11 +35,11 @@ class test_show_ip_rpf(unittest.TestCase):
                            "interface_name": "BRI0",
                            "originated_topology": "ipv4 unicast base",
                            "lookup_topology": "ipv4 multicast base",
-                           "route_mask": "172.16.0.0/255.255.0.0",
+                           "route_mask": "172.16.0.0/16",
                            "table_type": "unicast"
                       }
                  },
-                 "host": "host1"
+                 "source_host": "host1"
             }}}
 
     golden_output = {'execute.return_value': '''\
@@ -57,7 +56,7 @@ class test_show_ip_rpf(unittest.TestCase):
     golden_parsed_output2 = {
         "vrf": {
             "VRF1": {
-                 "host": "?",
+                 "source_host": "?",
                  "source_address": "10.1.1.100",
                  "path": {
                       "10.1.1.5 Ethernet3/0": {

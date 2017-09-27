@@ -3,9 +3,9 @@
 IOSXE parsers for the following show commands:
 
     * show ip rpf <mroute address>
-    * show ip rpf vrf xxx <mroute address>
+    * show ip rpf vrf <WORD> <mroute address>
     * show ipv6 rpf <mroute address>
-    * show ipv6 rpf vrf xxx <mroute address>
+    * show ipv6 rpf vrf <WORD> <mroute address>
 
 '''
 
@@ -18,20 +18,20 @@ from metaparser.util.schemaengine import Schema, Any, Optional
 
 
 # ==============================================
-# Parser for 'show ip rpf <x.x.x.x>'
-# Parser for 'show ip rpf vrf xxx <x.x.x.x>'
+# Parser for 'show ip rpf <mroute address>'
+# Parser for 'show ip rpf vrf <WORD> <mroute address>'
 # ==============================================
 
 class ShowIpRpfSchema(MetaParser):
-    # Parser for 'show ip rpf <x.x.x.x>'
-    # Parser for 'show ip rpf vrf xxx <x.x.x.x>'
-    # Parser for 'show ipv6 rpf <x:x::x:x>>'
-    # Parser for 'show ipv6 rpf vrf xxx <x:x::x:x>'
+    # Schema for 'show ip rpf <mroute address>'
+    # Schema for 'show ip rpf vrf <WORD> <mroute address>'
+    # Schema for 'show ipv6 rpf <mroute address>'
+    # Schema for 'show ipv6 rpf vrf <WORD> <mroute address>'
 
     schema = {'vrf':         
                 {Any(): {
                     'source_address': str,
-                    Optional('host'): str,
+                    Optional('source_host'): str,
                     'path':
                         {Any():
                             {'neighbor_address': str,
@@ -107,7 +107,7 @@ class ShowIpRpf(ShowIpRpfSchema):
                     ret_dict['vrf'][vrf] = {}
 
                 ret_dict['vrf'][vrf]['source_address'] = mroute
-                ret_dict['vrf'][vrf]['host'] = host
+                ret_dict['vrf'][vrf]['source_host'] = host
                 continue
 
             # RPF interface: BRI0
@@ -159,12 +159,19 @@ class ShowIpRpf(ShowIpRpfSchema):
                 continue
 
             # RPF route/mask: 10.1.1.0/24
+            # RPF route/mask: 172.16.0.0/255.255.0.0
             p4 = re.compile(r'^RPF +route\/mask:'
-                             ' +(?P<route>[\w\/\:\.]+)$')
+                             ' +(?P<route>[\w\/\:\.]+)\/(?P<mask>[\d\:\.]+)$')
             m = p4.match(line)
             if m:
                 route = m.groupdict()['route']
-                ret_dict['vrf'][vrf]['path'][path]['route_mask'] = route
+                mask = m.groupdict()['mask']
+
+                # convert 255.255.0.0 to 16
+                if '.' in mask:
+                    mask = sum([bin(int(x)).count("1") for x in mask.split(".")])
+
+                ret_dict['vrf'][vrf]['path'][path]['route_mask'] = '{r}/{m}'.format(r=route, m=mask)
                 continue
 
             # RPF type: Mroute
@@ -255,8 +262,8 @@ class ShowIpRpf(ShowIpRpfSchema):
 
 
 # ===========================================
-# Parser for 'show ipv6 rpf <x:x::x:x>>'
-# Parser for 'show ipv6 rpf vrf xxx <x:x::x:x>'
+# Parser for 'show ipv6 rpf <mroute address>'
+# Parser for 'show ipv6 rpf vrf <WORD> <mroute address>'
 # ===========================================
 class ShowIpv6Rpf(ShowIpRpf):
     def cli(self, mroute, vrf=''):
