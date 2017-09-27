@@ -129,9 +129,12 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
                              ' +V6-Listen: +(?P<v6_listen>[0-9]+)$')
             m = p6.match(line)
             if m:
-                hsrp_summary['stats']['v6_active'] = int(m.groupdict()['v6_active'])
-                hsrp_summary['stats']['v6_standby'] = int(m.groupdict()['v6_standby'])
-                hsrp_summary['stats']['v6_listen'] = int(m.groupdict()['v6_listen'])
+                hsrp_summary['stats']['v6_active'] \
+                    = int(m.groupdict()['v6_active'])
+                hsrp_summary['stats']['v6_standby'] \
+                    = int(m.groupdict()['v6_standby'])
+                hsrp_summary['stats']['v6_listen'] \
+                    = int(m.groupdict()['v6_listen'])
                 continue
 
             # Total HSRP Enabled interfaces: 1
@@ -149,15 +152,18 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
             if m:
                 if 'total_packets' not in hsrp_summary:
                     hsrp_summary['total_packets'] = {}
-                hsrp_summary['total_packets']['tx_pass'] = int(m.groupdict()['tx_pass'])
-                hsrp_summary['total_packets']['tx_fail'] = int(m.groupdict()['tx_fail'])
+                hsrp_summary['total_packets']['tx_pass'] \
+                    = int(m.groupdict()['tx_pass'])
+                hsrp_summary['total_packets']['tx_fail'] \
+                    = int(m.groupdict()['tx_fail'])
                 continue
 
             # Rx - Good: 0
             p9 = re.compile(r'\s*Rx +\- +Good: +(?P<rx_good>[0-9]+)$')
             m = p9.match(line)
             if m:
-                hsrp_summary['total_packets']['rx_good'] = int(m.groupdict()['rx_good'])
+                hsrp_summary['total_packets']['rx_good'] \
+                    = int(m.groupdict()['rx_good'])
                 continue
 
             # Packet for unknown groups: 0
@@ -186,162 +192,162 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
 class ShowHsrpAllSchema(MetaParser):
     
     schema = {
+        Any(): {
+            'address_family': {
                 Any(): {
-                    'address_family': {
+                    'version': {
                         Any(): {
-                            'version': {
+                            'groups': {
                                 Any(): {
-                                    'groups': {
-                                        Any(): {
-                                            'group_number': int,
-                                            Optional('tracked_objects'): {
-                                                Optional(Any()): {
-                                                    Optional('object_name'): int,
-                                                    Optional('status'): str,
-                                                    Optional('priority_decrement'): int,
-                                                }
-                                            },
-                                            Optional('hsrp_router_state'): str,
-                                            Optional('hsrp_router_state_reason'): str,
-                                            Optional('priority'): int,
-                                            Optional('configured_priority'): int,
-                                            Optional('preempt'): bool,
-                                            Optional('preempt_reload_delay'): int,
-                                            Optional('preempt_min_delay'): int,
-                                            Optional('preempt_sync_delay'): int,
-                                            'upper_fwd_threshold': int,
-                                            'lower_fwd_threshold': int,
-                                            Optional('timers'): {
-                                                Optional('hello_msec_flag'): bool,
-                                                Optional('hello_msec'): int,
-                                                Optional('hello_sec'): int,
-                                                Optional('hold_msec_flag'): bool,
-                                                Optional('hold_msec'): int,
-                                                Optional('hold_sec'): int,
-                                                Optional('cfged_hello_unit'): str,
-                                                Optional('cfged_hello_interval'): int,
-                                                Optional('cfged_hold_unit'): str,
-                                                Optional('cfged_hold_interval'): int,
-                                            },
-                                            Optional('primary_ipv4_address'): {
-                                                Optional('virtual_ip_learn'): bool,
-                                                Optional('address'): str,
-                                            },
-                                            Optional('secondary_ipv4_addresses'): {
-                                                Optional(Any()): {
-                                                    Optional('address'): str,
-                                                }
-                                            },
-                                            Optional('link_local_ipv6_address'): {
-                                                Optional('address'): str,
-                                                Optional('auto_configure'): bool,
-                                            },
-                                            Optional('global_ipv6_addresses'): {
-                                                Optional(Any()): {
-                                                    'address': str,
-                                                }
-                                            },
-                                            'active_router': str,
-                                            'standby_router': str,
-                                            'virtual_mac_address': str,
-                                            'virtual_mac_address_status': str,
-                                            Optional('authentication'): str,
-                                            'num_state_changes': int,
-                                            'last_state_change': str,
-                                            Optional('session_name'): str,
-                                            Optional('active_priority'): int,
-                                            Optional('standby_priority'): int,
-                                            Optional('active_expire'): float,
-                                            Optional('standby_expire'): float,
-                                            Optional('secondary_vips'): list,
-                                            Optional('active_ip_address'): str,
-                                            Optional('active_ipv6_address'): str,
-                                            Optional('active_mac_address'): str,
-                                            Optional('standby_ip_address'): str,
-                                            Optional('standby_ipv6_address'): str,
-                                            Optional('standby_mac_address'): str,
+                                    'group_number': int,
+                                    Optional('tracked_objects'): {
+                                        Optional(Any()): {
+                                            Optional('object_name'): int,
+                                            Optional('status'): str,
+                                            Optional('priority_decrement'): int,
                                         }
                                     },
-                                    Optional('slave_groups'): {
+                                    Optional('hsrp_router_state'): str,
+                                    Optional('hsrp_router_state_reason'): str,
+                                    Optional('priority'): int,
+                                    Optional('configured_priority'): int,
+                                    Optional('preempt'): bool,
+                                    Optional('preempt_reload_delay'): int,
+                                    Optional('preempt_min_delay'): int,
+                                    Optional('preempt_sync_delay'): int,
+                                    'upper_fwd_threshold': int,
+                                    'lower_fwd_threshold': int,
+                                    Optional('timers'): {
+                                        Optional('hello_msec_flag'): bool,
+                                        Optional('hello_msec'): int,
+                                        Optional('hello_sec'): int,
+                                        Optional('hold_msec_flag'): bool,
+                                        Optional('hold_msec'): int,
+                                        Optional('hold_sec'): int,
+                                        Optional('cfged_hello_unit'): str,
+                                        Optional('cfged_hello_interval'): int,
+                                        Optional('cfged_hold_unit'): str,
+                                        Optional('cfged_hold_interval'): int,
+                                    },
+                                    Optional('primary_ipv4_address'): {
+                                        Optional('virtual_ip_learn'): bool,
+                                        Optional('address'): str,
+                                    },
+                                    Optional('secondary_ipv4_addresses'): {
                                         Optional(Any()): {
-                                            Optional('group_number'): int,
-                                            Optional('tracked_objects'): {
-                                                Optional(Any()): {
-                                                    Optional('object_name'): int,
-                                                    Optional('status'): str,
-                                                    Optional('priority_decrement'): int,
-                                                }
-                                            },
-                                            Optional('hsrp_router_state'): str,
-                                            Optional('hsrp_router_state_reason'): str,
-                                            Optional('priority'): int,
-                                            Optional('configured_priority'): int,
-                                            Optional('preempt'): bool,
-                                            Optional('preempt_reload_delay'): int,
-                                            Optional('preempt_min_delay'): int,
-                                            Optional('preempt_sync_delay'): int,
-                                            Optional('upper_fwd_threshold'): int,
-                                            Optional('lower_fwd_threshold'): int,
-                                            Optional('timers'): {
-                                                Optional('hello_msec_flag'): bool,
-                                                Optional('hello_msec'): int,
-                                                Optional('hello_sec'): int,
-                                                Optional('hold_msec_flag'): bool,
-                                                Optional('hold_msec'): int,
-                                                Optional('hold_sec'): int,
-                                                Optional('cfged_hello_unit'): str,
-                                                Optional('cfged_hello_interval'): int,
-                                                Optional('cfged_hold_unit'): str,
-                                                Optional('cfged_hold_interval'): int,
-                                            },
-                                            Optional('primary_ipv4_address'): {
-                                                Optional('virtual_ip_learn'): bool,
-                                                Optional('address'): str,
-                                            },
-                                            Optional('secondary_ipv4_addresses'): {
-                                                Optional(Any()): {
-                                                    Optional('address'): str,
-                                                }
-                                            },
-                                            Optional('link_local_ipv6_address'): {
-                                                Optional('address'): str,
-                                                Optional('auto_configure'): bool,
-                                            },
-                                            Optional('global_ipv6_addresses'): {
-                                                Optional(Any()): {
-                                                    Optional('address'): str,
-                                                }
-                                            },
-                                            Optional('active_router'): str,
-                                            Optional('standby_router'): str,
-                                            Optional('virtual_mac_address'): str,
-                                            Optional('virtual_mac_address_status'): str,
-                                            Optional('authentication'): str,
-                                            Optional('num_state_changes'): int,
-                                            Optional('last_state_change'): str,
-                                            Optional('session_name'): str,
-                                            Optional('active_priority'): int,
-                                            Optional('standby_priority'): int,
-                                            Optional('active_expire'): float,
-                                            Optional('standby_expire'): float,
-                                            Optional('secondary_vips'): list,
-                                            Optional('active_ip_address'): str,
-                                            Optional('active_ipv6_address'): str,
-                                            Optional('active_mac_address'): str,
-                                            Optional('standby_ip_address'): str,
-                                            Optional('standby_ipv6_address'): str,
-                                            Optional('standby_mac_address'): str,
-                                            Optional('follow'): str,
+                                            Optional('address'): str,
                                         }
-                                    }
+                                    },
+                                    Optional('link_local_ipv6_address'): {
+                                        Optional('address'): str,
+                                        Optional('auto_configure'): bool,
+                                    },
+                                    Optional('global_ipv6_addresses'): {
+                                        Optional(Any()): {
+                                            'address': str,
+                                        }
+                                    },
+                                    'active_router': str,
+                                    'standby_router': str,
+                                    'virtual_mac_address': str,
+                                    'virtual_mac_address_status': str,
+                                    Optional('authentication'): str,
+                                    'num_state_changes': int,
+                                    'last_state_change': str,
+                                    Optional('session_name'): str,
+                                    Optional('active_priority'): int,
+                                    Optional('standby_priority'): int,
+                                    Optional('active_expire'): float,
+                                    Optional('standby_expire'): float,
+                                    Optional('secondary_vips'): list,
+                                    Optional('active_ip_address'): str,
+                                    Optional('active_ipv6_address'): str,
+                                    Optional('active_mac_address'): str,
+                                    Optional('standby_ip_address'): str,
+                                    Optional('standby_ipv6_address'): str,
+                                    Optional('standby_mac_address'): str,
                                 }
                             },
-                        },
+                            Optional('slave_groups'): {
+                                Optional(Any()): {
+                                    Optional('group_number'): int,
+                                    Optional('tracked_objects'): {
+                                        Optional(Any()): {
+                                            Optional('object_name'): int,
+                                            Optional('status'): str,
+                                            Optional('priority_decrement'): int,
+                                        }
+                                    },
+                                    Optional('hsrp_router_state'): str,
+                                    Optional('hsrp_router_state_reason'): str,
+                                    Optional('priority'): int,
+                                    Optional('configured_priority'): int,
+                                    Optional('preempt'): bool,
+                                    Optional('preempt_reload_delay'): int,
+                                    Optional('preempt_min_delay'): int,
+                                    Optional('preempt_sync_delay'): int,
+                                    Optional('upper_fwd_threshold'): int,
+                                    Optional('lower_fwd_threshold'): int,
+                                    Optional('timers'): {
+                                        Optional('hello_msec_flag'): bool,
+                                        Optional('hello_msec'): int,
+                                        Optional('hello_sec'): int,
+                                        Optional('hold_msec_flag'): bool,
+                                        Optional('hold_msec'): int,
+                                        Optional('hold_sec'): int,
+                                        Optional('cfged_hello_unit'): str,
+                                        Optional('cfged_hello_interval'): int,
+                                        Optional('cfged_hold_unit'): str,
+                                        Optional('cfged_hold_interval'): int,
+                                    },
+                                    Optional('primary_ipv4_address'): {
+                                        Optional('virtual_ip_learn'): bool,
+                                        Optional('address'): str,
+                                    },
+                                    Optional('secondary_ipv4_addresses'): {
+                                        Optional(Any()): {
+                                            Optional('address'): str,
+                                        }
+                                    },
+                                    Optional('link_local_ipv6_address'): {
+                                        Optional('address'): str,
+                                        Optional('auto_configure'): bool,
+                                    },
+                                    Optional('global_ipv6_addresses'): {
+                                        Optional(Any()): {
+                                            Optional('address'): str,
+                                        }
+                                    },
+                                    Optional('active_router'): str,
+                                    Optional('standby_router'): str,
+                                    Optional('virtual_mac_address'): str,
+                                    Optional('virtual_mac_address_status'): str,
+                                    Optional('authentication'): str,
+                                    Optional('num_state_changes'): int,
+                                    Optional('last_state_change'): str,
+                                    Optional('session_name'): str,
+                                    Optional('active_priority'): int,
+                                    Optional('standby_priority'): int,
+                                    Optional('active_expire'): float,
+                                    Optional('standby_expire'): float,
+                                    Optional('secondary_vips'): list,
+                                    Optional('active_ip_address'): str,
+                                    Optional('active_ipv6_address'): str,
+                                    Optional('active_mac_address'): str,
+                                    Optional('standby_ip_address'): str,
+                                    Optional('standby_ipv6_address'): str,
+                                    Optional('standby_mac_address'): str,
+                                    Optional('follow'): str,
+                                }
+                            }
+                        }
                     },
-                    'interface': str,
-                    'use_bia': bool,
                 },
-            }
+            },
+            'interface': str,
+            'use_bia': bool,
+        },
+    }
 
 class ShowHsrpAll(ShowHsrpAllSchema):
 
@@ -363,17 +369,33 @@ class ShowHsrpAll(ShowHsrpAllSchema):
             if line == '' and flag == True:
                 if group_key:
                     if follow:
-                        if 'slave_groups' not in hsrp_all_dict[interface]['address_family'][address_family]['version'][version]:
-                            hsrp_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'] = {}
-                        if group_number not in hsrp_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups']:
-                            hsrp_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'][group_number] = {}
-                        hsrp_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'][group_number].update(group_key)
-                        hsrp_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'][group_number]['follow'] = follow
-                        del hsrp_all_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_number]
+                        if 'slave_groups' not in hsrp_all_dict[interface]\
+                            ['address_family'][address_family]['version']\
+                            [version]:
+                            hsrp_all_dict[interface]['address_family']\
+                                [address_family]['version'][version]\
+                                ['slave_groups'] = {}
+                        if group_number not in hsrp_all_dict[interface]\
+                            ['address_family'][address_family]['version']\
+                            [version]['slave_groups']:
+                            hsrp_all_dict[interface]['address_family']\
+                                [address_family]['version'][version]\
+                                ['slave_groups'][group_number] = {}
+                        hsrp_all_dict[interface]['address_family']\
+                            [address_family]['version'][version]\
+                            ['slave_groups'][group_number].update(group_key)
+                        hsrp_all_dict[interface]['address_family']\
+                            [address_family]['version'][version]\
+                            ['slave_groups'][group_number]['follow'] = follow
+                        del hsrp_all_dict[interface]['address_family']\
+                            [address_family]['version'][version]['groups']\
+                            [group_number]
                         follow = None
                         flag = False
                     else:
-                        hsrp_all_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_number].update(group_key)
+                        hsrp_all_dict[interface]['address_family']\
+                            [address_family]['version'][version]['groups']\
+                            [group_number].update(group_key)
                         group_key = {}
                         flag = False
 
@@ -393,21 +415,32 @@ class ShowHsrpAll(ShowHsrpAllSchema):
                 if 'address_family' not in hsrp_all_dict[interface]:
                     hsrp_all_dict[interface]['address_family'] = {}
                 address_family = m.groupdict()['address_family'].lower()
-                if address_family not in hsrp_all_dict[interface]['address_family']:
-                    hsrp_all_dict[interface]['address_family'][address_family] = {}
+                if address_family not in hsrp_all_dict[interface]\
+                    ['address_family']:
+                    hsrp_all_dict[interface]['address_family']\
+                        [address_family] = {}
 
-                if 'version' not in hsrp_all_dict[interface]['address_family'][address_family]:
-                    hsrp_all_dict[interface]['address_family'][address_family]['version'] = {}
+                if 'version' not in hsrp_all_dict[interface]['address_family']\
+                    [address_family]:
+                    hsrp_all_dict[interface]['address_family'][address_family]\
+                        ['version'] = {}
                 version = int(m.groupdict()['version'])
-                if version not in hsrp_all_dict[interface]['address_family'][address_family]['version']:
-                    hsrp_all_dict[interface]['address_family'][address_family]['version'][version] = {}
+                if version not in hsrp_all_dict[interface]['address_family']\
+                    [address_family]['version']:
+                    hsrp_all_dict[interface]['address_family'][address_family]\
+                        ['version'][version] = {}
 
-                if 'groups' not in hsrp_all_dict[interface]['address_family'][address_family]['version'][version]:
-                    hsrp_all_dict[interface]['address_family'][address_family]['version'][version]['groups'] = {}
+                if 'groups' not in hsrp_all_dict[interface]['address_family']\
+                    [address_family]['version'][version]:
+                    hsrp_all_dict[interface]['address_family'][address_family]\
+                        ['version'][version]['groups'] = {}
 
                 group_number = int(m.groupdict()['group_number'])
-                if group_number not in hsrp_all_dict[interface]['address_family'][address_family]['version'][version]['groups']:
-                    hsrp_all_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_number] = {}
+                if group_number not in hsrp_all_dict[interface]\
+                    ['address_family'][address_family]['version'][version]\
+                    ['groups']:
+                    hsrp_all_dict[interface]['address_family'][address_family]\
+                        ['version'][version]['groups'][group_number] = {}
                     group_key['group_number'] = group_number
 
                     # reset secondary flag
@@ -415,15 +448,18 @@ class ShowHsrpAll(ShowHsrpAllSchema):
                     continue
 
             p2 = re.compile(r'\s*Local +state +is'
-                             ' +(?P<hsrp_router_state>\S+)(\((?P<hsrp_router_state_reason>.+)\))?, +priority'
-                             ' +(?P<priority>[0-9]+)'' +\(Cfged'
+                             ' +(?P<hsrp_router_state>\S+)'
+                             '(\((?P<hsrp_router_state_reason>.+)\))?, '
+                             '+priority +(?P<priority>[0-9]+)'' +\(Cfged'
                              ' +(?P<configured_priority>[0-9]+)\)(?:,'
                              ' *(?P<preempt>[a-zA-Z]+) *preempt)?$')
             m = p2.match(line)
             if m:
-                group_key['hsrp_router_state'] = m.groupdict()['hsrp_router_state'].lower()
+                group_key['hsrp_router_state'] \
+                    = m.groupdict()['hsrp_router_state'].lower()
                 if m.groupdict()['hsrp_router_state_reason']:
-                    group_key['hsrp_router_state_reason'] = m.groupdict()['hsrp_router_state_reason'].lower()
+                    group_key['hsrp_router_state_reason'] \
+                        = m.groupdict()['hsrp_router_state_reason'].lower()
                 priority = int(m.groupdict()['priority'])
                 group_key['priority'] = priority
                 group_key['configured_priority'] = \
@@ -462,7 +498,11 @@ class ShowHsrpAll(ShowHsrpAllSchema):
             # Hellotime 1 sec, holdtime 3 sec
             # Hellotime 299 msec, holdtime 2222 msec
             # Hellotime 999 msec (cfged 9 sec), holdtime 2999 msec (cfged 27 sec)
-            p5 = re.compile(r'\s*Hellotime +(?P<hello>[0-9]+) (?P<hello_unit>\S+)( \(cfged (?P<cfged_hello>\d+) (?P<cfged_hello_unit>\S+)\))?, +holdtime +(?P<hold>[0-9]+) +(?P<hold_unit>\S+)( \(cfged (?P<cfged_hold>\d+) (?P<cfged_hold_unit>\S+)\))?$')
+            p5 = re.compile(r'\s*Hellotime +(?P<hello>[0-9]+) '
+                '(?P<hello_unit>\S+)( \(cfged (?P<cfged_hello>\d+) '
+                '(?P<cfged_hello_unit>\S+)\))?, +holdtime +(?P<hold>[0-9]+) +'
+                '(?P<hold_unit>\S+)( \(cfged (?P<cfged_hold>\d+) '
+                '(?P<cfged_hold_unit>\S+)\))?$')
             m = p5.match(line)
             if m:
                 if 'timers' not in group_key:
@@ -472,31 +512,43 @@ class ShowHsrpAll(ShowHsrpAllSchema):
                 if hello_unit == 'sec' and hold_unit == 'sec':
                     group_key['timers']['hello_msec_flag'] = False
                     group_key['timers']['hold_msec_flag'] = False
-                    group_key['timers']['hello_sec'] = int(m.groupdict()['hello'])
-                    group_key['timers']['hold_sec'] = int(m.groupdict()['hold'])
+                    group_key['timers']['hello_sec'] \
+                        = int(m.groupdict()['hello'])
+                    group_key['timers']['hold_sec'] \
+                        = int(m.groupdict()['hold'])
                 elif hello_unit == 'msec' and hold_unit == 'sec':
                     group_key['timers']['hello_msec_flag'] = True
                     group_key['timers']['hold_msec_flag'] = False
-                    group_key['timers']['hello_msec'] = int(m.groupdict()['hello'])
-                    group_key['timers']['hold_sec'] = int(m.groupdict()['hold'])
+                    group_key['timers']['hello_msec'] \
+                        = int(m.groupdict()['hello'])
+                    group_key['timers']['hold_sec'] \
+                        = int(m.groupdict()['hold'])
                 elif hello_unit == 'sec' and hold_unit == 'msec':
                     group_key['timers']['hello_msec_flag'] = False
                     group_key['timers']['hold_msec_flag'] = True
-                    group_key['timers']['hello_sec'] = int(m.groupdict()['hello'])
-                    group_key['timers']['hold_msec'] = int(m.groupdict()['hold'])
+                    group_key['timers']['hello_sec'] \
+                        = int(m.groupdict()['hello'])
+                    group_key['timers']['hold_msec'] \
+                        = int(m.groupdict()['hold'])
                 elif hello_unit == 'msec' and hold_unit == 'msec':
                     group_key['timers']['hello_msec_flag'] = True
                     group_key['timers']['hold_msec_flag'] = True
-                    group_key['timers']['hello_msec'] = int(m.groupdict()['hello'])
-                    group_key['timers']['hold_msec'] = int(m.groupdict()['hold'])
+                    group_key['timers']['hello_msec'] \
+                        = int(m.groupdict()['hello'])
+                    group_key['timers']['hold_msec'] \
+                        = int(m.groupdict()['hold'])
                 if m.groupdict()['cfged_hello']:
-                    group_key['timers']['cfged_hello_interval'] = int(m.groupdict()['cfged_hello'])
+                    group_key['timers']['cfged_hello_interval'] \
+                        = int(m.groupdict()['cfged_hello'])
                 if m.groupdict()['cfged_hello_unit']:
-                    group_key['timers']['cfged_hello_unit'] = m.groupdict()['cfged_hello_unit']
+                    group_key['timers']['cfged_hello_unit'] \
+                        = m.groupdict()['cfged_hello_unit']
                 if m.groupdict()['cfged_hold']:
-                    group_key['timers']['cfged_hold_interval'] = int(m.groupdict()['cfged_hold'])
+                    group_key['timers']['cfged_hold_interval'] \
+                        = int(m.groupdict()['cfged_hold'])
                 if m.groupdict()['cfged_hold_unit']:
-                    group_key['timers']['cfged_hold_unit'] = m.groupdict()['cfged_hold_unit']
+                    group_key['timers']['cfged_hold_unit'] \
+                        = m.groupdict()['cfged_hold_unit']
 
                 continue
 
@@ -505,7 +557,8 @@ class ShowHsrpAll(ShowHsrpAllSchema):
             # Virtual IP address is fe80::5:73ff:fea0:14 (Auto)
             # Virtual IP address is fe80::1 (Cfged)
             p6 = re.compile(r'\s*Virtual +IP +address +is'
-                             ' +(?P<virtual_ip_address>[\w\:\.]+) +\((?P<vip_status>\S+)\)$')
+                             ' +(?P<virtual_ip_address>[\w\:\.]+) +'
+                             '\((?P<vip_status>\S+)\)$')
             m = p6.match(line)
             if m:
                 virtual_ip_address = m.groupdict()['virtual_ip_address']
@@ -515,46 +568,60 @@ class ShowHsrpAll(ShowHsrpAllSchema):
                     if '/' in virtual_ip_address:
                             if 'global_ipv6_addresses' not in group_key:
                                 group_key['global_ipv6_addresses'] = {}
-                                if virtual_ip_address not in group_key['global_ipv6_addresses']:
-                                    group_key['global_ipv6_addresses'][virtual_ip_address] = {}
-                                group_key['global_ipv6_addresses'][virtual_ip_address]['address'] = virtual_ip_address
+                                if virtual_ip_address not in group_key\
+                                    ['global_ipv6_addresses']:
+                                    group_key['global_ipv6_addresses']\
+                                        [virtual_ip_address] = {}
+                                group_key['global_ipv6_addresses']\
+                                    [virtual_ip_address]['address'] \
+                                    = virtual_ip_address
                     else:
                         # IPv6 Link Local address
                         if 'link_local_ipv6_address' not in group_key:
                             group_key['link_local_ipv6_address'] = {}
-                        group_key['link_local_ipv6_address']['address'] = virtual_ip_address
+                        group_key['link_local_ipv6_address']['address'] \
+                            = virtual_ip_address
                         if vip_status == 'Auto':
-                            group_key['link_local_ipv6_address']['auto_configure'] = True
+                            group_key['link_local_ipv6_address']\
+                                ['auto_configure'] = True
                         else:
-                            group_key['link_local_ipv6_address']['auto_configure'] = False
+                            group_key['link_local_ipv6_address']\
+                                ['auto_configure'] = False
                 else:
                     if 'primary_ipv4_address' not in group_key:
                         group_key['primary_ipv4_address'] = {}
-                    group_key['primary_ipv4_address']['address'] = virtual_ip_address
+                    group_key['primary_ipv4_address']['address'] \
+                        = virtual_ip_address
                     if vip_status == 'Learnt':
-                        group_key['primary_ipv4_address']['virtual_ip_learn'] = True
+                        group_key['primary_ipv4_address']['virtual_ip_learn'] \
+                            = True
                     else:
-                        group_key['primary_ipv4_address']['virtual_ip_learn'] = False
+                        group_key['primary_ipv4_address']['virtual_ip_learn'] \
+                            = False
                 continue
 
             # Secondary Virtual IP address is 10.1.1.253
-            p6 = re.compile(r'\s*[sS]econdary +[vV]irtual +IP +address +is +(?P<secondary_ipv4_address>\S+)')
+            p6 = re.compile(r'\s*[sS]econdary +[vV]irtual +IP +address +is +'
+                '(?P<secondary_ipv4_address>\S+)')
             m = p6.match(line)
             if m:
                 if 'secondary_ipv4_addresses' not in group_key:
                     group_key['secondary_ipv4_addresses'] = {}
                 secondary_ipv4_address = m.groupdict()['secondary_ipv4_address']
-                if secondary_ipv4_address not in group_key['secondary_ipv4_addresses']:
-                    group_key['secondary_ipv4_addresses'][secondary_ipv4_address] = {}
-                group_key['secondary_ipv4_addresses'][secondary_ipv4_address]['address'] = secondary_ipv4_address
+                if secondary_ipv4_address not in group_key\
+                    ['secondary_ipv4_addresses']:
+                    group_key['secondary_ipv4_addresses']\
+                        [secondary_ipv4_address] = {}
+                group_key['secondary_ipv4_addresses'][secondary_ipv4_address]\
+                    ['address'] = secondary_ipv4_address
 
 
             # Active router is unknown
             # Active router is 192.168.1.1, priority 110 expires in 2.662000 sec(s)
             p7 = re.compile(r'\s*Active +router +is'
                              ' +(?P<active_router>[\w\.\:]+)'
-                             '( *, *priority *(?P<active_priority>\d+) expires *'
-                             'in *(?P<expire>[\w\.]+) *sec\(s\))?$')
+                             '( *, *priority *(?P<active_priority>\d+) '
+                             'expires *in *(?P<expire>[\w\.]+) *sec\(s\))?$')
             m = p7.match(line)
             if m:
                 role = m.groupdict()['active_router']
@@ -584,8 +651,8 @@ class ShowHsrpAll(ShowHsrpAllSchema):
             # Standby router is 192.168.1.2 , priority 90 expires in 2.426000 sec(s)
             p8 = re.compile(r'\s*Standby +router +is'
                              ' +(?P<standby_router>[\w\.\:]+)'
-                             '( *, *priority *(?P<standby_priority>\d+) expires *'
-                             'in *(?P<expire>[\w\.]+) *sec\(s\))?$')
+                             '( *, *priority *(?P<standby_priority>\d+) '
+                             'expires *in *(?P<expire>[\w\.]+) *sec\(s\))?$')
             m = p8.match(line)
             if m:
                 role = m.groupdict()['standby_router']
@@ -625,11 +692,14 @@ class ShowHsrpAll(ShowHsrpAllSchema):
             # Virtual mac address is 0000.0c9f.f000 (Default MAC)
             p9 = re.compile(r'\s*Virtual +mac +address +is'
                              ' +(?P<virtual_mac_address>[a-zA-Z0-9\.]+)'
-                             ' +\((?P<virtual_mac_address_status>\S+) MAC( - (?P<use_bia>\S+) enabled)?\)$')
+                             ' +\((?P<virtual_mac_address_status>\S+) MAC'
+                             '( - (?P<use_bia>\S+) enabled)?\)$')
             m = p9.match(line)
             if m:
-                group_key['virtual_mac_address'] = m.groupdict()['virtual_mac_address']
-                group_key['virtual_mac_address_status'] = m.groupdict()['virtual_mac_address_status'].lower()
+                group_key['virtual_mac_address'] \
+                    = m.groupdict()['virtual_mac_address']
+                group_key['virtual_mac_address_status'] \
+                    = m.groupdict()['virtual_mac_address_status'].lower()
                 if m.groupdict()['use_bia'] == 'use-bia':
                     hsrp_all_dict[interface]['use_bia'] = True
                 else:
@@ -700,7 +770,8 @@ class ShowHsrpAll(ShowHsrpAllSchema):
                         group_key['global_ipv6_addresses'] = {}
                     if secondary_vips not in group_key['global_ipv6_addresses']:
                         group_key['global_ipv6_addresses'][secondary_vips] = {}
-                    group_key['global_ipv6_addresses'][secondary_vips]['address'] = secondary_vips
+                    group_key['global_ipv6_addresses'][secondary_vips]\
+                        ['address'] = secondary_vips
 
                 continue
 
@@ -744,7 +815,8 @@ class ShowHsrpDelay(ShowHsrpDelaySchema):
             # (no need to parse above because it's just header)
 
             # GigabitEthernet1   99      888
-            p1 = re.compile(r'\s*(?P<interface>\S+) +(?P<minimum_delay>\d+) +(?P<reload_delay>\d+)')
+            p1 = re.compile(r'\s*(?P<interface>\S+) +(?P<minimum_delay>\d+) +'
+                '(?P<reload_delay>\d+)')
             m = p1.match(line)
             if m:
                 interface = m.groupdict()['interface']
@@ -752,8 +824,10 @@ class ShowHsrpDelay(ShowHsrpDelaySchema):
                     hsrp_delay_dict[interface] = {}
                 if 'delay' not in hsrp_delay_dict[interface]:
                     hsrp_delay_dict[interface]['delay'] = {}
-                hsrp_delay_dict[interface]['delay']['minimum_delay'] = int(m.groupdict()['minimum_delay'])
-                hsrp_delay_dict[interface]['delay']['reload_delay'] = int(m.groupdict()['reload_delay'])
+                hsrp_delay_dict[interface]['delay']['minimum_delay'] \
+                    = int(m.groupdict()['minimum_delay'])
+                hsrp_delay_dict[interface]['delay']['reload_delay'] \
+                    = int(m.groupdict()['reload_delay'])
 
         return hsrp_delay_dict
 
