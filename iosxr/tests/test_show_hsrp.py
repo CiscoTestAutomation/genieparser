@@ -23,88 +23,108 @@ class test_show_hsrp_summary(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {
-    'hsrp_summary': {
-        'address_family': {
-            'ipv4': {
-                'intf_down': 1,
-                'intf_total': 2,
-                'intf_up': 1,
-                'state': {
-                    'ACTIVE': {
-                        'sessions': 1,
-                        'slaves': 0,
-                        'total': 1},
-                    'ALL': {
-                        'sessions': 2,
-                        'slaves': 0,
-                        'total': 2},
-                    'INIT': {
-                        'sessions': 1,
-                        'slaves': 0,
-                        'total': 1},
-                    'LEARN': {
-                        'sessions': 0,
-                        'slaves': 0,
-                        'total': 0},
-                    'LISTEN': {
-                        'sessions': 0,
-                        'slaves': 0,
-                        'total': 0},
-                    'SPEAK': {
-                        'sessions': 0,
-                        'slaves': 0,
-                        'total': 0},
-                    'STANDBY': {
-                        'sessions': 0,
-                        'slaves': 0,
-                        'total': 0}},
-                'virtual_addresses_active': 1,
-                'virtual_addresses_inactive': 1,
-                'vritual_addresses_total': 2},
-            'ipv6': {
-                'intf_down': 0,
-                'intf_total': 0,
-                'intf_up': 0,
-                'state': {
-                    'ACTIVE': {
-                        'sessions': 0,
-                        'slaves': 0,
-                        'total': 0},
-                    'ALL': {
-                        'sessions': 0,
-                        'slaves': 0,
-                        'total': 0},
-                    'INIT': {
-                        'sessions': 0,
-                        'slaves': 0,
-                        'total': 0},
-                    'LEARN': {
-                        'sessions': 0,
-                        'slaves': 0,
-                        'total': 0},
-                    'LISTEN': {
-                        'sessions': 0,
-                        'slaves': 0,
-                        'total': 0},
-                    'SPEAK': {
-                        'sessions': 0,
-                        'slaves': 0,
-                        'total': 0},
-                    'STANDBY': {
-                        'sessions': 0,
-                        'slaves': 0,
-                        'total': 0}},
-                'virtual_addresses_active': 0,
-                'virtual_addresses_inactive': 0,
-                'vritual_addresses_total': 0}},
-            'bfd_sessions_down': 0,
-            'bfd_sessions_inactive': 0,
-            'bfd_sessions_up': 0,
-            'num_bfd_sessions': 0,
-            'num_tracked_objects': 3,
-            'tracked_objects_down': 2,
-            'tracked_objects_up': 1}}
+    golden_parsed_output = \
+    {
+    'address_family': {
+      'ipv4': {
+        'intf_down': 1,
+        'intf_total': 2,
+        'intf_up': 1,
+        'state': {
+          'ACTIVE': {
+            'sessions': 1,
+            'slaves': 0,
+            'total': 1
+          },
+          'ALL': {
+            'sessions': 2,
+            'slaves': 0,
+            'total': 2
+          },
+          'INIT': {
+            'sessions': 1,
+            'slaves': 0,
+            'total': 1
+          },
+          'LEARN': {
+            'sessions': 0,
+            'slaves': 0,
+            'total': 0
+          },
+          'LISTEN': {
+            'sessions': 0,
+            'slaves': 0,
+            'total': 0
+          },
+          'SPEAK': {
+            'sessions': 0,
+            'slaves': 0,
+            'total': 0
+          },
+          'STANDBY': {
+            'sessions': 0,
+            'slaves': 0,
+            'total': 0
+            }
+        },
+        'virtual_addresses_active': 1,
+        'virtual_addresses_inactive': 1,
+        'vritual_addresses_total': 2
+      },
+      'ipv6': {
+        'intf_down': 0,
+        'intf_total': 0,
+        'intf_up': 0,
+        'state': {
+          'ACTIVE': {
+            'sessions': 0,
+            'slaves': 0,
+            'total': 0
+          },
+          'ALL': {
+            'sessions': 0,
+            'slaves': 0,
+            'total': 0
+          },
+          'INIT': {
+            'sessions': 0,
+            'slaves': 0,
+            'total': 0
+          },
+          'LEARN': {
+            'sessions': 0,
+            'slaves': 0,
+            'total': 0
+          },
+          'LISTEN': {
+            'sessions': 0,
+            'slaves': 0,
+            'total': 0
+          },
+          'SPEAK': {
+            'sessions': 0,
+            'slaves': 0,
+            'total': 0
+          },
+          'STANDBY': {
+            'sessions': 0,
+            'slaves': 0,
+            'total': 0
+            }
+        },
+        'virtual_addresses_active': 0,
+        'virtual_addresses_inactive': 0,
+        'vritual_addresses_total': 0
+        }
+    },
+    'bfd_sessions_down': 0,
+    'bfd_sessions_inactive': 0,
+    'bfd_sessions_up': 0,
+    'num_bfd_sessions': 0,
+    'num_tracked_objects': 3,
+    'tracked_objects_down': 2,
+    'tracked_objects_up': 1
+    }
 
     golden_output = {'execute.return_value': '''
                         IPv4                  IPv6
@@ -132,7 +152,6 @@ class test_show_hsrp_summary(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         hsrp_summary_obj = ShowHsrpSummary(device=self.device)
         parsed_output = hsrp_summary_obj.parse()
-        #import pprint ; pprint.pprint(parsed_output)
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_empty(self):
@@ -151,72 +170,125 @@ class test_show_hsrp_detail(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     
-    golden_parsed_output = {
-    'hsrp_detail': {
-        'group': {
-            5: {
-                'interface': {
-                    'GigabitEthernet0/0/0/1': {
-                        'address_family': {
-                            'ipv4': {
-                                'active_router': 'local',
-                                'active_priority': 49,
-                                'authentication_text': 'cisco123',
-                                'config_hellotime': 1000,
-                                'config_holdtime': 3000,
-                                'hellotime': 1000,
-                                'holdtime': 3000,
-                                'ip_address': '192.168.1.254',
-                                'last_coup_received': 'Never',
-                                'last_coup_sent': 'Never',
-                                'last_resign_received': 'Never',
-                                'last_resign_sent': 'Never',
-                                'last_state_change': '2d07h',
-                                'local_state': 'active',
-                                'min_delay': 5,
-                                'num_state_changes': 4,
-                                'preempt': True,
-                                'priority': 49,
-                                'reload_delay': 10,
-                                'standby_router': 'unknown',
-                                'standby_state': 'active',
-                                'standby_virtual_mac_addr': '0000.0c07.ac05',
-                                'track_objects': {
-                                    '1': {
-                                        'priority_decrement': 20},
-                                    'apple': {
-                                        'priority_decrement': 55},
-                                    'banana': {
-                                        'priority_decrement': 6},
-                                    'num_tracked_objects': 3,
-                                    'num_tracked_objects_up': 1},
-                                  'version': 1}}}}},
-            8: {
-                'interface': {
-                    'GigabitEthernet0/0/0/2': {
-                        'address_family': {
-                            'ipv4': {
-                                'active_router': 'unknown',
-                                'authentication_text': 'cisco123',
-                                'hellotime': 3000,
-                                'holdtime': 10000,
-                                'ip_address': '192.168.2.254',
-                                'last_coup_received': 'Never',
-                                'last_coup_sent': 'Never',
-                                'last_resign_received': 'Never',
-                                'last_resign_sent': 'Never',
-                                'last_state_change': 'never',
-                                'local_state': 'init',
-                                'min_delay': 5,
-                                'num_state_changes': 0,
-                                'preempt': True,
-                                'preempt_delay': 10,
-                                'priority': 115,
-                                'reload_delay': 15,
-                                'standby_router': 'unknown',
-                                'standby_state': 'stored',
-                                'standby_virtual_mac_addr': '0000.0c07.ac08',
-                                'version': 1}}}}}}}}
+    golden_parsed_output = \
+    {
+    'GigabitEthernet0/0/0/1': {
+      'address_family': {
+        'ipv4': {
+          'version': {
+            1: {
+              'groups': {
+                5: {
+                  'active_ip_address': 'local',
+                  'active_priority': 49,
+                  'active_router': 'local',
+                  'authentication': 'cisco123',
+                  'group_number': 5,
+                  'hsrp_router_state': 'active',
+                  'preempt': True,
+                  'primary_ipv4_address': {
+                    'address': '192.168.1.254'
+                  },
+                  'priority': 49,
+                  'standby_ip_address': 'unknown',
+                  'standby_router': 'unknown',
+                  'standby_state': 'active',
+                  'statistics': {
+                    'last_coup_received': 'Never',
+                    'last_coup_sent': 'Never',
+                    'last_resign_received': 'Never',
+                    'last_resign_sent': 'Never',
+                    'last_state_change': '2d07h',
+                    'num_state_changes': 4
+                  },
+                  'timers': {
+                    'cfgd_hello_msec': 1000,
+                    'cfgd_hold_msec': 3000,
+                    'hello_msec': 1000,
+                    'hello_msec_flag': True,
+                    'hold_msec': 3000,
+                    'hold_msec_flag': True
+                  },
+                  'tracked_objects': {
+                    '1': {
+                      'object_name': '1',
+                      'priority_decrement': 20
+                    },
+                    'apple': {
+                      'object_name': 'apple',
+                      'priority_decrement': 55
+                    },
+                    'banana': {
+                      'object_name': 'banana',
+                      'priority_decrement': 6
+                    },
+                    'num_tracked_objects': 3,
+                    'num_tracked_objects_up': 1
+                  },
+                  'virtual_mac_address': '0000.0c07.ac05'
+                  }
+                }
+              }
+            }
+          }
+      },
+      'delay': {
+        'minimum_delay': 5, 'reload_delay': 10
+      },
+      'interface': 'GigabitEthernet0/0/0/1',
+      'redirects_disable': False,
+      'use_bia': False
+    },
+    'GigabitEthernet0/0/0/2': {
+      'address_family': {
+        'ipv4': {
+          'version': {
+            1: {
+              'groups': {
+                8: {
+                  'active_ip_address': 'unknown',
+                  'active_router': 'unknown',
+                  'authentication': 'cisco123',
+                  'group_number': 8,
+                  'hsrp_router_state': 'init',
+                  'preempt': True,
+                  'preempt_delay': 10,
+                  'primary_ipv4_address': {
+                    'address': '192.168.2.254'
+                  },
+                  'priority': 115,
+                  'standby_ip_address': 'unknown',
+                  'standby_router': 'unknown',
+                  'standby_state': 'stored',
+                  'statistics': {
+                    'last_coup_received': 'Never',
+                    'last_coup_sent': 'Never',
+                    'last_resign_received': 'Never',
+                    'last_resign_sent': 'Never',
+                    'last_state_change': 'never',
+                    'num_state_changes': 0
+                  },
+                  'timers': {
+                    'hello_msec': 3000,
+                    'hello_msec_flag': True,
+                    'hold_msec': 10000,
+                    'hold_msec_flag': True
+                  },
+                  'virtual_mac_address': '0000.0c07.ac08'
+                  }
+                }
+              }
+            }
+          }
+      },
+      'delay': {
+        'minimum_delay': 5, 'reload_delay': 15
+      },
+      'interface': 'GigabitEthernet0/0/0/2',
+      'redirects_disable': False,
+      'use_bia': False
+      }
+    }
 
     golden_output = {'execute.return_value': '''
         GigabitEthernet0/0/0/1 - IPv4 Group 5 (version 1)
@@ -261,79 +333,115 @@ class test_show_hsrp_detail(unittest.TestCase):
           Last resign received: Never
         '''}
     
-    golden_parsed_output_1 = {
-        "hsrp_detail": {
-          "group": {
-               0: {
-                    "interface": {
-                         "GigabitEthernet0/0/0/2": {
-                              "address_family": {
-                                   "ipv4": {
-                                        "holdtime": 3000,
-                                        "min_delay": 5,
-                                        "standby_expire": "00:00:02",
-                                        "active_priority": 110,
-                                        "reload_delay": 10,
-                                        "hellotime": 1000,
-                                        "ip_address": "192.168.1.254",
-                                        "num_state_changes": 2,
-                                        "last_coup_sent": "Aug 11 08:26:25.272 UTC",
-                                        "standby_state": "active",
-                                        "config_hellotime": 1000,
-                                        "version": 1,
-                                        "local_state": "active",
-                                        "standby_virtual_mac_addr": "0000.0c07.ac00",
-                                        "last_resign_sent": "Never",
-                                        "last_coup_received": "Never",
-                                        "last_resign_received": "Aug 11 08:26:25.272 UTC",
-                                        "config_holdtime": 3000,
-                                        "priority": 110,
-                                        "preempt": True,
-                                        "last_state_change": "01:18:43",
-                                        "authentication_text": "cisco123",
-                                        "active_router": "local",
-                                        "standby_router": "192.168.1.2"
-                                   }
-                              }
-                         }
-                    }
-               },
-               1: {
-                    "interface": {
-                         "GigabitEthernet0/0/0/2": {
-                              "address_family": {
-                                   "ipv6": {
-                                        "holdtime": 3000,
-                                        "min_delay": 5,
-                                        "standby_expire": "00:00:02",
-                                        "active_priority": 120,
-                                        "reload_delay": 10,
-                                        "hellotime": 1000,
-                                        "ip_address": "fe80::205:73ff:fea0:1",
-                                        "num_state_changes": 2,
-                                        "last_coup_sent": "Aug 11 09:28:07.334 UTC",
-                                        "standby_state": "active",
-                                        "config_hellotime": 1000,
-                                        "version": 2,
-                                        "local_state": "active",
-                                        "standby_virtual_mac_addr": "0005.73a0.0001",
-                                        "last_resign_sent": "Never",
-                                        "last_coup_received": "Never",
-                                        "last_resign_received": "Aug 11 09:28:07.334 UTC",
-                                        "config_holdtime": 3000,
-                                        "priority": 120,
-                                        "preempt": True,
-                                        "last_state_change": "00:17:01",
-                                        "active_router": "local",
-                                        "standby_router": "fe80::5000:1cff:fe0a:1, 5200.1c0a.0001"
-                                   }
-                              }
-                         }
-                    }
-               }
+    golden_parsed_output_1 = \
+    {
+    'GigabitEthernet0/0/0/2': {
+      'address_family': {
+        'ipv4': {
+          'version': {
+            1: {
+              'groups': {
+                0: {
+                  'active_ip_address': 'local',
+                  'active_priority': 110,
+                  'active_router': 'local',
+                  'authentication': 'cisco123',
+                  'group_number': 0,
+                  'hsrp_router_state': 'active',
+                  'preempt': True,
+                  'primary_ipv4_address': {
+                    'address': '192.168.1.254'
+                  },
+                  'priority': 110,
+                  'standby_expire': '00:00:02',
+                  'standby_ip_address': '192.168.1.2',
+                  'standby_router': '192.168.1.2',
+                  'standby_state': 'active',
+                  'statistics': {
+                    'last_coup_received': 'Never',
+                    'last_coup_sent': 'Aug '
+                    '11 '
+                    '08:26:25.272 '
+                    'UTC',
+                    'last_resign_received': 'Aug '
+                    '11 '
+                    '08:26:25.272 '
+                    'UTC',
+                    'last_resign_sent': 'Never',
+                    'last_state_change': '01:18:43',
+                    'num_state_changes': 2
+                  },
+                  'timers': {
+                    'cfgd_hello_msec': 1000,
+                    'cfgd_hold_msec': 3000,
+                    'hello_msec': 1000,
+                    'hello_msec_flag': True,
+                    'hold_msec': 3000,
+                    'hold_msec_flag': True
+                  },
+                  'virtual_mac_address': '0000.0c07.ac00'
+                  }
+                }
+              }
+            }
+        },
+        'ipv6': {
+          'version': {
+            2: {
+              'groups': {
+                1: {
+                  'active_ip_address': 'local',
+                  'active_priority': 120,
+                  'active_router': 'local',
+                  'group_number': 1,
+                  'hsrp_router_state': 'active',
+                  'link_local_ipv6_address': {
+                    'address': 'fe80::205:73ff:fea0:1'
+                  },
+                  'preempt': True,
+                  'priority': 120,
+                  'standby_expire': '00:00:02',
+                  'standby_ipv6_address': 'fe80::5000:1cff:fe0a:1, '
+                  '5200.1c0a.0001',
+                  'standby_router': 'fe80::5000:1cff:fe0a:1, '
+                  '5200.1c0a.0001',
+                  'standby_state': 'active',
+                  'statistics': {
+                    'last_coup_received': 'Never',
+                    'last_coup_sent': 'Aug '
+                    '11 '
+                    '09:28:07.334 '
+                    'UTC',
+                    'last_resign_received': 'Aug '
+                    '11 '
+                    '09:28:07.334 '
+                    'UTC',
+                    'last_resign_sent': 'Never',
+                    'last_state_change': '00:17:01',
+                    'num_state_changes': 2
+                  },
+                  'timers': {
+                    'cfgd_hello_msec': 1000,
+                    'cfgd_hold_msec': 3000,
+                    'hello_msec': 1000,
+                    'hello_msec_flag': True,
+                    'hold_msec': 3000,
+                    'hold_msec_flag': True
+                  },
+                  'virtual_mac_address': '0005.73a0.0001'
+                  }
+                }
+              }
+            }
           }
-     }
-
+      },
+      'delay': {
+        'minimum_delay': 5, 'reload_delay': 10
+      },
+      'interface': 'GigabitEthernet0/0/0/2',
+      'redirects_disable': False,
+      'use_bia': False
+      }
     }
 
     golden_output_1 = {'execute.return_value': '''
