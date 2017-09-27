@@ -3,7 +3,7 @@
 IOSXE parsers for the following show commands:
 
     * show ipv6 pim interface
-    * show ipv6 pim vrf <vrf_name> interface 
+    * show ipv6 pim vrf <WROD> interface 
 
 '''
 
@@ -17,13 +17,13 @@ from metaparser.util.schemaengine import Schema, Any, Optional
 
 # =============================================
 # Parser for 'show ipv6 pim interface'
-# Parser for 'show ipv6 pim vrf xxx interface'
+# Parser for 'show ipv6 pim vrf <WROD> interface'
 # =============================================
 
 class ShowIpv6PimInterfaceSchema(MetaParser):
 
-    # Parser for 'show ipv6 pim interface'
-    # Parser for 'show ipv6 pim vrf xxx interface'
+    # Schema for 'show ipv6 pim interface'
+    # Schema for 'show ipv6 pim vrf <WROD> interface'
 
     schema = {'vrf': {
                 Any(): {
@@ -42,6 +42,9 @@ class ShowIpv6PimInterfaceSchema(MetaParser):
         }
 
 class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
+
+    # Parser for 'show ipv6 pim interface'
+    # Parser for 'show ipv6 pim vrf <WROD> interface'
 
     def cli(self, vrf=''):
 

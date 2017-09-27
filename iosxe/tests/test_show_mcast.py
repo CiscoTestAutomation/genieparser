@@ -34,7 +34,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                 "239.1.1.1": {
                                      "source_address": {
                                           "*": {
-                                               "expires": "stopped",
+                                               "expire": "stopped",
                                                "rp": "1.1.1.1",
                                                "flags": "SPF",
                                                "uptime": "00:00:03",
@@ -45,7 +45,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                                }
                                           },
                                           "1.1.1.1": {
-                                               "expires": "00:02:57",
+                                               "expire": "00:02:57",
                                                "flags": "PFT",
                                                "uptime": "00:00:03",
                                                "incoming_interface_list": {
@@ -56,7 +56,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                                }
                                           },
                                           "10.1.3.1": {
-                                               "expires": "00:02:57",
+                                               "expire": "00:02:57",
                                                "flags": "PFT",
                                                "uptime": "00:00:03",
                                                "incoming_interface_list": {
@@ -71,7 +71,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                 "224.0.1.40": {
                                      "source_address": {
                                           "*": {
-                                               "expires": "00:02:56",
+                                               "expire": "00:02:56",
                                                "outgoing_interface_list": {
                                                     "Loopback0": {
                                                          "expire": "00:02:56",
@@ -93,7 +93,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                 "224.1.1.1": {
                                      "source_address": {
                                           "*": {
-                                               "expires": "00:02:54",
+                                               "expire": "00:02:54",
                                                "outgoing_interface_list": {
                                                     "ATM0/0": {
                                                          "expire": "00:02:53",
@@ -160,7 +160,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                 "239.1.1.1": {
                                      "source_address": {
                                           "11.11.11.11": {
-                                               "expires": "00:02:55",
+                                               "expire": "00:02:55",
                                                "uptime": "00:00:04",
                                                "flags": "PFT",
                                                "incoming_interface_list": {
@@ -171,7 +171,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                                }
                                           },
                                           "*": {
-                                               "expires": "stopped",
+                                               "expire": "stopped",
                                                "uptime": "00:00:04",
                                                "flags": "SPF",
                                                "rp": "11.11.11.11",
@@ -186,7 +186,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                 "224.0.1.40": {
                                      "source_address": {
                                           "*": {
-                                               "expires": "00:02:52",
+                                               "expire": "00:02:52",
                                                "uptime": "00:08:58",
                                                "incoming_interface_list": {
                                                     "Null": {
@@ -289,7 +289,7 @@ class test_show_ipv6_mroute(unittest.TestCase):
                                                },
                                                "uptime": "00:02:06",
                                                "flags": "SFT",
-                                               "expires": "00:01:23"
+                                               "expire": "00:01:23"
                                           },
                                           "*": {
                                                "outgoing_interface_list": {
@@ -307,7 +307,7 @@ class test_show_ipv6_mroute(unittest.TestCase):
                                                "uptime": "00:04:45",
                                                "rp": "2001:DB8:6::6",
                                                "flags": "S",
-                                               "expires": "00:02:47"
+                                               "expire": "00:02:47"
                                           }}}}}}}}}
 
     golden_output = {'execute.return_value': '''\
@@ -353,7 +353,7 @@ class test_show_ipv6_mroute(unittest.TestCase):
                                                },
                                                "uptime": "00:02:06",
                                                "flags": "SFT",
-                                               "expires": "00:01:23"
+                                               "expire": "00:01:23"
                                           },
                                           "*": {
                                                "outgoing_interface_list": {
@@ -371,7 +371,7 @@ class test_show_ipv6_mroute(unittest.TestCase):
                                                "uptime": "00:04:45",
                                                "rp": "2001:DB8:6::6",
                                                "flags": "S",
-                                               "expires": "00:02:47"
+                                               "expire": "00:02:47"
                                           }}}}}}}}}
 
     golden_output2 = {'execute.return_value': '''\
