@@ -43,7 +43,7 @@ class ShowIpMrouteSchema(MetaParser):
                                     {Optional('source_address'): 
                                         {Any(): 
                                             {Optional('uptime'): str,
-                                             Optional('expires'): str,
+                                             Optional('expire'): str,
                                              Optional('flags'): str,
                                              Optional('rp'): str,
                                              Optional('incoming_interface_list'):
@@ -148,7 +148,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
                         ['source_address'][source_address]
 
                 sub_dict['uptime'] = m.groupdict()['uptime']
-                sub_dict['expires'] = m.groupdict()['expires']
+                sub_dict['expire'] = m.groupdict()['expires']
                 sub_dict['flags'] = m.groupdict()['flags']
                 
                 rendezvous_point = m.groupdict()['rendezvous_point']
