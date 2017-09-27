@@ -52,7 +52,7 @@ class test_show_mrib_vrf_route(unittest.TestCase):
                                     {'*': 
                                         {'flags': 'C RPF MD MH CD',
                                         'mdt_ifh': '0x803380',
-                                        'mvpn_payload': 'IPv4',
+                                        'mvpn_payload': 'ipv4',
                                         'mvpn_remote_tid': '0x0',
                                         'mvpn_tid': '0xe000001f',
                                         'outgoing_interface_list': 
@@ -69,7 +69,7 @@ class test_show_mrib_vrf_route(unittest.TestCase):
                                                 'uptime': '00:00:58',
                                                 'rpf_nbr': '192.168.0.12',}},
                                         'mdt_ifh': '0x803380',
-                                        'mvpn_payload': 'IPv4',
+                                        'mvpn_payload': 'ipv4',
                                         'mvpn_remote_tid': '0x0',
                                         'mvpn_tid': '0xe000001f',
                                         'outgoing_interface_list': 
