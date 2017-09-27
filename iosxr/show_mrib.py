@@ -178,7 +178,8 @@ class ShowMribVrfRoute(ShowMribVrfRouteSchema):
             p8 = re.compile(r'^\s*MVPN +Payload: +(?P<mvpn_payload>(\S+))$')
             m = p8.match(line)
             if m:
-                sub_dict['mvpn_payload'] = m.groupdict()['mvpn_payload']
+                sub_dict['mvpn_payload'] = \
+                    str(m.groupdict()['mvpn_payload']).lower()
                 continue
 
             # MDT IFH: 0x803380
