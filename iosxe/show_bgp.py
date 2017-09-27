@@ -3874,9 +3874,6 @@ class ShowIpBgpTemplatePeerPolicy(ShowIpbgpTemplatePeerPolicySchema):
         return parsed_dict
 
 
-
-
-
 class ShowIpBgpAllDampeningParametersSchema(MetaParser):
     '''
     Schema for show ip bgp all dampening parameters

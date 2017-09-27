@@ -7288,8 +7288,6 @@ class test_show_bgp_all(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-
-
     def test_golden_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
