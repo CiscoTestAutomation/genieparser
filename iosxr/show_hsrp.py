@@ -405,22 +405,35 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                     hsrp_detail_dict[interface]['interface'] = interface
                 if 'address_family' not in hsrp_detail_dict[interface]:
                     hsrp_detail_dict[interface]['address_family'] = {}
-                if address_family not in hsrp_detail_dict[interface]['address_family']:
-                    hsrp_detail_dict[interface]['address_family'][address_family] = {}
-                if 'version' not in hsrp_detail_dict[interface]['address_family'][address_family]:
-                    hsrp_detail_dict[interface]['address_family'][address_family]['version'] = {}
-                if version not in hsrp_detail_dict[interface]['address_family'][address_family]['version']:
-                    hsrp_detail_dict[interface]['address_family'][address_family]['version'][version] = {}
-                if 'groups' not in hsrp_detail_dict[interface]['address_family'][address_family]['version'][version]:
-                    hsrp_detail_dict[interface]['address_family'][address_family]['version'][version]['groups'] = {}
-                if group_number not in hsrp_detail_dict[interface]['address_family'][address_family]['version'][version]['groups']:
-                    hsrp_detail_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_number] = {}
+                if address_family not in hsrp_detail_dict[interface]\
+                    ['address_family']:
+                    hsrp_detail_dict[interface]['address_family']\
+                        [address_family] = {}
+                if 'version' not in hsrp_detail_dict[interface]\
+                    ['address_family'][address_family]:
+                    hsrp_detail_dict[interface]['address_family']\
+                        [address_family]['version'] = {}
+                if version not in hsrp_detail_dict[interface]\
+                    ['address_family'][address_family]['version']:
+                    hsrp_detail_dict[interface]['address_family']\
+                        [address_family]['version'][version] = {}
+                if 'groups' not in hsrp_detail_dict[interface]\
+                    ['address_family'][address_family]['version'][version]:
+                    hsrp_detail_dict[interface]['address_family']\
+                        [address_family]['version'][version]['groups'] = {}
+                if group_number not in hsrp_detail_dict[interface]\
+                    ['address_family'][address_family]['version'][version]\
+                    ['groups']:
+                    hsrp_detail_dict[interface]['address_family']\
+                        [address_family]['version'][version]['groups']\
+                        [group_number] = {}
                     group_key = {}
                     group_key['group_number'] = group_number
                 continue
 
             # Label group10 (1 slaves)
-            p2 = re.compile(r'\s*[lL]abel +(?P<session_name>\S+) +\((?P<num_of_slaves>\d+) slaves\)')
+            p2 = re.compile(r'\s*[lL]abel +(?P<session_name>\S+) +'
+                '\((?P<num_of_slaves>\d+) slaves\)')
             m = p2.match(line)
             if m:
                 group_key['session_name'] = m.groupdict()['session_name']
@@ -438,10 +451,13 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
             # Local state is Init, priority 100, use bia
             # Local state is Init, priority 100, may preempt, use bia
             # Local state is Init
-            p2 = re.compile(r'\s*Local +state +is +(?P<hsrp_router_state>[a-zA-Z]+)(, +priority +(?P<priority>[0-9]+))?(?P<preempt>, may preempt)?(?P<use_bia>, use bia)?$')
+            p2 = re.compile(r'\s*Local +state +is +(?P<hsrp_router_state>'
+                '[a-zA-Z]+)(, +priority +(?P<priority>[0-9]+))?(?P<preempt>, '
+                'may preempt)?(?P<use_bia>, use bia)?$')
             m = p2.match(line)
             if m:
-                group_key['hsrp_router_state'] = m.groupdict()['hsrp_router_state'].lower()
+                group_key['hsrp_router_state'] \
+                    = m.groupdict()['hsrp_router_state'].lower()
                 if m.groupdict()['priority']:
                     priority = int(m.groupdict()['priority'])
                 group_key['priority'] = priority
@@ -468,8 +484,10 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
             if m:
                 if 'timers' not in group_key:
                     group_key['timers'] = {}
-                group_key['timers']['hello_msec'] = int(m.groupdict()['hello_msec'])
-                group_key['timers']['hold_msec'] = int(m.groupdict()['hold_msec'])
+                group_key['timers']['hello_msec'] \
+                    = int(m.groupdict()['hello_msec'])
+                group_key['timers']['hold_msec'] \
+                    = int(m.groupdict()['hold_msec'])
                 group_key['timers']['hello_msec_flag'] = True
                 group_key['timers']['hold_msec_flag'] = True
                 continue
@@ -489,31 +507,39 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                 continue
 
             # Minimum delay 5 sec, reload delay 10 sec
-            p6 = re.compile(r'\s*Minimum +delay +(?P<minimum_delay>[0-9]+) +sec,'
-                             ' +reload +delay +(?P<reload_delay>[0-9]+) +sec$')
+            p6 = re.compile(r'\s*Minimum +delay +(?P<minimum_delay>[0-9]+)'
+                ' +sec, +reload +delay +(?P<reload_delay>[0-9]+) +sec$')
             m = p6.match(line)
             if m:
                 if 'delay' not in hsrp_detail_dict[interface]:
                     hsrp_detail_dict[interface]['delay'] = {}
-                hsrp_detail_dict[interface]['delay']['minimum_delay'] = int(m.groupdict()['minimum_delay'])
-                hsrp_detail_dict[interface]['delay']['reload_delay'] = int(m.groupdict()['reload_delay'])
+                hsrp_detail_dict[interface]['delay']['minimum_delay'] \
+                    = int(m.groupdict()['minimum_delay'])
+                hsrp_detail_dict[interface]['delay']['reload_delay'] \
+                    = int(m.groupdict()['reload_delay'])
                 continue
 
             # BFD enabled (GigabitEthernet0/0/0/1, 10.1.1.1): state inactive, interval 15 ms multiplier 3
             # BFD enabled (Unknown, 0.0.0.0): state inactive, interval 0 ms multiplier 0
-            p7 = re.compile(r'\s*BFD enabled \((?P<bfd_interface_name>\S+), (?P<bfd_address>\S+)\): state (?P<bfd_state>\S+), interval (?P<bfd_interval>\d+) ms multiplier (?P<bfd_detection_multiplier>\d+)$')
+            p7 = re.compile(r'\s*BFD enabled \((?P<bfd_interface_name>\S+), '
+                '(?P<bfd_address>\S+)\): state (?P<bfd_state>\S+), interval '
+                '(?P<bfd_interval>\d+) ms multiplier '
+                '(?P<bfd_detection_multiplier>\d+)$')
             m = p7.match(line)
             if m:
                 if 'bfd' not in hsrp_detail_dict[interface]:
                     hsrp_detail_dict[interface]['bfd'] = {}
                 hsrp_detail_dict[interface]['bfd']['enabled'] = True
                 if m.groupdict()['bfd_interface_name'] != 'Unknown':
-                    hsrp_detail_dict[interface]['bfd']['detection_multiplier'] = int(m.groupdict()['bfd_detection_multiplier'])
-                    hsrp_detail_dict[interface]['bfd']['interval'] = int(m.groupdict()['bfd_interval'])
+                    hsrp_detail_dict[interface]['bfd']['detection_multiplier'] \
+                        = int(m.groupdict()['bfd_detection_multiplier'])
+                    hsrp_detail_dict[interface]['bfd']['interval'] \
+                        = int(m.groupdict()['bfd_interval'])
                     if 'bfd' not in group_key:
                         group_key['bfd'] = {}
                     group_key['bfd']['address'] = m.groupdict()['bfd_address']
-                    group_key['bfd']['interface_name'] = m.groupdict()['bfd_interface_name']
+                    group_key['bfd']['interface_name'] \
+                        = m.groupdict()['bfd_interface_name']
                     group_key['bfd']['state'] = m.groupdict()['bfd_state']
                 continue
 
@@ -548,7 +574,8 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
             p8 = re.compile(r'\s*Active +router +is'
                              ' +(?P<active_router>([\w\:\.]+)(, *[\w\.\:]+)?)'
                              '(, *priority (?P<priority>\d+))?'
-                             '( *(expired|expires +in +(?P<expire>[\w\:\.]+)))?$')
+                             '( *(expired|expires +in +'
+                             '(?P<expire>[\w\:\.]+)))?$')
             m = p8.match(line)
             if m:
                 role = m.groupdict()['active_router']
@@ -576,7 +603,8 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
             # Standby router is fe80::5000:1cff:fe0a:1, 5200.1c0a.0001 expires in 00:00:02
             p9 = re.compile(r'\s*Standby +router +is'
                              ' +(?P<standby_router>([\w\:\.]+)(, *[\w\.\:]+)?)'
-                             '( *(expired|expires +in +(?P<expire>[\w\:\.]+)))?$')
+                             '( *(expired|expires +in +(?P<expire>'
+                             '[\w\:\.]+)))?$')
             m = p9.match(line)
             if m:
                 role = m.groupdict()['standby_router']
@@ -611,12 +639,23 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
 
                 # check if group belongs to slave_groups
                 if 'follow' in group_key:
-                    if 'slave_groups' not in hsrp_detail_dict[interface]['address_family'][address_family]['version'][version]:
-                        hsrp_detail_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'] = {}
-                    if group_number not in hsrp_detail_dict[interface]['address_family'][address_family]['version'][version]['slave_groups']:
-                        hsrp_detail_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'][group_number] = {}
-                    hsrp_detail_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'][group_number] = group_key
-                    del hsrp_detail_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_number]
+                    if 'slave_groups' not in hsrp_detail_dict[interface]\
+                        ['address_family'][address_family]['version'][version]:
+                        hsrp_detail_dict[interface]['address_family']\
+                            [address_family]['version'][version]\
+                            ['slave_groups'] = {}
+                    if group_number not in hsrp_detail_dict[interface]\
+                        ['address_family'][address_family]['version']\
+                        [version]['slave_groups']:
+                        hsrp_detail_dict[interface]['address_family']\
+                            [address_family]['version'][version]\
+                            ['slave_groups'][group_number] = {}
+                    hsrp_detail_dict[interface]['address_family']\
+                        [address_family]['version'][version]['slave_groups']\
+                        [group_number] = group_key
+                    del hsrp_detail_dict[interface]['address_family']\
+                        [address_family]['version'][version]['groups']\
+                        [group_number]
                 continue
 
             # Authentication text, string "cisco123"
@@ -660,7 +699,8 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                     hsrp_detail_dict[interface]['redirects_disable'] = False
                 if 'statistics' not in group_key:
                     group_key['statistics'] = {}
-                group_key['statistics']['last_coup_sent'] = m.groupdict()['last_coup_sent']
+                group_key['statistics']['last_coup_sent'] \
+                    = m.groupdict()['last_coup_sent']
                 continue
 
             # Last coup received:   Never
@@ -681,7 +721,8 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
             if m:
                 if 'statistics' not in group_key:
                     group_key['statistics'] = {}
-                group_key['statistics']['last_resign_sent'] = m.groupdict()['last_resign_sent']
+                group_key['statistics']['last_resign_sent'] \
+                    = m.groupdict()['last_resign_sent']
                 continue
 
             # Last resign received: Never
@@ -694,7 +735,8 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                     group_key['statistics'] = {}
                 group_key['statistics']['last_resign_received'] = \
                     m.groupdict()['last_resign_received']
-                hsrp_detail_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_number] = group_key
+                hsrp_detail_dict[interface]['address_family'][address_family]\
+                    ['version'][version]['groups'][group_number] = group_key
                 continue
 
             # Tracking states for 1 object, 1 up:
@@ -711,13 +753,18 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                     int(m.groupdict()['num_tracked_objects'])
                 group_key['tracked_objects']['num_tracked_objects_up'] = \
                     int(m.groupdict()['num_tracked_objects_up'])
-                hsrp_detail_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_number] = group_key
+                hsrp_detail_dict[interface]['address_family'][address_family]\
+                    ['version'][version]['groups'][group_number] = group_key
                 continue
 
             # Up   banana               Priority decrement: 20
             # Down   apple               Priority decrement: 50
             # Up   GigabitEthernet0/0/0/1 Priority decrement: 123
-            p18 = re.compile(r'\s*(?P<tracked_status>\S+) +((?P<tracked_object>[a-zA-Z0-9]+)|(?P<tracked_interface>[a-zA-Z0-9\/\.\-]+)) +Priority +decrement: +(?P<tracked_object_priority_decrement>[0-9]+)$')
+            p18 = re.compile(r'\s*(?P<tracked_status>\S+) +'
+                '((?P<tracked_object>[a-zA-Z0-9]+)|'
+                '(?P<tracked_interface>[a-zA-Z0-9\/\.\-]+)) +'
+                'Priority +decrement: +'
+                '(?P<tracked_object_priority_decrement>[0-9]+)$')
             m = p18.match(line)
             if m:
                 # if track_found:
@@ -728,16 +775,23 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                         group_key['tracked_objects'] = {}
                     if tracked_object not in group_key:
                         group_key['tracked_objects'][tracked_object] = {}
-                    group_key['tracked_objects'][tracked_object]['object_name'] = tracked_object
-                    group_key['tracked_objects'][tracked_object]['priority_decrement'] = int(m.groupdict()['tracked_object_priority_decrement'])
+                    group_key['tracked_objects'][tracked_object]\
+                        ['object_name'] = tracked_object
+                    group_key['tracked_objects'][tracked_object]\
+                        ['priority_decrement'] = int(m.groupdict()\
+                        ['tracked_object_priority_decrement'])
                 elif tracked_interface:
                     if 'tracked_interfaces' not in group_key:
                         group_key['tracked_interfaces'] = {}
                     if tracked_interface not in group_key['tracked_interfaces']:
                         group_key['tracked_interfaces'][tracked_interface] = {}
-                    group_key['tracked_interfaces'][tracked_interface]['interface_name'] = tracked_interface
-                    group_key['tracked_interfaces'][tracked_interface]['priority_decrement'] = int(m.groupdict()['tracked_object_priority_decrement']) 
-                hsrp_detail_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_number] = group_key
+                    group_key['tracked_interfaces'][tracked_interface]\
+                        ['interface_name'] = tracked_interface
+                    group_key['tracked_interfaces'][tracked_interface]\
+                        ['priority_decrement'] = int(m.groupdict()\
+                        ['tracked_object_priority_decrement']) 
+                hsrp_detail_dict[interface]['address_family'][address_family]\
+                    ['version'][version]['groups'][group_number] = group_key
 
         return hsrp_detail_dict
 
