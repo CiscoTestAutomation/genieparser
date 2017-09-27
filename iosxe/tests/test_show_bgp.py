@@ -28,210 +28,248 @@ class test_show_bgp_all_detail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-      'instance': {'default': {'vrf': {'VRF1': {'address_family': {'vpnv4 unicast RD 100:100': {'default_vrf': 'VRF1',
-                                       'prefixes': {'11.11.11.11/32': {'available_path': '1',
-                                                                       'best_path': '1',
-                                                                       'index': {1: {'gateway': '0.0.0.0',
-                                                                                     'localpref': 100,
-                                                                                     'metric': 0,
-                                                                                     'next-hop': '0.0.0.0',
-                                                                                     'next_hop_via': 'vrf '
-                                                                                                     'VRF1',
-                                                                                     'origin_codes': '?',
-                                                                                     'originator': '10.1.1.1',
-                                                                                     'recipient_pathid': 0,
-                                                                                     'refresh_epoch': 1,
-                                                                                     'route_info': 'Local',
-                                                                                     'status_codes': '*>',
-                                                                                     'transfer_pathid': '0x0',
-                                                                                     'update_group': 1,
-                                                                                     'weight': '32768'}},
-                                                                       'paths': '(1 '
-                                                                                'available, '
-                                                                                'best '
-                                                                                '#1, '
-                                                                                'table '
-                                                                                'VRF1)',
-                                                                       'table_version': '2'}},
-                                       'route_distinguisher': '100:100'},
-          'vpnv6 unicast RD 100:100': {'default_vrf': 'VRF1',
-                                       'prefixes': {'2001:11:11::11/128': {'available_path': '1',
-                                                                           'best_path': '1',
-                                                                           'index': {1: {'gateway': '0.0.0.0',
-                                                                                         'localpref': 100,
-                                                                                         'metric': 0,
-                                                                                         'next-hop': '::',
-                                                                                         'next_hop_via': 'vrf '
-                                                                                                         'VRF1',
-                                                                                         'origin_codes': '?',
-                                                                                         'originator': '10.1.1.1',
-                                                                                         'recipient_pathid': 0,
-                                                                                         'refresh_epoch': 1,
-                                                                                         'route_info': 'Local',
-                                                                                         'status_codes': '*>',
-                                                                                         'transfer_pathid': '0x0',
-                                                                                         'weight': '32768'}},
-                                                                           'paths': '(1 '
-                                                                                    'available, '
-                                                                                    'best '
-                                                                                    '#1, '
-                                                                                    'table '
-                                                                                    'VRF1)',
-                                                                           'table_version': '2'}},
-                                       'route_distinguisher': '100:100'}}},
-'default': {'address_family': {'ipv4 unicast': {'prefixes': {'1.1.1.1/32': {'available_path': '1',
-                                                          'best_path': '1',
-                                                          'index': {1: {'gateway': '0.0.0.0',
-                                                                        'localpref': 100,
-                                                                        'metric': 0,
-                                                                        'next-hop': '0.0.0.0',
-                                                                        'origin_codes': '?',
-                                                                        'originator': '10.1.1.1',
-                                                                        'recipient_pathid': 0,
-                                                                        'refresh_epoch': 1,
-                                                                        'route_info': 'Local',
-                                                                        'status_codes': '*>',
-                                                                        'transfer_pathid': '0x0',
-                                                                        'update_group': 3,
-                                                                        'weight': '32768'}},
-                                                          'paths': '(1 '
-                                                                   'available, '
-                                                                   'best '
-                                                                   '#1, '
-                                                                   'table '
-                                                                   'default)',
-                                                          'table_version': '4'},
-                                           '10.1.1.0/24': {'available_path': '2',
-                                                           'best_path': '1',
-                                                           'index': {1: {'gateway': '0.0.0.0',
-                                                                         'localpref': 100,
-                                                                         'metric': 0,
-                                                                         'next-hop': '0.0.0.0',
-                                                                         'origin_codes': '?',
-                                                                         'originator': '10.1.1.1',
-                                                                         'recipient_pathid': 0,
-                                                                         'refresh_epoch': 1,
-                                                                         'route_info': 'Local',
-                                                                         'status_codes': '*>',
-                                                                         'transfer_pathid': '0x0',
-                                                                         'weight': '32768'},
-                                                                     2: {'gateway': '10.1.1.2',
-                                                                         'localpref': 100,
-                                                                         'metric': 0,
-                                                                         'next-hop': '10.1.1.2',
-                                                                         'origin_codes': '?',
-                                                                         'originator': '10.1.1.2',
-                                                                         'refresh_epoch': 1,
-                                                                         'route_info': 'Local',
-                                                                         'status_codes': '* '
-                                                                                         'i',
-                                                                         'update_group': 3}},
-                                                           'paths': '(2 '
-                                                                    'available, '
-                                                                    'best '
-                                                                    '#1, '
-                                                                    'table '
-                                                                    'default)',
-                                                           'table_version': '5'},
-                                           '2.2.2.2/32': {'available_path': '1',
-                                                          'best_path': '1',
-                                                          'index': {1: {'gateway': '10.1.1.2',
-                                                                        'localpref': 100,
-                                                                        'metric': 0,
-                                                                        'next-hop': '10.1.1.2',
-                                                                        'origin_codes': '?',
-                                                                        'originator': '10.1.1.2',
-                                                                        'recipient_pathid': 0,
-                                                                        'refresh_epoch': 1,
-                                                                        'route_info': 'Local',
-                                                                        'status_codes': '*>',
-                                                                        'transfer_pathid': '0x0',
-                                                                        'update_group': 3}},
-                                                          'paths': '(1 '
-                                                                   'available, '
-                                                                   'best '
-                                                                   '#1, '
-                                                                   'table '
-                                                                   'default)',
-                                                          'table_version': '2'}}},
-             'ipv6 unicast': {'prefixes': {'2001:1:1:1::1/128': {'available_path': '1',
-                                                                 'best_path': '1',
-                                                                 'index': {1: {'gateway': '0.0.0.0',
-                                                                               'localpref': 100,
-                                                                               'metric': 0,
-                                                                               'next-hop': '::',
-                                                                               'origin_codes': '?',
-                                                                               'originator': '10.1.1.1',
-                                                                               'recipient_pathid': 0,
-                                                                               'refresh_epoch': 1,
-                                                                               'route_info': 'Local',
-                                                                               'status_codes': '*>',
-                                                                               'transfer_pathid': '0x0',
-                                                                               'update_group': 1,
-                                                                               'weight': '32768'}},
-                                                                 'paths': '(1 '
-                                                                          'available, '
-                                                                          'best '
-                                                                          '#1, '
-                                                                          'table '
-                                                                          'default)',
-                                                                 'table_version': '4'},
-                                           '2001:2:2:2::2/128': {'available_path': '2',
-                                                                 'best_path': '1',
-                                                                 'index': {1: {'gateway': '2001:DB8:1:1::2',
-                                                                               'localpref': 100,
-                                                                               'metric': 0,
-                                                                               'next-hop': '2001:DB8:1:1::2',
-                                                                               'origin_codes': '?',
-                                                                               'originator': '10.1.1.2',
-                                                                               'recipient_pathid': 0,
-                                                                               'refresh_epoch': 1,
-                                                                               'route_info': 'Local',
-                                                                               'status_codes': '* '
-                                                                                               'i',
-                                                                               'transfer_pathid': '0x0',
-                                                                               'update_group': 1}},
-                                                                 'paths': '(2 '
-                                                                          'available, '
-                                                                          'best '
-                                                                          '#1, '
-                                                                          'table '
-                                                                          'default)',
-                                                                 'table_version': '2'},
-                                           '2001:DB8:1:1::/64': {'available_path': '3',
-                                                                 'best_path': '1',
-                                                                 'index': {1: {'gateway': '0.0.0.0',
-                                                                               'localpref': 100,
-                                                                               'metric': 0,
-                                                                               'next-hop': '::',
-                                                                               'origin_codes': '?',
-                                                                               'originator': '10.1.1.1',
-                                                                               'recipient_pathid': 0,
-                                                                               'refresh_epoch': 1,
-                                                                               'route_info': 'Local',
-                                                                               'status_codes': '*>',
-                                                                               'transfer_pathid': '0x0',
-                                                                               'weight': '32768'},
-                                                                           2: {'gateway': '2001:DB8:1:1::2',
-                                                                               'localpref': 100,
-                                                                               'metric': 0,
-                                                                               'next-hop': '2001:DB8:1:1::2',
-                                                                               'origin_codes': '?',
-                                                                               'originator': '10.1.1.2',
-                                                                               'refresh_epoch': 1,
-                                                                               'route_info': 'Local',
-                                                                               'status_codes': '* '
-                                                                                               'i',
-                                                                               'update_group': 1}},
-                                                                 'paths': '(3 '
-                                                                          'available, '
-                                                                          'best '
-                                                                          '#1, '
-                                                                          'table '
-                                                                          'default)',
-                                                                 'table_version': '5'}}}}}}}}}
-
-
+      'instance':
+        {'default':
+          {'vrf':
+            {'VRF1':
+              {'address_family':
+                {'vpnv4 unicast RD 100:100':
+                  {'default_vrf': 'VRF1',
+                   'prefixes':
+                    {'11.11.11.11/32':
+                      {'available_path': '1',
+                       'best_path': '1',
+                       'index':
+                        {1:
+                          {'gateway': '0.0.0.0',
+                           'localpref': 100,
+                           'metric': 0,
+                           'next-hop': '0.0.0.0',
+                           'next_hop_via': 'vrf '
+                                           'VRF1',
+                           'origin_codes': '?',
+                           'originator': '10.1.1.1',
+                           'recipient_pathid': 0,
+                           'refresh_epoch': 1,
+                           'route_info': 'Local',
+                           'status_codes': '*>',
+                           'transfer_pathid': '0x0',
+                           'update_group': 1,
+                           'weight': '32768'}},
+                       'paths': '(1 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'VRF1)',
+                       'table_version': '2'}},
+                    'route_distinguisher': '100:100'},
+                'vpnv6 unicast RD 100:100':
+                  {'default_vrf': 'VRF1',
+                   'prefixes':
+                    {'2001:11:11::11/128':
+                      {'available_path': '1',
+                       'best_path': '1',
+                       'index':
+                        {1:
+                          {'gateway': '0.0.0.0',
+                           'localpref': 100,
+                           'metric': 0,
+                           'next-hop': '::',
+                           'next_hop_via': 'vrf '
+                                           'VRF1',
+                           'origin_codes': '?',
+                           'originator': '10.1.1.1',
+                           'recipient_pathid': 0,
+                           'refresh_epoch': 1,
+                           'route_info': 'Local',
+                           'status_codes': '*>',
+                           'transfer_pathid': '0x0',
+                           'weight': '32768'}},
+                       'paths': '(1 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'VRF1)',
+                       'table_version': '2'}},
+                    'route_distinguisher': '100:100'}}},
+            'default':
+              {'address_family':
+                {'ipv4 unicast':
+                  {'prefixes':
+                    {'1.1.1.1/32':
+                      {'available_path': '1',
+                       'best_path': '1',
+                       'index':
+                        {1:
+                          {'gateway': '0.0.0.0',
+                           'localpref': 100,
+                           'metric': 0,
+                           'next-hop': '0.0.0.0',
+                           'origin_codes': '?',
+                           'originator': '10.1.1.1',
+                           'recipient_pathid': 0,
+                           'refresh_epoch': 1,
+                           'route_info': 'Local',
+                           'status_codes': '*>',
+                           'transfer_pathid': '0x0',
+                           'update_group': 3,
+                           'weight': '32768'}},
+                       'paths': '(1 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'default)',
+                       'table_version': '4'},
+                    '10.1.1.0/24':
+                      {'available_path': '2',
+                       'best_path': '1',
+                       'index':
+                        {1:
+                          {'gateway': '0.0.0.0',
+                           'localpref': 100,
+                           'metric': 0,
+                           'next-hop': '0.0.0.0',
+                           'origin_codes': '?',
+                           'originator': '10.1.1.1',
+                           'recipient_pathid': 0,
+                           'refresh_epoch': 1,
+                           'route_info': 'Local',
+                           'status_codes': '*>',
+                           'transfer_pathid': '0x0',
+                           'weight': '32768'},
+                        2:
+                          {'gateway': '10.1.1.2',
+                           'localpref': 100,
+                           'metric': 0,
+                           'next-hop': '10.1.1.2',
+                           'origin_codes': '?',
+                           'originator': '10.1.1.2',
+                           'refresh_epoch': 1,
+                           'route_info': 'Local',
+                           'status_codes': '* '
+                                           'i',
+                           'update_group': 3}},
+                       'paths': '(2 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'default)',
+                       'table_version': '5'},
+                    '2.2.2.2/32':
+                      {'available_path': '1',
+                       'best_path': '1',
+                       'index':
+                        {1:
+                          {'gateway': '10.1.1.2',
+                           'localpref': 100,
+                           'metric': 0,
+                           'next-hop': '10.1.1.2',
+                           'origin_codes': '?',
+                           'originator': '10.1.1.2',
+                           'recipient_pathid': 0,
+                           'refresh_epoch': 1,
+                           'route_info': 'Local',
+                           'status_codes': '*>',
+                           'transfer_pathid': '0x0',
+                           'update_group': 3}},
+                       'paths': '(1 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'default)',
+                       'table_version': '2'}}},
+                'ipv6 unicast':
+                  {'prefixes':
+                    {'2001:1:1:1::1/128':
+                      {'available_path': '1',
+                       'best_path': '1',
+                       'index':
+                        {1:
+                          {'gateway': '0.0.0.0',
+                           'localpref': 100,
+                           'metric': 0,
+                           'next-hop': '::',
+                           'origin_codes': '?',
+                           'originator': '10.1.1.1',
+                           'recipient_pathid': 0,
+                           'refresh_epoch': 1,
+                           'route_info': 'Local',
+                           'status_codes': '*>',
+                           'transfer_pathid': '0x0',
+                           'update_group': 1,
+                           'weight': '32768'}},
+                       'paths': '(1 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'default)',
+                       'table_version': '4'},
+                    '2001:2:2:2::2/128':
+                      {'available_path': '2',
+                       'best_path': '1',
+                       'index':
+                        {1:
+                          {'gateway': '2001:DB8:1:1::2',
+                           'localpref': 100,
+                           'metric': 0,
+                           'next-hop': '2001:DB8:1:1::2',
+                           'origin_codes': '?',
+                           'originator': '10.1.1.2',
+                           'recipient_pathid': 0,
+                           'refresh_epoch': 1,
+                           'route_info': 'Local',
+                           'status_codes': '* '
+                                           'i',
+                           'transfer_pathid': '0x0',
+                           'update_group': 1}},
+                       'paths': '(2 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'default)',
+                       'table_version': '2'},
+                    '2001:DB8:1:1::/64':
+                      {'available_path': '3',
+                       'best_path': '1',
+                       'index':
+                        {1:
+                          {'gateway': '0.0.0.0',
+                           'localpref': 100,
+                           'metric': 0,
+                           'next-hop': '::',
+                           'origin_codes': '?',
+                           'originator': '10.1.1.1',
+                           'recipient_pathid': 0,
+                           'refresh_epoch': 1,
+                           'route_info': 'Local',
+                           'status_codes': '*>',
+                           'transfer_pathid': '0x0',
+                           'weight': '32768'},
+                        2: {'gateway': '2001:DB8:1:1::2',
+                            'localpref': 100,
+                            'metric': 0,
+                            'next-hop': '2001:DB8:1:1::2',
+                            'origin_codes': '?',
+                            'originator': '10.1.1.2',
+                            'refresh_epoch': 1,
+                            'route_info': 'Local',
+                            'status_codes': '* '
+                                            'i',
+                            'update_group': 1}},
+                       'paths': '(3 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'default)',
+                       'table_version': '5'}}}}}}}}}
 
     golden_output = {'execute.return_value': '''
       R1#show bgp all detail 
@@ -364,166 +402,195 @@ class test_show_bgp_all_detail(unittest.TestCase):
         '''}
 
     golden_parsed_output2 = {
-      'instance': {'default': {'vrf': {'EVPN-BGP-Table': {'address_family': {'vpnv4 unicast RD 65535:1': {'default_vrf': 'evpn1',
-                     'prefixes': {'100.1.1.0/24': {'available_path': '1',
-                                                   'best_path': '1',
-                                                   'index': {1: {'evpn': {'encap': ':8',
-                                                                          'evpn_esi': '00000000000000000000',
-                                                                          'ext_community': 'RT:65535:1',
-                                                                          'gateway_address': '0.0.0.0',
-                                                                          'label': 30000,
-                                                                          'local_vtep': '33.33.33.33',
-                                                                          'router_mac': 'MAC:001E.7A13.E9BF'},
-                                                                 'gateway': '0.0.0.0',
-                                                                 'localpref': 100,
-                                                                 'metric': 0,
-                                                                 'next-hop': '0.0.0.0',
-                                                                 'next_hop_via': 'vrf '
-                                                                                 'evpn1',
-                                                                 'origin_codes': '?',
-                                                                 'originator': '33.33.33.33',
-                                                                 'recipient_pathid': 0,
-                                                                 'refresh_epoch': 1,
-                                                                 'route_info': 'Local, '
-                                                                               'imported '
-                                                                               'path '
-                                                                               'from '
-                                                                               'base',
-                                                                 'status_codes': '*>',
-                                                                 'transfer_pathid': '0x0',
-                                                                 'weight': '32768'},
-                                                             2: {'evpn': {'encap': ':8',
-                                                                          'evpn_esi': '00000000000000000000',
-                                                                          'ext_community': 'RT:65535:1',
-                                                                          'gateway_address': '0.0.0.0',
-                                                                          'label': 30000,
-                                                                          'local_vtep': '33.33.33.33',
-                                                                          'router_mac': 'MAC:001E.7A13.E9BF'},
-                                                                 'gateway': '3.3.3.254',
-                                                                 'localpref': 100,
-                                                                 'metric': 0,
-                                                                 'next-hop': '3.3.3.254',
-                                                                 'next_hop_via': 'vrf '
-                                                                                 'evpn1',
-                                                                 'origin_codes': '?',
-                                                                 'originator': '33.33.33.22',
-                                                                 'refresh_epoch': 1,
-                                                                 'route_info': '65530, '
-                                                                               'imported '
-                                                                               'path '
-                                                                               'from '
-                                                                               'base',
-                                                                 'status_codes': '* '},
-                                                             3: {'evpn': {'encap': ':8',
-                                                                          'evpn_esi': '00000000000000000000',
-                                                                          'ext_community': 'RT:65535:1',
-                                                                          'gateway_address': '0.0.0.0',
-                                                                          'label': 30000,
-                                                                          'local_vtep': '33.33.33.33',
-                                                                          'router_mac': 'MAC:001E.7A13.E9BF'},
-                                                                 'gateway': '0.0.0.0',
-                                                                 'localpref': 100,
-                                                                 'metric': 0,
-                                                                 'next-hop': '0.0.0.0',
-                                                                 'next_hop_via': 'vrf '
-                                                                                 'evpn1',
-                                                                 'origin_codes': '?',
-                                                                 'originator': '33.33.33.33',
-                                                                 'recipient_pathid': 0,
-                                                                 'refresh_epoch': 1,
-                                                                 'route_info': 'Local, '
-                                                                               'imported '
-                                                                               'path '
-                                                                               'from '
-                                                                               'base',
-                                                                 'status_codes': '*>',
-                                                                 'transfer_pathid': '0x0',
-                                                                 'weight': '32768'}},
-                                                   'paths': '(1 '
-                                                            'available, '
-                                                            'best '
-                                                            '#1, '
-                                                            'table '
-                                                            'EVPN-BGP-Table)',
-                                                   'table_version': '5'}},
-                     'route_distinguisher': '65535:1'}}},
-'evpn1': {'address_family': {'vpnv4 unicast RD 65535:1': {'default_vrf': 'evpn1',
-            'prefixes': {'100.1.1.0/24': {'available_path': '1',
-                                          'best_path': '1',
-                                          'index': {1: {'gateway': '0.0.0.0',
-                                                        'local_vxlan_vtep': {'bdi': 'BDI200',
-                                                                             'encap': '8',
-                                                                             'local_router_mac': '001E.7A13.E9BF',
-                                                                             'vni': '30000',
-                                                                             'vrf': 'evpn1',
-                                                                             'vtep_ip': '33.33.33.33'},
-                                                        'localpref': 100,
-                                                        'metric': 0,
-                                                        'next-hop': '0.0.0.0',
-                                                        'next_hop_via': 'vrf '
-                                                                        'evpn1',
-                                                        'origin_codes': '?',
-                                                        'originator': '33.33.33.33',
-                                                        'recipient_pathid': 0,
-                                                        'refresh_epoch': 1,
-                                                        'route_info': 'Local',
-                                                        'status_codes': '*>',
-                                                        'transfer_pathid': '0x0',
-                                                        'weight': '32768'}},
-                                          'paths': '(1 '
-                                                   'available, '
-                                                   'best '
-                                                   '#1, '
-                                                   'table '
-                                                   'evpn1)',
-                                          'table_version': '5'},
-                         '3.3.3.0/24': {'available_path': '2',
-                                        'best_path': '2',
-                                        'index': {1: {'gateway': '3.3.3.254',
-                                                      'local_vxlan_vtep': {'bdi': 'BDI200',
-                                                                           'encap': '8',
-                                                                           'local_router_mac': '001E.7A13.E9BF',
-                                                                           'vni': '30000',
-                                                                           'vrf': 'evpn1',
-                                                                           'vtep_ip': '33.33.33.33'},
-                                                      'localpref': 100,
-                                                      'metric': 0,
-                                                      'next-hop': '3.3.3.254',
-                                                      'next_hop_via': 'vrf '
-                                                                      'evpn1',
-                                                      'origin_codes': '?',
-                                                      'originator': '33.33.33.22',
-                                                      'refresh_epoch': 1,
-                                                      'status_codes': '* '},
-                                                  2: {'gateway': '0.0.0.0',
-                                                      'local_vxlan_vtep': {'bdi': 'BDI200',
-                                                                           'encap': '8',
-                                                                           'local_router_mac': '001E.7A13.E9BF',
-                                                                           'vni': '30000',
-                                                                           'vrf': 'evpn1',
-                                                                           'vtep_ip': '33.33.33.33'},
-                                                      'localpref': 100,
-                                                      'metric': 0,
-                                                      'next-hop': '0.0.0.0',
-                                                      'next_hop_via': 'vrf '
-                                                                      'evpn1',
-                                                      'origin_codes': '?',
-                                                      'originator': '33.33.33.33',
-                                                      'recipient_pathid': 0,
-                                                      'refresh_epoch': 1,
-                                                      'route_info': 'Local',
-                                                      'status_codes': '*>',
-                                                      'transfer_pathid': '0x0',
-                                                      'update_group': 65530,
-                                                      'weight': '32768'}},
-                                        'paths': '(2 '
-                                                 'available, '
-                                                 'best '
-                                                 '#2, '
-                                                 'table '
-                                                 'evpn1)',
-                                        'table_version': '4'}},
-            'route_distinguisher': '65535:1'}}}}}}}
+      'instance':
+        {'default':
+          {'vrf':
+            {'EVPN-BGP-Table':
+              {'address_family':
+                {'vpnv4 unicast RD 65535:1':
+                  {'default_vrf': 'evpn1',
+                   'prefixes':
+                    {'100.1.1.0/24':
+                      {'available_path': '1',
+                       'best_path': '1',
+                       'index':
+                        {1:
+                          {'evpn':
+                            {'encap': ':8',
+                             'evpn_esi': '00000000000000000000',
+                             'ext_community': 'RT:65535:1',
+                             'gateway_address': '0.0.0.0',
+                             'label': 30000,
+                             'local_vtep': '33.33.33.33',
+                             'router_mac': 'MAC:001E.7A13.E9BF'},
+                          'gateway': '0.0.0.0',
+                          'localpref': 100,
+                          'metric': 0,
+                          'next-hop': '0.0.0.0',
+                          'next_hop_via': 'vrf '
+                                          'evpn1',
+                          'origin_codes': '?',
+                          'originator': '33.33.33.33',
+                          'recipient_pathid': 0,
+                          'refresh_epoch': 1,
+                          'route_info': 'Local, '
+                                        'imported '
+                                        'path '
+                                        'from '
+                                        'base',
+                          'status_codes': '*>',
+                          'transfer_pathid': '0x0',
+                          'weight': '32768'},
+                        2:
+                          {'evpn':
+                            {'encap': ':8',
+                             'evpn_esi': '00000000000000000000',
+                             'ext_community': 'RT:65535:1',
+                             'gateway_address': '0.0.0.0',
+                             'label': 30000,
+                             'local_vtep': '33.33.33.33',
+                             'router_mac': 'MAC:001E.7A13.E9BF'},
+                          'gateway': '3.3.3.254',
+                          'localpref': 100,
+                          'metric': 0,
+                          'next-hop': '3.3.3.254',
+                          'next_hop_via': 'vrf '
+                                          'evpn1',
+                          'origin_codes': '?',
+                          'originator': '33.33.33.22',
+                          'refresh_epoch': 1,
+                          'route_info': '65530, '
+                                        'imported '
+                                        'path '
+                                        'from '
+                                        'base',
+                          'status_codes': '* '},
+                        3:
+                          {'evpn':
+                            {'encap': ':8',
+                             'evpn_esi': '00000000000000000000',
+                             'ext_community': 'RT:65535:1',
+                             'gateway_address': '0.0.0.0',
+                             'label': 30000,
+                             'local_vtep': '33.33.33.33',
+                             'router_mac': 'MAC:001E.7A13.E9BF'},
+                          'gateway': '0.0.0.0',
+                          'localpref': 100,
+                          'metric': 0,
+                          'next-hop': '0.0.0.0',
+                          'next_hop_via': 'vrf '
+                                          'evpn1',
+                          'origin_codes': '?',
+                          'originator': '33.33.33.33',
+                          'recipient_pathid': 0,
+                          'refresh_epoch': 1,
+                          'route_info': 'Local, '
+                                        'imported '
+                                        'path '
+                                        'from '
+                                        'base',
+                          'status_codes': '*>',
+                          'transfer_pathid': '0x0',
+                          'weight': '32768'}},
+                       'paths': '(1 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'EVPN-BGP-Table)',
+                       'table_version': '5'}},
+                   'route_distinguisher': '65535:1'}}},
+                'evpn1':
+                  {'address_family':
+                    {'vpnv4 unicast RD 65535:1':
+                      {'default_vrf': 'evpn1',
+                       'prefixes':
+                        {'100.1.1.0/24':
+                          {'available_path': '1',
+                           'best_path': '1',
+                           'index':
+                            {1:
+                              {'gateway': '0.0.0.0',
+                               'local_vxlan_vtep':
+                                {'bdi': 'BDI200',
+                                 'encap': '8',
+                                 'local_router_mac': '001E.7A13.E9BF',
+                                 'vni': '30000',
+                                 'vrf': 'evpn1',
+                                 'vtep_ip': '33.33.33.33'},
+                               'localpref': 100,
+                               'metric': 0,
+                               'next-hop': '0.0.0.0',
+                               'next_hop_via': 'vrf '
+                                               'evpn1',
+                               'origin_codes': '?',
+                               'originator': '33.33.33.33',
+                               'recipient_pathid': 0,
+                               'refresh_epoch': 1,
+                               'route_info': 'Local',
+                               'status_codes': '*>',
+                               'transfer_pathid': '0x0',
+                               'weight': '32768'}},
+                       'paths': '(1 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'evpn1)',
+                       'table_version': '5'},
+                    '3.3.3.0/24':
+                      {'available_path': '2',
+                       'best_path': '2',
+                       'index':
+                        {1:
+                          {'gateway': '3.3.3.254',
+                           'local_vxlan_vtep':
+                            {'bdi': 'BDI200',
+                             'encap': '8',
+                             'local_router_mac': '001E.7A13.E9BF',
+                             'vni': '30000',
+                             'vrf': 'evpn1',
+                             'vtep_ip': '33.33.33.33'},
+                           'localpref': 100,
+                           'metric': 0,
+                           'next-hop': '3.3.3.254',
+                           'next_hop_via': 'vrf '
+                                           'evpn1',
+                           'origin_codes': '?',
+                           'originator': '33.33.33.22',
+                           'refresh_epoch': 1,
+                           'status_codes': '* '},
+                        2:
+                          {'gateway': '0.0.0.0',
+                           'local_vxlan_vtep':
+                            {'bdi': 'BDI200',
+                             'encap': '8',
+                             'local_router_mac': '001E.7A13.E9BF',
+                             'vni': '30000',
+                             'vrf': 'evpn1',
+                             'vtep_ip': '33.33.33.33'},
+                           'localpref': 100,
+                           'metric': 0,
+                           'next-hop': '0.0.0.0',
+                           'next_hop_via': 'vrf '
+                                           'evpn1',
+                           'origin_codes': '?',
+                           'originator': '33.33.33.33',
+                           'recipient_pathid': 0,
+                           'refresh_epoch': 1,
+                           'route_info': 'Local',
+                           'status_codes': '*>',
+                           'transfer_pathid': '0x0',
+                           'update_group': 65530,
+                           'weight': '32768'}},
+                       'paths': '(2 '
+                                'available, '
+                                'best '
+                                '#2, '
+                                'table '
+                                'evpn1)',
+                       'table_version': '4'}},
+                   'route_distinguisher': '65535:1'}}}}}}}
 
 
     golden_output2 = {'execute.return_value': '''
