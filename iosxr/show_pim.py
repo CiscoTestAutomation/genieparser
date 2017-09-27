@@ -126,19 +126,23 @@ class ShowPimVrfInterfaceDetailSchema(MetaParser):
                         {'enable': bool,
                         'interface': 
                             {Any(): 
-                                {'pim_state': str,
+                                {'oper_status': str,
                                 'nbr_count': int,
                                 'nbr_count': int,
                                 'hello_interval': int,
-                                'dr_prior': int,
-                                'primary_address': str,
+                                'dr_priority': int,
+                                'primary_address': list,
                                 Optional('address'): str,
                                 'flags': str,
-                                'bfd': str,
+                                'bfd': 
+                                    {'enable': bool,
+                                    'interval': float,
+                                    'detection_multiplier': int,
+                                    },
                                 'dr': str,
                                 'propagation_delay': int,
                                 'override_interval': int,
-                                'hello_timer': str,
+                                'hello_expiration': str,
                                 'neighbor_filter': str,
                                 },
                             },
@@ -196,18 +200,19 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
             #                                 Count Intvl  Prior
 
             # Loopback0                   on   1     30     1
-            p3 = re.compile(r'^\s*(?P<interface>(\S+)) +(?P<pim_state>(\S+))'
+            p3 = re.compile(r'^\s*(?P<interface>(\S+)) +(?P<oper_status>(\S+))'
                              ' +(?P<nbr_count>[0-9]+)'
                              ' +(?P<hello_interval>[0-9]+)'
-                             ' +(?P<dr_prior>[0-9]+)$')
+                             ' +(?P<dr_priority>[0-9]+)$')
             m = p3.match(line)
             if m:
                 # Get values
                 interface = m.groupdict()['interface']
-                pim_state = m.groupdict()['pim_state']
+                oper_status = m.groupdict()['oper_status']
                 nbr_count = int(m.groupdict()['nbr_count'])
                 hello_interval = int(m.groupdict()['hello_interval'])
-                dr_prior = int(m.groupdict()['dr_prior'])
+                dr_priority = int(m.groupdict()['dr_priority'])
+                address_list = []
                 if 'interface' not in parsed_dict['vrf'][vrf_name]\
                         ['address_family'][af]:
                     parsed_dict['vrf'][vrf_name]['address_family'][af]\
@@ -218,13 +223,13 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
                         ['interface'][interface] = {}
                 # Set values
                 parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
-                    [interface]['pim_state'] = pim_state
+                    [interface]['oper_status'] = oper_status
                 parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
                     [interface]['nbr_count'] = nbr_count
                 parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
                     [interface]['hello_interval'] = hello_interval
                 parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
-                    [interface]['dr_prior'] = dr_prior
+                    [interface]['dr_priority'] = dr_priority
                 continue
 
             # Primary Address : fe80::85c6:bdff:fe62:61e
@@ -232,9 +237,10 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
                              ' +(?P<primary_address>(\S+))$')
             m = p4.match(line)
             if m:
+                if m.groupdict()['primary_address']:
+                    address_list.append(m.groupdict()['primary_address'])
                 parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
-                    [interface]['primary_address'] = \
-                        m.groupdict()['primary_address']
+                    [interface]['primary_address'] = address_list
                 continue
             
             # Address : 2001:db8:2:2::2
@@ -254,12 +260,29 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
                 continue
 
             # BFD : Off/150 ms/3
-            p7 = re.compile(r'^\s*BFD *: (?P<bfd>[a-zA-Z0-9\/\s\-\_]+)$')
+            p7 = re.compile(r'^\s*BFD *: (?P<enable>(Off|On))'
+                             '\/(?P<interval>[0-9]+)'
+                             ' *ms\/(?P<detection_multiplier>[0-9]+)$')
             m = p7.match(line)
             if m:
-                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
-                    [interface]['bfd'] = m.groupdict()['bfd']
-                continue
+                # Get values
+                enable = m.groupdict()['enable']
+                interval = float(int(m.groupdict()['interval'])/1000)
+                detection_multiplier = int(m.groupdict()['detection_multiplier'])
+                # Set values
+                if 'bfd' not in parsed_dict['vrf'][vrf_name]['address_family']\
+                        [af]['interface'][interface]:
+                    parsed_dict['vrf'][vrf_name]['address_family'][af]\
+                        ['interface'][interface]['bfd'] = {}
+                    bfd_dict = parsed_dict['vrf'][vrf_name]['address_family']\
+                        [af]['interface'][interface]['bfd']
+                    if enable == 'On':
+                        bfd_dict['enable'] = True
+                    else:
+                        bfd_dict['enable'] = False
+                    bfd_dict['interval'] = interval
+                    bfd_dict['detection_multiplier'] = detection_multiplier
+                    continue
 
             # DR : this system
             p8 = re.compile(r'^\s*DR *: (?P<dr>[a-zA-Z\s]+)$')
@@ -290,11 +313,11 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
                 continue
 
             # Hello Timer : 00:00:19
-            p11 = re.compile(r'^\s*Hello +Timer *: +(?P<hello_timer>(\S+))$')
+            p11 = re.compile(r'^\s*Hello +Timer *: +(?P<hello_expiration>(\S+))$')
             m = p11.match(line)
             if m:
                 parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
-                    [interface]['hello_timer'] = m.groupdict()['hello_timer']
+                    [interface]['hello_expiration'] = m.groupdict()['hello_expiration']
                 continue
 
             # Neighbor Filter : -
@@ -331,7 +354,7 @@ class ShowPimVrfRpfSummarySchema(MetaParser):
                         'default_rpf_table': str,
                         'rib_convergence_timeout': str,
                         'rib_convergence_time_left': str,
-                        'multipath_prf_selection': bool,
+                        'multipath': bool,
                         Optional('table'): 
                             {Any(): 
                                 {'pim_rpf_registrations': int,
@@ -462,9 +485,9 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
             if m:
                 status = m.groupdict()['status']
                 if status == 'Enabled':
-                    sub_dict['multipath_prf_selection'] = True
+                    sub_dict['multipath'] = True
                 else:
-                    sub_dict['multipath_prf_selection'] = False
+                    sub_dict['multipath'] = False
                 continue
 
             # Table: IPv6-Unicast-default
