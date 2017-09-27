@@ -3656,7 +3656,6 @@ class ShowIpBgpTemplatePeerPolicy(ShowIpbgpTemplatePeerPolicySchema):
                 line = line.rstrip()
             else:
                 continue
-
             # Template:PEER-POLICY, index:1.
             p1 = re.compile(r'^\s*Template:+(?P<template_id>[0-9\s\S\w]+),'
                             ' +index:(?P<index>[0-9]+).$')
@@ -3872,48 +3871,213 @@ class ShowIpBgpTemplatePeerPolicy(ShowIpbgpTemplatePeerPolicySchema):
                     if not len(parsed_dict['peer_policy'][key]['inherited_policies']):
                         del parsed_dict['peer_policy'][key]['inherited_policies']
 
-
         return parsed_dict
 
 
 
-class ShowBgpAllSchema(MetaParser):
-    '''Schema for show bgp all'''
 
+
+class ShowIpBgpAllDampeningParametersSchema(MetaParser):
+    '''
+    Schema for show ip bgp all dampening parameters
+    '''
     schema = {
         'vrf':
             {Any():
-                   {'address_family':
-                        {Any():
-                             {Optional('bgp_table_version'): int,
-                              Optional('local_router_id'): str,
-                              Optional('route_distinguisher'): str,
-                              Optional('default_vrf'): str,
-                              Optional('af_private_import_to_address_family'): str,
-                              Optional('pfx_count'): int,
-                              Optional('pfx_limit'): int,
-                              Optional('routes'):
-                                  {Optional(Any()):
-                                       {Optional('index'):
-                                            {Optional(Any()):
-                                                 {Optional('next_hop'): str,
-                                                  Optional('status_codes'): str,
-                                                  Optional('path_type'): str,
-                                                  Optional('metric'): int,
-                                                  Optional('localpref'): int,
-                                                  Optional('weight'): int,
-                                                  Optional('path'): str,
-                                                  Optional('origin_codes'): str,
-                                                  },
-                                             },
-                                        },
-                                   },
-                              },
-                         },
-                    },
+                 {
+                 Optional('address_family'):
+                      {Any():
+                          {
+                              Optional('dampening'): bool,
+                              Optional('dampening_decay_time'): int,
+                              Optional('dampening_half_life_time'): int,
+                              Optional('dampening_reuse_time'): int,
+                              Optional('dampening_max_suppress_penalty'): int,
+                              Optional('dampening_suppress_time'): int,
+                              Optional('dampening_max_suppress_time'): int,
+                          },
+                      },
+                 },
              },
     }
 
+class ShowIpBgpAllDampeningParameters(ShowIpBgpAllDampeningParametersSchema):
+    '''
+        Parser for:
+        show ip bgp all dampening parameters
+    '''
+
+    def cli(self):
+
+        cmd = 'show ip bgp all dampening parameters'
+        out = self.device.execute(cmd)
+
+        # Init vars
+        parsed_dict = {}
+        vrf_name = 'default'
+
+        for line in out.splitlines():
+            if line.strip():
+                line = line.rstrip()
+            else:
+                continue
+
+            # For address family: IPv4 Unicast
+            p1 = re.compile(r'^\s*For +address +family:'
+                            ' +(?P<address_family>[a-zA-Z0-9\-\s]+)$')
+            m = p1.match(line)
+            if m:
+                af_name = m.groupdict()['address_family'].lower()
+                if 'vrf' not in parsed_dict:
+                    parsed_dict['vrf'] = {}
+                if vrf_name not in parsed_dict['vrf']:
+                    parsed_dict['vrf'][vrf_name] = {}
+                if 'address_family' not in parsed_dict['vrf'][vrf_name]:
+                    parsed_dict['vrf'][vrf_name]['address_family'] = {}
+                if af_name not in parsed_dict['vrf'][vrf_name]['address_family']:
+                    parsed_dict['vrf'][vrf_name]['address_family'][af_name] = {}
+                continue
+
+            # dampening 35 200 200 70
+            p2 = re.compile(r'^\s*dampening'
+                            ' +(?P<dampening_val>[\d\s\S]+)$')
+            m = p2.match(line)
+            if m:
+                dampening_val = m.groupdict()['dampening_val']
+                if vrf_name not in parsed_dict['vrf']:
+                    parsed_dict['vrf'][vrf_name] = {}
+                if 'address_family' not in parsed_dict['vrf'][vrf_name]:
+                    parsed_dict['vrf'][vrf_name]['address_family'] = {}
+                if af_name not in parsed_dict['vrf'][vrf_name]['address_family']:
+                    parsed_dict['vrf'][vrf_name]['address_family'][af_name] = {}
+
+                parsed_dict['vrf'][vrf_name]['address_family'][af_name]['dampening'] = True
+                continue
+
+            # Half-life time      : 35 mins       Decay Time       : 4200 secs
+            p3 = re.compile(r'^\s*Half-life +time\s*:'
+                            ' +(?P<half_life_time>[\d]+)'
+                            ' mins +Decay +Time +: +(?P<decay_time>[\d]+) +secs$')
+            m = p3.match(line)
+            if m:
+                half_life_time = int(m.groupdict()['half_life_time'])*60
+                decay_time = int(m.groupdict()['decay_time'])
+                parsed_dict['vrf'][vrf_name]['address_family'][af_name]\
+                    ['dampening_half_life_time'] = half_life_time
+                parsed_dict['vrf'][vrf_name]['address_family'][af_name] \
+                    ['dampening_decay_time'] = decay_time
+                continue
+
+            # Max suppress penalty:   800         Max suppress time: 70 mins
+            p4 = re.compile(r'^\s*Max +suppress +penalty:'
+                            '\s+(?P<max_suppress_penalty>[0-9]+)'
+                            '\s+Max +suppress +time:\s+(?P<max_suppress_time>[\d]+) +mins$')
+            m = p4.match(line)
+            if m:
+                max_suppress_penalty = int(m.groupdict()['max_suppress_penalty'])
+                max_suppress_time = int(m.groupdict()['max_suppress_time'])*60
+                parsed_dict['vrf'][vrf_name]['address_family'][af_name] \
+                    ['dampening_max_suppress_penalty'] = max_suppress_penalty
+                parsed_dict['vrf'][vrf_name]['address_family'][af_name] \
+                    ['dampening_max_suppress_time'] = max_suppress_time
+                continue
+
+            # Suppress penalty :   200         Reuse penalty : 200
+            p5 = re.compile(r'^\s*Suppress +penalty +:'
+                            ' +(?P<suppress_penalty>[\d]+)'
+                            ' +Reuse +penalty +: +(?P<reuse_penalty>[\d]+)$')
+            m = p5.match(line)
+            if m:
+                suppress_penalty = int(m.groupdict()['suppress_penalty'])
+                reuse_time = int(m.groupdict()['reuse_penalty'])
+                parsed_dict['vrf'][vrf_name]['address_family'][af_name] \
+                    ['dampening_suppress_time'] = suppress_penalty
+                parsed_dict['vrf'][vrf_name]['address_family'][af_name]\
+                    ['dampening_reuse_time'] = reuse_time
+                continue
+
+            # % dampening not enabled for base
+            p6 = re.compile(r'^\s*% +dampening +not +enabled +for +base$')
+            m = p6.match(line)
+            if m:
+                continue
+
+            # For vrf: VRF1
+            p7 = re.compile(r'^\s*For +vrf: +(?P<vrf_name>[\w\d]+)$')
+            m = p7.match(line)
+            if m:
+                vrf_name = m.groupdict()['vrf_name']
+                if 'vrf' not in parsed_dict:
+                    parsed_dict['vrf'] = {}
+                if vrf_name not in parsed_dict['vrf']:
+                    parsed_dict['vrf'][vrf_name] = {}
+                continue
+
+            # % dampening not enabled for vrf VRF1
+            p8 = re.compile(r'^\s*% +dampening +not +enabled +for +vrf +(?P<vrf_name>[\d\w]+)$')
+            m = p8.match(line)
+            if m:
+                continue
+
+        if parsed_dict:
+            for vrf_name in parsed_dict['vrf'].keys():
+                if 'address_family' in parsed_dict['vrf'][vrf_name]:
+                    for i in parsed_dict['vrf'][vrf_name]['address_family'].copy():
+                        if not parsed_dict['vrf'][vrf_name]['address_family'][i]:
+                            parsed_dict['vrf'][vrf_name]['address_family'].pop(i)
+
+            for vrf_name in parsed_dict['vrf'].keys():
+                for i in parsed_dict['vrf'][vrf_name].copy():
+                    if not parsed_dict['vrf'][vrf_name][i]:
+                        parsed_dict['vrf'][vrf_name].pop(i)
+
+            for i in parsed_dict['vrf'].copy():
+                if not parsed_dict['vrf'][i]:
+                    parsed_dict['vrf'].pop(i)
+
+            for i in parsed_dict.copy():
+                if not parsed_dict[i]:
+                    parsed_dict.pop(i)
+
+        return parsed_dict
+
+
+class ShowBgpAllSchema(MetaParser):
+        '''Schema for show bgp all'''
+
+        schema = {
+            'vrf':
+                {Any():
+                     {'address_family':
+                          {Any():
+                               {Optional('bgp_table_version'): int,
+                                Optional('local_router_id'): str,
+                                Optional('route_distinguisher'): str,
+                                Optional('default_vrf'): str,
+                                Optional('af_private_import_to_address_family'): str,
+                                Optional('pfx_count'): int,
+                                Optional('pfx_limit'): int,
+                                Optional('routes'):
+                                    {Optional(Any()):
+                                         {Optional('index'):
+                                              {Optional(Any()):
+                                                   {Optional('next_hop'): str,
+                                                    Optional('status_codes'): str,
+                                                    Optional('path_type'): str,
+                                                    Optional('metric'): int,
+                                                    Optional('localpref'): int,
+                                                    Optional('weight'): int,
+                                                    Optional('path'): str,
+                                                    Optional('origin_codes'): str,
+                                                    },
+                                               },
+                                          },
+                                     },
+                                },
+                           },
+                      },
+                 },
+        }
 
 class ShowBgpAll(ShowBgpAllSchema):
     '''Parser for show bgp all'''
