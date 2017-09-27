@@ -187,12 +187,12 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
     golden_parsed_output1 = {
         'vrf': 
             {'default': 
-                {'address_family': 
-                    {'ipv4': 
-                        {'enable': True,
-                        'interface': 
-                            {'GigabitEthernet0/0/0/0': 
-                                {'bfd': 
+                {'interfaces': 
+                    {'GigabitEthernet0/0/0/0': 
+                        {'address_family': 
+                            {'ipv4': 
+                                {'address': ['10.2.3.2'],
+                                'bfd': 
                                     {'enable': False,
                                     'interval': 0.150,
                                     'detection_multiplier': 3,
@@ -206,10 +206,13 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
                                 'neighbor_filter': '-',
                                 'override_interval': 2500,
                                 'oper_status': 'on',
-                                'primary_address': ['10.2.3.2'],
-                                'propagation_delay': 500},
-                            'GigabitEthernet0/0/0/1': 
-                                {'bfd': 
+                                'primary_address': '10.2.3.2',
+                                'propagation_delay': 500}}},
+                    'GigabitEthernet0/0/0/1': 
+                        {'address_family': 
+                            {'ipv4': 
+                                {'address': ['10.1.2.2'],
+                                'bfd': 
                                     {'enable': False,
                                     'interval': 0.150,
                                     'detection_multiplier': 3,
@@ -223,10 +226,13 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
                                 'neighbor_filter': '-',
                                 'override_interval': 2500,
                                 'oper_status': 'on',
-                                'primary_address': ['10.1.2.2'],
-                                'propagation_delay': 500},
-                            'Loopback0': 
-                                {'bfd': 
+                                'primary_address': '10.1.2.2',
+                                'propagation_delay': 500}}},
+                    'Loopback0': 
+                        {'address_family': 
+                            {'ipv4': 
+                                {'address': ['2.2.2.2'],
+                                'bfd': 
                                     {'enable': False,
                                     'interval': 0.150,
                                     'detection_multiplier': 3,
@@ -240,7 +246,7 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
                                 'neighbor_filter': '-',
                                 'override_interval': 2500,
                                 'oper_status': 'on',
-                                'primary_address': ['2.2.2.2'],
+                                'primary_address': '2.2.2.2',
                                 'propagation_delay': 500}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
@@ -291,12 +297,11 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
     golden_parsed_output2 = {
         'vrf': 
             {'default': 
-                {'address_family': 
-                    {'ipv6': 
-                        {'enable': True,
-                        'interface': 
-                            {'GigabitEthernet0/0/0/0': 
-                                {'address': '2001:db8:2:3::2',
+                {'interfaces': 
+                    {'GigabitEthernet0/0/0/0': 
+                        {'address_family': 
+                            {'ipv6': 
+                                {'address': ['fe80::5054:ff:fee4:f669', '2001:db8:2:3::2'],
                                 'bfd': 
                                     {'enable': False,
                                     'interval': 0.150,
@@ -311,10 +316,12 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
                                 'neighbor_filter': '-',
                                 'override_interval': 2500,
                                 'oper_status': 'on',
-                                'primary_address': ['fe80::5054:ff:fee4:f669'],
-                                'propagation_delay': 500},
-                            'GigabitEthernet0/0/0/1': 
-                                {'address': '2001:db8:1:2::2',
+                                'primary_address': 'fe80::5054:ff:fee4:f669',
+                                'propagation_delay': 500}}},
+                    'GigabitEthernet0/0/0/1': 
+                        {'address_family': 
+                            {'ipv6': 
+                                {'address': ['fe80::5054:ff:feac:64b3', '2001:db8:1:2::2'],
                                 'bfd': 
                                     {'enable': False,
                                     'interval': 0.150,
@@ -329,10 +336,12 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
                                 'neighbor_filter': '-',
                                 'override_interval': 2500,
                                 'oper_status': 'on',
-                                'primary_address': ['fe80::5054:ff:feac:64b3'],
-                                'propagation_delay': 500},
-                            'Loopback0': 
-                                {'address': '2001:db8:2:2::2',
+                                'primary_address': 'fe80::5054:ff:feac:64b3',
+                                'propagation_delay': 500}}},
+                    'Loopback0': 
+                        {'address_family': 
+                            {'ipv6': 
+                                {'address': ['fe80::85c6:bdff:fe62:61e', '2001:db8:2:2::2'],
                                 'bfd': 
                                     {'enable': False,
                                     'interval': 0.150,
@@ -347,7 +356,7 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
                                 'neighbor_filter': '-',
                                 'override_interval': 2500,
                                 'oper_status': 'on',
-                                'primary_address': ['fe80::85c6:bdff:fe62:61e'],
+                                'primary_address': 'fe80::85c6:bdff:fe62:61e',
                                 'propagation_delay': 500}}}}}}}
 
     golden_output2 = {'execute.return_value': '''

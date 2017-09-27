@@ -121,18 +121,17 @@ class ShowPimVrfInterfaceDetailSchema(MetaParser):
     schema = {
         'vrf':
             {Any():
-                {'address_family': 
+                {'interfaces': 
                     {Any(): 
-                        {'enable': bool,
-                        'interface': 
+                        {'address_family': 
                             {Any(): 
                                 {'oper_status': str,
                                 'nbr_count': int,
                                 'nbr_count': int,
                                 'hello_interval': int,
                                 'dr_priority': int,
-                                'primary_address': list,
-                                Optional('address'): str,
+                                'primary_address': str,
+                                'address': list,
                                 'flags': str,
                                 'bfd': 
                                     {'enable': bool,
@@ -176,20 +175,12 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
                     parsed_dict['vrf'] = {}
                 if vrf == vrf_name and vrf_name not in parsed_dict['vrf']:
                     parsed_dict['vrf'][vrf_name] = {}
-                if 'address_family' not in parsed_dict['vrf'][vrf_name]:
-                    parsed_dict['vrf'][vrf_name]['address_family'] = {}
-                if af not in parsed_dict['vrf'][vrf_name]['address_family']:
-                    parsed_dict['vrf'][vrf_name]['address_family'][af] = {}
-                # Set enable
-                parsed_dict['vrf'][vrf_name]['address_family'][af]['enable'] = False
                 continue
 
             # IP PIM Multicast Interface State
             p2 = re.compile(r'^\s*IP +PIM +Multicast +Interface +State$')
             m = p2.match(line)
             if m:
-                parsed_dict['vrf'][vrf_name]['address_family']\
-                    [af]['enable'] = True
                 continue
 
             # Flag: B - Bidir enabled, NB - Bidir disabled
@@ -213,23 +204,25 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
                 hello_interval = int(m.groupdict()['hello_interval'])
                 dr_priority = int(m.groupdict()['dr_priority'])
                 address_list = []
-                if 'interface' not in parsed_dict['vrf'][vrf_name]\
-                        ['address_family'][af]:
-                    parsed_dict['vrf'][vrf_name]['address_family'][af]\
-                        ['interface'] = {}
-                if interface not in parsed_dict['vrf'][vrf_name]\
-                        ['address_family'][af]['interface']:
-                    parsed_dict['vrf'][vrf_name]['address_family'][af]\
-                        ['interface'][interface] = {}
+                if 'interfaces' not in parsed_dict['vrf'][vrf_name]:
+                    parsed_dict['vrf'][vrf_name]['interfaces'] = {}
+                if interface not in parsed_dict['vrf'][vrf_name]['interfaces']:
+                    parsed_dict['vrf'][vrf_name]['interfaces'][interface] = {}
+                if 'address_family' not in parsed_dict['vrf'][vrf_name]\
+                        ['interfaces'][interface]:
+                    parsed_dict['vrf'][vrf_name]['interfaces'][interface]\
+                        ['address_family'] = {}
+                if af not in parsed_dict['vrf'][vrf_name]['interfaces']\
+                        [interface]['address_family']:
+                    parsed_dict['vrf'][vrf_name]['interfaces'][interface]\
+                        ['address_family'][af] = {}
+                    sub_dict = parsed_dict['vrf'][vrf_name]['interfaces']\
+                        [interface]['address_family'][af]
                 # Set values
-                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
-                    [interface]['oper_status'] = oper_status
-                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
-                    [interface]['nbr_count'] = nbr_count
-                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
-                    [interface]['hello_interval'] = hello_interval
-                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
-                    [interface]['dr_priority'] = dr_priority
+                sub_dict['oper_status'] = oper_status
+                sub_dict['nbr_count'] = nbr_count
+                sub_dict['hello_interval'] = hello_interval
+                sub_dict['dr_priority'] = dr_priority
                 continue
 
             # Primary Address : fe80::85c6:bdff:fe62:61e
@@ -239,57 +232,52 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
             if m:
                 if m.groupdict()['primary_address']:
                     address_list.append(m.groupdict()['primary_address'])
-                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
-                    [interface]['primary_address'] = address_list
+                sub_dict['primary_address'] = m.groupdict()['primary_address']
+                sub_dict['address'] = address_list
                 continue
             
             # Address : 2001:db8:2:2::2
             p5 = re.compile(r'^\s*Address *: +(?P<address>(\S+))$')
             m = p5.match(line)
             if m:
-                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
-                    [interface]['address'] = m.groupdict()['address']
+                if m.groupdict()['address']:
+                    address_list.append(m.groupdict()['address'])
+                sub_dict['address'] = address_list
                 continue
 
             # Flags : B P NA V
             p6 = re.compile(r'^\s*Flags *: +(?P<flags>[a-zA-Z\s]+)$')
             m = p6.match(line)
             if m:
-                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
-                    [interface]['flags'] = m.groupdict()['flags']
+                sub_dict['flags'] = m.groupdict()['flags']
                 continue
 
             # BFD : Off/150 ms/3
             p7 = re.compile(r'^\s*BFD *: (?P<enable>(Off|On))'
                              '\/(?P<interval>[0-9]+)'
-                             ' *ms\/(?P<detection_multiplier>[0-9]+)$')
+                             ' *ms\/(?P<dmultiplier>[0-9]+)$')
             m = p7.match(line)
             if m:
                 # Get values
                 enable = m.groupdict()['enable']
                 interval = float(int(m.groupdict()['interval'])/1000)
-                detection_multiplier = int(m.groupdict()['detection_multiplier'])
+                dmultiplier = int(m.groupdict()['dmultiplier'])
                 # Set values
-                if 'bfd' not in parsed_dict['vrf'][vrf_name]['address_family']\
-                        [af]['interface'][interface]:
-                    parsed_dict['vrf'][vrf_name]['address_family'][af]\
-                        ['interface'][interface]['bfd'] = {}
-                    bfd_dict = parsed_dict['vrf'][vrf_name]['address_family']\
-                        [af]['interface'][interface]['bfd']
+                if 'bfd' not in sub_dict:
+                    sub_dict['bfd'] = {}
                     if enable == 'On':
-                        bfd_dict['enable'] = True
+                        sub_dict['bfd']['enable'] = True
                     else:
-                        bfd_dict['enable'] = False
-                    bfd_dict['interval'] = interval
-                    bfd_dict['detection_multiplier'] = detection_multiplier
+                        sub_dict['bfd']['enable'] = False
+                    sub_dict['bfd']['interval'] = interval
+                    sub_dict['bfd']['detection_multiplier'] = dmultiplier
                     continue
 
             # DR : this system
             p8 = re.compile(r'^\s*DR *: (?P<dr>[a-zA-Z\s]+)$')
             m = p8.match(line)
             if m:
-                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
-                    [interface]['dr'] = m.groupdict()['dr']
+                sub_dict['dr'] = m.groupdict()['dr']
                 continue
 
             # Propagation delay : 500
@@ -297,9 +285,8 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
                              ' +(?P<propagation_delay>[0-9]+)$')
             m = p9.match(line)
             if m:
-                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
-                    [interface]['propagation_delay'] = \
-                        int(m.groupdict()['propagation_delay'])
+                sub_dict['propagation_delay'] = \
+                    int(m.groupdict()['propagation_delay'])
                 continue
 
             # Override Interval : 2500
@@ -307,17 +294,15 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
                               ' +(?P<override_interval>[0-9]+)$')
             m = p10.match(line)
             if m:
-                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
-                    [interface]['override_interval'] = \
-                        int(m.groupdict()['override_interval'])
+                sub_dict['override_interval'] = \
+                    int(m.groupdict()['override_interval'])
                 continue
 
             # Hello Timer : 00:00:19
             p11 = re.compile(r'^\s*Hello +Timer *: +(?P<hello_expiration>(\S+))$')
             m = p11.match(line)
             if m:
-                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
-                    [interface]['hello_expiration'] = m.groupdict()['hello_expiration']
+                sub_dict['hello_expiration'] = m.groupdict()['hello_expiration']
                 continue
 
             # Neighbor Filter : -
@@ -325,9 +310,7 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
                               ' +(?P<neighbor_filter>(\S+))$')
             m = p12.match(line)
             if m:
-                parsed_dict['vrf'][vrf_name]['address_family'][af]['interface']\
-                    [interface]['neighbor_filter'] = \
-                        m.groupdict()['neighbor_filter']
+                sub_dict['neighbor_filter'] = m.groupdict()['neighbor_filter']
                 continue
 
         return parsed_dict
