@@ -64,22 +64,27 @@ class ShowBgpAllDetailSchema(MetaParser):
                                              Optional('metric'): int,
                                              Optional('localpref'): int,
                                              Optional('weight'): str,
-                                             Optional('ext_community'): str,
-                                             Optional('encap'): str,
-                                             Optional('router_mac'): str,
-                                             Optional('local_router_mac'): str,
-                                             Optional('vtep_ip'): str,
-                                             Optional('vrf'): str,
-                                             Optional('vni'): str,
-                                             Optional('bdi'): str,
                                              Optional('originator'): str,
                                              Optional('refresh_epoch'): int,
                                              Optional('recipient_pathid'): int,
                                              Optional('transfer_pathid'): str,
-                                             Optional('evpn_esi'): str,
-                                             Optional('local_vtep'): str,
-                                             Optional('gateway_address'): str,
-                                             Optional('label'): int,
+                                             Optional('evpn'):
+                                                {Optional('ext_community'): str,
+                                                 Optional('encap'): str,
+                                                 Optional('evpn_esi'): str,
+                                                 Optional('local_vtep'): str,
+                                                 Optional('gateway_address'): str,
+                                                 Optional('label'): int,
+                                                 Optional('router_mac'): str,
+                                                },
+                                             Optional('local_vxlan_vtep'):
+                                                {Optional('encap'): str,
+                                                 Optional('local_router_mac'): str,
+                                                 Optional('vtep_ip'): str,
+                                                 Optional('vrf'): str,
+                                                 Optional('vni'): str,
+                                                 Optional('bdi'): str,
+                                                }
                                             }
                                         },
                                     }
@@ -121,6 +126,7 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
                              ' +(?P<address_family>[a-zA-Z0-9\-\s]+)$')
             m = p1.match(line)
             if m:
+                index = 0
                 address_family = str(m.groupdict()['address_family']).lower()
                 original_address_family = address_family
                 if 'instance' not in bgp_dict:
@@ -243,19 +249,22 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
                     new_address_family = \
                         original_address_family + ' RD ' + route_distinguisher
                 continue
+
             # BGP routing table entry for 1.1.1.1/32, version 4
             # BGP routing table entry for [100:100]2001:11:11::11/128, version 2
             # BGP routing table entry for 100:100:11.11.11.11/32, version 2
             # BGP routing table entry for 2001:DB8:1:1::/64, version 5
+            # BGP routing table entry for 2001:2:2:2::2/128, version 2
             p3 = re.compile(r'^\s*BGP +routing +table +entry +for'
-                             ' +(\[(?P<route_distinguisher>[0-9\:]+)\])?'
-                             '([0-9]+\:[0-9]+\:)?(?P<router_id>(([0-9]+[\.]'
-                             '[0-9]+[\.][0-9]+[\.][0-9]+[\/][0-9]+)|'
-                             '([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+'
-                             '[\:][\:][a-zA-Z0-9]+[\/][0-9]+)|([a-zA-Z0-9]+'
-                             '[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+'
-                             '[\:][\:][\/][0-9]+)))\, +version'
-                             ' +(?P<prefix_table_version>[0-9]+)$')
+                             ' +(\[(?P<route_distinguisher>[0-9\:]+)\])?([0-9]'
+                             '+\:[0-9]+\:)?(?P<router_id>(([0-9]+[\.][0-9]+[\.]'
+                             '[0-9]+[\.][0-9]+[\/][0-9]+)|([a-zA-Z0-9]+[\:]'
+                             '[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][\:][a-zA-Z0-9]'
+                             '+[\/][0-9]+)|([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
+                             '[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][\:][\/][0-9]+)|'
+                             '([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
+                             '[a-zA-Z0-9]+[\:][\:][0-9]+[\/][0-9]+)))\,'
+                             ' +version +(?P<prefix_table_version>[0-9]+)$')
             m = p3.match(line)
             if m:
                 # Placing the update_group attribute from the previous prefix
@@ -419,12 +428,14 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
                              '(?:(?P<router_mac>[a-zA-Z0-9\:\.]+))?$')
             m = p8.match(line)
             if m:
+                if 'evpn' not in subdict:
+                    subdict['evpn'] = {}
                 ext_community = m.groupdict()['ext_community']
-                subdict['ext_community'] = ext_community
+                subdict['evpn']['ext_community'] = ext_community
                 if m.groupdict()['encap']:
-                    subdict['encap'] = m.groupdict()['encap']
+                    subdict['evpn']['encap'] = m.groupdict()['encap']
                 if m.groupdict()['router_mac']:
-                    subdict['router_mac'] = m.groupdict()['router_mac']
+                    subdict['evpn']['router_mac'] = m.groupdict()['router_mac']
                 continue
 
             # rx pathid: 0, tx pathid: 0
@@ -448,17 +459,21 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
                               '\, +[L|l]abel +(?P<label>[0-9]+)$')
             m = p10.match(line)
             if m:
-                subdict['evpn_esi'] = str(m.groupdict()['evpn_esi'])
-                subdict['local_vtep'] = str(m.groupdict()['local_vtep'])
-                subdict['gateway_address'] = \
+                if 'evpn' not in subdict:
+                    subdict['evpn'] = {}
+                subdict['evpn']['evpn_esi'] = str(m.groupdict()['evpn_esi'])
+                subdict['evpn']['local_vtep'] = str(m.groupdict()['local_vtep'])
+                subdict['evpn']['gateway_address'] = \
                     str(m.groupdict()['gateway_address'])
-                subdict['label'] = int(m.groupdict()['label'])
+                subdict['evpn']['label'] = int(m.groupdict()['label'])
                 continue
 
             # Local vxlan vtep:
             p11 = re.compile(r'^\s*Local +vxlan +vtep\:$')
             m = p11.match(line)
             if m:
+                if 'local_vxlan_vtep' not in subdict:
+                    subdict['local_vxlan_vtep'] = {}
                 local_vxlan_vtep = True
                 continue
 
@@ -466,7 +481,7 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
             p12 = re.compile(r'^\s*bdi\:(?P<bdi>[A-Z0-9]+)$')
             m = p12.match(line)
             if m and local_vxlan_vtep:
-                subdict['bdi'] = str(m.groupdict()['bdi'])
+                subdict['local_vxlan_vtep']['bdi'] = str(m.groupdict()['bdi'])
                 continue
 
             # vrf:evpn1, vni:30000
@@ -474,8 +489,8 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
                               ' +vni\:(?P<vni>[0-9]+)$')
             m = p13.match(line)
             if m and local_vxlan_vtep:
-                subdict['vrf'] = str(m.groupdict()['vrf'])
-                subdict['vni'] = str(m.groupdict()['vni'])
+                subdict['local_vxlan_vtep']['vrf'] = str(m.groupdict()['vrf'])
+                subdict['local_vxlan_vtep']['vni'] = str(m.groupdict()['vni'])
                 continue
 
             # local router mac:001E.7A13.E9BF
@@ -483,7 +498,7 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
                               '(?P<local_router_mac>[a-zA-Z0-9\.]+)$')
             m = p14.match(line)
             if m and local_vxlan_vtep:
-                subdict['local_router_mac'] = \
+                subdict['local_vxlan_vtep']['local_router_mac'] = \
                     str(m.groupdict()['local_router_mac'])
                 continue
 
@@ -491,14 +506,16 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
             p15 = re.compile(r'^\s*encap\:(?P<encap>[0-9]+)$')
             m = p15.match(line)
             if m and local_vxlan_vtep:
-                subdict['encap'] = str(m.groupdict()['encap'])
+                subdict['local_vxlan_vtep']['encap'] = \
+                    str(m.groupdict()['encap'])
                 continue
 
             # vtep-ip:33.33.33.33
             p16 = re.compile(r'^\s*vtep-ip\:(?P<vtep_ip>[0-9\.]+)$')
             m = p16.match(line)
             if m and local_vxlan_vtep:
-                subdict['vtep_ip'] = str(m.groupdict()['vtep_ip'])
+                subdict['local_vxlan_vtep']['vtep_ip'] = \
+                str(m.groupdict()['vtep_ip'])
                 continue
 
             # Local
