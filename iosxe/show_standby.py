@@ -152,12 +152,12 @@ class ShowStandbyInternal(ShowStandbyInternalSchema):
 
                 if hsrp not in stby_internal['virtual_ip_hash_table']:
                     stby_internal['virtual_ip_hash_table'][protocol][hsrp] = {}
-                    stby_internal['virtual_ip_hash_table'][protocol][hsrp]['interface']\
-                         = m.groupdict()['interface'].lower()
-                    stby_internal['virtual_ip_hash_table'][protocol][hsrp]['ip']\
-                         = m.groupdict()['ip']
-                    stby_internal['virtual_ip_hash_table'][protocol][hsrp]['group']\
-                         = int(m.groupdict()['group'])
+                    stby_internal['virtual_ip_hash_table'][protocol][hsrp]\
+                        ['interface'] = m.groupdict()['interface'].lower()
+                    stby_internal['virtual_ip_hash_table'][protocol][hsrp]\
+                        ['ip']= m.groupdict()['ip']
+                    stby_internal['virtual_ip_hash_table'][protocol][hsrp]\
+                        ['group']= int(m.groupdict()['group'])
                     continue
 
             # HSRP MAC Address Table
@@ -393,12 +393,14 @@ class ShowStandbyAll(ShowStandbyAllSchema):
             # State is Active
             # State is Disabled
             # State is Init (protocol not cfgd)
-            p2 = re.compile(r'\s*[sS]tate +is +(?P<hsrp_router_state>\S+)( +\((?P<hsrp_router_state_reason>.+)\))?')
+            p2 = re.compile(r'\s*[sS]tate +is +(?P<hsrp_router_state>\S+)'
+                '( +\((?P<hsrp_router_state_reason>.+)\))?')
             m = p2.match(line)
             if m:
                 hsrp_router_state = m.groupdict()['hsrp_router_state'].lower()
                 if m.groupdict()['hsrp_router_state_reason']:
-                    hsrp_router_state_reason = m.groupdict()['hsrp_router_state_reason']
+                    hsrp_router_state_reason = \
+                        m.groupdict()['hsrp_router_state_reason']
                 continue
 
             # 8 state changes, last state change 1w0d
@@ -416,7 +418,9 @@ class ShowStandbyAll(ShowStandbyAllSchema):
             # Link-Local Virtual IPv6 address is FE80::5:73FF:FEA0:14 (conf auto EUI64)
             # Link-Local Virtual IPv6 address is FE80::5:73FF:FEA0:A (impl auto EUI64)
             # Virtual IPv6 address 2001:DB8:10:1:1::254/64
-            p5 = re.compile(r'\s*(?P<v6_type>\S+)? *Virtual +(?P<address_family>\S+) +address( +is)? +(?P<vip>\S+) ?(\((?P<vip_conf>.*)\))?$')
+            p5 = re.compile(r'\s*(?P<v6_type>\S+)? *Virtual +'
+                '(?P<address_family>\S+) +address( +is)? +(?P<vip>\S+) ?'
+                '(\((?P<vip_conf>.*)\))?$')
             m = p5.match(line)
             if m:
                 if m.groupdict()['v6_type']:
@@ -435,16 +439,28 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                     standby_all_dict[interface]['interface'] = interface
                 if 'address_family' not in standby_all_dict[interface]:
                     standby_all_dict[interface]['address_family'] = {}
-                if address_family not in standby_all_dict[interface]['address_family']:
-                    standby_all_dict[interface]['address_family'][address_family] = {}
-                if 'version' not in standby_all_dict[interface]['address_family'][address_family]:
-                    standby_all_dict[interface]['address_family'][address_family]['version'] = {}
-                if version not in standby_all_dict[interface]['address_family'][address_family]['version']:
-                    standby_all_dict[interface]['address_family'][address_family]['version'][version] = {}
-                if 'groups' not in standby_all_dict[interface]['address_family'][address_family]['version'][version]:
-                    standby_all_dict[interface]['address_family'][address_family]['version'][version]['groups'] = {}
-                if group_number not in standby_all_dict[interface]['address_family'][address_family]['version'][version]['groups']:
-                    standby_all_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_number] = {}
+                if address_family not in standby_all_dict[interface]\
+                    ['address_family']:
+                    standby_all_dict[interface]['address_family']\
+                        [address_family] = {}
+                if 'version' not in standby_all_dict[interface]\
+                    ['address_family'][address_family]:
+                    standby_all_dict[interface]['address_family']\
+                        [address_family]['version'] = {}
+                if version not in standby_all_dict[interface]\
+                    ['address_family'][address_family]['version']:
+                    standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version] = {}
+                if 'groups' not in standby_all_dict[interface]\
+                    ['address_family'][address_family]['version'][version]:
+                    standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['groups'] = {}
+                if group_number not in standby_all_dict[interface]\
+                    ['address_family'][address_family]['version']\
+                    [version]['groups']:
+                    standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['groups']\
+                        [group_number] = {}
                     group_key = {}
 
                 # create hierarchy under group
@@ -453,11 +469,13 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                 if hsrp_router_state:
                     group_key['hsrp_router_state'] = hsrp_router_state
                 if 'hsrp_router_state_reason' in locals():
-                    group_key['hsrp_router_state_reason'] = hsrp_router_state_reason
+                    group_key['hsrp_router_state_reason'] = \
+                        hsrp_router_state_reason
                 if num_state_changes:
                     if 'statistics' not in group_key:
                         group_key['statistics'] = {}
-                    group_key['statistics']['num_state_changes'] = num_state_changes
+                    group_key['statistics']['num_state_changes'] = \
+                        num_state_changes
                 if last_state_change:
                     group_key['last_state_change'] = last_state_change
 
@@ -470,28 +488,34 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                         if 'fe80' in vip:
                             if 'link_local_ipv6_address' not in group_key:
                                 group_key['link_local_ipv6_address'] = {}
-                            group_key['link_local_ipv6_address']['address'] = vip
+                            group_key['link_local_ipv6_address']['address'] = \
+                                vip
                             if 'conf auto eui64' in vip_conf:
-                                group_key['link_local_ipv6_address']['auto_configure'] = 'auto'
+                                group_key['link_local_ipv6_address']\
+                                    ['auto_configure'] = 'auto'
                         else:
                             if 'global_ipv6_addresses' not in group_key:
                                 group_key['global_ipv6_addresses'] = {}
                             if vip not in group_key['global_ipv6_addresses']:
                                 group_key['global_ipv6_addresses'][vip] = {}
-                            group_key['global_ipv6_addresses'][vip]['address'] = vip
+                            group_key['global_ipv6_addresses'][vip]\
+                                ['address'] = vip
 
                 continue
 
             # Secondary virtual IP address 10.1.1.253
-            p4 = re.compile(r'\s*[sS]econdary +virtual +IP +address +(?P<secondary_ipv4_address>\S+)$')
+            p4 = re.compile(r'\s*[sS]econdary +virtual +IP +address +'
+                '(?P<secondary_ipv4_address>\S+)$')
             m = p4.match(line)
             if m:
                 if 'secondary_ipv4_addresses' not in group_key:
                     group_key['secondary_ipv4_addresses'] = {}
                 secondary_ipv4_address = m.groupdict()['secondary_ipv4_address']
                 if secondary_ipv4_address not in group_key:
-                    group_key['secondary_ipv4_addresses'][secondary_ipv4_address] = {}
-                group_key['secondary_ipv4_addresses'][secondary_ipv4_address]['address'] = secondary_ipv4_address
+                    group_key['secondary_ipv4_addresses']\
+                        [secondary_ipv4_address] = {}
+                group_key['secondary_ipv4_addresses'][secondary_ipv4_address]\
+                    ['address'] = secondary_ipv4_address
 
             # Track object 1 (unknown)
             p4 = re.compile(r'\s*Track +object +(?P<tracked_object>[0-9]+)'
@@ -503,18 +527,22 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                     group_key['tracked_objects'] = {}
                 if tracked_object not in group_key['tracked_objects']:
                     group_key['tracked_objects'][tracked_object] = {}
-                group_key['tracked_objects'][tracked_object]['object_name'] = tracked_object
+                group_key['tracked_objects'][tracked_object]['object_name'] \
+                    = tracked_object
                 continue
 
             # Active virtual MAC address is 0000.0c9f.f000 (MAC In Use)
             # Active virtual MAC address is unknown (MAC Not In Use)
             p6 = re.compile(r'\s*Active +virtual +MAC +address +is'
                              ' +(?P<virtual_mac_address>[a-zA-Z0-9\.]+)'
-                             ' +\((?P<virtual_mac_address_mac_in_use>[a-zA-Z\s]+)\)$')
+                             ' +\((?P<virtual_mac_address_mac_in_use>'
+                             '[a-zA-Z\s]+)\)$')
             m = p6.match(line)
             if m:
-                group_key['virtual_mac_address'] = m.groupdict()['virtual_mac_address'].lower()
-                if "MAC In Use" in m.groupdict()['virtual_mac_address_mac_in_use']:
+                group_key['virtual_mac_address'] = m.groupdict()\
+                    ['virtual_mac_address'].lower()
+                if "MAC In Use" in m.groupdict()\
+                    ['virtual_mac_address_mac_in_use']:
                     group_key['virtual_mac_address_mac_in_use'] = True
                 else:
                     group_key['virtual_mac_address_mac_in_use'] = False
@@ -525,13 +553,16 @@ class ShowStandbyAll(ShowStandbyAllSchema):
             # Local virtual MAC address is aaaa.aaaa.aaaa (cfgd)
             p7 = re.compile(r'\s*Local +virtual +MAC +address +is'
                              ' +(?P<local_virtual_mac_address>[a-zA-Z0-9\.]+)'
-                             ' +\((?P<local_virtual_mac_address_conf>[a-zA-Z0-9\s]+)'
-                             '\)$')
+                             ' +\((?P<local_virtual_mac_address_conf>'
+                             '[a-zA-Z0-9\s]+)\)$')
             m = p7.match(line)
             if m:
-                group_key['local_virtual_mac_address'] = m.groupdict()['local_virtual_mac_address']
-                local_virtual_mac_address_conf = m.groupdict()['local_virtual_mac_address_conf']
-                group_key['local_virtual_mac_address_conf'] = local_virtual_mac_address_conf
+                group_key['local_virtual_mac_address'] \
+                    = m.groupdict()['local_virtual_mac_address']
+                local_virtual_mac_address_conf \
+                    = m.groupdict()['local_virtual_mac_address_conf']
+                group_key['local_virtual_mac_address_conf'] \
+                    = local_virtual_mac_address_conf
                 if 'bia' in local_virtual_mac_address_conf:
                     standby_all_dict[interface]['use_bia'] = True
                 else:
@@ -543,7 +574,10 @@ class ShowStandbyAll(ShowStandbyAllSchema):
             # Hello time 999 msec, hold time 10 sec
             # Hello time 999 msec, hold time 2999 msec
             # Hello time 9 sec (cfgd 999 msec), hold time 27 sec (cfgd 2999 msec)
-            p8 = re.compile(r'\s*Hello ?time +(?P<hellotime>[0-9]+) (?P<hello_unit>\S+)( \(cfgd (?P<cfgd_hello_msec>\d)+ msec\))?, +hold ?time +(?P<holdtime>[0-9]+) +(?P<hold_unit>\S+)( \(cfgd (?P<cfgd_hold_msec>\d+) msec\))?$')
+            p8 = re.compile(r'\s*Hello ?time +(?P<hellotime>[0-9]+) '
+                '(?P<hello_unit>\S+)( \(cfgd (?P<cfgd_hello_msec>\d)+ msec\))?'
+                ', +hold ?time +(?P<holdtime>[0-9]+) +(?P<hold_unit>\S+)'
+                '( \(cfgd (?P<cfgd_hold_msec>\d+) msec\))?$')
             m = p8.match(line)
             if m:
                 if 'timers' not in group_key:
@@ -563,9 +597,11 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                     group_key['timers']['hold_msec_flag'] = False
                     group_key['timers']['hold_sec'] = holdtime
                 if m.groupdict()['cfgd_hello_msec']:
-                    group_key['timers']['cfgd_hello_msec'] = int(m.groupdict()['cfgd_hello_msec'])
+                    group_key['timers']['cfgd_hello_msec'] \
+                        = int(m.groupdict()['cfgd_hello_msec'])
                 if m.groupdict()['cfgd_hold_msec']:
-                    group_key['timers']['cfgd_hold_msec'] = int(m.groupdict()['cfgd_hold_msec'])
+                    group_key['timers']['cfgd_hold_msec'] \
+                        = int(m.groupdict()['cfgd_hold_msec'])
                 continue
 
             # Next hello sent in 2.848 secs
@@ -582,21 +618,27 @@ class ShowStandbyAll(ShowStandbyAllSchema):
             # Authentication text "cisco123"
             # Authentication "cisco123"
             # Authentication text, string "cisco123"
-            p10 = re.compile(r'\s*[aA]uthentication +(?P<authentication_type>[a-zA-Z0-9]+)?(, +)?(key-string|key-chain|string)?( +)?\"(?P<authentication>\S+)\"$')
+            p10 = re.compile(r'\s*[aA]uthentication +(?P<authentication_type>'
+                '[a-zA-Z0-9]+)?(, +)?(key-string|key-chain|string)?( +)?'
+                '\"(?P<authentication>\S+)\"$')
             m = p10.match(line)
             if m:
                 group_key['authentication'] = m.groupdict()['authentication']
-                group_key['authentication_type'] = m.groupdict()['authentication_type']
+                group_key['authentication_type'] \
+                    = m.groupdict()['authentication_type']
                 continue
 
             # MAC refresh 222 secs (next refresh 0 secs)
-            p10 = re.compile(r'\s*MAC refresh (?P<mac_refresh>\d+) secs \(next refresh (?P<mac_next_refresh>\d+) secs\)$')
+            p10 = re.compile(r'\s*MAC refresh (?P<mac_refresh>\d+) secs '
+                '\(next refresh (?P<mac_next_refresh>\d+) secs\)$')
             m = p10.match(line)
             if m:
                 if m.groupdict()['mac_refresh']:
-                    standby_all_dict[interface]['mac_refresh'] = int(m.groupdict()['mac_refresh'])
+                    standby_all_dict[interface]['mac_refresh'] \
+                        = int(m.groupdict()['mac_refresh'])
                 if m.groupdict()['mac_next_refresh']:
-                    standby_all_dict[interface]['mac_next_refresh'] = int(m.groupdict()['mac_next_refresh'])
+                    standby_all_dict[interface]['mac_next_refresh'] \
+                        = int(m.groupdict()['mac_next_refresh'])
                 continue
 
             # Preemption enabled, delay min 5 secs, reload 10 secs, sync 20 secs
@@ -633,7 +675,8 @@ class ShowStandbyAll(ShowStandbyAllSchema):
             p12_1 = re.compile(r'\s*Active +router +is'
                               ' +(?P<active_router>\S+),'
                               ' +priority +(?P<ar_priority>[0-9]+)'
-                              ' +\(expires in (?P<active_expires_in>[a-zA-Z0-9\.\s]+) sec\)$')
+                              ' +\(expires in (?P<active_expires_in>'
+                              '[a-zA-Z0-9\.\s]+) sec\)$')
             m = p12_1.match(line)
             if m:
                 active_router = m.groupdict()['active_router']
@@ -684,16 +727,34 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                 group_key['configured_priority'] = \
                     int(m.groupdict()['configured_priority'])
                 if 'follow' in group_key:
-                    if 'slave_groups' not in standby_all_dict[interface]['address_family'][address_family]['version'][version]:
-                        standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'] = {}
-                    if group_key['group_number'] not in standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups']:
-                        standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'][group_key['group_number']] = {}
-                    standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'][group_key['group_number']] = group_key
-                    standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'][group_key['group_number']]['slave_group_number'] = group_key['group_number']
-                    if standby_all_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_key['group_number']]:
-                        del standby_all_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_key['group_number']]
+                    if 'slave_groups' not in standby_all_dict[interface]\
+                        ['address_family'][address_family]['version'][version]:
+                        standby_all_dict[interface]['address_family']\
+                            [address_family]['version'][version]\
+                            ['slave_groups'] = {}
+                    if group_key['group_number'] not in standby_all_dict\
+                        [interface]['address_family'][address_family]\
+                        ['version'][version]['slave_groups']:
+                        standby_all_dict[interface]['address_family']\
+                            [address_family]['version'][version]\
+                            ['slave_groups'][group_key['group_number']] = {}
+                    standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['slave_groups']\
+                        [group_key['group_number']] = group_key
+                    standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['slave_groups']\
+                        [group_key['group_number']]['slave_group_number'] \
+                        = group_key['group_number']
+                    if standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['groups']\
+                        [group_key['group_number']]:
+                        del standby_all_dict[interface]['address_family']\
+                            [address_family]['version'][version]['groups']\
+                            [group_key['group_number']]
                 else:
-                    standby_all_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_number] = group_key
+                    standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['groups']\
+                        [group_number] = group_key
                 continue
 
             # Group name is "hsrp-Gi1/0/1-0" (default)
@@ -704,16 +765,34 @@ class ShowStandbyAll(ShowStandbyAllSchema):
             if m:
                 group_key['session_name'] = m.groupdict()['session_name']
                 if 'follow' in group_key:
-                    if 'slave_groups' not in standby_all_dict[interface]['address_family'][address_family]['version'][version]:
-                        standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'] = {}
-                    if group_key['group_number'] not in standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups']:
-                        standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'][group_key['group_number']] = {}
-                    standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'][group_key['group_number']] = group_key    
-                    standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'][group_key['group_number']]['slave_group_number'] = group_key['group_number']
-                    if standby_all_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_key['group_number']]:
-                        del standby_all_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_key['group_number']]
+                    if 'slave_groups' not in standby_all_dict[interface]\
+                        ['address_family'][address_family]['version'][version]:
+                        standby_all_dict[interface]['address_family']\
+                            [address_family]['version'][version]\
+                            ['slave_groups'] = {}
+                    if group_key['group_number'] not in standby_all_dict\
+                        [interface]['address_family'][address_family]\
+                        ['version'][version]['slave_groups']:
+                        standby_all_dict[interface]['address_family']\
+                            [address_family]['version'][version]\
+                            ['slave_groups'][group_key['group_number']] = {}
+                    standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['slave_groups']\
+                        [group_key['group_number']] = group_key
+                    standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['slave_groups']\
+                        [group_key['group_number']]['slave_group_number'] \
+                        = group_key['group_number']
+                    if standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['groups']\
+                        [group_key['group_number']]:
+                        del standby_all_dict[interface]['address_family']\
+                            [address_family]['version'][version]['groups']\
+                            [group_key['group_number']]
                 else:
-                    standby_all_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_number] = group_key
+                    standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['groups']\
+                        [group_number] = group_key
                 continue
             
             # Group name is "gandalf" (cfgd)
@@ -725,16 +804,34 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                 group_key['session_name'] = \
                     m.groupdict()['session_name']
                 if 'follow' in group_key:
-                    if 'slave_groups' not in standby_all_dict[interface]['address_family'][address_family]['version'][version]:
-                        standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'] = {}
-                    if group_key['group_number'] not in standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups']:
-                        standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'][group_key['group_number']] = {}
-                    standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'][group_key['group_number']] = group_key    
-                    standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'][group_key['group_number']]['slave_group_number'] = group_key['group_number']
-                    if standby_all_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_key['group_number']]:
-                        del standby_all_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_key['group_number']]
+                    if 'slave_groups' not in standby_all_dict[interface]\
+                        ['address_family'][address_family]['version'][version]:
+                        standby_all_dict[interface]['address_family']\
+                            [address_family]['version'][version]\
+                            ['slave_groups'] = {}
+                    if group_key['group_number'] not in standby_all_dict\
+                        [interface]['address_family'][address_family]\
+                        ['version'][version]['slave_groups']:
+                        standby_all_dict[interface]['address_family']\
+                            [address_family]['version'][version]\
+                            ['slave_groups'][group_key['group_number']] = {}
+                    standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['slave_groups']\
+                        [group_key['group_number']] = group_key
+                    standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['slave_groups']\
+                        [group_key['group_number']]['slave_group_number'] \
+                        = group_key['group_number']
+                    if standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['groups']\
+                        [group_key['group_number']]:
+                        del standby_all_dict[interface]['address_family']\
+                            [address_family]['version'][version]['groups']\
+                            [group_key['group_number']]
                 else:
-                    standby_all_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_number] = group_key
+                    standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['groups']\
+                        [group_number] = group_key
                 continue
 
             # Following "group10"
@@ -743,16 +840,34 @@ class ShowStandbyAll(ShowStandbyAllSchema):
             if m:
                 group_key['follow'] = m.groupdict()['follow']
                 if 'follow' in group_key:
-                    if 'slave_groups' not in standby_all_dict[interface]['address_family'][address_family]['version'][version]:
-                        standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'] = {}
-                    if group_key['group_number'] not in standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups']:
-                        standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'][group_key['group_number']] = {}
-                    standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'][group_key['group_number']] = group_key    
-                    standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'][group_key['group_number']]['slave_group_number'] = group_key['group_number']
-                    if standby_all_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_key['group_number']]:
-                        del standby_all_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_key['group_number']]
+                    if 'slave_groups' not in standby_all_dict[interface]\
+                        ['address_family'][address_family]['version'][version]:
+                        standby_all_dict[interface]['address_family']\
+                            [address_family]['version'][version]\
+                            ['slave_groups'] = {}
+                    if group_key['group_number'] not in standby_all_dict\
+                        [interface]['address_family'][address_family]\
+                        ['version'][version]['slave_groups']:
+                        standby_all_dict[interface]['address_family']\
+                            [address_family]['version'][version]\
+                            ['slave_groups'][group_key['group_number']] = {}
+                    standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['slave_groups']\
+                        [group_key['group_number']] = group_key
+                    standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['slave_groups']\
+                        [group_key['group_number']]['slave_group_number'] \
+                        = group_key['group_number']
+                    if standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['groups']\
+                        [group_key['group_number']]:
+                        del standby_all_dict[interface]['address_family']\
+                            [address_family]['version'][version]['groups']\
+                            [group_key['group_number']]
                 else:
-                    standby_all_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_number] = group_key
+                    standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['groups']\
+                        [group_number] = group_key
                 continue            
 
             # HSRP ICMP redirects disabled
@@ -761,16 +876,34 @@ class ShowStandbyAll(ShowStandbyAllSchema):
             if m:
                 standby_all_dict[interface]['redirects_disable'] = True
                 if 'follow' in group_key:
-                    if 'slave_groups' not in standby_all_dict[interface]['address_family'][address_family]['version'][version]:
-                        standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'] = {}
-                    if group_key['group_number'] not in standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups']:
-                        standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'][group_key['group_number']] = {}
-                    standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'][group_key['group_number']] = group_key    
-                    standby_all_dict[interface]['address_family'][address_family]['version'][version]['slave_groups'][group_key['group_number']]['slave_group_number'] = group_key['group_number']
-                    if standby_all_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_key['group_number']]:
-                        del standby_all_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_key['group_number']]
+                    if 'slave_groups' not in standby_all_dict[interface]\
+                        ['address_family'][address_family]['version'][version]:
+                        standby_all_dict[interface]['address_family']\
+                            [address_family]['version'][version]\
+                            ['slave_groups'] = {}
+                    if group_key['group_number'] not in standby_all_dict\
+                        [interface]['address_family'][address_family]\
+                        ['version'][version]['slave_groups']:
+                        standby_all_dict[interface]['address_family']\
+                            [address_family]['version'][version]\
+                            ['slave_groups'][group_key['group_number']] = {}
+                    standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['slave_groups']\
+                        [group_key['group_number']] = group_key
+                    standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['slave_groups']\
+                        [group_key['group_number']]['slave_group_number'] \
+                        = group_key['group_number']
+                    if standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['groups']\
+                        [group_key['group_number']]:
+                        del standby_all_dict[interface]['address_family']\
+                            [address_family]['version'][version]['groups']\
+                            [group_key['group_number']]
                 else:
-                    standby_all_dict[interface]['address_family'][address_family]['version'][version]['groups'][group_number] = group_key
+                    standby_all_dict[interface]['address_family']\
+                        [address_family]['version'][version]['groups']\
+                        [group_number] = group_key
                 continue
 
         return standby_all_dict
@@ -788,7 +921,8 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                     interface_name = None
                     for gigabitethernet in interface:
                         # Remove the namespace
-                        text = gigabitethernet.tag[gigabitethernet.tag.find('}')+1:]
+                        text = gigabitethernet.tag\
+                            [gigabitethernet.tag.find('}')+1:]
                         if text == 'name':
                             gig_number = gigabitethernet.text
                             interface_name = 'Gigabitethernet' + str(gig_number)
@@ -825,7 +959,8 @@ class ShowStandbyDelay(ShowStandbyDelaySchema):
             # (no need to parse above because it's just header)
 
             # GigabitEthernet1   99      888
-            p1 = re.compile(r'\s*(?P<interface>\S+) +(?P<minimum_delay>\d+) +(?P<reload_delay>\d+)')
+            p1 = re.compile(r'\s*(?P<interface>\S+) +(?P<minimum_delay>\d+) +'
+                '(?P<reload_delay>\d+)')
             m = p1.match(line)
             if m:
                 interface = m.groupdict()['interface']
@@ -833,8 +968,10 @@ class ShowStandbyDelay(ShowStandbyDelaySchema):
                     hsrp_delay_dict[interface] = {}
                 if 'delay' not in hsrp_delay_dict[interface]:
                     hsrp_delay_dict[interface]['delay'] = {}
-                hsrp_delay_dict[interface]['delay']['minimum_delay'] = int(m.groupdict()['minimum_delay'])
-                hsrp_delay_dict[interface]['delay']['reload_delay'] = int(m.groupdict()['reload_delay'])
+                hsrp_delay_dict[interface]['delay']['minimum_delay'] \
+                    = int(m.groupdict()['minimum_delay'])
+                hsrp_delay_dict[interface]['delay']['reload_delay'] \
+                    = int(m.groupdict()['reload_delay'])
 
         return hsrp_delay_dict
 
