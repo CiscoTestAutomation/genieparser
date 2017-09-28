@@ -111,7 +111,7 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
         # Init dictionary
         bgp_dict = {}
         subdict = ''
-        update_group = 0
+        next_line_update_group = False
         route_distinguisher = ''
         new_address_family = ''
         refresh_epoch_flag = False
@@ -139,16 +139,20 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
 
             # Paths: (1 available, best #1, table default)
             # Paths: (1 available, best #1, table VRF1)
-            p2 = re.compile(r'^\s*Paths: +(?P<paths>\('
-                             '(?P<available_path>[0-9]+) +available\, +best'
-                             ' +\#(?P<best_path>[0-9]+)\, +table'
-                             ' +(?P<vrf_id>[a-zA-Z0-9\-]+)(?:\,|\)?))$')
+            # Paths: (1 available, best #1, no table)
+            p2 = re.compile(r'^\s*Paths: +(?P<paths>\((?P<available_path>[0-9]'
+                             '+) +available\, +best +\#(?P<best_path>[0-9]+)\,'
+                             ' +((table +(?P<vrf_id>[a-zA-Z0-9\-]+)(?:\,|\)?)?'
+                             '|(no table\)))?))$')
             m = p2.match(line)
             if m:
                 paths = m.groupdict()['paths']
                 available_path = m.groupdict()['available_path']
                 best_path = m.groupdict()['best_path']
-                vrf = m.groupdict()['vrf_id']
+                if m.groupdict()['vrf_id']:
+                    vrf = m.groupdict()['vrf_id']
+                else:
+                    vrf = 'default'
                 if vrf not in bgp_dict['instance']['default']['vrf']:
                     bgp_dict['instance']['default']['vrf'][vrf] = {}
                 if 'address_family' not in bgp_dict['instance']\
@@ -255,24 +259,27 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
             # BGP routing table entry for 100:100:11.11.11.11/32, version 2
             # BGP routing table entry for 2001:DB8:1:1::/64, version 5
             # BGP routing table entry for 2001:2:2:2::2/128, version 2
-            p3 = re.compile(r'^\s*BGP +routing +table +entry +for'
-                             ' +(\[(?P<route_distinguisher>[0-9\:]+)\])?([0-9]'
-                             '+\:[0-9]+\:)?(?P<router_id>(([0-9]+[\.][0-9]+[\.]'
-                             '[0-9]+[\.][0-9]+[\/][0-9]+)|([a-zA-Z0-9]+[\:]'
-                             '[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][\:][a-zA-Z0-9]'
-                             '+[\/][0-9]+)|([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
-                             '[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][\:][\/][0-9]+)|'
-                             '([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
-                             '[a-zA-Z0-9]+[\:][\:][0-9]+[\/][0-9]+)))\,'
-                             ' +version +(?P<prefix_table_version>[0-9]+)$')
+            # BGP routing table entry for [5][65535:1][0][24][3.3.3.0]/17, version 3
+            p3 = re.compile(r'^\s*BGP +routing +table +entry +for +'
+                             '(\[[0-9]+\])?((?P<route_distinguisher>((\[[0-9]+'
+                             '[\:][0-9]+\])|([0-9]+[\:][0-9]+[\:]))))?(\['
+                             '[0-9]+\])?(\[[0-9]+\])?(?P<router_id>((\[[0-9]+'
+                             '[\.][0-9]+[\.][0-9]+[\.][0-9]+\][\/][0-9]+)|'
+                             '([0-9]+[\.][0-9]+[\.][0-9]+[\.][0-9]+[\/][0-9]+)'
+                             '|([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+'
+                             '[\:][\:][a-zA-Z0-9]+[\/][0-9]+)|([a-zA-Z0-9]+'
+                             '[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]'
+                             '+[\:][\:][\/][0-9]+)|([a-zA-Z0-9]+[\:]'
+                             '[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
+                             '[\:][0-9]+[\/][0-9]+)))\, +version +'
+                             '(?P<prefix_table_version>[0-9]+)$')
             m = p3.match(line)
             if m:
-                # Placing the update_group attribute from the previous prefix
-                if subdict:
-                    subdict['update_group'] = update_group
-                    next_line_update_group = False
+                update_group = 0
                 index = 0
                 prefixes = m.groupdict()['router_id']
+                prefixes = prefixes.replace('[', '')
+                prefixes = prefixes.replace(']', '')
                 prefix_table_version = m.groupdict()['prefix_table_version']
                 continue
 
@@ -316,6 +323,9 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
                     if m.groupdict()['next_hop_via']:
                         subdict['next_hop_via'] = \
                             m.groupdict()['next_hop_via']
+                    # Adding update_group to each index
+                    if update_group:
+                        subdict['update_group'] = update_group
                 else:
                     if 'index' not in bgp_dict['instance']['default']['vrf']\
                         [vrf]['address_family'][address_family]['prefixes']\
@@ -342,6 +352,9 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
                     if m.groupdict()['next_hop_via']:
                         subdict['next_hop_via'] = \
                             m.groupdict()['next_hop_via']
+                    # Adding update_group to each index
+                    if update_group:
+                        subdict['update_group'] = update_group
                 continue
 
             # Origin incomplete, metric 0, localpref 100, valid, internal
@@ -389,6 +402,7 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
                 # Adding the keys we got from 'route_info' line
                 if route_info:
                     subdict['route_info'] = route_info
+
                 continue
 
             # Advertised to update-groups:
@@ -406,9 +420,9 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
                 continue
 
             # 3
-            p6_3 = re.compile(r'\s*(?P<update_group>[0-9]+)$')
+            p6_3 = re.compile(r'^\s*           (?P<update_group>[0-9]+)$')
             m = p6_3.match(line)
-            if m and next_line_update_group:
+            if m:
                 update_group = int(m.groupdict()['update_group'])
                 continue
 
