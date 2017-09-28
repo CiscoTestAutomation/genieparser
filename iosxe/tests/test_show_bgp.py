@@ -54,7 +54,6 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'route_info': 'Local',
                            'status_codes': '*>',
                            'transfer_pathid': '0x0',
-                           'update_group': 1,
                            'weight': '32768'}},
                        'paths': '(1 '
                                 'available, '
@@ -139,6 +138,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'route_info': 'Local',
                            'status_codes': '*>',
                            'transfer_pathid': '0x0',
+                           'update_group': 3,
                            'weight': '32768'},
                         2:
                           {'gateway': '10.1.1.2',
@@ -174,8 +174,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'refresh_epoch': 1,
                            'route_info': 'Local',
                            'status_codes': '*>',
-                           'transfer_pathid': '0x0',
-                           'update_group': 3}},
+                           'transfer_pathid': '0x0'}},
                        'paths': '(1 '
                                 'available, '
                                 'best '
@@ -226,8 +225,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'route_info': 'Local',
                            'status_codes': '* '
                                            'i',
-                           'transfer_pathid': '0x0',
-                           'update_group': 1}},
+                           'transfer_pathid': '0x0'}},
                        'paths': '(2 '
                                 'available, '
                                 'best '
@@ -251,6 +249,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'route_info': 'Local',
                            'status_codes': '*>',
                            'transfer_pathid': '0x0',
+                           'update_group': 1,
                            'weight': '32768'},
                         2: {'gateway': '2001:DB8:1:1::2',
                             'localpref': 100,
@@ -410,8 +409,46 @@ class test_show_bgp_all_detail(unittest.TestCase):
                 {'vpnv4 unicast RD 65535:1':
                   {'default_vrf': 'evpn1',
                    'prefixes':
-                    {'100.1.1.0/24':
+                    {'100.1.1.0/17':
                       {'available_path': '1',
+                       'best_path': '1',
+                       'index':
+                        {1:
+                          {'evpn':
+                            {'encap': ':8',
+                             'evpn_esi': '00000000000000000000',
+                             'ext_community': 'RT:65535:1',
+                             'gateway_address': '0.0.0.0',
+                             'label': 30000,
+                             'local_vtep': '33.33.33.33',
+                             'router_mac': 'MAC:001E.7A13.E9BF'},
+                          'gateway': '0.0.0.0',
+                          'localpref': 100,
+                          'metric': 0,
+                          'next-hop': '0.0.0.0',
+                          'next_hop_via': 'vrf '
+                                          'evpn1',
+                          'origin_codes': '?',
+                          'originator': '33.33.33.33',
+                          'recipient_pathid': 0,
+                          'refresh_epoch': 1,
+                          'route_info': 'Local, '
+                                        'imported '
+                                        'path '
+                                        'from '
+                                        'base',
+                          'status_codes': '*>',
+                          'transfer_pathid': '0x0',
+                          'weight': '32768'}},
+                       'paths': '(1 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'EVPN-BGP-Table)',
+                       'table_version': '4'},
+                    '3.3.3.0/17':
+                      {'available_path': '2',
                        'best_path': '1',
                        'index':
                         {1:
@@ -464,42 +501,15 @@ class test_show_bgp_all_detail(unittest.TestCase):
                                         'path '
                                         'from '
                                         'base',
-                          'status_codes': '* '},
-                        3:
-                          {'evpn':
-                            {'encap': ':8',
-                             'evpn_esi': '00000000000000000000',
-                             'ext_community': 'RT:65535:1',
-                             'gateway_address': '0.0.0.0',
-                             'label': 30000,
-                             'local_vtep': '33.33.33.33',
-                             'router_mac': 'MAC:001E.7A13.E9BF'},
-                          'gateway': '0.0.0.0',
-                          'localpref': 100,
-                          'metric': 0,
-                          'next-hop': '0.0.0.0',
-                          'next_hop_via': 'vrf '
-                                          'evpn1',
-                          'origin_codes': '?',
-                          'originator': '33.33.33.33',
-                          'recipient_pathid': 0,
-                          'refresh_epoch': 1,
-                          'route_info': 'Local, '
-                                        'imported '
-                                        'path '
-                                        'from '
-                                        'base',
-                          'status_codes': '*>',
-                          'transfer_pathid': '0x0',
-                          'weight': '32768'}},
-                       'paths': '(1 '
+                          'status_codes': '* '}},
+                       'paths': '(2 '
                                 'available, '
                                 'best '
                                 '#1, '
                                 'table '
                                 'EVPN-BGP-Table)',
-                       'table_version': '5'}},
-                   'route_distinguisher': '65535:1'}}},
+                       'table_version': '3'}},
+                    'route_distinguisher': '65535:1'}}},
                 'evpn1':
                   {'address_family':
                     {'vpnv4 unicast RD 65535:1':
@@ -530,6 +540,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                                'route_info': 'Local',
                                'status_codes': '*>',
                                'transfer_pathid': '0x0',
+                               'update_group': 1,
                                'weight': '32768'}},
                        'paths': '(1 '
                                 'available, '
@@ -538,51 +549,53 @@ class test_show_bgp_all_detail(unittest.TestCase):
                                 'table '
                                 'evpn1)',
                        'table_version': '5'},
-                    '3.3.3.0/24':
-                      {'available_path': '2',
-                       'best_path': '2',
-                       'index':
-                        {1:
-                          {'gateway': '3.3.3.254',
-                           'local_vxlan_vtep':
-                            {'bdi': 'BDI200',
-                             'encap': '8',
-                             'local_router_mac': '001E.7A13.E9BF',
-                             'vni': '30000',
-                             'vrf': 'evpn1',
-                             'vtep_ip': '33.33.33.33'},
-                           'localpref': 100,
-                           'metric': 0,
-                           'next-hop': '3.3.3.254',
-                           'next_hop_via': 'vrf '
-                                           'evpn1',
-                           'origin_codes': '?',
-                           'originator': '33.33.33.22',
-                           'refresh_epoch': 1,
-                           'status_codes': '* '},
-                        2:
-                          {'gateway': '0.0.0.0',
-                           'local_vxlan_vtep':
-                            {'bdi': 'BDI200',
-                             'encap': '8',
-                             'local_router_mac': '001E.7A13.E9BF',
-                             'vni': '30000',
-                             'vrf': 'evpn1',
-                             'vtep_ip': '33.33.33.33'},
-                           'localpref': 100,
-                           'metric': 0,
-                           'next-hop': '0.0.0.0',
-                           'next_hop_via': 'vrf '
-                                           'evpn1',
-                           'origin_codes': '?',
-                           'originator': '33.33.33.33',
-                           'recipient_pathid': 0,
-                           'refresh_epoch': 1,
-                           'route_info': 'Local',
-                           'status_codes': '*>',
-                           'transfer_pathid': '0x0',
-                           'update_group': 65530,
-                           'weight': '32768'}},
+                        '3.3.3.0/24':
+                          {'available_path': '2',
+                           'best_path': '2',
+                           'index':
+                            {1:
+                              {'gateway': '3.3.3.254',
+                               'local_vxlan_vtep':
+                                {'bdi': 'BDI200',
+                                 'encap': '8',
+                                 'local_router_mac': '001E.7A13.E9BF',
+                                 'vni': '30000',
+                                 'vrf': 'evpn1',
+                                 'vtep_ip': '33.33.33.33'},
+                               'localpref': 100,
+                               'metric': 0,
+                               'next-hop': '3.3.3.254',
+                               'next_hop_via': 'vrf '
+                                               'evpn1',
+                               'origin_codes': '?',
+                               'originator': '33.33.33.22',
+                               'refresh_epoch': 1,
+                               'route_info': '65530',
+                               'status_codes': '* ',
+                               'update_group': 1},
+                            2:
+                              {'gateway': '0.0.0.0',
+                               'local_vxlan_vtep':
+                                {'bdi': 'BDI200',
+                                 'encap': '8',
+                                 'local_router_mac': '001E.7A13.E9BF',
+                                 'vni': '30000',
+                                 'vrf': 'evpn1',
+                                 'vtep_ip': '33.33.33.33'},
+                               'localpref': 100,
+                               'metric': 0,
+                               'next-hop': '0.0.0.0',
+                               'next_hop_via': 'vrf '
+                                               'evpn1',
+                               'origin_codes': '?',
+                               'originator': '33.33.33.33',
+                               'recipient_pathid': 0,
+                               'refresh_epoch': 1,
+                               'route_info': 'Local',
+                               'status_codes': '*>',
+                               'transfer_pathid': '0x0',
+                               'update_group': 1,
+                               'weight': '32768'}},
                        'paths': '(2 '
                                 'available, '
                                 'best '
@@ -590,8 +603,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                                 'table '
                                 'evpn1)',
                        'table_version': '4'}},
-                   'route_distinguisher': '65535:1'}}}}}}}
-
+                    'route_distinguisher': '65535:1'}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
       R1_CE#show bgp all detail 
