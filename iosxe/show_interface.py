@@ -231,7 +231,7 @@ class ShowInterfaces(ShowInterfacesSchema):
 
             # Hardware is Gigabit Ethernet, address is 0057.d228.1a64 (bia 0057.d228.1a64)
             # Hardware is Loopback
-            p2 = re.compile(r'^Hardware +is +(?P<type>[a-zA-Z0-9\/\s]+)'
+            p2 = re.compile(r'^Hardware +is +(?P<type>[a-zA-Z0-9\-\/\s]+)'
                             '(, *address +is +(?P<mac_address>[a-z0-9\.]+)'
                             ' *\(bia *(?P<phys_address>[a-z0-9\.]+)\))?$')
             m = p2.match(line)
@@ -1409,6 +1409,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
     def cli(self):
         out = self.device.execute('show ip interface')
         interface_dict = {}
+        unnumbered_dict = {}
         for line in out.splitlines():
             line = line.strip()
 
@@ -1895,6 +1896,33 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                 else:
                     interface_dict[interface]['wccp']\
                         ['redirect_exclude'] = True
+
+            # Interface is unnumbered. Using address of Loopback11 (200.11.3.1)
+            p40 = re.compile(r'^Interface +is +unnumbered. +Using +address +of +'
+                              '(?P<unnumbered_intf>[\w\/\.]+) +'
+                              '\((?P<unnumbered_ip>[\w\.\:]+)\)$')
+            m = p40.match(line)
+            if m:
+                unnumbered_dict[interface] = {}
+                unnumbered_intf = m.groupdict()['unnumbered_intf']
+                unnumbered_ip = m.groupdict()['unnumbered_ip']
+                unnumbered_dict[interface]['unnumbered_intf'] = unnumbered_intf
+                unnumbered_dict[interface]['unnumbered_ip'] = unnumbered_ip
+
+                if unnumbered_intf in interface_dict:
+                    if 'ipv4' in interface_dict[unnumbered_intf]:
+                        for address in interface_dict[unnumbered_intf]['ipv4']:
+                            if unnumbered_ip in address:
+                                if 'ipv4' not in interface_dict[interface]:
+                                    interface_dict[interface]['ipv4'] = {}
+                                if address not in interface_dict[interface]['ipv4']:
+                                    interface_dict[interface]['ipv4'][address] = {}
+                                m = re.search('([\w\.\:]+)\/(\d+)', address)
+                                interface_dict[interface]['ipv4'][address]['ip'] = m.groups()[0]
+                                interface_dict[interface]['ipv4'][address]['prefix_length'] = m.groups()[1]
+                                interface_dict[interface]['ipv4'][address]['secondary'] = False
+                                break
+                continue
 
         return interface_dict
 
