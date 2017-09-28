@@ -1730,9 +1730,10 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
                 continue
 
             #Trunking Native Mode VLAN: 1 (default)
+            # Trunking Native Mode VLAN: 200 (VLAN0200)
             p6 = re.compile(r'^\s*Trunking *Native *Mode *VLAN:'
                              ' *(?P<native_vlan>[0-9]+)'
-                             ' *\((?P<native_vlan_mode>[a-z]+)\)$')
+                             ' *\((?P<native_vlan_mode>[a-zA-Z0-9\-\_]+)\)$')
             m = p6.match(line)
             if m:
                 native_vlan = int(m.groupdict()['native_vlan'])
