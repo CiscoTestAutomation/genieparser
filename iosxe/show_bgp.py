@@ -53,7 +53,7 @@ class ShowBgpAllDetailSchema(MetaParser):
                                      Optional('table_version'): str,
                                      Optional('index'):
                                         {Any():
-                                            {Optional('next-hop'): str,
+                                            {Optional('next_hop'): str,
                                              Optional('next_hop_igp_metric'): str,
                                              Optional('gateway'): str,
                                              Optional('route_info'): str,
@@ -314,7 +314,7 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
                             ['address_family'][new_address_family]['prefixes']\
                             [prefixes]['index'][index]
 
-                    subdict['next-hop'] = nexthop
+                    subdict['next_hop'] = nexthop
                     subdict['gateway'] = gateway
                     subdict['originator'] = originator
                     if m.groupdict()['next_hop_igp_metric']:
@@ -343,7 +343,7 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
                             ['address_family'][address_family]['prefixes']\
                             [prefixes]['index'][index]
 
-                    subdict['next-hop'] = nexthop
+                    subdict['next_hop'] = nexthop
                     subdict['gateway'] = gateway
                     subdict['originator'] = originator
                     if m.groupdict()['next_hop_igp_metric']:
