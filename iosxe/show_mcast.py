@@ -170,6 +170,10 @@ class ShowIpMroute(ShowIpMrouteSchema):
                 incoming_interface = m.groupdict()['incoming_interface']
                 rpf_nbr = m.groupdict()['rpf_nbr']
                 rpf_info = m.groupdict()['status']
+                
+                sub_dict['rpf_nbr'] = rpf_nbr
+                if rpf_info:
+                    sub_dict['rpf_info'] = rpf_info.lower()
 
                 if incoming_interface.lower() == 'null':
                     sub_dict['rpf_nbr'] = rpf_nbr
@@ -209,6 +213,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
             if m:
                 rpf_nbr = m.groupdict()['rpf_nbr']
                 try:
+                    sub_dict['rpf_nbr'] = rpf_nbr
                     sub_dict['incoming_interface_list'][incoming_interface]['rpf_nbr'] = rpf_nbr
                 except:
                     sub_dict['rpf_nbr'] = rpf_nbr
