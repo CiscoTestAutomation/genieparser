@@ -38,11 +38,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                                "rp": "1.1.1.1",
                                                "flags": "SPF",
                                                "uptime": "00:00:03",
-                                               "incoming_interface_list": {
-                                                    "Null": {
-                                                         "rpf_nbr": "0.0.0.0"
-                                                    }
-                                               }
+                                               "rpf_nbr": "0.0.0.0",
                                           },
                                           "1.1.1.1": {
                                                "expire": "00:02:57",
@@ -82,11 +78,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                                "flags": "SCL",
                                                "rp": "2.2.2.2",
                                                "uptime": "2d09h",
-                                               "incoming_interface_list": {
-                                                    "Null": {
-                                                         "rpf_nbr": "0.0.0.0"
-                                                    }
-                                               }
+                                               "rpf_nbr": "0.0.0.0",
                                           }
                                      }
                                 },
@@ -105,10 +97,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                                "flags": "SJ",
                                                "rp": "172.16.0.0",
                                                "uptime": "00:03:57",
-                                               "incoming_interface_list": {
-                                                    "Null": {
-                                                         "rpf_nbr": "224.0.0.0224.0.0.0"
-                                                    }}}}}}}}}}}
+                                               "rpf_nbr": "224.0.0.0224.0.0.0"}}}}}}}}}
 
     golden_output = {'execute.return_value': '''\
         IP Multicast Routing Table
@@ -175,11 +164,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                                "uptime": "00:00:04",
                                                "flags": "SPF",
                                                "rp": "11.11.11.11",
-                                               "incoming_interface_list": {
-                                                    "Null": {
-                                                         "rpf_nbr": "0.0.0.0"
-                                                    }
-                                               }
+                                               "rpf_nbr": "0.0.0.0",
                                           }
                                      }
                                 },
@@ -188,11 +173,7 @@ class test_show_ip_mroute(unittest.TestCase):
                                           "*": {
                                                "expire": "00:02:52",
                                                "uptime": "00:08:58",
-                                               "incoming_interface_list": {
-                                                    "Null": {
-                                                         "rpf_nbr": "0.0.0.0"
-                                                    }
-                                               },
+                                               "rpf_nbr": "0.0.0.0",
                                                "outgoing_interface_list": {
                                                     "Loopback1": {
                                                          "state_mode": "forward/sparse",
