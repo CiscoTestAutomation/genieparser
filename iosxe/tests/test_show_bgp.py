@@ -12,10 +12,719 @@ from parser.iosxe.show_bgp import ShowBgpAllSummary, ShowBgpAllClusterIds, \
                                   ShowBgpAllNeighborsReceivedRoutes, \
                                   ShowIpBgpTemplatePeerPolicy, \
                                   ShowBgpAllNeighbors, \
-                                  ShowIpBgpTemplatePeerSession, \
                                   ShowIpBgpAllDampeningParameters, \
+                                  ShowIpBgpTemplatePeerSession, \
                                   ShowBgpAllNeighborsRoutes, \
-                                  ShowBgpAllNeighborsPolicy
+                                  ShowBgpAllNeighborsPolicy, \
+                                  ShowBgpAllDetail
+
+# ===================================
+# Unit test for 'show bgp all detail'
+# ===================================
+
+class test_show_bgp_all_detail(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+      'instance':
+        {'default':
+          {'vrf':
+            {'VRF1':
+              {'address_family':
+                {'vpnv4 unicast RD 100:100':
+                  {'default_vrf': 'VRF1',
+                   'prefixes':
+                    {'11.11.11.11/32':
+                      {'available_path': '1',
+                       'best_path': '1',
+                       'index':
+                        {1:
+                          {'gateway': '0.0.0.0',
+                           'localpref': 100,
+                           'metric': 0,
+                           'next-hop': '0.0.0.0',
+                           'next_hop_via': 'vrf '
+                                           'VRF1',
+                           'origin_codes': '?',
+                           'originator': '10.1.1.1',
+                           'recipient_pathid': 0,
+                           'refresh_epoch': 1,
+                           'route_info': 'Local',
+                           'status_codes': '*>',
+                           'transfer_pathid': '0x0',
+                           'weight': '32768'}},
+                       'paths': '(1 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'VRF1)',
+                       'table_version': '2'}},
+                    'route_distinguisher': '100:100'},
+                'vpnv6 unicast RD 100:100':
+                  {'default_vrf': 'VRF1',
+                   'prefixes':
+                    {'2001:11:11::11/128':
+                      {'available_path': '1',
+                       'best_path': '1',
+                       'index':
+                        {1:
+                          {'gateway': '0.0.0.0',
+                           'localpref': 100,
+                           'metric': 0,
+                           'next-hop': '::',
+                           'next_hop_via': 'vrf '
+                                           'VRF1',
+                           'origin_codes': '?',
+                           'originator': '10.1.1.1',
+                           'recipient_pathid': 0,
+                           'refresh_epoch': 1,
+                           'route_info': 'Local',
+                           'status_codes': '*>',
+                           'transfer_pathid': '0x0',
+                           'weight': '32768'}},
+                       'paths': '(1 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'VRF1)',
+                       'table_version': '2'}},
+                    'route_distinguisher': '100:100'}}},
+            'default':
+              {'address_family':
+                {'ipv4 unicast':
+                  {'prefixes':
+                    {'1.1.1.1/32':
+                      {'available_path': '1',
+                       'best_path': '1',
+                       'index':
+                        {1:
+                          {'gateway': '0.0.0.0',
+                           'localpref': 100,
+                           'metric': 0,
+                           'next-hop': '0.0.0.0',
+                           'origin_codes': '?',
+                           'originator': '10.1.1.1',
+                           'recipient_pathid': 0,
+                           'refresh_epoch': 1,
+                           'route_info': 'Local',
+                           'status_codes': '*>',
+                           'transfer_pathid': '0x0',
+                           'update_group': 3,
+                           'weight': '32768'}},
+                       'paths': '(1 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'default)',
+                       'table_version': '4'},
+                    '10.1.1.0/24':
+                      {'available_path': '2',
+                       'best_path': '1',
+                       'index':
+                        {1:
+                          {'gateway': '0.0.0.0',
+                           'localpref': 100,
+                           'metric': 0,
+                           'next-hop': '0.0.0.0',
+                           'origin_codes': '?',
+                           'originator': '10.1.1.1',
+                           'recipient_pathid': 0,
+                           'refresh_epoch': 1,
+                           'route_info': 'Local',
+                           'status_codes': '*>',
+                           'transfer_pathid': '0x0',
+                           'update_group': 3,
+                           'weight': '32768'},
+                        2:
+                          {'gateway': '10.1.1.2',
+                           'localpref': 100,
+                           'metric': 0,
+                           'next-hop': '10.1.1.2',
+                           'origin_codes': '?',
+                           'originator': '10.1.1.2',
+                           'refresh_epoch': 1,
+                           'route_info': 'Local',
+                           'status_codes': '* '
+                                           'i',
+                           'update_group': 3}},
+                       'paths': '(2 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'default)',
+                       'table_version': '5'},
+                    '2.2.2.2/32':
+                      {'available_path': '1',
+                       'best_path': '1',
+                       'index':
+                        {1:
+                          {'gateway': '10.1.1.2',
+                           'localpref': 100,
+                           'metric': 0,
+                           'next-hop': '10.1.1.2',
+                           'origin_codes': '?',
+                           'originator': '10.1.1.2',
+                           'recipient_pathid': 0,
+                           'refresh_epoch': 1,
+                           'route_info': 'Local',
+                           'status_codes': '*>',
+                           'transfer_pathid': '0x0'}},
+                       'paths': '(1 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'default)',
+                       'table_version': '2'}}},
+                'ipv6 unicast':
+                  {'prefixes':
+                    {'2001:1:1:1::1/128':
+                      {'available_path': '1',
+                       'best_path': '1',
+                       'index':
+                        {1:
+                          {'gateway': '0.0.0.0',
+                           'localpref': 100,
+                           'metric': 0,
+                           'next-hop': '::',
+                           'origin_codes': '?',
+                           'originator': '10.1.1.1',
+                           'recipient_pathid': 0,
+                           'refresh_epoch': 1,
+                           'route_info': 'Local',
+                           'status_codes': '*>',
+                           'transfer_pathid': '0x0',
+                           'update_group': 1,
+                           'weight': '32768'}},
+                       'paths': '(1 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'default)',
+                       'table_version': '4'},
+                    '2001:2:2:2::2/128':
+                      {'available_path': '2',
+                       'best_path': '1',
+                       'index':
+                        {1:
+                          {'gateway': '2001:DB8:1:1::2',
+                           'localpref': 100,
+                           'metric': 0,
+                           'next-hop': '2001:DB8:1:1::2',
+                           'origin_codes': '?',
+                           'originator': '10.1.1.2',
+                           'recipient_pathid': 0,
+                           'refresh_epoch': 1,
+                           'route_info': 'Local',
+                           'status_codes': '* '
+                                           'i',
+                           'transfer_pathid': '0x0'}},
+                       'paths': '(2 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'default)',
+                       'table_version': '2'},
+                    '2001:DB8:1:1::/64':
+                      {'available_path': '3',
+                       'best_path': '1',
+                       'index':
+                        {1:
+                          {'gateway': '0.0.0.0',
+                           'localpref': 100,
+                           'metric': 0,
+                           'next-hop': '::',
+                           'origin_codes': '?',
+                           'originator': '10.1.1.1',
+                           'recipient_pathid': 0,
+                           'refresh_epoch': 1,
+                           'route_info': 'Local',
+                           'status_codes': '*>',
+                           'transfer_pathid': '0x0',
+                           'update_group': 1,
+                           'weight': '32768'},
+                        2: {'gateway': '2001:DB8:1:1::2',
+                            'localpref': 100,
+                            'metric': 0,
+                            'next-hop': '2001:DB8:1:1::2',
+                            'origin_codes': '?',
+                            'originator': '10.1.1.2',
+                            'refresh_epoch': 1,
+                            'route_info': 'Local',
+                            'status_codes': '* '
+                                            'i',
+                            'update_group': 1}},
+                       'paths': '(3 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'default)',
+                       'table_version': '5'}}}}}}}}}
+
+    golden_output = {'execute.return_value': '''
+      R1#show bgp all detail 
+      For address family: IPv4 Unicast
+
+      BGP routing table entry for 1.1.1.1/32, version 4
+        Paths: (1 available, best #1, table default)
+        Advertised to update-groups:
+           3         
+        Refresh Epoch 1
+        Local
+          0.0.0.0 from 0.0.0.0 (10.1.1.1)
+            Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
+            rx pathid: 0, tx pathid: 0x0
+      BGP routing table entry for 2.2.2.2/32, version 2
+        Paths: (1 available, best #1, table default)
+        Not advertised to any peer
+        Refresh Epoch 1
+        Local
+          10.1.1.2 from 10.1.1.2 (10.1.1.2)
+            Origin incomplete, metric 0, localpref 100, valid, internal, best
+            rx pathid: 0, tx pathid: 0x0
+      BGP routing table entry for 10.1.1.0/24, version 5
+        Paths: (2 available, best #1, table default)
+        Advertised to update-groups:
+           3         
+        Refresh Epoch 1
+        Local
+          0.0.0.0 from 0.0.0.0 (10.1.1.1)
+            Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
+            rx pathid: 0, tx pathid: 0x0
+        Refresh Epoch 1
+        Local
+          10.1.1.2 from 10.1.1.2 (10.1.1.2)
+            Origin incomplete, metric 0, localpref 100, valid, internal
+            rx pathid: 0, tx pathid: 0
+
+      For address family: IPv6 Unicast
+
+      BGP routing table entry for 2001:1:1:1::1/128, version 4
+        Paths: (1 available, best #1, table default)
+        Advertised to update-groups:
+           1         
+        Refresh Epoch 1
+        Local
+          :: from 0.0.0.0 (10.1.1.1)
+            Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
+            rx pathid: 0, tx pathid: 0x0
+      BGP routing table entry for 2001:2:2:2::2/128, version 2
+        Paths: (2 available, best #1, table default)
+        Not advertised to any peer
+        Refresh Epoch 1
+        Local
+          2001:DB8:1:1::2 from 2001:DB8:1:1::2 (10.1.1.2)
+            Origin incomplete, metric 0, localpref 100, valid, internal, best
+            rx pathid: 0, tx pathid: 0x0
+        Refresh Epoch 1
+        Local
+          ::FFFF:10.1.1.2 (inaccessible) from 10.1.1.2 (10.1.1.2)
+            Origin incomplete, metric 0, localpref 100, valid, internal
+            rx pathid: 0, tx pathid: 0
+      BGP routing table entry for 2001:DB8:1:1::/64, version 5
+        Paths: (3 available, best #1, table default)
+        Advertised to update-groups:
+           1         
+        Refresh Epoch 1
+        Local
+          :: from 0.0.0.0 (10.1.1.1)
+            Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
+            rx pathid: 0, tx pathid: 0x0
+        Refresh Epoch 1
+        Local
+          2001:DB8:1:1::2 from 2001:DB8:1:1::2 (10.1.1.2)
+            Origin incomplete, metric 0, localpref 100, valid, internal
+            rx pathid: 0, tx pathid: 0
+        Refresh Epoch 1
+        Local
+          ::FFFF:10.1.1.2 (inaccessible) from 10.1.1.2 (10.1.1.2)
+            Origin incomplete, metric 0, localpref 100, valid, internal
+            rx pathid: 0, tx pathid: 0
+
+      For address family: VPNv4 Unicast
+
+
+      Route Distinguisher: 100:100 (default for vrf VRF1)
+      BGP routing table entry for 100:100:11.11.11.11/32, version 2
+        Paths: (1 available, best #1, table VRF1)
+        Not advertised to any peer
+        Refresh Epoch 1
+        Local
+          0.0.0.0 (via vrf VRF1) from 0.0.0.0 (10.1.1.1)
+            Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
+            rx pathid: 0, tx pathid: 0x0
+
+      For address family: VPNv6 Unicast
+
+
+      Route Distinguisher: 100:100 (default for vrf VRF1)
+      BGP routing table entry for [100:100]2001:11:11::11/128, version 2
+        Paths: (1 available, best #1, table VRF1)
+        Not advertised to any peer
+        Refresh Epoch 1
+        Local
+          :: (via vrf VRF1) from 0.0.0.0 (10.1.1.1)
+            Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
+            rx pathid: 0, tx pathid: 0x0
+
+      For address family: IPv4 Multicast
+
+
+      For address family: L2VPN E-VPN
+
+
+      For address family: VPNv4 Multicast
+                
+
+      For address family: MVPNv4 Unicast
+
+
+      For address family: MVPNv6 Unicast
+
+
+      For address family: VPNv6 Multicast
+
+
+      For address family: VPNv4 Flowspec
+
+
+      For address family: VPNv6 Flowspec
+        '''}
+
+    golden_parsed_output2 = {
+      'instance':
+        {'default':
+          {'vrf':
+            {'EVPN-BGP-Table':
+              {'address_family':
+                {'vpnv4 unicast RD 65535:1':
+                  {'default_vrf': 'evpn1',
+                   'prefixes':
+                    {'100.1.1.0/17':
+                      {'available_path': '1',
+                       'best_path': '1',
+                       'index':
+                        {1:
+                          {'evpn':
+                            {'encap': ':8',
+                             'evpn_esi': '00000000000000000000',
+                             'ext_community': 'RT:65535:1',
+                             'gateway_address': '0.0.0.0',
+                             'label': 30000,
+                             'local_vtep': '33.33.33.33',
+                             'router_mac': 'MAC:001E.7A13.E9BF'},
+                          'gateway': '0.0.0.0',
+                          'localpref': 100,
+                          'metric': 0,
+                          'next-hop': '0.0.0.0',
+                          'next_hop_via': 'vrf '
+                                          'evpn1',
+                          'origin_codes': '?',
+                          'originator': '33.33.33.33',
+                          'recipient_pathid': 0,
+                          'refresh_epoch': 1,
+                          'route_info': 'Local, '
+                                        'imported '
+                                        'path '
+                                        'from '
+                                        'base',
+                          'status_codes': '*>',
+                          'transfer_pathid': '0x0',
+                          'weight': '32768'}},
+                       'paths': '(1 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'EVPN-BGP-Table)',
+                       'table_version': '4'},
+                    '3.3.3.0/17':
+                      {'available_path': '2',
+                       'best_path': '1',
+                       'index':
+                        {1:
+                          {'evpn':
+                            {'encap': ':8',
+                             'evpn_esi': '00000000000000000000',
+                             'ext_community': 'RT:65535:1',
+                             'gateway_address': '0.0.0.0',
+                             'label': 30000,
+                             'local_vtep': '33.33.33.33',
+                             'router_mac': 'MAC:001E.7A13.E9BF'},
+                          'gateway': '0.0.0.0',
+                          'localpref': 100,
+                          'metric': 0,
+                          'next-hop': '0.0.0.0',
+                          'next_hop_via': 'vrf '
+                                          'evpn1',
+                          'origin_codes': '?',
+                          'originator': '33.33.33.33',
+                          'recipient_pathid': 0,
+                          'refresh_epoch': 1,
+                          'route_info': 'Local, '
+                                        'imported '
+                                        'path '
+                                        'from '
+                                        'base',
+                          'status_codes': '*>',
+                          'transfer_pathid': '0x0',
+                          'weight': '32768'},
+                        2:
+                          {'evpn':
+                            {'encap': ':8',
+                             'evpn_esi': '00000000000000000000',
+                             'ext_community': 'RT:65535:1',
+                             'gateway_address': '0.0.0.0',
+                             'label': 30000,
+                             'local_vtep': '33.33.33.33',
+                             'router_mac': 'MAC:001E.7A13.E9BF'},
+                          'gateway': '3.3.3.254',
+                          'localpref': 100,
+                          'metric': 0,
+                          'next-hop': '3.3.3.254',
+                          'next_hop_via': 'vrf '
+                                          'evpn1',
+                          'origin_codes': '?',
+                          'originator': '33.33.33.22',
+                          'refresh_epoch': 1,
+                          'route_info': '65530, '
+                                        'imported '
+                                        'path '
+                                        'from '
+                                        'base',
+                          'status_codes': '* '}},
+                       'paths': '(2 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'EVPN-BGP-Table)',
+                       'table_version': '3'}},
+                    'route_distinguisher': '65535:1'}}},
+                'evpn1':
+                  {'address_family':
+                    {'vpnv4 unicast RD 65535:1':
+                      {'default_vrf': 'evpn1',
+                       'prefixes':
+                        {'100.1.1.0/24':
+                          {'available_path': '1',
+                           'best_path': '1',
+                           'index':
+                            {1:
+                              {'gateway': '0.0.0.0',
+                               'local_vxlan_vtep':
+                                {'bdi': 'BDI200',
+                                 'encap': '8',
+                                 'local_router_mac': '001E.7A13.E9BF',
+                                 'vni': '30000',
+                                 'vrf': 'evpn1',
+                                 'vtep_ip': '33.33.33.33'},
+                               'localpref': 100,
+                               'metric': 0,
+                               'next-hop': '0.0.0.0',
+                               'next_hop_via': 'vrf '
+                                               'evpn1',
+                               'origin_codes': '?',
+                               'originator': '33.33.33.33',
+                               'recipient_pathid': 0,
+                               'refresh_epoch': 1,
+                               'route_info': 'Local',
+                               'status_codes': '*>',
+                               'transfer_pathid': '0x0',
+                               'update_group': 1,
+                               'weight': '32768'}},
+                       'paths': '(1 '
+                                'available, '
+                                'best '
+                                '#1, '
+                                'table '
+                                'evpn1)',
+                       'table_version': '5'},
+                        '3.3.3.0/24':
+                          {'available_path': '2',
+                           'best_path': '2',
+                           'index':
+                            {1:
+                              {'gateway': '3.3.3.254',
+                               'local_vxlan_vtep':
+                                {'bdi': 'BDI200',
+                                 'encap': '8',
+                                 'local_router_mac': '001E.7A13.E9BF',
+                                 'vni': '30000',
+                                 'vrf': 'evpn1',
+                                 'vtep_ip': '33.33.33.33'},
+                               'localpref': 100,
+                               'metric': 0,
+                               'next-hop': '3.3.3.254',
+                               'next_hop_via': 'vrf '
+                                               'evpn1',
+                               'origin_codes': '?',
+                               'originator': '33.33.33.22',
+                               'refresh_epoch': 1,
+                               'route_info': '65530',
+                               'status_codes': '* ',
+                               'update_group': 1},
+                            2:
+                              {'gateway': '0.0.0.0',
+                               'local_vxlan_vtep':
+                                {'bdi': 'BDI200',
+                                 'encap': '8',
+                                 'local_router_mac': '001E.7A13.E9BF',
+                                 'vni': '30000',
+                                 'vrf': 'evpn1',
+                                 'vtep_ip': '33.33.33.33'},
+                               'localpref': 100,
+                               'metric': 0,
+                               'next-hop': '0.0.0.0',
+                               'next_hop_via': 'vrf '
+                                               'evpn1',
+                               'origin_codes': '?',
+                               'originator': '33.33.33.33',
+                               'recipient_pathid': 0,
+                               'refresh_epoch': 1,
+                               'route_info': 'Local',
+                               'status_codes': '*>',
+                               'transfer_pathid': '0x0',
+                               'update_group': 1,
+                               'weight': '32768'}},
+                       'paths': '(2 '
+                                'available, '
+                                'best '
+                                '#2, '
+                                'table '
+                                'evpn1)',
+                       'table_version': '4'}},
+                    'route_distinguisher': '65535:1'}}}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+      R1_CE#show bgp all detail 
+      For address family: IPv4 Unicast
+
+
+      For address family: IPv6 Unicast
+
+
+      For address family: VPNv4 Unicast
+
+
+      Route Distinguisher: 65535:1 (default for vrf evpn1)
+      BGP routing table entry for 65535:1:3.3.3.0/24, version 4
+        Paths: (2 available, best #2, table evpn1)
+        Advertised to update-groups:
+           1         
+        Refresh Epoch 1
+        65530
+          3.3.3.254 (via vrf evpn1) from 3.3.3.254 (33.33.33.22)
+            Origin incomplete, metric 0, localpref 100, valid, external
+            Local vxlan vtep:
+              vrf:evpn1, vni:30000
+              local router mac:001E.7A13.E9BF
+              encap:8
+              vtep-ip:33.33.33.33
+              bdi:BDI200
+            rx pathid: 0, tx pathid: 0
+        Refresh Epoch 1
+        Local
+          0.0.0.0 (via vrf evpn1) from 0.0.0.0 (33.33.33.33)
+            Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
+            Local vxlan vtep:
+              vrf:evpn1, vni:30000
+              local router mac:001E.7A13.E9BF
+              encap:8
+              vtep-ip:33.33.33.33
+              bdi:BDI200
+            rx pathid: 0, tx pathid: 0x0
+      BGP routing table entry for 65535:1:100.1.1.0/24, version 5
+        Paths: (1 available, best #1, table evpn1)
+        Advertised to update-groups:
+           1         
+        Refresh Epoch 1
+        Local
+          0.0.0.0 (via vrf evpn1) from 0.0.0.0 (33.33.33.33)
+            Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
+            Local vxlan vtep:
+              vrf:evpn1, vni:30000
+              local router mac:001E.7A13.E9BF
+              encap:8
+              vtep-ip:33.33.33.33
+              bdi:BDI200
+            rx pathid: 0, tx pathid: 0x0
+
+      For address family: IPv4 Multicast
+
+
+      For address family: L2VPN E-VPN
+
+
+      Route Distinguisher: 65535:1 (default for vrf evpn1)
+      BGP routing table entry for [5][65535:1][0][24][3.3.3.0]/17, version 3
+        Paths: (2 available, best #1, table EVPN-BGP-Table)
+        Not advertised to any peer
+        Refresh Epoch 1
+        Local, imported path from base
+          0.0.0.0 (via vrf evpn1) from 0.0.0.0 (33.33.33.33)
+            Origin incomplete, metric 0, localpref 100, weight 32768, valid, external, best
+            EVPN ESI: 00000000000000000000, Gateway Address: 0.0.0.0, local vtep: 33.33.33.33, Label 30000
+            Extended Community: RT:65535:1 ENCAP:8 Router MAC:001E.7A13.E9BF
+            rx pathid: 0, tx pathid: 0x0
+        Refresh Epoch 1
+        65530, imported path from base
+          3.3.3.254 (via vrf evpn1) from 3.3.3.254 (33.33.33.22)
+            Origin incomplete, metric 0, localpref 100, valid, external
+            EVPN ESI: 00000000000000000000, Gateway Address: 0.0.0.0, local vtep: 33.33.33.33, Label 30000
+            Extended Community: RT:65535:1 ENCAP:8 Router MAC:001E.7A13.E9BF
+            rx pathid: 0, tx pathid: 0
+      BGP routing table entry for [5][65535:1][0][24][100.1.1.0]/17, version 4
+        Paths: (1 available, best #1, table EVPN-BGP-Table)
+        Not advertised to any peer
+        Refresh Epoch 1
+        Local, imported path from base
+          0.0.0.0 (via vrf evpn1) from 0.0.0.0 (33.33.33.33)
+            Origin incomplete, metric 0, localpref 100, weight 32768, valid, external, best
+            EVPN ESI: 00000000000000000000, Gateway Address: 0.0.0.0, local vtep: 33.33.33.33, Label 30000
+            Extended Community: RT:65535:1 ENCAP:8 Router MAC:001E.7A13.E9BF
+            rx pathid: 0, tx pathid: 0x0
+
+      For address family: VPNv4 Multicast
+
+
+      For address family: MVPNv4 Unicast
+
+
+      For address family: MVPNv6 Unicast
+
+
+      For address family: VPNv4 Flowspec
+        '''}
+
+    def test_show_bgp_all_detail_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpAllDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_show_bgp_all_detail_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowBgpAllDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+    def test_show_bgp_all_detail_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpAllDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
 # ====================================================
 # Unit test for 'show bgp all neighbors <WORD> policy'
