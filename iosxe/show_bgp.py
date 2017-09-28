@@ -2981,7 +2981,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
 
 class ShowBgpAllNeighborsReceivedRoutesSchema(MetaParser):
     
-    '''Schema for show bgp all neighbors <WORD> routes'''
+    '''Schema for show bgp all neighbors <WORD> received-routes'''
 
     schema = {
         'vrf':
