@@ -44,6 +44,8 @@ class test_show_ip_mroute(unittest.TestCase):
                                                "expire": "00:02:57",
                                                "flags": "PFT",
                                                "uptime": "00:00:03",
+                                               "rpf_info": "registering",
+                                               "rpf_nbr": "0.0.0.0",
                                                "incoming_interface_list": {
                                                     "Loopback0": {
                                                          "rpf_info": "registering",
@@ -55,6 +57,8 @@ class test_show_ip_mroute(unittest.TestCase):
                                                "expire": "00:02:57",
                                                "flags": "PFT",
                                                "uptime": "00:00:03",
+                                               "rpf_info": "registering",
+                                               "rpf_nbr": "0.0.0.0",
                                                "incoming_interface_list": {
                                                     "GigabitEthernet2": {
                                                          "rpf_info": "registering",
@@ -152,6 +156,8 @@ class test_show_ip_mroute(unittest.TestCase):
                                                "expire": "00:02:55",
                                                "uptime": "00:00:04",
                                                "flags": "PFT",
+                                               "rpf_info": "registering",
+                                               "rpf_nbr": "0.0.0.0",
                                                "incoming_interface_list": {
                                                     "Loopback1": {
                                                          "rpf_info": "registering",
@@ -270,6 +276,7 @@ class test_show_ipv6_mroute(unittest.TestCase):
                                                },
                                                "uptime": "00:02:06",
                                                "flags": "SFT",
+                                               "rpf_nbr": "2001:DB8:999::99",
                                                "expire": "00:01:23"
                                           },
                                           "*": {
@@ -288,6 +295,7 @@ class test_show_ipv6_mroute(unittest.TestCase):
                                                "uptime": "00:04:45",
                                                "rp": "2001:DB8:6::6",
                                                "flags": "S",
+                                               "rpf_nbr": "6:6:6::6",
                                                "expire": "00:02:47"
                                           }}}}}}}}}
 
@@ -334,6 +342,7 @@ class test_show_ipv6_mroute(unittest.TestCase):
                                                },
                                                "uptime": "00:02:06",
                                                "flags": "SFT",
+                                               "rpf_nbr": "2001:DB8:999::99",
                                                "expire": "00:01:23"
                                           },
                                           "*": {
@@ -352,6 +361,7 @@ class test_show_ipv6_mroute(unittest.TestCase):
                                                "uptime": "00:04:45",
                                                "rp": "2001:DB8:6::6",
                                                "flags": "S",
+                                               "rpf_nbr": "6:6:6::6",
                                                "expire": "00:02:47"
                                           }}}}}}}}}
 
