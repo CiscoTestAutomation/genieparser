@@ -267,6 +267,7 @@ class ShowStandbyAllSchema(MetaParser):
                                     },
                                     Optional('active_router_priority'): int,
                                     Optional('active_ip_address'): str,
+                                    Optional('active_ipv6_address'): str,
                                     Optional('active_expires_in'): float,
                                     Optional('default_priority'): int,
                                     Optional('configured_priority'): int,
@@ -283,6 +284,8 @@ class ShowStandbyAllSchema(MetaParser):
                                     Optional('local_virtual_mac_address_conf'): str,
                                     Optional('virtual_mac_address'): str,
                                     Optional('slave_group_number'): int,
+                                    Optional('standby_priority'): int,
+                                    Optional('standby_expires_in'): float,
                                 }
                             },
                             Optional('slave_groups'): {
@@ -337,6 +340,7 @@ class ShowStandbyAllSchema(MetaParser):
                                     },
                                     Optional('active_router_priority'): int,
                                     Optional('active_ip_address'): str,
+                                    Optional('active_ipv6_address'): str,
                                     Optional('active_expires_in'): float,
                                     Optional('default_priority'): int,
                                     Optional('configured_priority'): int,
@@ -353,6 +357,8 @@ class ShowStandbyAllSchema(MetaParser):
                                     Optional('local_virtual_mac_address_conf'): str,
                                     Optional('virtual_mac_address'): str,
                                     Optional('slave_group_number'): int,
+                                    Optional('standby_priority'): int,
+                                    Optional('standby_expires_in'): float,
                                 }
                             }
                         }
@@ -694,11 +700,20 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                 continue
 
             # Standby router is unknown 
-            p13 = re.compile(r'\s*Standby +router +is'
-                              ' +(?P<standby_router>\S+)$')
+            # Standby router is 10.1.1.2, priority 100 (expires in 10.624 sec)
+            p13 = re.compile(r'\s*Standby +router +is +(?P<standby_router>'
+                              '[a-zA-Z0-9\.]+)(, priority (?P<standby_priority>'
+                              '\d+) \(expires in (?P<standby_expires_in>\S+) '
+                              'sec\))?')
             m = p13.match(line)
             if m:
                 standby_router = m.groupdict()['standby_router']
+                if m.groupdict()['standby_priority']:
+                    group_key['standby_priority'] \
+                        = int(m.groupdict()['standby_priority'])
+                if m.groupdict()['standby_expires_in']:
+                    group_key['standby_expires_in'] \
+                        = float(m.groupdict()['standby_expires_in'])
                 group_key['standby_router'] = standby_router
                 if 'local' not in standby_router:
                     if ':' not in standby_router:
