@@ -398,13 +398,13 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Full-duplex, 1000Mb/s, link type is auto, media type is
             # Full Duplex, 1000Mbps, link type is auto, media type is RJ45
             p11 = re.compile(r'^(?P<duplex_mode>\w+)[\-\s]+[d|D]uplex, +'
-                              '(?P<port_speed>[0-9]+)(?: *(Mbps|Mb/s))?,'
+                              '(?P<port_speed>\d+|Auto-speed)(?: *(Mbps|Mb/s))?,'
                               '( *link +type +is +(?P<link_type>\w+),)?'
                               ' *media +type +is *(?P<media_type>[\w\/]+)?$')
             m = p11.match(line)
             if m:
                 duplex_mode = m.groupdict()['duplex_mode'].lower()
-                port_speed = m.groupdict()['port_speed']
+                port_speed = m.groupdict()['port_speed'].lower().replace('-speed', '')
                 link_type = m.groupdict()['link_type']
                 media_type = m.groupdict()['media_type']
                 interface_dict[interface]['duplex_mode'] = duplex_mode
@@ -1970,6 +1970,7 @@ class ShowIpv6InterfaceSchema(MetaParser):
                             Optional('origin'): str,
                             Optional('anycast'): bool,
                             Optional('eui_64'): bool,
+                            Optional('virtual'): bool,
                             Optional('autoconf'): {
                                 'valid_lifetime': int,
                                 'preferred_lifetime': int,
@@ -2015,6 +2016,10 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
         ret_dict = {}
         ipv6 = False
         joined_group = []
+        # status code dict:
+        status_code = {'ten': 'tentative',
+                       'dep': 'duplicate',
+                       'pre': 'preferre'}
         for line in out.splitlines():
             line = line.strip()
 
@@ -2043,9 +2048,10 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
 
             # IPv6 is enabled, link-local address is FE80::257:D2FF:FE28:
             # IPv6 is tentative, link-local address is FE80::257:D2FF:FE28:1A64 [TEN]
+            # IPv6 is tentative, link-local address is FE80::257:D2FF:FE28:1A64 [UNA/TEN]
             p2 =  re.compile(r'^IPv6 +is +(?P<status>\w+), +'
                               'link-local +address +is +(?P<link_local>[\w\:]+)'
-                              '( *\[(?P<type>\w+)\])?$')
+                              '( *\[(?P<type>[\w\/]+)\])?$')
             m = p2.match(line)
             if m:
                 status = m.groupdict()['status']
@@ -2069,7 +2075,38 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             # No Virtual link-local address(es):
-            # todo when has virtual link-local
+            # Virtual link-local address(es):
+            # FE80::5:73FF:FEA0:16 [UNA/OOD]
+            p21 =  re.compile(r'^Virtual +link\-local +address\(es\)\:$')
+            m = p21.match(line)
+            if m:
+                ipv6 = True
+                continue
+
+            p21_1 =  re.compile(r'^(?P<ipv6>[\w\:]+)'
+                             '( *\[(?P<type>[\w\/]+)\])?$')
+            m = p21_1.match(line)
+            if m and ipv6:
+                if 'ipv6' not in ret_dict[intf]:
+                    ret_dict[intf]['ipv6'] = {}
+                address = '{ip}'.format(ip=m.groupdict()['ipv6'])
+                if address not in ret_dict[intf]['ipv6']:
+                    ret_dict[intf]['ipv6'][address] = {}
+                ret_dict[intf]['ipv6'][address]['ip'] = m.groupdict()['ipv6']
+                ret_dict[intf]['ipv6'][address]['virtual'] = True
+
+                ip_type = m.groupdict()['type']
+                if ip_type and 'any' in ip_type.lower():
+                    ret_dict[intf]['ipv6'][address]['anycast'] = True
+                elif ip_type and 'eui' in ip_type.lower():
+                    ret_dict[intf]['ipv6'][address]['eui_64'] = True
+                elif ip_type:
+                    for code in ip_type.lower().split('/'):
+                        if code in status_code:
+                            ret_dict[intf]['ipv6'][address]['status'] = status_code[code]
+                        else:
+                            ret_dict[intf]['ipv6'][address]['status'] = 'valid'
+                continue
 
             # Stateless address autoconfig enabled
             p3 =  re.compile(r'^Stateless +address +autoconfig +enabled$')
@@ -2120,7 +2157,13 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 if ip_type and 'any' in ip_type.lower():
                     ret_dict[intf]['ipv6'][address]['anycast'] = True
                 elif ip_type and 'eui' in ip_type.lower():
-                    ret_dict[intf]['ipv6'][address]['eui_64'] = True                    
+                    ret_dict[intf]['ipv6'][address]['eui_64'] = True
+                elif ip_type:
+                    for code in ip_type.lower().split('/'):
+                        if code in status_code:
+                            ret_dict[intf]['ipv6'][address]['status'] = status_code[code]
+                        else:
+                            ret_dict[intf]['ipv6'][address]['status'] = 'valid'
                 continue
 
             #     valid lifetime 2591911 preferred lifetime 604711
