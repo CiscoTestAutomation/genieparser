@@ -4048,7 +4048,8 @@ class ShowBgpAllSchema(MetaParser):
                      {'address_family':
                           {Any():
                                {Optional('bgp_table_version'): int,
-                                Optional('local_router_id'): str,
+                                Optional('route_identifier'): str,
+                                Optional('vrf_route_identifier'): str,
                                 Optional('route_distinguisher'): str,
                                 Optional('default_vrf'): str,
                                 Optional('af_private_import_to_address_family'): str,
@@ -4060,7 +4061,6 @@ class ShowBgpAllSchema(MetaParser):
                                               {Optional(Any()):
                                                    {Optional('next_hop'): str,
                                                     Optional('status_codes'): str,
-                                                    Optional('path_type'): str,
                                                     Optional('metric'): int,
                                                     Optional('localpref'): int,
                                                     Optional('weight'): int,
@@ -4094,7 +4094,8 @@ class ShowBgpAll(ShowBgpAllSchema):
         bgp_table_version = local_router_id = ''
         metric = localpref = weight = ''
         status_codes = ''
-        af_private_import_to_address_family = pfx_count = pfx_limit = ''
+        prefix = ""
+        origin_codes_info = origin_codes_data = ""
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -4126,11 +4127,17 @@ class ShowBgpAll(ShowBgpAllSchema):
                               '(?: *(?P<param>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
             m = p3_1.match(line)
             if m:
+                #import pdb;pdb.set_trace()
                 # Get keys
                 if m.groupdict()['status_codes']:
-                    status_codes = str(m.groupdict()['status_codes'].rstrip())
+                    status_codes = m.groupdict()['status_codes']
                 if m.groupdict()['path_type']:
                     path_type = str(m.groupdict()['path_type'])
+                if path_type:
+                    status_codes = status_codes + path_type
+                else:
+                    status_codes = status_codes.rstrip()
+
                 if m.groupdict()['prefix']:
                     prefix = str(m.groupdict()['prefix'])
                 index = 0
@@ -4144,27 +4151,39 @@ class ShowBgpAll(ShowBgpAllSchema):
                               '(?P<path_type>(i|e|c|l|a|r|I))?'
                               ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
                               ' +(?P<metric>[0-9]+)?'
+                                '(?P<space>\s{1,4})'
                               ' +(?P<local_prf>[0-9]+)?'
-                              ' +(?P<weight>[0-9]+)?'
-                              ' +(?P<path>[0-9\s\S]+)'
-                              ' +(?P<origin_codes>(i|e|\?|\|))$')
+                                '(?P<space1>\s{1,6})'
+                              ' +(?P<weight>[0-9]+)'
+                              '(?P<termination>[\s\S]+)$')
 
             m = p3_2.match(line)
             if m:
                 # Get keys
+                path_type = ""
+                path_info = ""
                 if m.groupdict()['status_codes']:
-                    status_codes = m.groupdict()['status_codes'].rstrip()
+                    status_codes = m.groupdict()['status_codes']
                 if m.groupdict()['path_type']:
                     path_type = m.groupdict()['path_type']
+
                 if m.groupdict()['next_hop']:
                     next_hop = m.groupdict()['next_hop']
 
-                if m.groupdict()['status_codes']:
-                    status_codes = m.groupdict()['status_codes'].rstrip()
-                if m.groupdict()['path']:
-                    path = m.groupdict()['path']
-                if m.groupdict()['origin_codes']:
-                    origin_codes = m.groupdict()['origin_codes']
+                if path_type:
+                    status_codes = status_codes + path_type
+                else:
+                    status_codes = status_codes.rstrip()
+
+                if m.groupdict()['termination']:
+                    termination = m.groupdict()['termination']
+                    m3 = re.compile(r'(?: *(?P<path>[0-9\{\}\s]+))?'
+                                    ' +(?P<origin_codes>(i|e|\?|\|))$').match(termination)
+                    if m3.groupdict()['path']:
+                        path_info = m3.groupdict()['path']
+                    if m3.groupdict()['origin_codes']:
+                        origin_codes_info = m3.groupdict()['origin_codes']
+
                 if m.groupdict()['metric']:
                     metric = int(m.groupdict()['metric'])
                 if m.groupdict()['weight']:
@@ -4201,8 +4220,7 @@ class ShowBgpAll(ShowBgpAllSchema):
                 # Set keys
                 if status_codes:
                     af_dict['routes'][prefix]['index'][index]['status_codes'] = status_codes
-                if path:
-                    af_dict['routes'][prefix]['index'][index]['path'] = path
+
                 if m.groupdict()['next_hop']:
                     af_dict['routes'][prefix]['index'][index]['next_hop'] = next_hop
                 if m.groupdict()['local_prf']:
@@ -4211,8 +4229,12 @@ class ShowBgpAll(ShowBgpAllSchema):
                     af_dict['routes'][prefix]['index'][index]['weight'] = weight
                 if m.groupdict()['metric']:
                     af_dict['routes'][prefix]['index'][index]['metric'] = metric
-                if m.groupdict()['origin_codes']:
-                    af_dict['routes'][prefix]['index'][index]['origin_codes'] = origin_codes
+
+                if path_info:
+                     af_dict['routes'][prefix]['index'][index]['path'] = path_info
+                if origin_codes_info:
+                    af_dict['routes'][prefix]['index'][index]['origin_codes'] = origin_codes_info
+
                 continue
 
             # Network            Next Hop            Metric     LocPrf     Weight Path
@@ -4220,34 +4242,47 @@ class ShowBgpAll(ShowBgpAllSchema):
             # *>   100.1.1.0/24     0.0.0.0                  0         32768 ?
             # *>i 15.1.2.0/24      1.1.1.1               2219    100      0 200 33299 51178 47751 {27016} e
             # *>i 615:11:11::/64   ::FFFF:1.1.1.1        2219    100      0 200 33299 51178 47751 {27016} e
+
             p4 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
-                              '(?P<path_type>(i|e|c|l|a|r|I))?'
-                              ' +(?P<prefix>[0-9\.\:\/]+)'
-                              ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
-                              '(?P<space1>\s{8,16})'
-                              '(?P<metric>[0-9]+)?'
-                              '(?P<space2>\s{4,8})'
-                              '(?P<local_prf>[0-9]+)?'
-                              '(?P<space3>\s{4,8})'
-                              '(?P<weight>[0-9]+)?'
-                              '(?P<space4>\s{1})'
-                              '(?P<path>[0-9\s\S]+)'
-                              ' +(?P<origin_codes>(i|e|\?|\|))$')
+                            '(?P<path_type>(i|e|c|l|a|r|I))?'
+                            ' +(?P<prefix>[0-9\.\:\/]+)'
+                            ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
+                            '(?P<space1>\s{5,18})'
+                            '(?P<metric>[0-9]+)?'
+                            '(?P<space2>\s{4,8}?)'
+                            '(?P<local_prf>[0-9]+)?'
+                            '(?P<space3>\s{1,12})'
+                            '(?P<weight>[0-9]+)'
+                            '(?P<path>[0-9\s\S\{\}]+)$')
             m = p4.match(line)
             if m:
+                path_type = ""
+                path_data = ""
                 if m.groupdict()['prefix']:
                     prefix = m.groupdict()['prefix']
                     index = 1
 
                 # Get keys
                 if m.groupdict()['status_codes']:
-                    status_codes = m.groupdict()['status_codes'].rstrip()
+                    status_codes = m.groupdict()['status_codes']
+                if m.groupdict()['path_type']:
+                    path_type = m.groupdict()['path_type']
+
+                if path_type:
+                    status_codes = status_codes + path_type
+                else:
+                    status_codes = status_codes.rstrip()
+
                 if m.groupdict()['path']:
-                    path = m.groupdict()['path']
+                    path_1 = m.groupdict()['path']
+                    m3 = re.compile(r'(?: *(?P<path_inner>[0-9\{\}\s]+))?'
+                                    ' +(?P<origin_codes_inner>(i|e|\?|\|))$').match(path_1)
+                    if m3:
+                        path_data = m3.groupdict()['path_inner']
+                        origin_codes_data = m3.groupdict()['origin_codes_inner']
                 if m.groupdict()['next_hop']:
                     next_hop = m.groupdict()['next_hop']
-                if m.groupdict()['origin_codes']:
-                    origin_codes = m.groupdict()['origin_codes']
+
                 if m.groupdict()['metric']:
                     metric = int(m.groupdict()['metric'])
                 if m.groupdict()['weight']:
@@ -4282,8 +4317,8 @@ class ShowBgpAll(ShowBgpAllSchema):
                 # Set keys
                 if status_codes:
                     af_dict['routes'][prefix]['index'][index]['status_codes'] = status_codes
-                if path:
-                    af_dict['routes'][prefix]['index'][index]['path'] = path
+                if path_data:
+                    af_dict['routes'][prefix]['index'][index]['path'] = path_data
                 if m.groupdict()['next_hop']:
                     af_dict['routes'][prefix]['index'][index]['next_hop'] = next_hop
                 if m.groupdict()['local_prf']:
@@ -4292,8 +4327,8 @@ class ShowBgpAll(ShowBgpAllSchema):
                     af_dict['routes'][prefix]['index'][index]['weight'] = weight
                 if m.groupdict()['metric']:
                     af_dict['routes'][prefix]['index'][index]['metric'] = metric
-                if m.groupdict()['origin_codes']:
-                    af_dict['routes'][prefix]['index'][index]['origin_codes'] = origin_codes
+                if origin_codes_data:
+                    af_dict['routes'][prefix]['index'][index]['origin_codes'] = origin_codes_data
                 continue
 
             # AF-Private Import to Address-Family: L2VPN E-VPN, Pfx Count/Limit: 2/1000
@@ -4341,8 +4376,6 @@ class ShowBgpAll(ShowBgpAllSchema):
                 # Init dict
                 if m.groupdict()['default_vrf']:
                     vrf = m.groupdict()['default_vrf']
-                else:
-                    vrf = 'default'
 
                 if 'vrf' not in route_dict:
                     route_dict['vrf'] = {}
@@ -4358,16 +4391,18 @@ class ShowBgpAll(ShowBgpAllSchema):
                 route_dict['vrf'][vrf]['address_family'][new_address_family]\
                     ['bgp_table_version'] = bgp_table_version
                 route_dict['vrf'][vrf]['address_family'][new_address_family]\
-                    ['local_router_id'] = local_router_id
+                    ['route_identifier'] = local_router_id
                 route_dict['vrf'][vrf]['address_family'][new_address_family]\
                     ['route_distinguisher'] = route_distinguisher
 
-
-                if m.groupdict()['default_vrf']:
+                if vrf:
                     route_dict['vrf'][vrf]['address_family'][new_address_family]['default_vrf'] = \
-                        str(m.groupdict()['default_vrf'])
-                else:
-                    route_dict['vrf'][vrf]['address_family'][new_address_family]['default_vrf'] = 'default'
+                    vrf
+
+                if m.groupdict()['vrf_router_id']:
+                    route_dict['vrf'][vrf]['address_family'][new_address_family]['vrf_route_identifier'] = \
+                        str(m.groupdict()['vrf_router_id'])
+
 
                 # Reset address_family key and af_dict for use in other regex
                 address_family = new_address_family

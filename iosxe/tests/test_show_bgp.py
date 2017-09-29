@@ -6487,7 +6487,7 @@ class test_show_bgp_all(unittest.TestCase):
                            {'bgp_table_version': 5,
                             'default_vrf': 'evpn1',
                             'route_distinguisher': '65535:1',
-                            'local_router_id': '33.33.33.33',
+                            'route_identifier': '33.33.33.33',
                             'af_private_import_to_address_family': 'L2VPN E-VPN',
                             'pfx_count': 2,
                             'pfx_limit': 1000,
@@ -6503,22 +6503,22 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'weight': 0,
                                                 },
                                            2:
-                                               {'metric': 0,
+                                               {
                                                 'next_hop': '0.0.0.0',
                                                 'origin_codes': '?',
-                                                'path': '32768',
+                                                'weight': 32768,
                                                 'status_codes': '*>',
-
+                                                'metric':0,
                                                 },
                                            },
                                       },
                                  '100.1.1.0/24':
                                      {'index':
                                           {1:
-                                               {'localpref': 0,
+                                               {'metric': 0,
                                                 'next_hop': '0.0.0.0',
                                                 'origin_codes': '?',
-                                                'path': '32768',
+                                                'weight': 32768,
                                                 'status_codes': '*>',
                                                 },
                                            },
@@ -6529,7 +6529,7 @@ class test_show_bgp_all(unittest.TestCase):
                            {'bgp_table_version': 4,
                             'default_vrf': 'evpn1',
                             'route_distinguisher': '65535:1',
-                            'local_router_id': '33.33.33.33',
+                            'route_identifier': '33.33.33.33',
                             'routes':
                                 {'[5][65535:1][0][24][3.3.3.0]/17':
                                      {'index':
@@ -6537,7 +6537,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                {'metric': 0,
                                                 'next_hop': '0.0.0.0',
                                                 'origin_codes': '?',
-                                                'path': '32768',
+                                                'weight': 32768,
                                                 'status_codes': '*>',
                                                 },
                                            2:
@@ -6556,7 +6556,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                {'metric': 0,
                                                 'next_hop': '0.0.0.0',
                                                 'origin_codes': '?',
-                                                'path': '32768',
+                                                'weight': 32768,
                                                 'status_codes': '*>',
                                                 },
                                            },
@@ -6636,7 +6636,7 @@ class test_show_bgp_all(unittest.TestCase):
                            {'bgp_table_version': 56,
                             'default_vrf': 'default',
                             'route_distinguisher': '200:1',
-                            'local_router_id': '4.4.4.4',
+                            'route_identifier': '4.4.4.4',
                             'routes':
                                 {'15.1.1.0/24':
                                      {'index':
@@ -6646,7 +6646,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'localpref': 100,
                                                 'origin_codes': 'e',
                                                 'path': '200 33299 51178 47751 {27016}',
-                                                'status_codes': '*',
+                                                'status_codes': '* i',
                                                 'weight': 0,
                                                 },
                                           2:
@@ -6655,7 +6655,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'localpref': 100,
                                                 'origin_codes': 'e',
                                                 'path': '200 33299 51178 47751 {27016}',
-                                                'status_codes': '*>',
+                                                'status_codes': '*>i',
                                                 'weight': 0,
                                                 },
 
@@ -6669,7 +6669,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'localpref': 100,
                                                 'origin_codes': 'e',
                                                 'path': '200 33299 51178 47751 {27016}',
-                                                'status_codes': '*',
+                                                'status_codes': '* i',
                                                 'weight': 0,
                                                 },
                                           2:
@@ -6678,7 +6678,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'localpref': 100,
                                                 'origin_codes': 'e',
                                                 'path': '200 33299 51178 47751 {27016}',
-                                                'status_codes': '*>',
+                                                'status_codes': '*>i',
                                                 'weight': 0,
                                                 },
 
@@ -6690,7 +6690,7 @@ class test_show_bgp_all(unittest.TestCase):
                            {'bgp_table_version': 56,
                             'default_vrf': 'default',
                             'route_distinguisher': '200:2',
-                            'local_router_id': '4.4.4.4',
+                            'route_identifier': '4.4.4.4',
                             'routes':
                                 {'15.1.1.0/24':
                                      {'index':
@@ -6700,7 +6700,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'localpref': 100,
                                                 'origin_codes': 'e',
                                                 'path': '200 33299 51178 47751 {27016}',
-                                                'status_codes': '*>',
+                                                'status_codes': '*>i',
                                                 'weight': 0,
                                                 },
                                            2:
@@ -6709,7 +6709,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'localpref': 100,
                                                 'origin_codes': 'e',
                                                 'path': '200 33299 51178 47751 {27016}',
-                                                'status_codes': '*',
+                                                'status_codes': '* i',
                                                 'weight': 0,
                                                 },
 
@@ -6723,7 +6723,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'localpref': 100,
                                                 'origin_codes': 'e',
                                                 'path': '200 33299 51178 47751 {27016}',
-                                                'status_codes': '*>',
+                                                'status_codes': '*>i',
                                                 'weight': 0,
                                                 },
                                           2:
@@ -6732,7 +6732,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'localpref': 100,
                                                 'origin_codes': 'e',
                                                 'path': '200 33299 51178 47751 {27016}',
-                                                'status_codes': '*',
+                                                'status_codes': '* i',
                                                 'weight': 0,
                                                 },
 
@@ -6747,7 +6747,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'localpref': 100,
                                                 'origin_codes': 'e',
                                                 'path': '200 33299 51178 47751 {27016}',
-                                                'status_codes': '*>',
+                                                'status_codes': '*>i',
                                                 'weight': 0,
                                                 },
                                            2:
@@ -6756,7 +6756,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'localpref': 100,
                                                 'origin_codes': 'e',
                                                 'path': '200 33299 51178 47751 {27016}',
-                                                'status_codes': '*',
+                                                'status_codes': '* i',
                                                 'weight': 0,
                                                 },
 
@@ -6825,7 +6825,7 @@ class test_show_bgp_all(unittest.TestCase):
                            {'bgp_table_version': 56,
                             'default_vrf': 'default',
                             'route_distinguisher': '200:1',
-                            'local_router_id': '4.4.4.4',
+                            'route_identifier': '4.4.4.4',
                             'routes':
                                 {'15.1.1.0/24':
                                      {'index':
@@ -6835,7 +6835,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'localpref': 100,
                                                 'origin_codes': 'e',
                                                 'path': '200 33299 51178 47751 {27016}',
-                                                'status_codes': '*',
+                                                'status_codes': '* i',
                                                 'weight': 0,
                                                 },
                                            2:
@@ -6844,7 +6844,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'localpref': 100,
                                                 'origin_codes': 'e',
                                                 'path': '200 33299 51178 47751 {27016}',
-                                                'status_codes': '*>',
+                                                'status_codes': '*>i',
                                                 'weight': 0,
                                                 },
 
@@ -6858,7 +6858,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'localpref': 100,
                                                 'origin_codes': 'e',
                                                 'path': '200 33299 51178 47751 {27016}',
-                                                'status_codes': '*',
+                                                'status_codes': '* i',
                                                 'weight': 0,
                                                 },
                                            2:
@@ -6867,7 +6867,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'localpref': 100,
                                                 'origin_codes': 'e',
                                                 'path': '200 33299 51178 47751 {27016}',
-                                                'status_codes': '*>',
+                                                'status_codes': '*>i',
                                                 'weight': 0,
                                                 },
 
@@ -6879,7 +6879,7 @@ class test_show_bgp_all(unittest.TestCase):
                            {'bgp_table_version': 56,
                             'default_vrf': 'default',
                             'route_distinguisher': '200:2',
-                            'local_router_id': '4.4.4.4',
+                            'route_identifier': '4.4.4.4',
                             'routes':
                                 {'15.1.1.0/24':
                                      {'index':
@@ -6889,7 +6889,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'localpref': 100,
                                                 'origin_codes': 'e',
                                                 'path': '200 33299 51178 47751 {27016}',
-                                                'status_codes': '*>',
+                                                'status_codes': '*>i',
                                                 'weight': 0,
                                                 },
                                            2:
@@ -6898,7 +6898,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'localpref': 100,
                                                 'origin_codes': 'e',
                                                 'path': '200 33299 51178 47751 {27016}',
-                                                'status_codes': '*',
+                                                'status_codes': '* i',
                                                 'weight': 0,
                                                 },
 
@@ -6912,7 +6912,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'localpref': 100,
                                                 'origin_codes': 'e',
                                                 'path': '200 33299 51178 47751 {27016}',
-                                                'status_codes': '*>',
+                                                'status_codes': '*>i',
                                                 'weight': 0,
                                                 },
                                            2:
@@ -6921,7 +6921,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'localpref': 100,
                                                 'origin_codes': 'e',
                                                 'path': '200 33299 51178 47751 {27016}',
-                                                'status_codes': '*',
+                                                'status_codes': '* i',
                                                 'weight': 0,
                                                 },
 
@@ -6935,7 +6935,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'localpref': 100,
                                                 'origin_codes': 'e',
                                                 'path': '200 33299 51178 47751 {27016}',
-                                                'status_codes': '*>',
+                                                'status_codes': '*>i',
                                                 'weight': 0,
                                                 },
                                            2:
@@ -6944,7 +6944,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                 'localpref': 100,
                                                 'origin_codes': 'e',
                                                 'path': '200 33299 51178 47751 {27016}',
-                                                'status_codes': '*',
+                                                'status_codes': '* i',
                                                 'weight': 0,
                                                 },
 
@@ -6961,7 +6961,8 @@ class test_show_bgp_all(unittest.TestCase):
                              {'bgp_table_version': 56,
                               'default_vrf': 'VRF1',
                               'route_distinguisher': '300:1',
-                              'local_router_id': '4.4.4.4',
+                              'route_identifier': '4.4.4.4',
+                              'vrf_route_identifier': '44.44.44.44',
                               'routes':
                                   {'15.1.1.0/24':
                                        {'index':
@@ -6971,7 +6972,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                   'localpref': 100,
                                                   'origin_codes': 'e',
                                                   'path': '200 33299 51178 47751 {27016}',
-                                                  'status_codes': '*',
+                                                  'status_codes': '* i',
                                                   'weight': 0,
                                                   },
                                              2:
@@ -6980,7 +6981,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                   'localpref': 100,
                                                   'origin_codes': 'e',
                                                   'path': '200 33299 51178 47751 {27016}',
-                                                  'status_codes': '*>',
+                                                  'status_codes': '*>i',
                                                   'weight': 0,
                                                   },
 
@@ -6994,7 +6995,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                   'localpref': 100,
                                                   'origin_codes': 'e',
                                                   'path': '200 33299 51178 47751 {27016}',
-                                                  'status_codes': '*',
+                                                  'status_codes': '* i',
                                                   'weight': 0,
                                                   },
                                              2:
@@ -7003,7 +7004,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                   'localpref': 100,
                                                   'origin_codes': 'e',
                                                   'path': '200 33299 51178 47751 {27016}',
-                                                  'status_codes': '*>',
+                                                  'status_codes': '*>i',
                                                   'weight': 0,
                                                   },
 
@@ -7098,7 +7099,8 @@ class test_show_bgp_all(unittest.TestCase):
                              {'bgp_table_version': 56,
                               'default_vrf': 'VRF2',
                               'route_distinguisher': '400:1',
-                              'local_router_id': '4.4.4.4',
+                              'route_identifier': '4.4.4.4',
+                              'vrf_route_identifier': '44.44.44.44',
                               'routes':
                                   {'46.2.2.0/24':
                                        {'index':
@@ -7168,7 +7170,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                   'next_hop': '::FFFF:1.1.1.1',
                                                   'origin_codes': 'e',
                                                   'path': '400 33299 51178 47751 {27016}',
-                                                  'status_codes': '*',
+                                                  'status_codes': '* i',
                                                   'weight': 0,
                                                   },
                                              2:
@@ -7177,7 +7179,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                   'next_hop': '::FFFF:1.1.1.1',
                                                   'origin_codes': 'e',
                                                   'path': '400 33299 51178 47751 {27016}',
-                                                  'status_codes': '*>',
+                                                  'status_codes': '*>i',
                                                   'weight': 0,
                                                   },
                                              },
@@ -7190,7 +7192,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                   'next_hop': '::FFFF:1.1.1.1',
                                                   'origin_codes': 'e',
                                                   'path': '400 33299 51178 47751 {27016}',
-                                                  'status_codes': '*',
+                                                  'status_codes': '* i',
                                                   'weight': 0,
                                                   },
                                              2:
@@ -7199,7 +7201,7 @@ class test_show_bgp_all(unittest.TestCase):
                                                   'next_hop': '::FFFF:1.1.1.1',
                                                   'origin_codes': 'e',
                                                   'path': '400 33299 51178 47751 {27016}',
-                                                  'status_codes': '*>',
+                                                  'status_codes': '*>i',
                                                   'weight': 0,
                                                   },
                                              },
