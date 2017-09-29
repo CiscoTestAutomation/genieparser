@@ -1,9 +1,7 @@
 ''' show_archive.py
 
 IOSXE parsers for the following show commands:
-
     * show archive
-
 '''
 
 # Python
@@ -24,7 +22,7 @@ class ShowArchiveSchema(MetaParser):
 
     schema = {'archive': {
                 'total': int,
-                'maximum': int,
+                'max_archive_configurations': int,
                 'most_recent_file': str,
                 Any(): {
                     'file': str,
@@ -53,7 +51,7 @@ class ShowArchive(ShowArchiveSchema):
             if m:
                 if 'archive' not in ret_dict:
                     ret_dict['archive'] = {}
-                ret_dict['archive']['maximum'] = int(m.groupdict()['max'])
+                ret_dict['archive']['max_archive_configurations'] = int(m.groupdict()['max'])
                 continue
 
             # There are currently 1 archive configurations saved.
