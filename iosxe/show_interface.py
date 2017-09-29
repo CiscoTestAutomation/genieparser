@@ -475,6 +475,15 @@ class ShowInterfaces(ShowInterfacesSchema):
                 intfs = [convert_intf_name(i.strip()) for i in intfs]
                 interface_dict[interface]['port_channel']\
                     ['port_channel_member_intfs'] = intfs
+
+                # build connected interface port_channle
+                for intf in intfs:
+                    if intf not in interface_dict:
+                        interface_dict[intf] = {}
+                    if 'port_channle' not in interface_dict[intf]:
+                        interface_dict[intf]['port_channel'] = {}
+                    interface_dict[intf]['port_channel']['port_channel_member'] = True
+                    interface_dict[intf]['port_channel']['port_channel_int'] = interface
                 continue
 
             # Last clearing of "show interface" counters 1d02h
@@ -973,6 +982,7 @@ class ShowInterfacesSwitchportSchema(MetaParser):
                     Optional('operational_mode'): str,
                     Optional('port_channel'): {
                         Optional('port_channel_int'): str,
+                        Optional('port_channel_member_intfs'): list,
                         Optional('port_channel_member'): bool,
                     },
                     Optional('encapsulation'): {
@@ -1044,19 +1054,37 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Operational Mode: trunk (member of bundle Po12)
+            # Operational Mode: down (suspended member of bundle Po12)
             p4 =  re.compile(r'^Operational +Mode: +(?P<operational_mode>\w+)'
-                              '( +\(member +of +bundle +(?P<port_channel_int>[\w\/\.\-]+)\))?$')
+                              '( +\((?P<dummy>[\w\s]+)? *member +of +bundle +(?P<port_channel_int>[\w\/\.\-]+)\))?$')
             m = p4.match(line)
             if m:
                 ret_dict[intf]['operational_mode'] = m.groupdict()['operational_mode']
 
                 bundle_intf = m.groupdict()['port_channel_int']
                 if bundle_intf:
-	                if 'port_channel' not in ret_dict[intf]:
-	                    ret_dict[intf]['port_channel'] = {}
-	                ret_dict[intf]['port_channel']['port_channel_int'] = \
-	                    convert_intf_name(bundle_intf)
-	                ret_dict[intf]['port_channel']['port_channel_member'] = True
+                    if 'port_channel' not in ret_dict[intf]:
+                        ret_dict[intf]['port_channel'] = {}
+                    bundle_intf = convert_intf_name(bundle_intf)
+
+                    ret_dict[intf]['port_channel']['port_channel_int'] = bundle_intf
+                    ret_dict[intf]['port_channel']['port_channel_member'] = True
+
+                    # bundle interface is port_channel interface as well
+                    if bundle_intf not in ret_dict:
+                        ret_dict[bundle_intf] = {}
+                    if 'port_channel' not in ret_dict[bundle_intf]:
+                        ret_dict[bundle_intf]['port_channel'] = {}
+
+                    ret_dict[bundle_intf]['port_channel']['port_channel_member'] = True
+
+                    # append the list
+                    if 'port_channel_member_intfs' in ret_dict[bundle_intf]['port_channel']:
+                        port_list = ret_dict[bundle_intf]['port_channel']['port_channel_member_intfs']
+                        port_list.append(intf)
+                        ret_dict[bundle_intf]['port_channel']['port_channel_member_intfs'] = port_list
+                    else:
+                        ret_dict[bundle_intf]['port_channel']['port_channel_member_intfs'] = [intf]
                 continue
 
             # Administrative Trunking Encapsulation: dot1q
