@@ -266,9 +266,10 @@ class ShowInterface(ShowInterfaceSchema):
                 continue
 
             # admin state is down, Dedicated Interface, [parent interface is Ethernet2/1]
+            # admin state is up, Dedicated Interface
             p2_1 = re.compile(r'^\s*admin *state *is (?P<oper_status>[\w]+),'
-                               ' *Dedicated *Interface, \[parent *interface *is'
-                               ' *(?P<parent_interface>[a-zA-Z0-9\/\.]+)\]$')
+                               ' *Dedicated *Interface(, \[parent *interface *is'
+                               ' *(?P<parent_interface>[a-zA-Z0-9\/\.]+)\])?$')
             m = p2_1.match(line)
             if m:
                 oper_status = m.groupdict()['oper_status']
@@ -276,8 +277,9 @@ class ShowInterface(ShowInterfaceSchema):
 
                 interface_dict[interface]\
                         ['oper_status'] = oper_status
-                interface_dict[interface]\
-                ['parent_interface'] = parent_interface
+                if parent_interface:
+                    interface_dict[interface]\
+                        ['parent_interface'] = parent_interface
                 continue
 
             # Belongs to Po1
@@ -1730,9 +1732,10 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
                 continue
 
             #Trunking Native Mode VLAN: 1 (default)
+            # Trunking Native Mode VLAN: 200 (VLAN0200)
             p6 = re.compile(r'^\s*Trunking *Native *Mode *VLAN:'
                              ' *(?P<native_vlan>[0-9]+)'
-                             ' *\((?P<native_vlan_mode>[a-z]+)\)$')
+                             ' *\((?P<native_vlan_mode>[a-zA-Z0-9\-\_]+)\)$')
             m = p6.match(line)
             if m:
                 native_vlan = int(m.groupdict()['native_vlan'])

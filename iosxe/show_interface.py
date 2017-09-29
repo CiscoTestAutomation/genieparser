@@ -231,7 +231,7 @@ class ShowInterfaces(ShowInterfacesSchema):
 
             # Hardware is Gigabit Ethernet, address is 0057.d228.1a64 (bia 0057.d228.1a64)
             # Hardware is Loopback
-            p2 = re.compile(r'^Hardware +is +(?P<type>[a-zA-Z0-9\/\s]+)'
+            p2 = re.compile(r'^Hardware +is +(?P<type>[a-zA-Z0-9\-\/\s]+)'
                             '(, *address +is +(?P<mac_address>[a-z0-9\.]+)'
                             ' *\(bia *(?P<phys_address>[a-z0-9\.]+)\))?$')
             m = p2.match(line)
@@ -398,13 +398,13 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Full-duplex, 1000Mb/s, link type is auto, media type is
             # Full Duplex, 1000Mbps, link type is auto, media type is RJ45
             p11 = re.compile(r'^(?P<duplex_mode>\w+)[\-\s]+[d|D]uplex, +'
-                              '(?P<port_speed>[0-9]+)(?: *(Mbps|Mb/s))?,'
+                              '(?P<port_speed>\d+|Auto-speed)(?: *(Mbps|Mb/s))?,'
                               '( *link +type +is +(?P<link_type>\w+),)?'
                               ' *media +type +is *(?P<media_type>[\w\/]+)?$')
             m = p11.match(line)
             if m:
                 duplex_mode = m.groupdict()['duplex_mode'].lower()
-                port_speed = m.groupdict()['port_speed']
+                port_speed = m.groupdict()['port_speed'].lower().replace('-speed', '')
                 link_type = m.groupdict()['link_type']
                 media_type = m.groupdict()['media_type']
                 interface_dict[interface]['duplex_mode'] = duplex_mode
@@ -475,6 +475,15 @@ class ShowInterfaces(ShowInterfacesSchema):
                 intfs = [convert_intf_name(i.strip()) for i in intfs]
                 interface_dict[interface]['port_channel']\
                     ['port_channel_member_intfs'] = intfs
+
+                # build connected interface port_channle
+                for intf in intfs:
+                    if intf not in interface_dict:
+                        interface_dict[intf] = {}
+                    if 'port_channle' not in interface_dict[intf]:
+                        interface_dict[intf]['port_channel'] = {}
+                    interface_dict[intf]['port_channel']['port_channel_member'] = True
+                    interface_dict[intf]['port_channel']['port_channel_int'] = interface
                 continue
 
             # Last clearing of "show interface" counters 1d02h
@@ -973,6 +982,7 @@ class ShowInterfacesSwitchportSchema(MetaParser):
                     Optional('operational_mode'): str,
                     Optional('port_channel'): {
                         Optional('port_channel_int'): str,
+                        Optional('port_channel_member_intfs'): list,
                         Optional('port_channel_member'): bool,
                     },
                     Optional('encapsulation'): {
@@ -1044,19 +1054,37 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Operational Mode: trunk (member of bundle Po12)
+            # Operational Mode: down (suspended member of bundle Po12)
             p4 =  re.compile(r'^Operational +Mode: +(?P<operational_mode>\w+)'
-                              '( +\(member +of +bundle +(?P<port_channel_int>[\w\/\.\-]+)\))?$')
+                              '( +\((?P<dummy>[\w\s]+)? *member +of +bundle +(?P<port_channel_int>[\w\/\.\-]+)\))?$')
             m = p4.match(line)
             if m:
                 ret_dict[intf]['operational_mode'] = m.groupdict()['operational_mode']
 
                 bundle_intf = m.groupdict()['port_channel_int']
                 if bundle_intf:
-	                if 'port_channel' not in ret_dict[intf]:
-	                    ret_dict[intf]['port_channel'] = {}
-	                ret_dict[intf]['port_channel']['port_channel_int'] = \
-	                    convert_intf_name(bundle_intf)
-	                ret_dict[intf]['port_channel']['port_channel_member'] = True
+                    if 'port_channel' not in ret_dict[intf]:
+                        ret_dict[intf]['port_channel'] = {}
+                    bundle_intf = convert_intf_name(bundle_intf)
+
+                    ret_dict[intf]['port_channel']['port_channel_int'] = bundle_intf
+                    ret_dict[intf]['port_channel']['port_channel_member'] = True
+
+                    # bundle interface is port_channel interface as well
+                    if bundle_intf not in ret_dict:
+                        ret_dict[bundle_intf] = {}
+                    if 'port_channel' not in ret_dict[bundle_intf]:
+                        ret_dict[bundle_intf]['port_channel'] = {}
+
+                    ret_dict[bundle_intf]['port_channel']['port_channel_member'] = True
+
+                    # append the list
+                    if 'port_channel_member_intfs' in ret_dict[bundle_intf]['port_channel']:
+                        port_list = ret_dict[bundle_intf]['port_channel']['port_channel_member_intfs']
+                        port_list.append(intf)
+                        ret_dict[bundle_intf]['port_channel']['port_channel_member_intfs'] = port_list
+                    else:
+                        ret_dict[bundle_intf]['port_channel']['port_channel_member_intfs'] = [intf]
                 continue
 
             # Administrative Trunking Encapsulation: dot1q
@@ -1409,6 +1437,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
     def cli(self):
         out = self.device.execute('show ip interface')
         interface_dict = {}
+        unnumbered_dict = {}
         for line in out.splitlines():
             line = line.strip()
 
@@ -1896,6 +1925,33 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                     interface_dict[interface]['wccp']\
                         ['redirect_exclude'] = True
 
+            # Interface is unnumbered. Using address of Loopback11 (200.11.3.1)
+            p40 = re.compile(r'^Interface +is +unnumbered. +Using +address +of +'
+                              '(?P<unnumbered_intf>[\w\/\.]+) +'
+                              '\((?P<unnumbered_ip>[\w\.\:]+)\)$')
+            m = p40.match(line)
+            if m:
+                unnumbered_dict[interface] = {}
+                unnumbered_intf = m.groupdict()['unnumbered_intf']
+                unnumbered_ip = m.groupdict()['unnumbered_ip']
+                unnumbered_dict[interface]['unnumbered_intf'] = unnumbered_intf
+                unnumbered_dict[interface]['unnumbered_ip'] = unnumbered_ip
+
+                if unnumbered_intf in interface_dict:
+                    if 'ipv4' in interface_dict[unnumbered_intf]:
+                        for address in interface_dict[unnumbered_intf]['ipv4']:
+                            if unnumbered_ip in address:
+                                if 'ipv4' not in interface_dict[interface]:
+                                    interface_dict[interface]['ipv4'] = {}
+                                if address not in interface_dict[interface]['ipv4']:
+                                    interface_dict[interface]['ipv4'][address] = {}
+                                m = re.search('([\w\.\:]+)\/(\d+)', address)
+                                interface_dict[interface]['ipv4'][address]['ip'] = m.groups()[0]
+                                interface_dict[interface]['ipv4'][address]['prefix_length'] = m.groups()[1]
+                                interface_dict[interface]['ipv4'][address]['secondary'] = False
+                                break
+                continue
+
         return interface_dict
 
 
@@ -1914,6 +1970,7 @@ class ShowIpv6InterfaceSchema(MetaParser):
                             Optional('origin'): str,
                             Optional('anycast'): bool,
                             Optional('eui_64'): bool,
+                            Optional('virtual'): bool,
                             Optional('autoconf'): {
                                 'valid_lifetime': int,
                                 'preferred_lifetime': int,
@@ -1959,6 +2016,10 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
         ret_dict = {}
         ipv6 = False
         joined_group = []
+        # status code dict:
+        status_code = {'ten': 'tentative',
+                       'dep': 'duplicate',
+                       'pre': 'preferre'}
         for line in out.splitlines():
             line = line.strip()
 
@@ -1987,9 +2048,10 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
 
             # IPv6 is enabled, link-local address is FE80::257:D2FF:FE28:
             # IPv6 is tentative, link-local address is FE80::257:D2FF:FE28:1A64 [TEN]
+            # IPv6 is tentative, link-local address is FE80::257:D2FF:FE28:1A64 [UNA/TEN]
             p2 =  re.compile(r'^IPv6 +is +(?P<status>\w+), +'
                               'link-local +address +is +(?P<link_local>[\w\:]+)'
-                              '( *\[(?P<type>\w+)\])?$')
+                              '( *\[(?P<type>[\w\/]+)\])?$')
             m = p2.match(line)
             if m:
                 status = m.groupdict()['status']
@@ -2013,7 +2075,38 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             # No Virtual link-local address(es):
-            # todo when has virtual link-local
+            # Virtual link-local address(es):
+            # FE80::5:73FF:FEA0:16 [UNA/OOD]
+            p21 =  re.compile(r'^Virtual +link\-local +address\(es\)\:$')
+            m = p21.match(line)
+            if m:
+                ipv6 = True
+                continue
+
+            p21_1 =  re.compile(r'^(?P<ipv6>[\w\:]+)'
+                             '( *\[(?P<type>[\w\/]+)\])?$')
+            m = p21_1.match(line)
+            if m and ipv6:
+                if 'ipv6' not in ret_dict[intf]:
+                    ret_dict[intf]['ipv6'] = {}
+                address = '{ip}'.format(ip=m.groupdict()['ipv6'])
+                if address not in ret_dict[intf]['ipv6']:
+                    ret_dict[intf]['ipv6'][address] = {}
+                ret_dict[intf]['ipv6'][address]['ip'] = m.groupdict()['ipv6']
+                ret_dict[intf]['ipv6'][address]['virtual'] = True
+
+                ip_type = m.groupdict()['type']
+                if ip_type and 'any' in ip_type.lower():
+                    ret_dict[intf]['ipv6'][address]['anycast'] = True
+                elif ip_type and 'eui' in ip_type.lower():
+                    ret_dict[intf]['ipv6'][address]['eui_64'] = True
+                elif ip_type:
+                    for code in ip_type.lower().split('/'):
+                        if code in status_code:
+                            ret_dict[intf]['ipv6'][address]['status'] = status_code[code]
+                        else:
+                            ret_dict[intf]['ipv6'][address]['status'] = 'valid'
+                continue
 
             # Stateless address autoconfig enabled
             p3 =  re.compile(r'^Stateless +address +autoconfig +enabled$')
@@ -2064,7 +2157,13 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 if ip_type and 'any' in ip_type.lower():
                     ret_dict[intf]['ipv6'][address]['anycast'] = True
                 elif ip_type and 'eui' in ip_type.lower():
-                    ret_dict[intf]['ipv6'][address]['eui_64'] = True                    
+                    ret_dict[intf]['ipv6'][address]['eui_64'] = True
+                elif ip_type:
+                    for code in ip_type.lower().split('/'):
+                        if code in status_code:
+                            ret_dict[intf]['ipv6'][address]['status'] = status_code[code]
+                        else:
+                            ret_dict[intf]['ipv6'][address]['status'] = 'valid'
                 continue
 
             #     valid lifetime 2591911 preferred lifetime 604711

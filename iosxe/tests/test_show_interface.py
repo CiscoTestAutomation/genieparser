@@ -253,10 +253,32 @@ class test_show_interfaces_switchport(unittest.TestCase):
                  "administrative_encapsulation": "dot1q"
             }
        },
-       "GigabitEthernet1/1/1": {
+       "Port-channel12": {
             "switchport_enable": True,
-            "switchport_mode": "dynamic auto"
-       }
+              "private_vlan": {
+                   "encapsulation": "dot1q",
+                   "native_vlan_tagging": True
+              },
+              "native_vlan_tagging": False,
+              "negotiation_of_trunk": True,
+              "unknown_unicast_blocked": False,
+              "protected": False,
+              "encapsulation": {
+                   "administrative_encapsulation": "dot1q",
+                   "native_vlan": "0"
+              },
+              "switchport_mode": "trunk",
+              "unknown_multicast_blocked": False,
+              "trunk_vlans": "100-110",
+              "operational_mode": "down",
+              "pruning_vlans": "2-1001",
+              "port_channel": {
+                   "port_channel_member": True,
+                   "port_channel_member_intfs": [
+                        "GigabitEthernet1/0/2"
+                   ]
+              }
+         }
     }
 
 
@@ -352,9 +374,32 @@ class test_show_interfaces_switchport(unittest.TestCase):
         Unknown multicast blocked: disabled
         Appliance trust: none
 
-        Name: Gi1/1/1
+        Name: Po12
         Switchport: Enabled
-        Administrative Mode: dynamic auto
+        Administrative Mode: trunk
+        Operational Mode: down
+        Administrative Trunking Encapsulation: dot1q
+        Negotiation of Trunking: On
+        Access Mode VLAN: unassigned
+        Trunking Native Mode VLAN: 0 (Inactive)
+        Administrative Native VLAN tagging: disabled
+        Voice VLAN: none
+        Administrative private-vlan host-association: none 
+        Administrative private-vlan mapping: none 
+        Administrative private-vlan trunk native VLAN: none
+        Administrative private-vlan trunk Native VLAN tagging: enabled
+        Administrative private-vlan trunk encapsulation: dot1q
+        Administrative private-vlan trunk normal VLANs: none
+        Administrative private-vlan trunk associations: none
+        Administrative private-vlan trunk mappings: none
+        Operational private-vlan: none
+        Trunking VLANs Enabled: 100-110
+        Pruning VLANs Enabled: 2-1001
+
+        Protected: false
+        Unknown unicast blocked: disabled
+        Unknown multicast blocked: disabled
+        Appliance trust: none
     '''}
 
     def test_golden(self):
@@ -871,7 +916,8 @@ class test_show_interfaces(unittest.TestCase):
             "mac_address": "0057.d228.1a02",
             "connected": True,
             "port_channel": {
-                 "port_channel_member": False
+                 "port_channel_member": True,
+                 'port_channel_int': 'Port-channel12',
             },
             "arp_timeout": "04:00:00",
             "bandwidth": 1000000,

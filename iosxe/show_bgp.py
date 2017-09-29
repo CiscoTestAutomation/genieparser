@@ -28,6 +28,525 @@ from metaparser import MetaParser
 from metaparser.util.schemaengine import Schema, Any, Optional
 
 
+# ================================
+# Parser for 'show bgp all detail'
+# ================================
+
+class ShowBgpAllDetailSchema(MetaParser):
+
+    '''Schema for show bgp all detail'''
+
+    schema = {
+    'instance':
+        {'default':
+            {'vrf':
+                {Any():
+                    {'address_family':
+                        {Any():
+                            {Optional('route_distinguisher'): str,
+                             Optional('default_vrf'): str,
+                             Optional('prefixes'):
+                                {Any():
+                                    {Optional('paths'): str,
+                                     Optional('available_path'): str,
+                                     Optional('best_path'): str,
+                                     Optional('table_version'): str,
+                                     Optional('index'):
+                                        {Any():
+                                            {Optional('next_hop'): str,
+                                             Optional('next_hop_igp_metric'): str,
+                                             Optional('gateway'): str,
+                                             Optional('route_info'): str,
+                                             Optional('next_hop_via'): str,
+                                             Optional('update_group'): int,
+                                             Optional('status_codes'): str,
+                                             Optional('origin_codes'): str,
+                                             Optional('metric'): int,
+                                             Optional('localpref'): int,
+                                             Optional('weight'): str,
+                                             Optional('originator'): str,
+                                             Optional('refresh_epoch'): int,
+                                             Optional('recipient_pathid'): int,
+                                             Optional('transfer_pathid'): str,
+                                             Optional('evpn'):
+                                                {Optional('ext_community'): str,
+                                                 Optional('encap'): str,
+                                                 Optional('evpn_esi'): str,
+                                                 Optional('local_vtep'): str,
+                                                 Optional('gateway_address'): str,
+                                                 Optional('label'): int,
+                                                 Optional('router_mac'): str,
+                                                },
+                                             Optional('local_vxlan_vtep'):
+                                                {Optional('encap'): str,
+                                                 Optional('local_router_mac'): str,
+                                                 Optional('vtep_ip'): str,
+                                                 Optional('vrf'): str,
+                                                 Optional('vni'): str,
+                                                 Optional('bdi'): str,
+                                                }
+                                            }
+                                        },
+                                    }
+                                },
+                            }
+                        },
+                    }
+                },
+            }
+        }
+    }
+
+
+class ShowBgpAllDetail(ShowBgpAllDetailSchema):
+
+    '''Parser for show bgp all detail'''
+
+    def cli(self):
+
+        # show bgp all detail
+        cmd  = 'show bgp all detail'
+        out = self.device.execute(cmd)
+
+        # Init dictionary
+        bgp_dict = {}
+        subdict = ''
+        next_line_update_group = False
+        route_distinguisher = ''
+        new_address_family = ''
+        refresh_epoch_flag = False
+        route_info = ''
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            # For address family: IPv4 Unicast
+            # For address family: L2VPN E-VPN
+            p1 = re.compile(r'^\s*For +address +family:'
+                             ' +(?P<address_family>[a-zA-Z0-9\-\s]+)$')
+            m = p1.match(line)
+            if m:
+                index = 0
+                address_family = str(m.groupdict()['address_family']).lower()
+                original_address_family = address_family
+                if 'instance' not in bgp_dict:
+                    bgp_dict['instance'] = {}
+                if 'default' not in bgp_dict['instance']:
+                    bgp_dict['instance']['default'] = {}
+                if 'vrf' not in bgp_dict['instance']['default']:
+                    bgp_dict['instance']['default']['vrf'] = {}
+                    continue
+
+            # Paths: (1 available, best #1, table default)
+            # Paths: (1 available, best #1, table VRF1)
+            # Paths: (1 available, best #1, no table)
+            p2 = re.compile(r'^\s*Paths: +(?P<paths>\((?P<available_path>[0-9]'
+                             '+) +available\, +best +\#(?P<best_path>[0-9]+)\,'
+                             ' +((table +(?P<vrf_id>[a-zA-Z0-9\-]+)(?:\,|\)?)?'
+                             '|(no table\)))?))$')
+            m = p2.match(line)
+            if m:
+                paths = m.groupdict()['paths']
+                available_path = m.groupdict()['available_path']
+                best_path = m.groupdict()['best_path']
+                if m.groupdict()['vrf_id']:
+                    vrf = m.groupdict()['vrf_id']
+                else:
+                    vrf = 'default'
+                if vrf not in bgp_dict['instance']['default']['vrf']:
+                    bgp_dict['instance']['default']['vrf'][vrf] = {}
+                if 'address_family' not in bgp_dict['instance']\
+                    ['default']['vrf'][vrf]:
+                    bgp_dict['instance']['default']['vrf'][vrf]\
+                        ['address_family'] = {}
+
+                # Adding the new_address_family that contains the RD info
+                if new_address_family:
+                    if new_address_family not in bgp_dict['instance']\
+                        ['default']['vrf'][vrf]['address_family']:
+                        bgp_dict['instance']['default']['vrf'][vrf]\
+                            ['address_family'][new_address_family] = {}
+                    if 'prefixes' not in bgp_dict['instance']['default']['vrf']\
+                        [vrf]['address_family'][new_address_family]:
+                        bgp_dict['instance']['default']['vrf'][vrf]\
+                            ['address_family'][new_address_family]\
+                            ['prefixes'] = {}
+                    if prefixes not in bgp_dict['instance']['default']['vrf']\
+                        [vrf]['address_family'][new_address_family]['prefixes']:
+                        bgp_dict['instance']['default']['vrf'][vrf]\
+                            ['address_family'][new_address_family]\
+                            ['prefixes'][prefixes] = {}
+
+                    # Adding the keys we got from 'BGP routing table' line
+                    bgp_dict['instance']['default']['vrf'][vrf]\
+                        ['address_family'][new_address_family]['prefixes']\
+                        [prefixes]['table_version'] = prefix_table_version
+
+                    # Adding the keys we got from 'Route Distinguisher' line
+                    if route_distinguisher:
+                        bgp_dict['instance']['default']['vrf'][vrf]\
+                            ['address_family'][new_address_family]\
+                            ['route_distinguisher'] = route_distinguisher
+                        bgp_dict['instance']['default']['vrf'][vrf]\
+                            ['address_family'][new_address_family]\
+                            ['default_vrf'] = default_vrf
+
+                    bgp_dict['instance']['default']['vrf'][vrf]\
+                        ['address_family'][new_address_family]['prefixes']\
+                        [prefixes]['available_path'] = available_path
+                    bgp_dict['instance']['default']['vrf'][vrf]\
+                        ['address_family'][new_address_family]['prefixes']\
+                        [prefixes]['best_path'] = best_path
+                    bgp_dict['instance']['default']['vrf'][vrf]\
+                        ['address_family'][new_address_family]['prefixes']\
+                        [prefixes]['paths'] = paths
+                else:
+                    if address_family not in bgp_dict['instance']\
+                        ['default']['vrf'][vrf]['address_family']:
+                        bgp_dict['instance']['default']['vrf'][vrf]\
+                            ['address_family'][address_family] = {}
+                    if 'prefixes' not in bgp_dict['instance']['default']['vrf']\
+                        [vrf]['address_family'][address_family]:
+                        bgp_dict['instance']['default']['vrf'][vrf]\
+                            ['address_family'][address_family]['prefixes'] = {}
+                    if prefixes not in bgp_dict['instance']['default']['vrf']\
+                        [vrf]['address_family'][address_family]['prefixes']:
+                        bgp_dict['instance']['default']['vrf'][vrf]\
+                            ['address_family'][address_family]['prefixes']\
+                                [prefixes] = {}
+
+                    # Adding the keys we got from 'BGP routing table' line
+                    bgp_dict['instance']['default']['vrf'][vrf]\
+                        ['address_family'][address_family]['prefixes']\
+                        [prefixes]['table_version'] = prefix_table_version
+
+                    # Adding the keys we got from 'Route Distinguisher' line
+                    if route_distinguisher:
+                        bgp_dict['instance']['default']['vrf'][vrf]\
+                            ['address_family'][address_family]\
+                            ['route_distinguisher'] = route_distinguisher
+                        bgp_dict['instance']['default']['vrf'][vrf]\
+                            ['address_family'][address_family]\
+                            ['default_vrf'] = default_vrf
+
+                    bgp_dict['instance']['default']['vrf'][vrf]\
+                        ['address_family'][address_family]['prefixes']\
+                        [prefixes]['available_path'] = available_path
+                    bgp_dict['instance']['default']['vrf'][vrf]\
+                        ['address_family'][address_family]['prefixes']\
+                        [prefixes]['best_path'] = best_path
+                    bgp_dict['instance']['default']['vrf'][vrf]\
+                        ['address_family'][address_family]['prefixes']\
+                        [prefixes]['paths'] = paths
+
+            # Route Distinguisher: 100:100 (default for vrf VRF1)
+            # Route Distinguisher: 65535:1 (default for vrf evpn1)
+            p2_1 = re.compile(r'^\s*Route +Distinguisher:'
+                             ' +(?P<route_distinguisher>[0-9\:]+)'
+                             ' +\(default +for +vrf +(?P<vrf_id>[a-zA-Z0-9]+)\)$')
+            m = p2_1.match(line)
+            if m:
+                route_distinguisher = str(m.groupdict()['route_distinguisher'])
+                default_vrf = str(m.groupdict()['vrf_id'])
+                if address_family == 'vpnv4 unicast' or\
+                    address_family == 'vpnv6 unicast':
+                    new_address_family = \
+                        original_address_family + ' RD ' + route_distinguisher
+                continue
+
+            # BGP routing table entry for 1.1.1.1/32, version 4
+            # BGP routing table entry for [100:100]2001:11:11::11/128, version 2
+            # BGP routing table entry for 100:100:11.11.11.11/32, version 2
+            # BGP routing table entry for 2001:DB8:1:1::/64, version 5
+            # BGP routing table entry for 2001:2:2:2::2/128, version 2
+            # BGP routing table entry for [5][65535:1][0][24][3.3.3.0]/17, version 3
+            p3 = re.compile(r'^\s*BGP +routing +table +entry +for +'
+                             '(\[[0-9]+\])?((?P<route_distinguisher>((\[[0-9]+'
+                             '[\:][0-9]+\])|([0-9]+[\:][0-9]+[\:]))))?(\['
+                             '[0-9]+\])?(\[[0-9]+\])?(?P<router_id>((\[[0-9]+'
+                             '[\.][0-9]+[\.][0-9]+[\.][0-9]+\][\/][0-9]+)|'
+                             '([0-9]+[\.][0-9]+[\.][0-9]+[\.][0-9]+[\/][0-9]+)'
+                             '|([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+'
+                             '[\:][\:][a-zA-Z0-9]+[\/][0-9]+)|([a-zA-Z0-9]+'
+                             '[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]'
+                             '+[\:][\:][\/][0-9]+)|([a-zA-Z0-9]+[\:]'
+                             '[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
+                             '[\:][0-9]+[\/][0-9]+)))\, +version +'
+                             '(?P<prefix_table_version>[0-9]+)$')
+            m = p3.match(line)
+            if m:
+                update_group = 0
+                index = 0
+                prefixes = m.groupdict()['router_id']
+                prefixes = prefixes.replace('[', '')
+                prefixes = prefixes.replace(']', '')
+                prefix_table_version = m.groupdict()['prefix_table_version']
+                continue
+
+            # 10.1.1.2 from 10.1.1.2 (10.1.1.2)
+            # 2.2.2.2 (metric 11) (via default) from 2.2.2.2 (2.2.2.2)
+            # :: (via vrf VRF1) from 0.0.0.0 (10.1.1.1)
+            p4 = re.compile(r'^\s*((?P<nexthop>[a-zA-Z0-9\.\:]+)'
+                             '( +\(metric +(?P<next_hop_igp_metric>[0-9]+)\))?'
+                             '( +\(via +(?P<next_hop_via>[a-zA-Z0-9\s]+)\))? +'
+                             'from +(?P<gateway>[a-zA-Z0-9\.\:]+)'
+                             ' +\((?P<originator>[0-9\.]+)\))$')
+            m = p4.match(line)
+            if m:
+                index += 1
+                nexthop = m.groupdict()['nexthop']
+                gateway = m.groupdict()['gateway']
+                originator = m.groupdict()['originator']
+                if new_address_family:
+                    if 'index' not in bgp_dict['instance']['default']['vrf']\
+                        [vrf]['address_family'][new_address_family]['prefixes']\
+                        [prefixes]:
+                        bgp_dict['instance']['default']['vrf'][vrf]\
+                            ['address_family'][new_address_family]['prefixes']\
+                            [prefixes]['index'] = {}
+                    if index not in bgp_dict['instance']['default']['vrf'][vrf]\
+                        ['address_family'][new_address_family]['prefixes']\
+                        [prefixes]['index']:
+                        bgp_dict['instance']['default']['vrf'][vrf]\
+                        ['address_family'][new_address_family]['prefixes']\
+                                [prefixes]['index'][index] = {}
+                        subdict = bgp_dict['instance']['default']['vrf'][vrf]\
+                            ['address_family'][new_address_family]['prefixes']\
+                            [prefixes]['index'][index]
+
+                    subdict['next_hop'] = nexthop
+                    subdict['gateway'] = gateway
+                    subdict['originator'] = originator
+                    if m.groupdict()['next_hop_igp_metric']:
+                        subdict['next_hop_igp_metric'] = \
+                            m.groupdict()['next_hop_igp_metric']
+                    if m.groupdict()['next_hop_via']:
+                        subdict['next_hop_via'] = \
+                            m.groupdict()['next_hop_via']
+                    # Adding update_group to each index
+                    if update_group:
+                        subdict['update_group'] = update_group
+                else:
+                    if 'index' not in bgp_dict['instance']['default']['vrf']\
+                        [vrf]['address_family'][address_family]['prefixes']\
+                        [prefixes]:
+                        bgp_dict['instance']['default']['vrf'][vrf]\
+                            ['address_family'][address_family]['prefixes']\
+                            [prefixes]['index'] = {}
+                    if index not in bgp_dict['instance']['default']['vrf']\
+                        [vrf]['address_family'][address_family]['prefixes']\
+                        [prefixes]['index']:
+                        bgp_dict['instance']['default']['vrf'][vrf]\
+                        ['address_family'][address_family]['prefixes']\
+                                [prefixes]['index'][index] = {}
+                        subdict = bgp_dict['instance']['default']['vrf'][vrf]\
+                            ['address_family'][address_family]['prefixes']\
+                            [prefixes]['index'][index]
+
+                    subdict['next_hop'] = nexthop
+                    subdict['gateway'] = gateway
+                    subdict['originator'] = originator
+                    if m.groupdict()['next_hop_igp_metric']:
+                        subdict['next_hop_igp_metric'] = \
+                            m.groupdict()['next_hop_igp_metric']
+                    if m.groupdict()['next_hop_via']:
+                        subdict['next_hop_via'] = \
+                            m.groupdict()['next_hop_via']
+                    # Adding update_group to each index
+                    if update_group:
+                        subdict['update_group'] = update_group
+                continue
+
+            # Origin incomplete, metric 0, localpref 100, valid, internal
+            # Origin incomplete, metric 0, localpref 100, valid, internal, best
+            # Origin incomplete, metric 0, localpref 100, weight 32768, valid, sourced, best
+            p5 = re.compile(r'^\s*Origin +(?P<origin>[a-zA-Z]+),'
+                             '(?: +metric +(?P<metric>[0-9]+),?)?'
+                             '(?: +localpref +(?P<locprf>[0-9]+),?)?'
+                             '(?: +weight +(?P<weight>[0-9]+),?)?'
+                             '(?: +(?P<valid>(valid),?))?'
+                             '(?: +(?P<sourced>(sourced),?))?'
+                             '(?: +(?P<state>(internal|external),?))?'
+                             '(?: +(?P<best>(best)))?$')
+            m = p5.match(line)
+            if m:
+                status_codes = ''
+                if m.groupdict()['locprf']:
+                    subdict['localpref'] = int(m.groupdict()['locprf'])
+                if m.groupdict()['metric']:
+                     subdict['metric'] = int(m.groupdict()['metric'])
+                if m.groupdict()['weight']:
+                    subdict['weight'] = str(m.groupdict()['weight'])
+                if m.groupdict()['origin']:
+                    origin = str(m.groupdict()['origin'])
+                    if origin == 'incomplete':
+                        subdict['origin_codes'] = '?'
+                    elif origin == 'EGP':
+                        subdict['origin_codes'] = 'e'
+                    else:
+                        subdict['origin_codes'] = 'i'
+                if m.groupdict()['valid']:
+                    status_codes += '* '
+                if m.groupdict()['best']:
+                    status_codes = status_codes.rstrip()
+                    status_codes += '>'
+                if m.groupdict()['state']:
+                    state = str(m.groupdict()['state'])
+                    if state == 'internal':
+                        status_codes += 'i'
+                subdict['status_codes'] = status_codes
+
+                # Adding the keys we got from 'Refresh Epoch' line
+                subdict['refresh_epoch'] = refresh_epoch
+
+                # Adding the keys we got from 'route_info' line
+                if route_info:
+                    subdict['route_info'] = route_info
+
+                continue
+
+            # Advertised to update-groups:
+            p6_1 = re.compile(r'^\s*Advertised +to +update-groups *:$')
+            m = p6_1.match(line)
+            if m:
+                next_line_update_group = True
+                continue
+
+            # Not advertised to any peer
+            p6_2 = re.compile(r'^\s*Not +advertised +to +any +peer$')
+            m = p6_2.match(line)
+            if m:
+                next_line_update_group = False
+                continue
+
+            # 3
+            p6_3 = re.compile(r'^\s*           (?P<update_group>[0-9]+)$')
+            m = p6_3.match(line)
+            if m:
+                update_group = int(m.groupdict()['update_group'])
+                continue
+
+            # Refresh Epoch 1
+            p7 = re.compile(r'^\s*Refresh +Epoch +(?P<refresh_epoch>[0-9]+)$')
+            m = p7.match(line)
+            if m:
+                refresh_epoch_flag = True
+                refresh_epoch = int(m.groupdict()['refresh_epoch'])
+                continue
+
+            # Extended Community: RT:65535:1 ENCAP:8 Router MAC:001E.7A13.E9BF
+            p8 = re.compile(r'^\s*Extended +Community\: +'
+                             '(?:(?P<ext_community>[A-Z0-9\:]+))?'
+                             '( +ENCAP)?(?:(?P<encap>[0-9\:]+))?'
+                             '( +Router)?( +)?'
+                             '(?:(?P<router_mac>[a-zA-Z0-9\:\.]+))?$')
+            m = p8.match(line)
+            if m:
+                if 'evpn' not in subdict:
+                    subdict['evpn'] = {}
+                ext_community = m.groupdict()['ext_community']
+                subdict['evpn']['ext_community'] = ext_community
+                if m.groupdict()['encap']:
+                    subdict['evpn']['encap'] = m.groupdict()['encap']
+                if m.groupdict()['router_mac']:
+                    subdict['evpn']['router_mac'] = m.groupdict()['router_mac']
+                continue
+
+            # rx pathid: 0, tx pathid: 0
+            p9 = re.compile(r'^\s*rx +pathid\: +(?P<recipient_pathid>[0-9]+)\,'
+                             ' +tx +pathid\:'
+                             ' +(?P<transfer_pathid>[0-9]+x[0-9]+)$')
+            m = p9.match(line)
+            if m:
+                recipient_pathid = int(m.groupdict()['recipient_pathid'])
+                transfer_pathid = str(m.groupdict()['transfer_pathid'])
+
+                subdict['recipient_pathid'] = recipient_pathid
+                subdict['transfer_pathid'] = transfer_pathid
+                continue
+
+            # EVPN ESI: 00000000000000000000, Gateway Address: 0.0.0.0, local vtep: 33.33.33.33, Label 30000
+            p10 = re.compile(r'^\s*EVPN +ESI\: +(?P<evpn_esi>[0-9]+)\,'
+                              ' +Gateway +Address\: +'
+                              '(?P<gateway_address>[a-zA-Z0-9\.\:]+)\,'
+                              ' +local vtep\: +(?P<local_vtep>[a-zA-Z0-9\.\:]+)'
+                              '\, +[L|l]abel +(?P<label>[0-9]+)$')
+            m = p10.match(line)
+            if m:
+                if 'evpn' not in subdict:
+                    subdict['evpn'] = {}
+                subdict['evpn']['evpn_esi'] = str(m.groupdict()['evpn_esi'])
+                subdict['evpn']['local_vtep'] = str(m.groupdict()['local_vtep'])
+                subdict['evpn']['gateway_address'] = \
+                    str(m.groupdict()['gateway_address'])
+                subdict['evpn']['label'] = int(m.groupdict()['label'])
+                continue
+
+            # Local vxlan vtep:
+            p11 = re.compile(r'^\s*Local +vxlan +vtep\:$')
+            m = p11.match(line)
+            if m:
+                if 'local_vxlan_vtep' not in subdict:
+                    subdict['local_vxlan_vtep'] = {}
+                local_vxlan_vtep = True
+                continue
+
+            # bdi:BDI200
+            p12 = re.compile(r'^\s*bdi\:(?P<bdi>[A-Z0-9]+)$')
+            m = p12.match(line)
+            if m and local_vxlan_vtep:
+                subdict['local_vxlan_vtep']['bdi'] = str(m.groupdict()['bdi'])
+                continue
+
+            # vrf:evpn1, vni:30000
+            p13 = re.compile(r'^\s*vrf\:(?P<vrf>[a-zA-Z0-9]+)\,'
+                              ' +vni\:(?P<vni>[0-9]+)$')
+            m = p13.match(line)
+            if m and local_vxlan_vtep:
+                subdict['local_vxlan_vtep']['vrf'] = str(m.groupdict()['vrf'])
+                subdict['local_vxlan_vtep']['vni'] = str(m.groupdict()['vni'])
+                continue
+
+            # local router mac:001E.7A13.E9BF
+            p14 = re.compile(r'^\s*local +router +mac\:'
+                              '(?P<local_router_mac>[a-zA-Z0-9\.]+)$')
+            m = p14.match(line)
+            if m and local_vxlan_vtep:
+                subdict['local_vxlan_vtep']['local_router_mac'] = \
+                    str(m.groupdict()['local_router_mac'])
+                continue
+
+            # encap:8
+            p15 = re.compile(r'^\s*encap\:(?P<encap>[0-9]+)$')
+            m = p15.match(line)
+            if m and local_vxlan_vtep:
+                subdict['local_vxlan_vtep']['encap'] = \
+                    str(m.groupdict()['encap'])
+                continue
+
+            # vtep-ip:33.33.33.33
+            p16 = re.compile(r'^\s*vtep-ip\:(?P<vtep_ip>[0-9\.]+)$')
+            m = p16.match(line)
+            if m and local_vxlan_vtep:
+                subdict['local_vxlan_vtep']['vtep_ip'] = \
+                str(m.groupdict()['vtep_ip'])
+                continue
+
+            # Local
+            # 65530
+            # Local, imported path from base
+            # 200 33299 51178 47751 {27016}
+            # 200 33299 51178 47751 {27016}, imported path from 200:2:15.1.1.0/24 (global)
+            # 400 33299 51178 47751 {27016}, imported path from [400:1]646:22:22:4::/64 (VRF2)
+            p17 = re.compile(r'^\s*(?P<route_info>[a-zA-Z0-9\.\,\{\}\s\(\)\.\/\:\[\]]+)$')
+            m = p17.match(line)
+            if m and refresh_epoch_flag:
+                route_info = str(m.groupdict()['route_info'])
+                refresh_epoch_flag = False
+                continue
+
+        return bgp_dict
+
 # =================================================
 # Parser for 'show bgp all neighbors <WORD> policy'
 # =================================================
@@ -2462,7 +2981,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
 
 class ShowBgpAllNeighborsReceivedRoutesSchema(MetaParser):
     
-    '''Schema for show bgp all neighbors <WORD> routes'''
+    '''Schema for show bgp all neighbors <WORD> received-routes'''
 
     schema = {
         'vrf':

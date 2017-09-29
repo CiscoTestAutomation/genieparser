@@ -46,6 +46,8 @@ class ShowIpMrouteSchema(MetaParser):
                                              Optional('expire'): str,
                                              Optional('flags'): str,
                                              Optional('rp'): str,
+                                             Optional('rpf_nbr'): str,
+                                             Optional('rpf_info'): str,
                                              Optional('incoming_interface_list'):
                                                 {Any(): 
                                                     {'rpf_nbr': str,
@@ -168,6 +170,16 @@ class ShowIpMroute(ShowIpMrouteSchema):
                 incoming_interface = m.groupdict()['incoming_interface']
                 rpf_nbr = m.groupdict()['rpf_nbr']
                 rpf_info = m.groupdict()['status']
+                
+                sub_dict['rpf_nbr'] = rpf_nbr
+                if rpf_info:
+                    sub_dict['rpf_info'] = rpf_info.lower()
+
+                if incoming_interface.lower() == 'null':
+                    sub_dict['rpf_nbr'] = rpf_nbr
+                    if rpf_info:
+                        sub_dict['rpf_info'] = rpf_info.lower()
+                    continue
 
                 if 'incoming_interface_list' not in sub_dict:
                     sub_dict['incoming_interface_list'] = {}
@@ -186,6 +198,9 @@ class ShowIpMroute(ShowIpMrouteSchema):
             if m:
                 incoming_interface = m.groupdict()['incoming_interface']
 
+                if incoming_interface.lower() == 'null':
+                    continue
+
                 if 'incoming_interface_list' not in sub_dict:
                     sub_dict['incoming_interface_list'] = {}
                 if incoming_interface not in sub_dict['incoming_interface_list']:
@@ -198,9 +213,10 @@ class ShowIpMroute(ShowIpMrouteSchema):
             if m:
                 rpf_nbr = m.groupdict()['rpf_nbr']
                 try:
+                    sub_dict['rpf_nbr'] = rpf_nbr
                     sub_dict['incoming_interface_list'][incoming_interface]['rpf_nbr'] = rpf_nbr
                 except:
-                    pass
+                    sub_dict['rpf_nbr'] = rpf_nbr
                 continue
 
             # Outgoing interface list: Null
