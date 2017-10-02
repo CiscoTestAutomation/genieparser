@@ -1645,6 +1645,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                           Optional('link'): str,
                           Optional('bgp_version'): int,
                           Optional('router_id'): str,
+                          Optional('description'): str,
                           Optional('session_state'): str,
                           Optional('shutdown'): bool,
 
@@ -1941,6 +1942,15 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                 if af_name:
                     parsed_dict['vrf'][vrf_name]['neighbor'] \
                         [neighbor_id]['address_family'][af_name] = {}
+                continue
+
+            # Description: router22222222
+            p2_1 = re.compile(r'^\s*Description: +(?P<description>[\w\s\S]+)$')
+            m = p2_1.match(line)
+            if m:
+                description = m.groupdict()['description']
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]['description']\
+                    = description
                 continue
 
             # Administratively shut down
