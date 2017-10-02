@@ -190,8 +190,9 @@ class test_show_hsrp_detail(unittest.TestCase):
                     'address': '192.168.1.254'
                   },
                   'priority': 49,
-                  'standby_ip_address': 'unknown',
-                  'standby_router': 'unknown',
+                  'standby_ip_address': '192.168.1.5',
+                  'standby_router': '192.168.1.5',
+                  'standby_expire': '00:00:03',
                   'standby_state': 'active',
                   'statistics': {
                     'last_coup_received': 'Never',
@@ -246,8 +247,9 @@ class test_show_hsrp_detail(unittest.TestCase):
             1: {
               'groups': {
                 8: {
-                  'active_ip_address': 'unknown',
-                  'active_router': 'unknown',
+                  'active_ip_address': '192.168.1.2',
+                  'active_router': '192.168.1.2',
+                  'active_expire': '00:00:02',
                   'authentication': 'cisco123',
                   'group_number': 8,
                   'hsrp_router_state': 'init',
@@ -298,7 +300,7 @@ class test_show_hsrp_detail(unittest.TestCase):
           Minimum delay 5 sec, reload delay 10 sec
           Hot standby IP address is 192.168.1.254 configured
           Active router is local
-          Standby router is unknown expired
+          Standby router is 192.168.1.5 expires in 00:00:03
           Standby virtual mac address is 0000.0c07.ac05, state is active
           Authentication text, string "cisco123"
           4 state changes, last state change 2d07h
@@ -321,7 +323,7 @@ class test_show_hsrp_detail(unittest.TestCase):
           Hellotime 3000 msec holdtime 10000 msec
           Minimum delay 5 sec, reload delay 15 sec
           Hot standby IP address is 192.168.2.254 configured
-          Active router is unknown expired
+          Active router is 192.168.1.2 expires in 00:00:02
           Standby router is unknown expired
           Standby virtual mac address is 0000.0c07.ac08, state is stored
           Authentication text, string "cisco123"
