@@ -204,5 +204,34 @@ class test_show_ipv6_pim_interface(unittest.TestCase):
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
+class test_show_ip_pim_rp_mapping(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_output_mapping_1 = {'execute.return_value': '''
+        Router# show ip pim rp mapping
+
+         PIM Group-to-RP Mappings
+         This system is an RP (Auto-RP)
+         This system is an RP-mapping agent
+
+         Group(s) 227.0.0.0/8
+           RP 10.10.0.2 (?), v2v1, bidir
+             Info source:10.10.0.2 (?), via Auto-RP
+                  Uptime:00:01:42, expires:00:00:32
+         Group(s) 228.0.0.0/8
+           RP 10.10.0.3 (?), v2v1, bidir
+             Info source:10.10.0.3 (?), via Auto-RP
+                  Uptime:00:01:26, expires:00:00:34
+         Group(s) 229.0.0.0/8
+           RP 10.10.0.5 (mcast1.cisco.com), v2v1, bidir
+             Info source:10.10.0.5 (mcast1.cisco.com), via Auto-RP
+                  Uptime:00:00:52, expires:00:00:37
+         Group(s) (-)230.0.0.0/8
+           RP 10.10.0.5 (mcast1.cisco.com), v2v1, bidir
+             Info source:10.10.0.5 (mcast1.cisco.com), via Auto-RP
+                  Uptime:00:00:52, expires:00:00:37
+     '''}
+
 if __name__ == '__main__':
     unittest.main()
