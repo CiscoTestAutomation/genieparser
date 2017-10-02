@@ -1089,6 +1089,7 @@ class ShowBgpAllSummarySchema(MetaParser):
             * show bgp all summary
     """
     schema = {
+        'bgp_id': int,
         'vrf':
             {Any():
                  {Optional('neighbor'):
@@ -1196,6 +1197,10 @@ class ShowBgpAllSummary(ShowBgpAllSummarySchema):
             if m:
                 route_identifier = str(m.groupdict()['route_identifier'])
                 local_as = int(m.groupdict()['local_as'])
+
+                if 'bgp_id' not in sum_dict:
+                    sum_dict['bgp_id'] = local_as
+
                 if 'vrf' not in sum_dict:
                     sum_dict['vrf'] = {}
                 if vrf not in sum_dict['vrf']:
