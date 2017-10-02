@@ -1664,35 +1664,37 @@ class test_show_etherchannel_summary(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
          "num_channel_groups_in_use": 1,
-         "Port-channel2": {
-              "flags": "RU",
-              "port_channel": {
-                   "protocol": "lacp",
-                   "port_channel_member": True,
-                   "port_channel_member_intfs": [
-                        "GigabitEthernet0/0/0",
-                        "GigabitEthernet0/0/1"
-                   ]
-              },
-              "group": "2"
-         },
-         "GigabitEthernet0/0/0": {
-              "flags": "bndl",
-              "port_channel": {
-                   "port_channel_member": True,
-                   "port_channel_int": "Port-channel2"
-              },
-              "group": "2"
-         },
          "aggregators_number": 1,
-         "GigabitEthernet0/0/1": {
-              "flags": "bndl",
-              "port_channel": {
-                   "port_channel_member": True,
-                   "port_channel_int": "Port-channel2"
-              },
-              "group": "2"
-         }
+         'interfaces': {
+             "Port-channel2": {
+                  "flags": "RU",
+                  "port_channel": {
+                       "protocol": "lacp",
+                       "port_channel_member": True,
+                       "port_channel_member_intfs": [
+                            "GigabitEthernet0/0/0",
+                            "GigabitEthernet0/0/1"
+                       ]
+                  },
+                  "group": "2"
+             },
+             "GigabitEthernet0/0/0": {
+                  "flags": "bndl",
+                  "port_channel": {
+                       "port_channel_member": True,
+                       "port_channel_int": "Port-channel2"
+                  },
+                  "group": "2"
+             },
+             "GigabitEthernet0/0/1": {
+                  "flags": "bndl",
+                  "port_channel": {
+                       "port_channel_member": True,
+                       "port_channel_int": "Port-channel2"
+                  },
+                  "group": "2"
+             }
+        }
 
     }
 

@@ -2420,17 +2420,19 @@ class ShowEtherchannelSummarySchema(MetaParser):
     schema = {
                 'num_channel_groups_in_use': int,
                 'aggregators_number': int,
-                Any(): {
-                    'group': str,
-                    'flags': str,
-                    'port_channel': {
-                        'port_channel_member': bool,
-                        Optional('port_channel_int'): str,
-                        Optional('port_channel_member_intfs'): list,
-                        Optional('protocol'): str,
-                    },
+                'interfaces': {
+                    Any(): {
+                        'group': str,
+                        'flags': str,
+                        'port_channel': {
+                            'port_channel_member': bool,
+                            Optional('port_channel_int'): str,
+                            Optional('port_channel_member_intfs'): list,
+                            Optional('protocol'): str,
+                        },
+                    }
+                }
             }
-        }
 
 class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
 
@@ -2459,15 +2461,17 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
                 protocol = m.groupdict()['protocol'].lower()
                 ports = m.groupdict()['ports'].split()
                 # port_channle entry
-                if port_channel not in ret_dict:
-                    ret_dict[port_channel] = {}
-                if 'port_channel' not in ret_dict[port_channel]:
-                    ret_dict[port_channel]['port_channel'] = {}
+                if 'interfaces' not in ret_dict:
+                    ret_dict['interfaces'] = {}
+                if port_channel not in ret_dict['interfaces']:
+                    ret_dict['interfaces'][port_channel] = {}
+                if 'port_channel' not in ret_dict['interfaces'][port_channel]:
+                    ret_dict['interfaces'][port_channel]['port_channel'] = {}
 
-                ret_dict[port_channel]['group'] = group
-                ret_dict[port_channel]['flags'] = port_flags
-                ret_dict[port_channel]['port_channel']['port_channel_member'] = True
-                ret_dict[port_channel]['port_channel']['protocol'] = protocol
+                ret_dict['interfaces'][port_channel]['group'] = group
+                ret_dict['interfaces'][port_channel]['flags'] = port_flags
+                ret_dict['interfaces'][port_channel]['port_channel']['port_channel_member'] = True
+                ret_dict['interfaces'][port_channel]['port_channel']['protocol'] = protocol
                 
                 # build the bandled ethernet interfaces
                 for item in ports:
@@ -2477,18 +2481,18 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
                         intf = convert_intf_name(m.groupdict()['intf'])
                         eth_list.append(intf)
                         eth_flags = m.groupdict()['eth_flags']
-                        if intf not in ret_dict:
-                            ret_dict[intf] = {}
-                        if 'port_channel' not in ret_dict[intf]:
-                            ret_dict[intf]['port_channel'] = {}
+                        if intf not in ret_dict['interfaces']:
+                            ret_dict['interfaces'][intf] = {}
+                        if 'port_channel' not in ret_dict['interfaces'][intf]:
+                            ret_dict['interfaces'][intf]['port_channel'] = {}
 
-                        ret_dict[intf]['group'] = group
-                        ret_dict[intf]['flags'] = eth_flags
-                        ret_dict[intf]['port_channel']['port_channel_member'] = True
-                        ret_dict[intf]['port_channel']['port_channel_int'] = port_channel
+                        ret_dict['interfaces'][intf]['group'] = group
+                        ret_dict['interfaces'][intf]['flags'] = eth_flags
+                        ret_dict['interfaces'][intf]['port_channel']['port_channel_member'] = True
+                        ret_dict['interfaces'][intf]['port_channel']['port_channel_int'] = port_channel
 
                 # port_channel_member_intfs for port-channel interface
-                ret_dict[port_channel]['port_channel']['port_channel_member_intfs'] = sorted(eth_list)
+                ret_dict['interfaces'][port_channel]['port_channel']['port_channel_member_intfs'] = sorted(eth_list)
                 continue
 
             # Number of channel-groups in use: 1
