@@ -1,6 +1,13 @@
 ''' show_interface.py
+    IOSXE parsers for the following show commands:
 
-Example parser class
+    * show interfaces
+    * show ip interface brief
+    * show ip interface brief | include Vlan
+    * show interfaces switchport
+    * show ip interface
+    * show ipv6 interface
+    * show etherchannel summary
 
 '''
 
@@ -2408,8 +2415,10 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
 
 
 class ShowEtherchannelSummarySchema(MetaParser):
+
+    # Schema for show etherchannel summary
     schema = {
-                'channel_groups_in_use_number': int,
+                'num_channel_groups_in_use': int,
                 'aggregators_number': int,
                 Any(): {
                     'group': str,
@@ -2434,6 +2443,8 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
 
         for line in out.splitlines():
             line = line.strip()
+            # 2\tPo2(RU)\t\tLACP\t Gi0/0/0(bndl) Gi0/0/1(bndl)
+            line = line.replace('\t', '  ')
 
             # 2 Po2(RU)     LACP     Gi0/0/0(bndl) Gi0/0/1(bndl)
             p1 =  re.compile(r'^(?P<group>\d+) +'
@@ -2457,7 +2468,7 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
                 ret_dict[port_channel]['flags'] = port_flags
                 ret_dict[port_channel]['port_channel']['port_channel_member'] = True
                 ret_dict[port_channel]['port_channel']['protocol'] = protocol
-
+                
                 # build the bandled ethernet interfaces
                 for item in ports:
                     p_eth = re.compile(r'^(?P<intf>[\w\/\-\.]+)\((?P<eth_flags>\w+)\)')
@@ -2484,7 +2495,7 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
             p2 =  re.compile(r'^Number +of +channel\-groups +in +use: +(?P<group_num>\d+)$')
             m = p2.match(line)
             if m:
-                ret_dict['channel_groups_in_use_number'] = int(m.groupdict()['group_num'])
+                ret_dict['num_channel_groups_in_use'] = int(m.groupdict()['group_num'])
                 continue
 
             # Number of aggregators:           1

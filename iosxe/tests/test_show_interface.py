@@ -1663,7 +1663,7 @@ class test_show_etherchannel_summary(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
-         "channel_groups_in_use_number": 1,
+         "num_channel_groups_in_use": 1,
          "Port-channel2": {
               "flags": "RU",
               "port_channel": {
