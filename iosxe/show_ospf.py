@@ -349,8 +349,9 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema, MetaParser):
                 ospf_neigh_dict['intf'][intf]['neighbor'] = neighbor
                 continue
 
+            # Neighbor priority is 0, State is 2WAY, 2 state changes
             p3 = re.compile(r'^ *Neighbor +priority +is +(?P<neigh_pri>[0-9]+), '
-                            r'State +is +(?P<state>[a-zA-Z]+), '
+                            r'State +is +(?P<state>\w+), '
                             r'+(?P<state_changes>\d+) +state +changes$')
             m = p3.match(line)
             if m:
