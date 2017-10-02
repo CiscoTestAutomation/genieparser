@@ -540,9 +540,9 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema,MetaParser):
                 retransmit_timer = m.groupdict()['retransmit_timer']
                 ospf_intf_dict['intf'][intf]['retransmit_timer'] = retransmit_timer
                 continue
-        ospf_intf_dict['intfs_all'] = intfs_all
-        ospf_intf_dict['intfs_up'] = intfs_up
-        ospf_intf_dict['intfs_down'] = intfs_down
+        ospf_intf_dict['intfs_all'] = sorted(intfs_all)
+        ospf_intf_dict['intfs_up'] = sorted(intfs_up)
+        ospf_intf_dict['intfs_down'] = sorted(intfs_down)
         return ospf_intf_dict
 
 

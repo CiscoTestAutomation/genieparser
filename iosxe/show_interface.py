@@ -9,6 +9,7 @@ import logging
 import pprint
 import re
 import unittest
+import parsergen
 from collections import defaultdict
 
 from ats.log.utils import banner
@@ -16,7 +17,6 @@ import xmltodict
 try:
     import iptools
     from ats import tcl
-    import parsergen
     from cnetconf import testmodel
 except ImportError:
     pass
@@ -211,7 +211,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                     interface_dict[interface]['port_channel']\
                         ['port_channel_member'] = False
 
-                if enabled and 'down' in enabled:
+                if enabled and ('down' in enabled or 'delete' in enabled):
                     interface_dict[interface]['enabled'] = False
                 elif enabled and 'up' in enabled:
                     interface_dict[interface]['enabled'] = True
@@ -1452,7 +1452,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                 enabled = m.groupdict()['enabled'].lower()
                 if interface not in interface_dict:
                     interface_dict[interface] = {}
-                if 'down' in enabled:
+                if 'down' in enabled or 'delete' in enabled:
                     interface_dict[interface]['enabled'] = False
                 else:
                     interface_dict[interface]['enabled'] = True
@@ -1927,7 +1927,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # Interface is unnumbered. Using address of Loopback11 (200.11.3.1)
             p40 = re.compile(r'^Interface +is +unnumbered. +Using +address +of +'
-                              '(?P<unnumbered_intf>[\w\/\.]+) +'
+                              '(?P<unnumbered_intf>[\w\/\-\.]+) +'
                               '\((?P<unnumbered_ip>[\w\.\:]+)\)$')
             m = p40.match(line)
             if m:
