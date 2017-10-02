@@ -702,9 +702,9 @@ class ShowStandbyAll(ShowStandbyAllSchema):
             # Standby router is unknown 
             # Standby router is 10.1.1.2, priority 100 (expires in 10.624 sec)
             p13 = re.compile(r'\s*Standby +router +is +(?P<standby_router>'
-                              '[a-zA-Z0-9\.]+)(, priority (?P<standby_priority>'
-                              '\d+) \(expires in (?P<standby_expires_in>\S+) '
-                              'sec\))?')
+                              '[a-zA-Z0-9\.]+)(, +priority +'
+                              '(?P<standby_priority>\d+) +\(expires +in +'
+                              '(?P<standby_expires_in>\S+) +sec\))?')
             m = p13.match(line)
             if m:
                 standby_router = m.groupdict()['standby_router']

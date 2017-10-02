@@ -145,8 +145,10 @@ class test_show_standby_all(unittest.TestCase):
                   },
                   'priority': 100,
                   'session_name': 'hsrp-Gi1/0/1-0',
-                  'standby_ip_address': 'unknown',
-                  'standby_router': 'unknown',
+                  'standby_ip_address': '192.168.1.2',
+                  'standby_router': '192.168.1.2',
+                  'standby_priority': 100,
+                  'standby_expires_in': 10.624,
                   'statistics': {
                     'num_state_changes': 8
                   },
@@ -271,7 +273,7 @@ class test_show_standby_all(unittest.TestCase):
           Authentication MD5, key-chain "5"
           Preemption enabled, delay min 5 secs, reload 10 secs, sync 20 secs
           Active router is local
-          Standby router is unknown
+          Standby router is 192.168.1.2, priority 100 (expires in 10.624 sec)
           Priority 100 (default 100)
           Group name is "hsrp-Gi1/0/1-0" (default)
         GigabitEthernet1/0/2 - Group 10
