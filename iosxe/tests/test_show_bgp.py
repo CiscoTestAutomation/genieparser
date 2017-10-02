@@ -2804,6 +2804,7 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                               'link': 'internal',
                               'bgp_version': 4,
                               'router_id': '2.2.2.2',
+                              'description': 'router2222222',
                               'session_state': 'established',
                               'bgp_negotiated_keepalive_timers':
                                   {
@@ -4271,6 +4272,7 @@ TCP Semaphore      0x1286E8CC  FREE
 
 For address family: VPNv6 Unicast
 BGP neighbor is 2.2.2.2,  remote AS 100, internal link
+  Description: router2222222
   BGP version 4, remote router ID 2.2.2.2
   BGP state = Established, up for 01:10:38
   Last read 00:00:07, last write 00:00:12, hold time is 180, keepalive interval is 60 seconds

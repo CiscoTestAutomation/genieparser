@@ -309,9 +309,9 @@ GigabitEthernet4 is up, line protocol is up
                           'pid': '200',
                           'prot_state': 'up',
                           'rid': '192.0.0.8'}},
- 'intfs_all': ['GigabitEthernet3', 'Loopback100', 'GigabitEthernet4'],
+ 'intfs_all': ['GigabitEthernet3', 'GigabitEthernet4', 'Loopback100'],
  'intfs_down': [],
- 'intfs_up': ['GigabitEthernet3', 'Loopback100', 'GigabitEthernet4']}
+ 'intfs_up': ['GigabitEthernet3', 'GigabitEthernet4', 'Loopback100']}
 
 
     def test_golden(self):

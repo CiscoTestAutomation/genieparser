@@ -129,6 +129,29 @@ class ShowVersion(ShowVersionSchema):
                         m.groupdict()['image_id']
                     continue
 
+            # Cisco IOS Software [Fuji], ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.7.1prd4, RELEASE SOFTWARE (fc1)
+            # Cisco IOS Software [Fuji], Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Experimental Version 16.8.20170924:182909 [polaris_dev-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20170924_191550 132]
+
+            p1_1 = re.compile(
+                r'^\s*[Cc]isco +IOS +[Ss]oftware.+, (?P<platform>.+) Software +\((?P<image_id>.+)\).+( +Experimental)? +[Vv]ersion +(?P<version>[a-zA-Z0-9\.\:]+) *,? +')
+            m = p1_1.match(line)
+            if m:
+                version = m.groupdict()['version']
+                p1_2 = re.compile(r'^\s*(?P<ver_short>\d+\.\d+).*')
+                m2 = p1_2.match(version)
+                if m2:
+                    if 'version' not in version_dict:
+                        version_dict['version'] = {}
+                    version_dict['version']['version_short'] = \
+                        m2.groupdict()['ver_short']
+                    version_dict['version']['platform'] = \
+                        m.groupdict()['platform']
+                    version_dict['version']['version'] = \
+                        m.groupdict()['version']
+                    version_dict['version']['image_id'] = \
+                        m.groupdict()['image_id']
+                    continue
+
             # rom
             p2 = re.compile(
                 r'^\s*ROM\: +(?P<rom>.+)$')
