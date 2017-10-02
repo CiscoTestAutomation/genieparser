@@ -2405,3 +2405,93 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 ret_dict[intf]['ipv6']['enabled'] = False
                 continue
         return ret_dict
+
+
+class ShowEtherchannelSummarySchema(MetaParser):
+    schema = {
+                'channel_groups_in_use_number': int,
+                'aggregators_number': int,
+                Any(): {
+                    'group': str,
+                    'flags': str,
+                    'port_channel': {
+                        'port_channel_member': bool,
+                        Optional('port_channel_int'): str,
+                        Optional('port_channel_member_intfs'): list,
+                        Optional('protocol'): str,
+                    },
+            }
+        }
+
+class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
+
+    #parser for show etherchannel summary
+
+    def cli(self):
+        out = self.device.execute('show etherchannel summary')
+        ret_dict = {}
+        eth_list = []
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 2 Po2(RU)     LACP     Gi0/0/0(bndl) Gi0/0/1(bndl)
+            p1 =  re.compile(r'^(?P<group>\d+) +'
+                              '(?P<port_channel>[\w\.]+)\((?P<port_flags>\w+)\) +'
+                              '(?P<protocol>\w+) +'
+                              '(?P<ports>.*)$')
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()['group']
+                port_channel = convert_intf_name(m.groupdict()['port_channel'])
+                port_flags = m.groupdict()['port_flags']
+                protocol = m.groupdict()['protocol'].lower()
+                ports = m.groupdict()['ports'].split()
+                # port_channle entry
+                if port_channel not in ret_dict:
+                    ret_dict[port_channel] = {}
+                if 'port_channel' not in ret_dict[port_channel]:
+                    ret_dict[port_channel]['port_channel'] = {}
+
+                ret_dict[port_channel]['group'] = group
+                ret_dict[port_channel]['flags'] = port_flags
+                ret_dict[port_channel]['port_channel']['port_channel_member'] = True
+                ret_dict[port_channel]['port_channel']['protocol'] = protocol
+
+                # build the bandled ethernet interfaces
+                for item in ports:
+                    p_eth = re.compile(r'^(?P<intf>[\w\/\-\.]+)\((?P<eth_flags>\w+)\)')
+                    m = p_eth.match(item)
+                    if m:
+                        intf = convert_intf_name(m.groupdict()['intf'])
+                        eth_list.append(intf)
+                        eth_flags = m.groupdict()['eth_flags']
+                        if intf not in ret_dict:
+                            ret_dict[intf] = {}
+                        if 'port_channel' not in ret_dict[intf]:
+                            ret_dict[intf]['port_channel'] = {}
+
+                        ret_dict[intf]['group'] = group
+                        ret_dict[intf]['flags'] = eth_flags
+                        ret_dict[intf]['port_channel']['port_channel_member'] = True
+                        ret_dict[intf]['port_channel']['port_channel_int'] = port_channel
+
+                # port_channel_member_intfs for port-channel interface
+                ret_dict[port_channel]['port_channel']['port_channel_member_intfs'] = sorted(eth_list)
+                continue
+
+            # Number of channel-groups in use: 1
+            p2 =  re.compile(r'^Number +of +channel\-groups +in +use: +(?P<group_num>\d+)$')
+            m = p2.match(line)
+            if m:
+                ret_dict['channel_groups_in_use_number'] = int(m.groupdict()['group_num'])
+                continue
+
+            # Number of aggregators:           1
+            p3 =  re.compile(r'^Number +of +aggregators: +(?P<num>\d+)$')
+            m = p3.match(line)
+            if m:
+                ret_dict['aggregators_number'] = int(m.groupdict()['num'])
+                continue
+
+        return ret_dict

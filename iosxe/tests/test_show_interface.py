@@ -26,7 +26,8 @@ from metaparser.util.exceptions import SchemaEmptyParserError
 from parser.iosxe.show_interface import ShowInterfacesSwitchport,\
                                         ShowIpInterfaceBriefPipeVlan,\
                                         ShowInterfaces, ShowIpInterface,\
-                                        ShowIpv6Interface
+                                        ShowIpv6Interface, \
+                                        ShowEtherchannelSummary
 
 
 class test_show_interface_parsergen(unittest.TestCase):
@@ -1650,6 +1651,87 @@ class test_show_ipv6_interface(unittest.TestCase):
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         interface_obj = ShowIpv6Interface(device=self.device)
+        parsed_output = interface_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+#############################################################################
+# unitest For show etherchannel summary
+#############################################################################
+class test_show_etherchannel_summary(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {
+         "channel_groups_in_use_number": 1,
+         "Port-channel2": {
+              "flags": "RU",
+              "port_channel": {
+                   "protocol": "lacp",
+                   "port_channel_member": True,
+                   "port_channel_member_intfs": [
+                        "GigabitEthernet0/0/0",
+                        "GigabitEthernet0/0/1"
+                   ]
+              },
+              "group": "2"
+         },
+         "GigabitEthernet0/0/0": {
+              "flags": "bndl",
+              "port_channel": {
+                   "port_channel_member": True,
+                   "port_channel_int": "Port-channel2"
+              },
+              "group": "2"
+         },
+         "aggregators_number": 1,
+         "GigabitEthernet0/0/1": {
+              "flags": "bndl",
+              "port_channel": {
+                   "port_channel_member": True,
+                   "port_channel_int": "Port-channel2"
+              },
+              "group": "2"
+         }
+
+    }
+
+    golden_output = {'execute.return_value': '''
+        Flags:  D - down        P/bndl - bundled in port-channel
+                I - stand-alone s/susp - suspended
+                H - Hot-standby (LACP only)
+                R - Layer3      S - Layer2
+                U - in use      f - failed to allocate aggregator
+
+                M - not in use, minimum links not met
+                u - unsuitable for bundling
+                w - waiting to be aggregated
+                d - default port
+
+
+        Number of channel-groups in use: 1
+        Number of aggregators:           1
+
+        Group  Port-channel  Protocol    Ports
+        ------+-------------+-----------+-----------------------------------------------
+        2 Po2(RU)   LACP   Gi0/0/0(bndl) Gi0/0/1(bndl)
+
+        RU - L3 port-channel UP State
+        SU - L2 port-channel UP state
+        P/bndl -  Bundled
+        S/susp  - Suspended
+
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        interface_obj = ShowEtherchannelSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = interface_obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        interface_obj = ShowEtherchannelSummary(device=self.device)
         parsed_output = interface_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
