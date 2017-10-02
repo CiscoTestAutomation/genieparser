@@ -1731,6 +1731,7 @@ class test_show_bgp_all_summary(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
+        'bgp_id': 100,
         'vrf':
             {'default':
                  {'neighbor':
@@ -2064,6 +2065,7 @@ class test_show_bgp_all_summary(unittest.TestCase):
         '''}
 
     golden_parsed_output_2 = {
+        'bgp_id': 100,
         'vrf':
             {'default':
                  {'neighbor':
@@ -2567,6 +2569,7 @@ class test_show_bgp_all_summary(unittest.TestCase):
 
 
             '''}
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         bgp_summary_obj = ShowBgpAllSummary(device=self.device1)
