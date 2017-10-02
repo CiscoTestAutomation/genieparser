@@ -1668,6 +1668,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                                     Optional('local_host'): str,
                                     Optional('foreign_port'): str,
                                     Optional('foreign_host'): str,
+                                    Optional('mss'): int,
                                     },
                               Optional('min_time_between_advertisement_runs'): int,
                               Optional('address_tracking_status'): str,
@@ -2833,14 +2834,24 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             m = p50.match(line)
             if m:
                 datagram = m.groupdict()['datagram']
+
                 if 'bgp_session_transport' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
                     parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
                         ['bgp_session_transport'] = {}
+
+                if 'transport' not in parsed_dict['vrf'][vrf_name] \
+                        ['neighbor'][neighbor_id]['bgp_session_transport']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_session_transport']['transport'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                   ['bgp_session_transport']['transport']['mss'] = int(datagram)
 
                 if 'datagram' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
                         ['bgp_session_transport']:
                     parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
                         ['bgp_session_transport']['datagram'] = {}
+
                 continue
             # Rcvd: 164 (out of order: 0), with data: 80, total data bytes: 2374
             p51 = re.compile(r'^\s*Rcvd: (?P<received>[0-9]+)'
