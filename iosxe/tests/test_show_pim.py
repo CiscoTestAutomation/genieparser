@@ -218,32 +218,32 @@ class test_show_ip_pim_interface(unittest.TestCase):
                      {'ipv4':
                           {
                           'interface': {
-                    'GigabitEthernet1': {
-                        'dr_priority': 1,
-                        'query_interval': 30,
-                        'neighbor_count': 1,
-                        'version_mode': 'v2/S',
-                        'dr_address': '10.1.2.2',
-                        'address': ['10.1.2.1'],
-                        },
-                    'GigabitEthernet2': {
-                        'dr_priority': 1,
-                        'query_interval': 30,
-                        'neighbor_count': 1,
-                        'version_mode': 'v2/S',
-                        'dr_address': '10.1.3.3',
-                        'address': ['10.1.3.1'],
-                    },
-                    'Loopback0': {
-                        'dr_priority': 1,
-                        'query_interval': 30,
-                        'neighbor_count': 0,
-                        'version_mode': 'v2/S',
-                        'dr_address': '1.1.1.1',
-                        'address': ['1.1.1.1'],
-                    },
-                },
-                    },
+                                'GigabitEthernet1': {
+                                    'dr_priority': 1,
+                                    'hello_interval': 30,
+                                    'neighbor_count': 1,
+                                    'version_mode': 'v2/S',
+                                    'dr_address': '10.1.2.2',
+                                    'address': ['10.1.2.1'],
+                                    },
+                                'GigabitEthernet2': {
+                                    'dr_priority': 1,
+                                    'hello_interval': 30,
+                                    'neighbor_count': 1,
+                                    'version_mode': 'v2/S',
+                                    'dr_address': '10.1.3.3',
+                                    'address': ['10.1.3.1'],
+                                },
+                                'Loopback0': {
+                                    'dr_priority': 1,
+                                    'hello_interval': 30,
+                                    'neighbor_count': 0,
+                                    'version_mode': 'v2/S',
+                                    'dr_address': '1.1.1.1',
+                                    'address': ['1.1.1.1'],
+                                },
+                          },
+                     },
                 },
             },
         },
@@ -266,7 +266,7 @@ class test_show_ip_pim_interface(unittest.TestCase):
                             {
                             'GigabitEthernet3': {
                                 'dr_priority': 1,
-                                'query_interval': 30,
+                                'hello_interval': 30,
                                 'neighbor_count': 1,
                                 'version_mode': 'v2/S',
                                 'dr_address': '10.1.5.5',

@@ -128,7 +128,7 @@ class ShowIpPimInterfaceSchema(MetaParser):
                         'interface': {
                             Any(): {
                                 Optional('dr_priority'): int,
-                                Optional('query_interval'): int,
+                                Optional('hello_interval'): int,
                                 Optional('neighbor_count'): int,
                                 Optional('version_mode'): str,
                                 Optional('dr_address'): str,
@@ -207,7 +207,7 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
                 ret_dict['vrf'][vrf]['address_family'][af_name]['interface']\
                     [intf_name]['version_mode'] = version_mode
                 ret_dict['vrf'][vrf]['address_family'][af_name]['interface']\
-                    [intf_name]['query_interval'] = query_interval
+                    [intf_name]['hello_interval'] = query_interval
                 ret_dict['vrf'][vrf]['address_family'][af_name]['interface']\
                     [intf_name]['dr_priority'] = dr_priority
                 ret_dict['vrf'][vrf]['address_family'][af_name]['interface']\
