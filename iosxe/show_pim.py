@@ -148,17 +148,21 @@ class ShowIpPimRpMappingSchema(MetaParser):
     }
 
 class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
+
     # Parser for 'show ip pim rp mapping'
+    # Parser for 'show ip pim vrf <vrf_name> rp mapping'
 
-    def cli(self):
+    def cli(self, af_name, vrf_name=""):
 
-        # find interface
+        # find cmd
+        if vrf_name:
+            cmd = 'show ip vrf <vrf_name> rp mapping'
+        else:
+            cmd = 'show ip pim rp mapping'
+            vrf_name = 'default'
 
-        cmd = 'show ip pim rp mapping'
-        vrf = 'default'
-        af_name = 'ipv6'
         protocol_static = ""
-
+        vrf = vrf_name
         # excute command to get output
         out = self.device.execute(cmd)
 

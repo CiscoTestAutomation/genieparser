@@ -294,18 +294,58 @@ class test_show_ip_pim_rp_mapping(unittest.TestCase):
 
      '''}
 
+    golden_parsed_output_mapping_2 = {
+        'vrf':
+            {'VRF1':
+                {
+                'address_family':
+                    {'ipv6':
+                        {
+                        'rp':
+                            {
+                            'rp_mappings': {
+                                '224.0.0.0/4 10.1.5.5 static': {
+                                    'group': '224.0.0.0/4',
+                                    'rp_address_host': '?',
+                                    'rp_address': '10.1.5.5',
+                                    'protocol': 'static',
+                                    },
+                                },
+                            },
+
+                        },
+                    },
+                },
+            },
+    }
+
+    golden_output_mapping_2 = {'execute.return_value':'''
+    R1_xe#show ip pim vrf VRF1 rp mapping
+        PIM Group-to-RP Mappings
+
+        Group(s): 224.0.0.0/4, Static
+            RP: 10.1.5.5 (?)
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpPimRpMapping(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
+            parsed_output = obj.parse(af_name='ipv6')
 
     def test_golden_mapping_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_mapping_1)
         obj = ShowIpPimRpMapping(device=self.device)
-        parsed_output = obj.parse()
+        parsed_output = obj.parse(af_name='ipv6')
         self.assertEqual(parsed_output,self.golden_parsed_output_mapping_1)
+
+    def test_golden_mapping_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_mapping_2)
+        obj = ShowIpPimRpMapping(device=self.device)
+        parsed_output = obj.parse(af_name='ipv6',vrf_name='VRF1')
+        self.assertEqual(parsed_output,self.golden_parsed_output_mapping_2)
 
 if __name__ == '__main__':
     unittest.main()
