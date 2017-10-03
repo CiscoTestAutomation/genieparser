@@ -214,11 +214,11 @@ class test_show_ip_pim_interface(unittest.TestCase):
     golden_parsed_output_interface_1 = {
         'vrf':
             {'default':
-                {'address_family':
-                     {'ipv4':
-                          {
-                          'interface': {
-                                'GigabitEthernet1': {
+                {'interfaces':
+                     {'GigabitEthernet1':
+                         {
+                          'address_family': {
+                                'ipv4': {
                                     'dr_priority': 1,
                                     'hello_interval': 30,
                                     'neighbor_count': 1,
@@ -226,23 +226,31 @@ class test_show_ip_pim_interface(unittest.TestCase):
                                     'dr_address': '10.1.2.2',
                                     'address': ['10.1.2.1'],
                                     },
-                                'GigabitEthernet2': {
+                          },
+                         },
+                     'GigabitEthernet2': {
+                         'address_family': {
+                             'ipv4': {
                                     'dr_priority': 1,
                                     'hello_interval': 30,
                                     'neighbor_count': 1,
                                     'version_mode': 'v2/S',
                                     'dr_address': '10.1.3.3',
                                     'address': ['10.1.3.1'],
-                                },
-                                'Loopback0': {
+                                 },
+                         },
+                     },
+                     'Loopback0': {
+                         'address_family': {
+                             'ipv4': {
                                     'dr_priority': 1,
                                     'hello_interval': 30,
                                     'neighbor_count': 0,
                                     'version_mode': 'v2/S',
                                     'dr_address': '1.1.1.1',
                                     'address': ['1.1.1.1'],
-                                },
-                          },
+                             },
+                         },
                      },
                 },
             },
@@ -259,12 +267,12 @@ class test_show_ip_pim_interface(unittest.TestCase):
     golden_parsed_output_interface_2 = {
         'vrf':
             {'VRF1':
-                {'address_family':
-                    {'ipv4':
+                {'interfaces':
+                    {'GigabitEthernet3':
                         {
-                        'interface':
+                        'address_family':
                             {
-                            'GigabitEthernet3': {
+                            'ipv4': {
                                 'dr_priority': 1,
                                 'hello_interval': 30,
                                 'neighbor_count': 1,
@@ -302,7 +310,7 @@ class test_show_ip_pim_interface(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_interface_2)
         obj = ShowIpPimInterface(device=self.device)
-        parsed_output = obj.parse(vrf_name='VRF1')
+        parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output,self.golden_parsed_output_interface_2)
 
 if __name__ == '__main__':

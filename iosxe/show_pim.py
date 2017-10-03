@@ -123,9 +123,9 @@ class ShowIpPimInterfaceSchema(MetaParser):
     schema = {
         'vrf': {
             Any(): {
-                'address_family':{
+                'interfaces':{
                     Any():{
-                        'interface': {
+                        'address_family': {
                             Any(): {
                                 Optional('dr_priority'): int,
                                 Optional('hello_interval'): int,
@@ -146,16 +146,15 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
     # Parser for 'show ip pim Interface'
     # Parser for 'show ip pim vrf <vrf_name> interface'
 
-    def cli(self, vrf_name=""):
+    def cli(self, vrf=""):
 
         # find cmd
-        if vrf_name:
-            cmd = 'show ip vrf {} interface'.format(vrf_name)
+        if vrf:
+            cmd = 'show ip vrf {} interface'.format(vrf)
         else:
             cmd = 'show ip pim interface'
-            vrf_name = 'default'
+            vrf = 'default'
 
-        vrf = vrf_name
         af_name = 'ipv4'
 
         # excute command to get output
@@ -189,29 +188,29 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
                     ret_dict['vrf'] = {}
                 if vrf not in ret_dict['vrf']:
                     ret_dict['vrf'][vrf] = {}
-                if 'address_family' not in ret_dict['vrf'][vrf]:
-                    ret_dict['vrf'][vrf]['address_family'] = {}
-                if af_name not in ret_dict['vrf'][vrf]['address_family']:
-                    ret_dict['vrf'][vrf]['address_family'][af_name] = {}
-                if 'interface' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
-                    ret_dict['vrf'][vrf]['address_family'][af_name]['interface'] = {}
-                if intf_name not in ret_dict['vrf'][vrf]['address_family']\
-                        [af_name]['interface']:
-                    ret_dict['vrf'][vrf]['address_family'][af_name]\
-                        ['interface'][intf_name] = {}
+                if 'interfaces' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['interfaces'] = {}
+                if intf_name not in ret_dict['vrf'][vrf]['interfaces']:
+                    ret_dict['vrf'][vrf]['interfaces'][intf_name] = {}
+                if 'address_family' not in ret_dict['vrf'][vrf]['interfaces'][intf_name]:
+                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] = {}
+                if intf_name not in ret_dict['vrf'][vrf]['interfaces']\
+                        [intf_name]['address_family']:
+                    ret_dict['vrf'][vrf]['interfaces'][intf_name]\
+                        ['address_family'][af_name] = {}
 
-                ret_dict['vrf'][vrf]['address_family'][af_name]['interface']\
-                    [intf_name]['address'] = address.split()
-                ret_dict['vrf'][vrf]['address_family'][af_name]['interface']\
-                    [intf_name]['neighbor_count'] = nbr_count
-                ret_dict['vrf'][vrf]['address_family'][af_name]['interface']\
-                    [intf_name]['version_mode'] = version_mode
-                ret_dict['vrf'][vrf]['address_family'][af_name]['interface']\
-                    [intf_name]['hello_interval'] = query_interval
-                ret_dict['vrf'][vrf]['address_family'][af_name]['interface']\
-                    [intf_name]['dr_priority'] = dr_priority
-                ret_dict['vrf'][vrf]['address_family'][af_name]['interface']\
-                    [intf_name]['dr_address'] = dr_address
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name]\
+                    ['address'] = address.split()
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name]\
+                    ['neighbor_count'] = nbr_count
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name]\
+                    ['version_mode'] = version_mode
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name]\
+                    ['hello_interval'] = query_interval
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name]\
+                    ['dr_priority'] = dr_priority
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name]\
+                    ['dr_address'] = dr_address
                 continue
 
         return ret_dict
