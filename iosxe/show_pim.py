@@ -124,7 +124,7 @@ class ShowIpPimRpMappingSchema(MetaParser):
     schema = {'vrf':
         {
             Any(): {
-                'address-family': {
+                'address_family': {
                     Any(): {
                         'rp': {
                             'rp_mappings': {
@@ -148,7 +148,7 @@ class ShowIpPimRpMappingSchema(MetaParser):
         },
     }
 
-class ShowIpPimRpMapping(MetaParser):
+class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
     # Parser for 'show ip pim rp mapping'
 
     def cli(self):
@@ -159,7 +159,6 @@ class ShowIpPimRpMapping(MetaParser):
         vrf = 'default'
         af_name = 'ipv6'
         protocol_static = ""
-        protocol_others = ""
 
         # excute command to get output
         out = self.device.execute(cmd)

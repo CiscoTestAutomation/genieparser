@@ -206,6 +206,7 @@ class test_show_ipv6_pim_interface(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 class test_show_ip_pim_rp_mapping(unittest.TestCase):
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -293,6 +294,11 @@ class test_show_ip_pim_rp_mapping(unittest.TestCase):
 
      '''}
 
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpPimRpMapping(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
     def test_golden_mapping_1(self):
         self.maxDiff = None
