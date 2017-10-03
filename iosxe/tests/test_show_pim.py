@@ -10,7 +10,8 @@ from metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
 # Parser
-from parser.iosxe.show_pim import ShowIpv6PimInterface
+from parser.iosxe.show_pim import ShowIpv6PimInterface,\
+                                  ShowIpPimInterface
 
 
 # ============================================
@@ -203,6 +204,98 @@ class test_show_ipv6_pim_interface(unittest.TestCase):
         obj = ShowIpv6PimInterface(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+
+class test_show_ip_pim_interface(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_interface_1 = {
+        'vrf':
+            {'default':
+                {
+                'interface': {
+                    'GigabitEthernet1': {
+                        'dr_priority': 1,
+                        'query_interval': 30,
+                        'neighbor_count': 1,
+                        'version_mode': 'v2/S',
+                        'dr_address': '10.1.2.2',
+                        'address': ['10.1.2.1'],
+                        },
+                    'GigabitEthernet2': {
+                        'dr_priority': 1,
+                        'query_interval': 30,
+                        'neighbor_count': 1,
+                        'version_mode': 'v2/S',
+                        'dr_address': '10.1.3.3',
+                        'address': ['10.1.3.1'],
+                    },
+                    'Loopback0': {
+                        'dr_priority': 1,
+                        'query_interval': 30,
+                        'neighbor_count': 0,
+                        'version_mode': 'v2/S',
+                        'dr_address': '1.1.1.1',
+                        'address': ['1.1.1.1'],
+                    },
+                },
+            },
+        },
+    }
+    golden_output_interface_1 = {'execute.return_value': '''
+    Address          Interface                Ver/   Nbr    Query  DR         DR
+                                          Mode   Count  Intvl  Prior
+    10.1.2.1         GigabitEthernet1         v2/S   1      30     1          10.1.2.2
+    10.1.3.1         GigabitEthernet2         v2/S   1      30     1          10.1.3.3
+    1.1.1.1          Loopback0                v2/S   0      30     1          1.1.1.1
+     '''}
+
+    golden_parsed_output_interface_2 = {
+        'vrf':
+            {'VRF1':
+                {
+                'interface':
+                    {
+                    'GigabitEthernet3': {
+                        'dr_priority': 1,
+                        'query_interval': 30,
+                        'neighbor_count': 1,
+                        'version_mode': 'v2/S',
+                        'dr_address': '10.1.5.5',
+                        'address': ['10.1.5.1'],
+                        },
+                    },
+                },
+            },
+        }
+    golden_output_interface_2 = {'execute.return_value':'''
+    Address          Interface                Ver/   Nbr    Query  DR         DR
+                                          Mode   Count  Intvl  Prior
+    10.1.5.1         GigabitEthernet3         v2/S   1      30     1          10.1.5.5
+
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpPimInterface(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_mapping_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_interface_1)
+        obj = ShowIpPimInterface(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_interface_1)
+
+    def test_golden_mapping_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_interface_2)
+        obj = ShowIpPimInterface(device=self.device)
+        parsed_output = obj.parse(vrf_name='VRF1')
+        self.assertEqual(parsed_output,self.golden_parsed_output_interface_2)
 
 if __name__ == '__main__':
     unittest.main()

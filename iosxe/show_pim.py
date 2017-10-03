@@ -115,3 +115,86 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
                 continue
 
         return ret_dict
+
+
+class ShowIpPimInterfaceSchema(MetaParser):
+
+    # Schema for 'show ip pim Interface'
+    schema = {
+        'vrf': {
+            Any(): {
+                'interface': {
+                    Any(): {
+                        Optional('dr_priority'): int,
+                        Optional('query_interval'): int,
+                        Optional('neighbor_count'): int,
+                        Optional('version_mode'): str,
+                        Optional('dr_address'): str,
+                        Optional('address'): list,
+                    },
+                }
+            },
+        }
+    }
+
+class ShowIpPimInterface(ShowIpPimInterfaceSchema):
+
+    # Parser for 'show ip pim Interface'
+    # Parser for 'show ip pim vrf <vrf_name> interface'
+
+    def cli(self, vrf_name=""):
+
+        # find cmd
+        if vrf_name:
+            cmd = 'show ip vrf <vrf_name> interface'
+        else:
+            cmd = 'show ip pim interface'
+            vrf_name = 'default'
+
+        vrf = vrf_name
+
+        # excute command to get output
+        out = self.device.execute(cmd)
+
+        # initial variables
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+            #Address          Interface                Ver/   Nbr    Query  DR         DR
+            #                              Mode   Count  Intvl  Prior
+            # 10.1.2.1         GigabitEthernet1         v2/S   1      30     1          10.1.2.2
+            p1 = re.compile(r'^\s*(?P<address>[\w\:\.]+) +(?P<interface>[\w\d]+)'
+                            ' +(?P<version_mode>[\w\d\/]+)'
+                            ' +(?P<nbr_count>[\d]+)'
+                            ' +(?P<query_interval>[\d]+)'
+                            ' +(?P<dr_priority>[\d]+)'
+                            ' +(?P<dr_address>[\w\d\.\:]+)$')
+            m = p1.match(line)
+            if m:
+                address = m.groupdict()['address']
+                intf_name = m.groupdict()['interface']
+                nbr_count = int(m.groupdict()['nbr_count'])
+                version_mode = m.groupdict()['version_mode']
+                query_interval = int(m.groupdict()['query_interval'])
+                dr_priority = int(m.groupdict()['dr_priority'])
+                dr_address = m.groupdict()['dr_address']
+
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+                if 'interface' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['interface'] = {}
+                if intf_name not in ret_dict['vrf'][vrf]['interface']:
+                    ret_dict['vrf'][vrf]['interface'][intf_name] = {}
+
+                ret_dict['vrf'][vrf]['interface'][intf_name]['address'] = address.split()
+                ret_dict['vrf'][vrf]['interface'][intf_name]['neighbor_count'] = nbr_count
+                ret_dict['vrf'][vrf]['interface'][intf_name]['version_mode'] = version_mode
+                ret_dict['vrf'][vrf]['interface'][intf_name]['query_interval'] = query_interval
+                ret_dict['vrf'][vrf]['interface'][intf_name]['dr_priority'] = dr_priority
+                ret_dict['vrf'][vrf]['interface'][intf_name]['dr_address'] = dr_address
+                continue
+
+        return ret_dict
