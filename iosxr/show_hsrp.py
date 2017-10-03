@@ -295,6 +295,7 @@ class ShowHsrpDetailSchema(MetaParser):
                                     Optional('standby_priority'): int,
                                     Optional('active_state'): str,
                                     Optional('standby_state'): str,
+                                    Optional('active_expire'): str,
                                     Optional('standby_expire'): str,
                                     'hsrp_router_state': str,
                                 }
@@ -363,6 +364,8 @@ class ShowHsrpDetailSchema(MetaParser):
                                     Optional('standby_priority'): int,
                                     Optional('active_state'): str,
                                     Optional('standby_state'): str,
+                                    Optional('active_expire'): str,
+                                    Optional('standby_expire'): str,
                                     'hsrp_router_state': str,
                                 }
                             }
