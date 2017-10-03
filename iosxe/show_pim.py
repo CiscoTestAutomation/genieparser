@@ -150,7 +150,7 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
 
         # find cmd
         if vrf_name:
-            cmd = 'show ip vrf <vrf_name> interface'
+            cmd = 'show ip vrf {} interface'.format(vrf_name)
         else:
             cmd = 'show ip pim interface'
             vrf_name = 'default'
