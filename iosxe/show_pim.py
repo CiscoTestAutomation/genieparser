@@ -122,8 +122,7 @@ class ShowIpPimRpMappingSchema(MetaParser):
     # Schema for 'show ip pim rp mapping'
 
     schema = {'vrf':
-        {
-            Any(): {
+        {Any(): {
                 'address_family': {
                     Any(): {
                         'rp': {
@@ -139,11 +138,11 @@ class ShowIpPimRpMappingSchema(MetaParser):
                                     Optional('priority'): int,
                                     Optional('hold_time'): int,
                                     Optional('info_source'): str,
-                                }
+                                },
                             },
                         },
                     },
-                }
+                },
             },
         },
     }
@@ -171,8 +170,8 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
 
             # Group(s) 224.0.0.0/4
             # Group(s) 224.0.0.0/4, Static
-            p2 = re.compile(r'^\s*Group\(s\)\:? +(?P<group>[0-9a-zA-Z\:\.\/]+)(, +(?P<protocol>[\w\s\S]+))?$')
-            m = p2.match(line)
+            p1 = re.compile(r'^\s*Group\(s\)\:? +(?P<group>[0-9a-zA-Z\:\.\/]+)(, +(?P<protocol>[\w\s\S]+))?$')
+            m = p1.match(line)
             if m:
                 rp_group_protocol = ""
                 protocol_static = ""
