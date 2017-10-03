@@ -10,7 +10,8 @@ from metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
 # Parser
-from parser.iosxe.show_pim import ShowIpv6PimInterface
+from parser.iosxe.show_pim import ShowIpv6PimInterface, \
+                                  ShowIpPimRpMapping
 
 
 # ============================================
@@ -208,30 +209,97 @@ class test_show_ip_pim_rp_mapping(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
+    golden_parsed_output_mapping_1 = {
+        'vrf':
+            {
+                'default':
+                    {
+                        'address_family':
+                            {
+                              'ipv6':
+                                  {
+                                    'rp':
+                                         {
+                                            'rp_mappings': {
+                                                '224.0.0.0/4 3.3.3.3 bootstrap': {
+                                                  'group': '224.0.0.0/4',
+                                                  'rp_address': '3.3.3.3',
+                                                  'rp_address_host': '?',
+                                                  'rp_version': 'v2',
+                                                  'up_time': '00:00:19',
+                                                  'expiration': '00:02:19',
+                                                  'priority': 5,
+                                                  'hold_time': 150,
+                                                  'info_source': '4.4.4.4',
+                                                  'protocol': 'bootstrap',
+                                                },
+                                                '224.0.0.0/4 2.2.2.2 bootstrap': {
+                                                    'group': '224.0.0.0/4',
+                                                    'rp_address': '2.2.2.2',
+                                                    'rp_address_host': '?',
+                                                    'rp_version': 'v2',
+                                                    'up_time': '00:00:35',
+                                                    'expiration': '00:02:03',
+                                                    'priority': 10,
+                                                    'hold_time': 150,
+                                                    'info_source': '4.4.4.4',
+                                                    'protocol': 'bootstrap',
+                                                },
+                                                '224.0.0.0/4 3.3.3.3 static': {
+                                                    'group': '224.0.0.0/4',
+                                                    'rp_address_host': '?',
+                                                    'rp_address': '3.3.3.3',
+                                                    'protocol': 'static',
+                                                },
+                                                '224.0.0.0/4 20.0.0.3 autorp': {
+                                                    'group': '224.0.0.0/4',
+                                                    'rp_address_host': '?',
+                                                    'rp_version': 'v2v1',
+                                                    'rp_address': '20.0.0.3',
+                                                    'up_time': '00:22:08',
+                                                    'expiration': '00:02:40',
+                                                    'info_source': '20.0.0.2',
+                                                    'protocol': 'autorp',
+                                                },
+
+                                            },
+                                        },
+
+                                  },
+                            },
+
+                    },
+            },
+
+    }
     golden_output_mapping_1 = {'execute.return_value': '''
-        Router# show ip pim rp mapping
+    R1_xe#show ip pim rp mapping
+    PIM Group-to-RP Mappings
 
-         PIM Group-to-RP Mappings
-         This system is an RP (Auto-RP)
-         This system is an RP-mapping agent
+    Group(s) 224.0.0.0/4
+      RP 3.3.3.3 (?), v2
+        Info source: 4.4.4.4 (?), via bootstrap, priority 5, holdtime 150
+         Uptime: 00:00:19, expires: 00:02:19
+      RP 2.2.2.2 (?), v2
+        Info source: 4.4.4.4 (?), via bootstrap, priority 10, holdtime 150
+         Uptime: 00:00:35, expires: 00:02:03
+    Group(s): 224.0.0.0/4, Static
+        RP: 3.3.3.3 (?)
 
-         Group(s) 227.0.0.0/8
-           RP 10.10.0.2 (?), v2v1, bidir
-             Info source:10.10.0.2 (?), via Auto-RP
-                  Uptime:00:01:42, expires:00:00:32
-         Group(s) 228.0.0.0/8
-           RP 10.10.0.3 (?), v2v1, bidir
-             Info source:10.10.0.3 (?), via Auto-RP
-                  Uptime:00:01:26, expires:00:00:34
-         Group(s) 229.0.0.0/8
-           RP 10.10.0.5 (mcast1.cisco.com), v2v1, bidir
-             Info source:10.10.0.5 (mcast1.cisco.com), via Auto-RP
-                  Uptime:00:00:52, expires:00:00:37
-         Group(s) (-)230.0.0.0/8
-           RP 10.10.0.5 (mcast1.cisco.com), v2v1, bidir
-             Info source:10.10.0.5 (mcast1.cisco.com), via Auto-RP
-                  Uptime:00:00:52, expires:00:00:37
+    Group(s) 224.0.0.0/4
+      RP 20.0.0.3 (?), v2v1
+        Info source: 20.0.0.2 (?), via Auto-RP
+         Uptime: 00:22:08, expires: 00:02:40
+
      '''}
+
+
+    def test_golden_mapping_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_mapping_1)
+        obj = ShowIpPimRpMapping(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_mapping_1)
 
 if __name__ == '__main__':
     unittest.main()
