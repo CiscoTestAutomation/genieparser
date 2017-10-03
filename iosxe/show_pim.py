@@ -152,7 +152,7 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
     # Parser for 'show ip pim rp mapping'
     # Parser for 'show ip pim vrf <vrf_name> rp mapping'
 
-    def cli(self, af_name, vrf_name=""):
+    def cli(self, vrf_name=""):
 
         # find cmd
         if vrf_name:
@@ -162,6 +162,7 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
             vrf_name = 'default'
 
         protocol_static = ""
+        af_name = 'ipv4'
         vrf = vrf_name
         # excute command to get output
         out = self.device.execute(cmd)

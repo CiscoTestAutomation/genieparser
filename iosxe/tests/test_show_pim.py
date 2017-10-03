@@ -217,7 +217,7 @@ class test_show_ip_pim_rp_mapping(unittest.TestCase):
                     {
                         'address_family':
                             {
-                              'ipv6':
+                              'ipv4':
                                   {
                                     'rp':
                                          {
@@ -299,7 +299,7 @@ class test_show_ip_pim_rp_mapping(unittest.TestCase):
             {'VRF1':
                 {
                 'address_family':
-                    {'ipv6':
+                    {'ipv4':
                         {
                         'rp':
                             {
@@ -331,20 +331,20 @@ class test_show_ip_pim_rp_mapping(unittest.TestCase):
         self.device = Mock(**self.empty_output)
         obj = ShowIpPimRpMapping(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(af_name='ipv6')
+            parsed_output = obj.parse()
 
     def test_golden_mapping_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_mapping_1)
         obj = ShowIpPimRpMapping(device=self.device)
-        parsed_output = obj.parse(af_name='ipv6')
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_mapping_1)
 
     def test_golden_mapping_2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_mapping_2)
         obj = ShowIpPimRpMapping(device=self.device)
-        parsed_output = obj.parse(af_name='ipv6',vrf_name='VRF1')
+        parsed_output = obj.parse(vrf_name='VRF1')
         self.assertEqual(parsed_output,self.golden_parsed_output_mapping_2)
 
 if __name__ == '__main__':
