@@ -118,20 +118,43 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
 
 class ShowIpPimBsrRouterSchema(MetaParser):
 
-    # Schema for 'show ip pim Interface'
+    # Schema for 'show ip pim bsr-router'
     schema = {
         'vrf': {
             Any(): {
                 'address_family':{
                     Any():{
-                        'interface': {
-                            Any(): {
-                                Optional('dr_priority'): int,
-                                Optional('query_interval'): int,
-                                Optional('neighbor_count'): int,
-                                Optional('version_mode'): str,
-                                Optional('dr_address'): str,
-                                Optional('address'): list,
+                        'rp': {
+                            'bsr':{
+                                Optional('bsr_candidate'): {
+                                    Optional('address'): str,
+                                    Optional('hash_mask_length'): int,
+                                    Optional('priority'): int,
+                                },
+                                Optional('bsr_rp_candidate_interface'): {
+                                    Optional('interface'): str,
+                                    Optional('address'): str,
+                                    Optional('holdtime'): int,
+                                    Optional('next_advertisment'): str,
+                                    Optional('priority'): int,
+                                    Optional('interval'): int,
+                                },
+                                Optional('bsr_rp_candidate_address'): {
+                                    Optional('interface'): str,
+                                    Optional('address'): str,
+                                    Optional('holdtime'): str,
+                                    Optional('next_advertisment'): str,
+                                    Optional('priority'): int,
+                                    Optional('interval'): int,
+                                },
+                                Optional('bsr'): {
+                                    Optional('address'): str,
+                                    Optional('hash_mask_length'): int,
+                                    Optional('address_host'): str,
+                                    Optional('priority'): int,
+                                    Optional('up_time'): str,
+                                    Optional('expires'): str,
+                                },
                             },
                         },
                     },
@@ -140,22 +163,23 @@ class ShowIpPimBsrRouterSchema(MetaParser):
         }
     }
 
-class ShowIpPimBSRRouter(ShowIpPimBsrRouterSchema):
+class ShowIpPimBsrRouter(ShowIpPimBsrRouterSchema):
 
     # Parser for 'show ip pim bsr-router'
     # Parser for 'show ip pim vrf <vrf_name> bsr-router'
 
-    def cli(self, vrf_name=""):
+    def cli(self, vrf=""):
 
         # find cmd
-        if vrf_name:
-            cmd = 'show ip vrf <vrf_name> interface'
+        if vrf:
+            cmd = 'show ip vrf {} bsr-router'.format(vrf)
         else:
-            cmd = 'show ip pim interface'
-            vrf_name = 'default'
+            cmd = 'show ip pim bsr-router'
+            vrf = 'default'
 
-        vrf = vrf_name
         af_name = 'ipv4'
+        rp_can_interface = rp_can_address = rp_can_holdtime = rp_can_interval = ""
+        rp_can_next_advertisment = rp_can_priority = ""
 
         # excute command to get output
         out = self.device.execute(cmd)
@@ -165,24 +189,14 @@ class ShowIpPimBSRRouter(ShowIpPimBsrRouterSchema):
 
         for line in out.splitlines():
             line = line.strip()
-            #Address          Interface                Ver/   Nbr    Query  DR         DR
-            #                              Mode   Count  Intvl  Prior
-            # 10.1.2.1         GigabitEthernet1         v2/S   1      30     1          10.1.2.2
-            p1 = re.compile(r'^\s*(?P<address>[\w\:\.]+) +(?P<interface>[\w\d]+)'
-                            ' +(?P<version_mode>[\w\d\/]+)'
-                            ' +(?P<nbr_count>[\d]+)'
-                            ' +(?P<query_interval>[\d]+)'
-                            ' +(?P<dr_priority>[\d]+)'
-                            ' +(?P<dr_address>[\w\d\.\:]+)$')
+
+            # PIMv2 Bootstrap information
+            # BSR address: 4.4.4.4 (?)
+            p1 = re.compile(r'^\s*BSR +address: +(?P<address>[\w\:\.]+) +\((?P<address_host>[\w\d\S]+)\)$')
             m = p1.match(line)
             if m:
                 address = m.groupdict()['address']
-                intf_name = m.groupdict()['interface']
-                nbr_count = int(m.groupdict()['nbr_count'])
-                version_mode = m.groupdict()['version_mode']
-                query_interval = int(m.groupdict()['query_interval'])
-                dr_priority = int(m.groupdict()['dr_priority'])
-                dr_address = m.groupdict()['dr_address']
+                address_host = m.groupdict()['address_host']
 
                 if 'vrf' not in ret_dict:
                     ret_dict['vrf'] = {}
@@ -192,25 +206,181 @@ class ShowIpPimBSRRouter(ShowIpPimBsrRouterSchema):
                     ret_dict['vrf'][vrf]['address_family'] = {}
                 if af_name not in ret_dict['vrf'][vrf]['address_family']:
                     ret_dict['vrf'][vrf]['address_family'][af_name] = {}
-                if 'interface' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
-                    ret_dict['vrf'][vrf]['address_family'][af_name]['interface'] = {}
-                if intf_name not in ret_dict['vrf'][vrf]['address_family']\
-                        [af_name]['interface']:
+                if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] = {}
+                if 'bsr' not in ret_dict['vrf'][vrf]['address_family']\
+                        [af_name]['rp']:
                     ret_dict['vrf'][vrf]['address_family'][af_name]\
-                        ['interface'][intf_name] = {}
+                        ['rp']['bsr'] = {}
+                if 'bsr' not in ret_dict['vrf'][vrf]['address_family'] \
+                        [af_name]['rp']['bsr']:
+                    ret_dict['vrf'][vrf]['address_family'][af_name] \
+                        ['rp']['bsr']['bsr'] = {}
 
-                ret_dict['vrf'][vrf]['address_family'][af_name]['interface']\
-                    [intf_name]['address'] = address.split()
-                ret_dict['vrf'][vrf]['address_family'][af_name]['interface']\
-                    [intf_name]['neighbor_count'] = nbr_count
-                ret_dict['vrf'][vrf]['address_family'][af_name]['interface']\
-                    [intf_name]['version_mode'] = version_mode
-                ret_dict['vrf'][vrf]['address_family'][af_name]['interface']\
-                    [intf_name]['query_interval'] = query_interval
-                ret_dict['vrf'][vrf]['address_family'][af_name]['interface']\
-                    [intf_name]['dr_priority'] = dr_priority
-                ret_dict['vrf'][vrf]['address_family'][af_name]['interface']\
-                    [intf_name]['dr_address'] = dr_address
+                ret_dict['vrf'][vrf]['address_family'][af_name] \
+                    ['rp']['bsr']['bsr']['address'] = address
+                ret_dict['vrf'][vrf]['address_family'][af_name] \
+                    ['rp']['bsr']['bsr']['address_host'] = address_host
+                continue
+
+            #  Uptime:      00:01:23, BSR Priority: 0, Hash mask length: 0
+            p2 = re.compile(r'^\s*Uptime: +(?P<up_time>[\d\:]+),'
+                            ' +BSR +Priority: +(?P<priority>\d+),'
+                            ' +Hash +mask +length: +(?P<hash_mask_length>\d+)$')
+            m = p2.match(line)
+            if m:
+                bsr_up_time = m.groupdict()['up_time']
+                bsr_priority = int(m.groupdict()['priority'])
+                bsr_hash_mask = int(m.groupdict()['hash_mask_length'])
+
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+                if 'address_family' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['address_family'] = {}
+                if af_name not in ret_dict['vrf'][vrf]['address_family']:
+                    ret_dict['vrf'][vrf]['address_family'][af_name] = {}
+                if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] = {}
+                if 'bsr' not in ret_dict['vrf'][vrf]['address_family'] \
+                        [af_name]['rp']:
+                    ret_dict['vrf'][vrf]['address_family'][af_name] \
+                        ['rp']['bsr'] = {}
+
+                if 'bsr' not in ret_dict['vrf'][vrf]['address_family'] \
+                        [af_name]['rp']['bsr']:
+                    ret_dict['vrf'][vrf]['address_family'][af_name] \
+                        ['rp']['bsr']['bsr'] = {}
+
+                ret_dict['vrf'][vrf]['address_family'][af_name] \
+                    ['rp']['bsr']['bsr']['up_time'] = bsr_up_time
+
+                ret_dict['vrf'][vrf]['address_family'][af_name] \
+                    ['rp']['bsr']['bsr']['priority'] = bsr_priority
+
+                ret_dict['vrf'][vrf]['address_family'][af_name] \
+                    ['rp']['bsr']['bsr']['hash_mask_length'] = bsr_hash_mask
+                continue
+
+            # Expires:     00:01:46
+            p3 = re.compile(r'^\s*Expires: +(?P<expires>[\d\:]+)$')
+
+            m = p3.match(line)
+            if m:
+                bsr_expiration = m.groupdict()['expires']
+                ret_dict['vrf'][vrf]['address_family'][af_name] \
+                    ['rp']['bsr']['bsr']['expires'] = bsr_expiration
+                continue
+
+            # Candidate BSR address: 1.1.1.1, priority: 0, hash mask length: 0
+            p4 = re.compile(r'^\s*Candidate +BSR +address: +(?P<can_address>[\w\d\:\.]+),'
+                            ' +priority: +(?P<can_priority>\d+),'
+                            ' +hash +mask +length: +(?P<can_hash_mask_length>\d+)$')
+            m = p4.match(line)
+            if m:
+                can_address = m.groupdict()['can_address']
+                can_priority = int(m.groupdict()['can_priority'])
+                can_hash_mask = int(m.groupdict()['can_hash_mask_length'])
+
+                if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] = {}
+                if 'bsr' not in ret_dict['vrf'][vrf]['address_family'][af_name]['rp']:
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] = {}
+                if 'bsr_candidate' not in ret_dict['vrf'][vrf]['address_family']\
+                        [af_name]['rp']['bsr']:
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp']\
+                        ['bsr']['bsr_candidate'] = {}
+
+                ret_dict['vrf'][vrf]['address_family'][af_name] \
+                    ['rp']['bsr']['bsr_candidate']['address'] = can_address
+
+                ret_dict['vrf'][vrf]['address_family'][af_name] \
+                    ['rp']['bsr']['bsr_candidate']['priority'] = can_priority
+
+                ret_dict['vrf'][vrf]['address_family'][af_name] \
+                    ['rp']['bsr']['bsr_candidate']['hash_mask_length'] = can_hash_mask
+                continue
+
+            #  Candidate RP: 10.1.5.1(GigabitEthernet3)
+            p5 = re.compile(r'^\s*Candidate +RP:'
+                            ' +(?P<rp_can_address>[\w\d\.\:]+)\((?P<rp_can_interface>[\w\d]+)\)$')
+
+            m = p5.match(line)
+            if m:
+                rp_can_address = m.groupdict()['rp_can_address']
+                rp_can_interface = m.groupdict()['rp_can_interface']
+                continue
+
+            # Holdtime 150 seconds
+            p6 = re.compile(r'^\s*Holdtime'
+                            ' +(?P<holdtime>\d+) +seconds$')
+            m = p6.match(line)
+            if m:
+                rp_can_holdtime = int(m.groupdict()['holdtime'])
+                continue
+
+            # Advertisement interval 60 seconds
+            p7 = re.compile(r'^\s*Advertisement +interval'
+                            ' +(?P<interval>\d+) +seconds$')
+            m = p7.match(line)
+            if m:
+                rp_can_interval = int(m.groupdict()['interval'])
+                continue
+
+            # Next advertisement in 00:00:27
+            p8 = re.compile(r'^\s*Next +advertisement +in'
+                            ' +(?P<next_advertisment>[\d\:]+)$')
+            m = p8.match(line)
+            if m:
+                rp_can_next_advertisment = m.groupdict()['next_advertisment']
+                continue
+
+            # Candidate RP priority : 5
+            p9 = re.compile(r'^\s*Candidate +RP +priority +:'
+                            ' +(?P<rp_can_priority>[\d]+)$')
+            m = p9.match(line)
+            if m:
+                rp_can_priority = int(m.groupdict()['rp_can_priority'])
+                continue
+
+            if rp_can_address or rp_can_interface:
+                if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] = {}
+                if 'bsr' not in ret_dict['vrf'][vrf]['address_family'][af_name]['rp']:
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] = {}
+
+                if rp_can_interface:
+                    key = 'bsr_rp_candidate_interface'
+                else:
+                    key = 'bsr_rp_candidate_address'
+
+                if key not in ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr']:
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'][key] = {}
+
+                if rp_can_interface:
+                    ret_dict['vrf'][vrf]['address_family'][af_name] \
+                    ['rp']['bsr'][key]['interface'] = rp_can_interface
+
+                if rp_can_address:
+                    ret_dict['vrf'][vrf]['address_family'][af_name] \
+                    ['rp']['bsr'][key]['address'] = rp_can_address
+
+                if rp_can_holdtime:
+                    ret_dict['vrf'][vrf]['address_family'][af_name] \
+                        ['rp']['bsr'][key]['holdtime'] = rp_can_holdtime
+
+                if rp_can_interval:
+                    ret_dict['vrf'][vrf]['address_family'][af_name] \
+                        ['rp']['bsr'][key]['interval'] = rp_can_interval
+
+                if rp_can_next_advertisment:
+                    ret_dict['vrf'][vrf]['address_family'][af_name] \
+                        ['rp']['bsr'][key]['next_advertisment'] = rp_can_next_advertisment
+
+                if rp_can_priority:
+                    ret_dict['vrf'][vrf]['address_family'][af_name] \
+                        ['rp']['bsr'][key]['priority'] = rp_can_priority
                 continue
 
         return ret_dict
