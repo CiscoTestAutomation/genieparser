@@ -5,6 +5,7 @@ Example parser class
 '''
 import re
 import logging
+from copy import deepcopy
 
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Schema, \
@@ -1093,15 +1094,19 @@ class ShowPlatform(ShowPlatformSchema):
 
         cmd = 'show platform'.format()
         out = self.device.execute(cmd)
-        platform_dict = res = res2 = {}
+        platform_dict = {}
+        sub_dict = {}
         if out:
 
             for line in out.splitlines():
-                line = line.rstrip()
+                line = line.strip()
 
-                # C3850: switch_mac_address
+                # ----------      C3850    -------------
+
+                # Switch/Stack Mac Address : 0057.d21b.cc00 - Local Mac Address
                 p1 = re.compile(
-                    r'^\s*[Ss]witch\/[Ss]tack +[Mm]ac +[Aa]ddress +\: +(?P<switch_mac_address>.+)$')
+                    r'^[Ss]witch\/[Ss]tack +[Mm]ac +[Aa]ddress +\: +'
+                     '(?P<switch_mac_address>[\w\.]+) *(?P<local>[\w\s\-]+)?$')
                 m = p1.match(line)
                 if m:
                     if 'main' not in platform_dict:
@@ -1109,180 +1114,158 @@ class ShowPlatform(ShowPlatformSchema):
                     platform_dict['main']['switch_mac_address'] = m.groupdict()['switch_mac_address']
                     continue
 
-                # C3850: mac_persistency_wait_time
-                p2 = re.compile(r'^\s*[Mm]ac +persistency +wait +time\: +(?P<mac_persistency_wait_time>.+)$')
+                # Mac persistency wait time: Indefinite
+                p2 = re.compile(r'^[Mm]ac +persistency +wait +time\: +(?P<mac_persistency_wait_time>[\w\.\:]+)$')
                 m = p2.match(line)
                 if m:
                     if 'main' not in platform_dict:
                         platform_dict['main'] = {}
-                    platform_dict['main']['mac_persistency_wait_time'] = m.groupdict()['mac_persistency_wait_time']
+                    platform_dict['main']['mac_persistency_wait_time'] = m.groupdict()['mac_persistency_wait_time'].lower()
                     continue
 
-                # ASR1K: chassis
-                p3 = re.compile(r'^\s*[Cc]hassis +type: +(?P<chassis>.+)$')
+                # Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver. 
+                # ------  -----   ---------             -----------  --------------  -------       --------
+                #  1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d21b.cc00  V07           16.6.1
+                p3 = re.compile(r'^(?P<switch>\d+) +(?P<ports>\d+) +'
+                                 '(?P<model>[\w\-]+) +(?P<serial_no>\w+) +'
+                                 '(?P<mac_address>[\w\.\:]+) +'
+                                 '(?P<hw_ver>\w+) +(?P<sw_ver>[\w\.]+)$')
                 m = p3.match(line)
+                if m:
+                    slot = m.groupdict()['switch']
+                    model = m.groupdict()['model']
+                    if 'slot' not in platform_dict:
+                        platform_dict['slot'] = {}
+                    if slot not in platform_dict['slot']:
+                        platform_dict['slot'][slot] = {}
+                    if 'WS-C' in model:
+                        lc_type = 'rp'
+                    else:
+                        lc_type = 'other'
+
+                    if lc_type not in platform_dict['slot'][slot]:
+                        platform_dict['slot'][slot][lc_type] = {}
+                    if model not in platform_dict['slot'][slot][lc_type]:
+                        platform_dict['slot'][slot][lc_type][model] = {}
+                    platform_dict['slot'][slot][lc_type][model]['hw_ver'] = m.groupdict()['hw_ver']
+                    platform_dict['slot'][slot][lc_type][model]['mac_address'] = m.groupdict()['mac_address']
+                    platform_dict['slot'][slot][lc_type][model]['name'] = model
+                    platform_dict['slot'][slot][lc_type][model]['ports'] = m.groupdict()['ports']
+                    platform_dict['slot'][slot][lc_type][model]['slot'] = slot
+                    platform_dict['slot'][slot][lc_type][model]['sn'] = m.groupdict()['serial_no']
+                    platform_dict['slot'][slot][lc_type][model]['sw_ver'] = m.groupdict()['sw_ver']
+                    continue
+
+                #                                     Current
+                # Switch#   Role        Priority      State 
+                # -------------------------------------------
+                # *1       Active          3          Ready
+                p4 = re.compile(r'^\*?(?P<switch>\d+) +(?P<role>\w+) +'
+                                 '(?P<priority>\d+) +(?P<state>\w+)$')
+                m = p4.match(line)
+                if m:
+                    slot = m.groupdict()['switch']
+                    if 'slot' not in platform_dict:
+                        continue
+                    if slot not in platform_dict['slot']:
+                        continue
+
+                    for key, value in platform_dict['slot'][slot].items():
+                        for key, last in value.items():
+                            last['priority'] = m.groupdict()['priority']
+                            last['role'] = m.groupdict()['role']
+                            last['state'] = m.groupdict()['state']
+                    continue
+
+                # ----------      ASR1K    -------------
+                # Chassis type: ASR1006
+                p5 = re.compile(r'^[Cc]hassis +type: +(?P<chassis>\w+)$')
+                m = p5.match(line)
                 if m:
                     if 'main' not in platform_dict:
                         platform_dict['main'] = {}
                     platform_dict['main']['chassis'] = m.groupdict()['chassis']
                     continue
 
-        # table1 for C3850
-        tmp = parsergen.oper_fill_tabular(right_justified=True,
-                                              header_fields=
-                                                  [ "Switch",
-                                                    "Ports",
-                                                    "Model                ",
-                                                    "Serial No. ",
-                                                    "MAC address   ",
-                                                    "Hw Ver.",
-                                                    "Sw Ver."],
-                                              label_fields=
-                                                  [ "slot",
-                                                    "ports",
-                                                    "name",
-                                                    "sn",
-                                                    "mac_address",
-                                                    "hw_ver",
-                                                    "sw_ver"],
-                                              index=[0, 2],
-                                              table_terminal_pattern=r"^[Mac|Switch|\n]",
-                                              device_output=out,
-                                              device_os='iosxe')
-
-        if tmp.entries:
-            res = tmp
-
-        # table1 for ASR1K
-        tmp = parsergen.oper_fill_tabular(right_justified=True,
-                                              header_fields=
-                                                  [ "Slot     ",
-                                                    "Type               ",
-                                                    "State                ",
-                                                    "Insert time \(ago\)"],
-                                              label_fields=
-                                                  [ "slot",
-                                                    "name",
-                                                    "state",
-                                                    "insert_time"],
-                                              index=[0, 1],
-                                              table_terminal_pattern=r"^\n",
-                                              device_output=out,
-                                              device_os='iosxe')
-
-        if tmp.entries:
-            res = tmp
-
-        # table2 for C3850
-        tmp2 = parsergen.oper_fill_tabular(right_justified=True,
-                                              header_fields=
-                                                  [ "Switch#",
-                                                    "Role    ",
-                                                    "Priority",
-                                                    "State ", ],
-                                              label_fields=
-                                                  [ "slot",
-                                                    "role",
-                                                    "priority",
-                                                    "state", ],
-                                              index=[0, ],
-                                              device_output=out,
-                                              device_os='iosxe')
-
-        if tmp2.entries:
-            res2 = tmp2
-
-        # table2 for ASR1K
-        tmp2 = parsergen.oper_fill_tabular(right_justified=True,
-                                              header_fields=
-                                                  [ "Slot     ",
-                                                    "CPLD Version       ",
-                                                    "Firmware Version                       ", ],
-                                              label_fields=
-                                                  [ "slot",
-                                                    "cpld_ver",
-                                                    "fw_ver", ],
-                                              index=[0, ],
-                                              device_output=out,
-                                              device_os='iosxe')
-
-        if tmp2.entries:
-            res2 = tmp2
-
-        if res:
-            slot = subslot = mod = ''
-            for n in sorted(res.entries.keys()):
-                if 'slot' not in platform_dict:
-                    platform_dict['slot'] = {}
-                if n not in platform_dict['slot']:
-                    platform_dict['slot'][n] = {}
-                p5 = re.compile(r'(?P<slot>\d+)\/(?P<subslot>\d+)')
-                m = p5.match(n)
+                # Slot      Type                State                 Insert time (ago) 
+                # --------- ------------------- --------------------- ----------------- 
+                # 0         ASR1000-SIP40       ok                    00:33:53
+                #  0/0      SPA-1XCHSTM1/OC3    ok                    2d00h
+                # 4                             unknown               2d00h
+                p6 = re.compile(r'^(?P<slot>\w+)(\/(?P<subslot>\d+))? +(?P<name>\S+) +'
+                                 '(?P<state>\w+(\, \w+)?) +(?P<insert_time>[\w\.\:]+)$')
+                m = p6.match(line)
                 if m:
                     slot = m.groupdict()['slot']
                     subslot = m.groupdict()['subslot']
-                for d in sorted(res.entries[n].keys()):
-                    if ('WS-C' in d) or ('ASR1000-RP' in d):
-                        if 'rp' not in platform_dict['slot'][n]:
-                            platform_dict['slot'][n]['rp'] = {}
-                        if d not in platform_dict['slot'][n]['rp']:
-                            platform_dict['slot'][n]['rp'][d] = {}
-                        for k, v in res.entries[n][d].items():
-                            platform_dict['slot'][n]['rp'][d][k] = v
-                        for k in res2.entries.keys():
-                            if '*' in k:
-                                old_k = k
-                                k = k.replace('*', '')
-                                res2.entries[k] = res2.entries[old_k]
-                                del res2.entries[old_k]
-                        for k, v in res2.entries[n].items():
-                            if ('slot' in k) and ('*' in v):
-                                v = v.replace('*', '')
-                            platform_dict['slot'][n]['rp'][d][k] = v
-                    elif (('ASR1000-SIP' in d) or ('ASR1000-2T' in d) or ('ASR1000-6T' in d)) and (not subslot):
-                        if 'lc' not in platform_dict['slot'][n]:
-                            platform_dict['slot'][n]['lc'] = {}
-                        if d not in platform_dict['slot'][n]['lc']:
-                            platform_dict['slot'][n]['lc'][d] = {}
-                        for k, v in res.entries[n][d].items():
-                            platform_dict['slot'][n]['lc'][d][k] = v
-                        if n in res2.entries:
-                            for k, v in res2.entries[n].items():
-                                platform_dict['slot'][n]['lc'][d][k] = v
-                        mod = d
-                    elif subslot:
-                        if 'subslot' not in platform_dict['slot'][slot]['lc'][mod]:
-                            platform_dict['slot'][slot]['lc'][mod]['subslot'] = {}
-                        if subslot not in platform_dict['slot'][slot]['lc'][mod]['subslot']:
-                            platform_dict['slot'][slot]['lc'][mod]['subslot'][subslot] = {}
-                        if d not in platform_dict['slot'][slot]['lc'][mod]['subslot'][subslot]:
-                            platform_dict['slot'][slot]['lc'][mod]['subslot'][subslot][d] = {}
-                        for k, v in res.entries[n][d].items():
-                            if 'slot' in k:
-                                platform_dict['slot'][slot]['lc'][mod]['subslot'][subslot][d]['subslot'] = subslot
-                            else:
-                                platform_dict['slot'][slot]['lc'][mod]['subslot'][subslot][d][k] = v
-                        del platform_dict['slot'][slot + '/' + subslot]
-                        slot = subslot = ''
-                    else:
-                        if 'other' not in platform_dict['slot'][n]:
-                            platform_dict['slot'][n]['other'] = {}
-                        if d not in platform_dict['slot'][n]['other']:
-                            platform_dict['slot'][n]['other'][d] = {}
-                        for k, v in res.entries[n][d].items():
-                            platform_dict['slot'][n]['other'][d][k] = v
-                        if n in res2.entries:
-                            for k, v in res2.entries[n].items():
-                                platform_dict['slot'][n]['other'][d][k] = v
+                    name = m.groupdict()['name']
+                    if not name:
+                        continue
 
-            for slot in sorted(res2.entries.keys()):
-                if slot not in platform_dict['slot']:
-                    platform_dict['slot'][slot] = {}
-                    for k, v in res2.entries[slot].items():
-                        if 'rp' not in platform_dict['slot'][slot]:
-                            platform_dict['slot'][slot]['rp'] = {}
-                        if 'None' not in platform_dict['slot'][slot]['rp']:
-                            platform_dict['slot'][slot]['rp']['None'] = {}
-                        platform_dict['slot'][slot]['rp']['None'][k] = v
+                    # subslot
+                    if subslot:
+                        try:
+                            if slot not in platform_dict['slot']:
+                                continue
+                            for key, value in platform_dict['slot'][slot].items():
+                                for key, last in value.items():
+                                    if 'subslot' not in last:
+                                        last['subslot'] = {}
+                                    if subslot not in last['subslot']:
+                                        last['subslot'][subslot] = {}
+                                    if name not in last['subslot'][subslot]:
+                                        last['subslot'][subslot][name] = {}
+                                    sub_dict = last['subslot'][subslot][name]
+                            sub_dict['subslot'] = subslot
+                        except:
+                            continue
+                    else:
+                        if 'slot' not in platform_dict:
+                            platform_dict['slot'] = {}
+                        if slot not in platform_dict['slot']:
+                            platform_dict['slot'][slot] = {}
+                        if ('ASR1000-SIP' in name) or ('ASR1000-2T' in name) or ('ASR1000-6T' in name):
+                            lc_type = 'lc'
+                        elif 'ASR1000-RP' in name:
+                            lc_type = 'rp'
+                        else:
+                            lc_type = 'other'
+
+                        if lc_type not in platform_dict['slot'][slot]:
+                            platform_dict['slot'][slot][lc_type] = {}
+
+                        if name not in platform_dict['slot'][slot][lc_type]:
+                            platform_dict['slot'][slot][lc_type][name] = {}
+                        sub_dict = platform_dict['slot'][slot][lc_type][name]
+                        sub_dict['slot'] = slot
+
+                    sub_dict['name'] = name
+                    sub_dict['state'] = m.groupdict()['state'].strip()
+                    sub_dict['insert_time'] = m.groupdict()['insert_time']
+                    continue
+
+
+                # Slot      CPLD Version        Firmware Version                        
+                # --------- ------------------- --------------------------------------- 
+                # 0         00200800            16.2(1r) 
+                p7 = re.compile(r'^(?P<slot>\w+) +(?P<cpld_version>\d+) +'
+                                 '(?P<fireware_ver>[\w\.\(\)\/]+)$')
+                m = p7.match(line)
+                if m:
+                    fw_ver = m.groupdict()['fireware_ver']
+                    cpld_ver = m.groupdict()['cpld_version']
+                    slot = m.groupdict()['slot']
+                    if 'slot' not in platform_dict:
+                        continue
+                    if slot not in platform_dict['slot']:
+                        continue
+
+                    for key, value in platform_dict['slot'][slot].items():
+                        for key, last in value.items():
+                            if 'N/A' not in cpld_ver:
+                                last['cpld_ver'] = m.groupdict()['cpld_version']
+                            if 'N/A' not in fw_ver:
+                                last['fw_ver'] = m.groupdict()['fireware_ver']
+                    continue
 
         return platform_dict
