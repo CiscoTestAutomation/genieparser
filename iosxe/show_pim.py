@@ -130,7 +130,7 @@ class ShowIpPimInterfaceSchema(MetaParser):
                                 Optional('dr_priority'): int,
                                 Optional('hello_interval'): int,
                                 Optional('neighbor_count'): int,
-                                Optional('version'): str,
+                                Optional('version'): int,
                                 Optional('mode'): str,
                                 Optional('dr_address'): str,
                                 Optional('address'): list,
@@ -170,7 +170,7 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
             #                              Mode   Count  Intvl  Prior
             # 10.1.2.1         GigabitEthernet1         v2/S   1      30     1          10.1.2.2
             p1 = re.compile(r'^\s*(?P<address>[\w\:\.]+) +(?P<interface>[\w\d]+)'
-                            ' +(?P<version>[\w\d]+)\/(?P<mode>[\w]+)'
+                            ' +v(?P<version>[\d]+)\/(?P<mode>[\w]+)'
                             ' +(?P<nbr_count>[\d]+)'
                             ' +(?P<query_interval>[\d]+)'
                             ' +(?P<dr_priority>[\d]+)'
@@ -181,7 +181,7 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
                 address = m.groupdict()['address']
                 intf_name = m.groupdict()['interface']
                 nbr_count = int(m.groupdict()['nbr_count'])
-                version = m.groupdict()['version']
+                version = int(m.groupdict()['version'])
                 mode = m.groupdict()['mode']
                 query_interval = int(m.groupdict()['query_interval'])
                 dr_priority = int(m.groupdict()['dr_priority'])
