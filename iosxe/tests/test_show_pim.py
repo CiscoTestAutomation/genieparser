@@ -10,7 +10,8 @@ from metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
 # Parser
-from parser.iosxe.show_pim import ShowIpv6PimInterface
+from parser.iosxe.show_pim import ShowIpv6PimInterface, \
+                                  ShowIpv6PimBsrCandidateRp
 
 
 # ============================================
@@ -203,6 +204,98 @@ class test_show_ipv6_pim_interface(unittest.TestCase):
         obj = ShowIpv6PimInterface(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+# ============================================
+# Parser for 'show ip pim candidate-rp'
+# Parser for 'show ip pim vrf xxx candidate-rp'
+# ============================================
+class test_show_ip_pim_bsr_candidate_rp(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_candidate_2 = {
+        'vrf':
+            {'default':
+                {
+                'address_family':
+                    {'ipv6':
+                        {'rp':
+                            {'bsr':
+                                {'bsr_rp_candidate_address': {
+                                    'address': '2001:3:3:3::3',
+                                    'priority': 5,
+                                    'mode': 'SM',
+                                    'holdtime': 150,
+                                    'interval': 60,
+                                },
+                                'rp_candidate_next_advertisement': '00:00:48',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+    golden_output_bsr_candidate_2 = {'execute.return_value': '''
+        R3_iosv#show ipv6 pim bsr candidate-rp
+        PIMv2 C-RP information
+          Candidate RP: 2001:3:3:3::3 SM
+            Priority 5, Holdtime 150
+            Advertisement interval 60 seconds
+            Next advertisement in 00:00:48
+    '''}
+
+    golden_parsed_output_bsr_candidate_1 = {
+        'vrf':
+            {'VRF1':
+                {
+                'address_family':
+                    {'ipv6':
+                        {'rp':
+                            {'bsr':
+                                {'bsr_rp_candidate_address': {
+                                    'address': '2001:DB8:1:5::1',
+                                    'priority': 192,
+                                    'mode': 'SM',
+                                    'holdtime': 150,
+                                    'interval': 60,
+                                    },
+                                'rp_candidate_next_advertisement':'00:00:50',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+    }
+    golden_output_bsr_candidate_1 = {'execute.return_value': '''
+        R1_xe#show ipv6 pim vrf VRF1 bsr candidate-rp
+        PIMv2 C-RP information
+           Candidate RP: 2001:DB8:1:5::1 SM
+             Priority 192, Holdtime 150
+            Advertisement interval 60 seconds
+            Next advertisement in 00:00:50
+        '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpv6PimBsrCandidateRp(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_mapping_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_bsr_candidate_1)
+        obj = ShowIpv6PimBsrCandidateRp(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_bsr_candidate_1)
+
+    def test_golden_mapping_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_bsr_candidate_2)
+        obj = ShowIpv6PimBsrCandidateRp(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_candidate_2)
 
 if __name__ == '__main__':
     unittest.main()
