@@ -156,7 +156,7 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
 
         # find cmd
         if vrf_name:
-            cmd = 'show ip vrf {vrf_name} rp mapping'.format(vrf_name=vrf_name)
+            cmd = 'show ip pim vrf {vrf_name} rp mapping'.format(vrf_name=vrf_name)
         else:
             cmd = 'show ip pim rp mapping'
             vrf_name = 'default'
