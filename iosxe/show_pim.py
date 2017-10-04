@@ -172,7 +172,7 @@ class ShowIpPimBsrRouter(ShowIpPimBsrRouterSchema):
 
         # find cmd
         if vrf:
-            cmd = 'show ip vrf {} bsr-router'.format(vrf)
+            cmd = 'show ip pim vrf {} bsr-router'.format(vrf)
         else:
             cmd = 'show ip pim bsr-router'
             vrf = 'default'
