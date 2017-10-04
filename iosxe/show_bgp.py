@@ -1641,6 +1641,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
             * show bgp all neighbors
     """
     schema = {
+        Optional('list_of_neighbors'): list,
         'vrf':
             {Any():
                  {
@@ -1862,6 +1863,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
 
         # Init vars
         parsed_dict = {}
+        parsed_dict['list_of_neighbors'] = []
 
 
         for line in out.splitlines():
@@ -1889,6 +1891,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                 remote_as = int(m.groupdict()['remote_as'])
                 link = m.groupdict()['link']  # internal / external
 
+                parsed_dict['list_of_neighbors'].append(neighbor_id)
                 if 'vrf' not in parsed_dict:
                     parsed_dict['vrf'] = {}
                 if vrf_name not in parsed_dict['vrf']:
@@ -1925,7 +1928,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                 remote_as = int(m.groupdict()['remote_as'])
                 link = m.groupdict()['link']  # internal / external
 
-
+                parsed_dict['list_of_neighbors'].append(neighbor_id)
                 if 'vrf' not in parsed_dict:
                     parsed_dict['vrf'] = {}
                 if vrf_name not in parsed_dict['vrf']:
@@ -4672,7 +4675,6 @@ class ShowBgpAll(ShowBgpAllSchema):
                               '(?: *(?P<param>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
             m = p3_1.match(line)
             if m:
-                #import pdb;pdb.set_trace()
                 # Get keys
                 if m.groupdict()['status_codes']:
                     status_codes = m.groupdict()['status_codes']

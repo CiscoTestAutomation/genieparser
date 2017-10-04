@@ -2798,6 +2798,14 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output_1 = {
+        'list_of_neighbors': ['2.2.2.2',
+                        '3.3.3.3',
+                        '10.4.6.6',
+                        '20.4.6.6',
+                        '2.2.2.2',
+                        '3.3.3.3',
+                        '2001:DB8:4:6::6',
+                        '2001:DB8:20:4:6::6'],
         'vrf':
             {'default':
                 {
@@ -4605,7 +4613,7 @@ For address family: VPNv6 Multicast
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAllNeighbors(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
+        with self.assertRaises(SchemaMissingKeyError):
             parsed_output = obj.parse()
     def test_golden_1(self):
         self.maxDiff = None
