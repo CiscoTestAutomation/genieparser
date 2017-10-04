@@ -206,8 +206,6 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
                 up_time = m.groupdict()['up_time']
                 priority = int(m.groupdict()['priority'])
                 hash_mask = int(m.groupdict()['hash_mask_length'])
-
-
                 continue
 
             # RPF: FE80::21E:F6FF:FE2D:3600,Loopback0
