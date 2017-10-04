@@ -130,7 +130,8 @@ class ShowIpPimInterfaceSchema(MetaParser):
                                 Optional('dr_priority'): int,
                                 Optional('hello_interval'): int,
                                 Optional('neighbor_count'): int,
-                                Optional('version_mode'): str,
+                                Optional('version'): str,
+                                Optional('mode'): str,
                                 Optional('dr_address'): str,
                                 Optional('address'): list,
                             },
@@ -169,20 +170,29 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
             #                              Mode   Count  Intvl  Prior
             # 10.1.2.1         GigabitEthernet1         v2/S   1      30     1          10.1.2.2
             p1 = re.compile(r'^\s*(?P<address>[\w\:\.]+) +(?P<interface>[\w\d]+)'
-                            ' +(?P<version_mode>[\w\d\/]+)'
+                            ' +(?P<version>[\w\d]+)\/(?P<mode>[\w]+)'
                             ' +(?P<nbr_count>[\d]+)'
                             ' +(?P<query_interval>[\d]+)'
                             ' +(?P<dr_priority>[\d]+)'
                             ' +(?P<dr_address>[\w\d\.\:]+)$')
             m = p1.match(line)
             if m:
+                new_mode = ""
                 address = m.groupdict()['address']
                 intf_name = m.groupdict()['interface']
                 nbr_count = int(m.groupdict()['nbr_count'])
-                version_mode = m.groupdict()['version_mode']
+                version = m.groupdict()['version']
+                mode = m.groupdict()['mode']
                 query_interval = int(m.groupdict()['query_interval'])
                 dr_priority = int(m.groupdict()['dr_priority'])
                 dr_address = m.groupdict()['dr_address']
+
+                if mode == 'S':
+                    new_mode = 'sparse-mode'
+                if mode == 'SD':
+                    new_mode = 'sparse-dense-mode'
+                if mode == 'D':
+                    new_mode = 'dense-mode'
 
                 if 'vrf' not in ret_dict:
                     ret_dict['vrf'] = {}
@@ -204,7 +214,9 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
                 ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name]\
                     ['neighbor_count'] = nbr_count
                 ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name]\
-                    ['version_mode'] = version_mode
+                    ['version'] = version
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name] \
+                    ['mode'] = new_mode
                 ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name]\
                     ['hello_interval'] = query_interval
                 ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name]\
