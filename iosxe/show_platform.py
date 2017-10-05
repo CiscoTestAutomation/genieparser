@@ -5,7 +5,6 @@ Example parser class
 '''
 import re
 import logging
-from copy import deepcopy
 
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Schema, \
@@ -1191,7 +1190,6 @@ class ShowPlatform(ShowPlatformSchema):
                 # --------- ------------------- --------------------- ----------------- 
                 # 0         ASR1000-SIP40       ok                    00:33:53
                 #  0/0      SPA-1XCHSTM1/OC3    ok                    2d00h
-                # 4                             unknown               2d00h
                 p6 = re.compile(r'^(?P<slot>\w+)(\/(?P<subslot>\d+))? +(?P<name>\S+) +'
                                  '(?P<state>\w+(\, \w+)?) +(?P<insert_time>[\w\.\:]+)$')
                 m = p6.match(line)
@@ -1244,11 +1242,31 @@ class ShowPlatform(ShowPlatformSchema):
                     sub_dict['insert_time'] = m.groupdict()['insert_time']
                     continue
 
+                # 4                             unknown               2d00h
+                p6_1 = re.compile(r'^(?P<slot>\w+) +(?P<state>\w+(\, \w+)?)'
+                                 ' +(?P<insert_time>[\w\.\:]+)$')
+                m = p6_1.match(line)
+                if m:                    
+                    slot = m.groupdict()['slot']
+                    if 'slot' not in platform_dict:
+                        platform_dict['slot'] = {}
+                    if slot not in platform_dict['slot']:
+                        platform_dict['slot'][slot] = {}
+
+                    if 'other' not in platform_dict['slot'][slot]:
+                        platform_dict['slot'][slot]['other'] ={}
+                        platform_dict['slot'][slot]['other'][''] ={}
+                    platform_dict['slot'][slot]['other']['']['slot'] = slot
+                    platform_dict['slot'][slot]['other']['']['name'] = ''
+                    platform_dict['slot'][slot]['other']['']['state'] = m.groupdict()['state']
+                    platform_dict['slot'][slot]['other']['']['insert_time'] = m.groupdict()['insert_time']
+                    continue
+
 
                 # Slot      CPLD Version        Firmware Version                        
                 # --------- ------------------- --------------------------------------- 
                 # 0         00200800            16.2(1r) 
-                p7 = re.compile(r'^(?P<slot>\w+) +(?P<cpld_version>\d+) +'
+                p7 = re.compile(r'^(?P<slot>\w+) +(?P<cpld_version>\d+|N\/A) +'
                                  '(?P<fireware_ver>[\w\.\(\)\/]+)$')
                 m = p7.match(line)
                 if m:
@@ -1262,10 +1280,8 @@ class ShowPlatform(ShowPlatformSchema):
 
                     for key, value in platform_dict['slot'][slot].items():
                         for key, last in value.items():
-                            if 'N/A' not in cpld_ver:
-                                last['cpld_ver'] = m.groupdict()['cpld_version']
-                            if 'N/A' not in fw_ver:
-                                last['fw_ver'] = m.groupdict()['fireware_ver']
+                            last['cpld_ver'] = m.groupdict()['cpld_version']
+                            last['fw_ver'] = m.groupdict()['fireware_ver']
                     continue
 
         return platform_dict

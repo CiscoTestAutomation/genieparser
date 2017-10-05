@@ -1734,6 +1734,18 @@ Switch#   Role        Priority      State
                                                 }
                                             }
                                         },
+                                        '4': {
+                                            'other': {
+                                                '': {
+                                                    'slot': '4',
+                                                    'name': '',
+                                                    'state': 'unknown',
+                                                    'insert_time': '2d00h',
+                                                    'cpld_ver': 'N/A',
+                                                    'fw_ver': 'N/A',
+                                                }
+                                            }
+                                        },
                                     }
                                 }
 
