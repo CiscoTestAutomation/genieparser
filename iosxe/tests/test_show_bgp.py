@@ -1731,6 +1731,7 @@ class test_show_bgp_all_summary(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
+        'bgp_id': 100,
         'vrf':
             {'default':
                  {'neighbor':
@@ -2064,6 +2065,7 @@ class test_show_bgp_all_summary(unittest.TestCase):
         '''}
 
     golden_parsed_output_2 = {
+        'bgp_id': 100,
         'vrf':
             {'default':
                  {'neighbor':
@@ -2567,6 +2569,7 @@ class test_show_bgp_all_summary(unittest.TestCase):
 
 
             '''}
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         bgp_summary_obj = ShowBgpAllSummary(device=self.device1)
@@ -2795,6 +2798,14 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output_1 = {
+        'list_of_neighbors': ['2.2.2.2',
+                        '3.3.3.3',
+                        '10.4.6.6',
+                        '20.4.6.6',
+                        '2.2.2.2',
+                        '3.3.3.3',
+                        '2001:DB8:4:6::6',
+                        '2001:DB8:20:4:6::6'],
         'vrf':
             {'default':
                 {
@@ -2825,6 +2836,7 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                            'local_port': '35281',
                                            'foreign_host': '2.2.2.2',
                                            'foreign_port': '179',
+                                           'mss':536,
                                       },
                                       'min_time_between_advertisement_runs': 0,
                                       'address_tracking_status': 'enabled' ,
@@ -3024,6 +3036,7 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                            'local_port': '56031',
                                            'foreign_host': '3.3.3.3',
                                            'foreign_port': '179',
+                                           'mss': 536,
                                            },
                                       'min_time_between_advertisement_runs': 0,
                                       'address_tracking_status': 'enabled',
@@ -3229,6 +3242,7 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                               'local_port': '179',
                                               'foreign_host': '10.4.6.6',
                                               'foreign_port': '11010',
+                                              'mss': 1460,
                                           },
                                       'min_time_between_advertisement_runs': 0,
                                       'address_tracking_status': 'enabled',
@@ -3415,6 +3429,7 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                               'local_port': '179',
                                               'foreign_host': '2001:DB8:4:6::6',
                                               'foreign_port': '11003',
+                                              'mss': 1440,
                                           },
                                       'min_time_between_advertisement_runs': 0,
                                       'address_tracking_status': 'enabled',
@@ -3606,6 +3621,7 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                               'local_port': '179',
                                               'foreign_host': '20.4.6.6',
                                               'foreign_port': '11003',
+                                              'mss': 1460,
                                           },
                                       'min_time_between_advertisement_runs': 0,
                                       'address_tracking_status': 'enabled',
@@ -3792,6 +3808,7 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                                               'local_port': '179',
                                               'foreign_host': '2001:DB8:20:4:6::6',
                                               'foreign_port': '11003',
+                                              'mss': 1440,
                                           },
                                       'min_time_between_advertisement_runs': 0,
                                       'address_tracking_status': 'enabled',
@@ -4596,7 +4613,7 @@ For address family: VPNv6 Multicast
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAllNeighbors(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
+        with self.assertRaises(SchemaMissingKeyError):
             parsed_output = obj.parse()
     def test_golden_1(self):
         self.maxDiff = None

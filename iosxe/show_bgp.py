@@ -1089,6 +1089,7 @@ class ShowBgpAllSummarySchema(MetaParser):
             * show bgp all summary
     """
     schema = {
+        'bgp_id': int,
         'vrf':
             {Any():
                  {Optional('neighbor'):
@@ -1196,6 +1197,10 @@ class ShowBgpAllSummary(ShowBgpAllSummarySchema):
             if m:
                 route_identifier = str(m.groupdict()['route_identifier'])
                 local_as = int(m.groupdict()['local_as'])
+
+                if 'bgp_id' not in sum_dict:
+                    sum_dict['bgp_id'] = local_as
+
                 if 'vrf' not in sum_dict:
                     sum_dict['vrf'] = {}
                 if vrf not in sum_dict['vrf']:
@@ -1636,6 +1641,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
             * show bgp all neighbors
     """
     schema = {
+        Optional('list_of_neighbors'): list,
         'vrf':
             {Any():
                  {
@@ -1668,6 +1674,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                                     Optional('local_host'): str,
                                     Optional('foreign_port'): str,
                                     Optional('foreign_host'): str,
+                                    Optional('mss'): int,
                                     },
                               Optional('min_time_between_advertisement_runs'): int,
                               Optional('address_tracking_status'): str,
@@ -1856,6 +1863,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
 
         # Init vars
         parsed_dict = {}
+        parsed_dict['list_of_neighbors'] = []
 
 
         for line in out.splitlines():
@@ -1883,6 +1891,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                 remote_as = int(m.groupdict()['remote_as'])
                 link = m.groupdict()['link']  # internal / external
 
+                parsed_dict['list_of_neighbors'].append(neighbor_id)
                 if 'vrf' not in parsed_dict:
                     parsed_dict['vrf'] = {}
                 if vrf_name not in parsed_dict['vrf']:
@@ -1919,7 +1928,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                 remote_as = int(m.groupdict()['remote_as'])
                 link = m.groupdict()['link']  # internal / external
 
-
+                parsed_dict['list_of_neighbors'].append(neighbor_id)
                 if 'vrf' not in parsed_dict:
                     parsed_dict['vrf'] = {}
                 if vrf_name not in parsed_dict['vrf']:
@@ -2833,14 +2842,24 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             m = p50.match(line)
             if m:
                 datagram = m.groupdict()['datagram']
+
                 if 'bgp_session_transport' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]:
                     parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id] \
                         ['bgp_session_transport'] = {}
+
+                if 'transport' not in parsed_dict['vrf'][vrf_name] \
+                        ['neighbor'][neighbor_id]['bgp_session_transport']:
+                    parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                        ['bgp_session_transport']['transport'] = {}
+
+                parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
+                   ['bgp_session_transport']['transport']['mss'] = int(datagram)
 
                 if 'datagram' not in parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
                         ['bgp_session_transport']:
                     parsed_dict['vrf'][vrf_name]['neighbor'][neighbor_id]\
                         ['bgp_session_transport']['datagram'] = {}
+
                 continue
             # Rcvd: 164 (out of order: 0), with data: 80, total data bytes: 2374
             p51 = re.compile(r'^\s*Rcvd: (?P<received>[0-9]+)'
@@ -4656,7 +4675,6 @@ class ShowBgpAll(ShowBgpAllSchema):
                               '(?: *(?P<param>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
             m = p3_1.match(line)
             if m:
-                #import pdb;pdb.set_trace()
                 # Get keys
                 if m.groupdict()['status_codes']:
                     status_codes = m.groupdict()['status_codes']
