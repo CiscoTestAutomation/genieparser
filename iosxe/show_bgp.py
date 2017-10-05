@@ -1863,8 +1863,6 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
 
         # Init vars
         parsed_dict = {}
-        parsed_dict['list_of_neighbors'] = []
-
 
         for line in out.splitlines():
             if line.strip():
@@ -1891,7 +1889,11 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                 remote_as = int(m.groupdict()['remote_as'])
                 link = m.groupdict()['link']  # internal / external
 
-                parsed_dict['list_of_neighbors'].append(neighbor_id)
+                if 'list_of_neighbors' not in parsed_dict:
+                    parsed_dict['list_of_neighbors'] = []
+                    parsed_dict['list_of_neighbors'].append(neighbor_id)
+                else:
+                    parsed_dict['list_of_neighbors'].append(neighbor_id)
                 if 'vrf' not in parsed_dict:
                     parsed_dict['vrf'] = {}
                 if vrf_name not in parsed_dict['vrf']:
@@ -1928,7 +1930,11 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                 remote_as = int(m.groupdict()['remote_as'])
                 link = m.groupdict()['link']  # internal / external
 
-                parsed_dict['list_of_neighbors'].append(neighbor_id)
+                if 'list_of_neighbors' not in parsed_dict:
+                    parsed_dict['list_of_neighbors'] = []
+                    parsed_dict['list_of_neighbors'].append(neighbor_id)
+                else:
+                    parsed_dict['list_of_neighbors'].append(neighbor_id)
                 if 'vrf' not in parsed_dict:
                     parsed_dict['vrf'] = {}
                 if vrf_name not in parsed_dict['vrf']:
