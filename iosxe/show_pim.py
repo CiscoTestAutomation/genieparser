@@ -251,9 +251,9 @@ class ShowIpv6PimBsrElectionSchema(MetaParser):
                                     Optional('scope_range_list'): str,
                                     Optional('priority'): int,
                                     Optional('up_time'): str,
-                                    Optional('bs_timer'): str,
-                                    Optional('reverse_path_forwarding_interface'): str,
-                                    Optional('reverse_path_forwarding_address'): str,
+                                    Optional('expires'): str,
+                                    Optional('rpf_interface'): str,
+                                    Optional('rpf_address'): str,
 
                                 },
                             },
@@ -272,9 +272,9 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
 
         # find cmd
         if vrf:
-            cmd = 'show ip pim vrf {} bsr election'.format(vrf)
+            cmd = 'show ipv6 pim vrf {} bsr election'.format(vrf)
         else:
-            cmd = 'show ip pim bsr election'
+            cmd = 'show ipv6 pim bsr election'
             vrf = 'default'
 
         # initial variables
@@ -317,7 +317,7 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
                 continue
 
             # RPF: FE80::21E:F6FF:FE2D:3600,Loopback0
-            p4 = re.compile(r'^\s*RPF: +(?P<rpf>[\w\:\.]+),(?P<interface>\w+)$')
+            p4 = re.compile(r'^\s*RPF: +(?P<rpf>[\w\:\.]+),(?P<interface>[\w\d\S]+)$')
 
             m = p4.match(line)
             if m:
@@ -382,13 +382,13 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
                     ['bsr']['priority'] = priority
             if bs_timer:
                 ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
-                    ['bsr']['bs_timer'] = bs_timer
+                    ['bsr']['expires'] = bs_timer
             if rpf_address:
                 ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
-                    ['bsr']['reverse_path_forwarding_address'] = rpf_address
+                    ['bsr']['rpf_address'] = rpf_address
             if rpf_interface:
                 ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
-                    ['bsr']['reverse_path_forwarding_interface'] = rpf_interface
+                    ['bsr']['rpf_interface'] = rpf_interface
 
 
             if can_address:
