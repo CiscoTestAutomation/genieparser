@@ -130,7 +130,7 @@ class ShowIpv6PimBsrCandidateRpSchema(MetaParser):
                     Any(): {
                         'rp': {
                             'bsr': {
-                                Optional('bsr_rp_candidate_address'): {
+                                Any(): {
                                     Optional('address'): str,
                                     Optional('holdtime'): int,
                                     Optional('priority'): int,
@@ -148,16 +148,16 @@ class ShowIpv6PimBsrCandidateRpSchema(MetaParser):
 
 
 class ShowIpv6PimBsrCandidateRp(ShowIpv6PimBsrCandidateRpSchema):
-    # Parser for 'show ipv6 pim bsr election'
-    # Parser for 'show ipv6 pim vrf <vrf_name> bsr election'
+    # Parser for 'show ipv6 pim bsr candidate-rp'
+    # Parser for 'show ipv6 pim vrf <vrf_name> bsr candidate-rp'
 
     def cli(self, vrf=""):
 
         # find cmd
         if vrf:
-            cmd = 'show ip pim vrf {} bsr candidate-rp'.format(vrf)
+            cmd = 'show ipv6 pim vrf {} bsr candidate-rp'.format(vrf)
         else:
-            cmd = 'show ip pim bsr candidate-rp'
+            cmd = 'show ipv6 pim bsr candidate-rp'
             vrf = 'default'
 
         # initial variables
@@ -205,52 +205,56 @@ class ShowIpv6PimBsrCandidateRp(ShowIpv6PimBsrCandidateRpSchema):
                 next_advertisement = m.groupdict()['next_advertisement']
                 continue
 
-            if 'vrf' not in ret_dict:
-                ret_dict['vrf'] = {}
-            if vrf not in ret_dict['vrf']:
-                ret_dict['vrf'][vrf] = {}
-            if 'address_family' not in ret_dict['vrf'][vrf]:
-                ret_dict['vrf'][vrf]['address_family'] = {}
-            if af_name not in ret_dict['vrf'][vrf]['address_family']:
-                ret_dict['vrf'][vrf]['address_family'][af_name] = {}
-            if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
-                ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] = {}
-            if 'bsr' not in ret_dict['vrf'][vrf]['address_family'] \
-                    [af_name]['rp']:
-                ret_dict['vrf'][vrf]['address_family'][af_name] \
-                    ['rp']['bsr'] = {}
-
-            if 'bsr_rp_candidate_address' not in ret_dict['vrf'][vrf]['address_family'] \
-                    [af_name]['rp']['bsr']:
-                ret_dict['vrf'][vrf]['address_family'][af_name] \
-                    ['rp']['bsr']['bsr_rp_candidate_address'] = {}
             if address:
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+                if 'address_family' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['address_family'] = {}
+                if af_name not in ret_dict['vrf'][vrf]['address_family']:
+                    ret_dict['vrf'][vrf]['address_family'][af_name] = {}
+                if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] = {}
+                if 'bsr' not in ret_dict['vrf'][vrf]['address_family'] \
+                        [af_name]['rp']:
+                    ret_dict['vrf'][vrf]['address_family'][af_name] \
+                        ['rp']['bsr'] = {}
+                if address not in ret_dict['vrf'][vrf]['address_family'] \
+                    [af_name]['rp']['bsr']:
+                    ret_dict['vrf'][vrf]['address_family'][af_name] \
+                        ['rp']['bsr'][address] = {}
+
                 ret_dict['vrf'][vrf]['address_family'][af_name] \
-                    ['rp']['bsr']['bsr_rp_candidate_address']['address'] = address
+                    ['rp']['bsr'][address]['address'] = address
 
-            if mode:
-                ret_dict['vrf'][vrf]['address_family'][af_name] \
-                    ['rp']['bsr']['bsr_rp_candidate_address']['mode'] = mode
+                if mode:
+                    ret_dict['vrf'][vrf]['address_family'][af_name] \
+                        ['rp']['bsr'][address]['mode'] = mode
 
-            if priority is not None:
-                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr']\
-                    ['bsr_rp_candidate_address']['priority'] = priority
+                if priority is not None:
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr']\
+                        [address]['priority'] = priority
 
-            if holdtime is not None:
-                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr']\
-                    ['bsr_rp_candidate_address']['holdtime'] = holdtime
+                if holdtime is not None:
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr']\
+                        [address]['holdtime'] = holdtime
 
-            if interval :
-                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr']\
-                    ['bsr_rp_candidate_address']['interval'] = interval
-            if next_advertisement:
-                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
-                    ['rp_candidate_next_advertisement'] = next_advertisement
+                if interval :
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr']\
+                        [address]['interval'] = interval
+                if next_advertisement:
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
+                        ['rp_candidate_next_advertisement'] = next_advertisement
 
             continue
 
         return ret_dict
 
+# ==============================================
+#  show ip pim interface
+#  show ip pim vrf <vrf_name> interface
+# ==============================================
 class ShowIpPimInterfaceSchema(MetaParser):
 
     # Schema for 'show ip pim Interface'
