@@ -169,7 +169,7 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
             #Address          Interface                Ver/   Nbr    Query  DR         DR
             #                              Mode   Count  Intvl  Prior
             # 10.1.2.1         GigabitEthernet1         v2/S   1      30     1          10.1.2.2
-            p1 = re.compile(r'^\s*(?P<address>[\w\:\.]+) +(?P<interface>[\w\d]+)'
+            p1 = re.compile(r'^\s*(?P<address>[\w\:\.]+) +(?P<interface>[\w\d\S]+)'
                             ' +v(?P<version>[\d]+)\/(?P<mode>[\w]+)'
                             ' +(?P<nbr_count>[\d]+)'
                             ' +(?P<query_interval>[\d]+)'
