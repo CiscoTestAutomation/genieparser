@@ -4613,7 +4613,7 @@ For address family: VPNv6 Multicast
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAllNeighbors(device=self.device)
-        with self.assertRaises(SchemaMissingKeyError):
+        with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
     def test_golden_1(self):
         self.maxDiff = None

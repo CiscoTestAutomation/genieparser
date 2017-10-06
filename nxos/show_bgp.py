@@ -2985,7 +2985,7 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
             p3 = re.compile(r'^\s*Nexthop *: +(?P<nh>[a-zA-Z0-9\.\:]+),'
                              '( +Flags *: +(?P<flags>\w+),)?'
                              ' +Refcount *: +(?P<refcount>[0-9]+), +IGP'
-                             ' +cost *: +(?P<igp_cost>[0-9]+)$')
+                             ' +cost *: +(?P<igp_cost>[0-9\-]+)$')
             m = p3.match(line)
             if m:
                 nexthop = m.groupdict()['nh']
@@ -6121,7 +6121,7 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
             # d e 2.3.1.0/24       19.0.102.3                38   00:09:36 00:01:40 35/30/10
             p4 = re.compile(r'^(?P<best>[\*])?(?P<status>\w+)'
                              ' +(?P<pathtype>[e|i])'
-                             ' +(?P<network>[\w\/\.\:]+)'
+                             ' +(?P<network>\S+)'
                              ' +(?P<peer>[\w\/\.\:]+)'
                              ' +(?P<flaps>\d+)'
                              ' +(?P<duration>[\w\:\.]+)'
@@ -6301,6 +6301,12 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
                         # ipv6prefix>2001::/112</ipv6prefix>
                         try:
                             network = prefix_root.find('{}ipv6prefix'.format(namespace)).text
+                        except:
+                            pass
+
+                        # <nonipprefix>[2]:[0]:[0]:[48]:[0201.0201.0201]:[32]:[2.7.1.1]/248</nonipprefix>
+                        try:
+                            network = prefix_root.find('{}nonipprefix'.format(namespace)).text
                         except:
                             pass
                            
@@ -6756,6 +6762,7 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
                 sub_dict['rr_configured'] = False
                 sub_dict['peer_as_check_disabled'] = False
                 sub_dict['as_override'] = False
+                sub_dict['default_originate'] = False
                 continue
 
             # Condition-map DENY_ALL_RM, Advertise-map BLOCK-ALL, Status Advertise
@@ -6767,6 +6774,13 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
                 sub_dict['condition_map'] = m.groupdict()['con_map']
                 sub_dict['advertise_map'] = m.groupdict()['adv_map']
                 sub_dict['advertise_map_status'] = m.groupdict()['status'].lower()
+                continue
+
+            # Inbound soft reconfiguration allowed(always)
+            p25 = re.compile(r'^Inbound +soft +reconfiguration +allowed\(always\)$')
+            m = p25.match(line)
+            if m:
+                sub_dict['in_soft_reconfig_allowed'] = True
                 continue
 
             # Community attribute sent to this neighbor

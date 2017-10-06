@@ -295,6 +295,7 @@ class ShowIpOspfNeighborDetailSchema(MetaParser):
                 {Any():
                      {'neighbor': str,
                       'interface_address': str,
+                      Optional('interface_id'): str,
                       'area': str,
                       'state': str,
                       'state_changes': str,
@@ -330,11 +331,13 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema, MetaParser):
         entry = None
         for line in out.splitlines():
             line = line.rstrip()
-            p1 = re.compile(r'^\s*Neighbor\s+(?P<neighbor>\S+),\s*interface\s+address\s+(?P<interface_address>\S+)(,)?(\s)?(interface-id unknown)?$')
+            p1 = re.compile(r'^\s*Neighbor\s+(?P<neighbor>\S+),\s*interface\s+address\s+(?P<interface_address>\S+)(,)?(\s)?'
+                             '(interface-id +(?P<interface_id>\w+))?$')
             m = p1.match(line)
             if m:
                 interface_address = m.groupdict()['interface_address']
                 neighbor = m.groupdict()['neighbor']
+                interface_id = m.groupdict()['interface_id']
 
             p2 = re.compile(r'^\s*In\s+the\s+area\s+(?P<area>\S+)\s+via\s+interface\s+(?P<interface>\S+)$')
             m = p2.match(line)
@@ -347,6 +350,8 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema, MetaParser):
                 ospf_neigh_dict['intf'][intf]['area'] = m.groupdict()['area']
                 ospf_neigh_dict['intf'][intf]['interface_address'] = interface_address
                 ospf_neigh_dict['intf'][intf]['neighbor'] = neighbor
+                if interface_id and 'unknwon' not in interface_id:
+                    ospf_neigh_dict['intf'][intf]['interface_id'] = interface_id
                 continue
 
             # Neighbor priority is 0, State is 2WAY, 2 state changes
