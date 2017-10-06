@@ -1476,8 +1476,8 @@ Switch#   Role        Priority      State
 
     golden_parsed_output_c3850 = {
                                     'main': {
-                                        'switch_mac_address': '0057.d21b.cc00 - Local Mac Address',
-                                        'mac_persistency_wait_time': 'Indefinite',
+                                        'switch_mac_address': '0057.d21b.cc00',
+                                        'mac_persistency_wait_time': 'indefinite',
                                     },
                                     'slot': {
                                         '1': {
@@ -1678,18 +1678,6 @@ Switch#   Role        Priority      State
                                                 }
                                             }
                                         },
-                                       '4': {
-                                            'other': {
-                                                '': {
-                                                    'slot': '4',
-                                                    'name': '',
-                                                    'state': 'unknown',
-                                                    'insert_time': '2d00h',
-                                                    'cpld_ver': 'N/A',
-                                                    'fw_ver': 'N/A',
-                                                }
-                                            }
-                                        },
                                         'R0': {
                                             'rp': {
                                                 'ASR1000-RP2': {
@@ -1746,6 +1734,18 @@ Switch#   Role        Priority      State
                                                 }
                                             }
                                         },
+                                        '4': {
+                                            'other': {
+                                                '': {
+                                                    'slot': '4',
+                                                    'name': '',
+                                                    'state': 'unknown',
+                                                    'insert_time': '2d00h',
+                                                    'cpld_ver': 'N/A',
+                                                    'fw_ver': 'N/A',
+                                                }
+                                            }
+                                        },
                                     }
                                 }
 
@@ -1784,14 +1784,13 @@ F0        08041102            16.2(1r)
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         platform_obj = ShowPlatform(device=self.dev1)
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(SchemaEmptyParserError):
             parsed_output = platform_obj.parse()
 
     def test_semi_empty(self):
         self.dev2 = Mock(**self.semi_empty_output)
         platform_obj = ShowPlatform(device=self.dev2)
-        # with self.assertRaises(SchemaMissingKeyError):
-        with self.assertRaises(Exception):
+        with self.assertRaises(SchemaEmptyParserError):
             parsed_output = platform_obj.parse()       
 
     def test_golden_c3850(self):
