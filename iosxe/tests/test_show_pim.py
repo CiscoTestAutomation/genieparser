@@ -547,8 +547,8 @@ class test_show_ip_pim_interface(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output_interface_2)
 
 # ============================================
-# unit test for 'show ip pim interface'
-# unit test for 'show ip pim vrf xxx interface'
+# unit test for 'show ip pim mapping'
+# unit test for 'show ip pim vrf xxx mapping'
 # ============================================
 class test_show_ip_pim_rp_mapping(unittest.TestCase):
 
@@ -558,66 +558,90 @@ class test_show_ip_pim_rp_mapping(unittest.TestCase):
     golden_parsed_output_mapping_1 = {
         'vrf':
             {
-                'default':
+            'default':
+                {
+                'address_family':
                     {
-                        'address_family':
-                            {
-                              'ipv4':
-                                  {
-                                    'rp':
-                                         {
-                                            'rp_mappings': {
-                                                '224.0.0.0/4 3.3.3.3 bootstrap': {
-                                                  'group': '224.0.0.0/4',
-                                                  'rp_address': '3.3.3.3',
-                                                  'rp_address_host': '?',
-                                                  'rp_version': 'v2',
-                                                  'up_time': '00:00:19',
-                                                  'expiration': '00:02:19',
-                                                  'priority': 5,
-                                                  'hold_time': 150,
-                                                  'info_source': '4.4.4.4',
-                                                  'protocol': 'bootstrap',
-                                                },
-                                                '224.0.0.0/4 2.2.2.2 bootstrap': {
-                                                    'group': '224.0.0.0/4',
-                                                    'rp_address': '2.2.2.2',
-                                                    'rp_address_host': '?',
-                                                    'rp_version': 'v2',
-                                                    'up_time': '00:00:35',
-                                                    'expiration': '00:02:03',
-                                                    'priority': 10,
-                                                    'hold_time': 150,
-                                                    'info_source': '4.4.4.4',
-                                                    'protocol': 'bootstrap',
-                                                },
-                                                '224.0.0.0/4 3.3.3.3 static': {
-                                                    'group': '224.0.0.0/4',
-                                                    'rp_address_host': '?',
-                                                    'rp_address': '3.3.3.3',
-                                                    'protocol': 'static',
-                                                },
-                                                '224.0.0.0/4 20.0.0.3 autorp': {
-                                                    'group': '224.0.0.0/4',
-                                                    'rp_address_host': '?',
-                                                    'rp_version': 'v2v1',
-                                                    'rp_address': '20.0.0.3',
-                                                    'up_time': '00:22:08',
-                                                    'expiration': '00:02:40',
-                                                    'info_source': '20.0.0.2',
-                                                    'protocol': 'autorp',
-                                                },
+                      'ipv4':
+                          {
+                            'rp':
+                                {
+                                'rp_mappings': {
+                                    '224.0.0.0/4 3.3.3.3 bootstrap': {
+                                      'group': '224.0.0.0/4',
+                                      'rp_address': '3.3.3.3',
+                                      'rp_address_host': '?',
+                                      'up_time': '00:00:19',
+                                      'expiration': '00:02:19',
+                                      'priority': 5,
+                                      'hold_time': 150,
+                                      'protocol': 'bootstrap',
+                                    },
+                                    '224.0.0.0/4 2.2.2.2 bootstrap': {
+                                        'group': '224.0.0.0/4',
+                                        'rp_address': '2.2.2.2',
+                                        'rp_address_host': '?',
+                                        'up_time': '00:00:35',
+                                        'expiration': '00:02:03',
+                                        'priority': 10,
+                                        'hold_time': 150,
+                                        'protocol': 'bootstrap',
+                                    },
+                                    '224.0.0.0/4 3.3.3.3 static': {
+                                        'group': '224.0.0.0/4',
+                                        'rp_address_host': '?',
+                                        'rp_address': '3.3.3.3',
+                                        'protocol': 'static',
+                                    },
+                                    '224.0.0.0/4 20.0.0.3 autorp': {
+                                        'group': '224.0.0.0/4',
+                                        'rp_address_host': '?',
+                                        'rp_address': '20.0.0.3',
+                                        'up_time': '00:22:08',
+                                        'expiration': '00:02:40',
+                                        'protocol': 'autorp',
+                                    },
 
-                                            },
+                                },
+                                 'rp_list': {
+                                    '3.3.3.3 bootstrap': {
+                                          'address': '3.3.3.3',
+                                          'up_time': '00:00:19',
+                                          'expiration': '00:02:19',
+                                          'bsr_version':'v2',
+                                          'info_source_type': "bootstrap",
+                                          "info_source_address": "4.4.4.4",
+                                          },
+                                     '3.3.3.3 static': {
+                                         'address': '3.3.3.3',
+                                         "info_source_type": "static",
+                                     },
+                                     '2.2.2.2 bootstrap': {
+                                         'address': '2.2.2.2',
+                                         'bsr_version': 'v2',
+                                         'up_time': '00:00:35',
+                                         'expiration': '00:02:03',
+                                         "info_source_type": "bootstrap",
+                                         "info_source_address": "4.4.4.4",
+                                     },
+                                     '20.0.0.3 autorp': {
+                                         'address': '20.0.0.3',
+                                         'bsr_version': 'v2v1',
+                                         'up_time': '00:22:08',
+                                         'expiration': '00:02:40',
+                                         "info_source_type": "autorp",
+                                         'info_source_address': '20.0.0.2',
                                         },
+                                    },
+                                },
 
-                                  },
                             },
+                        },
 
                     },
-            },
+                },
 
-    }
+            }
     golden_output_mapping_1 = {'execute.return_value': '''
     R1_xe#show ip pim rp mapping
     PIM Group-to-RP Mappings
@@ -656,13 +680,18 @@ class test_show_ip_pim_rp_mapping(unittest.TestCase):
                                     'protocol': 'static',
                                     },
                                 },
+                            'rp_list': {
+                                '10.1.5.5 static': {
+                                      'address': '10.1.5.5',
+                                      'info_source_type': 'static',
+                                      },
+                                },
                             },
-
                         },
                     },
                 },
             },
-    }
+        }
 
     golden_output_mapping_2 = {'execute.return_value':'''
     R1_xe#show ip pim vrf VRF1 rp mapping
@@ -672,11 +701,18 @@ class test_show_ip_pim_rp_mapping(unittest.TestCase):
             RP: 10.1.5.5 (?)
     '''}
 
+    golden_output_mapping_3 = {'execute.return_value': '''
+        R1_xe#show ip pim vrf VRF1 rp mapping
+            PIM Group-to-RP Mappings
+            % DDDDD
+            '''
+    }
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpPimRpMapping(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
 
     def test_golden_mapping_1(self):
         self.maxDiff = None
@@ -691,6 +727,12 @@ class test_show_ip_pim_rp_mapping(unittest.TestCase):
         obj = ShowIpPimRpMapping(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output,self.golden_parsed_output_mapping_2)
+
+    def test_empty_nodata(self):
+        self.device = Mock(**self.golden_output_mapping_3)
+        obj = ShowIpPimRpMapping(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
 if __name__ == '__main__':
     unittest.main()
