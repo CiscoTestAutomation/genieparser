@@ -682,6 +682,51 @@ class test_show_ip_pim_bsr_router(unittest.TestCase):
                 Candidate RP priority : 10
     '''}
 
+    golden_parsed_output_bsr_4 = {
+        'vrf':
+            {'VRF1':
+                {
+                    'address_family':
+                        {'ipv4':
+                            {'rp':
+                                {'bsr':
+                                    {'GigabitEthernet0/2': {
+                                        'interface': 'GigabitEthernet0/2',
+                                        'address': '10.4.6.4',
+                                        'holdtime': 150,
+                                        'next_advertisment': '00:00:00',
+                                        'priority': 5,
+                                        'interval': 60,
+                                    },
+                                    'bsr': {
+                                        'address': '10.4.6.6',
+                                        'hash_mask_length': 0,
+                                        'priority': 0,
+                                        'address_host': '?',
+                                        'up_time': '4d03h',
+                                        'expires': '00:02:00',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+    }
+
+    golden_output_bsr_4 = {'execute.return_value':'''
+            R4_iosv#show ip pim vrf VRF1 bsr-router
+        PIMv2 Bootstrap information
+          BSR address: 10.4.6.6 (?)
+          Uptime:      4d03h, BSR Priority: 0, Hash mask length: 0
+          Expires:     00:02:00
+          Candidate RP: 10.4.6.4(GigabitEthernet0/2)
+            Holdtime 150 seconds
+            Advertisement interval 60 seconds
+            Next advertisement in 00:00:00
+            Candidate RP priority : 5
+        '''
+    }
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpPimBsrRouter(device=self.device)
@@ -709,5 +754,11 @@ class test_show_ip_pim_bsr_router(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_bsr_3)
 
+    def test_golden_bsr_router_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_bsr_4)
+        obj = ShowIpPimBsrRouter(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_bsr_4)
 if __name__ == '__main__':
     unittest.main()

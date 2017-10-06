@@ -447,8 +447,6 @@ class ShowIpv6PimBsrCandidateRp(ShowIpv6PimBsrCandidateRpSchema):
 
         return ret_dict
 
-
-
 # ==============================================
 #  show ip pim interface
 #  show ip pim vrf <vrf_name> interface
@@ -561,140 +559,6 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
                 continue
 
         return ret_dict
-
-# ==============================================
-#  show ipv6 pim bsr candidate-rp
-#  show ipv6 pim vrf <vrf_name> bsr candidate-rp
-# ==============================================
-class ShowIpv6PimBsrCandidateRpSchema(MetaParser):
-    # show ipv6 pim bsr candidate-rp
-    # show ipv6 pim vrf <vrf_name> bsr candidate-rp
-    schema = {
-        'vrf': {
-            Any(): {
-                'address_family': {
-                    Any(): {
-                        'rp': {
-                            'bsr': {
-                                Any(): {
-                                    Optional('address'): str,
-                                    Optional('holdtime'): int,
-                                    Optional('priority'): int,
-                                    Optional('mode'): str,
-                                    Optional('interval'): int,
-                                },
-                                Optional('rp_candidate_next_advertisement'): str,
-                            },
-                        },
-                    },
-                },
-            },
-        }
-    }
-
-class ShowIpv6PimBsrCandidateRp(ShowIpv6PimBsrCandidateRpSchema):
-        # Parser for 'show ipv6 pim bsr candidate-rp'
-        # Parser for 'show ipv6 pim vrf <vrf_name> bsr candidate-rp'
-
-        def cli(self, vrf=""):
-
-            # find cmd
-            if vrf:
-                cmd = 'show ipv6 pim vrf {} bsr candidate-rp'.format(vrf)
-            else:
-                cmd = 'show ipv6 pim bsr candidate-rp'
-                vrf = 'default'
-
-            # initial variables
-            ret_dict = {}
-            af_name = 'ipv6'
-            address = priority = holdtime = interval = mode = ""
-            next_advertisement = ""
-
-            # execute command to get output
-            out = self.device.execute(cmd)
-
-            for line in out.splitlines():
-                line = line.strip()
-
-                # PIMv2 C-RP information
-                # Candidate RP: 2001:3:3:3::3 SM
-                p1 = re.compile(r'^\s*Candidate RP: +(?P<candidate_rp_address>[\w\:\.]+)'
-                                ' +(?P<mode>\w+)$')
-                m = p1.match(line)
-                if m:
-                    address = m.groupdict()['candidate_rp_address']
-                    mode = m.groupdict()['mode']
-                    continue
-
-                # Priority 5, Holdtime 150
-                p2 = re.compile(r'^\s*Priority +(?P<priority>\d+)'
-                                ', +Holdtime +(?P<holdtime>\d+)$')
-                m = p2.match(line)
-                if m:
-                    priority = int(m.groupdict()['priority'])
-                    holdtime = int(m.groupdict()['holdtime'])
-                    continue
-
-                # Advertisement interval 60 seconds
-                p3 = re.compile(r'^\s*Advertisement +interval +(?P<interval>\d+) +seconds$')
-                m = p3.match(line)
-                if m:
-                    interval = int(m.groupdict()['interval'])
-                    continue
-
-                # Next advertisement in 00:00:48
-                p4 = re.compile(r'^\s*Next +advertisement +in +(?P<next_advertisement>[\d\:]+)$')
-                m = p4.match(line)
-                if m:
-                    next_advertisement = m.groupdict()['next_advertisement']
-                    continue
-
-                if address:
-                    if 'vrf' not in ret_dict:
-                        ret_dict['vrf'] = {}
-                    if vrf not in ret_dict['vrf']:
-                        ret_dict['vrf'][vrf] = {}
-                    if 'address_family' not in ret_dict['vrf'][vrf]:
-                        ret_dict['vrf'][vrf]['address_family'] = {}
-                    if af_name not in ret_dict['vrf'][vrf]['address_family']:
-                        ret_dict['vrf'][vrf]['address_family'][af_name] = {}
-                    if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
-                        ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] = {}
-                    if 'bsr' not in ret_dict['vrf'][vrf]['address_family'] \
-                            [af_name]['rp']:
-                        ret_dict['vrf'][vrf]['address_family'][af_name] \
-                            ['rp']['bsr'] = {}
-                    if address not in ret_dict['vrf'][vrf]['address_family'] \
-                            [af_name]['rp']['bsr']:
-                        ret_dict['vrf'][vrf]['address_family'][af_name] \
-                            ['rp']['bsr'][address] = {}
-
-                    ret_dict['vrf'][vrf]['address_family'][af_name] \
-                        ['rp']['bsr'][address]['address'] = address
-
-                    if mode:
-                        ret_dict['vrf'][vrf]['address_family'][af_name] \
-                            ['rp']['bsr'][address]['mode'] = mode
-
-                    if priority is not None:
-                        ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
-                            [address]['priority'] = priority
-
-                    if holdtime is not None:
-                        ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
-                            [address]['holdtime'] = holdtime
-
-                    if interval:
-                        ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
-                            [address]['interval'] = interval
-                    if next_advertisement:
-                        ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
-                            ['rp_candidate_next_advertisement'] = next_advertisement
-
-                continue
-
-            return ret_dict
 
 # ==============================================
 #  show ip pim interface
@@ -1007,13 +871,12 @@ class ShowIpPimBsrRouter(ShowIpPimBsrRouterSchema):
 
             #  Candidate RP: 10.1.5.1(GigabitEthernet3)
             p5 = re.compile(r'^\s*Candidate +RP:'
-                            ' +(?P<rp_can_address>[\w\d\.\:]+)\((?P<rp_can_interface>[\w\d]+)\)$')
+                            ' +(?P<rp_can_address>[\w\d\.\:]+)\((?P<rp_can_interface>[\w\d\S]+)\)$')
 
             m = p5.match(line)
             if m:
                 rp_can_address = m.groupdict()['rp_can_address']
                 rp_can_interface = m.groupdict()['rp_can_interface']
-                continue
 
             # Holdtime 150 seconds
             p6 = re.compile(r'^\s*Holdtime'
@@ -1021,7 +884,6 @@ class ShowIpPimBsrRouter(ShowIpPimBsrRouterSchema):
             m = p6.match(line)
             if m:
                 rp_can_holdtime = int(m.groupdict()['holdtime'])
-                continue
 
             # Advertisement interval 60 seconds
             p7 = re.compile(r'^\s*Advertisement +interval'
@@ -1029,7 +891,6 @@ class ShowIpPimBsrRouter(ShowIpPimBsrRouterSchema):
             m = p7.match(line)
             if m:
                 rp_can_interval = int(m.groupdict()['interval'])
-                continue
 
             # Next advertisement in 00:00:27
             p8 = re.compile(r'^\s*Next +advertisement +in'
@@ -1037,7 +898,6 @@ class ShowIpPimBsrRouter(ShowIpPimBsrRouterSchema):
             m = p8.match(line)
             if m:
                 rp_can_next_advertisment = m.groupdict()['next_advertisment']
-                continue
 
             # Candidate RP priority : 5
             p9 = re.compile(r'^\s*Candidate +RP +priority +:'
@@ -1045,7 +905,7 @@ class ShowIpPimBsrRouter(ShowIpPimBsrRouterSchema):
             m = p9.match(line)
             if m:
                 rp_can_priority = int(m.groupdict()['rp_can_priority'])
-                continue
+
 
             if rp_can_address or rp_can_interface:
                 if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
