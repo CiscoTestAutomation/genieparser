@@ -14144,298 +14144,459 @@ class test_show_bgp_all_dampening_flap_statistics_cli(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-      "vrf": {
-          "default": {
-               "address_family": {
-                    "ipv6 multicast": {
-                         "history_paths": 0,
-                         "dampened_paths": 0,
-                         'dampening_enabled': True
-                    },
-                    "vpnv4 unicast": {
-                         "route_identifier": {
-                              "101:100": {
-                                   "history_paths": 0,
-                                   "dampened_paths": 2,
-                                   'dampening_enabled': True
-                              },
-                              "0:0": {
-                                   "history_paths": 0,
-                                   "network": {
-                                        "2.3.2.0/24": {
-                                             "reuse_limit": 10,
-                                             "suppress_limit": 30,
-                                             "flaps": 38,
-                                             "reuse_time": "00:01:40",
-                                             "pathtype": 'e',
-                                             "status": 'd',
-                                             "best": False,
-                                             "peer": "19.0.102.3",
-                                             "duration": "00:09:36",
-                                             "current_penalty": 35
-                                        },
-                                        "2.3.1.0/24": {
-                                             "reuse_limit": 10,
-                                             "suppress_limit": 30,
-                                             "flaps": 38,
-                                             "reuse_time": "00:01:40",
-                                             "pathtype": 'e',
-                                             "status": 'd',
-                                             "best": False,
-                                             "peer": "19.0.102.3",
-                                             "duration": "00:09:36",
-                                             "current_penalty": 35
-                                        }
-                                   },
-                                   "dampened_paths": 2,
-                                   'dampening_enabled': True
-                              },
-                              "102:100": {
-                                   "history_paths": 0,
-                                   "dampened_paths": 2,
-                                   'dampening_enabled': True
-                              }
-                         },
-                         "history_paths": 0,
-                         "dampened_paths": 2,
-                         'dampening_enabled': True
-                    },
-                    "ipv4 unicast": {
-                         "history_paths": 0,
-                         "network": {
-                              "2.0.1.0/24": {
-                                   "reuse_limit": 10,
-                                   "suppress_limit": 30,
-                                   "flaps": 38,
-                                   "reuse_time": "00:01:40",
-                                   "pathtype": 'e',
-                                   "status": 'd',
-                                   "best": False,
-                                   "peer": "19.0.102.3",
-                                   "duration": "00:09:36",
-                                   "current_penalty": 34
-                              },
-                              "2.0.0.0/24": {
-                                   "reuse_limit": 10,
-                                   "suppress_limit": 30,
-                                   "flaps": 38,
-                                   "reuse_time": "00:01:40",
-                                   "pathtype": 'e',
-                                   "status": 'd',
-                                   "best": False,
-                                   "peer": "19.0.102.3",
-                                   "duration": "00:09:36",
-                                   "current_penalty": 34
-                              }
-                         },
-                         "dampened_paths": 2,
-                         'dampening_enabled': True
-                    },
-                    "ipv4 multicast": {
-                         "history_paths": 0,
-                         "network": {
-                              "2.1.1.0/24": {
-                                   "reuse_limit": 10,
-                                   "suppress_limit": 30,
-                                   "flaps": 38,
-                                   "reuse_time": "00:01:40",
-                                   "pathtype": 'e',
-                                   "status": 'd',
-                                   "best": False,
-                                   "peer": "19.0.102.3",
-                                   "duration": "00:09:36",
-                                   "current_penalty": 34
-                              },
-                              "2.1.0.0/24": {
-                                   "reuse_limit": 10,
-                                   "suppress_limit": 30,
-                                   "flaps": 38,
-                                   "reuse_time": "00:01:40",
-                                   "pathtype": 'e',
-                                   "status": 'd',
-                                   "best": False,
-                                   "peer": "19.0.102.3",
-                                   "duration": "00:09:36",
-                                   "current_penalty": 34
-                              }
-                         },
-                         "dampened_paths": 2,
-                         'dampening_enabled': True
-                    },
-                    "vpnv6 unicast": {
-                         "route_identifier": {
-                              "100:200": {
-                                   "history_paths": 0,
-                                   "dampened_paths": 0,
-                                   'dampening_enabled': True
-                              },
-                              "0xbb00010000000000": {
-                                   "history_paths": 0,
-                                   "dampened_paths": 0,
-                                   'dampening_enabled': True
-                              }
-                         },
-                         "history_paths": 0,
-                         "dampened_paths": 0,
-                         'dampening_enabled': True
-                    },
-                    "link-state": {
-                         "history_paths": 0,
-                         "network": {
-                              "[2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/616": {
-                                   "reuse_limit": 10,
-                                   "suppress_limit": 30,
-                                   "flaps": 38,
-                                   "reuse_time": "00:01:40",
-                                   "pathtype": 'e',
-                                   "status": 'd',
-                                   "best": False,
-                                   "peer": "19.0.102.3",
-                                   "duration": "00:09:36",
-                                   "current_penalty": 34
-                              },
-                              "[2]:[77][7,0][39.39.39.39,1,656877351][39.1.1.1,22][19.0.102.3,39.0.1.30]/616": {
-                                   "reuse_limit": 10,
-                                   "suppress_limit": 30,
-                                   "flaps": 38,
-                                   "reuse_time": "00:01:40",
-                                   "pathtype": 'e',
-                                   "status": 'd',
-                                   "best": False,
-                                   "peer": "19.0.102.3",
-                                   "duration": "00:09:36",
-                                   "current_penalty": 34
-                              }
-                         },
-                         "dampened_paths": 2,
-                         'dampening_enabled': True
-                    },
-                    "ipv6 unicast": {
-                         "history_paths": 0,
-                         'dampening_enabled': True,
-                         "network": {
-                              "2001::/112": {
-                                   "reuse_limit": 10,
-                                   "suppress_limit": 30,
-                                   "flaps": 38,
-                                   "reuse_time": "00:01:40",
-                                   "pathtype": 'e',
-                                   "status": 'd',
-                                   "peer": "fec0::2002",
-                                   "best": False,
-                                   "duration": "00:09:36",
-                                   "current_penalty": 34
-                              },
-                              "2001::1:0/112": {
-                                   "reuse_limit": 10,
-                                   "suppress_limit": 30,
-                                   "flaps": 38,
-                                   "reuse_time": "00:01:40",
-                                   "pathtype": 'e',
-                                   "status": 'd',
-                                   "best": False,
-                                   "peer": "fec0::2002",
-                                   "duration": "00:09:36",
-                                   "current_penalty": 34
-                              }
-                         },
-                         "dampened_paths": 2}}}}}
+        "vrf": {
+              "default": {
+                   "address_family": {
+                        "l2vpn evpn": {
+                             "dampening_enabled": True,
+                             "route_identifier": {
+                                  "2.2.2.101:1002": {
+                                       "dampening_enabled": True,
+                                       "dampened_paths": 4,
+                                       "history_paths": 0
+                                  },
+                                  "101:1000": {
+                                       "dampening_enabled": True,
+                                       "dampened_paths": 4,
+                                       "history_paths": 0
+                                  },
+                                  "101:10001": {
+                                       "dampening_enabled": True,
+                                       "dampened_paths": 4,
+                                       "history_paths": 0
+                                  },
+                                  "101:1001": {
+                                       "dampening_enabled": True,
+                                       "dampened_paths": 4,
+                                       "history_paths": 0
+                                  },
+                                  "201:2000": {
+                                       "dampening_enabled": True,
+                                       "network": {
+                                            "[2]:[0]:[0]:[48]:[0201.0201.0202]:[32]:[2.7.1.2]/248": {
+                                                 "duration": "00:20:58",
+                                                 "peer": "19.0.102.3",
+                                                 "best": False,
+                                                 "suppress_limit": 30,
+                                                 "pathtype": "e",
+                                                 "status": "d",
+                                                 "current_penalty": 35,
+                                                 "flaps": 84,
+                                                 "reuse_limit": 10,
+                                                 "reuse_time": "00:01:50"
+                                            },
+                                            "[5]:[0]:[0]:[24]:[2.8.1.0]:[0.0.0.0]/224": {
+                                                 "duration": "00:20:58",
+                                                 "peer": "19.0.102.3",
+                                                 "best": False,
+                                                 "suppress_limit": 30,
+                                                 "pathtype": "e",
+                                                 "status": "d",
+                                                 "current_penalty": 35,
+                                                 "flaps": 84,
+                                                 "reuse_limit": 10,
+                                                 "reuse_time": "00:01:50"
+                                            },
+                                            "[5]:[0]:[0]:[24]:[2.8.2.0]:[0.0.0.0]/224": {
+                                                 "duration": "00:20:58",
+                                                 "peer": "19.0.102.3",
+                                                 "best": False,
+                                                 "suppress_limit": 30,
+                                                 "pathtype": "e",
+                                                 "status": "d",
+                                                 "current_penalty": 35,
+                                                 "flaps": 84,
+                                                 "reuse_limit": 10,
+                                                 "reuse_time": "00:01:50"
+                                            },
+                                            "[2]:[0]:[0]:[48]:[0201.0201.0201]:[32]:[2.7.1.1]/248": {
+                                                 "duration": "00:20:58",
+                                                 "peer": "19.0.102.3",
+                                                 "best": False,
+                                                 "suppress_limit": 30,
+                                                 "pathtype": "e",
+                                                 "status": "d",
+                                                 "current_penalty": 35,
+                                                 "flaps": 84,
+                                                 "reuse_limit": 10,
+                                                 "reuse_time": "00:01:50"
+                                            }
+                                       },
+                                       "dampened_paths": 4,
+                                       "history_paths": 0
+                                  }
+                             },
+                             "dampened_paths": 4,
+                             "history_paths": 0
+                        },
+                        "ipv6 multicast": {
+                             "dampening_enabled": True,
+                             "network": {
+                                  "3100::/112": {
+                                       "duration": "00:21:00",
+                                       "peer": "fec0::2002",
+                                       "best": False,
+                                       "suppress_limit": 30,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "current_penalty": 34,
+                                       "flaps": 84,
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:50"
+                                  },
+                                  "3100::1:0/112": {
+                                       "duration": "00:21:00",
+                                       "peer": "fec0::2002",
+                                       "best": False,
+                                       "suppress_limit": 30,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "current_penalty": 34,
+                                       "flaps": 84,
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:50"
+                                  }
+                             },
+                             "dampened_paths": 2,
+                             "history_paths": 0
+                        },
+                        "vpnv4 unicast": {
+                             "dampening_enabled": True,
+                             "route_identifier": {
+                                  "101:100": {
+                                       "dampening_enabled": True,
+                                       "dampened_paths": 2,
+                                       "history_paths": 0
+                                  },
+                                  "0:0": {
+                                       "dampening_enabled": True,
+                                       "network": {
+                                            "2.3.2.0/24": {
+                                                 "duration": "00:20:58",
+                                                 "peer": "19.0.102.3",
+                                                 "best": False,
+                                                 "suppress_limit": 30,
+                                                 "pathtype": "e",
+                                                 "status": "d",
+                                                 "current_penalty": 35,
+                                                 "flaps": 84,
+                                                 "reuse_limit": 10,
+                                                 "reuse_time": "00:01:50"
+                                            },
+                                            "2.3.1.0/24": {
+                                                 "duration": "00:20:58",
+                                                 "peer": "19.0.102.3",
+                                                 "best": False,
+                                                 "suppress_limit": 30,
+                                                 "pathtype": "e",
+                                                 "status": "d",
+                                                 "current_penalty": 35,
+                                                 "flaps": 84,
+                                                 "reuse_limit": 10,
+                                                 "reuse_time": "00:01:50"
+                                            }
+                                       },
+                                       "dampened_paths": 2,
+                                       "history_paths": 0
+                                  },
+                                  "102:100": {
+                                       "dampening_enabled": True,
+                                       "dampened_paths": 2,
+                                       "history_paths": 0
+                                  }
+                             },
+                             "dampened_paths": 2,
+                             "history_paths": 0
+                        },
+                        "ipv6 unicast": {
+                             "dampening_enabled": True,
+                             "network": {
+                                  "2001::/112": {
+                                       "duration": "00:21:00",
+                                       "peer": "fec0::2002",
+                                       "best": False,
+                                       "suppress_limit": 30,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "current_penalty": 34,
+                                       "flaps": 84,
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:50"
+                                  },
+                                  "2001::1:0/112": {
+                                       "duration": "00:21:00",
+                                       "peer": "fec0::2002",
+                                       "best": False,
+                                       "suppress_limit": 30,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "current_penalty": 34,
+                                       "flaps": 84,
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:50"
+                                  }
+                             },
+                             "dampened_paths": 2,
+                             "history_paths": 0
+                        },
+                        "ipv4 multicast": {
+                             "dampening_enabled": True,
+                             "network": {
+                                  "2.1.1.0/24": {
+                                       "duration": "00:20:58",
+                                       "peer": "19.0.102.3",
+                                       "best": False,
+                                       "suppress_limit": 30,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "current_penalty": 35,
+                                       "flaps": 84,
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:50"
+                                  },
+                                  "2.1.0.0/24": {
+                                       "duration": "00:20:58",
+                                       "peer": "19.0.102.3",
+                                       "best": False,
+                                       "suppress_limit": 30,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "current_penalty": 35,
+                                       "flaps": 84,
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:50"
+                                  }
+                             },
+                             "dampened_paths": 2,
+                             "history_paths": 0
+                        },
+                        "ipv4 unicast": {
+                             "dampening_enabled": True,
+                             "network": {
+                                  "2.0.0.0/24": {
+                                       "duration": "00:20:58",
+                                       "peer": "19.0.102.3",
+                                       "best": False,
+                                       "suppress_limit": 30,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "current_penalty": 35,
+                                       "flaps": 84,
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:50"
+                                  },
+                                  "2.0.1.0/24": {
+                                       "duration": "00:20:58",
+                                       "peer": "19.0.102.3",
+                                       "best": False,
+                                       "suppress_limit": 30,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "current_penalty": 35,
+                                       "flaps": 84,
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:50"
+                                  }
+                             },
+                             "dampened_paths": 2,
+                             "history_paths": 0
+                        },
+                        "vpnv6 unicast": {
+                             "dampening_enabled": True,
+                             "route_identifier": {
+                                  "0xbb00010000000000": {
+                                       "dampening_enabled": True,
+                                       "dampened_paths": 0,
+                                       "history_paths": 0
+                                  },
+                                  "100:200": {
+                                       "dampening_enabled": True,
+                                       "dampened_paths": 0,
+                                       "history_paths": 0
+                                  }
+                             },
+                             "dampened_paths": 0,
+                             "history_paths": 0
+                        },
+                        "link-state": {
+                             "dampening_enabled": True,
+                             "network": {
+                                  "[2]:[77][7,0][39.39.39.39,1,656877351][39.1.1.1,22][19.0.102.3,39.0.1.30]/616": {
+                                       "duration": "00:20:58",
+                                       "peer": "19.0.102.3",
+                                       "best": False,
+                                       "suppress_limit": 30,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "current_penalty": 35,
+                                       "flaps": 84,
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:50"
+                                  },
+                                  "[2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/616": {
+                                       "duration": "00:20:58",
+                                       "peer": "19.0.102.3",
+                                       "best": False,
+                                       "suppress_limit": 30,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "current_penalty": 35,
+                                       "flaps": 84,
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:50"
+                                  }
+                             },
+                             "dampened_paths": 2,
+                             "history_paths": 0
+                        }}}}}
 
     golden_output = {'execute.return_value': '''
-         Flap Statistics for VRF default, address family IPv4 Unicast:
-         Flaps - Flap count of prefix, Duration - Duration of flap statistics
-         ReuseTime - Time after which a dampened path will be reused
-         P - Current Penalty  S - Suppress Limit  R- Reuse Limit
-         Dampening configured, 0 history paths, 2 dampened paths
+        Flap Statistics for VRF default, address family IPv4 Unicast:
+        Flaps - Flap count of prefix, Duration - Duration of flap statistics
+        ReuseTime - Time after which a dampened path will be reused
+        P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+        Dampening configured, 0 history paths, 2 dampened paths
 
-             Network                Peer             Flaps Duration ReuseTime P / S / R
-         d e 2.0.0.0/24       19.0.102.3                38   00:09:36 00:01:40 34/30/10
-         d e 2.0.1.0/24       19.0.102.3                38   00:09:36 00:01:40 34/30/10
+            Network                 Peer              Flaps  Duration ReuseTime P / S / R
+        d e 2.0.0.0/24        19.0.102.3                84   00:20:58 00:01:50  35/30/10
+        d e 2.0.1.0/24        19.0.102.3                84   00:20:58 00:01:50  35/30/10
 
-         Flap Statistics for VRF default, address family IPv4 Multicast:
-         Flaps - Flap count of prefix, Duration - Duration of flap statistics
-         ReuseTime - Time after which a dampened path will be reused
-         P - Current Penalty  S - Suppress Limit  R- Reuse Limit
-         Dampening configured, 0 history paths, 2 dampened paths
+        Flap Statistics for VRF default, address family IPv4 Multicast:
+        Flaps - Flap count of prefix, Duration - Duration of flap statistics
+        ReuseTime - Time after which a dampened path will be reused
+        P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+        Dampening configured, 0 history paths, 2 dampened paths
 
-             Network                Peer             Flaps Duration ReuseTime P / S / R
-         d e 2.1.0.0/24       19.0.102.3                38   00:09:36 00:01:40 34/30/10
-         d e 2.1.1.0/24       19.0.102.3                38   00:09:36 00:01:40 34/30/10
+            Network                 Peer              Flaps  Duration ReuseTime P / S / R
+        d e 2.1.0.0/24        19.0.102.3                84   00:20:58 00:01:50  35/30/10
+        d e 2.1.1.0/24        19.0.102.3                84   00:20:58 00:01:50  35/30/10
 
-         Flap Statistics for VRF default, address family IPv6 Unicast:
-         Flaps - Flap count of prefix, Duration - Duration of flap statistics
-         ReuseTime - Time after which a dampened path will be reused
-         P - Current Penalty  S - Suppress Limit  R- Reuse Limit
-         Dampening configured, 0 history paths, 2 dampened paths
+        Flap Statistics for VRF default, address family IPv6 Unicast:
+        Flaps - Flap count of prefix, Duration - Duration of flap statistics
+        ReuseTime - Time after which a dampened path will be reused
+        P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+        Dampening configured, 0 history paths, 2 dampened paths
 
-             Network                Peer             Flaps Duration ReuseTime P / S / R
-         d e 2001::/112       fec0::2002                38   00:09:36 00:01:40 34/30/10
-         d e 2001::1:0/112    fec0::2002                38   00:09:36 00:01:40 34/30/10
+            Network                 Peer              Flaps  Duration ReuseTime P / S / R
+        d e 2001::/112        fec0::2002                84   00:21:00 00:01:50  34/30/10
+        d e 2001::1:0/112     fec0::2002                84   00:21:00 00:01:50  34/30/10
 
-         Flap Statistics for VRF default, address family IPv6 Multicast:
-         Flaps - Flap count of prefix, Duration - Duration of flap statistics
-         ReuseTime - Time after which a dampened path will be reused
-         P - Current Penalty  S - Suppress Limit  R- Reuse Limit
-         Dampening configured, 0 history paths, 0 dampened paths
+        Flap Statistics for VRF default, address family IPv6 Multicast:
+        Flaps - Flap count of prefix, Duration - Duration of flap statistics
+        ReuseTime - Time after which a dampened path will be reused
+        P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+        Dampening configured, 0 history paths, 2 dampened paths
 
-             Network                Peer             Flaps Duration ReuseTime P / S / R
+            Network                 Peer              Flaps  Duration ReuseTime P / S / R
+        d e 3100::/112        fec0::2002                84   00:21:00 00:01:50  34/30/10
+        d e 3100::1:0/112     fec0::2002                84   00:21:00 00:01:50  34/30/10
 
-         Flap Statistics for VRF default, address family VPNv4 Unicast:
-         Flaps - Flap count of prefix, Duration - Duration of flap statistics
-         ReuseTime - Time after which a dampened path will be reused
-         P - Current Penalty  S - Suppress Limit  R- Reuse Limit
-         Dampening configured, 0 history paths, 2 dampened paths
+        Flap Statistics for VRF default, address family VPNv4 Unicast:
+        Flaps - Flap count of prefix, Duration - Duration of flap statistics
+        ReuseTime - Time after which a dampened path will be reused
+        P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+        Dampening configured, 0 history paths, 2 dampened paths
 
-         Route Distinguisher: 0:0
-             Network                Peer             Flaps Duration ReuseTime P / S / R
-         d e 2.3.1.0/24       19.0.102.3                38   00:09:36 00:01:40 35/30/10
-         d e 2.3.2.0/24       19.0.102.3                38   00:09:36 00:01:40 35/30/10
+        Route Distinguisher: 0:0
+            Network                 Peer              Flaps  Duration ReuseTime P / S / R
+        d e 2.3.1.0/24        19.0.102.3                84   00:20:58 00:01:50  35/30/10
+        d e 2.3.2.0/24        19.0.102.3                84   00:20:58 00:01:50  35/30/10
 
-         Flap Statistics for VRF default, address family VPNv4 Unicast:
-         Flaps - Flap count of prefix, Duration - Duration of flap statistics
-         ReuseTime - Time after which a dampened path will be reused
-         P - Current Penalty  S - Suppress Limit  R- Reuse Limit
-         Dampening configured, 0 history paths, 2 dampened paths
+        Flap Statistics for VRF default, address family VPNv4 Unicast:
+        Flaps - Flap count of prefix, Duration - Duration of flap statistics
+        ReuseTime - Time after which a dampened path will be reused
+        P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+        Dampening configured, 0 history paths, 2 dampened paths
 
-         Route Distinguisher: 101:100
-             Network                Peer             Flaps Duration ReuseTime P / S / R
+        Route Distinguisher: 101:100
+            Network                 Peer              Flaps  Duration ReuseTime P / S / R
 
-         Flap Statistics for VRF default, address family VPNv4 Unicast:
-         Flaps - Flap count of prefix, Duration - Duration of flap statistics
-         ReuseTime - Time after which a dampened path will be reused
-         P - Current Penalty  S - Suppress Limit  R- Reuse Limit
-         Dampening configured, 0 history paths, 2 dampened paths
+        Flap Statistics for VRF default, address family VPNv4 Unicast:
+        Flaps - Flap count of prefix, Duration - Duration of flap statistics
+        ReuseTime - Time after which a dampened path will be reused
+        P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+        Dampening configured, 0 history paths, 2 dampened paths
 
-         Route Distinguisher: 102:100
-             Network                Peer             Flaps Duration ReuseTime P / S / R
+        Route Distinguisher: 102:100
+            Network                 Peer              Flaps  Duration ReuseTime P / S / R
 
-         Flap Statistics for VRF default, address family VPNv6 Unicast:
-         Flaps - Flap count of prefix, Duration - Duration of flap statistics
-         ReuseTime - Time after which a dampened path will be reused
-         P - Current Penalty  S - Suppress Limit  R- Reuse Limit
-         Dampening configured, 0 history paths, 0 dampened paths
+        Flap Statistics for VRF default, address family VPNv6 Unicast:
+        Flaps - Flap count of prefix, Duration - Duration of flap statistics
+        ReuseTime - Time after which a dampened path will be reused
+        P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+        Dampening configured, 0 history paths, 0 dampened paths
 
-         Route Distinguisher: 100:200
-             Network                Peer             Flaps Duration ReuseTime P / S / R
+        Route Distinguisher: 100:200
+            Network                 Peer              Flaps  Duration ReuseTime P / S / R
 
-         Flap Statistics for VRF default, address family VPNv6 Unicast:
-         Flaps - Flap count of prefix, Duration - Duration of flap statistics
-         ReuseTime - Time after which a dampened path will be reused
-         P - Current Penalty  S - Suppress Limit  R- Reuse Limit
-         Dampening configured, 0 history paths, 0 dampened paths
+        Flap Statistics for VRF default, address family VPNv6 Unicast:
+        Flaps - Flap count of prefix, Duration - Duration of flap statistics
+        ReuseTime - Time after which a dampened path will be reused
+        P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+        Dampening configured, 0 history paths, 0 dampened paths
 
-         Route Distinguisher: 0xbb00010000000000
-             Network                Peer             Flaps Duration ReuseTime P / S / R
+        Route Distinguisher: 0xbb00010000000000
+            Network                 Peer              Flaps  Duration ReuseTime P / S / R
 
-         Flap Statistics for VRF default, address family Link-State:
-         Flaps - Flap count of prefix, Duration - Duration of flap statistics
-         ReuseTime - Time after which a dampened path will be reused
-         P - Current Penalty  S - Suppress Limit  R- Reuse Limit
-         Dampening configured, 0 history paths, 2 dampened paths
+        Flap Statistics for VRF default, address family L2VPN EVPN:
+        Flaps - Flap count of prefix, Duration - Duration of flap statistics
+        ReuseTime - Time after which a dampened path will be reused
+        P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+        Dampening configured, 0 history paths, 4 dampened paths
 
-             Network                Peer             Flaps Duration ReuseTime P / S / R
-         d e [2]:[77][7,0][39.39.39.39,1,656877351][39.1.1.1,22][19.0.102.3,39.0.1.30]/61619.0.102.3                38   00:09:36 00:01:40 34/30/10
-         d e [2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/61619.0.102.3                38   00:09:36 00:01:40 34/30/10
+        Route Distinguisher: 101:1000
+            Network                 Peer              Flaps  Duration ReuseTime P / S / R
+
+        Flap Statistics for VRF default, address family L2VPN EVPN:
+        Flaps - Flap count of prefix, Duration - Duration of flap statistics
+        ReuseTime - Time after which a dampened path will be reused
+        P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+        Dampening configured, 0 history paths, 4 dampened paths
+
+        Route Distinguisher: 101:1001
+            Network                 Peer              Flaps  Duration ReuseTime P / S / R
+
+        Flap Statistics for VRF default, address family L2VPN EVPN:
+        Flaps - Flap count of prefix, Duration - Duration of flap statistics
+        ReuseTime - Time after which a dampened path will be reused
+        P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+        Dampening configured, 0 history paths, 4 dampened paths
+
+        Route Distinguisher: 101:10001
+            Network                 Peer              Flaps  Duration ReuseTime P / S / R
+
+        Flap Statistics for VRF default, address family L2VPN EVPN:
+        Flaps - Flap count of prefix, Duration - Duration of flap statistics
+        ReuseTime - Time after which a dampened path will be reused
+        P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+        Dampening configured, 0 history paths, 4 dampened paths
+
+        Route Distinguisher: 201:2000
+            Network                 Peer              Flaps  Duration ReuseTime P / S / R
+        d e [2]:[0]:[0]:[48]:[0201.0201.0201]:[32]:[2.7.1.1]/248 19.0.102.3                84   00:20:58 00:01:50  35/30/10
+        d e [2]:[0]:[0]:[48]:[0201.0201.0202]:[32]:[2.7.1.2]/248 19.0.102.3                84   00:20:58 00:01:50  35/30/10
+        d e [5]:[0]:[0]:[24]:[2.8.1.0]:[0.0.0.0]/224 19.0.102.3                84   00:20:58 00:01:50  35/30/10
+        d e [5]:[0]:[0]:[24]:[2.8.2.0]:[0.0.0.0]/224 19.0.102.3                84   00:20:58 00:01:50  35/30/10
+
+        Flap Statistics for VRF default, address family L2VPN EVPN:
+        Flaps - Flap count of prefix, Duration - Duration of flap statistics
+        ReuseTime - Time after which a dampened path will be reused
+        P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+        Dampening configured, 0 history paths, 4 dampened paths
+
+        Route Distinguisher: 2.2.2.101:1002
+            Network                 Peer              Flaps  Duration ReuseTime P / S / R
+
+        Flap Statistics for VRF default, address family Link-State:
+        Flaps - Flap count of prefix, Duration - Duration of flap statistics
+        ReuseTime - Time after which a dampened path will be reused
+        P - Current Penalty  S - Suppress Limit  R- Reuse Limit
+        Dampening configured, 0 history paths, 2 dampened paths
+
+            Network                 Peer              Flaps  Duration ReuseTime P / S / R
+        d e [2]:[77][7,0][39.39.39.39,1,656877351][39.1.1.1,22][19.0.102.3,39.0.1.30]/616 19.0.102.3                84   00:20:58 00:01:50  35/30/10
+        d e [2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/616 19.0.102.3                84   00:20:58 00:01:50  35/30/10
+               38   00:09:36 00:01:40 34/30/10
 
     '''}
 
@@ -14462,496 +14623,747 @@ class test_show_bgp_all_dampening_flap_statistics_xml(unittest.TestCase):
         "vrf": {
               "default": {
                    "address_family": {
-                        "vpnv4 unicast": {
-                            "history_paths": 2,
-                            "dampened_paths": 0,
-                            "dampening_enabled": True,
+                        "l2vpn evpn": {
+                             "dampening_enabled": True,
                              "route_identifier": {
-                                  "0:0": {
-                                       "history_paths": 0,
+                                  "2.2.2.101:1002": {
+                                       "dampening_enabled": True,
+                                       "dampened_paths": 4,
+                                       "history_paths": 0
+                                  },
+                                  "101:1000": {
+                                       "dampening_enabled": True,
+                                       "dampened_paths": 4,
+                                       "history_paths": 0
+                                  },
+                                  "101:10001": {
+                                       "dampening_enabled": True,
+                                       "dampened_paths": 4,
+                                       "history_paths": 0
+                                  },
+                                  "101:1001": {
+                                       "dampening_enabled": True,
+                                       "dampened_paths": 4,
+                                       "history_paths": 0
+                                  },
+                                  "201:2000": {
+                                       "dampening_enabled": True,
+                                       "network": {
+                                            "[2]:[0]:[0]:[48]:[0201.0201.0202]:[32]:[2.7.1.2]/248": {
+                                                 "duration": "00:19:41",
+                                                 "peer": "19.0.102.3",
+                                                 "best": False,
+                                                 "suppress_limit": 30,
+                                                 "pathtype": "e",
+                                                 "status": "d",
+                                                 "current_penalty": 38,
+                                                 "flaps": 79,
+                                                 "reuse_limit": 10,
+                                                 "reuse_time": "00:01:40"
+                                            },
+                                            "[5]:[0]:[0]:[24]:[2.8.1.0]:[0.0.0.0]/224": {
+                                                 "duration": "00:19:41",
+                                                 "peer": "19.0.102.3",
+                                                 "best": False,
+                                                 "suppress_limit": 30,
+                                                 "pathtype": "e",
+                                                 "status": "d",
+                                                 "current_penalty": 38,
+                                                 "flaps": 79,
+                                                 "reuse_limit": 10,
+                                                 "reuse_time": "00:01:40"
+                                            },
+                                            "[5]:[0]:[0]:[24]:[2.8.2.0]:[0.0.0.0]/224": {
+                                                 "duration": "00:19:41",
+                                                 "peer": "19.0.102.3",
+                                                 "best": False,
+                                                 "suppress_limit": 30,
+                                                 "pathtype": "e",
+                                                 "status": "d",
+                                                 "current_penalty": 38,
+                                                 "flaps": 79,
+                                                 "reuse_limit": 10,
+                                                 "reuse_time": "00:01:40"
+                                            },
+                                            "[2]:[0]:[0]:[48]:[0201.0201.0201]:[32]:[2.7.1.1]/248": {
+                                                 "duration": "00:19:41",
+                                                 "peer": "19.0.102.3",
+                                                 "best": False,
+                                                 "suppress_limit": 30,
+                                                 "pathtype": "e",
+                                                 "status": "d",
+                                                 "current_penalty": 38,
+                                                 "flaps": 79,
+                                                 "reuse_limit": 10,
+                                                 "reuse_time": "00:01:40"
+                                            }
+                                       },
+                                       "dampened_paths": 4,
+                                       "history_paths": 0
+                                  }
+                             },
+                             "dampened_paths": 4,
+                             "history_paths": 0
+                        },
+                        "ipv6 multicast": {
+                             "dampening_enabled": True,
+                             "network": {
+                                  "3100::/112": {
+                                       "duration": "00:19:41",
+                                       "peer": "fec0::2002",
+                                       "best": False,
+                                       "suppress_limit": 30,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "current_penalty": 38,
+                                       "flaps": 79,
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:40"
+                                  },
+                                  "3100::1:0/112": {
+                                       "duration": "00:19:42",
+                                       "peer": "fec0::2002",
+                                       "best": False,
+                                       "suppress_limit": 30,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "current_penalty": 38,
+                                       "flaps": 79,
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:40"
+                                  }
+                             },
+                             "dampened_paths": 2,
+                             "history_paths": 0
+                        },
+                        "vpnv4 unicast": {
+                             "dampening_enabled": True,
+                             "route_identifier": {
+                                  "101:100": {
+                                       "dampening_enabled": True,
                                        "dampened_paths": 2,
+                                       "history_paths": 0
+                                  },
+                                  "0:0": {
                                        "dampening_enabled": True,
                                        "network": {
                                             "2.3.2.0/24": {
-                                                 "reuse_limit": 10,
-                                                 "reuse_time": "00:01:40",
-                                                 "duration": "00:09:53",
+                                                 "duration": "00:19:40",
+                                                 "peer": "19.0.102.3",
                                                  "best": False,
-                                                 "flaps": 39,
+                                                 "suppress_limit": 30,
                                                  "pathtype": "e",
                                                  "status": "d",
-                                                 "peer": "19.0.102.3",
-                                                 "suppress_limit": 30,
-                                                 "current_penalty": 35
+                                                 "current_penalty": 38,
+                                                 "flaps": 79,
+                                                 "reuse_limit": 10,
+                                                 "reuse_time": "00:01:40"
                                             },
                                             "2.3.1.0/24": {
-                                                 "reuse_limit": 10,
-                                                 "reuse_time": "00:01:40",
-                                                 "duration": "00:09:53",
+                                                 "duration": "00:19:40",
+                                                 "peer": "19.0.102.3",
                                                  "best": False,
-                                                 "flaps": 39,
+                                                 "suppress_limit": 30,
                                                  "pathtype": "e",
                                                  "status": "d",
-                                                 "peer": "19.0.102.3",
-                                                 "suppress_limit": 30,
-                                                 "current_penalty": 35
+                                                 "current_penalty": 38,
+                                                 "flaps": 79,
+                                                 "reuse_limit": 10,
+                                                 "reuse_time": "00:01:40"
                                             }
-                                       }
+                                       },
+                                       "dampened_paths": 2,
+                                       "history_paths": 0
                                   },
                                   "102:100": {
-                                       "history_paths": 2,
-                                       "dampened_paths": 0,
-                                       "dampening_enabled": True
-                                  },
-                                  "101:100": {
-                                       "history_paths": 0,
+                                       "dampening_enabled": True,
                                        "dampened_paths": 2,
-                                       "dampening_enabled": True
-                                  }
-                             }
-                        },
-                        "link-state": {
-                             "history_paths": 2,
-                             "dampened_paths": 0,
-                             "network": {
-                                  "[2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/616": {
-                                       "reuse_limit": 10,
-                                       "peer": "19.0.102.3",
-                                       "duration": "00:09:57",
-                                       "best": False,
-                                       "flaps": 40,
-                                       "pathtype": "e",
-                                       "status": "h",
-                                       "current_penalty": 38,
-                                       "suppress_limit": 30
-                                  },
-                                  "[2]:[77][7,0][39.39.39.39,1,656877351][39.1.1.1,22][19.0.102.3,39.0.1.30]/616": {
-                                       "reuse_limit": 10,
-                                       "peer": "19.0.102.3",
-                                       "duration": "00:09:57",
-                                       "best": False,
-                                       "flaps": 40,
-                                       "pathtype": "e",
-                                       "status": "h",
-                                       "current_penalty": 38,
-                                       "suppress_limit": 30
+                                       "history_paths": 0
                                   }
                              },
-                             "dampening_enabled": True
-                        },
-                        "vpnv6 unicast": {
-                            "history_paths": 0,
-                            "dampened_paths": 0,
-                            "dampening_enabled": True,
-                             "route_identifier": {
-                                  "0xbb00010000000000": {
-                                       "history_paths": 0,
-                                       "dampened_paths": 0,
-                                       "dampening_enabled": True
-                                  },
-                                  "100:200": {
-                                       "history_paths": 0,
-                                       "dampened_paths": 0,
-                                       "dampening_enabled": True
-                                  }
-                             }
-                        },
-                        "ipv4 unicast": {
-                             "history_paths": 0,
                              "dampened_paths": 2,
-                             "network": {
-                                  "2.0.1.0/24": {
-                                       "reuse_limit": 10,
-                                       "reuse_time": "00:01:40",
-                                       "duration": "00:09:53",
-                                       "best": False,
-                                       "flaps": 39,
-                                       "pathtype": "e",
-                                       "status": "d",
-                                       "peer": "19.0.102.3",
-                                       "suppress_limit": 30,
-                                       "current_penalty": 34
-                                  },
-                                  "2.0.0.0/24": {
-                                       "reuse_limit": 10,
-                                       "reuse_time": "00:01:40",
-                                       "duration": "00:09:53",
-                                       "best": False,
-                                       "flaps": 39,
-                                       "pathtype": "e",
-                                       "status": "d",
-                                       "peer": "19.0.102.3",
-                                       "suppress_limit": 30,
-                                       "current_penalty": 34
-                                  }
-                             },
-                             "dampening_enabled": True
-                        },
-                        "ipv4 multicast": {
-                             "history_paths": 0,
-                             "dampened_paths": 2,
-                             "network": {
-                                  "2.1.1.0/24": {
-                                       "reuse_limit": 10,
-                                       "reuse_time": "00:01:40",
-                                       "duration": "00:09:53",
-                                       "best": False,
-                                       "flaps": 39,
-                                       "pathtype": "e",
-                                       "status": "d",
-                                       "peer": "19.0.102.3",
-                                       "suppress_limit": 30,
-                                       "current_penalty": 34
-                                  },
-                                  "2.1.0.0/24": {
-                                       "reuse_limit": 10,
-                                       "reuse_time": "00:01:40",
-                                       "duration": "00:09:53",
-                                       "best": False,
-                                       "flaps": 39,
-                                       "pathtype": "e",
-                                       "status": "d",
-                                       "peer": "19.0.102.3",
-                                       "suppress_limit": 30,
-                                       "current_penalty": 34
-                                  }
-                             },
-                             "dampening_enabled": True
+                             "history_paths": 0
                         },
                         "ipv6 unicast": {
-                             "history_paths": 0,
-                             "dampened_paths": 2,
+                             "dampening_enabled": True,
                              "network": {
                                   "2001::/112": {
-                                       "reuse_limit": 10,
-                                       "reuse_time": "00:01:40",
-                                       "duration": "00:09:53",
+                                       "duration": "00:19:41",
+                                       "peer": "fec0::2002",
                                        "best": False,
-                                       "flaps": 39,
+                                       "suppress_limit": 30,
                                        "pathtype": "e",
                                        "status": "d",
-                                       "peer": "fec0::2002",
-                                       "suppress_limit": 30,
-                                       "current_penalty": 34
+                                       "current_penalty": 38,
+                                       "flaps": 79,
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:40"
                                   },
                                   "2001::1:0/112": {
-                                       "reuse_limit": 10,
-                                       "reuse_time": "00:01:40",
-                                       "duration": "00:09:53",
+                                       "duration": "00:19:41",
+                                       "peer": "fec0::2002",
                                        "best": False,
-                                       "flaps": 39,
+                                       "suppress_limit": 30,
                                        "pathtype": "e",
                                        "status": "d",
-                                       "peer": "fec0::2002",
-                                       "suppress_limit": 30,
-                                       "current_penalty": 34
+                                       "current_penalty": 38,
+                                       "flaps": 79,
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:40"
                                   }
                              },
-                             "dampening_enabled": True
+                             "dampened_paths": 2,
+                             "history_paths": 0
                         },
-                        "ipv6 multicast": {
-                             "history_paths": 0,
+                        "ipv4 multicast": {
+                             "dampening_enabled": True,
+                             "network": {
+                                  "2.1.1.0/24": {
+                                       "duration": "00:19:40",
+                                       "peer": "19.0.102.3",
+                                       "best": False,
+                                       "suppress_limit": 30,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "current_penalty": 38,
+                                       "flaps": 79,
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:40"
+                                  },
+                                  "2.1.0.0/24": {
+                                       "duration": "00:19:40",
+                                       "peer": "19.0.102.3",
+                                       "best": False,
+                                       "suppress_limit": 30,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "current_penalty": 38,
+                                       "flaps": 79,
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:40"
+                                  }
+                             },
+                             "dampened_paths": 2,
+                             "history_paths": 0
+                        },
+                        "ipv4 unicast": {
+                             "dampening_enabled": True,
+                             "network": {
+                                  "2.0.0.0/24": {
+                                       "duration": "00:19:40",
+                                       "peer": "19.0.102.3",
+                                       "best": False,
+                                       "suppress_limit": 30,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "current_penalty": 38,
+                                       "flaps": 79,
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:40"
+                                  },
+                                  "2.0.1.0/24": {
+                                       "duration": "00:19:40",
+                                       "peer": "19.0.102.3",
+                                       "best": False,
+                                       "suppress_limit": 30,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "current_penalty": 38,
+                                       "flaps": 79,
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:40"
+                                  }
+                             },
+                             "dampened_paths": 2,
+                             "history_paths": 0
+                        },
+                        "vpnv6 unicast": {
+                             "dampening_enabled": True,
+                             "route_identifier": {
+                                  "0xbb00010000000000": {
+                                       "dampening_enabled": True,
+                                       "dampened_paths": 0,
+                                       "history_paths": 0
+                                  },
+                                  "100:200": {
+                                       "dampening_enabled": True,
+                                       "dampened_paths": 0,
+                                       "history_paths": 0
+                                  }
+                             },
                              "dampened_paths": 0,
-                             "dampening_enabled": True
+                             "history_paths": 0
+                        },
+                        "link-state": {
+                             "dampening_enabled": True,
+                             "network": {
+                                  "[2]:[77][7,0][39.39.39.39,1,656877351][39.1.1.1,22][19.0.102.3,39.0.1.30]/616": {
+                                       "duration": "00:19:41",
+                                       "peer": "19.0.102.3",
+                                       "best": False,
+                                       "suppress_limit": 30,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "current_penalty": 38,
+                                       "flaps": 79,
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:40"
+                                  },
+                                  "[2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/616": {
+                                       "duration": "00:19:41",
+                                       "peer": "19.0.102.3",
+                                       "best": False,
+                                       "suppress_limit": 30,
+                                       "pathtype": "e",
+                                       "status": "d",
+                                       "current_penalty": 38,
+                                       "flaps": 79,
+                                       "reuse_limit": 10,
+                                       "reuse_time": "00:01:40"
+                                  }
+                             },
+                             "dampened_paths": 2,
+                             "history_paths": 0
                         }}}}}
 
     golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
-         <nf:rpc-reply xmlns="http://www.cisco.com/nxos:7.0.3.I7.1.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
-          <nf:data>
-           <show>
-            <bgp>
-             <all>
-              <dampening>
-               <flap-statistics>
-                <__readonly__>
-                 <TABLE_vrf>
-                  <ROW_vrf>
-                   <vrf-name-out>default</vrf-name-out>
-                   <TABLE_afi>
-                    <ROW_afi>
-                     <afi>1</afi>
-                     <TABLE_safi>
-                      <ROW_safi>
-                       <safi>1</safi>
-                       <af-name>IPv4 Unicast</af-name>
-                       <TABLE_rd>
-                        <ROW_rd>
-                         <dampeningenabled>true</dampeningenabled>
-                         <historypaths>0</historypaths>
-                         <dampenedpaths>2</dampenedpaths>
-                         <TABLE_prefix>
-                          <ROW_prefix>
-                           <ipprefix>2.0.0.0/24</ipprefix>
-                           <status>d</status>
-                           <pathtype>e</pathtype>
-                           <peer>19.0.102.3</peer>
-                           <flapcount>39</flapcount>
-                           <duration>00:09:53</duration>
-                           <reuse>00:01:40</reuse>
-                           <penalty>34</penalty>
-                           <suppresslimit>30</suppresslimit>
-                           <reuselimit>10</reuselimit>
-                           <best>false</best>
-                          </ROW_prefix>
-                          <ROW_prefix>
-                           <ipprefix>2.0.1.0/24</ipprefix>
-                           <status>d</status>
-                           <pathtype>e</pathtype>
-                           <peer>19.0.102.3</peer>
-                           <flapcount>39</flapcount>
-                           <duration>00:09:53</duration>
-                           <reuse>00:01:40</reuse>
-                           <penalty>34</penalty>
-                           <suppresslimit>30</suppresslimit>
-                           <reuselimit>10</reuselimit>
-                           <best>false</best>
-                          </ROW_prefix>
-                         </TABLE_prefix>
-                        </ROW_rd>
-                       </TABLE_rd>
-                      </ROW_safi>
-                     </TABLE_safi>
-                    </ROW_afi>
-                    <ROW_afi>
-                     <afi>1</afi>
-                     <TABLE_safi>
-                      <ROW_safi>
-                       <safi>2</safi>
-                       <af-name>IPv4 Multicast</af-name>
-                       <TABLE_rd>
-                        <ROW_rd>
-                         <dampeningenabled>true</dampeningenabled>
-                         <historypaths>0</historypaths>
-                         <dampenedpaths>2</dampenedpaths>
-                         <TABLE_prefix>
-                          <ROW_prefix>
-                           <ipprefix>2.1.0.0/24</ipprefix>
-                           <status>d</status>
-                           <pathtype>e</pathtype>
-                           <peer>19.0.102.3</peer>
-                           <flapcount>39</flapcount>
-                           <duration>00:09:53</duration>
-                           <reuse>00:01:40</reuse>
-                           <penalty>34</penalty>
-                           <suppresslimit>30</suppresslimit>
-                           <reuselimit>10</reuselimit>
-                           <best>false</best>
-                          </ROW_prefix>
-                          <ROW_prefix>
-                           <ipprefix>2.1.1.0/24</ipprefix>
-                           <status>d</status>
-                           <pathtype>e</pathtype>
-                           <peer>19.0.102.3</peer>
-                           <flapcount>39</flapcount>
-                           <duration>00:09:53</duration>
-                           <reuse>00:01:40</reuse>
-                           <penalty>34</penalty>
-                           <suppresslimit>30</suppresslimit>
-                           <reuselimit>10</reuselimit>
-                           <best>false</best>
-                          </ROW_prefix>
-                         </TABLE_prefix>
-                        </ROW_rd>
-                       </TABLE_rd>
-                      </ROW_safi>
-                     </TABLE_safi>
-                    </ROW_afi>
-                    <ROW_afi>
-                     <afi>2</afi>
-                     <TABLE_safi>
-                      <ROW_safi>
-                       <safi>1</safi>
-                       <af-name>IPv6 Unicast</af-name>
-                       <TABLE_rd>
-                        <ROW_rd>
-                         <dampeningenabled>true</dampeningenabled>
-                         <historypaths>0</historypaths>
-                         <dampenedpaths>2</dampenedpaths>
-                         <TABLE_prefix>
-                          <ROW_prefix>
-                           <ipv6prefix>2001::/112</ipv6prefix>
-                           <status>d</status>
-                           <pathtype>e</pathtype>
-                           <ipv6peer>fec0::2002</ipv6peer>
-                           <flapcount>39</flapcount>
-                           <duration>00:09:53</duration>
-                           <reuse>00:01:40</reuse>
-                           <penalty>34</penalty>
-                           <suppresslimit>30</suppresslimit>
-                           <reuselimit>10</reuselimit>
-                           <best>false</best>
-                          </ROW_prefix>
-                          <ROW_prefix>
-                           <ipv6prefix>2001::1:0/112</ipv6prefix>
-                           <status>d</status>
-                           <pathtype>e</pathtype>
-                           <ipv6peer>fec0::2002</ipv6peer>
-                           <flapcount>39</flapcount>
-                           <duration>00:09:53</duration>
-                           <reuse>00:01:40</reuse>
-                           <penalty>34</penalty>
-                           <suppresslimit>30</suppresslimit>
-                           <reuselimit>10</reuselimit>
-                           <best>false</best>
-                          </ROW_prefix>
-                         </TABLE_prefix>
-                        </ROW_rd>
-                       </TABLE_rd>
-                      </ROW_safi>
-                     </TABLE_safi>
-                    </ROW_afi>
-                    <ROW_afi>
-                     <afi>2</afi>
-                     <TABLE_safi>
-                      <ROW_safi>
-                       <safi>2</safi>
-                       <af-name>IPv6 Multicast</af-name>
-                       <TABLE_rd>
-                        <ROW_rd>
-                         <dampeningenabled>true</dampeningenabled>
-                         <historypaths>0</historypaths>
-                         <dampenedpaths>0</dampenedpaths>
-                        </ROW_rd>
-                       </TABLE_rd>
-                      </ROW_safi>
-                     </TABLE_safi>
-                    </ROW_afi>
-                    <ROW_afi>
-                     <afi>1</afi>
-                     <TABLE_safi>
-                      <ROW_safi>
-                       <safi>128</safi>
-                       <af-name>VPNv4 Unicast</af-name>
-                       <TABLE_rd>
-                        <ROW_rd>
-                         <rd_val>0:0</rd_val>
-                         <dampeningenabled>true</dampeningenabled>
-                         <historypaths>0</historypaths>
-                         <dampenedpaths>2</dampenedpaths>
-                         <TABLE_prefix>
-                          <ROW_prefix>
-                           <ipprefix>2.3.1.0/24</ipprefix>
-                           <status>d</status>
-                           <pathtype>e</pathtype>
-                           <peer>19.0.102.3</peer>
-                           <flapcount>39</flapcount>
-                           <duration>00:09:53</duration>
-                           <reuse>00:01:40</reuse>
-                           <penalty>35</penalty>
-                           <suppresslimit>30</suppresslimit>
-                           <reuselimit>10</reuselimit>
-                           <best>false</best>
-                          </ROW_prefix>
-                          <ROW_prefix>
-                           <ipprefix>2.3.2.0/24</ipprefix>
-                           <status>d</status>
-                           <pathtype>e</pathtype>
-                           <peer>19.0.102.3</peer>
-                           <flapcount>39</flapcount>
-                           <duration>00:09:53</duration>
-                           <reuse>00:01:40</reuse>
-                           <penalty>35</penalty>
-                           <suppresslimit>30</suppresslimit>
-                           <reuselimit>10</reuselimit>
-                           <best>false</best>
-                          </ROW_prefix>
-                         </TABLE_prefix>
-                        </ROW_rd>
-                        <ROW_rd>
-                         <rd_val>101:100</rd_val>
-                         <dampeningenabled>true</dampeningenabled>
-                         <historypaths>0</historypaths>
-                         <dampenedpaths>2</dampenedpaths>
-                        </ROW_rd>
-                        <ROW_rd>
-                         <rd_val>102:100</rd_val>
-                         <dampeningenabled>true</dampeningenabled>
-                         <historypaths>2</historypaths>
-                         <dampenedpaths>0</dampenedpaths>
-                        </ROW_rd>
-                       </TABLE_rd>
-                      </ROW_safi>
-                     </TABLE_safi>
-                    </ROW_afi>
-                    <ROW_afi>
-                     <afi>2</afi>
-                     <TABLE_safi>
-                      <ROW_safi>
-                       <safi>128</safi>
-                       <af-name>VPNv6 Unicast</af-name>
-                       <TABLE_rd>
-                        <ROW_rd>
-                         <rd_val>100:200</rd_val>
-                         <dampeningenabled>true</dampeningenabled>
-                         <historypaths>0</historypaths>
-                         <dampenedpaths>0</dampenedpaths>
-                        </ROW_rd>
-                        <ROW_rd>
-                         <rd_val>0xbb00010000000000</rd_val>
-                         <dampeningenabled>true</dampeningenabled>
-                         <historypaths>0</historypaths>
-                         <dampenedpaths>0</dampenedpaths>
-                        </ROW_rd>
-                       </TABLE_rd>
-                      </ROW_safi>
-                     </TABLE_safi>
-                    </ROW_afi>
-                    <ROW_afi>
-                     <afi>16388</afi>
-                     <TABLE_safi>
-                      <ROW_safi>
-                       <safi>71</safi>
-                       <af-name>Link-State</af-name>
-                       <TABLE_rd>
-                        <ROW_rd>
-                         <dampeningenabled>true</dampeningenabled>
-                         <historypaths>2</historypaths>
-                         <dampenedpaths>0</dampenedpaths>
-                         <TABLE_prefix>
-                          <ROW_prefix>
-                           <ipprefix>[2]:[77][7,0][39.39.39.39,1,656877351][39.1.1.1,22][19.0.102.3,39.0.1.30]/616</ipprefix>
-                           <status>h</status>
-                           <pathtype>e</pathtype>
-                           <peer>19.0.102.3</peer>
-                           <flapcount>40</flapcount>
-                           <duration>00:09:57</duration>
-                           <reuse></reuse>
-                           <penalty>38</penalty>
-                           <suppresslimit>30</suppresslimit>
-                           <reuselimit>10</reuselimit>
-                           <best>false</best>
-                          </ROW_prefix>
-                          <ROW_prefix>
-                           <ipprefix>[2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/616</ipprefix>
-                           <status>h</status>
-                           <pathtype>e</pathtype>
-                           <peer>19.0.102.3</peer>
-                           <flapcount>40</flapcount>
-                           <duration>00:09:57</duration>
-                           <reuse></reuse>
-                           <penalty>38</penalty>
-                           <suppresslimit>30</suppresslimit>
-                           <reuselimit>10</reuselimit>
-                           <best>false</best>
-                          </ROW_prefix>
-                         </TABLE_prefix>
-                        </ROW_rd>
-                       </TABLE_rd>
-                      </ROW_safi>
-                     </TABLE_safi>
-                    </ROW_afi>
-                   </TABLE_afi>
-                  </ROW_vrf>
-                 </TABLE_vrf>
-                </__readonly__>
-               </flap-statistics>
-              </dampening>
-             </all>
-            </bgp>
-           </show>
-          </nf:data>
-         </nf:rpc-reply>
-         ]]>]]>
+        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:7.0.3.I7.2.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+         <nf:data>
+          <show>
+           <bgp>
+            <all>
+             <dampening>
+              <flap-statistics>
+               <__readonly__>
+                <TABLE_vrf>
+                 <ROW_vrf>
+                  <vrf-name-out>default</vrf-name-out>
+                  <TABLE_afi>
+                   <ROW_afi>
+                    <afi>1</afi>
+                    <TABLE_safi>
+                     <ROW_safi>
+                      <safi>1</safi>
+                      <af-name>IPv4 Unicast</af-name>
+                      <TABLE_rd>
+                       <ROW_rd>
+                        <dampeningenabled>true</dampeningenabled>
+                        <historypaths>0</historypaths>
+                        <dampenedpaths>2</dampenedpaths>
+                        <TABLE_prefix>
+                         <ROW_prefix>
+                          <ipprefix>2.0.0.0/24</ipprefix>
+                          <status>d</status>
+                          <pathtype>e</pathtype>
+                          <peer>19.0.102.3</peer>
+                          <flapcount>79</flapcount>
+                          <duration>00:19:40</duration>
+                          <reuse>00:01:40</reuse>
+                          <penalty>38</penalty>
+                          <suppresslimit>30</suppresslimit>
+                          <reuselimit>10</reuselimit>
+                          <best>false</best>
+                         </ROW_prefix>
+                         <ROW_prefix>
+                          <ipprefix>2.0.1.0/24</ipprefix>
+                          <status>d</status>
+                          <pathtype>e</pathtype>
+                          <peer>19.0.102.3</peer>
+                          <flapcount>79</flapcount>
+                          <duration>00:19:40</duration>
+                          <reuse>00:01:40</reuse>
+                          <penalty>38</penalty>
+                          <suppresslimit>30</suppresslimit>
+                          <reuselimit>10</reuselimit>
+                          <best>false</best>
+                         </ROW_prefix>
+                        </TABLE_prefix>
+                       </ROW_rd>
+                      </TABLE_rd>
+                     </ROW_safi>
+                    </TABLE_safi>
+                   </ROW_afi>
+                   <ROW_afi>
+                    <afi>1</afi>
+                    <TABLE_safi>
+                     <ROW_safi>
+                      <safi>2</safi>
+                      <af-name>IPv4 Multicast</af-name>
+                      <TABLE_rd>
+                       <ROW_rd>
+                        <dampeningenabled>true</dampeningenabled>
+                        <historypaths>0</historypaths>
+                        <dampenedpaths>2</dampenedpaths>
+                        <TABLE_prefix>
+                         <ROW_prefix>
+                          <ipprefix>2.1.0.0/24</ipprefix>
+                          <status>d</status>
+                          <pathtype>e</pathtype>
+                          <peer>19.0.102.3</peer>
+                          <flapcount>79</flapcount>
+                          <duration>00:19:40</duration>
+                          <reuse>00:01:40</reuse>
+                          <penalty>38</penalty>
+                          <suppresslimit>30</suppresslimit>
+                          <reuselimit>10</reuselimit>
+                          <best>false</best>
+                         </ROW_prefix>
+                         <ROW_prefix>
+                          <ipprefix>2.1.1.0/24</ipprefix>
+                          <status>d</status>
+                          <pathtype>e</pathtype>
+                          <peer>19.0.102.3</peer>
+                          <flapcount>79</flapcount>
+                          <duration>00:19:40</duration>
+                          <reuse>00:01:40</reuse>
+                          <penalty>38</penalty>
+                          <suppresslimit>30</suppresslimit>
+                          <reuselimit>10</reuselimit>
+                          <best>false</best>
+                         </ROW_prefix>
+                        </TABLE_prefix>
+                       </ROW_rd>
+                      </TABLE_rd>
+                     </ROW_safi>
+                    </TABLE_safi>
+                   </ROW_afi>
+                   <ROW_afi>
+                    <afi>2</afi>
+                    <TABLE_safi>
+                     <ROW_safi>
+                      <safi>1</safi>
+                      <af-name>IPv6 Unicast</af-name>
+                      <TABLE_rd>
+                       <ROW_rd>
+                        <dampeningenabled>true</dampeningenabled>
+                        <historypaths>0</historypaths>
+                        <dampenedpaths>2</dampenedpaths>
+                        <TABLE_prefix>
+                         <ROW_prefix>
+                          <ipv6prefix>2001::/112</ipv6prefix>
+                          <status>d</status>
+                          <pathtype>e</pathtype>
+                          <ipv6peer>fec0::2002</ipv6peer>
+                          <flapcount>79</flapcount>
+                          <duration>00:19:41</duration>
+                          <reuse>00:01:40</reuse>
+                          <penalty>38</penalty>
+                          <suppresslimit>30</suppresslimit>
+                          <reuselimit>10</reuselimit>
+                          <best>false</best>
+                         </ROW_prefix>
+                         <ROW_prefix>
+                          <ipv6prefix>2001::1:0/112</ipv6prefix>
+                          <status>d</status>
+                          <pathtype>e</pathtype>
+                          <ipv6peer>fec0::2002</ipv6peer>
+                          <flapcount>79</flapcount>
+                          <duration>00:19:41</duration>
+                          <reuse>00:01:40</reuse>
+                          <penalty>38</penalty>
+                          <suppresslimit>30</suppresslimit>
+                          <reuselimit>10</reuselimit>
+                          <best>false</best>
+                         </ROW_prefix>
+                        </TABLE_prefix>
+                       </ROW_rd>
+                      </TABLE_rd>
+                     </ROW_safi>
+                    </TABLE_safi>
+                   </ROW_afi>
+                   <ROW_afi>
+                    <afi>2</afi>
+                    <TABLE_safi>
+                     <ROW_safi>
+                      <safi>2</safi>
+                      <af-name>IPv6 Multicast</af-name>
+                      <TABLE_rd>
+                       <ROW_rd>
+                        <dampeningenabled>true</dampeningenabled>
+                        <historypaths>0</historypaths>
+                        <dampenedpaths>2</dampenedpaths>
+                        <TABLE_prefix>
+                         <ROW_prefix>
+                          <ipv6prefix>3100::/112</ipv6prefix>
+                          <status>d</status>
+                          <pathtype>e</pathtype>
+                          <ipv6peer>fec0::2002</ipv6peer>
+                          <flapcount>79</flapcount>
+                          <duration>00:19:41</duration>
+                          <reuse>00:01:40</reuse>
+                          <penalty>38</penalty>
+                          <suppresslimit>30</suppresslimit>
+                          <reuselimit>10</reuselimit>
+                          <best>false</best>
+                         </ROW_prefix>
+                         <ROW_prefix>
+                          <ipv6prefix>3100::1:0/112</ipv6prefix>
+                          <status>d</status>
+                          <pathtype>e</pathtype>
+                          <ipv6peer>fec0::2002</ipv6peer>
+                          <flapcount>79</flapcount>
+                          <duration>00:19:42</duration>
+                          <reuse>00:01:40</reuse>
+                          <penalty>38</penalty>
+                          <suppresslimit>30</suppresslimit>
+                          <reuselimit>10</reuselimit>
+                          <best>false</best>
+                         </ROW_prefix>
+                        </TABLE_prefix>
+                       </ROW_rd>
+                      </TABLE_rd>
+                     </ROW_safi>
+                    </TABLE_safi>
+                   </ROW_afi>
+                   <ROW_afi>
+                    <afi>1</afi>
+                    <TABLE_safi>
+                     <ROW_safi>
+                      <safi>128</safi>
+                      <af-name>VPNv4 Unicast</af-name>
+                      <TABLE_rd>
+                       <ROW_rd>
+                        <rd_val>0:0</rd_val>
+                        <dampeningenabled>true</dampeningenabled>
+                        <historypaths>0</historypaths>
+                        <dampenedpaths>2</dampenedpaths>
+                        <TABLE_prefix>
+                         <ROW_prefix>
+                          <ipprefix>2.3.1.0/24</ipprefix>
+                          <status>d</status>
+                          <pathtype>e</pathtype>
+                          <peer>19.0.102.3</peer>
+                          <flapcount>79</flapcount>
+                          <duration>00:19:40</duration>
+                          <reuse>00:01:40</reuse>
+                          <penalty>38</penalty>
+                          <suppresslimit>30</suppresslimit>
+                          <reuselimit>10</reuselimit>
+                          <best>false</best>
+                         </ROW_prefix>
+                         <ROW_prefix>
+                          <ipprefix>2.3.2.0/24</ipprefix>
+                          <status>d</status>
+                          <pathtype>e</pathtype>
+                          <peer>19.0.102.3</peer>
+                          <flapcount>79</flapcount>
+                          <duration>00:19:40</duration>
+                          <reuse>00:01:40</reuse>
+                          <penalty>38</penalty>
+                          <suppresslimit>30</suppresslimit>
+                          <reuselimit>10</reuselimit>
+                          <best>false</best>
+                         </ROW_prefix>
+                        </TABLE_prefix>
+                       </ROW_rd>
+                       <ROW_rd>
+                        <rd_val>101:100</rd_val>
+                        <dampeningenabled>true</dampeningenabled>
+                        <historypaths>0</historypaths>
+                        <dampenedpaths>2</dampenedpaths>
+                       </ROW_rd>
+                       <ROW_rd>
+                        <rd_val>102:100</rd_val>
+                        <dampeningenabled>true</dampeningenabled>
+                        <historypaths>0</historypaths>
+                        <dampenedpaths>2</dampenedpaths>
+                       </ROW_rd>
+                      </TABLE_rd>
+                     </ROW_safi>
+                    </TABLE_safi>
+                   </ROW_afi>
+                   <ROW_afi>
+                    <afi>2</afi>
+                    <TABLE_safi>
+                     <ROW_safi>
+                      <safi>128</safi>
+                      <af-name>VPNv6 Unicast</af-name>
+                      <TABLE_rd>
+                       <ROW_rd>
+                        <rd_val>100:200</rd_val>
+                        <dampeningenabled>true</dampeningenabled>
+                        <historypaths>0</historypaths>
+                        <dampenedpaths>0</dampenedpaths>
+                       </ROW_rd>
+                       <ROW_rd>
+                        <rd_val>0xbb00010000000000</rd_val>
+                        <dampeningenabled>true</dampeningenabled>
+                        <historypaths>0</historypaths>
+                        <dampenedpaths>0</dampenedpaths>
+                       </ROW_rd>
+                      </TABLE_rd>
+                     </ROW_safi>
+                    </TABLE_safi>
+                   </ROW_afi>
+                   <ROW_afi>
+                    <afi>1</afi>
+                    <TABLE_safi>
+                     <ROW_safi>
+                      <safi>5</safi>
+                      <af-name>IPv4 MVPN</af-name>
+                     </ROW_safi>
+                    </TABLE_safi>
+                   </ROW_afi>
+                   <ROW_afi>
+                    <afi>2</afi>
+                    <TABLE_safi>
+                     <ROW_safi>
+                      <safi>5</safi>
+                      <af-name>IPv6 MVPN</af-name>
+                     </ROW_safi>
+                    </TABLE_safi>
+                   </ROW_afi>
+                   <ROW_afi>
+                    <afi>25</afi>
+                    <TABLE_safi>
+                     <ROW_safi>
+                      <safi>70</safi>
+                      <af-name>L2VPN EVPN</af-name>
+                      <TABLE_rd>
+                       <ROW_rd>
+                        <rd_val>101:1000</rd_val>
+                        <dampeningenabled>true</dampeningenabled>
+                        <historypaths>0</historypaths>
+                        <dampenedpaths>4</dampenedpaths>
+                       </ROW_rd>
+                       <ROW_rd>
+                        <rd_val>101:1001</rd_val>
+                        <dampeningenabled>true</dampeningenabled>
+                        <historypaths>0</historypaths>
+                        <dampenedpaths>4</dampenedpaths>
+                       </ROW_rd>
+                       <ROW_rd>
+                        <rd_val>101:10001</rd_val>
+                        <dampeningenabled>true</dampeningenabled>
+                        <historypaths>0</historypaths>
+                        <dampenedpaths>4</dampenedpaths>
+                       </ROW_rd>
+                       <ROW_rd>
+                        <rd_val>201:2000</rd_val>
+                        <dampeningenabled>true</dampeningenabled>
+                        <historypaths>0</historypaths>
+                        <dampenedpaths>4</dampenedpaths>
+                        <TABLE_prefix>
+                         <ROW_prefix>
+                          <nonipprefix>[2]:[0]:[0]:[48]:[0201.0201.0201]:[32]:[2.7.1.1]/248</nonipprefix>
+                          <status>d</status>
+                          <pathtype>e</pathtype>
+                          <peer>19.0.102.3</peer>
+                          <flapcount>79</flapcount>
+                          <duration>00:19:41</duration>
+                          <reuse>00:01:40</reuse>
+                          <penalty>38</penalty>
+                          <suppresslimit>30</suppresslimit>
+                          <reuselimit>10</reuselimit>
+                          <best>false</best>
+                         </ROW_prefix>
+                         <ROW_prefix>
+                          <nonipprefix>[2]:[0]:[0]:[48]:[0201.0201.0202]:[32]:[2.7.1.2]/248</nonipprefix>
+                          <status>d</status>
+                          <pathtype>e</pathtype>
+                          <peer>19.0.102.3</peer>
+                          <flapcount>79</flapcount>
+                          <duration>00:19:41</duration>
+                          <reuse>00:01:40</reuse>
+                          <penalty>38</penalty>
+                          <suppresslimit>30</suppresslimit>
+                          <reuselimit>10</reuselimit>
+                          <best>false</best>
+                         </ROW_prefix>
+                         <ROW_prefix>
+                          <nonipprefix>[5]:[0]:[0]:[24]:[2.8.1.0]:[0.0.0.0]/224</nonipprefix>
+                          <status>d</status>
+                          <pathtype>e</pathtype>
+                          <peer>19.0.102.3</peer>
+                          <flapcount>79</flapcount>
+                          <duration>00:19:41</duration>
+                          <reuse>00:01:40</reuse>
+                          <penalty>38</penalty>
+                          <suppresslimit>30</suppresslimit>
+                          <reuselimit>10</reuselimit>
+                          <best>false</best>
+                         </ROW_prefix>
+                         <ROW_prefix>
+                          <nonipprefix>[5]:[0]:[0]:[24]:[2.8.2.0]:[0.0.0.0]/224</nonipprefix>
+                          <status>d</status>
+                          <pathtype>e</pathtype>
+                          <peer>19.0.102.3</peer>
+                          <flapcount>79</flapcount>
+                          <duration>00:19:41</duration>
+                          <reuse>00:01:40</reuse>
+                          <penalty>38</penalty>
+                          <suppresslimit>30</suppresslimit>
+                          <reuselimit>10</reuselimit>
+                          <best>false</best>
+                         </ROW_prefix>
+                        </TABLE_prefix>
+                       </ROW_rd>
+                       <ROW_rd>
+                        <rd_val>2.2.2.101:1002</rd_val>
+                        <dampeningenabled>true</dampeningenabled>
+                        <historypaths>0</historypaths>
+                        <dampenedpaths>4</dampenedpaths>
+                       </ROW_rd>
+                      </TABLE_rd>
+                     </ROW_safi>
+                    </TABLE_safi>
+                   </ROW_afi>
+                   <ROW_afi>
+                    <afi>16388</afi>
+                    <TABLE_safi>
+                     <ROW_safi>
+                      <safi>71</safi>
+                      <af-name>Link-State</af-name>
+                      <TABLE_rd>
+                       <ROW_rd>
+                        <dampeningenabled>true</dampeningenabled>
+                        <historypaths>0</historypaths>
+                        <dampenedpaths>2</dampenedpaths>
+                        <TABLE_prefix>
+                         <ROW_prefix>
+                          <nonipprefix>[2]:[77][7,0][39.39.39.39,1,656877351][39.1.1.1,22][19.0.102.3,39.0.1.30]/616</nonipprefix>
+                          <status>d</status>
+                          <pathtype>e</pathtype>
+                          <peer>19.0.102.3</peer>
+                          <flapcount>79</flapcount>
+                          <duration>00:19:41</duration>
+                          <reuse>00:01:40</reuse>
+                          <penalty>38</penalty>
+                          <suppresslimit>30</suppresslimit>
+                          <reuselimit>10</reuselimit>
+                          <best>false</best>
+                         </ROW_prefix>
+                         <ROW_prefix>
+                          <nonipprefix>[2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/616</nonipprefix>
+                          <status>d</status>
+                          <pathtype>e</pathtype>
+                          <peer>19.0.102.3</peer>
+                          <flapcount>79</flapcount>
+                          <duration>00:19:41</duration>
+                          <reuse>00:01:40</reuse>
+                          <penalty>38</penalty>
+                          <suppresslimit>30</suppresslimit>
+                          <reuselimit>10</reuselimit>
+                          <best>false</best>
+                         </ROW_prefix>
+                        </TABLE_prefix>
+                       </ROW_rd>
+                      </TABLE_rd>
+                     </ROW_safi>
+                    </TABLE_safi>
+                   </ROW_afi>
+                  </TABLE_afi>
+                 </ROW_vrf>
+                </TABLE_vrf>
+               </__readonly__>
+              </flap-statistics>
+             </dampening>
+            </all>
+           </bgp>
+          </show>
+         </nf:data>
+        </nf:rpc-reply>
+        ]]>]]>
         '''}
 
     def test_golden_xml(self):
@@ -15156,84 +15568,634 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
     
     golden_parsed_output_2 = {
         "vrf": {
-            "default": {
-               "address_family": {
-                    'link-state': {
-                        'af_nexthop_trigger_enable': True,
-                        'nexthop_trigger_delay_critical': 3000,
-                        'nexthop_trigger_delay_non_critical': 10000
-                    },
-                    "vpnv4 unicast": {
-                         "af_nexthop_trigger_enable": True,
-                         "nexthop_trigger_delay_non_critical": 10000,
-                         "nexthop_trigger_delay_critical": 3000
-                    },
-                    "ipv6 unicast": {
-                         "af_nexthop_trigger_enable": True,
-                         "nexthop_trigger_delay_non_critical": 10000,
-                         "nexthop_trigger_delay_critical": 3000,
-                         "next_hop": {
-                            "0::": {
-                                 'attached': False,
-                                 'local': True,
-                                 'reachable': False,
-                                 'labeled': False,
-                                 'filtered': False,
-                                 'pending_update': False,
-                                 "resolve_time": "never",
-                                 "igp_preference": 0,
-                                 "igp_cost": 0,
-                                 "metric_next_advertise": "never",
-                                 "rib_route": "0::/0",
-                                 "igp_route_type": 0,
-                                 "refcount": 3,
-                                 "rnh_epoch": 0,
-                                 "flags": "0x2",
-                            },
+              "default": {
+                   "address_family": {
+                        "ipv4 multicast": {
+                             "next_hop": {
+                                  "19.0.102.3": {
+                                       "pending_update": False,
+                                       "refcount": 2,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 0,
+                                       "attached_nexthop": {
+                                            "19.0.102.3": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "19.0.102.3/32"
+                                  },
+                                  "19.0.102.4": {
+                                       "pending_update": False,
+                                       "refcount": 2,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 0,
+                                       "attached_nexthop": {
+                                            "19.0.102.4": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "19.0.102.4/32"
+                                  }
+                             },
+                             "af_nexthop_trigger_enable": True,
+                             "nexthop_trigger_delay_non_critical": 10000,
+                             "nexthop_trigger_delay_critical": 3000
                         },
-                    },
-                    "ipv4 multicast": {
-                         "af_nexthop_trigger_enable": True,
-                         "nexthop_trigger_delay_non_critical": 10000,
-                         "nexthop_trigger_delay_critical": 3000
-                    },
-                    "vpnv6 unicast": {
-                         "af_nexthop_trigger_enable": True,
-                         "nexthop_trigger_delay_non_critical": 10000,
-                         "nexthop_trigger_delay_critical": 3000
-                    },
-                    "ipv4 unicast": {
-                         "af_nexthop_trigger_enable": True,
-                         "nexthop_trigger_delay_non_critical": 10000,
-                         "nexthop_trigger_delay_critical": 3000
-                    },
-                    "ipv6 multicast": {
-                         "af_nexthop_trigger_enable": True,
-                         "nexthop_trigger_delay_non_critical": 10000,
-                         "nexthop_trigger_delay_critical": 3000,
-                         "next_hop": {
-                            "0::": {
-                                 'attached': False,
-                                 'local': True,
-                                 'reachable': False,
-                                 'labeled': False,
-                                 'filtered': False,
-                                 'pending_update': False,
-                                 "resolve_time": "never",
-                                 "igp_preference": 0,
-                                 "igp_cost": 0,
-                                 "metric_next_advertise": "never",
-                                 "rib_route": "0::/0",
-                                 "igp_route_type": 0,
-                                 "refcount": 3,
-                                 "rnh_epoch": 0,
-                                 "flags": "0x2",}}}}}}}
+                        "ipv6 multicast": {
+                             "next_hop": {
+                                  "fec0::1002": {
+                                       "pending_update": False,
+                                       "refcount": 2,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 0,
+                                       "attached_nexthop": {
+                                            "fec0::1002": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "fec0::1002/128"
+                                  },
+                                  "fec0::2002": {
+                                       "pending_update": False,
+                                       "refcount": 2,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 0,
+                                       "attached_nexthop": {
+                                            "fec0::2002": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "fec0::2002/128"
+                                  }
+                             },
+                             "af_nexthop_trigger_enable": True,
+                             "nexthop_trigger_delay_non_critical": 10000,
+                             "nexthop_trigger_delay_critical": 3000
+                        },
+                        "vpnv4 unicast": {
+                             "next_hop": {
+                                  "19.0.102.3": {
+                                       "pending_update": False,
+                                       "refcount": 2,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 2,
+                                       "attached_nexthop": {
+                                            "19.0.102.3": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "19.0.102.3/32"
+                                  },
+                                  "19.0.101.1": {
+                                       "pending_update": False,
+                                       "refcount": 2,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 2,
+                                       "attached_nexthop": {
+                                            "19.0.101.1": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "19.0.101.1/32"
+                                  },
+                                  "19.0.102.4": {
+                                       "pending_update": False,
+                                       "refcount": 4,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 1,
+                                       "attached_nexthop": {
+                                            "19.0.102.4": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "19.0.102.4/32"
+                                  }
+                             },
+                             "af_nexthop_trigger_enable": True,
+                             "nexthop_trigger_delay_non_critical": 10000,
+                             "nexthop_trigger_delay_critical": 3000
+                        },
+                        "ipv4 unicast": {
+                             "next_hop": {
+                                  "19.0.102.3": {
+                                       "pending_update": False,
+                                       "refcount": 2,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 2,
+                                       "attached_nexthop": {
+                                            "19.0.102.3": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "19.0.102.3/32"
+                                  },
+                                  "19.0.101.1": {
+                                       "pending_update": False,
+                                       "refcount": 2,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 2,
+                                       "attached_nexthop": {
+                                            "19.0.101.1": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "19.0.101.1/32"
+                                  },
+                                  "21.0.101.99": {
+                                       "pending_update": False,
+                                       "refcount": 2,
+                                       "attached": False,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 0,
+                                       "igp_preference": 0,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": False,
+                                       "flags": "0",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": -1,
+                                       "rib_route": "0.0.0.0/0"
+                                  },
+                                  "19.0.102.4": {
+                                       "pending_update": False,
+                                       "refcount": 2,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 1,
+                                       "attached_nexthop": {
+                                            "19.0.102.4": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "19.0.102.4/32"
+                                  }
+                             },
+                             "af_nexthop_trigger_enable": True,
+                             "nexthop_trigger_delay_non_critical": 10000,
+                             "nexthop_trigger_delay_critical": 3000
+                        },
+                        "l2vpn evpn": {
+                             "next_hop": {
+                                  "19.0.102.3": {
+                                       "pending_update": False,
+                                       "refcount": 4,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 2,
+                                       "attached_nexthop": {
+                                            "19.0.102.3": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "19.0.102.3/32"
+                                  },
+                                  "19.0.101.1": {
+                                       "pending_update": False,
+                                       "refcount": 9,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 2,
+                                       "attached_nexthop": {
+                                            "19.0.101.1": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "19.0.101.1/32"
+                                  },
+                                  "19.0.102.4": {
+                                       "pending_update": False,
+                                       "refcount": 4,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 1,
+                                       "attached_nexthop": {
+                                            "19.0.102.4": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "19.0.102.4/32"
+                                  }
+                             },
+                             "af_nexthop_trigger_enable": True,
+                             "nexthop_trigger_delay_non_critical": 10000,
+                             "nexthop_trigger_delay_critical": 3000
+                        },
+                        "ipv4 mvpn": {
+                             "next_hop": {
+                                  "19.0.103.20": {
+                                       "pending_update": False,
+                                       "refcount": 15,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 1,
+                                       "attached_nexthop": {
+                                            "19.0.103.20": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "19.0.103.20/32"
+                                  },
+                                  "19.0.103.10": {
+                                       "pending_update": False,
+                                       "refcount": 15,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 1,
+                                       "attached_nexthop": {
+                                            "19.0.103.10": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "19.0.103.10/32"
+                                  }
+                             },
+                             "af_nexthop_trigger_enable": True,
+                             "nexthop_trigger_delay_non_critical": 10000,
+                             "nexthop_trigger_delay_critical": 3000
+                        },
+                        "ipv6 unicast": {
+                             "next_hop": {
+                                  "fec0::1002": {
+                                       "pending_update": False,
+                                       "refcount": 3,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 0,
+                                       "attached_nexthop": {
+                                            "fec0::1002": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "fec0::1002/128"
+                                  },
+                                  "fec0::2002": {
+                                       "pending_update": False,
+                                       "refcount": 2,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 0,
+                                       "attached_nexthop": {
+                                            "fec0::2002": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:19",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "fec0::2002/128"
+                                  }
+                             },
+                             "af_nexthop_trigger_enable": True,
+                             "nexthop_trigger_delay_non_critical": 10000,
+                             "nexthop_trigger_delay_critical": 3000
+                        },
+                        "ipv6 mvpn": {
+                             "next_hop": {
+                                  "1920:21::2": {
+                                       "pending_update": False,
+                                       "refcount": 10,
+                                       "attached": False,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 0,
+                                       "igp_preference": 0,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": False,
+                                       "flags": "0",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": -1,
+                                       "rib_route": "0::/0"
+                                  },
+                                  "1920:11::2": {
+                                       "pending_update": False,
+                                       "refcount": 10,
+                                       "attached": False,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 0,
+                                       "igp_preference": 0,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": False,
+                                       "flags": "0",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": -1,
+                                       "rib_route": "0::/0"
+                                  }
+                             },
+                             "af_nexthop_trigger_enable": True,
+                             "nexthop_trigger_delay_non_critical": 10000,
+                             "nexthop_trigger_delay_critical": 3000
+                        },
+                        "vpnv6 unicast": {
+                             "next_hop": {
+                                  "::ffff:19.0.102.3": {
+                                       "pending_update": False,
+                                       "refcount": 2,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 2,
+                                       "attached_nexthop": {
+                                            "19.0.102.3": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "19.0.102.3/32"
+                                  },
+                                  "::ffff:19.0.101.1": {
+                                       "pending_update": False,
+                                       "refcount": 2,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 2,
+                                       "attached_nexthop": {
+                                            "19.0.101.1": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "19.0.101.1/32"
+                                  }
+                             },
+                             "af_nexthop_trigger_enable": True,
+                             "nexthop_trigger_delay_non_critical": 10000,
+                             "nexthop_trigger_delay_critical": 3000
+                        },
+                        "link-state": {
+                             "next_hop": {
+                                  "19.0.102.3": {
+                                       "pending_update": False,
+                                       "refcount": 2,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 2,
+                                       "attached_nexthop": {
+                                            "19.0.102.3": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "19.0.102.3/32"
+                                  },
+                                  "19.0.101.1": {
+                                       "pending_update": False,
+                                       "refcount": 2,
+                                       "attached": True,
+                                       "igp_route_type": 0,
+                                       "rnh_epoch": 2,
+                                       "attached_nexthop": {
+                                            "19.0.101.1": {
+                                                 "attached_nexthop_interface": "Ethernet1/1"
+                                            }
+                                       },
+                                       "igp_preference": 250,
+                                       "filtered": False,
+                                       "resolve_time": "00:52:09",
+                                       "reachable": True,
+                                       "flags": "0x5",
+                                       "metric_next_advertise": "never",
+                                       "labeled": False,
+                                       "local": False,
+                                       "igp_cost": 0,
+                                       "rib_route": "19.0.101.1/32"
+                                  }
+                             },
+                             "af_nexthop_trigger_enable": True,
+                             "nexthop_trigger_delay_non_critical": 10000,
+                             "nexthop_trigger_delay_critical": 3000
+                        }
+                   }
+              }
+         }
+    }
 
     golden_output_2 = {'execute.return_value': '''
         Next Hop table for VRF default, address family IPv4 Unicast:
         Next-hop trigger-delay(miliseconds)
           Critical: 3000 Non-critical: 10000
         IPv4 Next-hop table
+
+        IPv4 Unicast Next-hops:
+
+        Nexthop: 19.0.101.1, Flags: 0x5, Refcount: 2, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: 19.0.101.1, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:09, using 19.0.101.1/32
+        Metric next advertise: Never
+        RNH epoch: 2
+
+        Nexthop: 19.0.102.3, Flags: 0x5, Refcount: 2, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: 19.0.102.3, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:09, using 19.0.102.3/32
+        Metric next advertise: Never
+        RNH epoch: 2
+
+        Nexthop: 19.0.102.4, Flags: 0x5, Refcount: 2, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: 19.0.102.4, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:09, using 19.0.102.4/32
+        Metric next advertise: Never
+        RNH epoch: 1
+
+        Nexthop: 21.0.101.99, Flags: 0, Refcount: 2, IGP cost: -1
+        IGP Route type: 0, IGP preference: 0
+        Nexthop is not-attached not-local unreachable not-labeled
+        Nexthop last resolved: 00:52:09, using 0.0.0.0/0
+        Metric next advertise: Never
+        RNH epoch: 0
         IPv6 Next-hop table
 
         IPv6 Unicast Next-hops:
@@ -15242,6 +16204,24 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
         Next-hop trigger-delay(miliseconds)
           Critical: 3000 Non-critical: 10000
         IPv4 Next-hop table
+
+        IPv4 Multicast Next-hops:
+
+        Nexthop: 19.0.102.3, Flags: 0x5, Refcount: 2, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: 19.0.102.3, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:09, using 19.0.102.3/32
+        Metric next advertise: Never
+        RNH epoch: 0
+
+        Nexthop: 19.0.102.4, Flags: 0x5, Refcount: 2, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: 19.0.102.4, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:09, using 19.0.102.4/32
+        Metric next advertise: Never
+        RNH epoch: 0
         IPv6 Next-hop table
 
         IPv6 Multicast Next-hops:
@@ -15250,14 +16230,25 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
         Next-hop trigger-delay(miliseconds)
           Critical: 3000 Non-critical: 10000
         IPv4 Next-hop table
+
+        IPv4 Unicast Next-hops:
         IPv6 Next-hop table
 
         IPv6 Unicast Next-hops:
 
-        Nexthop: 0::, Flags: 0x2, Refcount: 3, IGP cost: 0
-        IGP Route type: 0, IGP preference: 0
-        Nexthop is not-attached local unreachable not-labeled
-        Nexthop last resolved: never, using 0::/0
+        Nexthop: fec0::1002, Flags: 0x5, Refcount: 3, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: fec0::1002, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:09, using fec0::1002/128
+        Metric next advertise: Never
+        RNH epoch: 0
+
+        Nexthop: fec0::2002, Flags: 0x5, Refcount: 2, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: fec0::2002, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:19, using fec0::2002/128
         Metric next advertise: Never
         RNH epoch: 0
 
@@ -15265,14 +16256,25 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
         Next-hop trigger-delay(miliseconds)
           Critical: 3000 Non-critical: 10000
         IPv4 Next-hop table
+
+        IPv4 Multicast Next-hops:
         IPv6 Next-hop table
 
         IPv6 Multicast Next-hops:
 
-        Nexthop: 0::, Flags: 0x2, Refcount: 3, IGP cost: 0
-        IGP Route type: 0, IGP preference: 0
-        Nexthop is not-attached local unreachable not-labeled
-        Nexthop last resolved: never, using 0::/0
+        Nexthop: fec0::1002, Flags: 0x5, Refcount: 2, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: fec0::1002, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:09, using fec0::1002/128
+        Metric next advertise: Never
+        RNH epoch: 0
+
+        Nexthop: fec0::2002, Flags: 0x5, Refcount: 2, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: fec0::2002, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:09, using fec0::2002/128
         Metric next advertise: Never
         RNH epoch: 0
 
@@ -15280,6 +16282,32 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
         Next-hop trigger-delay(miliseconds)
           Critical: 3000 Non-critical: 10000
         IPv4 Next-hop table
+
+        IPv4 Unicast Next-hops:
+
+        Nexthop: 19.0.101.1, Flags: 0x5, Refcount: 2, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: 19.0.101.1, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:09, using 19.0.101.1/32
+        Metric next advertise: Never
+        RNH epoch: 2
+
+        Nexthop: 19.0.102.3, Flags: 0x5, Refcount: 2, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: 19.0.102.3, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:09, using 19.0.102.3/32
+        Metric next advertise: Never
+        RNH epoch: 2
+
+        Nexthop: 19.0.102.4, Flags: 0x5, Refcount: 4, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: 19.0.102.4, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:09, using 19.0.102.4/32
+        Metric next advertise: Never
+        RNH epoch: 1
         IPv6 Next-hop table
 
         IPv6 Unicast Next-hops:
@@ -15288,6 +16316,108 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
         Next-hop trigger-delay(miliseconds)
           Critical: 3000 Non-critical: 10000
         IPv4 Next-hop table
+
+        IPv4 Unicast Next-hops:
+
+        Nexthop: ::ffff:19.0.101.1, Flags: 0x5, Refcount: 2, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: 19.0.101.1, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:09, using 19.0.101.1/32
+        Metric next advertise: Never
+        RNH epoch: 2
+
+        Nexthop: ::ffff:19.0.102.3, Flags: 0x5, Refcount: 2, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: 19.0.102.3, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:09, using 19.0.102.3/32
+        Metric next advertise: Never
+        RNH epoch: 2
+        IPv6 Next-hop table
+
+        IPv6 Unicast Next-hops:
+
+        Next Hop table for VRF default, address family IPv4 MVPN:
+        Next-hop trigger-delay(miliseconds)
+          Critical: 3000 Non-critical: 10000
+        IPv4 Next-hop table
+
+        IPv4 Unicast Next-hops:
+
+        Nexthop: 19.0.103.10, Flags: 0x5, Refcount: 15, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: 19.0.103.10, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:09, using 19.0.103.10/32
+        Metric next advertise: Never
+        RNH epoch: 1
+
+        Nexthop: 19.0.103.20, Flags: 0x5, Refcount: 15, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: 19.0.103.20, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:09, using 19.0.103.20/32
+        Metric next advertise: Never
+        RNH epoch: 1
+        IPv6 Next-hop table
+
+        IPv6 Unicast Next-hops:
+
+        Next Hop table for VRF default, address family IPv6 MVPN:
+        Next-hop trigger-delay(miliseconds)
+          Critical: 3000 Non-critical: 10000
+        IPv4 Next-hop table
+
+        IPv4 Unicast Next-hops:
+        IPv6 Next-hop table
+
+        IPv6 Unicast Next-hops:
+
+        Nexthop: 1920:11::2, Flags: 0, Refcount: 10, IGP cost: -1
+        IGP Route type: 0, IGP preference: 0
+        Nexthop is not-attached not-local unreachable not-labeled
+        Nexthop last resolved: 00:52:09, using 0::/0
+        Metric next advertise: Never
+        RNH epoch: 0
+
+        Nexthop: 1920:21::2, Flags: 0, Refcount: 10, IGP cost: -1
+        IGP Route type: 0, IGP preference: 0
+        Nexthop is not-attached not-local unreachable not-labeled
+        Nexthop last resolved: 00:52:09, using 0::/0
+        Metric next advertise: Never
+        RNH epoch: 0
+
+        Next Hop table for VRF default, address family L2VPN EVPN:
+        Next-hop trigger-delay(miliseconds)
+          Critical: 3000 Non-critical: 10000
+        IPv4 Next-hop table
+
+        IPv4 Unicast Next-hops:
+
+        Nexthop: 19.0.101.1, Flags: 0x5, Refcount: 9, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: 19.0.101.1, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:09, using 19.0.101.1/32
+        Metric next advertise: Never
+        RNH epoch: 2
+
+        Nexthop: 19.0.102.3, Flags: 0x5, Refcount: 4, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: 19.0.102.3, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:09, using 19.0.102.3/32
+        Metric next advertise: Never
+        RNH epoch: 2
+
+        Nexthop: 19.0.102.4, Flags: 0x5, Refcount: 4, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: 19.0.102.4, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:09, using 19.0.102.4/32
+        Metric next advertise: Never
+        RNH epoch: 1
         IPv6 Next-hop table
 
         IPv6 Unicast Next-hops:
@@ -15296,9 +16426,28 @@ class test_show_bgp_all_nexthop_database_cli(unittest.TestCase):
         Next-hop trigger-delay(miliseconds)
           Critical: 3000 Non-critical: 10000
         IPv4 Next-hop table
+
+        IPv4 Unicast Next-hops:
+
+        Nexthop: 19.0.101.1, Flags: 0x5, Refcount: 2, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: 19.0.101.1, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:09, using 19.0.101.1/32
+        Metric next advertise: Never
+        RNH epoch: 2
+
+        Nexthop: 19.0.102.3, Flags: 0x5, Refcount: 2, IGP cost: 0
+        IGP Route type: 0, IGP preference: 250
+        Attached nexthop: 19.0.102.3, Interface: Ethernet1/1
+        Nexthop is attached not-local reachable not-labeled
+        Nexthop last resolved: 00:52:09, using 19.0.102.3/32
+        Metric next advertise: Never
+        RNH epoch: 2
         IPv6 Next-hop table
 
         IPv6 Unicast Next-hops:
+
     '''
     }
 
@@ -15605,53 +16754,357 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
 
     golden_parsed_output_2 = {
         "vrf": {
-            "default": {
+          "default": {
                "address_family": {
                     "ipv4 unicast": {
                          "nexthop_trigger_delay_non_critical": 10000,
                          "af_nexthop_trigger_enable": True,
-                         "nexthop_trigger_delay_critical": 3000
+                         "nexthop_trigger_delay_critical": 3000,
+                         "next_hop": {
+                              "19.0.102.3": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "attached_nexthop": {
+                                        "19.0.102.3": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
+                                   "igp_cost": 0,
+                                   "rib_route": "19.0.102.3/32",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:36",
+                                   "local": False,
+                                   "igp_preference": 250,
+                                   "rnh_epoch": 2,
+                                   "reachable": True,
+                                   "attached": True,
+                                   "refcount": 2,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              },
+                              "21.0.101.99": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "igp_cost": -1,
+                                   "rib_route": "0.0.0.0/0",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:36",
+                                   "local": False,
+                                   "igp_preference": 0,
+                                   "rnh_epoch": 0,
+                                   "reachable": False,
+                                   "attached": False,
+                                   "refcount": 2,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              },
+                              "19.0.102.4": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "attached_nexthop": {
+                                        "19.0.102.4": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
+                                   "igp_cost": 0,
+                                   "rib_route": "19.0.102.4/32",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:36",
+                                   "local": False,
+                                   "igp_preference": 250,
+                                   "rnh_epoch": 1,
+                                   "reachable": True,
+                                   "attached": True,
+                                   "refcount": 2,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              },
+                              "19.0.101.1": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "attached_nexthop": {
+                                        "19.0.101.1": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
+                                   "igp_cost": 0,
+                                   "rib_route": "19.0.101.1/32",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:36",
+                                   "local": False,
+                                   "igp_preference": 250,
+                                   "rnh_epoch": 2,
+                                   "reachable": True,
+                                   "attached": True,
+                                   "refcount": 2,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              }
+                         }
                     },
-                    "vpnv6 unicast": {
-                         "nexthop_trigger_delay_non_critical": 10000,
-                         "af_nexthop_trigger_enable": True,
-                         "nexthop_trigger_delay_critical": 3000
-                    },
-                    "ipv4 multicast": {
-                         "nexthop_trigger_delay_non_critical": 10000,
-                         "af_nexthop_trigger_enable": True,
-                         "nexthop_trigger_delay_critical": 3000
-                    },
-                    "vpnv4 unicast": {
-                         "nexthop_trigger_delay_non_critical": 10000,
-                         "af_nexthop_trigger_enable": True,
-                         "nexthop_trigger_delay_critical": 3000
-                    },
-                    "link-state": {
-                         "nexthop_trigger_delay_non_critical": 10000,
-                         "af_nexthop_trigger_enable": True,
-                         "nexthop_trigger_delay_critical": 3000
-                    },
-                    "ipv6 multicast": {
+                    "ipv4 mvpn": {
                          "nexthop_trigger_delay_non_critical": 10000,
                          "af_nexthop_trigger_enable": True,
                          "nexthop_trigger_delay_critical": 3000,
                          "next_hop": {
-                              "0::": {
-                                   "refcount": 3,
-                                   "metric_next_advertise": "never",
-                                   "igp_preference": 0,
+                              "19.0.103.20": {
                                    "igp_route_type": 0,
-                                   "labeled": False,
-                                   "rib_route": "0::/0",
                                    "filtered": False,
+                                   "attached_nexthop": {
+                                        "19.0.103.20": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
                                    "igp_cost": 0,
-                                   "pending_update": False,
+                                   "rib_route": "19.0.103.20/32",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:37",
+                                   "local": False,
+                                   "igp_preference": 250,
+                                   "rnh_epoch": 1,
+                                   "reachable": True,
+                                   "attached": True,
+                                   "refcount": 15,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              },
+                              "19.0.103.10": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "attached_nexthop": {
+                                        "19.0.103.10": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
+                                   "igp_cost": 0,
+                                   "rib_route": "19.0.103.10/32",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:37",
+                                   "local": False,
+                                   "igp_preference": 250,
+                                   "rnh_epoch": 1,
+                                   "reachable": True,
+                                   "attached": True,
+                                   "refcount": 15,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              }
+                         }
+                    },
+                    "ipv4 multicast": {
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000,
+                         "next_hop": {
+                              "19.0.102.3": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "attached_nexthop": {
+                                        "19.0.102.3": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
+                                   "igp_cost": 0,
+                                   "rib_route": "19.0.102.3/32",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:36",
+                                   "local": False,
+                                   "igp_preference": 250,
                                    "rnh_epoch": 0,
-                                   "reachable": False,
-                                   "local": True,
-                                   "attached": False,
-                                   "resolve_time": "never"
+                                   "reachable": True,
+                                   "attached": True,
+                                   "refcount": 2,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              },
+                              "19.0.102.4": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "attached_nexthop": {
+                                        "19.0.102.4": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
+                                   "igp_cost": 0,
+                                   "rib_route": "19.0.102.4/32",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:36",
+                                   "local": False,
+                                   "igp_preference": 250,
+                                   "rnh_epoch": 0,
+                                   "reachable": True,
+                                   "attached": True,
+                                   "refcount": 2,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              }
+                         }
+                    },
+                    "vpnv6 unicast": {
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000,
+                         "next_hop": {
+                              "::ffff:19.0.101.1": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "attached_nexthop": {
+                                        "19.0.101.1": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
+                                   "igp_cost": 0,
+                                   "rib_route": "19.0.101.1/32",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:37",
+                                   "local": False,
+                                   "igp_preference": 250,
+                                   "rnh_epoch": 2,
+                                   "reachable": True,
+                                   "attached": True,
+                                   "refcount": 2,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              },
+                              "::ffff:19.0.102.3": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "attached_nexthop": {
+                                        "19.0.102.3": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
+                                   "igp_cost": 0,
+                                   "rib_route": "19.0.102.3/32",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:37",
+                                   "local": False,
+                                   "igp_preference": 250,
+                                   "rnh_epoch": 2,
+                                   "reachable": True,
+                                   "attached": True,
+                                   "refcount": 2,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              }
+                         }
+                    },
+                    "l2vpn evpn": {
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000,
+                         "next_hop": {
+                              "19.0.102.3": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "attached_nexthop": {
+                                        "19.0.102.3": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
+                                   "igp_cost": 0,
+                                   "rib_route": "19.0.102.3/32",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:37",
+                                   "local": False,
+                                   "igp_preference": 250,
+                                   "rnh_epoch": 2,
+                                   "reachable": True,
+                                   "attached": True,
+                                   "refcount": 4,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              },
+                              "19.0.102.4": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "attached_nexthop": {
+                                        "19.0.102.4": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
+                                   "igp_cost": 0,
+                                   "rib_route": "19.0.102.4/32",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:37",
+                                   "local": False,
+                                   "igp_preference": 250,
+                                   "rnh_epoch": 1,
+                                   "reachable": True,
+                                   "attached": True,
+                                   "refcount": 4,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              },
+                              "19.0.101.1": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "attached_nexthop": {
+                                        "19.0.101.1": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
+                                   "igp_cost": 0,
+                                   "rib_route": "19.0.101.1/32",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:37",
+                                   "local": False,
+                                   "igp_preference": 250,
+                                   "rnh_epoch": 2,
+                                   "reachable": True,
+                                   "attached": True,
+                                   "refcount": 9,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              }
+                         }
+                    },
+                    "link-state": {
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000,
+                         "next_hop": {
+                              "19.0.102.3": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "attached_nexthop": {
+                                        "19.0.102.3": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
+                                   "igp_cost": 0,
+                                   "rib_route": "19.0.102.3/32",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:37",
+                                   "local": False,
+                                   "igp_preference": 250,
+                                   "rnh_epoch": 2,
+                                   "reachable": True,
+                                   "attached": True,
+                                   "refcount": 2,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              },
+                              "19.0.101.1": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "attached_nexthop": {
+                                        "19.0.101.1": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
+                                   "igp_cost": 0,
+                                   "rib_route": "19.0.101.1/32",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:37",
+                                   "local": False,
+                                   "igp_preference": 250,
+                                   "rnh_epoch": 2,
+                                   "reachable": True,
+                                   "attached": True,
+                                   "refcount": 2,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
                               }
                          }
                     },
@@ -15660,21 +17113,206 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                          "af_nexthop_trigger_enable": True,
                          "nexthop_trigger_delay_critical": 3000,
                          "next_hop": {
-                              "0::": {
+                              "fec0::2002": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "attached_nexthop": {
+                                        "fec0::2002": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
+                                   "igp_cost": 0,
+                                   "rib_route": "fec0::2002/128",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:45",
+                                   "local": False,
+                                   "igp_preference": 250,
+                                   "rnh_epoch": 0,
+                                   "reachable": True,
+                                   "attached": True,
+                                   "refcount": 2,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              },
+                              "fec0::1002": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "attached_nexthop": {
+                                        "fec0::1002": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
+                                   "igp_cost": 0,
+                                   "rib_route": "fec0::1002/128",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:36",
+                                   "local": False,
+                                   "igp_preference": 250,
+                                   "rnh_epoch": 0,
+                                   "reachable": True,
+                                   "attached": True,
                                    "refcount": 3,
                                    "metric_next_advertise": "never",
-                                   "igp_preference": 0,
+                                   "pending_update": False
+                              }
+                         }
+                    },
+                    "ipv6 mvpn": {
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000,
+                         "next_hop": {
+                              "1920:21::2": {
                                    "igp_route_type": 0,
-                                   "labeled": False,
-                                   "rib_route": "0::/0",
                                    "filtered": False,
-                                   "igp_cost": 0,
-                                   "pending_update": False,
+                                   "igp_cost": -1,
+                                   "rib_route": "0::/0",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:37",
+                                   "local": False,
+                                   "igp_preference": 0,
                                    "rnh_epoch": 0,
                                    "reachable": False,
-                                   "local": True,
                                    "attached": False,
-                                   "resolve_time": "never"}}}}}}}
+                                   "refcount": 10,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              },
+                              "1920:11::2": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "igp_cost": -1,
+                                   "rib_route": "0::/0",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:37",
+                                   "local": False,
+                                   "igp_preference": 0,
+                                   "rnh_epoch": 0,
+                                   "reachable": False,
+                                   "attached": False,
+                                   "refcount": 10,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              }
+                         }
+                    },
+                    "vpnv4 unicast": {
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000,
+                         "next_hop": {
+                              "19.0.102.3": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "attached_nexthop": {
+                                        "19.0.102.3": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
+                                   "igp_cost": 0,
+                                   "rib_route": "19.0.102.3/32",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:37",
+                                   "local": False,
+                                   "igp_preference": 250,
+                                   "rnh_epoch": 2,
+                                   "reachable": True,
+                                   "attached": True,
+                                   "refcount": 2,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              },
+                              "19.0.102.4": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "attached_nexthop": {
+                                        "19.0.102.4": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
+                                   "igp_cost": 0,
+                                   "rib_route": "19.0.102.4/32",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:37",
+                                   "local": False,
+                                   "igp_preference": 250,
+                                   "rnh_epoch": 1,
+                                   "reachable": True,
+                                   "attached": True,
+                                   "refcount": 4,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              },
+                              "19.0.101.1": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "attached_nexthop": {
+                                        "19.0.101.1": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
+                                   "igp_cost": 0,
+                                   "rib_route": "19.0.101.1/32",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:37",
+                                   "local": False,
+                                   "igp_preference": 250,
+                                   "rnh_epoch": 2,
+                                   "reachable": True,
+                                   "attached": True,
+                                   "refcount": 2,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              }
+                         }
+                    },
+                    "ipv6 multicast": {
+                         "nexthop_trigger_delay_non_critical": 10000,
+                         "af_nexthop_trigger_enable": True,
+                         "nexthop_trigger_delay_critical": 3000,
+                         "next_hop": {
+                              "fec0::2002": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "attached_nexthop": {
+                                        "fec0::2002": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
+                                   "igp_cost": 0,
+                                   "rib_route": "fec0::2002/128",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:37",
+                                   "local": False,
+                                   "igp_preference": 250,
+                                   "rnh_epoch": 0,
+                                   "reachable": True,
+                                   "attached": True,
+                                   "refcount": 2,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              },
+                              "fec0::1002": {
+                                   "igp_route_type": 0,
+                                   "filtered": False,
+                                   "attached_nexthop": {
+                                        "fec0::1002": {
+                                             "attached_nexthop_interface": "Ethernet1/1"
+                                        }
+                                   },
+                                   "igp_cost": 0,
+                                   "rib_route": "fec0::1002/128",
+                                   "labeled": False,
+                                   "resolve_time": "00:53:37",
+                                   "local": False,
+                                   "igp_preference": 250,
+                                   "rnh_epoch": 0,
+                                   "reachable": True,
+                                   "attached": True,
+                                   "refcount": 2,
+                                   "metric_next_advertise": "never",
+                                   "pending_update": False
+                              }}}}}}}
 
     golden_output_2 = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
         <nf:rpc-reply xmlns="http://www.cisco.com/nxos:7.0.3.I7.2.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -15696,6 +17334,94 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                      <af-name>IPv4 Unicast</af-name>
                      <nhcriticaldelay>3000</nhcriticaldelay>
                      <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                     <TABLE_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>19.0.101.1</ipnexthop-out>
+                       <refcount>2</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>19.0.101.1</attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:36</resolvetime>
+                       <ribroute>19.0.101.1/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>2</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>19.0.102.3</ipnexthop-out>
+                       <refcount>2</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>19.0.102.3</attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:36</resolvetime>
+                       <ribroute>19.0.102.3/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>2</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>19.0.102.4</ipnexthop-out>
+                       <refcount>2</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>19.0.102.4</attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:36</resolvetime>
+                       <ribroute>19.0.102.4/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>21.0.101.99</ipnexthop-out>
+                       <refcount>2</refcount>
+                       <igpmetric>-1</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>0</igppref>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>false</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:36</resolvetime>
+                       <ribroute>0.0.0.0/0</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>0</rnhepoch>
+                      </ROW_nexthop>
+                     </TABLE_nexthop>
                     </ROW_nhsafi>
                    </TABLE_nhsafi>
                   </ROW_nhafi>
@@ -15712,6 +17438,54 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                      <af-name>IPv4 Multicast</af-name>
                      <nhcriticaldelay>3000</nhcriticaldelay>
                      <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                     <TABLE_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>19.0.102.3</ipnexthop-out>
+                       <refcount>2</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>19.0.102.3</attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:36</resolvetime>
+                       <ribroute>19.0.102.3/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>0</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>19.0.102.4</ipnexthop-out>
+                       <refcount>2</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>19.0.102.4</attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:36</resolvetime>
+                       <ribroute>19.0.102.4/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>0</rnhepoch>
+                      </ROW_nexthop>
+                     </TABLE_nexthop>
                     </ROW_nhsafi>
                    </TABLE_nhsafi>
                   </ROW_nhafi>
@@ -15730,18 +17504,47 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                      <nhnoncriticaldelay>10000</nhnoncriticaldelay>
                      <TABLE_nexthop>
                       <ROW_nexthop>
-                       <ipv6nexthop-out>0::</ipv6nexthop-out>
+                       <ipv6nexthop-out>fec0::1002</ipv6nexthop-out>
                        <refcount>3</refcount>
                        <igpmetric>0</igpmetric>
                        <igptype>0</igptype>
-                       <igppref>0</igppref>
-                       <attached>false</attached>
-                       <local>true</local>
-                       <reachable>false</reachable>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <ipv6attachedhop>fec0::1002</ipv6attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
                        <labeled>false</labeled>
                        <filtered>false</filtered>
-                       <resolvetime>never</resolvetime>
-                       <ipv6ribroute>0::/0</ipv6ribroute>
+                       <resolvetime>00:53:36</resolvetime>
+                       <ipv6ribroute>fec0::1002/128</ipv6ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>0</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>fec0::2002</ipv6nexthop-out>
+                       <refcount>2</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <ipv6attachedhop>fec0::2002</ipv6attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:45</resolvetime>
+                       <ipv6ribroute>fec0::2002/128</ipv6ribroute>
                        <pendingupdate>false</pendingupdate>
                        <nextadvertise>Never</nextadvertise>
                        <rnhepoch>0</rnhepoch>
@@ -15765,18 +17568,47 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                      <nhnoncriticaldelay>10000</nhnoncriticaldelay>
                      <TABLE_nexthop>
                       <ROW_nexthop>
-                       <ipv6nexthop-out>0::</ipv6nexthop-out>
-                       <refcount>3</refcount>
+                       <ipv6nexthop-out>fec0::1002</ipv6nexthop-out>
+                       <refcount>2</refcount>
                        <igpmetric>0</igpmetric>
                        <igptype>0</igptype>
-                       <igppref>0</igppref>
-                       <attached>false</attached>
-                       <local>true</local>
-                       <reachable>false</reachable>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <ipv6attachedhop>fec0::1002</ipv6attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
                        <labeled>false</labeled>
                        <filtered>false</filtered>
-                       <resolvetime>never</resolvetime>
-                       <ipv6ribroute>0::/0</ipv6ribroute>
+                       <resolvetime>00:53:37</resolvetime>
+                       <ipv6ribroute>fec0::1002/128</ipv6ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>0</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>fec0::2002</ipv6nexthop-out>
+                       <refcount>2</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <ipv6attachedhop>fec0::2002</ipv6attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:37</resolvetime>
+                       <ipv6ribroute>fec0::2002/128</ipv6ribroute>
                        <pendingupdate>false</pendingupdate>
                        <nextadvertise>Never</nextadvertise>
                        <rnhepoch>0</rnhepoch>
@@ -15798,6 +17630,77 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                      <af-name>VPNv4 Unicast</af-name>
                      <nhcriticaldelay>3000</nhcriticaldelay>
                      <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                     <TABLE_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>19.0.101.1</ipnexthop-out>
+                       <refcount>2</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>19.0.101.1</attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:37</resolvetime>
+                       <ribroute>19.0.101.1/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>2</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>19.0.102.3</ipnexthop-out>
+                       <refcount>2</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>19.0.102.3</attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:37</resolvetime>
+                       <ribroute>19.0.102.3/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>2</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>19.0.102.4</ipnexthop-out>
+                       <refcount>4</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>19.0.102.4</attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:37</resolvetime>
+                       <ribroute>19.0.102.4/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                     </TABLE_nexthop>
                     </ROW_nhsafi>
                    </TABLE_nhsafi>
                   </ROW_nhafi>
@@ -15814,6 +17717,257 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                      <af-name>VPNv6 Unicast</af-name>
                      <nhcriticaldelay>3000</nhcriticaldelay>
                      <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                     <TABLE_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>::ffff:19.0.101.1</ipv6nexthop-out>
+                       <refcount>2</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <ipv6attachedhop>19.0.101.1</ipv6attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:37</resolvetime>
+                       <ipv6ribroute>19.0.101.1/32</ipv6ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>2</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>::ffff:19.0.102.3</ipv6nexthop-out>
+                       <refcount>2</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <ipv6attachedhop>19.0.102.3</ipv6attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:37</resolvetime>
+                       <ipv6ribroute>19.0.102.3/32</ipv6ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>2</rnhepoch>
+                      </ROW_nexthop>
+                     </TABLE_nexthop>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>1</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>5</nhsafi>
+                     <af-name>IPv4 MVPN</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                     <TABLE_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>19.0.103.10</ipnexthop-out>
+                       <refcount>15</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>19.0.103.10</attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:37</resolvetime>
+                       <ribroute>19.0.103.10/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>19.0.103.20</ipnexthop-out>
+                       <refcount>15</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>19.0.103.20</attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:37</resolvetime>
+                       <ribroute>19.0.103.20/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                     </TABLE_nexthop>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>2</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>5</nhsafi>
+                     <af-name>IPv6 MVPN</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                     <TABLE_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>1920:11::2</ipv6nexthop-out>
+                       <refcount>10</refcount>
+                       <igpmetric>-1</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>0</igppref>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>false</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:37</resolvetime>
+                       <ipv6ribroute>0::/0</ipv6ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>0</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipv6nexthop-out>1920:21::2</ipv6nexthop-out>
+                       <refcount>10</refcount>
+                       <igpmetric>-1</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>0</igppref>
+                       <attached>false</attached>
+                       <local>false</local>
+                       <reachable>false</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:37</resolvetime>
+                       <ipv6ribroute>0::/0</ipv6ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>0</rnhepoch>
+                      </ROW_nexthop>
+                     </TABLE_nexthop>
+                    </ROW_nhsafi>
+                   </TABLE_nhsafi>
+                  </ROW_nhafi>
+                 </TABLE_nhafi>
+                </ROW_nhvrf>
+                <ROW_nhvrf>
+                 <nhvrf-name-out>default</nhvrf-name-out>
+                 <TABLE_nhafi>
+                  <ROW_nhafi>
+                   <nhafi>25</nhafi>
+                   <TABLE_nhsafi>
+                    <ROW_nhsafi>
+                     <nhsafi>70</nhsafi>
+                     <af-name>L2VPN EVPN</af-name>
+                     <nhcriticaldelay>3000</nhcriticaldelay>
+                     <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                     <TABLE_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>19.0.101.1</ipnexthop-out>
+                       <refcount>9</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>19.0.101.1</attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:37</resolvetime>
+                       <ribroute>19.0.101.1/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>2</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>19.0.102.3</ipnexthop-out>
+                       <refcount>4</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>19.0.102.3</attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:37</resolvetime>
+                       <ribroute>19.0.102.3/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>2</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>19.0.102.4</ipnexthop-out>
+                       <refcount>4</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>19.0.102.4</attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:37</resolvetime>
+                       <ribroute>19.0.102.4/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>1</rnhepoch>
+                      </ROW_nexthop>
+                     </TABLE_nexthop>
                     </ROW_nhsafi>
                    </TABLE_nhsafi>
                   </ROW_nhafi>
@@ -15830,6 +17984,54 @@ class test_show_bgp_all_nexthop_database_xml(unittest.TestCase):
                      <af-name>Link-State</af-name>
                      <nhcriticaldelay>3000</nhcriticaldelay>
                      <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                     <TABLE_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>19.0.101.1</ipnexthop-out>
+                       <refcount>2</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>19.0.101.1</attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:37</resolvetime>
+                       <ribroute>19.0.101.1/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>2</rnhepoch>
+                      </ROW_nexthop>
+                      <ROW_nexthop>
+                       <ipnexthop-out>19.0.102.3</ipnexthop-out>
+                       <refcount>2</refcount>
+                       <igpmetric>0</igpmetric>
+                       <igptype>0</igptype>
+                       <igppref>250</igppref>
+                       <TABLE_attachedhops>
+                        <ROW_attachedhops>
+                         <attachedhop>19.0.102.3</attachedhop>
+                         <interface>Ethernet1/1</interface>
+                        </ROW_attachedhops>
+                       </TABLE_attachedhops>
+                       <attached>true</attached>
+                       <local>false</local>
+                       <reachable>true</reachable>
+                       <labeled>false</labeled>
+                       <filtered>false</filtered>
+                       <resolvetime>00:53:37</resolvetime>
+                       <ribroute>19.0.102.3/32</ribroute>
+                       <pendingupdate>false</pendingupdate>
+                       <nextadvertise>Never</nextadvertise>
+                       <rnhepoch>2</rnhepoch>
+                      </ROW_nexthop>
+                     </TABLE_nexthop>
                     </ROW_nhsafi>
                    </TABLE_nhsafi>
                   </ROW_nhafi>
@@ -15874,812 +18076,453 @@ class test_show_bgp_peer_template_cmd_cli(unittest.TestCase):
 
     golden_parsed_output = {
         "template": {
-            "PEER1": {
+          "PEER1": {
+               "passive_only": False,
                "remove_private_as": False,
-               "logging_neighbor_events": False,
-               "address_family": {
-                    "vpnv4 unicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         'as_override': False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ip prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
-                              }
-                         },
-                         "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
-                         "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ip prefix-list"
-                              }
-                         },
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
-                         "send_ext_community": True,
-                         "rr_configured": False
-                    },
-                    "link-state": {
-                         "in_soft_reconfig_allowed": False,
-                         "peer_as_check_disabled": False,
-                         'as_override': False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ip prefix-list"
-                              }
-                         },
-                         "third_party_nexthop": False,
-                         "max_pfx": 445566,
-                         "send_community": True,
-                         "allow_as_in": 10,
-                         "in_policy": {
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ip prefix-list"
-                              }
-                         },
-                         "send_ext_community": True,
-                         "rr_configured": False
-                    },
-                    "ipv4 multicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "advertise_map_status": "advertise",
-                         'soo': 'SOO:1.1.1.1:100',
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ip prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
-                              }
-                         },
-                         "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "default_originate_route_map": "PASS-ALL",
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
-                         "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ip prefix-list"
-                              }
-                         },
-                         "default_originate": True,
-                         "advertise_map": "BLOCK-ALL",
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
-                         "as_override": True,
-                         "send_ext_community": True,
-                         "condition_map": "DENY_ALL_RM",
-                         "rr_configured": False
-                    },
-                    "ipv6 multicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "advertise_map_status": "advertise",
-                         'soo': 'SOO:1.1.1.1:100',
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ipv6 prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
-                              }
-                         },
-                         "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "default_originate_route_map": "PASS-ALL",
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
-                         "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ipv6 prefix-list"
-                              }
-                         },
-                         "default_originate": True,
-                         "advertise_map": "BLOCK-ALL",
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
-                         "as_override": True,
-                         "send_ext_community": True,
-                         "condition_map": "DENY_ALL_RM",
-                         "rr_configured": False
-                    },
-                    "ipv4 unicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "advertise_map_status": "advertise",
-                         'soo': 'SOO:1.1.1.1:100',
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ip prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
-                              }
-                         },
-                         "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "default_originate_route_map": "PASS-ALL",
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
-                         "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ip prefix-list"
-                              }
-                         },
-                         "default_originate": True,
-                         "advertise_map": "BLOCK-ALL",
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
-                         "as_override": True,
-                         "send_ext_community": True,
-                         "condition_map": "DENY_ALL_RM",
-                         "rr_configured": False
-                    },
-                    "ipv6 unicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "advertise_map_status": "advertise",
-                         'soo': 'SOO:1.1.1.1:100',
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ipv6 prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
-                              }
-                         },
-                         "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "default_originate_route_map": "PASS-ALL",
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
-                         "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ipv6 prefix-list"
-                              }
-                         },
-                         "default_originate": True,
-                         "advertise_map": "BLOCK-ALL",
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
-                         "as_override": True,
-                         "send_ext_community": True,
-                         "condition_map": "DENY_ALL_RM",
-                         "rr_configured": False
-                    },
-                    "vpnv6 unicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         'as_override': False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ipv6 prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
-                              }
-                         },
-                         "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
-                         "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ipv6 prefix-list"
-                              }
-                         },
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
-                         "send_ext_community": True,
-                         "rr_configured": False
-                    }
-               },
-               "source_interface": "loopback1",
-               "low_mem_exempt": True,
-               "passive_only": True,
                "vrf": {
                     "default": {
                          "inheriting_peer": {
-                              "21.0.201.1": {
-                                   "inheriting_peer": "21.0.201.1"
+                              "19.0.200.200": {
+                                   "inheriting_peer": "19.0.200.200"
                               }
                          }
                     }
                },
-               "local_as_inactive": True,
-               "external_bgp_peer_hops_limit": 100
-            },
-            "PEER2": {
-               "remove_private_as": False,
-               "logging_neighbor_events": False,
                "address_family": {
-                    "vpnv4 unicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         'as_override': False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ip prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
-                              }
-                         },
-                         "in_soft_reconfig_allowed": False,
+                    "ipv6 multicast": {
                          "send_community": True,
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
+                         "condition_map": "PERMIT_ALL_RM",
+                         "weight": 222,
+                         "unsuppress_map": "PERMIT_ALL_RM",
                          "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ip prefix-list"
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
                               }
                          },
+                         "in_soft_reconfig_allowed": True,
+                         "default_originate": True,
+                         "soo": "SOO:1.1.1.1:88",
+                         "advertise_map_status": "advertise",
+                         "allow_as_in": 4,
+                         "rr_configured": False,
+                         "peer_as_check_disabled": True,
                          "third_party_nexthop": False,
-                         "max_pfx": 888888888,
+                         "local_nexthop": "0.0.0.0",
+                         "advertise_map": "PASS-ALL",
+                         "out_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
                          "send_ext_community": True,
-                         "rr_configured": False
+                         "as_override": True,
+                         "max_pfx": 1000000
                     },
                     "link-state": {
-                         "in_soft_reconfig_allowed": False,
-                         "peer_as_check_disabled": False,
-                         'as_override': False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ip prefix-list"
-                              }
-                         },
-                         "third_party_nexthop": False,
-                         "max_pfx": 445566,
+                         "as_override": False,
                          "send_community": True,
-                         "allow_as_in": 10,
-                         "in_policy": {
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ip prefix-list"
-                              }
-                         },
+                         "in_soft_reconfig_allowed": False,
+                         "third_party_nexthop": False,
+                         "default_originate": False,
+                         "peer_as_check_disabled": False,
+                         "allow_as_in": 4,
                          "send_ext_community": True,
-                         "rr_configured": False
+                         "rr_configured": False,
+                         "max_pfx": 1000000
                     },
-                    "ipv4 multicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "advertise_map_status": "advertise",
-                         'soo': 'SOO:1.1.1.1:100',
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
+                    "ipv4 mvpn": {
+                         "send_community": True,
+                         "third_party_nexthop": False,
+                         "max_pfx": 1000000,
+                         "send_ext_community": True,
                          "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ip prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
                               }
                          },
                          "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "default_originate_route_map": "PASS-ALL",
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
+                         "rr_configured": False,
+                         "peer_as_check_disabled": True,
+                         "allow_as_in": 4,
+                         "default_originate": False,
+                         "as_override": False,
                          "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ip prefix-list"
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
                               }
-                         },
-                         "default_originate": True,
-                         "advertise_map": "BLOCK-ALL",
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
-                         "as_override": True,
-                         "send_ext_community": True,
-                         "condition_map": "DENY_ALL_RM",
-                         "rr_configured": False
-                    },
-                    "ipv6 multicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "advertise_map_status": "advertise",
-                         'soo': 'SOO:1.1.1.1:100',
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ipv6 prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
-                              }
-                         },
-                         "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "default_originate_route_map": "PASS-ALL",
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
-                         "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ipv6 prefix-list"
-                              }
-                         },
-                         "default_originate": True,
-                         "advertise_map": "BLOCK-ALL",
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
-                         "as_override": True,
-                         "send_ext_community": True,
-                         "condition_map": "DENY_ALL_RM",
-                         "rr_configured": False
-                    },
-                    "ipv4 unicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "advertise_map_status": "advertise",
-                         'soo': 'SOO:1.1.1.1:100',
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ip prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
-                              }
-                         },
-                         "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "default_originate_route_map": "PASS-ALL",
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
-                         "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ip prefix-list"
-                              }
-                         },
-                         "default_originate": True,
-                         "advertise_map": "BLOCK-ALL",
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
-                         "as_override": True,
-                         "send_ext_community": True,
-                         "condition_map": "DENY_ALL_RM",
-                         "rr_configured": False
-                    },
-                    "ipv6 unicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "advertise_map_status": "advertise",
-                         'soo': 'SOO:1.1.1.1:100',
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ipv6 prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
-                              }
-                         },
-                         "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "default_originate_route_map": "PASS-ALL",
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
-                         "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ipv6 prefix-list"
-                              }
-                         },
-                         "default_originate": True,
-                         "advertise_map": "BLOCK-ALL",
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
-                         "as_override": True,
-                         "send_ext_community": True,
-                         "condition_map": "DENY_ALL_RM",
-                         "rr_configured": False
+                         }
                     },
                     "vpnv6 unicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         'as_override': False,
+                         "send_community": True,
+                         "third_party_nexthop": False,
+                         "weight": 222,
+                         "unsuppress_map": "PERMIT_ALL_RM",
+                         "in_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
+                         "send_ext_community": True,
                          "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ipv6 prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
                               }
                          },
                          "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "allow_as_in": 10,
+                         "rr_configured": False,
+                         "peer_as_check_disabled": False,
                          "local_nexthop": "0.0.0.0",
+                         "allow_as_in": 4,
+                         "default_originate": False,
+                         "as_override": False,
+                         "max_pfx": 1000000
+                    },
+                    "vpnv4 unicast": {
+                         "send_community": True,
+                         "third_party_nexthop": False,
+                         "weight": 222,
+                         "unsuppress_map": "PERMIT_ALL_RM",
                          "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ipv6 prefix-list"
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
                               }
                          },
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
                          "send_ext_community": True,
-                         "rr_configured": False
+                         "out_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "rr_configured": False,
+                         "peer_as_check_disabled": False,
+                         "local_nexthop": "0.0.0.0",
+                         "allow_as_in": 4,
+                         "default_originate": False,
+                         "as_override": False,
+                         "max_pfx": 1000000
+                    },
+                    "ipv4 multicast": {
+                         "send_community": True,
+                         "condition_map": "PERMIT_ALL_RM",
+                         "weight": 222,
+                         "unsuppress_map": "PERMIT_ALL_RM",
+                         "in_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": True,
+                         "default_originate": True,
+                         "soo": "SOO:1.1.1.1:88",
+                         "advertise_map_status": "advertise",
+                         "allow_as_in": 4,
+                         "rr_configured": False,
+                         "peer_as_check_disabled": True,
+                         "third_party_nexthop": False,
+                         "local_nexthop": "0.0.0.0",
+                         "advertise_map": "PASS-ALL",
+                         "out_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
+                         "send_ext_community": True,
+                         "as_override": True,
+                         "max_pfx": 1000000
+                    },
+                    "l2vpn evpn": {
+                         "send_community": True,
+                         "third_party_nexthop": False,
+                         "max_pfx": 1000000,
+                         "send_ext_community": True,
+                         "out_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "rr_configured": False,
+                         "peer_as_check_disabled": True,
+                         "allow_as_in": 4,
+                         "default_originate": False,
+                         "as_override": True,
+                         "in_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         }
+                    },
+                    "ipv6 mvpn": {
+                         "send_community": True,
+                         "third_party_nexthop": False,
+                         "max_pfx": 1000000,
+                         "send_ext_community": True,
+                         "out_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "rr_configured": False,
+                         "peer_as_check_disabled": True,
+                         "allow_as_in": 4,
+                         "default_originate": False,
+                         "as_override": False,
+                         "in_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         }
+                    },
+                    "ipv6 unicast": {
+                         "send_community": True,
+                         "condition_map": "PERMIT_ALL_RM",
+                         "weight": 222,
+                         "unsuppress_map": "PERMIT_ALL_RM",
+                         "in_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": True,
+                         "default_originate": True,
+                         "soo": "SOO:1.1.1.1:88",
+                         "advertise_map_status": "advertise",
+                         "allow_as_in": 4,
+                         "rr_configured": False,
+                         "peer_as_check_disabled": True,
+                         "third_party_nexthop": False,
+                         "local_nexthop": "0.0.0.0",
+                         "advertise_map": "PASS-ALL",
+                         "out_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
+                         "send_ext_community": True,
+                         "as_override": True,
+                         "max_pfx": 1000000
+                    },
+                    "ipv4 unicast": {
+                         "send_community": True,
+                         "condition_map": "PERMIT_ALL_RM",
+                         "weight": 222,
+                         "unsuppress_map": "PERMIT_ALL_RM",
+                         "in_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": True,
+                         "default_originate": True,
+                         "soo": "SOO:1.1.1.1:88",
+                         "advertise_map_status": "advertise",
+                         "allow_as_in": 4,
+                         "rr_configured": False,
+                         "peer_as_check_disabled": True,
+                         "third_party_nexthop": False,
+                         "local_nexthop": "0.0.0.0",
+                         "advertise_map": "PASS-ALL",
+                         "out_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
+                         "send_ext_community": True,
+                         "as_override": True,
+                         "max_pfx": 1000000
                     }
                },
-               "source_interface": "loopback1",
-               "low_mem_exempt": True,
-               "passive_only": True,
                "local_as_inactive": False,
-               "external_bgp_peer_hops_limit": 100
-            }
-        }
-    }
+               "logging_neighbor_events": False
+          }}}
 
     golden_output = {'execute.return_value': '''
-         BGP peer-template is PEER2
-          Using loopback1 as update source for this peer
-          Peer is low-memory exempt
-          Disable logging neighbor events
-          External BGP peer might be up to 100 hops away
-          Only passive connection setup allowed
+         BGP peer-template is PEER1
 
           For address family: IPv4 Unicast
-          Condition-map DENY_ALL_RM, Advertise-map BLOCK-ALL, Status Advertise
+          Condition-map PERMIT_ALL_RM, Advertise-map PASS-ALL, Status Advertise
+          Inbound soft reconfiguration allowed(always)
           Community attribute sent to this neighbor
           Extended community attribute sent to this neighbor
           Nexthop always set to local peering address, 0.0.0.0
           Third-party Nexthop will not be computed.
-          Maximum prefixes allowed 888888888
-          SOO Extcommunity: SOO:1.1.1.1:100
-          Weight: 9999
-          Allow my ASN 10 times
+          Maximum prefixes allowed 1000000
+          Advertisement Interval 333 seconds, timer not running
+          SOO Extcommunity: SOO:1.1.1.1:88
+          Weight: 222
+          Allow my ASN 4 times
           ASN override is enabled
-          Inbound ip prefix-list configured is LIST123
-          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
-          Outbound ip prefix-list configured is LIST456
-          Outbound route-map configured is PERMIT_IPV6_RM
-          Default information originate, route-map PASS-ALL  Last End-of-RIB sent 0.000000 after session start
+          Peer ASN check is disabled
+          Inbound route-map configured is PASS-ALL
+          Outbound route-map configured is PASS-ALL
+          Default information originate  Last End-of-RIB sent 0.000000 after session start
           First convergence 0.000000 after session start with 0 routes sent
 
-          Unsuppress-map ORIGINATE_IPV6 configured
+          Unsuppress-map PERMIT_ALL_RM configured
 
           For address family: IPv4 Multicast
-          Condition-map DENY_ALL_RM, Advertise-map BLOCK-ALL, Status Advertise
+          Condition-map PERMIT_ALL_RM, Advertise-map PASS-ALL, Status Advertise
+          Inbound soft reconfiguration allowed(always)
           Community attribute sent to this neighbor
           Extended community attribute sent to this neighbor
           Nexthop always set to local peering address, 0.0.0.0
           Third-party Nexthop will not be computed.
-          Maximum prefixes allowed 888888888
-          SOO Extcommunity: SOO:1.1.1.1:100
-          Weight: 9999
-          Allow my ASN 10 times
+          Maximum prefixes allowed 1000000
+          Advertisement Interval 333 seconds, timer not running
+          SOO Extcommunity: SOO:1.1.1.1:88
+          Weight: 222
+          Allow my ASN 4 times
           ASN override is enabled
-          Inbound ip prefix-list configured is LIST123
-          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
-          Outbound ip prefix-list configured is LIST456
-          Outbound route-map configured is PERMIT_IPV6_RM
-          Default information originate, route-map PASS-ALL  Last End-of-RIB sent 0.000000 after session start
+          Peer ASN check is disabled
+          Inbound route-map configured is PASS-ALL
+          Outbound route-map configured is PASS-ALL
+          Default information originate  Last End-of-RIB sent 0.000000 after session start
           First convergence 0.000000 after session start with 0 routes sent
 
-          Unsuppress-map ORIGINATE_IPV6 configured
+          Unsuppress-map PERMIT_ALL_RM configured
 
           For address family: IPv6 Unicast
-          Condition-map DENY_ALL_RM, Advertise-map BLOCK-ALL, Status Advertise
+          Condition-map PERMIT_ALL_RM, Advertise-map PASS-ALL, Status Advertise
+          Inbound soft reconfiguration allowed(always)
           Community attribute sent to this neighbor
           Extended community attribute sent to this neighbor
           Nexthop always set to local peering address, 0.0.0.0
           Third-party Nexthop will not be computed.
-          Maximum prefixes allowed 888888888
-          SOO Extcommunity: SOO:1.1.1.1:100
-          Weight: 9999
-          Allow my ASN 10 times
+          Maximum prefixes allowed 1000000
+          Advertisement Interval 333 seconds, timer not running
+          SOO Extcommunity: SOO:1.1.1.1:88
+          Weight: 222
+          Allow my ASN 4 times
           ASN override is enabled
-          Inbound ipv6 prefix-list configured is LIST123
-          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
-          Outbound ipv6 prefix-list configured is LIST456
-          Outbound route-map configured is PERMIT_IPV6_RM
-          Default information originate, route-map PASS-ALL  Last End-of-RIB sent 0.000000 after session start
+          Peer ASN check is disabled
+          Inbound route-map configured is PASS-ALL
+          Outbound route-map configured is PASS-ALL
+          Default information originate  Last End-of-RIB sent 0.000000 after session start
           First convergence 0.000000 after session start with 0 routes sent
 
-          Unsuppress-map ORIGINATE_IPV6 configured
+          Unsuppress-map PERMIT_ALL_RM configured
 
           For address family: IPv6 Multicast
-          Condition-map DENY_ALL_RM, Advertise-map BLOCK-ALL, Status Advertise
+          Condition-map PERMIT_ALL_RM, Advertise-map PASS-ALL, Status Advertise
+          Inbound soft reconfiguration allowed(always)
           Community attribute sent to this neighbor
           Extended community attribute sent to this neighbor
           Nexthop always set to local peering address, 0.0.0.0
           Third-party Nexthop will not be computed.
-          Maximum prefixes allowed 888888888
-          SOO Extcommunity: SOO:1.1.1.1:100
-          Weight: 9999
-          Allow my ASN 10 times
+          Maximum prefixes allowed 1000000
+          Advertisement Interval 333 seconds, timer not running
+          SOO Extcommunity: SOO:1.1.1.1:88
+          Weight: 222
+          Allow my ASN 4 times
           ASN override is enabled
-          Inbound ipv6 prefix-list configured is LIST123
-          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
-          Outbound ipv6 prefix-list configured is LIST456
-          Outbound route-map configured is PERMIT_IPV6_RM
-          Default information originate, route-map PASS-ALL  Last End-of-RIB sent 0.000000 after session start
+          Peer ASN check is disabled
+          Inbound route-map configured is PASS-ALL
+          Outbound route-map configured is PASS-ALL
+          Default information originate  Last End-of-RIB sent 0.000000 after session start
           First convergence 0.000000 after session start with 0 routes sent
 
-          Unsuppress-map ORIGINATE_IPV6 configured
+          Unsuppress-map PERMIT_ALL_RM configured
 
           For address family: VPNv4 Unicast
           Community attribute sent to this neighbor
           Extended community attribute sent to this neighbor
           Nexthop always set to local peering address, 0.0.0.0
           Third-party Nexthop will not be computed.
-          Maximum prefixes allowed 888888888
-          Weight: 9999
-          Allow my ASN 10 times
-          Inbound ip prefix-list configured is LIST123
-          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
-          Outbound ip prefix-list configured is LIST456
-          Outbound route-map configured is PERMIT_IPV6_RM
+          Maximum prefixes allowed 1000000
+          Advertisement Interval 333 seconds, timer not running
+          Weight: 222
+          Allow my ASN 4 times
+          Inbound route-map configured is PASS-ALL
+          Outbound route-map configured is PASS-ALL
           Last End-of-RIB sent 0.000000 after session start
           First convergence 0.000000 after session start with 0 routes sent
 
-          Unsuppress-map ORIGINATE_IPV6 configured
+          Unsuppress-map PERMIT_ALL_RM configured
 
           For address family: VPNv6 Unicast
           Community attribute sent to this neighbor
           Extended community attribute sent to this neighbor
           Nexthop always set to local peering address, 0.0.0.0
           Third-party Nexthop will not be computed.
-          Maximum prefixes allowed 888888888
-          Weight: 9999
-          Allow my ASN 10 times
-          Inbound ipv6 prefix-list configured is LIST123
-          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
-          Outbound ipv6 prefix-list configured is LIST456
-          Outbound route-map configured is PERMIT_IPV6_RM
+          Maximum prefixes allowed 1000000
+          Advertisement Interval 333 seconds, timer not running
+          Weight: 222
+          Allow my ASN 4 times
+          Inbound route-map configured is PASS-ALL
+          Outbound route-map configured is PASS-ALL
           Last End-of-RIB sent 0.000000 after session start
           First convergence 0.000000 after session start with 0 routes sent
 
-          Unsuppress-map ORIGINATE_IPV6 configured
+          Unsuppress-map PERMIT_ALL_RM configured
+
+          For address family: IPv4 MVPN
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Third-party Nexthop will not be computed.
+          Maximum prefixes allowed 1000000
+          Allow my ASN 4 times
+          Peer ASN check is disabled
+          Inbound route-map configured is PASS-ALL
+          Outbound route-map configured is PASS-ALL
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: IPv6 MVPN
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Third-party Nexthop will not be computed.
+          Maximum prefixes allowed 1000000
+          Allow my ASN 4 times
+          Peer ASN check is disabled
+          Inbound route-map configured is PASS-ALL
+          Outbound route-map configured is PASS-ALL
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
+
+          For address family: L2VPN EVPN
+          Community attribute sent to this neighbor
+          Extended community attribute sent to this neighbor
+          Third-party Nexthop will not be computed.
+          Maximum prefixes allowed 1000000
+          Allow my ASN 4 times
+          ASN override is enabled
+          Peer ASN check is disabled
+          Inbound route-map configured is PASS-ALL
+          Outbound route-map configured is PASS-ALL
+          Last End-of-RIB sent 0.000000 after session start
+          First convergence 0.000000 after session start with 0 routes sent
 
           For address family: Link-State
           Community attribute sent to this neighbor
           Extended community attribute sent to this neighbor
           Third-party Nexthop will not be computed.
-          Maximum prefixes allowed 445566
-          Allow my ASN 10 times
-          Inbound ip prefix-list configured is LIST123
-          Outbound ip prefix-list configured is LIST456
-          Last End-of-RIB sent 0.000000 after session start
-          First convergence 0.000000 after session start with 0 routes sent
-
-        Members of peer-template PEER2:
-
-        BGP peer-template is PEER1
-          Using loopback1 as update source for this peer
-          Peer is low-memory exempt
-          Disable logging neighbor events
-          External BGP peer might be up to 100 hops away
-          Only passive connection setup allowed
-          Neighbor local-as command not active
-
-          For address family: IPv4 Unicast
-          Condition-map DENY_ALL_RM, Advertise-map BLOCK-ALL, Status Advertise
-          Community attribute sent to this neighbor
-          Extended community attribute sent to this neighbor
-          Nexthop always set to local peering address, 0.0.0.0
-          Third-party Nexthop will not be computed.
-          Maximum prefixes allowed 888888888
-          SOO Extcommunity: SOO:1.1.1.1:100
-          Weight: 9999
-          Allow my ASN 10 times
-          ASN override is enabled
-          Inbound ip prefix-list configured is LIST123
-          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
-          Outbound ip prefix-list configured is LIST456
-          Outbound route-map configured is PERMIT_IPV6_RM
-          Default information originate, route-map PASS-ALL  Last End-of-RIB sent 0.000000 after session start
-          First convergence 0.000000 after session start with 0 routes sent
-
-          Unsuppress-map ORIGINATE_IPV6 configured
-
-          For address family: IPv4 Multicast
-          Condition-map DENY_ALL_RM, Advertise-map BLOCK-ALL, Status Advertise
-          Community attribute sent to this neighbor
-          Extended community attribute sent to this neighbor
-          Nexthop always set to local peering address, 0.0.0.0
-          Third-party Nexthop will not be computed.
-          Maximum prefixes allowed 888888888
-          SOO Extcommunity: SOO:1.1.1.1:100
-          Weight: 9999
-          Allow my ASN 10 times
-          ASN override is enabled
-          Inbound ip prefix-list configured is LIST123
-          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
-          Outbound ip prefix-list configured is LIST456
-          Outbound route-map configured is PERMIT_IPV6_RM
-          Default information originate, route-map PASS-ALL  Last End-of-RIB sent 0.000000 after session start
-          First convergence 0.000000 after session start with 0 routes sent
-
-          Unsuppress-map ORIGINATE_IPV6 configured
-
-          For address family: IPv6 Unicast
-          Condition-map DENY_ALL_RM, Advertise-map BLOCK-ALL, Status Advertise
-          Community attribute sent to this neighbor
-          Extended community attribute sent to this neighbor
-          Nexthop always set to local peering address, 0.0.0.0
-          Third-party Nexthop will not be computed.
-          Maximum prefixes allowed 888888888
-          SOO Extcommunity: SOO:1.1.1.1:100
-          Weight: 9999
-          Allow my ASN 10 times
-          ASN override is enabled
-          Inbound ipv6 prefix-list configured is LIST123
-          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
-          Outbound ipv6 prefix-list configured is LIST456
-          Outbound route-map configured is PERMIT_IPV6_RM
-          Default information originate, route-map PASS-ALL  Last End-of-RIB sent 0.000000 after session start
-          First convergence 0.000000 after session start with 0 routes sent
-
-          Unsuppress-map ORIGINATE_IPV6 configured
-
-          For address family: IPv6 Multicast
-          Condition-map DENY_ALL_RM, Advertise-map BLOCK-ALL, Status Advertise
-          Community attribute sent to this neighbor
-          Extended community attribute sent to this neighbor
-          Nexthop always set to local peering address, 0.0.0.0
-          Third-party Nexthop will not be computed.
-          Maximum prefixes allowed 888888888
-          SOO Extcommunity: SOO:1.1.1.1:100
-          Weight: 9999
-          Allow my ASN 10 times
-          ASN override is enabled
-          Inbound ipv6 prefix-list configured is LIST123
-          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
-          Outbound ipv6 prefix-list configured is LIST456
-          Outbound route-map configured is PERMIT_IPV6_RM
-          Default information originate, route-map PASS-ALL  Last End-of-RIB sent 0.000000 after session start
-          First convergence 0.000000 after session start with 0 routes sent
-
-          Unsuppress-map ORIGINATE_IPV6 configured
-
-          For address family: VPNv4 Unicast
-          Community attribute sent to this neighbor
-          Extended community attribute sent to this neighbor
-          Nexthop always set to local peering address, 0.0.0.0
-          Third-party Nexthop will not be computed.
-          Maximum prefixes allowed 888888888
-          Weight: 9999
-          Allow my ASN 10 times
-          Inbound ip prefix-list configured is LIST123
-          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
-          Outbound ip prefix-list configured is LIST456
-          Outbound route-map configured is PERMIT_IPV6_RM
-          Last End-of-RIB sent 0.000000 after session start
-          First convergence 0.000000 after session start with 0 routes sent
-
-          Unsuppress-map ORIGINATE_IPV6 configured
-
-          For address family: VPNv6 Unicast
-          Community attribute sent to this neighbor
-          Extended community attribute sent to this neighbor
-          Nexthop always set to local peering address, 0.0.0.0
-          Third-party Nexthop will not be computed.
-          Maximum prefixes allowed 888888888
-          Weight: 9999
-          Allow my ASN 10 times
-          Inbound ipv6 prefix-list configured is LIST123
-          Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
-          Outbound ipv6 prefix-list configured is LIST456
-          Outbound route-map configured is PERMIT_IPV6_RM
-          Last End-of-RIB sent 0.000000 after session start
-          First convergence 0.000000 after session start with 0 routes sent
-
-          Unsuppress-map ORIGINATE_IPV6 configured
-
-          For address family: Link-State
-          Community attribute sent to this neighbor
-          Extended community attribute sent to this neighbor
-          Third-party Nexthop will not be computed.
-          Maximum prefixes allowed 445566
-          Allow my ASN 10 times
-          Inbound ip prefix-list configured is LIST123
-          Outbound ip prefix-list configured is LIST456
+          Maximum prefixes allowed 1000000
+          Allow my ASN 4 times
           Last End-of-RIB sent 0.000000 after session start
           First convergence 0.000000 after session start with 0 routes sent
 
         Members of peer-template PEER1:
-        default: 21.0.201.1     
+        default: 19.0.200.200
 
     '''}
 
@@ -16688,6 +18531,7 @@ class test_show_bgp_peer_template_cmd_cli(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowBgpPeerTemplateCmd(device=self.device)
         parsed_output = obj.parse()
+        import pdb; pdb.set_trace()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_empty(self):
@@ -16704,538 +18548,284 @@ class test_show_bgp_peer_template_xml(unittest.TestCase):
     device = Device(name='aDevice')
     golden_parsed_output = {
         "template": {
-            "PEER1": {
+          "PEER1": {
+               "passive_only": False,
                "remove_private_as": False,
-               "logging_neighbor_events": False,
-               "address_family": {
-                    "vpnv4 unicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         'as_override': False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ip prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
-                              }
-                         },
-                         "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
-                         "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ip prefix-list"
-                              }
-                         },
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
-                         "send_ext_community": True,
-                         "rr_configured": False
-                    },
-                    "link-state": {
-                         "in_soft_reconfig_allowed": False,
-                         "peer_as_check_disabled": False,
-                         'as_override': False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ip prefix-list"
-                              }
-                         },
-                         "third_party_nexthop": False,
-                         "max_pfx": 445566,
-                         "send_community": True,
-                         "allow_as_in": 10,
-                         "in_policy": {
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ip prefix-list"
-                              }
-                         },
-                         "send_ext_community": True,
-                         "rr_configured": False
-                    },
-                    "ipv4 multicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "advertise_map_status": "advertise",
-                         'soo': 'SOO:1.1.1.1:100',
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ip prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
-                              }
-                         },
-                         "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "default_originate_route_map": "PASS-ALL",
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
-                         "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ip prefix-list"
-                              }
-                         },
-                         "default_originate": True,
-                         "advertise_map": "BLOCK-ALL",
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
-                         "as_override": True,
-                         "send_ext_community": True,
-                         "condition_map": "DENY_ALL_RM",
-                         "rr_configured": False
-                    },
-                    "ipv6 multicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "advertise_map_status": "advertise",
-                         'soo': 'SOO:1.1.1.1:100',
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ipv6 prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
-                              }
-                         },
-                         "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "default_originate_route_map": "PASS-ALL",
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
-                         "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ipv6 prefix-list"
-                              }
-                         },
-                         "default_originate": True,
-                         "advertise_map": "BLOCK-ALL",
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
-                         "as_override": True,
-                         "send_ext_community": True,
-                         "condition_map": "DENY_ALL_RM",
-                         "rr_configured": False
-                    },
-                    "ipv4 unicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "advertise_map_status": "advertise",
-                         'soo': 'SOO:1.1.1.1:100',
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ip prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
-                              }
-                         },
-                         "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "default_originate_route_map": "PASS-ALL",
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
-                         "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ip prefix-list"
-                              }
-                         },
-                         "default_originate": True,
-                         "advertise_map": "BLOCK-ALL",
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
-                         "as_override": True,
-                         "send_ext_community": True,
-                         "condition_map": "DENY_ALL_RM",
-                         "rr_configured": False
-                    },
-                    "ipv6 unicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "advertise_map_status": "advertise",
-                         'soo': 'SOO:1.1.1.1:100',
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ipv6 prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
-                              }
-                         },
-                         "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "default_originate_route_map": "PASS-ALL",
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
-                         "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ipv6 prefix-list"
-                              }
-                         },
-                         "default_originate": True,
-                         "advertise_map": "BLOCK-ALL",
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
-                         "as_override": True,
-                         "send_ext_community": True,
-                         "condition_map": "DENY_ALL_RM",
-                         "rr_configured": False
-                    },
-                    "vpnv6 unicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         'as_override': False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ipv6 prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
-                              }
-                         },
-                         "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
-                         "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ipv6 prefix-list"
-                              }
-                         },
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
-                         "send_ext_community": True,
-                         "rr_configured": False
-                    }
-               },
-               "source_interface": "loopback1",
-               "low_mem_exempt": True,
-               "passive_only": True,
                "vrf": {
                     "default": {
                          "inheriting_peer": {
-                              "21.0.201.1": {
-                                   "inheriting_peer": "21.0.201.1"
+                              "19.0.200.200": {
+                                   "inheriting_peer": "19.0.200.200"
                               }
                          }
                     }
                },
-               "local_as_inactive": True,
-               "external_bgp_peer_hops_limit": 100
-            },
-            "PEER2": {
-               "remove_private_as": False,
-               "logging_neighbor_events": False,
                "address_family": {
-                    "vpnv4 unicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         'as_override': False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ip prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
-                              }
-                         },
-                         "in_soft_reconfig_allowed": False,
+                    "ipv6 multicast": {
                          "send_community": True,
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
+                         "condition_map": "PERMIT_ALL_RM",
+                         "weight": 222,
+                         "unsuppress_map": "PERMIT_ALL_RM",
                          "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ip prefix-list"
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
                               }
                          },
+                         "in_soft_reconfig_allowed": True,
+                         "default_originate": True,
+                         "soo": "SOO:1.1.1.1:88",
+                         "advertise_map_status": "advertise",
+                         "allow_as_in": 4,
+                         "rr_configured": False,
+                         "peer_as_check_disabled": True,
                          "third_party_nexthop": False,
-                         "max_pfx": 888888888,
+                         "local_nexthop": "0.0.0.0",
+                         "advertise_map": "PASS-ALL",
+                         "out_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
                          "send_ext_community": True,
-                         "rr_configured": False
+                         "as_override": True,
+                         "max_pfx": 1000000
                     },
                     "link-state": {
-                         "in_soft_reconfig_allowed": False,
-                         "peer_as_check_disabled": False,
-                         'as_override': False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ip prefix-list"
-                              }
-                         },
-                         "third_party_nexthop": False,
-                         "max_pfx": 445566,
+                         "as_override": False,
                          "send_community": True,
-                         "allow_as_in": 10,
-                         "in_policy": {
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ip prefix-list"
-                              }
-                         },
+                         "in_soft_reconfig_allowed": False,
+                         "third_party_nexthop": False,
+                         "default_originate": False,
+                         "peer_as_check_disabled": False,
+                         "allow_as_in": 4,
                          "send_ext_community": True,
-                         "rr_configured": False
+                         "rr_configured": False,
+                         "max_pfx": 1000000
                     },
-                    "ipv4 multicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "advertise_map_status": "advertise",
-                         'soo': 'SOO:1.1.1.1:100',
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
+                    "ipv4 mvpn": {
+                         "send_community": True,
+                         "third_party_nexthop": False,
+                         "max_pfx": 1000000,
+                         "send_ext_community": True,
                          "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ip prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
                               }
                          },
                          "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "default_originate_route_map": "PASS-ALL",
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
+                         "rr_configured": False,
+                         "peer_as_check_disabled": True,
+                         "allow_as_in": 4,
+                         "default_originate": False,
+                         "as_override": False,
                          "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ip prefix-list"
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
                               }
-                         },
-                         "default_originate": True,
-                         "advertise_map": "BLOCK-ALL",
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
-                         "as_override": True,
-                         "send_ext_community": True,
-                         "condition_map": "DENY_ALL_RM",
-                         "rr_configured": False
-                    },
-                    "ipv6 multicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "advertise_map_status": "advertise",
-                         'soo': 'SOO:1.1.1.1:100',
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ipv6 prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
-                              }
-                         },
-                         "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "default_originate_route_map": "PASS-ALL",
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
-                         "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ipv6 prefix-list"
-                              }
-                         },
-                         "default_originate": True,
-                         "advertise_map": "BLOCK-ALL",
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
-                         "as_override": True,
-                         "send_ext_community": True,
-                         "condition_map": "DENY_ALL_RM",
-                         "rr_configured": False
-                    },
-                    "ipv4 unicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "advertise_map_status": "advertise",
-                         'soo': 'SOO:1.1.1.1:100',
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ip prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
-                              }
-                         },
-                         "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "default_originate_route_map": "PASS-ALL",
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
-                         "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ip prefix-list"
-                              }
-                         },
-                         "default_originate": True,
-                         "advertise_map": "BLOCK-ALL",
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
-                         "as_override": True,
-                         "send_ext_community": True,
-                         "condition_map": "DENY_ALL_RM",
-                         "rr_configured": False
-                    },
-                    "ipv6 unicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "advertise_map_status": "advertise",
-                         'soo': 'SOO:1.1.1.1:100',
-                         "weight": 9999,
-                         "peer_as_check_disabled": False,
-                         "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ipv6 prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
-                              }
-                         },
-                         "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "default_originate_route_map": "PASS-ALL",
-                         "allow_as_in": 10,
-                         "local_nexthop": "0.0.0.0",
-                         "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ipv6 prefix-list"
-                              }
-                         },
-                         "default_originate": True,
-                         "advertise_map": "BLOCK-ALL",
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
-                         "as_override": True,
-                         "send_ext_community": True,
-                         "condition_map": "DENY_ALL_RM",
-                         "rr_configured": False
+                         }
                     },
                     "vpnv6 unicast": {
-                         "unsuppress_map": "ORIGINATE_IPV6",
-                         "weight": 9999,
-                         'as_override': False,
-                         "peer_as_check_disabled": False,
+                         "send_community": True,
+                         "third_party_nexthop": False,
+                         "weight": 222,
+                         "unsuppress_map": "PERMIT_ALL_RM",
+                         "in_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
+                         "send_ext_community": True,
                          "out_policy": {
-                              "LIST456": {
-                                   "name": "LIST456",
-                                   "type": "ipv6 prefix-list"
-                              },
-                              "PERMIT_IPV6_RM": {
-                                   "name": "PERMIT_IPV6_RM",
-                                   "type": "route-map"
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
                               }
                          },
                          "in_soft_reconfig_allowed": False,
-                         "send_community": True,
-                         "allow_as_in": 10,
+                         "rr_configured": False,
+                         "peer_as_check_disabled": False,
                          "local_nexthop": "0.0.0.0",
+                         "allow_as_in": 4,
+                         "default_originate": False,
+                         "as_override": False,
+                         "max_pfx": 1000000
+                    },
+                    "vpnv4 unicast": {
+                         "send_community": True,
+                         "third_party_nexthop": False,
+                         "weight": 222,
+                         "unsuppress_map": "PERMIT_ALL_RM",
                          "in_policy": {
-                              "PERMIT_ROUTE_IPV4_RM": {
-                                   "name": "PERMIT_ROUTE_IPV4_RM",
-                                   "type": "route-map"
-                              },
-                              "LIST123": {
-                                   "name": "LIST123",
-                                   "type": "ipv6 prefix-list"
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
                               }
                          },
-                         "third_party_nexthop": False,
-                         "max_pfx": 888888888,
                          "send_ext_community": True,
-                         "rr_configured": False
+                         "out_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "rr_configured": False,
+                         "peer_as_check_disabled": False,
+                         "local_nexthop": "0.0.0.0",
+                         "allow_as_in": 4,
+                         "default_originate": False,
+                         "as_override": False,
+                         "max_pfx": 1000000
+                    },
+                    "ipv4 multicast": {
+                         "send_community": True,
+                         "condition_map": "PERMIT_ALL_RM",
+                         "weight": 222,
+                         "unsuppress_map": "PERMIT_ALL_RM",
+                         "in_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": True,
+                         "default_originate": True,
+                         "soo": "SOO:1.1.1.1:88",
+                         "advertise_map_status": "advertise",
+                         "allow_as_in": 4,
+                         "rr_configured": False,
+                         "peer_as_check_disabled": True,
+                         "third_party_nexthop": False,
+                         "local_nexthop": "0.0.0.0",
+                         "advertise_map": "PASS-ALL",
+                         "out_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
+                         "send_ext_community": True,
+                         "as_override": True,
+                         "max_pfx": 1000000
+                    },
+                    "l2vpn evpn": {
+                         "send_community": True,
+                         "third_party_nexthop": False,
+                         "max_pfx": 1000000,
+                         "send_ext_community": True,
+                         "out_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "rr_configured": False,
+                         "peer_as_check_disabled": True,
+                         "allow_as_in": 4,
+                         "default_originate": False,
+                         "as_override": True,
+                         "in_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         }
+                    },
+                    "ipv6 mvpn": {
+                         "send_community": True,
+                         "third_party_nexthop": False,
+                         "max_pfx": 1000000,
+                         "send_ext_community": True,
+                         "out_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": False,
+                         "rr_configured": False,
+                         "peer_as_check_disabled": True,
+                         "allow_as_in": 4,
+                         "default_originate": False,
+                         "as_override": False,
+                         "in_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         }
+                    },
+                    "ipv6 unicast": {
+                         "send_community": True,
+                         "condition_map": "PERMIT_ALL_RM",
+                         "weight": 222,
+                         "unsuppress_map": "PERMIT_ALL_RM",
+                         "in_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": True,
+                         "default_originate": True,
+                         "soo": "SOO:1.1.1.1:88",
+                         "advertise_map_status": "advertise",
+                         "allow_as_in": 4,
+                         "rr_configured": False,
+                         "peer_as_check_disabled": True,
+                         "third_party_nexthop": False,
+                         "local_nexthop": "0.0.0.0",
+                         "advertise_map": "PASS-ALL",
+                         "out_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
+                         "send_ext_community": True,
+                         "as_override": True,
+                         "max_pfx": 1000000
+                    },
+                    "ipv4 unicast": {
+                         "send_community": True,
+                         "condition_map": "PERMIT_ALL_RM",
+                         "weight": 222,
+                         "unsuppress_map": "PERMIT_ALL_RM",
+                         "in_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
+                         "in_soft_reconfig_allowed": True,
+                         "default_originate": True,
+                         "soo": "SOO:1.1.1.1:88",
+                         "advertise_map_status": "advertise",
+                         "allow_as_in": 4,
+                         "rr_configured": False,
+                         "peer_as_check_disabled": True,
+                         "third_party_nexthop": False,
+                         "local_nexthop": "0.0.0.0",
+                         "advertise_map": "PASS-ALL",
+                         "out_policy": {
+                              "PASS-ALL": {
+                                   "type": "route-map",
+                                   "name": "PASS-ALL"
+                              }
+                         },
+                         "send_ext_community": True,
+                         "as_override": True,
+                         "max_pfx": 1000000
                     }
                },
-               "source_interface": "loopback1",
-               "low_mem_exempt": True,
-               "passive_only": True,
                "local_as_inactive": False,
-               "external_bgp_peer_hops_limit": 100
+               "logging_neighbor_events": False
             }
         }
     }
@@ -17249,12 +18839,9 @@ class test_show_bgp_peer_template_xml(unittest.TestCase):
              <__readonly__>
               <TABLE_neighbor>
                <ROW_neighbor>
-                <templatepeer>PEER2</templatepeer>
-                <sourceif>loopback1</sourceif>
-                <lowmemexempt>true</lowmemexempt>
+                <templatepeer>PEER1</templatepeer>
                 <ttlsecurity>false</ttlsecurity>
-                <ttllimit>100</ttllimit>
-                <passiveonly>true</passiveonly>
+                <passiveonly>false</passiveonly>
                 <localas-inactive>false</localas-inactive>
                 <remove-privateas>false</remove-privateas>
                 <TABLE_peraf>
@@ -17264,53 +18851,38 @@ class test_show_bgp_peer_template_xml(unittest.TestCase):
                    <ROW_persaf>
                     <per-safi>1</per-safi>
                     <per-af-name>IPv4 Unicast</per-af-name>
-                    <conditionmap>DENY_ALL_RM</conditionmap>
-                    <advertisemap>BLOCK-ALL</advertisemap>
+                    <conditionmap>PERMIT_ALL_RM</conditionmap>
+                    <advertisemap>PASS-ALL</advertisemap>
                     <advertisemapstatus>Advertise</advertisemapstatus>
-                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <insoftreconfigallowed>true</insoftreconfigallowed>
+                    <insoftreconfigallowedalways>true</insoftreconfigallowedalways>
                     <sendcommunity>true</sendcommunity>
                     <sendextcommunity>true</sendextcommunity>
                     <localnexthop>0.0.0.0</localnexthop>
                     <thirdpartynexthop>false</thirdpartynexthop>
-                    <maxpfx>888888888</maxpfx>
-                    <soo>SOO:1.1.1.1:100</soo>
-                    <weight>9999</weight>
-                    <allowasin>10</allowasin>
+                    <maxpfx>1000000</maxpfx>
+                    <soo>SOO:1.1.1.1:88</soo>
+                    <weight>222</weight>
+                    <allowasin>4</allowasin>
                     <asoverride>true</asoverride>
-                    <peerascheckdisabled>false</peerascheckdisabled>
+                    <peerascheckdisabled>true</peerascheckdisabled>
                     <TABLE_inpolicy>
-                     <ROW_inpolicy>
-                      <inpolicynr>0</inpolicynr>
-                      <inpolicytype>ip prefix-list</inpolicytype>
-                      <inpolicyname>LIST123</inpolicyname>
-                     </ROW_inpolicy>
                      <ROW_inpolicy>
                       <inpolicynr>2</inpolicynr>
                       <inpolicytype>route-map</inpolicytype>
-                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
+                      <inpolicyname>PASS-ALL</inpolicyname>
                      </ROW_inpolicy>
                     </TABLE_inpolicy>
                     <TABLE_outpolicy>
                      <ROW_outpolicy>
-                      <outpolicynr>0</outpolicynr>
-                      <outpolicytype>ip prefix-list</outpolicytype>
-                      <outpolicyname>LIST456</outpolicyname>
-                     </ROW_outpolicy>
-                     <ROW_outpolicy>
                       <outpolicynr>2</outpolicynr>
                       <outpolicytype>route-map</outpolicytype>
-                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
+                      <outpolicyname>PASS-ALL</outpolicyname>
                      </ROW_outpolicy>
                     </TABLE_outpolicy>
                     <rrconfigured>false</rrconfigured>
                     <defaultoriginate>true</defaultoriginate>
-                    <defaultoriginatermap>PASS-ALL</defaultoriginatermap>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicyname>0</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
-                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
+                    <unsuppress-map>PERMIT_ALL_RM</unsuppress-map>
                    </ROW_persaf>
                   </TABLE_persaf>
                  </ROW_peraf>
@@ -17320,53 +18892,38 @@ class test_show_bgp_peer_template_xml(unittest.TestCase):
                    <ROW_persaf>
                     <per-safi>2</per-safi>
                     <per-af-name>IPv4 Multicast</per-af-name>
-                    <conditionmap>DENY_ALL_RM</conditionmap>
-                    <advertisemap>BLOCK-ALL</advertisemap>
+                    <conditionmap>PERMIT_ALL_RM</conditionmap>
+                    <advertisemap>PASS-ALL</advertisemap>
                     <advertisemapstatus>Advertise</advertisemapstatus>
-                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <insoftreconfigallowed>true</insoftreconfigallowed>
+                    <insoftreconfigallowedalways>true</insoftreconfigallowedalways>
                     <sendcommunity>true</sendcommunity>
                     <sendextcommunity>true</sendextcommunity>
                     <localnexthop>0.0.0.0</localnexthop>
                     <thirdpartynexthop>false</thirdpartynexthop>
-                    <maxpfx>888888888</maxpfx>
-                    <soo>SOO:1.1.1.1:100</soo>
-                    <weight>9999</weight>
-                    <allowasin>10</allowasin>
+                    <maxpfx>1000000</maxpfx>
+                    <soo>SOO:1.1.1.1:88</soo>
+                    <weight>222</weight>
+                    <allowasin>4</allowasin>
                     <asoverride>true</asoverride>
-                    <peerascheckdisabled>false</peerascheckdisabled>
+                    <peerascheckdisabled>true</peerascheckdisabled>
                     <TABLE_inpolicy>
-                     <ROW_inpolicy>
-                      <inpolicynr>0</inpolicynr>
-                      <inpolicytype>ip prefix-list</inpolicytype>
-                      <inpolicyname>LIST123</inpolicyname>
-                     </ROW_inpolicy>
                      <ROW_inpolicy>
                       <inpolicynr>2</inpolicynr>
                       <inpolicytype>route-map</inpolicytype>
-                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
+                      <inpolicyname>PASS-ALL</inpolicyname>
                      </ROW_inpolicy>
                     </TABLE_inpolicy>
                     <TABLE_outpolicy>
                      <ROW_outpolicy>
-                      <outpolicynr>0</outpolicynr>
-                      <outpolicytype>ip prefix-list</outpolicytype>
-                      <outpolicyname>LIST456</outpolicyname>
-                     </ROW_outpolicy>
-                     <ROW_outpolicy>
                       <outpolicynr>2</outpolicynr>
                       <outpolicytype>route-map</outpolicytype>
-                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
+                      <outpolicyname>PASS-ALL</outpolicyname>
                      </ROW_outpolicy>
                     </TABLE_outpolicy>
                     <rrconfigured>false</rrconfigured>
                     <defaultoriginate>true</defaultoriginate>
-                    <defaultoriginatermap>PASS-ALL</defaultoriginatermap>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicyname>0</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
-                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
+                    <unsuppress-map>PERMIT_ALL_RM</unsuppress-map>
                    </ROW_persaf>
                   </TABLE_persaf>
                  </ROW_peraf>
@@ -17376,53 +18933,38 @@ class test_show_bgp_peer_template_xml(unittest.TestCase):
                    <ROW_persaf>
                     <per-safi>1</per-safi>
                     <per-af-name>IPv6 Unicast</per-af-name>
-                    <conditionmap>DENY_ALL_RM</conditionmap>
-                    <advertisemap>BLOCK-ALL</advertisemap>
+                    <conditionmap>PERMIT_ALL_RM</conditionmap>
+                    <advertisemap>PASS-ALL</advertisemap>
                     <advertisemapstatus>Advertise</advertisemapstatus>
-                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <insoftreconfigallowed>true</insoftreconfigallowed>
+                    <insoftreconfigallowedalways>true</insoftreconfigallowedalways>
                     <sendcommunity>true</sendcommunity>
                     <sendextcommunity>true</sendextcommunity>
                     <localnexthop>0.0.0.0</localnexthop>
                     <thirdpartynexthop>false</thirdpartynexthop>
-                    <maxpfx>888888888</maxpfx>
-                    <soo>SOO:1.1.1.1:100</soo>
-                    <weight>9999</weight>
-                    <allowasin>10</allowasin>
+                    <maxpfx>1000000</maxpfx>
+                    <soo>SOO:1.1.1.1:88</soo>
+                    <weight>222</weight>
+                    <allowasin>4</allowasin>
                     <asoverride>true</asoverride>
-                    <peerascheckdisabled>false</peerascheckdisabled>
+                    <peerascheckdisabled>true</peerascheckdisabled>
                     <TABLE_inpolicy>
-                     <ROW_inpolicy>
-                      <inpolicynr>0</inpolicynr>
-                      <inpolicytype>ipv6 prefix-list</inpolicytype>
-                      <inpolicyname>LIST123</inpolicyname>
-                     </ROW_inpolicy>
                      <ROW_inpolicy>
                       <inpolicynr>2</inpolicynr>
                       <inpolicytype>route-map</inpolicytype>
-                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
+                      <inpolicyname>PASS-ALL</inpolicyname>
                      </ROW_inpolicy>
                     </TABLE_inpolicy>
                     <TABLE_outpolicy>
                      <ROW_outpolicy>
-                      <outpolicynr>0</outpolicynr>
-                      <outpolicytype>ipv6 prefix-list</outpolicytype>
-                      <outpolicyname>LIST456</outpolicyname>
-                     </ROW_outpolicy>
-                     <ROW_outpolicy>
                       <outpolicynr>2</outpolicynr>
                       <outpolicytype>route-map</outpolicytype>
-                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
+                      <outpolicyname>PASS-ALL</outpolicyname>
                      </ROW_outpolicy>
                     </TABLE_outpolicy>
                     <rrconfigured>false</rrconfigured>
                     <defaultoriginate>true</defaultoriginate>
-                    <defaultoriginatermap>PASS-ALL</defaultoriginatermap>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicyname>0</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
-                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
+                    <unsuppress-map>PERMIT_ALL_RM</unsuppress-map>
                    </ROW_persaf>
                   </TABLE_persaf>
                  </ROW_peraf>
@@ -17432,53 +18974,38 @@ class test_show_bgp_peer_template_xml(unittest.TestCase):
                    <ROW_persaf>
                     <per-safi>2</per-safi>
                     <per-af-name>IPv6 Multicast</per-af-name>
-                    <conditionmap>DENY_ALL_RM</conditionmap>
-                    <advertisemap>BLOCK-ALL</advertisemap>
+                    <conditionmap>PERMIT_ALL_RM</conditionmap>
+                    <advertisemap>PASS-ALL</advertisemap>
                     <advertisemapstatus>Advertise</advertisemapstatus>
-                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <insoftreconfigallowed>true</insoftreconfigallowed>
+                    <insoftreconfigallowedalways>true</insoftreconfigallowedalways>
                     <sendcommunity>true</sendcommunity>
                     <sendextcommunity>true</sendextcommunity>
                     <localnexthop>0.0.0.0</localnexthop>
                     <thirdpartynexthop>false</thirdpartynexthop>
-                    <maxpfx>888888888</maxpfx>
-                    <soo>SOO:1.1.1.1:100</soo>
-                    <weight>9999</weight>
-                    <allowasin>10</allowasin>
+                    <maxpfx>1000000</maxpfx>
+                    <soo>SOO:1.1.1.1:88</soo>
+                    <weight>222</weight>
+                    <allowasin>4</allowasin>
                     <asoverride>true</asoverride>
-                    <peerascheckdisabled>false</peerascheckdisabled>
+                    <peerascheckdisabled>true</peerascheckdisabled>
                     <TABLE_inpolicy>
-                     <ROW_inpolicy>
-                      <inpolicynr>0</inpolicynr>
-                      <inpolicytype>ipv6 prefix-list</inpolicytype>
-                      <inpolicyname>LIST123</inpolicyname>
-                     </ROW_inpolicy>
                      <ROW_inpolicy>
                       <inpolicynr>2</inpolicynr>
                       <inpolicytype>route-map</inpolicytype>
-                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
+                      <inpolicyname>PASS-ALL</inpolicyname>
                      </ROW_inpolicy>
                     </TABLE_inpolicy>
                     <TABLE_outpolicy>
                      <ROW_outpolicy>
-                      <outpolicynr>0</outpolicynr>
-                      <outpolicytype>ipv6 prefix-list</outpolicytype>
-                      <outpolicyname>LIST456</outpolicyname>
-                     </ROW_outpolicy>
-                     <ROW_outpolicy>
                       <outpolicynr>2</outpolicynr>
                       <outpolicytype>route-map</outpolicytype>
-                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
+                      <outpolicyname>PASS-ALL</outpolicyname>
                      </ROW_outpolicy>
                     </TABLE_outpolicy>
                     <rrconfigured>false</rrconfigured>
                     <defaultoriginate>true</defaultoriginate>
-                    <defaultoriginatermap>PASS-ALL</defaultoriginatermap>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicyname>0</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
-                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
+                    <unsuppress-map>PERMIT_ALL_RM</unsuppress-map>
                    </ROW_persaf>
                   </TABLE_persaf>
                  </ROW_peraf>
@@ -17493,42 +19020,28 @@ class test_show_bgp_peer_template_xml(unittest.TestCase):
                     <sendextcommunity>true</sendextcommunity>
                     <localnexthop>0.0.0.0</localnexthop>
                     <thirdpartynexthop>false</thirdpartynexthop>
-                    <maxpfx>888888888</maxpfx>
-                    <weight>9999</weight>
-                    <allowasin>10</allowasin>
+                    <maxpfx>1000000</maxpfx>
+                    <weight>222</weight>
+                    <allowasin>4</allowasin>
                     <asoverride>false</asoverride>
                     <peerascheckdisabled>false</peerascheckdisabled>
                     <TABLE_inpolicy>
                      <ROW_inpolicy>
-                      <inpolicynr>0</inpolicynr>
-                      <inpolicytype>ip prefix-list</inpolicytype>
-                      <inpolicyname>LIST123</inpolicyname>
-                     </ROW_inpolicy>
-                     <ROW_inpolicy>
                       <inpolicynr>2</inpolicynr>
                       <inpolicytype>route-map</inpolicytype>
-                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
+                      <inpolicyname>PASS-ALL</inpolicyname>
                      </ROW_inpolicy>
                     </TABLE_inpolicy>
                     <TABLE_outpolicy>
                      <ROW_outpolicy>
-                      <outpolicynr>0</outpolicynr>
-                      <outpolicytype>ip prefix-list</outpolicytype>
-                      <outpolicyname>LIST456</outpolicyname>
-                     </ROW_outpolicy>
-                     <ROW_outpolicy>
                       <outpolicynr>2</outpolicynr>
                       <outpolicytype>route-map</outpolicytype>
-                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
+                      <outpolicyname>PASS-ALL</outpolicyname>
                      </ROW_outpolicy>
                     </TABLE_outpolicy>
                     <rrconfigured>false</rrconfigured>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicyname>0</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
-                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
+                    <defaultoriginate>false</defaultoriginate>
+                    <unsuppress-map>PERMIT_ALL_RM</unsuppress-map>
                    </ROW_persaf>
                   </TABLE_persaf>
                  </ROW_peraf>
@@ -17543,42 +19056,127 @@ class test_show_bgp_peer_template_xml(unittest.TestCase):
                     <sendextcommunity>true</sendextcommunity>
                     <localnexthop>0.0.0.0</localnexthop>
                     <thirdpartynexthop>false</thirdpartynexthop>
-                    <maxpfx>888888888</maxpfx>
-                    <weight>9999</weight>
-                    <allowasin>10</allowasin>
+                    <maxpfx>1000000</maxpfx>
+                    <weight>222</weight>
+                    <allowasin>4</allowasin>
                     <asoverride>false</asoverride>
                     <peerascheckdisabled>false</peerascheckdisabled>
                     <TABLE_inpolicy>
                      <ROW_inpolicy>
-                      <inpolicynr>0</inpolicynr>
-                      <inpolicytype>ipv6 prefix-list</inpolicytype>
-                      <inpolicyname>LIST123</inpolicyname>
-                     </ROW_inpolicy>
-                     <ROW_inpolicy>
                       <inpolicynr>2</inpolicynr>
                       <inpolicytype>route-map</inpolicytype>
-                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
+                      <inpolicyname>PASS-ALL</inpolicyname>
                      </ROW_inpolicy>
                     </TABLE_inpolicy>
                     <TABLE_outpolicy>
                      <ROW_outpolicy>
-                      <outpolicynr>0</outpolicynr>
-                      <outpolicytype>ipv6 prefix-list</outpolicytype>
-                      <outpolicyname>LIST456</outpolicyname>
-                     </ROW_outpolicy>
-                     <ROW_outpolicy>
                       <outpolicynr>2</outpolicynr>
                       <outpolicytype>route-map</outpolicytype>
-                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
+                      <outpolicyname>PASS-ALL</outpolicyname>
                      </ROW_outpolicy>
                     </TABLE_outpolicy>
                     <rrconfigured>false</rrconfigured>
+                    <defaultoriginate>false</defaultoriginate>
+                    <unsuppress-map>PERMIT_ALL_RM</unsuppress-map>
+                   </ROW_persaf>
+                  </TABLE_persaf>
+                 </ROW_peraf>
+                 <ROW_peraf>
+                  <per-afi>1</per-afi>
+                  <TABLE_persaf>
+                   <ROW_persaf>
+                    <per-safi>5</per-safi>
+                    <per-af-name>IPv4 MVPN</per-af-name>
+                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <sendcommunity>true</sendcommunity>
+                    <sendextcommunity>true</sendextcommunity>
+                    <thirdpartynexthop>false</thirdpartynexthop>
+                    <maxpfx>1000000</maxpfx>
+                    <allowasin>4</allowasin>
+                    <asoverride>false</asoverride>
+                    <peerascheckdisabled>true</peerascheckdisabled>
+                    <TABLE_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>2</inpolicynr>
+                      <inpolicytype>route-map</inpolicytype>
+                      <inpolicyname>PASS-ALL</inpolicyname>
+                     </ROW_inpolicy>
+                    </TABLE_inpolicy>
                     <TABLE_outpolicy>
                      <ROW_outpolicy>
-                      <outpolicyname>0</outpolicyname>
+                      <outpolicynr>2</outpolicynr>
+                      <outpolicytype>route-map</outpolicytype>
+                      <outpolicyname>PASS-ALL</outpolicyname>
                      </ROW_outpolicy>
                     </TABLE_outpolicy>
-                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
+                    <rrconfigured>false</rrconfigured>
+                    <defaultoriginate>false</defaultoriginate>
+                   </ROW_persaf>
+                  </TABLE_persaf>
+                 </ROW_peraf>
+                 <ROW_peraf>
+                  <per-afi>2</per-afi>
+                  <TABLE_persaf>
+                   <ROW_persaf>
+                    <per-safi>5</per-safi>
+                    <per-af-name>IPv6 MVPN</per-af-name>
+                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <sendcommunity>true</sendcommunity>
+                    <sendextcommunity>true</sendextcommunity>
+                    <thirdpartynexthop>false</thirdpartynexthop>
+                    <maxpfx>1000000</maxpfx>
+                    <allowasin>4</allowasin>
+                    <asoverride>false</asoverride>
+                    <peerascheckdisabled>true</peerascheckdisabled>
+                    <TABLE_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>2</inpolicynr>
+                      <inpolicytype>route-map</inpolicytype>
+                      <inpolicyname>PASS-ALL</inpolicyname>
+                     </ROW_inpolicy>
+                    </TABLE_inpolicy>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>2</outpolicynr>
+                      <outpolicytype>route-map</outpolicytype>
+                      <outpolicyname>PASS-ALL</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <rrconfigured>false</rrconfigured>
+                    <defaultoriginate>false</defaultoriginate>
+                   </ROW_persaf>
+                  </TABLE_persaf>
+                 </ROW_peraf>
+                 <ROW_peraf>
+                  <per-afi>25</per-afi>
+                  <TABLE_persaf>
+                   <ROW_persaf>
+                    <per-safi>70</per-safi>
+                    <per-af-name>L2VPN EVPN</per-af-name>
+                    <insoftreconfigallowed>false</insoftreconfigallowed>
+                    <sendcommunity>true</sendcommunity>
+                    <sendextcommunity>true</sendextcommunity>
+                    <thirdpartynexthop>false</thirdpartynexthop>
+                    <maxpfx>1000000</maxpfx>
+                    <allowasin>4</allowasin>
+                    <asoverride>true</asoverride>
+                    <peerascheckdisabled>true</peerascheckdisabled>
+                    <TABLE_inpolicy>
+                     <ROW_inpolicy>
+                      <inpolicynr>2</inpolicynr>
+                      <inpolicytype>route-map</inpolicytype>
+                      <inpolicyname>PASS-ALL</inpolicyname>
+                     </ROW_inpolicy>
+                    </TABLE_inpolicy>
+                    <TABLE_outpolicy>
+                     <ROW_outpolicy>
+                      <outpolicynr>2</outpolicynr>
+                      <outpolicytype>route-map</outpolicytype>
+                      <outpolicyname>PASS-ALL</outpolicyname>
+                     </ROW_outpolicy>
+                    </TABLE_outpolicy>
+                    <rrconfigured>false</rrconfigured>
+                    <defaultoriginate>false</defaultoriginate>
                    </ROW_persaf>
                   </TABLE_persaf>
                  </ROW_peraf>
@@ -17592,430 +19190,22 @@ class test_show_bgp_peer_template_xml(unittest.TestCase):
                     <sendcommunity>true</sendcommunity>
                     <sendextcommunity>true</sendextcommunity>
                     <thirdpartynexthop>false</thirdpartynexthop>
-                    <maxpfx>445566</maxpfx>
-                    <allowasin>10</allowasin>
+                    <maxpfx>1000000</maxpfx>
+                    <allowasin>4</allowasin>
                     <asoverride>false</asoverride>
                     <peerascheckdisabled>false</peerascheckdisabled>
-                    <TABLE_inpolicy>
-                     <ROW_inpolicy>
-                      <inpolicynr>0</inpolicynr>
-                      <inpolicytype>ip prefix-list</inpolicytype>
-                      <inpolicyname>LIST123</inpolicyname>
-                     </ROW_inpolicy>
-                    </TABLE_inpolicy>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicynr>0</outpolicynr>
-                      <outpolicytype>ip prefix-list</outpolicytype>
-                      <outpolicyname>LIST456</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
                     <rrconfigured>false</rrconfigured>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicyname>0</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
+                    <defaultoriginate>false</defaultoriginate>
                    </ROW_persaf>
                   </TABLE_persaf>
                  </ROW_peraf>
                 </TABLE_peraf>
                 <TABLE_vrf>
-                 <ROW_vrf>
-                  <vrf-name>ac</vrf-name>
-                 </ROW_vrf>
-                 <ROW_vrf>
-                  <vrf-name>default</vrf-name>
-                 </ROW_vrf>
-                 <ROW_vrf>
-                  <vrf-name>vpn1</vrf-name>
-                 </ROW_vrf>
-                 <ROW_vrf>
-                  <vrf-name>vpn2</vrf-name>
-                 </ROW_vrf>
-                </TABLE_vrf>
-               </ROW_neighbor>
-               <ROW_neighbor>
-                <templatepeer>PEER1</templatepeer>
-                <sourceif>loopback1</sourceif>
-                <lowmemexempt>true</lowmemexempt>
-                <ttlsecurity>false</ttlsecurity>
-                <ttllimit>100</ttllimit>
-                <passiveonly>true</passiveonly>
-                <localas-inactive>true</localas-inactive>
-                <remove-privateas>false</remove-privateas>
-                <TABLE_peraf>
-                 <ROW_peraf>
-                  <per-afi>1</per-afi>
-                  <TABLE_persaf>
-                   <ROW_persaf>
-                    <per-safi>1</per-safi>
-                    <per-af-name>IPv4 Unicast</per-af-name>
-                    <conditionmap>DENY_ALL_RM</conditionmap>
-                    <advertisemap>BLOCK-ALL</advertisemap>
-                    <advertisemapstatus>Advertise</advertisemapstatus>
-                    <insoftreconfigallowed>false</insoftreconfigallowed>
-                    <sendcommunity>true</sendcommunity>
-                    <sendextcommunity>true</sendextcommunity>
-                    <localnexthop>0.0.0.0</localnexthop>
-                    <thirdpartynexthop>false</thirdpartynexthop>
-                    <maxpfx>888888888</maxpfx>
-                    <soo>SOO:1.1.1.1:100</soo>
-                    <weight>9999</weight>
-                    <allowasin>10</allowasin>
-                    <asoverride>true</asoverride>
-                    <peerascheckdisabled>false</peerascheckdisabled>
-                    <TABLE_inpolicy>
-                     <ROW_inpolicy>
-                      <inpolicynr>0</inpolicynr>
-                      <inpolicytype>ip prefix-list</inpolicytype>
-                      <inpolicyname>LIST123</inpolicyname>
-                     </ROW_inpolicy>
-                     <ROW_inpolicy>
-                      <inpolicynr>2</inpolicynr>
-                      <inpolicytype>route-map</inpolicytype>
-                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
-                     </ROW_inpolicy>
-                    </TABLE_inpolicy>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicynr>0</outpolicynr>
-                      <outpolicytype>ip prefix-list</outpolicytype>
-                      <outpolicyname>LIST456</outpolicyname>
-                     </ROW_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicynr>2</outpolicynr>
-                      <outpolicytype>route-map</outpolicytype>
-                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
-                    <rrconfigured>false</rrconfigured>
-                    <defaultoriginate>true</defaultoriginate>
-                    <defaultoriginatermap>PASS-ALL</defaultoriginatermap>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicyname>0</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
-                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
-                   </ROW_persaf>
-                  </TABLE_persaf>
-                 </ROW_peraf>
-                 <ROW_peraf>
-                  <per-afi>1</per-afi>
-                  <TABLE_persaf>
-                   <ROW_persaf>
-                    <per-safi>2</per-safi>
-                    <per-af-name>IPv4 Multicast</per-af-name>
-                    <conditionmap>DENY_ALL_RM</conditionmap>
-                    <advertisemap>BLOCK-ALL</advertisemap>
-                    <advertisemapstatus>Advertise</advertisemapstatus>
-                    <insoftreconfigallowed>false</insoftreconfigallowed>
-                    <sendcommunity>true</sendcommunity>
-                    <sendextcommunity>true</sendextcommunity>
-                    <localnexthop>0.0.0.0</localnexthop>
-                    <thirdpartynexthop>false</thirdpartynexthop>
-                    <maxpfx>888888888</maxpfx>
-                    <soo>SOO:1.1.1.1:100</soo>
-                    <weight>9999</weight>
-                    <allowasin>10</allowasin>
-                    <asoverride>true</asoverride>
-                    <peerascheckdisabled>false</peerascheckdisabled>
-                    <TABLE_inpolicy>
-                     <ROW_inpolicy>
-                      <inpolicynr>0</inpolicynr>
-                      <inpolicytype>ip prefix-list</inpolicytype>
-                      <inpolicyname>LIST123</inpolicyname>
-                     </ROW_inpolicy>
-                     <ROW_inpolicy>
-                      <inpolicynr>2</inpolicynr>
-                      <inpolicytype>route-map</inpolicytype>
-                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
-                     </ROW_inpolicy>
-                    </TABLE_inpolicy>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicynr>0</outpolicynr>
-                      <outpolicytype>ip prefix-list</outpolicytype>
-                      <outpolicyname>LIST456</outpolicyname>
-                     </ROW_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicynr>2</outpolicynr>
-                      <outpolicytype>route-map</outpolicytype>
-                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
-                    <rrconfigured>false</rrconfigured>
-                    <defaultoriginate>true</defaultoriginate>
-                    <defaultoriginatermap>PASS-ALL</defaultoriginatermap>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicyname>0</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
-                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
-                   </ROW_persaf>
-                  </TABLE_persaf>
-                 </ROW_peraf>
-                 <ROW_peraf>
-                  <per-afi>2</per-afi>
-                  <TABLE_persaf>
-                   <ROW_persaf>
-                    <per-safi>1</per-safi>
-                    <per-af-name>IPv6 Unicast</per-af-name>
-                    <conditionmap>DENY_ALL_RM</conditionmap>
-                    <advertisemap>BLOCK-ALL</advertisemap>
-                    <advertisemapstatus>Advertise</advertisemapstatus>
-                    <insoftreconfigallowed>false</insoftreconfigallowed>
-                    <sendcommunity>true</sendcommunity>
-                    <sendextcommunity>true</sendextcommunity>
-                    <localnexthop>0.0.0.0</localnexthop>
-                    <thirdpartynexthop>false</thirdpartynexthop>
-                    <maxpfx>888888888</maxpfx>
-                    <soo>SOO:1.1.1.1:100</soo>
-                    <weight>9999</weight>
-                    <allowasin>10</allowasin>
-                    <asoverride>true</asoverride>
-                    <peerascheckdisabled>false</peerascheckdisabled>
-                    <TABLE_inpolicy>
-                     <ROW_inpolicy>
-                      <inpolicynr>0</inpolicynr>
-                      <inpolicytype>ipv6 prefix-list</inpolicytype>
-                      <inpolicyname>LIST123</inpolicyname>
-                     </ROW_inpolicy>
-                     <ROW_inpolicy>
-                      <inpolicynr>2</inpolicynr>
-                      <inpolicytype>route-map</inpolicytype>
-                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
-                     </ROW_inpolicy>
-                    </TABLE_inpolicy>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicynr>0</outpolicynr>
-                      <outpolicytype>ipv6 prefix-list</outpolicytype>
-                      <outpolicyname>LIST456</outpolicyname>
-                     </ROW_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicynr>2</outpolicynr>
-                      <outpolicytype>route-map</outpolicytype>
-                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
-                    <rrconfigured>false</rrconfigured>
-                    <defaultoriginate>true</defaultoriginate>
-                    <defaultoriginatermap>PASS-ALL</defaultoriginatermap>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicyname>0</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
-                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
-                   </ROW_persaf>
-                  </TABLE_persaf>
-                 </ROW_peraf>
-                 <ROW_peraf>
-                  <per-afi>2</per-afi>
-                  <TABLE_persaf>
-                   <ROW_persaf>
-                    <per-safi>2</per-safi>
-                    <per-af-name>IPv6 Multicast</per-af-name>
-                    <conditionmap>DENY_ALL_RM</conditionmap>
-                    <advertisemap>BLOCK-ALL</advertisemap>
-                    <advertisemapstatus>Advertise</advertisemapstatus>
-                    <insoftreconfigallowed>false</insoftreconfigallowed>
-                    <sendcommunity>true</sendcommunity>
-                    <sendextcommunity>true</sendextcommunity>
-                    <localnexthop>0.0.0.0</localnexthop>
-                    <thirdpartynexthop>false</thirdpartynexthop>
-                    <maxpfx>888888888</maxpfx>
-                    <soo>SOO:1.1.1.1:100</soo>
-                    <weight>9999</weight>
-                    <allowasin>10</allowasin>
-                    <asoverride>true</asoverride>
-                    <peerascheckdisabled>false</peerascheckdisabled>
-                    <TABLE_inpolicy>
-                     <ROW_inpolicy>
-                      <inpolicynr>0</inpolicynr>
-                      <inpolicytype>ipv6 prefix-list</inpolicytype>
-                      <inpolicyname>LIST123</inpolicyname>
-                     </ROW_inpolicy>
-                     <ROW_inpolicy>
-                      <inpolicynr>2</inpolicynr>
-                      <inpolicytype>route-map</inpolicytype>
-                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
-                     </ROW_inpolicy>
-                    </TABLE_inpolicy>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicynr>0</outpolicynr>
-                      <outpolicytype>ipv6 prefix-list</outpolicytype>
-                      <outpolicyname>LIST456</outpolicyname>
-                     </ROW_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicynr>2</outpolicynr>
-                      <outpolicytype>route-map</outpolicytype>
-                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
-                    <rrconfigured>false</rrconfigured>
-                    <defaultoriginate>true</defaultoriginate>
-                    <defaultoriginatermap>PASS-ALL</defaultoriginatermap>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicyname>0</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
-                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
-                   </ROW_persaf>
-                  </TABLE_persaf>
-                 </ROW_peraf>
-                 <ROW_peraf>
-                  <per-afi>1</per-afi>
-                  <TABLE_persaf>
-                   <ROW_persaf>
-                    <per-safi>128</per-safi>
-                    <per-af-name>VPNv4 Unicast</per-af-name>
-                    <insoftreconfigallowed>false</insoftreconfigallowed>
-                    <sendcommunity>true</sendcommunity>
-                    <sendextcommunity>true</sendextcommunity>
-                    <localnexthop>0.0.0.0</localnexthop>
-                    <thirdpartynexthop>false</thirdpartynexthop>
-                    <maxpfx>888888888</maxpfx>
-                    <weight>9999</weight>
-                    <allowasin>10</allowasin>
-                    <asoverride>false</asoverride>
-                    <peerascheckdisabled>false</peerascheckdisabled>
-                    <TABLE_inpolicy>
-                     <ROW_inpolicy>
-                      <inpolicynr>0</inpolicynr>
-                      <inpolicytype>ip prefix-list</inpolicytype>
-                      <inpolicyname>LIST123</inpolicyname>
-                     </ROW_inpolicy>
-                     <ROW_inpolicy>
-                      <inpolicynr>2</inpolicynr>
-                      <inpolicytype>route-map</inpolicytype>
-                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
-                     </ROW_inpolicy>
-                    </TABLE_inpolicy>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicynr>0</outpolicynr>
-                      <outpolicytype>ip prefix-list</outpolicytype>
-                      <outpolicyname>LIST456</outpolicyname>
-                     </ROW_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicynr>2</outpolicynr>
-                      <outpolicytype>route-map</outpolicytype>
-                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
-                    <rrconfigured>false</rrconfigured>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicyname>0</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
-                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
-                   </ROW_persaf>
-                  </TABLE_persaf>
-                 </ROW_peraf>
-                 <ROW_peraf>
-                  <per-afi>2</per-afi>
-                  <TABLE_persaf>
-                   <ROW_persaf>
-                    <per-safi>128</per-safi>
-                    <per-af-name>VPNv6 Unicast</per-af-name>
-                    <insoftreconfigallowed>false</insoftreconfigallowed>
-                    <sendcommunity>true</sendcommunity>
-                    <sendextcommunity>true</sendextcommunity>
-                    <localnexthop>0.0.0.0</localnexthop>
-                    <thirdpartynexthop>false</thirdpartynexthop>
-                    <maxpfx>888888888</maxpfx>
-                    <weight>9999</weight>
-                    <allowasin>10</allowasin>
-                    <asoverride>false</asoverride>
-                    <peerascheckdisabled>false</peerascheckdisabled>
-                    <TABLE_inpolicy>
-                     <ROW_inpolicy>
-                      <inpolicynr>0</inpolicynr>
-                      <inpolicytype>ipv6 prefix-list</inpolicytype>
-                      <inpolicyname>LIST123</inpolicyname>
-                     </ROW_inpolicy>
-                     <ROW_inpolicy>
-                      <inpolicynr>2</inpolicynr>
-                      <inpolicytype>route-map</inpolicytype>
-                      <inpolicyname>PERMIT_ROUTE_IPV4_RM</inpolicyname>
-                     </ROW_inpolicy>
-                    </TABLE_inpolicy>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicynr>0</outpolicynr>
-                      <outpolicytype>ipv6 prefix-list</outpolicytype>
-                      <outpolicyname>LIST456</outpolicyname>
-                     </ROW_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicynr>2</outpolicynr>
-                      <outpolicytype>route-map</outpolicytype>
-                      <outpolicyname>PERMIT_IPV6_RM</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
-                    <rrconfigured>false</rrconfigured>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicyname>0</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
-                    <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
-                   </ROW_persaf>
-                  </TABLE_persaf>
-                 </ROW_peraf>
-                 <ROW_peraf>
-                  <per-afi>16388</per-afi>
-                  <TABLE_persaf>
-                   <ROW_persaf>
-                    <per-safi>71</per-safi>
-                    <per-af-name>Link-State</per-af-name>
-                    <insoftreconfigallowed>false</insoftreconfigallowed>
-                    <sendcommunity>true</sendcommunity>
-                    <sendextcommunity>true</sendextcommunity>
-                    <thirdpartynexthop>false</thirdpartynexthop>
-                    <maxpfx>445566</maxpfx>
-                    <allowasin>10</allowasin>
-                    <asoverride>false</asoverride>
-                    <peerascheckdisabled>false</peerascheckdisabled>
-                    <TABLE_inpolicy>
-                     <ROW_inpolicy>
-                      <inpolicynr>0</inpolicynr>
-                      <inpolicytype>ip prefix-list</inpolicytype>
-                      <inpolicyname>LIST123</inpolicyname>
-                     </ROW_inpolicy>
-                    </TABLE_inpolicy>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicynr>0</outpolicynr>
-                      <outpolicytype>ip prefix-list</outpolicytype>
-                      <outpolicyname>LIST456</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
-                    <rrconfigured>false</rrconfigured>
-                    <TABLE_outpolicy>
-                     <ROW_outpolicy>
-                      <outpolicyname>0</outpolicyname>
-                     </ROW_outpolicy>
-                    </TABLE_outpolicy>
-                   </ROW_persaf>
-                  </TABLE_persaf>
-                 </ROW_peraf>
-                </TABLE_peraf>
-                <TABLE_vrf>
-                 <ROW_vrf>
-                  <vrf-name>ac</vrf-name>
-                 </ROW_vrf>
                  <ROW_vrf>
                   <vrf-name>default</vrf-name>
                   <TABLE_inheritingpeer>
                    <ROW_inheritingpeer>
-                    <inheritingpeer>21.0.201.1</inheritingpeer>
+                    <inheritingpeer>19.0.200.200</inheritingpeer>
                    </ROW_inheritingpeer>
                   </TABLE_inheritingpeer>
                  </ROW_vrf>
@@ -18042,6 +19232,7 @@ class test_show_bgp_peer_template_xml(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowBgpPeerTemplateCmd(device=self.device, context='xml')
         parsed_output = obj.parse()
+        import pdb; pdb.set_trace()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
