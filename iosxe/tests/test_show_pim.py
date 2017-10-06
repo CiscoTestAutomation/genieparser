@@ -12,8 +12,8 @@ from metaparser.util.exceptions import SchemaEmptyParserError, \
 # Parser
 from parser.iosxe.show_pim import ShowIpv6PimInterface,\
                                   ShowIpPimInterface,\
+                                  ShowIpv6PimBsrCandidateRp, \
                                   ShowIpv6PimBsrElection
-
 
 # ============================================
 # Parser for 'show ipv6 pim interface'
@@ -325,7 +325,114 @@ class test_show_ip_pim_bsr_election(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_elec_2)
 
+# ============================================
+# Parser for 'show ipv6 pim candidate-rp'
+# Parser for 'show ipv6 pim vrf xxx candidate-rp'
+# ============================================
+class test_show_ipv6_pim_bsr_candidate_rp(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
 
+    golden_parsed_output_candidate_2 = {
+        'vrf':
+            {'default':
+                {
+                'address_family':
+                    {'ipv6':
+                        {'rp':
+                            {'bsr':
+                                {'2001:3:3:3::3': {
+                                    'address': '2001:3:3:3::3',
+                                    'priority': 5,
+                                    'mode': 'SM',
+                                    'holdtime': 150,
+                                    'interval': 60,
+                                },
+                                'rp_candidate_next_advertisement': '00:00:48',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+    golden_output_bsr_candidate_2 = {'execute.return_value': '''
+        R3_iosv#show ipv6 pim bsr candidate-rp
+        PIMv2 C-RP information
+          Candidate RP: 2001:3:3:3::3 SM
+            Priority 5, Holdtime 150
+            Advertisement interval 60 seconds
+            Next advertisement in 00:00:48
+    '''}
+
+    golden_parsed_output_bsr_candidate_1 = {
+        'vrf':
+            {'VRF1':
+                {
+                'address_family':
+                    {'ipv6':
+                        {'rp':
+                            {'bsr':
+                                {'2001:DB8:1:5::1': {
+                                    'address': '2001:DB8:1:5::1',
+                                    'priority': 192,
+                                    'mode': 'SM',
+                                    'holdtime': 150,
+                                    'interval': 60,
+                                    },
+                                'rp_candidate_next_advertisement':'00:00:50',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+    }
+    golden_output_bsr_candidate_1 = {'execute.return_value': '''
+        R1_xe#show ipv6 pim vrf VRF1 bsr candidate-rp
+        PIMv2 C-RP information
+           Candidate RP: 2001:DB8:1:5::1 SM
+             Priority 192, Holdtime 150
+            Advertisement interval 60 seconds
+            Next advertisement in 00:00:50
+        '''}
+
+    golden_output_bsr_candidate_3 = {'execute.return_value': '''
+        R2_iosv#show ipv6 pim vrf VRF1 bsr candidate-rp
+        %VPN Routing instance VRF1 does not exist. Create first
+        '''
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpv6PimBsrCandidateRp(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_candidate_rp_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_bsr_candidate_1)
+        obj = ShowIpv6PimBsrCandidateRp(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_bsr_candidate_1)
+
+    def test_golden_candidate_rp_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_bsr_candidate_2)
+        obj = ShowIpv6PimBsrCandidateRp(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_candidate_2)
+
+    def test_golden_candidate_rp_3(self):
+        self.device = Mock(**self.golden_output_bsr_candidate_3)
+        obj = ShowIpv6PimBsrCandidateRp(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+# ============================================
+# Parser for 'show ip pim interface'
+# Parser for 'show ip pim vrf xxx interface'
+# ============================================
 class test_show_ip_pim_interface(unittest.TestCase):
 
     device = Device(name='aDevice')
@@ -432,7 +539,6 @@ class test_show_ip_pim_interface(unittest.TestCase):
     10.1.5.1         GigabitEthernet3         v2/S   1      30     1          10.1.5.5
 
     '''}
-
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpPimInterface(device=self.device)
