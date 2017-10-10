@@ -51,6 +51,9 @@ class ShowIpPrefixListDefail(ShowIpPrefixListDefailSchema):
 
     def cli(self, af='ip'):
 
+        # ip should be ip or ipv6
+        assert ip in ['ip', 'ipv6']
+
         # excute command to get output
         protocol = 'ipv4' if af == 'ip' else af
         out = self.device.execute('show {} prefix-list detail'.format(af))
