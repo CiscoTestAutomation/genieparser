@@ -1989,14 +1989,17 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
 
             # BGP state = Established, up for 01:10:35
             # or
-            # BGP state = Idel, down for 01:10:35
-            p4 = re.compile(r'^\s*BGP +state += +(?P<session_state>[a-zA-Z]+),'
-                            ' +(?P<up_down>\w+) +for +(?P<time>[0-9\:]+)$')
+            # BGP state = Idle, down for 01:10:35
+            # BGP state = Idle
+            p4 = re.compile(r'^\s*BGP +state += +(?P<session_state>[a-zA-Z]+)'
+                            '(, +(?P<up_down>\w+) +for +(?P<time>[0-9\:]+))?$')
             m = p4.match(line)
             if m:
                 session_state = m.groupdict()['session_state']
-                up_down = m.groupdict()['up_down']
-                up_down_time = m.groupdict()['time']
+                if m.groupdict()['up_down']:
+                    up_down = m.groupdict()['up_down']
+                if m.groupdict()['time']:
+                    up_down_time = m.groupdict()['time']
 
 
                 parsed_dict['vrf'][vrf_name]['neighbor']\
@@ -2015,8 +2018,9 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                 parsed_dict['vrf'][vrf_name]['neighbor']\
                     [neighbor_id]['address_family'][af_name]['session_state'] = session_state.lower()
 
-                parsed_dict['vrf'][vrf_name]['neighbor']\
-                    [neighbor_id]['address_family'][af_name][up_down+'_time'] = up_down_time
+                if m.groupdict()['up_down'] and m.groupdict()['time']:
+                    parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['address_family'][af_name][up_down+'_time'] = up_down_time
 
                 continue
 
