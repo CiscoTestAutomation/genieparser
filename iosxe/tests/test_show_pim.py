@@ -13,6 +13,7 @@ from metaparser.util.exceptions import SchemaEmptyParserError, \
 from parser.iosxe.show_pim import ShowIpv6PimInterface,\
                                   ShowIpPimInterface,\
                                   ShowIpv6PimBsrCandidateRp, \
+                                  ShowIpPimRpMapping, \
                                   ShowIpv6PimBsrElection, \
                                   ShowIpPimBsrRouter
 
@@ -760,5 +761,194 @@ class test_show_ip_pim_bsr_router(unittest.TestCase):
         obj = ShowIpPimBsrRouter(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output_bsr_4)
+
+# ============================================
+# unit test for 'show ip pim mapping'
+# unit test for 'show ip pim vrf xxx mapping'
+# ============================================
+class test_show_ip_pim_rp_mapping(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_mapping_1 = {
+        'vrf':
+            {
+            'default':
+                {
+                'address_family':
+                    {
+                      'ipv4':
+                          {
+                            'rp':
+                                {
+                                'rp_mappings': {
+                                    '224.0.0.0/4 3.3.3.3 bootstrap': {
+                                      'group': '224.0.0.0/4',
+                                      'rp_address': '3.3.3.3',
+                                      'rp_address_host': '?',
+                                      'up_time': '00:00:19',
+                                      'expiration': '00:02:19',
+                                      'priority': 5,
+                                      'hold_time': 150,
+                                      'protocol': 'bootstrap',
+                                    },
+                                    '224.0.0.0/4 2.2.2.2 bootstrap': {
+                                        'group': '224.0.0.0/4',
+                                        'rp_address': '2.2.2.2',
+                                        'rp_address_host': '?',
+                                        'up_time': '00:00:35',
+                                        'expiration': '00:02:03',
+                                        'priority': 10,
+                                        'hold_time': 150,
+                                        'protocol': 'bootstrap',
+                                    },
+                                    '224.0.0.0/4 3.3.3.3 static': {
+                                        'group': '224.0.0.0/4',
+                                        'rp_address_host': '?',
+                                        'rp_address': '3.3.3.3',
+                                        'protocol': 'static',
+                                    },
+                                    '224.0.0.0/4 20.0.0.3 autorp': {
+                                        'group': '224.0.0.0/4',
+                                        'rp_address_host': '?',
+                                        'rp_address': '20.0.0.3',
+                                        'up_time': '00:22:08',
+                                        'expiration': '00:02:40',
+                                        'protocol': 'autorp',
+                                    },
+
+                                },
+                                 'rp_list': {
+                                    '3.3.3.3 bootstrap': {
+                                          'address': '3.3.3.3',
+                                          'up_time': '00:00:19',
+                                          'expiration': '00:02:19',
+                                          'bsr_version':'v2',
+                                          'info_source_type': "bootstrap",
+                                          "info_source_address": "4.4.4.4",
+                                          },
+                                     '3.3.3.3 static': {
+                                         'address': '3.3.3.3',
+                                         "info_source_type": "static",
+                                     },
+                                     '2.2.2.2 bootstrap': {
+                                         'address': '2.2.2.2',
+                                         'bsr_version': 'v2',
+                                         'up_time': '00:00:35',
+                                         'expiration': '00:02:03',
+                                         "info_source_type": "bootstrap",
+                                         "info_source_address": "4.4.4.4",
+                                     },
+                                     '20.0.0.3 autorp': {
+                                         'address': '20.0.0.3',
+                                         'bsr_version': 'v2v1',
+                                         'up_time': '00:22:08',
+                                         'expiration': '00:02:40',
+                                         "info_source_type": "autorp",
+                                         'info_source_address': '20.0.0.2',
+                                        },
+                                    },
+                                },
+
+                            },
+                        },
+
+                    },
+                },
+
+            }
+    golden_output_mapping_1 = {'execute.return_value': '''
+    R1_xe#show ip pim rp mapping
+    PIM Group-to-RP Mappings
+
+    Group(s) 224.0.0.0/4
+      RP 3.3.3.3 (?), v2
+        Info source: 4.4.4.4 (?), via bootstrap, priority 5, holdtime 150
+         Uptime: 00:00:19, expires: 00:02:19
+      RP 2.2.2.2 (?), v2
+        Info source: 4.4.4.4 (?), via bootstrap, priority 10, holdtime 150
+         Uptime: 00:00:35, expires: 00:02:03
+    Group(s): 224.0.0.0/4, Static
+        RP: 3.3.3.3 (?)
+
+    Group(s) 224.0.0.0/4
+      RP 20.0.0.3 (?), v2v1
+        Info source: 20.0.0.2 (?), via Auto-RP
+         Uptime: 00:22:08, expires: 00:02:40
+
+     '''}
+
+    golden_parsed_output_mapping_2 = {
+        'vrf':
+            {'VRF1':
+                {
+                'address_family':
+                    {'ipv4':
+                        {
+                        'rp':
+                            {
+                            'rp_mappings': {
+                                '224.0.0.0/4 10.1.5.5 static': {
+                                    'group': '224.0.0.0/4',
+                                    'rp_address_host': '?',
+                                    'rp_address': '10.1.5.5',
+                                    'protocol': 'static',
+                                    },
+                                },
+                            'rp_list': {
+                                '10.1.5.5 static': {
+                                      'address': '10.1.5.5',
+                                      'info_source_type': 'static',
+                                      },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+    golden_output_mapping_2 = {'execute.return_value':'''
+    R1_xe#show ip pim vrf VRF1 rp mapping
+        PIM Group-to-RP Mappings
+
+        Group(s): 224.0.0.0/4, Static
+            RP: 10.1.5.5 (?)
+    '''}
+
+    golden_output_mapping_3 = {'execute.return_value': '''
+        R1_xe#show ip pim vrf VRF1 rp mapping
+            PIM Group-to-RP Mappings
+            % DDDDD
+            '''
+    }
+    def test_empty_1(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpPimRpMapping(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
+    def test_golden_mapping_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_mapping_1)
+        obj = ShowIpPimRpMapping(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_mapping_1)
+
+    def test_golden_mapping_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_mapping_2)
+        obj = ShowIpPimRpMapping(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output,self.golden_parsed_output_mapping_2)
+
+    def test_empty_nodata(self):
+        self.device = Mock(**self.golden_output_mapping_3)
+        obj = ShowIpPimRpMapping(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
 if __name__ == '__main__':
     unittest.main()

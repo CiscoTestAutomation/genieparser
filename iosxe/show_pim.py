@@ -457,119 +457,6 @@ class ShowIpPimInterfaceSchema(MetaParser):
     schema = {
         'vrf': {
             Any(): {
-                'interfaces':{
-                    Any():{
-                        'address_family': {
-                            Any(): {
-                                Optional('dr_priority'): int,
-                                Optional('hello_interval'): int,
-                                Optional('neighbor_count'): int,
-                                Optional('version'): int,
-                                Optional('mode'): str,
-                                Optional('dr_address'): str,
-                                Optional('address'): list,
-                            },
-                        },
-                    },
-                },
-            },
-        }
-    }
-
-
-class ShowIpPimInterface(ShowIpPimInterfaceSchema):
-
-    # Parser for 'show ip pim Interface'
-    # Parser for 'show ip pim vrf <vrf_name> interface'
-    def cli(self, vrf=""):
-
-        # find cmd
-        if vrf:
-            cmd = 'show ip pim vrf {} interface'.format(vrf)
-        else:
-            cmd = 'show ip pim interface'
-            vrf = 'default'
-
-        af_name = 'ipv4'
-        # excute command to get output
-        out = self.device.execute(cmd)
-
-        # initial variables
-        ret_dict = {}
-
-        for line in out.splitlines():
-            line = line.strip()
-            #Address          Interface                Ver/   Nbr    Query  DR         DR
-            #                              Mode   Count  Intvl  Prior
-            # 10.1.2.1         GigabitEthernet1         v2/S   1      30     1          10.1.2.2
-            p1 = re.compile(r'^\s*(?P<address>[\w\:\.]+) +(?P<interface>[\w\d\S]+)'
-                            ' +v(?P<version>[\d]+)\/(?P<mode>[\w]+)'
-                            ' +(?P<nbr_count>[\d]+)'
-                            ' +(?P<query_interval>[\d]+)'
-                            ' +(?P<dr_priority>[\d]+)'
-                            ' +(?P<dr_address>[\w\d\.\:]+)$')
-            m = p1.match(line)
-            if m:
-                new_mode = ""
-                address = m.groupdict()['address']
-                intf_name = m.groupdict()['interface']
-                nbr_count = int(m.groupdict()['nbr_count'])
-                version = int(m.groupdict()['version'])
-                mode = m.groupdict()['mode']
-                query_interval = int(m.groupdict()['query_interval'])
-                dr_priority = int(m.groupdict()['dr_priority'])
-                dr_address = m.groupdict()['dr_address']
-
-                if mode == 'S':
-                    new_mode = 'sparse-mode'
-                if mode == 'SD':
-                    new_mode = 'sparse-dense-mode'
-                if mode == 'D':
-                    new_mode = 'dense-mode'
-
-                if 'vrf' not in ret_dict:
-                    ret_dict['vrf'] = {}
-                if vrf not in ret_dict['vrf']:
-                    ret_dict['vrf'][vrf] = {}
-                if 'interfaces' not in ret_dict['vrf'][vrf]:
-                    ret_dict['vrf'][vrf]['interfaces'] = {}
-                if intf_name not in ret_dict['vrf'][vrf]['interfaces']:
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name] = {}
-                if 'address_family' not in ret_dict['vrf'][vrf]['interfaces'][intf_name]:
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] = {}
-                if intf_name not in ret_dict['vrf'][vrf]['interfaces']\
-                        [intf_name]['address_family']:
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]\
-                        ['address_family'][af_name] = {}
-
-                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name]\
-                    ['address'] = address.split()
-                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name]\
-                    ['neighbor_count'] = nbr_count
-                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name]\
-                    ['version'] = version
-                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name] \
-                    ['mode'] = new_mode
-                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name]\
-                    ['hello_interval'] = query_interval
-                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name]\
-                    ['dr_priority'] = dr_priority
-                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name]\
-                    ['dr_address'] = dr_address
-                continue
-
-        return ret_dict
-
-# ==============================================
-#  show ip pim interface
-#  show ip pim vrf <vrf_name> interface
-# ==============================================
-class ShowIpPimInterfaceSchema(MetaParser):
-
-    # Schema for 'show ip pim Interface'
-    schema = {
-        'vrf': {
-            Any(): {
                 'interfaces': {
                     Any(): {
                         'address_family': {
@@ -684,10 +571,10 @@ class ShowIpPimBsrRouterSchema(MetaParser):
     schema = {
         'vrf': {
             Any(): {
-                'address_family':{
-                    Any():{
+                'address_family': {
+                    Any(): {
                         'rp': {
-                            'bsr':{
+                            'bsr': {
                                 Optional('bsr_candidate'): {
                                     Optional('address'): str,
                                     Optional('hash_mask_length'): int,
@@ -765,9 +652,9 @@ class ShowIpPimBsrRouter(ShowIpPimBsrRouterSchema):
                     ret_dict['vrf'][vrf]['address_family'][af_name] = {}
                 if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
                     ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] = {}
-                if 'bsr' not in ret_dict['vrf'][vrf]['address_family']\
+                if 'bsr' not in ret_dict['vrf'][vrf]['address_family'] \
                         [af_name]['rp']:
-                    ret_dict['vrf'][vrf]['address_family'][af_name]\
+                    ret_dict['vrf'][vrf]['address_family'][af_name] \
                         ['rp']['bsr'] = {}
                 if 'bsr' not in ret_dict['vrf'][vrf]['address_family'] \
                         [af_name]['rp']['bsr']:
@@ -780,7 +667,7 @@ class ShowIpPimBsrRouter(ShowIpPimBsrRouterSchema):
                     ['rp']['bsr']['bsr']['address_host'] = address_host
                 continue
 
-            #  Uptime:      00:01:23, BSR Priority: 0, Hash mask length: 0
+            # Uptime:      00:01:23, BSR Priority: 0, Hash mask length: 0
             p2 = re.compile(r'^\s*Uptime: +(?P<up_time>[\w\d\:]+),'
                             ' +BSR +Priority: +(?P<priority>\d+),'
                             ' +Hash +mask +length: +(?P<hash_mask_length>\d+)$')
@@ -854,9 +741,9 @@ class ShowIpPimBsrRouter(ShowIpPimBsrRouterSchema):
                     ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] = {}
                 if 'bsr' not in ret_dict['vrf'][vrf]['address_family'][af_name]['rp']:
                     ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] = {}
-                if 'bsr_candidate' not in ret_dict['vrf'][vrf]['address_family']\
+                if 'bsr_candidate' not in ret_dict['vrf'][vrf]['address_family'] \
                         [af_name]['rp']['bsr']:
-                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp']\
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
                         ['bsr']['bsr_candidate'] = {}
 
                 ret_dict['vrf'][vrf]['address_family'][af_name] \
@@ -869,7 +756,7 @@ class ShowIpPimBsrRouter(ShowIpPimBsrRouterSchema):
                     ['rp']['bsr']['bsr_candidate']['hash_mask_length'] = can_hash_mask
                 continue
 
-            #  Candidate RP: 10.1.5.1(GigabitEthernet3)
+            # Candidate RP: 10.1.5.1(GigabitEthernet3)
             p5 = re.compile(r'^\s*Candidate +RP:'
                             ' +(?P<rp_can_address>[\w\d\.\:]+)\((?P<rp_can_interface>[\w\d\S]+)\)$')
 
@@ -906,7 +793,6 @@ class ShowIpPimBsrRouter(ShowIpPimBsrRouterSchema):
             if m:
                 rp_can_priority = int(m.groupdict()['rp_can_priority'])
 
-
             if rp_can_address or rp_can_interface:
                 if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
                     ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] = {}
@@ -923,11 +809,11 @@ class ShowIpPimBsrRouter(ShowIpPimBsrRouterSchema):
 
                 if rp_can_interface:
                     ret_dict['vrf'][vrf]['address_family'][af_name] \
-                    ['rp']['bsr'][key]['interface'] = rp_can_interface
+                        ['rp']['bsr'][key]['interface'] = rp_can_interface
 
                 if rp_can_address:
                     ret_dict['vrf'][vrf]['address_family'][af_name] \
-                    ['rp']['bsr'][key]['address'] = rp_can_address
+                        ['rp']['bsr'][key]['address'] = rp_can_address
 
                 if rp_can_holdtime:
                     ret_dict['vrf'][vrf]['address_family'][af_name] \
@@ -947,3 +833,305 @@ class ShowIpPimBsrRouter(ShowIpPimBsrRouterSchema):
                 continue
 
         return ret_dict
+# ===================================================
+#  schema for show ip pim rp mapping
+#  schema for show ip pim vrf <vrf_name> rp mapping
+# ====================================================
+class ShowIpPimRpMappingSchema(MetaParser):
+
+    # Schema for 'show ip pim rp mapping'
+
+    schema = {
+        'vrf':
+            {Any(): {
+                'address_family': {
+                    Any(): {
+                        'rp': {
+                            'rp_mappings': {
+                                Any(): {
+                                    'group': str,
+                                    'rp_address': str,
+                                    'protocol': str,
+                                    Optional('rp_address_host'): str,
+                                    Optional('up_time'): str,
+                                    Optional('expiration'): str,
+                                    Optional('priority'): int,
+                                    Optional('hold_time'): int,
+
+                                },
+                            },
+                            'rp_list':{
+                                Any():{
+                                    Optional('address'): str,
+                                    Optional('info_source_address'): str,
+                                    Optional('bsr_version'): str,
+                                    Optional('up_time'): str,
+                                    Optional('expiration'): str,
+                                    Optional('info_source_type'): str,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+# ===================================================
+#  parser for show ip pim rp mapping
+#  parser for show ip pim vrf <vrf_name> rp mapping
+# ====================================================
+class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
+
+    # Parser for 'show ip pim rp mapping'
+    # Parser for 'show ip pim vrf <vrf_name> rp mapping'
+
+    def cli(self, vrf=""):
+
+        # find cmd
+        if vrf:
+            cmd = 'show ip pim vrf {} rp mapping'.format(vrf)
+        else:
+            cmd = 'show ip pim rp mapping'
+            vrf = 'default'
+
+        protocol_static = ""
+        af_name = 'ipv4'
+
+
+        # excute command to get output
+        out = self.device.execute(cmd)
+
+        # initial variables
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Group(s) 224.0.0.0/4
+            # Group(s) 224.0.0.0/4, Static
+            p1 = re.compile(r'^\s*Group\(s\)\:? +(?P<group>[0-9a-zA-Z\:\.\/]+)(, +(?P<protocol>[\w\s\S]+))?$')
+            m = p1.match(line)
+            if m:
+                rp_group_protocol = ""
+                protocol_static = ""
+
+                group = m.groupdict()['group']
+                if m.groupdict()['protocol']:
+                    protocol_static = m.groupdict()['protocol'].lower()
+                continue
+                """
+                                    if rp_address_protocol not in ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['rp_list']:
+                        ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['rp_list'][rp_address_protocol] = {}
+
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
+                            ['rp_list'][rp_group_protocol]['info_source_type'] = protocol_static
+
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
+                        ['rp_list'][rp_group_protocol]['address'] = rp_address
+                """
+
+            # RP 3.3.3.3 (?), v2
+            p2 = re.compile(r'^\s*RP\:? +(?P<rp_address>[\s\w\:\.]+)'
+                            ' +\((?P<rp_address_host>[\w\d\.\:\?]+)\)?'
+                            '(, +(?P<rp_version>[\w\d]+))?$')
+            m = p2.match(line)
+            if m:
+                rp_group_protocol = ""
+
+                rp_address = m.groupdict()['rp_address']
+                if m.groupdict()['rp_address_host']:
+                    rp_address_host = m.groupdict()['rp_address_host']
+                if m.groupdict()['rp_version']:
+                    rp_version = m.groupdict()['rp_version']
+                if group:
+                    rp_group = group + " " + rp_address
+                if protocol_static:
+                    rp_group_protocol = rp_group + " " + protocol_static
+
+                if rp_group_protocol:
+                    if 'vrf' not in ret_dict:
+                        ret_dict['vrf'] = {}
+                    if vrf not in ret_dict['vrf']:
+                        ret_dict['vrf'][vrf] = {}
+                    if 'address_family' not in ret_dict['vrf'][vrf]:
+                        ret_dict['vrf'][vrf]['address_family'] = {}
+                    if af_name not in ret_dict['vrf'][vrf]['address_family']:
+                        ret_dict['vrf'][vrf]['address_family'][af_name] = {}
+
+                    if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
+                        ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] = {}
+                    if 'rp_mappings' not in ret_dict['vrf'][vrf]['address_family'][af_name]['rp']:
+                        ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['rp_mappings'] = {}
+                    if rp_group_protocol not in ret_dict['vrf'][vrf]['address_family']\
+                            [af_name]['rp']['rp_mappings']:
+                        ret_dict['vrf'][vrf]['address_family'][af_name]['rp']\
+                            ['rp_mappings'][rp_group_protocol] = {}
+
+                    if 'rp_list' not in ret_dict['vrf'][vrf]['address_family'][af_name]['rp']:
+                        ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['rp_list'] = {}
+
+                    if protocol_static:
+                        rp_address_protocol = rp_address + " "+ protocol_static
+                        if rp_address_protocol not in ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['rp_list']:
+                            ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['rp_list'][rp_address_protocol] = {}
+
+                        ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
+                            ['rp_list'][rp_address_protocol]['info_source_type'] = protocol_static
+
+                        ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
+                            ['rp_list'][rp_address_protocol]['address'] = rp_address
+
+
+
+
+                        ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
+                            ['rp_mappings'][rp_group_protocol]['protocol'] = protocol_static
+
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp']\
+                        ['rp_mappings'][rp_group_protocol]['group'] = group
+
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp']\
+                        ['rp_mappings'][rp_group_protocol]['rp_address'] = rp_address
+
+                    if m.groupdict()['rp_address_host']:
+                        ret_dict['vrf'][vrf]['address_family'][af_name]['rp']\
+                            ['rp_mappings'][rp_group_protocol]['rp_address_host'] = rp_address_host
+
+
+                continue
+
+            # Info source: 4.4.4.4 (?), via bootstrap, priority 5, holdtime 150
+            p3 = re.compile(r'^\s*Info +source: +(?P<info_source>[\w\:\.]+)'
+                            ' +\((?P<rp_address_host>[\w\d\.\:\?]+)\)?'
+                            '(, +via +(?P<protocol>[\w\S\-]+))?'
+                            '(, +priority +(?P<priority>[\d]+))?'
+                            '(, +holdtime +(?P<holdtime>[\d]+))?$')
+            m = p3.match(line)
+            if m:
+                info_source_address = m.groupdict()['info_source']
+                if rp_group:
+                    if m.groupdict()['protocol']:
+                        protocol_others = m.groupdict()['protocol'].lower().replace('-','')
+
+                        rp_group_protocol = rp_group + " " + protocol_others
+
+                        if 'vrf' not in ret_dict:
+                            ret_dict['vrf'] = {}
+                        if vrf not in ret_dict['vrf']:
+                            ret_dict['vrf'][vrf] = {}
+                        if 'address_family' not in ret_dict['vrf'][vrf]:
+                            ret_dict['vrf'][vrf]['address_family'] = {}
+                        if af_name not in ret_dict['vrf'][vrf]['address_family']:
+                            ret_dict['vrf'][vrf]['address_family'][af_name] = {}
+
+                        if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
+                            ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] = {}
+                        if 'rp_mappings' not in ret_dict['vrf'][vrf]['address_family'][af_name]['rp']:
+                            ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['rp_mappings'] = {}
+
+                        if rp_group_protocol not in ret_dict['vrf'][vrf]['address_family'] \
+                                [af_name]['rp']['rp_mappings']:
+                            ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
+                                ['rp_mappings'][rp_group_protocol] = {}
+
+                        if info_source_address:
+                            address_info_source_type = rp_address + " " + protocol_others
+
+                            if 'rp_list' not in ret_dict['vrf'][vrf]['address_family'][af_name]['rp']:
+                                ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
+                                    ['rp_list'] = {}
+                            if address_info_source_type not in ret_dict['vrf'][vrf]['address_family'][af_name]['rp']:
+                                ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
+                                    ['rp_list'][address_info_source_type] = {}
+
+
+                            ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
+                                ['rp_list'][address_info_source_type]['info_source_address'] \
+                                = info_source_address
+
+                            ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
+                                ['rp_list'][address_info_source_type]['address'] \
+                                = rp_address
+
+
+                            ret_dict['vrf'][vrf]['address_family'][af_name]['rp']\
+                            ['rp_list'][address_info_source_type]['info_source_type']\
+                                = protocol_others
+
+                        ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
+                            ['rp_mappings'][rp_group_protocol]['protocol'] = protocol_others
+
+                        if m.groupdict()['priority']:
+                            ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
+                            ['rp_mappings'][rp_group_protocol]['priority'] = int(m.groupdict()['priority'])
+
+                        if m.groupdict()['holdtime']:
+                            ret_dict['vrf'][vrf]['address_family'][af_name]['rp']\
+                            ['rp_mappings'][rp_group_protocol]['hold_time'] = int(m.groupdict()['holdtime'])
+
+                        ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
+                            ['rp_mappings'][rp_group_protocol]['group'] = group
+
+                        ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
+                            ['rp_mappings'][rp_group_protocol]['rp_address'] = rp_address
+
+                        if rp_version:
+                            ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
+                                ['rp_list'][address_info_source_type]['bsr_version'] = rp_version
+
+                        if m.groupdict()['rp_address_host']:
+                            ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
+                                ['rp_mappings'][rp_group_protocol]['rp_address_host'] = rp_address_host
+                #continue
+
+            # Uptime: 00:00:19, expires: 00:02:19
+            p4 = re.compile(r'^\s*Uptime: +(?P<uptime>[\w\d\S\:]+),'
+                            ' +expires: +(?P<expires>[\w\d\S\:]+)$')
+            m = p4.match(line)
+            if m:
+                up_time = m.groupdict()['uptime']
+                expiration = m.groupdict()['expires']
+
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+                if 'address_family' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['address_family'] = {}
+
+                if af_name not in ret_dict['vrf'][vrf]['address_family']:
+                    ret_dict['vrf'][vrf]['address_family'][af_name] = {}
+
+                if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] = {}
+
+                if 'rp_mappings' not in ret_dict['vrf'][vrf]['address_family'][af_name]['rp']:
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['rp_mappings'] = {}
+
+                if 'rp_list' not in ret_dict['vrf'][vrf]['address_family'][af_name]['rp']:
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
+                        ['rp_list'] = {}
+
+                if rp_group_protocol not in ret_dict['vrf'][vrf]['address_family']\
+                        [af_name]['rp']['rp_mappings']:
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp']\
+                        ['rp_mappings'][rp_group_protocol] = {}
+
+                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['rp_mappings'][rp_group_protocol]\
+                    ['up_time'] = up_time
+                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['rp_mappings'][rp_group_protocol]\
+                    ['expiration'] = expiration
+
+                if address_info_source_type not in ret_dict['vrf'][vrf]['address_family']\
+                        [af_name]['rp']['rp_list']:
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp']\
+                        ['rp_list'][address_info_source_type] = {}
+
+                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['rp_list'][address_info_source_type] \
+                    ['up_time'] = up_time
+                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['rp_list'][address_info_source_type] \
+                    ['expiration'] = expiration
+                continue
+        return ret_dict
+
