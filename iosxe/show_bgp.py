@@ -1989,9 +1989,10 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
 
             # BGP state = Established, up for 01:10:35
             # or
-            # BGP state = Idel, down for 01:10:35
-            p4 = re.compile(r'^\s*BGP +state += +(?P<session_state>[a-zA-Z]+),'
-                            ' +(?P<up_down>\w+) +for +(?P<time>[0-9\:]+)$')
+            # BGP state = Idle, down for 01:10:35
+            # BGP state = Idle
+            p4 = re.compile(r'^\s*BGP +state += +(?P<session_state>[a-zA-Z]+)'
+                            '(, +(?P<up_down>\w+) +for +(?P<time>[0-9\:]+))?$')
             m = p4.match(line)
             if m:
                 session_state = m.groupdict()['session_state']
