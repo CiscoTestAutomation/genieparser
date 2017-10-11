@@ -1996,8 +1996,10 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             m = p4.match(line)
             if m:
                 session_state = m.groupdict()['session_state']
-                up_down = m.groupdict()['up_down']
-                up_down_time = m.groupdict()['time']
+                if m.groupdict()['up_down']:
+                    up_down = m.groupdict()['up_down']
+                if m.groupdict()['time']:
+                    up_down_time = m.groupdict()['time']
 
 
                 parsed_dict['vrf'][vrf_name]['neighbor']\
@@ -2016,8 +2018,9 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                 parsed_dict['vrf'][vrf_name]['neighbor']\
                     [neighbor_id]['address_family'][af_name]['session_state'] = session_state.lower()
 
-                parsed_dict['vrf'][vrf_name]['neighbor']\
-                    [neighbor_id]['address_family'][af_name][up_down+'_time'] = up_down_time
+                if m.groupdict()['up_down'] and m.groupdict()['time']:
+                    parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['address_family'][af_name][up_down+'_time'] = up_down_time
 
                 continue
 
