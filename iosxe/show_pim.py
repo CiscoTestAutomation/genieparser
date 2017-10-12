@@ -1157,6 +1157,7 @@ class ShowIpPimInterfaceDetailSchema(MetaParser):
                                  Optional('pim_status'): str,
                                  Optional('version'): int,
                                  Optional('mode'): str,
+                                 Optional('sm'): {},
                                  Optional('dr_address'): str,
                                  Optional('neighbor_count'): int,
                                  Optional('jp_interval'): int,
@@ -1164,7 +1165,7 @@ class ShowIpPimInterfaceDetailSchema(MetaParser):
                                  Optional('state_refresh_origination'): str,
                                  Optional('nbma_mode'): str,
                                  Optional('atm_multipoint_signalling'): str,
-                                 Optional('domain_border'): str,
+                                 Optional('bsr_border'): str,
                                  Optional('neighbors_rpf_proxy_capable'): bool,
                                  Optional('none_dr_join'): bool,
                              },
@@ -1200,7 +1201,7 @@ class ShowIpPimInterfaceDetail(ShowIpPimInterfaceDetailSchema):
         hello_interval = hello_packet_out= address = dr_address = multi_packet_in= ""
         multi_packet_out = mode = version = pim_status = state_refresh_origination = ""
         state_refresh_processing = multi_switching = tagswitching = atm_multipoint = ""
-        jp_interval = neighbors_rpf_proxy_capable = domain_border = bfd = ttl_threshold = ""
+        jp_interval = neighbors_rpf_proxy_capable = bsr_border = bfd = ttl_threshold = ""
         non_dr_join = ""
         # excute command to get output
         out = self.device.execute(cmd)
@@ -1330,7 +1331,7 @@ class ShowIpPimInterfaceDetail(ShowIpPimInterfaceDetailSchema):
                              ' +(?P<domain_border>\w+)$')
             m = p17.match(line)
             if m:
-                domain_border = m.groupdict()['domain_border']
+                bsr_border = m.groupdict()['domain_border']
 
             # PIM neighbors rpf proxy capable: TRUE
             p18 = re.compile(r'^\s*PIM +neighbors +rpf +proxy +capable:'
@@ -1452,9 +1453,12 @@ class ShowIpPimInterfaceDetail(ShowIpPimInterfaceDetailSchema):
                     ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
                         [af_name]['version'] = version
 
-                if mode is not None:
+                if mode:
                     ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
                         [af_name]['mode'] = mode
+                    if mode.lower() == 'sparse':
+                        ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
+                        [af_name]['sm'] = {}
 
                 if dr_address:
                     ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
@@ -1483,9 +1487,9 @@ class ShowIpPimInterfaceDetail(ShowIpPimInterfaceDetailSchema):
                     ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
                         [af_name]['atm_multipoint_signalling'] = atm_multipoint
 
-                if  domain_border:
+                if  bsr_border:
                     ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['domain_border'] = domain_border
+                        [af_name]['bsr_border'] = bsr_border
 
                 if neighbors_rpf_proxy_capable:
                     if neighbors_rpf_proxy_capable.lower() == 'true':
