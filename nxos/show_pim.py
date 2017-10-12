@@ -125,7 +125,7 @@ class ShowIpv6PimVrfAllDetail(ShowIpv6PimVrfAllDetailSchema):
             if m:
                 if m.groupdict()['route_range']:
                     shared_tree_route_range = m.groupdict()['route_range']
-                    print('xxxxxxxxxxx')
+
                     parsed_dict['vrf'][vrf_name]['address_family'] \
                     [af_name]['shared_tree_route_ranges'] = shared_tree_route_range
 
