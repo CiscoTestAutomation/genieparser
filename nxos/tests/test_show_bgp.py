@@ -18531,7 +18531,6 @@ class test_show_bgp_peer_template_cmd_cli(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowBgpPeerTemplateCmd(device=self.device)
         parsed_output = obj.parse()
-        import pdb; pdb.set_trace()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_empty(self):
@@ -19232,7 +19231,6 @@ class test_show_bgp_peer_template_xml(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowBgpPeerTemplateCmd(device=self.device, context='xml')
         parsed_output = obj.parse()
-        import pdb; pdb.set_trace()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
