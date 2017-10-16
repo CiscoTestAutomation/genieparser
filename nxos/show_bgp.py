@@ -6015,7 +6015,8 @@ def compose_compare_command(root, namespace, expect_command):
             None
 
         Raises:
-            AssertionError
+            AssertionError: xml tag cli and command is not matched
+            Exception: No mandatory tag __readonly__ in output
 
         example:
 
@@ -6026,7 +6027,6 @@ def compose_compare_command(root, namespace, expect_command):
     '''
     # get to data node
     cmd_node = root.getchildren()[0]
-
     # compose command from element tree
     # ex.  <nf:data>
     #        <show>
@@ -6038,7 +6038,11 @@ def compose_compare_command(root, namespace, expect_command):
     cli = ''
     while True:
         # get next node
-        cmd_node = cmd_node.getchildren()[0]
+        try:
+            cmd_node = cmd_node.getchildren()[0]
+        except:
+            raise Exception('No __readonly__ in xml output, better to file a bug')
+            break
 
         # get tag name
         tag = cmd_node.tag.replace(namespace, '')
@@ -6052,7 +6056,8 @@ def compose_compare_command(root, namespace, expect_command):
     cli = cli.strip()
     # compare the commands
     assert cli == expect_command, \
-        'composed cli {c} not the same as expected command {e}'.format(c=cli, e=expect_command)
+        'Cli created from XML tags does not match the actual cli:\n'\
+        'XML Tags cli: {c}\nCli command: {e}'.format(c=cli, e=expect_command)
 
 class ShowBgpAllDampeningFlapStatisticsSchema(MetaParser):
     
@@ -6252,23 +6257,23 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
         root = ET.fromstring(out)
 
         # top table root
-        vrf_root = retrieve_xml_child(root, 'TABLE_vrf')
+        show_root = retrieve_xml_child(root, 'show')
         # get xml namespace
         # {http://www.cisco.com/nxos:7.0.3.I7.1.:bgp}
         try:
-            line = vrf_root.getchildren()[0].tag
-            m = re.compile(r'(?P<name>\{[\S]+\})').match(line)
+            m = re.compile(r'(?P<name>\{[\S]+\})').match(show_root.tag)
             namespace = m.groupdict()['name']
         except:
             return etree_dict
 
         # compare cli command
-        try:
-            compose_compare_command(root=root, namespace=namespace,
-                                    expect_command='show bgp all dampening flap-statistics')
-        except Exception as e:
-            raise Exception(str(e))
+        compose_compare_command(root=root, namespace=namespace,
+                                expect_command='show bgp all dampening flap-statistics')
 
+        # top table root
+        vrf_root = retrieve_xml_child(root, 'TABLE_vrf')
+        if not vrf_root:
+            return etree_dict
 
         # -----   loop vrf  -----
         for vrf_tree in vrf_root.findall('{}ROW_vrf'.format(namespace)):
