@@ -8,7 +8,8 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Parser
-from parser.nxos.show_vrf import ShowVrf, ShowVrfInterface
+from parser.nxos.show_vrf import ShowVrf, ShowVrfInterface, \
+                                 ShowVrfDetail
 
 # Metaparser
 from metaparser.util.exceptions import SchemaEmptyParserError
@@ -116,6 +117,173 @@ class test_show_vrf_interface(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+
+# =======================================
+#  Unit test for 'show vrf <WORD> detail'
+# =======================================
+class test_show_vrf_detail(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "management": {
+              "max_routes": 0,
+              "state": "up",
+              "vrf_id": 2,
+              "address_family": {
+                   "ipv6": {
+                        "table_id": "0x80000002",
+                        "state": "up",
+                        "fwd_id": "0x80000002"
+                   },
+                   "ipv4": {
+                        "table_id": "0x00000002",
+                        "state": "up",
+                        "fwd_id": "0x00000002"
+                   }
+              },
+              "mid_threshold": 0,
+              "route_distinguisher": "0:0"
+         },
+         "default": {
+              "max_routes": 0,
+              "state": "up",
+              "vrf_id": 1,
+              "address_family": {
+                   "ipv6": {
+                        "table_id": "0x80000001",
+                        "state": "up",
+                        "fwd_id": "0x80000001"
+                   },
+                   "ipv4": {
+                        "table_id": "0x00000001",
+                        "state": "up",
+                        "fwd_id": "0x00000001"
+                   }
+              },
+              "mid_threshold": 0,
+              "route_distinguisher": "0:0"
+         },
+         "VRF2": {
+              "max_routes": 0,
+              "state": "up",
+              "vrf_id": 4,
+              "address_family": {
+                   "ipv6": {
+                        "table_id": "0x80000004",
+                        "state": "up",
+                        "fwd_id": "0x80000004"
+                   },
+                   "ipv4": {
+                        "table_id": "0x00000004",
+                        "state": "up",
+                        "fwd_id": "0x00000004"
+                   }
+              },
+              "mid_threshold": 0,
+              "route_distinguisher": "400:1"
+         },
+         "VRF1": {
+              "max_routes": 20000,
+              "state": "up",
+              "vrf_id": 3,
+              "address_family": {
+                   "ipv6": {
+                        "table_id": "0x80000003",
+                        "state": "up",
+                        "fwd_id": "0x80000003"
+                   },
+                   "ipv4": {
+                        "table_id": "0x00000003",
+                        "state": "up",
+                        "fwd_id": "0x00000003"
+                   }
+              },
+              "mid_threshold": 17000,
+              "route_distinguisher": "300:1"
+         }
+    }
+
+    golden_output = {'execute.return_value': '''
+        VRF-Name: VRF1, VRF-ID: 3, State: Up
+            VPNID: unknown
+            RD: 300:1
+            Max Routes: 20000  Mid-Threshold: 17000
+            Table-ID: 0x80000003, AF: IPv6, Fwd-ID: 0x80000003, State: Up
+            Table-ID: 0x00000003, AF: IPv4, Fwd-ID: 0x00000003, State: Up
+
+        VRF-Name: VRF2, VRF-ID: 4, State: Up
+            VPNID: unknown
+            RD: 400:1
+            Max Routes: 0  Mid-Threshold: 0
+            Table-ID: 0x80000004, AF: IPv6, Fwd-ID: 0x80000004, State: Up
+            Table-ID: 0x00000004, AF: IPv4, Fwd-ID: 0x00000004, State: Up
+
+        VRF-Name: default, VRF-ID: 1, State: Up
+            VPNID: unknown
+            RD: 0:0
+            Max Routes: 0  Mid-Threshold: 0
+            Table-ID: 0x80000001, AF: IPv6, Fwd-ID: 0x80000001, State: Up
+            Table-ID: 0x00000001, AF: IPv4, Fwd-ID: 0x00000001, State: Up
+
+        VRF-Name: management, VRF-ID: 2, State: Up
+            VPNID: unknown
+            RD: 0:0
+            Max Routes: 0  Mid-Threshold: 0
+            Table-ID: 0x80000002, AF: IPv6, Fwd-ID: 0x80000002, State: Up
+            Table-ID: 0x00000002, AF: IPv4, Fwd-ID: 0x00000002, State: Up
+        '''}
+
+    golden_parsed_output_1 = {
+         "VRF1": {
+              "max_routes": 20000,
+              "state": "up",
+              "vrf_id": 3,
+              "address_family": {
+                   "ipv6": {
+                        "table_id": "0x80000003",
+                        "state": "up",
+                        "fwd_id": "0x80000003"
+                   },
+                   "ipv4": {
+                        "table_id": "0x00000003",
+                        "state": "up",
+                        "fwd_id": "0x00000003"
+                   }
+              },
+              "mid_threshold": 17000,
+              "route_distinguisher": "300:1"
+         }}
+
+    golden_output_1 = {'execute.return_value': '''
+        VRF-Name: VRF1, VRF-ID: 3, State: Up
+            VPNID: unknown
+            RD: 300:1
+            Max Routes: 20000  Mid-Threshold: 17000
+            Table-ID: 0x80000003, AF: IPv6, Fwd-ID: 0x80000003, State: Up
+            Table-ID: 0x00000003, AF: IPv4, Fwd-ID: 0x00000003, State: Up
+        '''}
+
+    def test_show_vrf_all(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowVrfDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_show_vrf_word(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowVrfDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+    def test_show_vrf_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowVrfDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
 if __name__ == '__main__':
     unittest.main()
