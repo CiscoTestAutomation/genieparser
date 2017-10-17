@@ -37,34 +37,10 @@ from metaparser.util.schemaengine import Schema, \
                                          And, \
                                          Default, \
                                          Use
+# import parser utils
+from parser.utils.common import Common
 
 logger = logging.getLogger(__name__)
-
-
-def regexp(expression):
-    def match(value):
-        if re.match(expression, value):
-            return value
-        else:
-            raise TypeError("Value '%s' doesnt match regex '%s'"
-                            % (value, expression))
-    return match
-
-def convert_intf_name(intf):
-    # Please add more when face other type of interface
-    convert = {'Eth': 'Ethernet',
-               'Lo': 'Loopback',
-               'Po': 'Port-channel',
-               'Null': 'Null',
-               'Gi': 'GigabitEthernet',
-               'Te': 'TenGigabitEthernet',
-               'mgmt': 'mgmt'}
-    int_type = re.search('([a-zA-Z]+)', intf).group(0)
-    int_port = re.search('([\d\/\.]+)', intf).group(0)
-    if int_type in convert.keys():
-        return(convert[int_type] + int_port)
-    else:
-        return(intf)
 
 
 class ShowInterfacesSchema(MetaParser):
@@ -479,7 +455,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 interface_dict[interface]['port_channel']\
                     ['port_channel_member'] = True
                 intfs = m.groupdict()['port_channel_member_intfs'].split(',')
-                intfs = [convert_intf_name(i.strip()) for i in intfs]
+                intfs = [Common.convert_intf_name(i.strip()) for i in intfs]
                 interface_dict[interface]['port_channel']\
                     ['port_channel_member_intfs'] = intfs
 
@@ -1038,7 +1014,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
             p1 =  re.compile(r'^Name: +(?P<intf>[\w\/\.\-]+)$')
             m = p1.match(line)
             if m:
-                intf = convert_intf_name(m.groupdict()['intf'])
+                intf = Common.convert_intf_name(m.groupdict()['intf'])
                 if intf not in ret_dict:
                     ret_dict[intf] = {}
                 continue
@@ -1072,7 +1048,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 if bundle_intf:
                     if 'port_channel' not in ret_dict[intf]:
                         ret_dict[intf]['port_channel'] = {}
-                    bundle_intf = convert_intf_name(bundle_intf)
+                    bundle_intf = Common.convert_intf_name(bundle_intf)
 
                     ret_dict[intf]['port_channel']['port_channel_int'] = bundle_intf
                     ret_dict[intf]['port_channel']['port_channel_member'] = True
@@ -2399,7 +2375,7 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 if 'unnumbered' not in ret_dict[intf]['ipv6']:
                     ret_dict[intf]['ipv6']['unnumbered'] = {}
                 ret_dict[intf]['ipv6']['unnumbered']['interface_ref'] = \
-                    convert_intf_name(m.groupdict()['unnumbered_intf'])
+                    Common.convert_intf_name(m.groupdict()['unnumbered_intf'])
                 continue
 
             # No global unicast address is configured
@@ -2456,7 +2432,7 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()['group']
-                port_channel = convert_intf_name(m.groupdict()['port_channel'])
+                port_channel = Common.convert_intf_name(m.groupdict()['port_channel'])
                 port_flags = m.groupdict()['port_flags']
                 protocol = m.groupdict()['protocol'].lower()
                 ports = m.groupdict()['ports'].split()
@@ -2478,7 +2454,7 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
                     p_eth = re.compile(r'^(?P<intf>[\w\/\-\.]+)\((?P<eth_flags>\w+)\)')
                     m = p_eth.match(item)
                     if m:
-                        intf = convert_intf_name(m.groupdict()['intf'])
+                        intf = Common.convert_intf_name(m.groupdict()['intf'])
                         eth_list.append(intf)
                         eth_flags = m.groupdict()['eth_flags']
                         if intf not in ret_dict['interfaces']:
