@@ -46,6 +46,9 @@ from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
 # Parser
 from parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
 
+# import parser utils
+from parser.utils.common import Common
+
 # =====================================
 # Parser for 'show bgp process vrf all'
 # =====================================
@@ -5972,92 +5975,6 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
 # ===================================================
 # Parser for 'show bgp all dampening flap-statistics'
 # ===================================================
-def retrieve_xml_child(root, key):
-    '''return the root which contains the key from xml
-
-        Args:
-
-            root (`obj`): ElementTree Object, point to top of the tree
-            key (`str`): Expceted tag name. ( without namespace)
-
-        Returns:
-            Element object of the given tag
-
-        Raises:
-            None
-
-        example:
-
-            >>> retrieve_xml_child(
-                    root=<Element '{urn:ietf:params:xml:ns:netconf:base:1.0}rpc-reply' at 0xf760434c>,
-                    key='TABLE_vrf')
-    '''
-    for item in root:
-        if key in item.tag:
-            return item
-        else:
-            root = item
-            return retrieve_xml_child(root, key)
-
-
-def compose_compare_command(root, namespace, expect_command):
-    '''compose commmand from the xml Element object from the root,
-       then compare with the command with the expect_command.
-       Only work for cisco standard output.
-
-        Args:
-
-            root (`obj`): ElementTree Object, point to top of the tree
-            namespace (`str`): Namesapce. Ex. {http://www.cisco.com/nxos:8.2.0.SK.1.:rip}
-            expect_command (`str`): expected command.
-
-        Returns:
-            None
-
-        Raises:
-            AssertionError: xml tag cli and command is not matched
-            Exception: No mandatory tag __readonly__ in output
-
-        example:
-
-            >>> compose_compare_command(
-                    root=<Element '{urn:ietf:params:xml:ns:netconf:base:1.0}rpc-reply' at 0xf760434c>,
-                    namespace='{http://www.cisco.com/nxos:8.2.0.SK.1.:rip}',
-                    expect_command='show bgp all dampening flap-statistics')
-    '''
-    # get to data node
-    cmd_node = root.getchildren()[0]
-    # compose command from element tree
-    # ex.  <nf:data>
-    #        <show>
-    #         <bgp>
-    #          <all>
-    #           <dampening>
-    #            <flap-statistics>
-    #             <__readonly__>
-    cli = ''
-    while True:
-        # get next node
-        try:
-            cmd_node = cmd_node.getchildren()[0]
-        except:
-            raise Exception('No __readonly__ in xml output, better to file a bug')
-            break
-
-        # get tag name
-        tag = cmd_node.tag.replace(namespace, '')
-
-        # __readonly__ is the end of the command
-        if '__readonly__' not in tag:
-            cli += ' ' + tag
-        else:
-            break
-
-    cli = cli.strip()
-    # compare the commands
-    assert cli == expect_command, \
-        'Cli created from XML tags does not match the actual cli:\n'\
-        'XML Tags cli: {c}\nCli command: {e}'.format(c=cli, e=expect_command)
 
 class ShowBgpAllDampeningFlapStatisticsSchema(MetaParser):
     
@@ -6257,7 +6174,7 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
         root = ET.fromstring(out)
 
         # top table root
-        show_root = retrieve_xml_child(root, 'show')
+        show_root = Common.retrieve_xml_child(root=root, key='show')
         # get xml namespace
         # {http://www.cisco.com/nxos:7.0.3.I7.1.:bgp}
         try:
@@ -6267,11 +6184,11 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
             return etree_dict
 
         # compare cli command
-        compose_compare_command(root=root, namespace=namespace,
+        Common.compose_compare_command(root=root, namespace=namespace,
                                 expect_command='show bgp all dampening flap-statistics')
 
         # top table root
-        vrf_root = retrieve_xml_child(root, 'TABLE_vrf')
+        vrf_root = Common.retrieve_xml_child(root=root, key='TABLE_vrf')
         if not vrf_root:
             return etree_dict
 
@@ -6479,15 +6396,22 @@ class ShowBgpAllNexthopDatabase(ShowBgpVrfAllAllNextHopDatabase):
         root = ET.fromstring(out)
 
         # top table root
-        vrf_root = retrieve_xml_child(root, 'TABLE_nhvrf')
-
+        show_root = Common.retrieve_xml_child(root=root, key='show')
         # get xml namespace
         # {http://www.cisco.com/nxos:7.0.3.I7.1.:bgp}
         try:
-            line = vrf_root.getchildren()[0].tag
-            m = re.compile(r'(?P<name>\{[\S]+\})').match(line)
+            m = re.compile(r'(?P<name>\{[\S]+\})').match(show_root.tag)
             namespace = m.groupdict()['name']
         except:
+            return etree_dict
+
+        # compare cli command
+        Common.compose_compare_command(root=root, namespace=namespace,
+                                expect_command='show bgp all nexthop-database')
+
+        # top table root
+        vrf_root = Common.retrieve_xml_child(root=root, key='TABLE_nhvrf')
+        if not vrf_root:
             return etree_dict
 
         # -----   loop vrf  -----
@@ -7049,15 +6973,22 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
         root = ET.fromstring(out)
 
         # top table root
-        root = retrieve_xml_child(root, 'TABLE_neighbor')
-
+        show_root = Common.retrieve_xml_child(root=root, key='show')
         # get xml namespace
         # {http://www.cisco.com/nxos:7.0.3.I7.1.:bgp}
         try:
-            line = root.getchildren()[0].tag
-            m = re.compile(r'(?P<name>\{[\S]+\})').match(line)
+            m = re.compile(r'(?P<name>\{[\S]+\})').match(show_root.tag)
             namespace = m.groupdict()['name']
         except:
+            return etree_dict
+
+        # compare cli command
+        Common.compose_compare_command(root=root, namespace=namespace,
+                                expect_command='show bgp peer-template')
+
+        # top table root
+        root = Common.retrieve_xml_child(root=root, key='TABLE_neighbor')
+        if not root:
             return etree_dict
 
         # -----   loop vrf  -----
@@ -7534,31 +7465,41 @@ class ShowBgpPolicyStatistics(ShowBgpPolicyStatisticsSchema):
         out = out.replace("]]>]]>", "")
         root = ET.fromstring(out)
 
-        # get neighbor
-        nei = retrieve_xml_child(root, '__XML__PARAM__neighbor-id')
-        if hasattr(nei, 'tag'):            
-            # get xml namespace
-            # {http://www.cisco.com/nxos:7.0.3.I7.1.:bgp}
-            m = re.compile(r'(?P<name>\{[\S]+\})').match(nei.tag)
+        # top table root
+        show_root = Common.retrieve_xml_child(root=root, key='show')
+        # get xml namespace
+        # {http://www.cisco.com/nxos:7.0.3.I7.1.:bgp}
+        try:
+            m = re.compile(r'(?P<name>\{[\S]+\})').match(show_root.tag)
             namespace = m.groupdict()['name']
+        except:
+            return etree_dict
 
+        # compare cli command
+        Common.compose_compare_command(root=root, namespace=namespace,
+                                       expect_command=cmd)
+
+        # get neighbor
+        nei = Common.retrieve_xml_child(root=root, key='__XML__PARAM__neighbor-id')
+
+        if hasattr(nei, 'tag'):
             for item in nei.getchildren():
                 if '__XML__value' in item.tag:
                     neighbor = item.text
                     continue
 
-                root = item.getchildren()[0]
+                # cover the senario that __readonly__ may be mssing when
+                # there are values in the output
+                if '__readonly__' in item.tag:
+                    root = item.getchildren()[0]
+                else:
+                    root = item
         else:
-            # top table root
-            root = retrieve_xml_child(root, 'TABLE_vrf')
-            # get xml namespace
-            # {http://www.cisco.com/nxos:7.0.3.I7.1.:bgp}
-            try:
-                line = root.getchildren()[0].tag
-                m = re.compile(r'(?P<name>\{[\S]+\})').match(line)
-                namespace = m.groupdict()['name']
-            except:
-                return etree_dict
+            # top table rootl
+            root = Common.retrieve_xml_child(root=root, key='TABLE_vrf')
+        # import pdb; pdb.set_trace()
+        if not root:
+            return etree_dict
 
         # -----   loop vrf  -----
         for vrf_tree in root.findall('{}ROW_vrf'.format(namespace)):

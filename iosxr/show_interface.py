@@ -17,33 +17,10 @@ from metaparser.util.schemaengine import Schema, \
                                          Default, \
                                          Use
 
+# import parser utils
+from parser.utils.common import Common
+
 logger = logging.getLogger(__name__)
-
-
-def regexp(expression):
-    def match(value):
-        if re.match(expression,value):
-            return value
-        else:
-            raise TypeError("Value '%s' doesnt match regex '%s'"
-                              %(value, expression))
-    return match
-
-
-def convert_intf_name(intf):
-    # Please add more when face other type of interface
-    convert = {'Eth': 'Ethernet',
-               'Lo': 'Loopback',
-               'Po': 'port-channel',
-               'Null': 'Null',
-               'Gi': 'GigabitEthernet',
-               'mgmt': 'mgmt'}
-    int_type = re.search('([a-zA-Z]+)', intf).group(0)
-    int_port = re.search('([\d\/\.]+)', intf).group(0)
-    if int_type in convert.keys():
-        return(convert[int_type] + int_port)
-    else:
-        return(intf)
 
 
 class ShowIpInterfaceBriefSchema(MetaParser):
@@ -2153,7 +2130,7 @@ class ShowEthernetTags(ShowEthernetTagsSchema):
                              ' +(?P<rewrite_num_of_tags_push>\d+)$')
             m = p1.match(line)
             if m:
-                interface = convert_intf_name(m.groupdict()['interface'])
+                interface = Common.convert_intf_name(m.groupdict()['interface'])
                 status = m.groupdict()['status']
                 outer_vlan = m.groupdict()['outer_vlan']
                 mtu = m.groupdict()['mtu']
