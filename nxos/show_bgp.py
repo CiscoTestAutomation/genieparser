@@ -3551,7 +3551,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutesSchema(MetaParser):
                                                  Optional('status_codes'): str,
                                                  Optional('path_type'): str,
                                                  Optional('metric'): int,
-                                                 Optional('localprf'): int,
+                                                 Optional('locprf'): int,
                                                  Optional('weight'): int,
                                                  Optional('path'): str,
                                                  Optional('origin_codes'): str,
@@ -3748,7 +3748,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
 
                 if m1:
                     af_dict['advertised'][prefix]['index'][index]['metric'] = int(m1.groupdict()['metric'])
-                    af_dict['advertised'][prefix]['index'][index]['localprf'] = int(m1.groupdict()['localprf'])
+                    af_dict['advertised'][prefix]['index'][index]['locprf'] = int(m1.groupdict()['localprf'])
                     af_dict['advertised'][prefix]['index'][index]['weight'] = int(m1.groupdict()['weight'])
                     # Set path
                     if m1.groupdict()['path']:
@@ -3760,7 +3760,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                     if len(m2.groupdict()['space']) > 10:
                         af_dict['advertised'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
                     else:
-                        af_dict['advertised'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
+                        af_dict['advertised'][prefix]['index'][index]['locprf'] = int(m2.groupdict()['value'])
                     # Set path
                     if m2.groupdict()['path']:
                         af_dict['advertised'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
@@ -3833,7 +3833,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
 
                 if m1:
                     af_dict['advertised'][prefix]['index'][index]['metric'] = int(m1.groupdict()['metric'])
-                    af_dict['advertised'][prefix]['index'][index]['localprf'] = int(m1.groupdict()['localprf'])
+                    af_dict['advertised'][prefix]['index'][index]['locprf'] = int(m1.groupdict()['localprf'])
                     af_dict['advertised'][prefix]['index'][index]['weight'] = int(m1.groupdict()['weight'])
                     # Set path
                     if m1.groupdict()['path']:
@@ -3845,7 +3845,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                     if len(m2.groupdict()['space']) > 10:
                         af_dict['advertised'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
                     else:
-                        af_dict['advertised'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
+                        af_dict['advertised'][prefix]['index'][index]['locprf'] = int(m2.groupdict()['value'])
                     # Set path
                     if m2.groupdict()['path']:
                         af_dict['advertised'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
@@ -3928,7 +3928,7 @@ class ShowBgpVrfAllNeighborsRoutesSchema(MetaParser):
                                                  Optional('status_codes'): str,
                                                  Optional('path_type'): str,
                                                  Optional('metric'): int,
-                                                 Optional('localprf'): int,
+                                                 Optional('locprf'): int,
                                                  Optional('weight'): int,
                                                  Optional('path'): str,
                                                  Optional('origin_codes'): str,
@@ -4125,7 +4125,7 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
 
                 if m1:
                     af_dict['routes'][prefix]['index'][index]['metric'] = int(m1.groupdict()['metric'])
-                    af_dict['routes'][prefix]['index'][index]['localprf'] = int(m1.groupdict()['localprf'])
+                    af_dict['routes'][prefix]['index'][index]['locprf'] = int(m1.groupdict()['localprf'])
                     af_dict['routes'][prefix]['index'][index]['weight'] = int(m1.groupdict()['weight'])
                     # Set path
                     if m1.groupdict()['path']:
@@ -4137,7 +4137,7 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
                     if len(m2.groupdict()['space']) > 10:
                         af_dict['routes'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
                     else:
-                        af_dict['routes'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
+                        af_dict['routes'][prefix]['index'][index]['locprf'] = int(m2.groupdict()['value'])
                     # Set path
                     if m2.groupdict()['path']:
                         af_dict['routes'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
@@ -4210,7 +4210,7 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
 
                 if m1:
                     af_dict['routes'][prefix]['index'][index]['metric'] = int(m1.groupdict()['metric'])
-                    af_dict['routes'][prefix]['index'][index]['localprf'] = int(m1.groupdict()['localprf'])
+                    af_dict['routes'][prefix]['index'][index]['locprf'] = int(m1.groupdict()['localprf'])
                     af_dict['routes'][prefix]['index'][index]['weight'] = int(m1.groupdict()['weight'])
                     # Set path
                     if m1.groupdict()['path']:
@@ -4222,7 +4222,7 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
                     if len(m2.groupdict()['space']) > 10:
                         af_dict['routes'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
                     else:
-                        af_dict['routes'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
+                        af_dict['routes'][prefix]['index'][index]['locprf'] = int(m2.groupdict()['value'])
                     # Set path
                     if m2.groupdict()['path']:
                         af_dict['routes'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
@@ -4305,7 +4305,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutesSchema(MetaParser):
                                                  Optional('status_codes'): str,
                                                  Optional('path_type'): str,
                                                  Optional('metric'): int,
-                                                 Optional('localprf'): int,
+                                                 Optional('locprf'): int,
                                                  Optional('weight'): int,
                                                  Optional('path'): str,
                                                  Optional('origin_codes'): str,
@@ -4502,7 +4502,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
 
                 if m1:
                     af_dict['received_routes'][prefix]['index'][index]['metric'] = int(m1.groupdict()['metric'])
-                    af_dict['received_routes'][prefix]['index'][index]['localprf'] = int(m1.groupdict()['localprf'])
+                    af_dict['received_routes'][prefix]['index'][index]['locprf'] = int(m1.groupdict()['localprf'])
                     af_dict['received_routes'][prefix]['index'][index]['weight'] = int(m1.groupdict()['weight'])
                     # Set path
                     if m1.groupdict()['path']:
@@ -4514,7 +4514,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
                     if len(m2.groupdict()['space']) > 10:
                         af_dict['received_routes'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
                     else:
-                        af_dict['received_routes'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
+                        af_dict['received_routes'][prefix]['index'][index]['locprf'] = int(m2.groupdict()['value'])
                     # Set path
                     if m2.groupdict()['path']:
                         af_dict['received_routes'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
@@ -4587,7 +4587,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
 
                 if m1:
                     af_dict['received_routes'][prefix]['index'][index]['metric'] = int(m1.groupdict()['metric'])
-                    af_dict['received_routes'][prefix]['index'][index]['localprf'] = int(m1.groupdict()['localprf'])
+                    af_dict['received_routes'][prefix]['index'][index]['locprf'] = int(m1.groupdict()['localprf'])
                     af_dict['received_routes'][prefix]['index'][index]['weight'] = int(m1.groupdict()['weight'])
                     # Set path
                     if m1.groupdict()['path']:
@@ -4599,7 +4599,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
                     if len(m2.groupdict()['space']) > 10:
                         af_dict['received_routes'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
                     else:
-                        af_dict['received_routes'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
+                        af_dict['received_routes'][prefix]['index'][index]['locprf'] = int(m2.groupdict()['value'])
                     # Set path
                     if m2.groupdict()['path']:
                         af_dict['received_routes'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
