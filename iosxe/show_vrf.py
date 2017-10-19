@@ -13,22 +13,8 @@ from metaparser import MetaParser
 from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
 
-
-def convert_intf_name(intf):
-    # Please add more when face other type of interface
-    convert = {'Eth': 'Ethernet',
-               'Lo': 'Loopback',
-               'Po': 'Port-channel',
-               'Null': 'Null',
-               'Gi': 'GigabitEthernet',
-               'Te': 'TenGigabitEthernet',
-               'mgmt': 'mgmt'}
-    int_type = re.search('([a-zA-Z]+)', intf).group(0)
-    int_port = re.search('([\d\/\.]+)', intf).group(0)
-    if int_type in convert.keys():
-        return(convert[int_type] + int_port)
-    else:
-        return(intf)
+# import parser utils
+from parser.utils.common import Common
 
 
 class ShowVrfDetailSchema(MetaParser):
@@ -67,8 +53,11 @@ class ShowVrfDetailSchema(MetaParser):
                         Optional('routing_table_limit'): {
                             Optional('routing_table_limit_number'): int,
                             'routing_table_limit_action': {
-                                'enable_alert_percent': {
+                                Optional('enable_alert_percent'): {
                                     'alert_percent_value': int,
+                                },
+                                Optional('enable_alert_limit_number'): {
+                                    'alert_limit_number': int,
                                 },
                                 Optional('enable_simple_alert'): {
                                     'simple_alert': bool,
@@ -143,7 +132,7 @@ class ShowVrfDetail(ShowVrfDetailSchema):
             m = p3_1.match(line)
             if m and intf_conf:
                 intfs = m.groupdict()['intf'].split()
-                intf_list = [convert_intf_name(item) for item in intfs]
+                intf_list = [Common.convert_intf_name(item) for item in intfs]
                 vrf_dict[vrf]['interfaces'] = intf_list
                 intf_conf = False
                 continue
@@ -243,15 +232,14 @@ class ShowVrfDetail(ShowVrfDetailSchema):
             # Route warning limit 10000, current count 0
             # Route limit 10000, warning limit 70% (7000), current count 1
             p9 = re.compile(r'^Route( *limit +(?P<limit>\d+),)? +'
-                             'warning +limit +(?P<warning>[\d\%]+)( *\((?P<warning_limit>[\d\%]+)\))?, +'
+                             'warning +limit +((?P<warning>\d+)|(?P<percent>\d+)\% *\((?P<warning_limit>[\d\%]+)\)), +'
                              'current +count +(?P<count>\d+)$')
             m = p9.match(line)
             if m:
                 routing_table_limit_number = m.groupdict()['limit']
-                alert_value = m.groupdict()['warning_limit']
-                alert_percent_value = m.groupdict()['warning']
-                if alert_value:
-                    alert_percent_value = int(alert_value)
+                alert_value = m.groupdict()['warning']
+                alert_percent_value = m.groupdict()['percent']
+                alert_percent_warning = m.groupdict()['warning_limit']
                 count = int(m.groupdict()['count'])
 
                 if 'routing_table_limit' not in af_dict:
@@ -260,16 +248,37 @@ class ShowVrfDetail(ShowVrfDetailSchema):
                 if routing_table_limit_number:
                     af_dict['routing_table_limit']['routing_table_limit_number'] = \
                         int(routing_table_limit_number)
+
                 if 'routing_table_limit_action' not in af_dict['routing_table_limit']:
                     af_dict['routing_table_limit']['routing_table_limit_action'] = {}
 
-                if 'enable_alert_percent' not in af_dict['routing_table_limit']\
-                    ['routing_table_limit_action']:
-                    af_dict['routing_table_limit']['routing_table_limit_action']\
-                        ['enable_alert_percent'] = {}
+                if alert_percent_value:
 
-                af_dict['routing_table_limit']['routing_table_limit_action']\
-                        ['enable_alert_percent']['alert_percent_value'] = int(alert_percent_value)
+                    if 'enable_alert_percent' not in af_dict['routing_table_limit']\
+                        ['routing_table_limit_action']:
+                        af_dict['routing_table_limit']['routing_table_limit_action']\
+                            ['enable_alert_percent'] = {}
+                            
+                    af_dict['routing_table_limit']['routing_table_limit_action']\
+                            ['enable_alert_percent']['alert_percent_value'] = int(alert_percent_value)
+
+                    if alert_percent_warning:
+                        if 'enable_alert_limit_number' not in af_dict['routing_table_limit']\
+                            ['routing_table_limit_action']:
+                            af_dict['routing_table_limit']['routing_table_limit_action']\
+                                ['enable_alert_limit_number'] = {}
+                        af_dict['routing_table_limit']['routing_table_limit_action']\
+                            ['enable_alert_limit_number']['alert_limit_number'] = int(alert_percent_warning)
+
+                if alert_value:
+                    if 'enable_alert_limit_number' not in af_dict['routing_table_limit']\
+                        ['routing_table_limit_action']:
+                        af_dict['routing_table_limit']['routing_table_limit_action']\
+                            ['enable_alert_limit_number'] = {}
+
+                    af_dict['routing_table_limit']['routing_table_limit_action']\
+                            ['enable_alert_limit_number']['alert_limit_number'] = int(alert_value)
+
                 continue
 
 
