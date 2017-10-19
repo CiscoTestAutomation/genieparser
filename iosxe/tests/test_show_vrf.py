@@ -64,8 +64,8 @@ class test_show_vrf_detail(unittest.TestCase):
                         "table_id": "0x1",
                         "routing_table_limit": {
                              "routing_table_limit_action": {
-                                  "enable_alert_percent": {
-                                       "alert_percent_value": 10000
+                                  "enable_alert_limit_number": {
+                                       "alert_limit_number": 10000
                                   }
                              }
                         },
@@ -93,7 +93,10 @@ class test_show_vrf_detail(unittest.TestCase):
                         "routing_table_limit": {
                              "routing_table_limit_action": {
                                   "enable_alert_percent": {
-                                       "alert_percent_value": 7000
+                                       "alert_percent_value": 70
+                                  },
+                                  "enable_alert_limit_number": {
+                                       "alert_limit_number": 7000
                                   }
                              },
                              "routing_table_limit_number": 10000

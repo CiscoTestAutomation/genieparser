@@ -391,7 +391,7 @@ class ShowIpMulticast(ShowIpMulticastSchema):
         cmd = 'show ip multicast' if not vrf else \
               'show ip multicast vrf {}'.format(vrf)
         vrf = vrf if vrf else 'default'
-        out = self.device.execute('')
+        out = self.device.execute(cmd)
 
         ret_dict = {}
 
