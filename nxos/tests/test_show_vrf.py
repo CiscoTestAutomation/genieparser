@@ -276,7 +276,7 @@ class test_show_vrf_detail(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
         obj = ShowVrfDetail(device=self.device)
-        parsed_output = obj.parse()
+        parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
     def test_show_vrf_empty(self):

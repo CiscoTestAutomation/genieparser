@@ -1,4 +1,4 @@
-''' show_mcast.py
+''' show_prefix_list.py
 
 NXOS parsers for the following show commands:
 
@@ -34,6 +34,7 @@ class ShowIpPrefixListSchema(MetaParser):
                             {'prefix': str,
                              'masklength_range': str,
                              'sequence': int,
+                             'action': str
                             }
                         },
                     },
@@ -81,12 +82,15 @@ class ShowIpPrefixList(ShowIpPrefixListSchema):
             # seq 5 permit 2001:DB8:1::/64
             # seq 20 permit 37.0.0.0/8 ge 24
             # seq 25 permit 38.0.0.0/8 ge 16 le 24
-            p3 = re.compile(r'^seq +(?P<seq>\d+) +permit +(?P<prefixes>(?P<prefix>[\w\.\|:]+)\/(?P<mask>\d+))'
-                             '( *(?P<range>[lge\d\s]+))?$')
+            # seq 10 permit 192.0.2.0/24 eq 25
+            p3 = re.compile(r'^seq +(?P<seq>\d+) +(?P<action>\w+) +'
+                             '(?P<prefixes>(?P<prefix>[\w\.\|:]+)\/(?P<mask>\d+))'
+                             '( *(?P<range>[lgeq\d\s]+))?$')
             m = p3.match(line)
             if m:
                 prefixes = m.groupdict()['prefixes']
                 mask = m.groupdict()['mask']
+                action = m.groupdict()['action']
                 if 'prefixes' not in ret_dict['prefix_set_name'][name]:
                     ret_dict['prefix_set_name'][name]['prefixes'] = {}
 
@@ -115,14 +119,22 @@ class ShowIpPrefixList(ShowIpPrefixListSchema):
                         max_val = '32' if af == 'ip' else '128'
                         masklength_range = '{val1}..{val2}'.format(val1=match.groupdict()['val1'],
                                                                    val2=max_val)
+                    # eq 25
+                    match = re.compile(r'^eq +(?P<val1>\d+)$').match(dummy)
+                    if match:
+                        val = match.groupdict()['val1']
+                        masklength_range = '{val1}..{val2}'.format(val1=val, val2=val)
 
                 # compose the level key vaule
-                key = prefixes + ' ' + masklength_range
+                key = '{prefixes} {masklength_range} {action}'.format(prefixes=prefixes,
+                                                                      masklength_range=masklength_range,
+                                                                      action=action)
                 if key not in ret_dict['prefix_set_name'][name]['prefixes']:
                     ret_dict['prefix_set_name'][name]['prefixes'][key] = {}
 
                 ret_dict['prefix_set_name'][name]['prefixes'][key]['prefix'] = prefixes
                 ret_dict['prefix_set_name'][name]['prefixes'][key]['masklength_range'] = masklength_range
+                ret_dict['prefix_set_name'][name]['prefixes'][key]['action'] = action
                 ret_dict['prefix_set_name'][name]['prefixes'][key]['sequence'] = int(m.groupdict()['seq'])
                 continue
 

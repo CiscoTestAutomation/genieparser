@@ -1,4 +1,4 @@
-''' show_bgp.py
+''' show_vrf.py
 
 NXOS parsers for the following show commands:
     * 'show vrf'

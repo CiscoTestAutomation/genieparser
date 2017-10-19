@@ -1,4 +1,4 @@
-''' show_mcast.py
+''' show_prefix_list.py
 
 IOSXE parsers for the following show commands:
 
@@ -39,6 +39,7 @@ class ShowIpPrefixListDefailSchema(MetaParser):
                              'sequence': int,
                              'hit_count': int,
                              'refcount': int,
+                             'action': str,
                             }
                         },
                     },
@@ -97,13 +98,15 @@ class ShowIpPrefixListDefail(ShowIpPrefixListDefailSchema):
             # seq 5 permit 2001:DB8:1::/64 (hit count: 0, refcount: 1)
             # seq 20 permit 37.0.0.0/8 ge 24 (hit count: 0, refcount: 2)
             # seq 25 permit 38.0.0.0/8 ge 16 le 24 (hit count: 0, refcount: 3)
-            p3 = re.compile(r'^seq +(?P<seq>\d+) +permit +(?P<prefixes>(?P<prefix>[\w\.\|:]+)\/(?P<mask>\d+))'
+            p3 = re.compile(r'^seq +(?P<seq>\d+) +(?P<action>\w+) +'
+                             '(?P<prefixes>(?P<prefix>[\w\.\|:]+)\/(?P<mask>\d+))'
                              '( *(?P<range>[lge\d\s]+))?'
                              ' +\(hit +count: +(?P<hit_count>\d+), +refcount: +(?P<refcount>\d+)\)$')
             m = p3.match(line)
             if m:
                 prefixes = m.groupdict()['prefixes']
                 mask = m.groupdict()['mask']
+                action = m.groupdict()['action']
                 if 'prefixes' not in ret_dict['prefix_set_name'][name]:
                     ret_dict['prefix_set_name'][name]['prefixes'] = {}
 
@@ -134,12 +137,15 @@ class ShowIpPrefixListDefail(ShowIpPrefixListDefailSchema):
                                                                    val2=max_val)
 
                 # compose the level key vaule
-                key = prefixes + ' ' + masklength_range
+                key = '{prefixes} {masklength_range} {action}'.format(prefixes=prefixes,
+                                                                      masklength_range=masklength_range,
+                                                                      action=action)
                 if key not in ret_dict['prefix_set_name'][name]['prefixes']:
                     ret_dict['prefix_set_name'][name]['prefixes'][key] = {}
 
                 ret_dict['prefix_set_name'][name]['prefixes'][key]['prefix'] = prefixes
                 ret_dict['prefix_set_name'][name]['prefixes'][key]['masklength_range'] = masklength_range
+                ret_dict['prefix_set_name'][name]['prefixes'][key]['action'] = action
                 ret_dict['prefix_set_name'][name]['prefixes'][key]['sequence'] = int(m.groupdict()['seq'])
                 ret_dict['prefix_set_name'][name]['prefixes'][key]['hit_count'] = int(m.groupdict()['hit_count'])
                 ret_dict['prefix_set_name'][name]['prefixes'][key]['refcount'] = int(m.groupdict()['refcount'])
