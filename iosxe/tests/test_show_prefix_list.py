@@ -27,40 +27,45 @@ class test_show_ip_prefix_list_detail(unittest.TestCase):
           "test": {
                "sequences": "5 - 25",
                "prefixes": {
-                    "35.0.0.0/8 8..16": {
+                    "35.0.0.0/8 8..16 permit": {
                          "refcount": 0,
                          "prefix": "35.0.0.0/8",
                          "sequence": 10,
                          "hit_count": 0,
-                         "masklength_range": "8..16"
+                         "masklength_range": "8..16",
+                         "action": "permit",
                     },
-                    "36.0.0.0/8 8..16": {
+                    "36.0.0.0/8 8..16 permit": {
                          "refcount": 1,
                          "prefix": "36.0.0.0/8",
                          "sequence": 15,
                          "hit_count": 0,
-                         "masklength_range": "8..16"
+                         "masklength_range": "8..16",
+                         "action": "permit",
                     },
-                    "38.0.0.0/8 16..24": {
+                    "38.0.0.0/8 16..24 permit": {
                          "refcount": 3,
                          "prefix": "38.0.0.0/8",
                          "sequence": 25,
                          "hit_count": 0,
-                         "masklength_range": "16..24"
+                         "masklength_range": "16..24",
+                         "action": "permit",
                     },
-                    "37.0.0.0/8 24..32": {
+                    "37.0.0.0/8 24..32 permit": {
                          "refcount": 2,
                          "prefix": "37.0.0.0/8",
                          "sequence": 20,
                          "hit_count": 0,
-                         "masklength_range": "24..32"
+                         "masklength_range": "24..32",
+                         "action": "permit",
                     },
-                    "35.0.0.0/8 8..8": {
+                    "35.0.0.0/8 8..8 permit": {
                          "refcount": 1,
                          "prefix": "35.0.0.0/8",
                          "sequence": 5,
                          "hit_count": 0,
-                         "masklength_range": "8..8"
+                         "masklength_range": "8..8",
+                         "action": "permit",
                     }
                },
                "protocol": "ipv4",
@@ -109,25 +114,28 @@ class test_show_ipv6_prefix_list_detail(unittest.TestCase):
           "test6": {
                "sequences": "5 - 20",
                "prefixes": {
-                    "2001:DB8:2::/64 65..128": {
+                    "2001:DB8:2::/64 65..128 permit": {
                          "refcount": 1,
                          "prefix": "2001:DB8:2::/64",
                          "sequence": 10,
                          "hit_count": 0,
+                         "action": "permit",
                          "masklength_range": "65..128"
                     },
-                    "2001:DB8:3::/64 64..128": {
+                    "2001:DB8:3::/64 64..128 permit": {
                          "refcount": 3,
                          "prefix": "2001:DB8:3::/64",
                          "sequence": 15,
                          "hit_count": 0,
+                         "action": "permit",
                          "masklength_range": "64..128"
                     },
-                    "2001:DB8:1::/64 64..64": {
+                    "2001:DB8:1::/64 64..64 permit": {
                          "refcount": 1,
                          "prefix": "2001:DB8:1::/64",
                          "sequence": 5,
                          "hit_count": 0,
+                         "action": "permit",
                          "masklength_range": "64..64"
                     }
                },
