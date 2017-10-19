@@ -14,6 +14,24 @@ NXOS parsers for the following show commands:
     * 'show bgp vrf all all neighbors <WORD> advertised-routes'
     * 'show bgp vrf all all neighbors <WORD> routes'
     * 'show bgp vrf all all neighbors <WORD> received-routes'
+    * 'show bgp all dampening flap-statistics'
+    * 'show bgp all dampening flap-statistics | xml'
+    * 'show bgp all nexthop-database'
+    * 'show bgp all nexthop-database | xml'
+    * 'show bgp peer-template'
+    * 'show bgp peer-template | xml'
+    * 'show bgp vrf <vrf> <address_family>  policy statistics redistribute'
+    * 'show bgp vrf <vrf> <address_family>  policy statistics redistribute | xml'
+    * 'show bgp vrf <vrf> <address_family>  policy statistics dampening'
+    * 'show bgp vrf <vrf> <address_family>  policy statistics dampening | xml'
+    * 'show bgp vrf <vrf> <address_family>  policy statistics neighbor <neighbor>'
+    * 'show bgp vrf <vrf> <address_family>  policy statistics neighbor <neighbor> | xml'
+    * 'show bgp <address_family>  policy statistics redistribute'
+    * 'show bgp <address_family>  policy statistics redistribute | xml'
+    * 'show bgp <address_family>  policy statistics dampening'
+    * 'show bgp <address_family>  policy statistics dampening | xml'
+    * 'show bgp <address_family>  policy statistics neighbor <neighbor>'
+    * 'show bgp <address_family>  policy statistics neighbor <neighbor> | xml'
 '''
 
 # Python
@@ -27,6 +45,9 @@ from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
 
 # Parser
 from parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
+
+# import parser utils
+from parser.utils.common import Common
 
 # =====================================
 # Parser for 'show bgp process vrf all'
@@ -2884,30 +2905,41 @@ class ShowBgpVrfAllAllNextHopDatabaseSchema(MetaParser):
                         {'af_nexthop_trigger_enable': bool,
                          'nexthop_trigger_delay_critical': int,
                          'nexthop_trigger_delay_non_critical': int,
-                         Optional('next_hop'): str,
-                         Optional('refcount'): int,
-                         Optional('igp_cost'): int,
-                         Optional('igp_route_type'): int,
-                         Optional('igp_preference'): int,
-                         Optional('nexthop_type'): str,
-                         Optional('nexthop_last_resolved'): str,
-                         Optional('nexthop_resolved_using'): str,
-                         Optional('metric_next_advertise'): str,
-                         Optional('rnh_epoch'): int,
-                         Optional('attached_nexthop'): str,
-                         Optional('attached_nexthop_interface'): str,
+                         Optional('next_hop'): {
+                            Any(): {                                
+                                 Optional('refcount'): int,
+                                 Optional('flags'): str,
+                                 Optional('igp_cost'): int,
+                                 Optional('igp_route_type'): int,
+                                 Optional('igp_preference'): int,
+                                 Optional('attached'): bool,
+                                 Optional('local'): bool,
+                                 Optional('reachable'): bool,
+                                 Optional('labeled'): bool,
+                                 Optional('filtered'): bool,
+                                 Optional('pending_update'): bool,
+                                 Optional('resolve_time'): str,
+                                 Optional('rib_route'): str,
+                                 Optional('metric_next_advertise'): str,
+                                 Optional('rnh_epoch'): int,
+                                 Optional('attached_nexthop'): {
+                                    Any(): {
+                                        'attached_nexthop_interface': str,
+                                        },
+                                    },
+                                },
+                            }
+                         }
                         },
                     },
                 },
-            },
-        }
+            }
 
 class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
     
     '''Parser for show bgp vrf all all nexthop-database'''
 
-    def cli(self):
-        cmd = 'show bgp vrf all all nexthop-database'
+    def cli(self, cmd='show bgp vrf all all nexthop-database'):
         out = self.device.execute(cmd)
         
         # Init vars
@@ -2919,7 +2951,7 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
             # Next Hop table for VRF VRF1, address family IPv4 Unicast:
             p1 = re.compile(r'^\s*Next +Hop +table +for +VRF'
                              ' +(?P<vrf_name>[a-zA-Z0-9]+), +address +family'
-                             ' +(?P<af>[a-zA-Z0-9\s]+) *:$')
+                             ' +(?P<af>[a-zA-Z0-9\s\-]+) *:$')
             m = p1.match(line)
             if m:
                 if 'vrf' not in nh_dict:
@@ -2952,14 +2984,23 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
                 continue
 
             # Nexthop: 0.0.0.0, Refcount: 4, IGP cost: 0
+            # Nexthop: 200.0.3.1, Flags: 0x41, Refcount: 1, IGP cost: 3
             p3 = re.compile(r'^\s*Nexthop *: +(?P<nh>[a-zA-Z0-9\.\:]+),'
+                             '( +Flags *: +(?P<flags>\w+),)?'
                              ' +Refcount *: +(?P<refcount>[0-9]+), +IGP'
-                             ' +cost *: +(?P<igp_cost>[0-9]+)$')
+                             ' +cost *: +(?P<igp_cost>[0-9\-]+)$')
             m = p3.match(line)
             if m:
-                af_dict['next_hop'] = str(m.groupdict()['nh'])
-                af_dict['refcount'] = int(m.groupdict()['refcount'])
-                af_dict['igp_cost'] = int(m.groupdict()['igp_cost'])
+                nexthop = m.groupdict()['nh']
+                if 'next_hop' not in af_dict:
+                    af_dict['next_hop'] = {}
+                if nexthop not in af_dict['next_hop']:
+                    af_dict['next_hop'][nexthop] = {}
+
+                af_dict['next_hop'][nexthop]['refcount'] = int(m.groupdict()['refcount'])
+                af_dict['next_hop'][nexthop]['igp_cost'] = int(m.groupdict()['igp_cost'])
+                if m.groupdict()['flags']:
+                    af_dict['next_hop'][nexthop]['flags'] = m.groupdict()['flags']
                 continue
 
             # IGP Route type: 0, IGP preference: 0
@@ -2968,27 +3009,51 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
                              ' +(?P<igp_preference>[0-9]+)$')
             m = p4.match(line)
             if m:
-                af_dict['igp_route_type'] = int(m.groupdict()['igp_route_type'])
-                af_dict['igp_preference'] = int(m.groupdict()['igp_preference'])
+                af_dict['next_hop'][nexthop]['igp_route_type'] = int(m.groupdict()['igp_route_type'])
+                af_dict['next_hop'][nexthop]['igp_preference'] = int(m.groupdict()['igp_preference'])
                 continue
 
             # Nexthop is not-attached local unreachable not-labeled
             # Nexthop is not-attached not-local reachable labeled
-            p5 = re.compile(r'^\s*Nexthop +is +(?P<nexthop_type>[a-zA-Z\s\-]+)$')
+            p5 = re.compile(r'^\s*Nexthop +is +(?P<attached>[\w\-]+) +'
+                             '(?P<local>[\w\-]+) +(?P<reachable>[\w\-]+) +'
+                             '(?P<labeled>[\w\-]+)$')
             m = p5.match(line)
             if m:
-                af_dict['nexthop_type'] = str(m.groupdict()['nexthop_type'])
+                if m.groupdict()['attached'] == 'not-attached':
+                    af_dict['next_hop'][nexthop]['attached'] = False
+                else:
+                    af_dict['next_hop'][nexthop]['attached'] = True
+
+                if m.groupdict()['local'] == 'not-local':
+                    af_dict['next_hop'][nexthop]['local'] = False
+                else:
+                    af_dict['next_hop'][nexthop]['local'] = True
+
+                if m.groupdict()['reachable'] == 'unreachable':
+                    af_dict['next_hop'][nexthop]['reachable'] = False
+                else:
+                    af_dict['next_hop'][nexthop]['reachable'] = True
+
+                if m.groupdict()['labeled'] == 'not-labeled':
+                    af_dict['next_hop'][nexthop]['labeled'] = False
+                else:
+                    af_dict['next_hop'][nexthop]['labeled'] = True
+
+                af_dict['next_hop'][nexthop]['filtered'] = False
+                af_dict['next_hop'][nexthop]['pending_update'] = False
+
                 continue
 
             # Nexthop last resolved: never, using 0.0.0.0/0
             p6 = re.compile(r'^\s*Nexthop +last +resolved *:'
                              ' +(?P<nexthop_last_resolved>[a-zA-Z0-9\:]+),'
-                             ' +using +(?P<nexthop_resolved_using>[0-9\.\/]+)$')
+                             ' +using +(?P<nexthop_resolved_using>[\w\:\-\.\/]+)$')
             m = p6.match(line)
             if m:
-                af_dict['nexthop_last_resolved'] = \
+                af_dict['next_hop'][nexthop]['resolve_time'] = \
                     str(m.groupdict()['nexthop_last_resolved'])
-                af_dict['nexthop_resolved_using'] = \
+                af_dict['next_hop'][nexthop]['rib_route'] = \
                     str(m.groupdict()['nexthop_resolved_using'])
                 continue
 
@@ -2997,7 +3062,7 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
                              ' +(?P<metric_next_advertise>[a-zA-Z0-9]+)$')
             m = p7.match(line)
             if m:
-                af_dict['metric_next_advertise'] = \
+                af_dict['next_hop'][nexthop]['metric_next_advertise'] = \
                     str(m.groupdict()['metric_next_advertise']).lower()
                 continue
 
@@ -3005,19 +3070,25 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
             p8 = re.compile(r'^\s*RNH +epoch *: +(?P<rnh_epoch>[0-9]+)$')
             m = p8.match(line)
             if m:
-                af_dict['rnh_epoch'] = int(m.groupdict()['rnh_epoch'])
+                af_dict['next_hop'][nexthop]['rnh_epoch'] = int(m.groupdict()['rnh_epoch'])
                 continue
 
             # Attached nexthop: 10.1.3.3, Interface: Ethernet4/2
             p8 = re.compile(r'^\s*Attached +nexthop *:'
-                             ' +(?P<attached_nexthop>[0-9\.\:]+), +Interface *:'
-                             ' +(?P<attached_nexthop_interface>[a-zA-Z0-9\/]+)$')
+                             ' +(?P<attached_nexthop>[\w\.\:]+), +Interface *:'
+                             ' +(?P<attached_nexthop_interface>[\w\-\.\/]+)$')
             m = p8.match(line)
             if m:
-                af_dict['attached_nexthop'] = \
-                    str(m.groupdict()['attached_nexthop'])
-                af_dict['attached_nexthop_interface'] = \
-                    str(m.groupdict()['attached_nexthop_interface'])
+                if 'attached_nexthop' not in af_dict['next_hop'][nexthop]:
+                    af_dict['next_hop'][nexthop]['attached_nexthop'] = {}
+
+                at_nexthop = m.groupdict()['attached_nexthop']
+
+                if at_nexthop not in af_dict['next_hop'][nexthop]['attached_nexthop']:
+                    af_dict['next_hop'][nexthop]['attached_nexthop'][at_nexthop] = {}
+                af_dict['next_hop'][nexthop]['attached_nexthop'][at_nexthop]\
+                    ['attached_nexthop_interface'] = \
+                        m.groupdict()['attached_nexthop_interface']
                 continue
 
         return nh_dict
@@ -3480,7 +3551,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutesSchema(MetaParser):
                                                  Optional('status_codes'): str,
                                                  Optional('path_type'): str,
                                                  Optional('metric'): int,
-                                                 Optional('localprf'): int,
+                                                 Optional('locprf'): int,
                                                  Optional('weight'): int,
                                                  Optional('path'): str,
                                                  Optional('origin_codes'): str,
@@ -3677,7 +3748,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
 
                 if m1:
                     af_dict['advertised'][prefix]['index'][index]['metric'] = int(m1.groupdict()['metric'])
-                    af_dict['advertised'][prefix]['index'][index]['localprf'] = int(m1.groupdict()['localprf'])
+                    af_dict['advertised'][prefix]['index'][index]['locprf'] = int(m1.groupdict()['localprf'])
                     af_dict['advertised'][prefix]['index'][index]['weight'] = int(m1.groupdict()['weight'])
                     # Set path
                     if m1.groupdict()['path']:
@@ -3689,7 +3760,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                     if len(m2.groupdict()['space']) > 10:
                         af_dict['advertised'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
                     else:
-                        af_dict['advertised'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
+                        af_dict['advertised'][prefix]['index'][index]['locprf'] = int(m2.groupdict()['value'])
                     # Set path
                     if m2.groupdict()['path']:
                         af_dict['advertised'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
@@ -3762,7 +3833,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
 
                 if m1:
                     af_dict['advertised'][prefix]['index'][index]['metric'] = int(m1.groupdict()['metric'])
-                    af_dict['advertised'][prefix]['index'][index]['localprf'] = int(m1.groupdict()['localprf'])
+                    af_dict['advertised'][prefix]['index'][index]['locprf'] = int(m1.groupdict()['localprf'])
                     af_dict['advertised'][prefix]['index'][index]['weight'] = int(m1.groupdict()['weight'])
                     # Set path
                     if m1.groupdict()['path']:
@@ -3774,7 +3845,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
                     if len(m2.groupdict()['space']) > 10:
                         af_dict['advertised'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
                     else:
-                        af_dict['advertised'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
+                        af_dict['advertised'][prefix]['index'][index]['locprf'] = int(m2.groupdict()['value'])
                     # Set path
                     if m2.groupdict()['path']:
                         af_dict['advertised'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
@@ -3857,7 +3928,7 @@ class ShowBgpVrfAllNeighborsRoutesSchema(MetaParser):
                                                  Optional('status_codes'): str,
                                                  Optional('path_type'): str,
                                                  Optional('metric'): int,
-                                                 Optional('localprf'): int,
+                                                 Optional('locprf'): int,
                                                  Optional('weight'): int,
                                                  Optional('path'): str,
                                                  Optional('origin_codes'): str,
@@ -4054,7 +4125,7 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
 
                 if m1:
                     af_dict['routes'][prefix]['index'][index]['metric'] = int(m1.groupdict()['metric'])
-                    af_dict['routes'][prefix]['index'][index]['localprf'] = int(m1.groupdict()['localprf'])
+                    af_dict['routes'][prefix]['index'][index]['locprf'] = int(m1.groupdict()['localprf'])
                     af_dict['routes'][prefix]['index'][index]['weight'] = int(m1.groupdict()['weight'])
                     # Set path
                     if m1.groupdict()['path']:
@@ -4066,7 +4137,7 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
                     if len(m2.groupdict()['space']) > 10:
                         af_dict['routes'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
                     else:
-                        af_dict['routes'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
+                        af_dict['routes'][prefix]['index'][index]['locprf'] = int(m2.groupdict()['value'])
                     # Set path
                     if m2.groupdict()['path']:
                         af_dict['routes'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
@@ -4139,7 +4210,7 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
 
                 if m1:
                     af_dict['routes'][prefix]['index'][index]['metric'] = int(m1.groupdict()['metric'])
-                    af_dict['routes'][prefix]['index'][index]['localprf'] = int(m1.groupdict()['localprf'])
+                    af_dict['routes'][prefix]['index'][index]['locprf'] = int(m1.groupdict()['localprf'])
                     af_dict['routes'][prefix]['index'][index]['weight'] = int(m1.groupdict()['weight'])
                     # Set path
                     if m1.groupdict()['path']:
@@ -4151,7 +4222,7 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
                     if len(m2.groupdict()['space']) > 10:
                         af_dict['routes'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
                     else:
-                        af_dict['routes'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
+                        af_dict['routes'][prefix]['index'][index]['locprf'] = int(m2.groupdict()['value'])
                     # Set path
                     if m2.groupdict()['path']:
                         af_dict['routes'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
@@ -4234,7 +4305,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutesSchema(MetaParser):
                                                  Optional('status_codes'): str,
                                                  Optional('path_type'): str,
                                                  Optional('metric'): int,
-                                                 Optional('localprf'): int,
+                                                 Optional('locprf'): int,
                                                  Optional('weight'): int,
                                                  Optional('path'): str,
                                                  Optional('origin_codes'): str,
@@ -4431,7 +4502,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
 
                 if m1:
                     af_dict['received_routes'][prefix]['index'][index]['metric'] = int(m1.groupdict()['metric'])
-                    af_dict['received_routes'][prefix]['index'][index]['localprf'] = int(m1.groupdict()['localprf'])
+                    af_dict['received_routes'][prefix]['index'][index]['locprf'] = int(m1.groupdict()['localprf'])
                     af_dict['received_routes'][prefix]['index'][index]['weight'] = int(m1.groupdict()['weight'])
                     # Set path
                     if m1.groupdict()['path']:
@@ -4443,7 +4514,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
                     if len(m2.groupdict()['space']) > 10:
                         af_dict['received_routes'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
                     else:
-                        af_dict['received_routes'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
+                        af_dict['received_routes'][prefix]['index'][index]['locprf'] = int(m2.groupdict()['value'])
                     # Set path
                     if m2.groupdict()['path']:
                         af_dict['received_routes'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
@@ -4516,7 +4587,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
 
                 if m1:
                     af_dict['received_routes'][prefix]['index'][index]['metric'] = int(m1.groupdict()['metric'])
-                    af_dict['received_routes'][prefix]['index'][index]['localprf'] = int(m1.groupdict()['localprf'])
+                    af_dict['received_routes'][prefix]['index'][index]['locprf'] = int(m1.groupdict()['localprf'])
                     af_dict['received_routes'][prefix]['index'][index]['weight'] = int(m1.groupdict()['weight'])
                     # Set path
                     if m1.groupdict()['path']:
@@ -4528,7 +4599,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
                     if len(m2.groupdict()['space']) > 10:
                         af_dict['received_routes'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
                     else:
-                        af_dict['received_routes'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
+                        af_dict['received_routes'][prefix]['index'][index]['locprf'] = int(m2.groupdict()['value'])
                     # Set path
                     if m2.groupdict()['path']:
                         af_dict['received_routes'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
@@ -4920,7 +4991,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         bgp_dict['bgp']['instance']['default']['vrf'][vrf]['log_neighbor_changes'] = False
 
                     #   router-id <router-id>
-                    p11 = re.compile(r'^\s*router-id +(?P<router_id>[0-9]+)$')
+                    p11 = re.compile(r'^\s*router-id +(?P<router_id>[0-9\.]+)$')
                     m = p11.match(line)
                     if m:
                         bgp_dict['bgp']['instance']['default']['vrf'][vrf]['router_id'] = \
@@ -5900,5 +5971,1721 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
 
         return bgp_dict
 
+
+# ===================================================
+# Parser for 'show bgp all dampening flap-statistics'
+# ===================================================
+
+class ShowBgpAllDampeningFlapStatisticsSchema(MetaParser):
+    
+    '''Schema for show bgp all dampening flap-statistics'''
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        Optional('network'): {
+                            Any(): {
+                                'peer': str,
+                                'flaps': int,
+                                'duration': str,
+                                'current_penalty': int,
+                                'suppress_limit': int,
+                                'reuse_limit': int,
+                                'best': bool,
+                                Optional('status'): str,
+                                Optional('reuse_time'): str,
+                                Optional('pathtype'): str,
+                            },
+                        },
+                        Optional('history_paths'): int,
+                        Optional('dampened_paths'): int,
+                        Optional('dampening_enabled'): bool,
+                        Optional('route_identifier'): {
+                            Any(): {
+                                Optional('network'): {
+                                    Any(): {
+                                        'peer': str,
+                                        'flaps': int,
+                                        'duration': str,
+                                        Optional('reuse_time'): str,
+                                        'current_penalty': int,
+                                        'suppress_limit': int,
+                                        'reuse_limit': int,
+                                        'best': bool,
+                                        Optional('status'): str,
+                                        Optional('pathtype'): str,
+                                    },
+                                },
+                                'history_paths': int,
+                                'dampened_paths': int,
+                                'dampening_enabled': bool,
+                            },
+                        }
+                    },                            
+                },
+            },
+        }
+    }
+
+
+class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema):
+    
+    '''Parser for show bgp all dampening flap-statistics'''
+
+    def cli(self):
+        cmd = 'show bgp all dampening flap-statistics'
+        out = self.device.execute(cmd)
+        
+        # Init vars
+        ret_dict = {}
+        sub_dict = {}
+        history_paths = None
+        dampened_paths = None
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # build keys for dampened_paths and history_paths
+            if isinstance(dampened_paths, int):
+                sub_dict['dampened_paths'] = dampened_paths
+                sub_dict['dampening_enabled'] = True
+                
+            if isinstance(history_paths, int):
+                sub_dict['history_paths'] = history_paths
+
+            # Flap Statistics for VRF default, address family IPv4 Unicast:
+            p1 = re.compile(r'^Flap +Statistics +for +VRF +'
+                             '(?P<vrf_name>[\w\-]+), +address +family +'
+                             '(?P<address_family>[\w\s\-]+):$')
+            m = p1.match(line)
+            if m:
+                address_family = m.groupdict()['address_family'].lower()
+                vrf = m.groupdict()['vrf_name']
+
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+
+                if 'address_family' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['address_family'] = {}
+
+                if address_family not in ret_dict['vrf'][vrf]['address_family']:
+                    ret_dict['vrf'][vrf]['address_family'][address_family] = {}
+                    sub_dict = ret_dict['vrf'][vrf]['address_family'][address_family]
+                        
+                # reset variable
+                dampened_paths = None
+                history_paths = None
+                continue
+
+            # Dampening configured, 0 history paths, 2 dampened paths
+            p2 = re.compile(r'^Dampening +configured, +'
+                             '(?P<history_paths>\d+) +history +paths, +'
+                             '(?P<dampened_paths>\d+) +dampened +paths$')
+            m = p2.match(line)
+            if m:
+                history_paths = int(m.groupdict()['history_paths'])
+                dampened_paths = int(m.groupdict()['dampened_paths'])
+                continue
+
+            # Route Distinguisher: 0:0
+            p3 = re.compile(r'^Route +Distinguisher: +'
+                             '(?P<route_identifier>[\w\.\:]+)$')
+            m = p3.match(line)
+            if m:
+                route_identifier = m.groupdict()['route_identifier']
+                if 'route_identifier' not in ret_dict['vrf'][vrf]\
+                    ['address_family'][address_family]:
+                    ret_dict['vrf'][vrf]['address_family'][address_family]\
+                        ['route_identifier'] = {}
+
+                if route_identifier not in ret_dict['vrf'][vrf]\
+                    ['address_family'][address_family]['route_identifier']:
+                    ret_dict['vrf'][vrf]['address_family'][address_family]\
+                        ['route_identifier'][route_identifier] = {}
+
+                    sub_dict = ret_dict['vrf'][vrf]['address_family'][address_family]\
+                        ['route_identifier'][route_identifier]
+                continue
+
+            # d e 2.3.1.0/24       19.0.102.3                38   00:09:36 00:01:40 35/30/10
+            p4 = re.compile(r'^(?P<best>[\*])?(?P<status>\w+)'
+                             ' +(?P<pathtype>[e|i])'
+                             ' +(?P<network>\S+)'
+                             ' +(?P<peer>[\w\/\.\:]+)'
+                             ' +(?P<flaps>\d+)'
+                             ' +(?P<duration>[\w\:\.]+)'
+                             '( +(?P<reuse_time>[\w\:\.]+))?'
+                             ' +(?P<current_penalty>\d+)\/'
+                             '(?P<suppress_limit>\d+)\/(?P<reuse_limit>\d+)$')
+            m = p4.match(line)
+
+            # d e [2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/61619.0.102.3                38   00:09:36 00:01:40 34/30/10
+            p4_1 = re.compile(r'^(?P<best>[\*])?(?P<status>\w+)'
+                             ' +(?P<pathtype>[e|i])'
+                             ' +(?P<network>\S+\/\d{1,3})'
+                             '(?P<peer>[1|2][\d\.\:]+)'
+                             ' +(?P<flaps>\d+)'
+                             ' +(?P<duration>[\w\:\.]+)'
+                             '( +(?P<reuse_time>[\w\:\.]+))?'
+                             ' +(?P<current_penalty>\d+)\/'
+                             '(?P<suppress_limit>\d+)\/(?P<reuse_limit>\d+)$')
+            m1 = p4_1.match(line)
+            m = m if m else m1
+            if m:
+                network = m.groupdict()['network']
+                if 'network' not in sub_dict:
+                    sub_dict['network'] = {}
+                if network not in sub_dict['network']:
+                    sub_dict['network'][network] = {}
+
+                if m.groupdict()['best']:
+                    sub_dict['network'][network]['best'] = True
+                else:
+                    sub_dict['network'][network]['best'] = False
+                sub_dict['network'][network]['status'] = m.groupdict()['status']
+                sub_dict['network'][network]['pathtype'] = m.groupdict()['pathtype']
+                sub_dict['network'][network]['peer'] = m.groupdict()['peer']
+                sub_dict['network'][network]['flaps'] = int(m.groupdict()['flaps'])
+                sub_dict['network'][network]['duration'] = m.groupdict()['duration']
+                if m.groupdict()['reuse_time']:
+                    sub_dict['network'][network]['reuse_time'] = m.groupdict()['reuse_time']
+                sub_dict['network'][network]['current_penalty'] = \
+                    int(m.groupdict()['current_penalty'])
+                sub_dict['network'][network]['suppress_limit'] = \
+                    int(m.groupdict()['suppress_limit'])
+                sub_dict['network'][network]['reuse_limit'] = \
+                    int(m.groupdict()['reuse_limit'])
+                continue
+        return ret_dict
+
+
+    def xml(self):
+        out = self.device.execute('show bgp all dampening flap-statistics | xml')
+
+        etree_dict = {}
+        sub_dict = {}
+        # Remove junk characters returned by the device
+        out = out.replace("]]>]]>", "")
+        root = ET.fromstring(out)
+
+        # top table root
+        show_root = Common.retrieve_xml_child(root=root, key='show')
+        # get xml namespace
+        # {http://www.cisco.com/nxos:7.0.3.I7.1.:bgp}
+        try:
+            m = re.compile(r'(?P<name>\{[\S]+\})').match(show_root.tag)
+            namespace = m.groupdict()['name']
+        except:
+            return etree_dict
+
+        # compare cli command
+        Common.compose_compare_command(root=root, namespace=namespace,
+                                expect_command='show bgp all dampening flap-statistics')
+
+        # top table root
+        vrf_root = Common.retrieve_xml_child(root=root, key='TABLE_vrf')
+        if not vrf_root:
+            return etree_dict
+
+        # -----   loop vrf  -----
+        for vrf_tree in vrf_root.findall('{}ROW_vrf'.format(namespace)):
+            # vrf
+            try:
+                vrf = vrf_tree.find('{}vrf-name-out'.format(namespace)).text
+            except:
+                break
+
+            # address_family table
+            afi = vrf_tree.find('{}TABLE_afi'.format(namespace))
+
+            # -----   loop address_family  -----
+            for af_root in afi.findall('{}ROW_afi'.format(namespace)):
+
+                # address_family
+                row_safi = af_root.find('{}TABLE_safi'.format(namespace))
+                row_safi = row_safi.find('{}ROW_safi'.format(namespace))
+
+                try:
+                    af = row_safi.find('{}af-name'.format(namespace)).text.lower()
+                except:
+                    continue
+
+                # rd table
+                rd = row_safi.find('{}TABLE_rd'.format(namespace))
+                if not rd:
+                    continue
+                else:
+                    if 'vrf' not in etree_dict:
+                        etree_dict['vrf'] = {}
+                    if vrf not in etree_dict['vrf']:
+                        etree_dict['vrf'][vrf] = {}
+
+                    if 'address_family' not in etree_dict['vrf'][vrf]:
+                        etree_dict['vrf'][vrf]['address_family'] = {}
+                    if af not in etree_dict['vrf'][vrf]['address_family']:
+                        etree_dict['vrf'][vrf]['address_family'][af] = {}
+
+                # -----   loop rd  -----
+                for rd_root in rd.findall('{}ROW_rd'.format(namespace)):
+                    # rd
+                    try:
+                        rd = rd_root.find('{}rd_val'.format(namespace)).text
+                    except:
+                        rd = None
+
+                    # <dampeningenabled>true</dampeningenabled>
+                    dampeningenabled = rd_root.find('{}dampeningenabled'
+                                                    .format(namespace)).text
+                    # <historypaths>0</historypaths>
+                    historypaths = int(rd_root.find('{}historypaths'
+                                                    .format(namespace)).text)
+                    # <dampenedpaths>2</dampenedpaths>
+                    dampenedpaths = int(rd_root.find('{}dampenedpaths'
+                                                     .format(namespace)).text)
+
+                    if rd:
+                        # set default attributes under address family 
+                        # <dampeningenabled>true</dampeningenabled>
+                        if dampeningenabled == 'true':
+                            etree_dict['vrf'][vrf]['address_family'][af]['dampening_enabled'] = True
+
+                        # <historypaths>0</historypaths>
+                        etree_dict['vrf'][vrf]['address_family'][af]['history_paths'] = historypaths
+                        
+                        # <dampenedpaths>2</dampenedpaths>
+                        etree_dict['vrf'][vrf]['address_family'][af]['dampened_paths'] = dampenedpaths
+
+                        if 'route_identifier' not in etree_dict['vrf'][vrf]\
+                            ['address_family'][af]:
+                            etree_dict['vrf'][vrf]['address_family'][af]\
+                                ['route_identifier'] = {}
+
+                        if rd not in etree_dict['vrf'][vrf]\
+                            ['address_family'][af]['route_identifier']:
+                            etree_dict['vrf'][vrf]['address_family'][af]\
+                                ['route_identifier'][rd] = {}
+
+                        sub_dict = etree_dict['vrf'][vrf]['address_family'][af]\
+                            ['route_identifier'][rd]
+                    else:
+                        sub_dict = etree_dict['vrf'][vrf]['address_family'][af]
+
+                    # <dampeningenabled>true</dampeningenabled>
+                    if dampeningenabled == 'true':
+                        sub_dict['dampening_enabled'] = True
+
+                    # <historypaths>0</historypaths>
+                    sub_dict['history_paths'] = historypaths
+
+                    # <dampenedpaths>2</dampenedpaths>
+                    sub_dict['dampened_paths'] = dampenedpaths
+
+                    # prefix table
+                    prefix = rd_root.find('{}TABLE_prefix'.format(namespace))
+                    if not prefix:
+                        continue
+
+                    # -----   loop prefix  -----
+                    for prefix_root in prefix.findall('{}ROW_prefix'.format(namespace)):
+
+                        # <ipprefix>2.3.1.0/24</ipprefix>
+                        try:
+                            network = prefix_root.find('{}ipprefix'.format(namespace)).text
+                        except:
+                            pass
+
+                        # ipv6prefix>2001::/112</ipv6prefix>
+                        try:
+                            network = prefix_root.find('{}ipv6prefix'.format(namespace)).text
+                        except:
+                            pass
+
+                        # <nonipprefix>[2]:[0]:[0]:[48]:[0201.0201.0201]:[32]:[2.7.1.1]/248</nonipprefix>
+                        try:
+                            network = prefix_root.find('{}nonipprefix'.format(namespace)).text
+                        except:
+                            pass
+                           
+                        if 'network' not in sub_dict:
+                            sub_dict['network'] = {}
+
+                        if network not in sub_dict['network']:
+                            sub_dict['network'][network] = {}
+
+                        # <status>d</status>
+                        sub_dict['network'][network]['status'] = \
+                            prefix_root.find('{}status'.format(namespace)).text
+
+                        # <pathtype>e</pathtype>
+                        sub_dict['network'][network]['pathtype'] = \
+                            prefix_root.find('{}pathtype'.format(namespace)).text
+
+                        # <peer>19.0.102.3</peer>
+                        try:
+                            sub_dict['network'][network]['peer'] = \
+                                prefix_root.find('{}peer'.format(namespace)).text
+                        except:
+                            pass
+
+                        # <ipv6peer>fec0::2002</ipv6peer>
+                        try:
+                            sub_dict['network'][network]['peer'] = \
+                                prefix_root.find('{}ipv6peer'.format(namespace)).text
+                        except:
+                            pass
+
+                        # <flapcount>39</flapcount>
+                        sub_dict['network'][network]['flaps'] = \
+                            int(prefix_root.find('{}flapcount'.format(namespace)).text)
+                            
+                        # <duration>00:09:53</duration>
+                        sub_dict['network'][network]['duration'] = \
+                            prefix_root.find('{}duration'.format(namespace)).text
+                            
+                        # <reuse>00:01:40</reuse>
+                        reuse = prefix_root.find('{}reuse'.format(namespace)).text
+                        if reuse:
+                            sub_dict['network'][network]['reuse_time'] = reuse
+                            
+                            
+                        # <penalty>34</penalty>
+                        penalty = prefix_root.find('{}penalty'.format(namespace)).text
+                        if penalty:
+                            sub_dict['network'][network]['current_penalty'] = int(penalty)
+                            
+                        # <suppresslimit>30</suppresslimit>
+                        sub_dict['network'][network]['suppress_limit'] = \
+                            int(prefix_root.find('{}suppresslimit'.format(namespace)).text)
+
+                       # <reuselimit>10</reuselimit>
+                        sub_dict['network'][network]['reuse_limit'] = \
+                            int(prefix_root.find('{}reuselimit'.format(namespace)).text)
+
+                       # <best>false</best>
+                        if prefix_root.find('{}best'.format(namespace)).text == 'false':
+                            sub_dict['network'][network]['best'] = False
+                        else:
+                            sub_dict['network'][network]['best'] = True                                                                                    
+        return etree_dict
+
+
+# ===================================================
+# Parser for 'show bgp all nexthop-database'
+# ===================================================
+class ShowBgpAllNexthopDatabase(ShowBgpVrfAllAllNextHopDatabase):
+    
+    '''Parser for show bgp all nexthop-database'''
+
+    def cli(self):
+        cmd = 'show bgp all nexthop-database'
+        return super().cli(cmd)
+
+
+    def xml(self):
+        out = self.device.execute('show bgp all nexthop-database | xml')
+
+        etree_dict = {}
+        sub_dict = {}
+        # Remove junk characters returned by the device
+        out = out.replace("]]>]]>", "")
+        root = ET.fromstring(out)
+
+        # top table root
+        show_root = Common.retrieve_xml_child(root=root, key='show')
+        # get xml namespace
+        # {http://www.cisco.com/nxos:7.0.3.I7.1.:bgp}
+        try:
+            m = re.compile(r'(?P<name>\{[\S]+\})').match(show_root.tag)
+            namespace = m.groupdict()['name']
+        except:
+            return etree_dict
+
+        # compare cli command
+        Common.compose_compare_command(root=root, namespace=namespace,
+                                expect_command='show bgp all nexthop-database')
+
+        # top table root
+        vrf_root = Common.retrieve_xml_child(root=root, key='TABLE_nhvrf')
+        if not vrf_root:
+            return etree_dict
+
+        # -----   loop vrf  -----
+        for vrf_tree in vrf_root.findall('{}ROW_nhvrf'.format(namespace)):
+            # vrf
+            try:
+                vrf = vrf_tree.find('{}nhvrf-name-out'.format(namespace)).text
+            except:
+                break
+
+            if 'vrf' not in etree_dict:
+                etree_dict['vrf'] = {}
+            if vrf not in etree_dict['vrf']:
+                etree_dict['vrf'][vrf] = {}
+
+            # address_family table
+            afi = vrf_tree.find('{}TABLE_nhafi'.format(namespace))
+
+            # -----   loop address_family  -----
+            for af_root in afi.findall('{}ROW_nhafi'.format(namespace)):
+
+                # address_family
+                row_safi = af_root.find('{}TABLE_nhsafi'.format(namespace))
+                af_root = row_safi.find('{}ROW_nhsafi'.format(namespace))
+                try:
+                    af = af_root.find('{}af-name'.format(namespace)).text.lower()
+                except:
+                    continue
+
+                if 'address_family' not in etree_dict['vrf'][vrf]:
+                    etree_dict['vrf'][vrf]['address_family'] = {}
+                if af not in etree_dict['vrf'][vrf]['address_family']:
+                    etree_dict['vrf'][vrf]['address_family'][af] = {}
+
+                # af_nexthop_trigger_enable
+                etree_dict['vrf'][vrf]['address_family'][af]\
+                    ['af_nexthop_trigger_enable'] = True
+
+                # <nhnoncriticaldelay>10000</nhnoncriticaldelay>
+                etree_dict['vrf'][vrf]['address_family'][af]\
+                    ['nexthop_trigger_delay_non_critical'] = int(af_root.find('{}nhnoncriticaldelay'
+                                                             .format(namespace)).text)
+                # <nhcriticaldelay>3000</nhcriticaldelay>
+                etree_dict['vrf'][vrf]['address_family'][af]\
+                    ['nexthop_trigger_delay_critical'] = int(af_root.find('{}nhcriticaldelay'
+                                                             .format(namespace)).text)
+
+                # nexthop table
+                next_hop = af_root.find('{}TABLE_nexthop'.format(namespace))
+                if not next_hop:
+                    continue
+
+                # -----   loop nexthop  -----
+                for nexthop_root in next_hop.findall('{}ROW_nexthop'.format(namespace)):
+                    # nexthop
+                    # <ipnexthop-out>200.0.3.1</ipnexthop-out>
+                    try:
+                        nexthop = nexthop_root.find('{}ipnexthop-out'.format(namespace)).text
+                    except:
+                        pass
+
+                    # <ipv6nexthop-out>2000::3:1</ipv6nexthop-out>
+                    try:
+                        nexthop = nexthop_root.find('{}ipv6nexthop-out'.format(namespace)).text
+                    except:
+                        pass
+
+                    if 'next_hop' not in etree_dict['vrf'][vrf]\
+                        ['address_family'][af]:
+                        etree_dict['vrf'][vrf]['address_family'][af]\
+                            ['next_hop'] = {}
+
+                    if nexthop not in etree_dict['vrf'][vrf]\
+                        ['address_family'][af]['next_hop']:
+                        etree_dict['vrf'][vrf]['address_family'][af]\
+                            ['next_hop'][nexthop] = {}
+
+                    sub_dict = etree_dict['vrf'][vrf]['address_family'][af]\
+                        ['next_hop'][nexthop]
+
+                    # <refcount>1</refcount>
+                    sub_dict['refcount'] = int(nexthop_root.find(
+                                                '{}refcount'.format(namespace)).text)
+
+                    # <igpmetric>3</igpmetric>
+                    sub_dict['igp_cost'] = \
+                        int(nexthop_root.find('{}igpmetric'.format(namespace)).text)
+
+                    # <igptype>0</igptype>
+                    sub_dict['igp_route_type'] = \
+                        int(nexthop_root.find('{}igptype'.format(namespace)).text)
+
+                    # <igppref>110</igppref>
+                    sub_dict['igp_preference'] = \
+                        int(nexthop_root.find('{}igppref'.format(namespace)).text)
+
+                    # <attached>false</attached>
+                    if nexthop_root.find('{}attached'.format(namespace)).text == 'false':
+                        sub_dict['attached'] = False
+                    else:
+                        sub_dict['attached'] = True
+
+
+                    # <local>false</local>
+                    if nexthop_root.find('{}local'.format(namespace)).text == 'false':
+                        sub_dict['local'] = False
+                    else:
+                        sub_dict['local'] = True
+
+                    # <reachable>true</reachable>
+                    if nexthop_root.find('{}reachable'.format(namespace)).text == 'false':
+                        sub_dict['reachable'] = False
+                    else:
+                        sub_dict['reachable'] = True
+
+                    # <labeled>true</labeled>
+                    if nexthop_root.find('{}labeled'.format(namespace)).text == 'false':
+                        sub_dict['labeled'] = False
+                    else:
+                        sub_dict['labeled'] = True
+
+                    # <filtered>false</filtered>
+                    if nexthop_root.find('{}filtered'.format(namespace)).text == 'false':
+                        sub_dict['filtered'] = False
+                    else:
+                        sub_dict['filtered'] = True
+
+                    # <pendingupdate>false</pendingupdate>
+                    if nexthop_root.find('{}pendingupdate'.format(namespace)).text == 'false':
+                        sub_dict['pending_update'] = False
+                    else:
+                        sub_dict['pending_update'] = True
+
+                    # <resolvetime>18:38:21</resolvetime>
+                    sub_dict['resolve_time'] = \
+                        nexthop_root.find('{}resolvetime'.format(namespace)).text
+
+                    # <ribroute>200.0.3.1/32</ribroute>
+                    try:
+                        sub_dict['rib_route'] = \
+                            nexthop_root.find('{}ribroute'.format(namespace)).text
+                    except:
+                        pass                    
+
+                    # <ipv6ribroute>0::/0</ipv6ribroute>
+                    try:
+                        sub_dict['rib_route'] = \
+                            nexthop_root.find('{}ipv6ribroute'.format(namespace)).text
+                    except:
+                        pass
+
+                    # <nextadvertise>Never</nextadvertise>
+                    sub_dict['metric_next_advertise'] = \
+                        nexthop_root.find('{}nextadvertise'.format(namespace)).text.lower()
+
+                    # <rnhepoch>1</rnhepoch>
+                    sub_dict['rnh_epoch'] = \
+                        int(nexthop_root.find('{}rnhepoch'.format(namespace)).text)
+
+
+                    # attachedhops table
+                    attached = nexthop_root.find('{}TABLE_attachedhops'.format(namespace))
+                    if not attached:
+                        continue
+
+                    # -----   loop attachedhops  -----
+                    for attach_root in attached.findall('{}ROW_attachedhops'.format(namespace)):
+
+                        # <attachedhop>201.7.23.2</attachedhop>
+                        try:
+                            att_hop = attach_root.find('{}attachedhop'.format(namespace)).text
+                        except:
+                            pass
+
+                        # <ipv6attachedhop>fe80::6e9c:edff:fe4d:ff41</ipv6attachedhop>
+                        try:
+                            att_hop = attach_root.find('{}ipv6attachedhop'.format(namespace)).text
+                        except:
+                            pass
+                           
+                        if 'attached_nexthop' not in sub_dict:
+                            sub_dict['attached_nexthop'] = {}
+
+                        if att_hop not in sub_dict['attached_nexthop']:
+                            sub_dict['attached_nexthop'][att_hop] = {}
+
+                        # <interface>port-channel2.100</interface>
+                        sub_dict['attached_nexthop'][att_hop]['attached_nexthop_interface'] = \
+                            attach_root.find('{}interface'.format(namespace)).text                                                                                                          
+        return etree_dict
+
+
+# ===================================================
+# Parser for 'show bgp peer-template'
+# ===================================================
+class ShowBgpPeerTemplateCmdSchema(MetaParser):
+    
+    '''Schema for show bgp peer-template'''
+
+    schema = {
+        'template': {
+            Any(): {
+                Optional('source_interface'): str,
+                Optional('low_mem_exempt'): bool,
+                Optional('logging_neighbor_events'): bool,
+                Optional('external_bgp_peer_hops_limit'): int,
+                Optional('passive_only'): bool,
+                Optional('local_as_inactive'): bool,
+                Optional('remove_private_as'): bool,
+                Optional('vrf'): {
+                    Any(): {
+                        'inheriting_peer': {
+                            Any(): {
+                                'inheriting_peer': str,
+                            },
+                        }
+                    },
+                },
+                'address_family': {
+                    Any(): {
+                        Optional('condition_map'): str,
+                        Optional('advertise_map'): str,
+                        Optional('advertise_map_status'): str,
+                        Optional('in_soft_reconfig_allowed'): bool,
+                        Optional('send_community'): bool,
+                        Optional('send_ext_community'): bool,
+                        Optional('local_nexthop'): str,
+                        Optional('third_party_nexthop'): bool,
+                        Optional('max_pfx'): int,
+                        Optional('soo'): str,
+                        Optional('weight'): int,
+                        Optional('allow_as_in'): int,
+                        Optional('as_override'): bool,
+                        Optional('peer_as_check_disabled'): bool,
+                        Optional('rr_configured'): bool,
+                        Optional('default_originate'): bool,
+                        Optional('default_originate_route_map'): str,
+                        Optional('unsuppress_map'): str,
+                        Optional('in_policy'): {
+                            Any(): {
+                                'type': str,
+                                'name': str,
+                            },
+                        },
+                        Optional('out_policy'): {
+                            Any(): {
+                                'type': str,
+                                'name': str,
+                            },
+                        },                        
+                    },                            
+                },
+            },
+        }
+    }
+class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
+    
+    '''Parser for show bgp peer-template'''
+
+    def cli(self):
+        cmd = 'show bgp peer-template'
+        out = self.device.execute(cmd)
+        
+        # Init vars
+        ret_dict = {}
+        sub_dict = {}
+        tem_peer = None
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # BGP peer-template is PEER2
+            p1 = re.compile(r'^BGP +peer\-template +is +'
+                             '(?P<template>[\w\-]+)$')
+            m = p1.match(line)
+            if m:
+                template = m.groupdict()['template']
+
+                if 'template' not in ret_dict:
+                    ret_dict['template'] = {}
+
+                if template not in ret_dict['template']:
+                    ret_dict['template'][template] = {}
+
+                # will enable regext when there is output
+                # initial the flag due to comparison with xml version
+                ret_dict['template'][template]['local_as_inactive'] = False
+                ret_dict['template'][template]['remove_private_as'] = False
+                ret_dict['template'][template]['logging_neighbor_events'] = False
+                ret_dict['template'][template]['passive_only'] = False
+                continue
+
+            # Using loopback1 as update source for this peer
+            p2 = re.compile(r'^Using +(?P<intf>[\w\-\/\.]+) +as'
+                             ' +update +source +for +this +peer$')
+            m = p2.match(line)
+            if m:
+                ret_dict['template'][template]['source_interface'] = \
+                    m.groupdict()['intf']
+                continue
+
+            # Peer is low-memory exempt
+            p3 = re.compile(r'^Peer +is +low\-memory +exempt$')
+            m = p3.match(line)
+            if m:
+                ret_dict['template'][template]['low_mem_exempt'] = True
+                continue
+
+            # Disable logging neighbor events
+            p4 = re.compile(r'^Disable +logging +neighbor +events$')
+            m = p4.match(line)
+            if m:
+                ret_dict['template'][template]['logging_neighbor_events'] = False
+                continue
+
+            # External BGP peer might be up to 100 hops away
+            p5 = re.compile(r'^External +BGP +peer +might +be +up +to'
+                             ' +(?P<hops>\d+) +hops +away$')
+            m = p5.match(line)
+            if m:
+                ret_dict['template'][template]['external_bgp_peer_hops_limit'] = \
+                    int(m.groupdict()['hops'])
+                continue
+
+            # Only passive connection setup allowed
+            p6 = re.compile(r'^Only +passive +connection +setup +allowed$')
+            m = p6.match(line)
+            if m:
+                ret_dict['template'][template]['passive_only'] = True
+                continue
+
+            # Neighbor local-as command not active
+            p23 = re.compile(r'^Neighbor +local\-as +command +not +active$')
+            m = p23.match(line)
+            if m:
+                ret_dict['template'][template]['local_as_inactive'] = True
+                continue
+
+            # For address family: IPv4 Unicast
+            p7 = re.compile(r'^For +address +family: +(?P<af>[\w\s\-]+)$')
+            m = p7.match(line)
+            if m:
+                af = m.groupdict()['af'].lower()
+
+                if 'address_family' not in ret_dict['template'][template]:
+                    ret_dict['template'][template]['address_family'] = {}
+
+                if af not in ret_dict['template'][template]['address_family']:
+                    ret_dict['template'][template]['address_family'][af] = {}
+
+                sub_dict = ret_dict['template'][template]['address_family'][af]
+
+                # will enable regext when there is output
+                # initial the flag due to comparison with xml version
+                sub_dict['in_soft_reconfig_allowed'] = False
+                sub_dict['rr_configured'] = False
+                sub_dict['peer_as_check_disabled'] = False
+                sub_dict['as_override'] = False
+                sub_dict['default_originate'] = False
+                continue
+
+            # Condition-map DENY_ALL_RM, Advertise-map BLOCK-ALL, Status Advertise
+            p8 = re.compile(r'^Condition\-map +(?P<con_map>[\w\-]+), +'
+                             'Advertise\-map +(?P<adv_map>[\w\-]+), +'
+                             'Status +(?P<status>[\w\-]+)$')
+            m = p8.match(line)
+            if m:
+                sub_dict['condition_map'] = m.groupdict()['con_map']
+                sub_dict['advertise_map'] = m.groupdict()['adv_map']
+                sub_dict['advertise_map_status'] = m.groupdict()['status'].lower()
+                continue
+
+            # Inbound soft reconfiguration allowed(always)
+            p25 = re.compile(r'^Inbound +soft +reconfiguration +allowed\(always\)$')
+            m = p25.match(line)
+            if m:
+                sub_dict['in_soft_reconfig_allowed'] = True
+                continue
+
+            # Community attribute sent to this neighbor
+            p9 = re.compile(r'^Community +attribute +sent +to +this +neighbor$')
+            m = p9.match(line)
+            if m:
+                sub_dict['send_community'] = True
+                continue
+
+            # Extended community attribute sent to this neighbor
+            p10 = re.compile(r'^Extended +community +attribute +sent +'
+                              'to +this +neighbor$')
+            m = p10.match(line)
+            if m:
+                sub_dict['send_ext_community'] = True
+                continue
+
+            # Nexthop always set to local peering address, 0.0.0.0
+            p11 = re.compile(r'^Nexthop +always +set +to +local +'
+                              'peering +address, +(?P<local_nexthop>[\w\.\:]+)$')
+            m = p11.match(line)
+            if m:
+                sub_dict['local_nexthop'] = m.groupdict()['local_nexthop']
+                continue
+
+            # Third-party Nexthop will not be computed.
+            # will enhance this when output for third_party_nexthop is enabled
+            p12 = re.compile(r'^Third\-party +Nexthop +will +not +be +computed.$')
+            m = p12.match(line)
+            if m:
+                sub_dict['third_party_nexthop'] = False
+                continue
+
+            # Maximum prefixes allowed 888888888
+            p13 = re.compile(r'^Maximum +prefixes +allowed +(?P<max_pfx>\d+)$')
+            m = p13.match(line)
+            if m:
+                sub_dict['max_pfx'] = int(m.groupdict()['max_pfx'])
+                continue
+
+            # SOO Extcommunity: SOO:1.1.1.1:100
+            p14 = re.compile(r'^SOO +Extcommunity: +(?P<soo>[\w\:\.]+)$')
+            m = p14.match(line)
+            if m:
+                sub_dict['soo'] = m.groupdict()['soo']
+                continue
+
+            # Weight: 9999
+            p15 = re.compile(r'^Weight: +(?P<weight>\d+)$')
+            m = p15.match(line)
+            if m:
+                sub_dict['weight'] = int(m.groupdict()['weight'])
+                continue
+
+            # Allow my ASN 10 times
+            p16 = re.compile(r'^Allow +my +ASN +(?P<asn>\d+) +times$')
+            m = p16.match(line)
+            if m:
+                sub_dict['allow_as_in'] = int(m.groupdict()['asn'])
+                continue
+
+            # ASN override is enabled
+            p17 = re.compile(r'^ASN +override +is +(?P<status>\w+)$')
+            m = p17.match(line)
+            if m:
+                if m.groupdict()['status'] == 'enabled':
+                    sub_dict['as_override'] = True
+                else:
+                    sub_dict['as_override'] = False
+                continue
+
+            # Peer ASN check is disabled
+            p24 = re.compile(r'^Peer +ASN +check +is +disabled$')
+            m = p24.match(line)
+            if m:
+                sub_dict['peer_as_check_disabled'] = True
+                continue
+
+            # Inbound ip prefix-list configured is LIST123
+            # Inbound route-map configured is PERMIT_ROUTE_IPV4_RM
+            p18 = re.compile(r'^Inbound +(?P<type>[\w\-\s]+) +configured'
+                              ' +is +(?P<name>[\w\-]+)$')
+            m = p18.match(line)
+            if m:
+                name = m.groupdict()['name']
+                policy_type = m.groupdict()['type']
+
+                if 'in_policy' not in sub_dict:
+                    sub_dict['in_policy'] = {}
+
+                if name not in sub_dict['in_policy']:
+                    sub_dict['in_policy'][name] = {}
+
+                sub_dict['in_policy'][name]['name'] = name
+                sub_dict['in_policy'][name]['type'] = policy_type
+                continue
+
+            # Outbound ip prefix-list configured is LIST456
+            # Outbound route-map configured is PERMIT_IPV6_RM
+            p19 = re.compile(r'^Outbound +(?P<type>[\w\-\s]+) +configured'
+                              ' +is +(?P<name>[\w\-]+)$')
+            m = p19.match(line)
+            if m:
+                name = m.groupdict()['name']
+                policy_type = m.groupdict()['type']
+
+                if 'out_policy' not in sub_dict:
+                    sub_dict['out_policy'] = {}
+
+                if name not in sub_dict['out_policy']:
+                    sub_dict['out_policy'][name] = {}
+
+                sub_dict['out_policy'][name]['name'] = name
+                sub_dict['out_policy'][name]['type'] = policy_type
+                continue
+
+            # Default information originate, route-map PASS-ALL  Last End-of-RIB sent 0.000000 after session start
+            # Default information originate  Last End-of-RIB sent 0.000000 after session start
+            p20 = re.compile(r'^Default +information +originate(, +'
+                              'route-map +(?P<map>[\w\-]+))? +(?P<dummy>.*)$')
+            m = p20.match(line)
+            if m:
+                sub_dict['default_originate'] = True
+                if m.groupdict()['map']:
+                    sub_dict['default_originate_route_map'] = m.groupdict()['map']
+                continue
+
+            # First convergence 0.000000 after session start with 0 routes sent
+
+            # Unsuppress-map ORIGINATE_IPV6 configured
+            p21 = re.compile(r'^Unsuppress\-map +(?P<map>[\w\-]+) +configured$')
+            m = p21.match(line)
+            if m:
+                sub_dict['unsuppress_map'] = m.groupdict()['map']
+                continue
+
+            # Members of peer-template PEER1:
+            # default: 21.0.201.1
+            p22 = re.compile(r'^Members +of +peer\-template +(?P<peer>[\w\-]+):$')
+            m = p22.match(line)
+            if m:
+                tem_peer = m.groupdict()['peer']
+                continue
+
+            p22_1 = re.compile(r'^(?P<vrf>[\w\-]+): +(?P<neighbor>[\w\:\.]+)$')
+            m = p22_1.match(line)
+            if m and tem_peer:
+                if 'vrf' not in ret_dict['template'][tem_peer]:
+                    ret_dict['template'][tem_peer]['vrf'] = {}
+
+                vrf = m.groupdict()['vrf']
+
+                if vrf not in ret_dict['template'][tem_peer]['vrf']:
+                    ret_dict['template'][tem_peer]['vrf'][vrf] = {}
+
+                if 'inheriting_peer' not in ret_dict['template'][tem_peer]['vrf'][vrf]:
+                    ret_dict['template'][tem_peer]['vrf'][vrf]['inheriting_peer'] = {}
+
+                nei = m.groupdict()['neighbor']
+
+                if nei not in ret_dict['template'][tem_peer]['vrf'][vrf]['inheriting_peer']:
+                    ret_dict['template'][tem_peer]['vrf'][vrf]['inheriting_peer'][nei] = {}
+
+                ret_dict['template'][tem_peer]['vrf'][vrf]['inheriting_peer'][nei]\
+                    ['inheriting_peer'] = nei
+                    
+
+                # reset tem_peer
+                tem_peer = None
+                continue
+
+        return ret_dict
+
+
+    def xml(self):
+        out = self.device.execute('show bgp peer-template | xml')
+
+        etree_dict = {}
+        sub_dict = {}
+        # Remove junk characters returned by the device
+        out = out.replace("]]>]]>", "")
+        root = ET.fromstring(out)
+
+        # top table root
+        show_root = Common.retrieve_xml_child(root=root, key='show')
+        # get xml namespace
+        # {http://www.cisco.com/nxos:7.0.3.I7.1.:bgp}
+        try:
+            m = re.compile(r'(?P<name>\{[\S]+\})').match(show_root.tag)
+            namespace = m.groupdict()['name']
+        except:
+            return etree_dict
+
+        # compare cli command
+        Common.compose_compare_command(root=root, namespace=namespace,
+                                expect_command='show bgp peer-template')
+
+        # top table root
+        root = Common.retrieve_xml_child(root=root, key='TABLE_neighbor')
+        if not root:
+            return etree_dict
+
+        # -----   loop vrf  -----
+        for peer_tree in root.findall('{}ROW_neighbor'.format(namespace)):
+            # vrf
+            try:
+                template = peer_tree.find('{}templatepeer'.format(namespace)).text
+            except:
+                break
+
+            if 'template' not in etree_dict:
+                etree_dict['template'] = {}
+            if template not in etree_dict['template']:
+                etree_dict['template'][template] = {}
+
+            # <sourceif>loopback1</sourceif>
+            try:
+                etree_dict['template'][template]['source_interface'] = \
+                    peer_tree.find('{}sourceif'.format(namespace)).text
+            except:
+                pass
+
+            # <lowmemexempt>true</lowmemexempt>
+            try:
+                if peer_tree.find('{}lowmemexempt'.format(namespace)).text == 'true':
+                    etree_dict['template'][template]['low_mem_exempt'] = True
+                else:
+                    etree_dict['template'][template]['low_mem_exempt'] = False
+            except:
+                pass
+
+            # <ttlsecurity>false</ttlsecurity>
+            if peer_tree.find('{}ttlsecurity'.format(namespace)).text == 'true':
+                etree_dict['template'][template]['logging_neighbor_events'] = True
+            else:
+                etree_dict['template'][template]['logging_neighbor_events'] = False
+
+            # <passiveonly>true</passiveonly>
+            if peer_tree.find('{}passiveonly'.format(namespace)).text == 'true':
+                etree_dict['template'][template]['passive_only'] = True
+            else:
+                etree_dict['template'][template]['passive_only'] = False
+
+            # <localas-inactive>false</localas-inactive>
+            if peer_tree.find('{}localas-inactive'.format(namespace)).text == 'true':
+                etree_dict['template'][template]['local_as_inactive'] = True
+            else:
+                etree_dict['template'][template]['local_as_inactive'] = False
+
+            # <remove-privateas>false</remove-privateas>
+            if peer_tree.find('{}remove-privateas'.format(namespace)).text == 'true':
+                etree_dict['template'][template]['remove_private_as'] = True
+            else:
+                etree_dict['template'][template]['remove_private_as'] = False
+
+            # <ttllimit>100</ttllimit>
+            try:
+                etree_dict['template'][template]['external_bgp_peer_hops_limit'] = \
+                    int(peer_tree.find('{}ttllimit'.format(namespace)).text)
+            except:
+                pass
+
+             # vrf table
+            vrf_tree = peer_tree.find('{}TABLE_vrf'.format(namespace))
+            if vrf_tree:
+                # -----   loop vrf  -----
+                for vrf_root in vrf_tree.findall('{}ROW_vrf'.format(namespace)):
+                    # <vrf-name>default</vrf-name>
+                    try:
+                        vrf = vrf_root.find('{}vrf-name'.format(namespace)).text.lower()
+                    except:
+                        continue
+
+                    # inheritingpeer table
+                    inherit_tree = vrf_root.find('{}TABLE_inheritingpeer'.format(namespace))
+                    if not inherit_tree:
+                        continue
+
+                    # -----   loop inheritingpeer  -----
+                    for inherit_root in inherit_tree.findall('{}ROW_inheritingpeer'
+                                                             .format(namespace)):
+
+                        # <inheritingpeer>21.0.201.1</inheritingpeer>
+                        try:
+                            inherit_peer = inherit_root.find('{}inheritingpeer'
+                                                             .format(namespace)).text.lower()
+                        except:
+                            continue
+                        if 'vrf' not in etree_dict['template'][template]:
+                            etree_dict['template'][template]['vrf'] = {}
+                        if vrf not in etree_dict['template'][template]['vrf']:
+                            etree_dict['template'][template]['vrf'][vrf] = {}
+
+                        if 'inheriting_peer' not in etree_dict['template']\
+                            [template]['vrf'][vrf]:
+                            etree_dict['template'][template]['vrf'][vrf]\
+                                ['inheriting_peer'] = {}
+                            
+                        if inherit_peer not in etree_dict['template']\
+                            [template]['vrf'][vrf]['inheriting_peer']:
+                            etree_dict['template'][template]['vrf'][vrf]\
+                                ['inheriting_peer'][inherit_peer] = {}
+
+                        etree_dict['template'][template]['vrf'][vrf]\
+                                ['inheriting_peer'][inherit_peer]['inheriting_peer'] = inherit_peer
+
+
+            # address_family table
+            afi = peer_tree.find('{}TABLE_peraf'.format(namespace))
+
+            # -----   loop address_family  -----
+            for af_root in afi.findall('{}ROW_peraf'.format(namespace)):
+
+                try:
+                    # address_family
+                    row_safi = af_root.find('{}TABLE_persaf'.format(namespace))
+                    af_root = row_safi.find('{}ROW_persaf'.format(namespace))
+                    af = af_root.find('{}per-af-name'.format(namespace)).text.lower()
+                except:
+                    continue
+
+                if 'address_family' not in etree_dict['template'][template]:
+                    etree_dict['template'][template]['address_family'] = {}
+                if af not in etree_dict['template'][template]['address_family']:
+                    etree_dict['template'][template]['address_family'][af] = {}
+
+                sub_dict = etree_dict['template'][template]['address_family'][af]
+
+                # <conditionmap>DENY_ALL_RM</conditionmap>
+                try:
+                    sub_dict['condition_map'] = \
+                        af_root.find('{}conditionmap'.format(namespace)).text
+                except:
+                    pass
+
+                # <advertisemap>BLOCK-ALL</advertisemap>
+                try:
+                    sub_dict['advertise_map'] = \
+                        af_root.find('{}advertisemap'.format(namespace)).text
+                except:
+                    pass
+
+                # <advertisemapstatus>Advertise</advertisemapstatus>
+                try:
+                    sub_dict['advertise_map_status'] = \
+                        af_root.find('{}advertisemapstatus'.format(namespace)).text.lower()
+                except:
+                    pass
+
+                try:
+                    # <insoftreconfigallowed>false</insoftreconfigallowed>
+                    if af_root.find('{}insoftreconfigallowed'.format(namespace)).text == 'true':
+                        sub_dict['in_soft_reconfig_allowed'] = True
+                    else:
+                        sub_dict['in_soft_reconfig_allowed'] = False
+                except:
+                    pass
+
+                # <sendcommunity>true</sendcommunity>
+                if af_root.find('{}sendcommunity'.format(namespace)).text == 'true':
+                    sub_dict['send_community'] = True
+                else:
+                    sub_dict['send_community'] = False
+
+                # <sendextcommunity>true</sendextcommunity>
+                if af_root.find('{}sendextcommunity'.format(namespace)).text == 'true':
+                    sub_dict['send_ext_community'] = True
+                else:
+                    sub_dict['send_ext_community'] = False
+
+                # <thirdpartynexthop>false</thirdpartynexthop>
+                if af_root.find('{}thirdpartynexthop'.format(namespace)).text == 'true':
+                    sub_dict['third_party_nexthop'] = True
+                else:
+                    sub_dict['third_party_nexthop'] = False
+
+                    # <asoverride>true</asoverride>
+                if af_root.find('{}asoverride'.format(namespace)).text == 'true':
+                    sub_dict['as_override'] = True
+                else:
+                    sub_dict['as_override'] = False
+
+                # <peerascheckdisabled>false</peerascheckdisabled>
+                if af_root.find('{}peerascheckdisabled'.format(namespace)).text == 'true':
+                    sub_dict['peer_as_check_disabled'] = True
+                else:
+                    sub_dict['peer_as_check_disabled'] = False
+
+                # <rrconfigured>false</rrconfigured>
+                if af_root.find('{}rrconfigured'.format(namespace)).text == 'true':
+                    sub_dict['rr_configured'] = True
+                else:
+                    sub_dict['rr_configured'] = False
+
+                # <localnexthop>0.0.0.0</localnexthop>
+                try:
+                    sub_dict['local_nexthop'] = \
+                        af_root.find('{}localnexthop'.format(namespace)).text
+                except:
+                    pass
+
+                # <maxpfx>888888888</maxpfx>
+                try:
+                    sub_dict['max_pfx'] = \
+                        int(af_root.find('{}maxpfx'.format(namespace)).text)
+                except:
+                    pass
+
+                # <soo>SOO:1.1.1.1:100</soo>
+                try:
+                    sub_dict['soo'] = \
+                        af_root.find('{}soo'.format(namespace)).text
+                except:
+                    pass
+
+                # <weight>9999</weight>
+                try:
+                    sub_dict['weight'] = \
+                        int(af_root.find('{}weight'.format(namespace)).text)
+                except:
+                    pass
+
+                # <allowasin>10</allowasin>
+                try:
+                    sub_dict['allow_as_in'] = \
+                        int(af_root.find('{}allowasin'.format(namespace)).text)
+                except:
+                    pass
+
+                # <defaultoriginate>true</defaultoriginate>
+                try:
+                    if af_root.find('{}defaultoriginate'.format(namespace)).text == 'true':
+                        sub_dict['default_originate'] = True
+                    else:
+                        sub_dict['default_originate'] = False
+                except:
+                    pass
+
+                # <defaultoriginatermap>PASS-ALL</defaultoriginatermap>
+                try:
+                    sub_dict['default_originate_route_map'] = \
+                        af_root.find('{}defaultoriginatermap'.format(namespace)).text
+                except:
+                    pass
+
+                # <unsuppress-map>ORIGINATE_IPV6</unsuppress-map>
+                try:
+                    sub_dict['unsuppress_map'] = \
+                        af_root.find('{}unsuppress-map'.format(namespace)).text
+                except:
+                    pass
+                
+
+                # TABLE_inpolicy table
+                policy = af_root.find('{}TABLE_inpolicy'.format(namespace))
+
+                if policy:
+                    # -----   loop in policy  -----
+                    for policy_root in policy.findall('{}ROW_inpolicy'.format(namespace)):
+                        try:
+                            policy = policy_root.find('{}inpolicyname'.format(namespace)).text
+                        except:
+                            continue
+
+                        if 'in_policy' not in sub_dict:
+                            sub_dict['in_policy'] = {}
+                        if policy not in sub_dict['in_policy']:
+                            sub_dict['in_policy'][policy] = {}
+
+                        sub_dict['in_policy'][policy]['name'] = policy
+
+                        # <inpolicytype>route-map</inpolicytype>
+                        sub_dict['in_policy'][policy]['type'] = \
+                            policy_root.find('{}inpolicytype'.format(namespace)).text
+
+                # TABLE_outpolicy table
+                policy = af_root.find('{}TABLE_outpolicy'.format(namespace))
+
+                if policy:
+                    # -----   loop in policy  -----
+                    for policy_root in policy.findall('{}ROW_outpolicy'.format(namespace)):
+                        try:
+                            policy = policy_root.find('{}outpolicyname'.format(namespace)).text
+                        except:
+                            continue
+                        if 'out_policy' not in sub_dict:
+                            sub_dict['out_policy'] = {}
+                        if policy not in sub_dict['out_policy']:
+                            sub_dict['out_policy'][policy] = {}
+
+                        sub_dict['out_policy'][policy]['name'] = policy
+
+                        # <outpolicytype>route-map</outpolicytype>
+                        sub_dict['out_policy'][policy]['type'] = \
+                            policy_root.find('{}outpolicytype'.format(namespace)).text
+
+                                                                                                                         
+        return etree_dict
+
+
+# ================================================================================
+# common parse function for commands:
+#   'show bgp vrf <vrf> <address_family>  policy statistics redistribute'
+#   'show bgp vrf <vrf> <address_family>  policy statistics dampening'
+#   'show bgp vrf <vrf> <address_family>  policy statistics neighbor <neighbor>'
+# ================================================================================
+class ShowBgpPolicyStatisticsSchema(MetaParser):
+    
+    '''Schema for
+       show bgp [vrf <vrf>] <address_family>  policy statistics redistribute
+       show bgp [vrf <vrf>] <address_family>  policy statistics dampening
+       show bgp [vrf <vrf>] <address_family>  policy statistics neighbor <neighbor>
+    '''
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'rpm_handle_count': int,
+                Optional('route_map'): {
+                    Any():{
+                        Any(): {
+                            'action': str,
+                            'seq_num': int,
+                            'total_accept_count': int,
+                            'total_reject_count': int,
+                            Optional('command'): {
+                                'compare_count': int,
+                                'match_count': int,
+                                'command': str
+                            }
+                        },
+                    },
+                }
+            },
+        }
+    }
+class ShowBgpPolicyStatistics(ShowBgpPolicyStatisticsSchema):
+    
+    def cli(self, cmd):
+
+        out = self.device.execute(cmd)
+        
+        # Init vars
+        ret_dict = {}
+        index = 1
+
+        # extract vrf info if specified,
+        # if not, vrf is default
+        m = re.compile(r'^show +bgp +vrf +(?P<vrf>\w+)').match(cmd)
+        if m:
+            vrf = m.groupdict()['vrf']
+            if vrf == 'all':
+                vrf = ''
+        else:
+            vrf = 'default'
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Details for VRF default
+            p1 = re.compile(r'^Details +for +VRF +'
+                             '(?P<vrf>[\w\-]+)$')
+            m = p1.match(line)
+            if m:
+                vrf = m.groupdict()['vrf']
+                nei_flag = True
+                continue
+
+            # No such neighbor
+            if re.compile(r'No +such +neighbor$').match(line):
+                nei_flag = False
+
+            # Total count for redistribute rpm handles: 1
+            # Total count for neighbor rpm handles: 1
+            # Total count for dampening rpm handles: 1
+            p2 = re.compile(r'^Total +count +for +(?P<type>\w+) +rpm +handles: +'
+                             '(?P<handles>\d+)$')
+            m = p2.match(line)
+
+            # BGP policy statistics not available
+            p3 = re.compile(r'^BGP +policy +statistics +not +available$')
+            m1 = p3.match(line)
+
+            if m or m1:
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+
+                ret_dict['vrf'][vrf]['rpm_handle_count'] = \
+                    int(m.groupdict()['handles']) if m else 0
+                continue
+
+            # C: No. of comparisions, M: No. of matches
+
+            # route-map Filter-pip deny 10
+            # route-map ADD_RT_400_400 permit 10
+            # route-map RMAP_DIRECT->BGP_IPV4 permit 10
+            p4 = re.compile(r'^route\-map +(?P<name>\S+) +'
+                             '(?P<action>\w+) +(?P<seqnum>\d+)$')
+            m = p4.match(line)
+            if m:
+                name = m.groupdict()['name']
+
+                if 'route_map' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['route_map'] = {}
+
+                if name not in ret_dict['vrf'][vrf]['route_map']:
+                    ret_dict['vrf'][vrf]['route_map'][name] = {}
+                    index = 1
+                else:
+                    index += 1
+
+                if index not in ret_dict['vrf'][vrf]['route_map'][name]:
+                    ret_dict['vrf'][vrf]['route_map'][name][index] = {}
+
+                ret_dict['vrf'][vrf]['route_map'][name][index]['action'] = \
+                    m.groupdict()['action']
+
+                ret_dict['vrf'][vrf]['route_map'][name][index]['seq_num'] = \
+                    int(m.groupdict()['seqnum'])
+                continue
+
+            #   match ip address prefix-list pip-prefix                    C: 0      M: 0 
+            #   match ip address prefix-list DIRECT->BGP_IPV4              C: 16     M: 0 
+            p5 = re.compile(r'^(?P<command>[\w\s\-\>]+) +'
+                             'C: +(?P<compare_count>\d+) +'
+                             'M: +(?P<match_count>\d+)$')
+            m = p5.match(line)
+            if m:
+                command = m.groupdict()['command'].strip()
+
+                if 'command' not in ret_dict['vrf'][vrf]['route_map'][name][index]:
+                    ret_dict['vrf'][vrf]['route_map'][name][index]['command'] = {}
+
+                ret_dict['vrf'][vrf]['route_map'][name][index]['command']\
+                    ['compare_count'] = int(m.groupdict()['compare_count'])
+
+                ret_dict['vrf'][vrf]['route_map'][name][index]['command']\
+                    ['match_count'] = int(m.groupdict()['match_count'])
+
+                ret_dict['vrf'][vrf]['route_map'][name][index]['command']\
+                    ['command'] = command
+                continue
+
+            # Total accept count for policy: 0
+            p6 = re.compile(r'^Total +accept +count +for +policy: +'
+                             '(?P<total_accept_count>\d+)$')
+            m = p6.match(line)
+            if m:
+                ret_dict['vrf'][vrf]['route_map'][name][index]['total_accept_count'] = \
+                    int(m.groupdict()['total_accept_count'])
+                continue
+
+            # Total reject count for policy: 0
+            p7 = re.compile(r'^Total +reject +count +for +policy: +'
+                             '(?P<total_reject_count>\d+)$')
+            m = p7.match(line)
+            if m:
+                ret_dict['vrf'][vrf]['route_map'][name][index]['total_reject_count'] = \
+                    int(m.groupdict()['total_reject_count'])
+                continue
+
+        return ret_dict
+
+
+    def xml(self, cmd):
+        out = self.device.execute('{} | xml'.format(cmd))
+
+        etree_dict = {}
+        neighbor = None
+        # Remove junk characters returned by the device
+        out = out.replace("]]>]]>", "")
+        root = ET.fromstring(out)
+
+        # top table root
+        show_root = Common.retrieve_xml_child(root=root, key='show')
+        # get xml namespace
+        # {http://www.cisco.com/nxos:7.0.3.I7.1.:bgp}
+        try:
+            m = re.compile(r'(?P<name>\{[\S]+\})').match(show_root.tag)
+            namespace = m.groupdict()['name']
+        except:
+            return etree_dict
+
+        # compare cli command
+        Common.compose_compare_command(root=root, namespace=namespace,
+                                       expect_command=cmd)
+
+        # get neighbor
+        nei = Common.retrieve_xml_child(root=root, key='__XML__PARAM__neighbor-id')
+
+        if hasattr(nei, 'tag'):
+            for item in nei.getchildren():
+                if '__XML__value' in item.tag:
+                    neighbor = item.text
+                    continue
+
+                # cover the senario that __readonly__ may be mssing when
+                # there are values in the output
+                if '__readonly__' in item.tag:
+                    root = item.getchildren()[0]
+                else:
+                    root = item
+        else:
+            # top table rootl
+            root = Common.retrieve_xml_child(root=root, key='TABLE_vrf')
+        # import pdb; pdb.set_trace()
+        if not root:
+            return etree_dict
+
+        # -----   loop vrf  -----
+        for vrf_tree in root.findall('{}ROW_vrf'.format(namespace)):
+            # vrf
+            try:
+                vrf = vrf_tree.find('{}vrf-name-polstats'.format(namespace)).text
+            except:
+                break
+
+            if 'vrf' not in etree_dict:
+                etree_dict['vrf'] = {}
+            if vrf not in etree_dict['vrf']:
+                etree_dict['vrf'][vrf] = {}
+
+            # <rpm-handle-count>1</rpm-handle-count>
+            etree_dict['vrf'][vrf]['rpm_handle_count'] = \
+                int(vrf_tree.find('{}rpm-handle-count'.format(namespace)).text)
+
+             # route_map table
+            rpm_tree = vrf_tree.find('{}TABLE_rmap'.format(namespace))
+            if not rpm_tree:
+                continue
+
+            # -----   loop route_map  -----
+            for rmp_root in rpm_tree.findall('{}ROW_rmap'.format(namespace)):
+                # route map
+                try:
+                    name = rmp_root.find('{}name'.format(namespace)).text
+                    name = name.replace('&gt;', '>')
+                except:
+                    continue
+
+                if 'route_map' not in etree_dict['vrf'][vrf]:
+                    etree_dict['vrf'][vrf]['route_map'] = {}
+
+                if name not in etree_dict['vrf'][vrf]['route_map']:
+                    etree_dict['vrf'][vrf]['route_map'][name] = {}
+                    # initial index
+                    index = 1
+                else:
+                    index += 1
+                    
+                if index not in etree_dict['vrf'][vrf]['route_map'][name]:
+                    etree_dict['vrf'][vrf]['route_map'][name][index] = {}
+
+
+                # <action>deny</action>
+                try:
+                    etree_dict['vrf'][vrf]['route_map'][name][index]['action'] = \
+                        rmp_root.find('{}action'.format(namespace)).text
+                except:
+                    pass
+
+                # <seqnum>10</seqnum>
+                try:
+                    etree_dict['vrf'][vrf]['route_map'][name][index]['seq_num'] = \
+                        int(rmp_root.find('{}seqnum'.format(namespace)).text)
+                except:
+                    pass
+
+                # <totalacceptcount>0</totalacceptcount>
+                try:
+                    etree_dict['vrf'][vrf]['route_map'][name][index]['total_accept_count'] = \
+                        int(rmp_root.find('{}totalacceptcount'.format(namespace)).text)
+                except:
+                    pass
+
+                # <totalrejectcount>2</totalrejectcount>
+                try:
+                    etree_dict['vrf'][vrf]['route_map'][name][index]['total_reject_count'] = \
+                        int(rmp_root.find('{}totalrejectcount'.format(namespace)).text)
+                except:
+                    pass
+
+
+                # TABLE_cmd table
+                command = rmp_root.find('{}TABLE_cmd'.format(namespace))
+
+                if not command:
+                    continue
+
+                # -----   loop command  -----
+                for command_root in command.findall('{}ROW_cmd'.format(namespace)):
+                    try:
+                        cmd_str = command_root.find('{}command'.format(namespace)).text.strip()
+                        cmd_str = cmd_str.replace('&gt;', '>')
+                    except:
+                        continue
+
+                    if 'command' not in etree_dict['vrf'][vrf]['route_map'][name][index]:
+                        etree_dict['vrf'][vrf]['route_map'][name][index]['command'] = {}
+
+                    # command
+                    etree_dict['vrf'][vrf]['route_map'][name][index]\
+                        ['command']['command'] = cmd_str
+
+                    # <comparecount>2</comparecount>
+                    try:
+                        etree_dict['vrf'][vrf]['route_map'][name][index]\
+                            ['command']['compare_count'] = \
+                                int(command_root.find('{}comparecount'.format(namespace)).text)
+                    except:
+                        pass
+                    
+                    # <matchcount>0</matchcount>
+                    try:
+                        etree_dict['vrf'][vrf]['route_map'][name][index]\
+                            ['command']['match_count'] = \
+                                int(command_root.find('{}matchcount'.format(namespace)).text)
+                    except:
+                        pass
+        return etree_dict
+
+
+# ================================================================================
+# 'show bgp vrf <vrf> <address_family> policy statistics redistribute'
+# 'show bgp <address_family> policy statistics redistribute'
+# ================================================================================
+class ShowBgpPolicyStatisticsRedistribute(ShowBgpPolicyStatistics):
+    
+    def cli(self, address_family, vrf=''):
+        if vrf:
+            cmd = 'show bgp vrf {vrf} {af} policy statistics redistribute'\
+                  .format(vrf=vrf, af=address_family)
+        else:
+            cmd = 'show bgp {af} policy statistics redistribute'\
+                  .format(af=address_family)
+        return super().cli(cmd)
+
+    def xml(self, address_family, vrf=''):
+        if vrf:
+            cmd = 'show bgp vrf {vrf} {af} policy statistics redistribute'\
+                  .format(vrf=vrf, af=address_family)
+        else:
+            cmd = 'show bgp {af} policy statistics redistribute'\
+                  .format(af=address_family)
+        return super().xml(cmd)
+
+
+# ================================================================================
+# 'show bgp vrf <vrf> <address_family> policy statistics neighbor <xxx>'
+# 'show bgp <address_family> policy statistics neighbor <xxx>'
+# ================================================================================
+class ShowBgpPolicyStatisticsNeighbor(ShowBgpPolicyStatistics):
+    
+    def cli(self, address_family, neighbor, vrf=''):
+        if vrf:
+            cmd = 'show bgp vrf {vrf} {af} policy statistics neighbor {nei}'\
+                  .format(vrf=vrf, af=address_family, nei=neighbor)
+        else:
+            cmd = 'show bgp {af} policy statistics neighbor {nei}'\
+                  .format(af=address_family, nei=neighbor)
+        return super().cli(cmd)
+
+    def xml(self, address_family, neighbor, vrf=''):
+        if vrf:
+            cmd = 'show bgp vrf {vrf} {af} policy statistics neighbor {nei}'\
+                  .format(vrf=vrf, af=address_family, nei=neighbor)
+        else:
+            cmd = 'show bgp {af} policy statistics neighbor {nei}'\
+                  .format(af=address_family, nei=neighbor)
+        return super().xml(cmd)
+
+
+# ================================================================================
+# 'show bgp vrf <vrf> <address_family> policy statistics dampening'
+# 'show bgp <address_family> policy statistics dampening'
+# ================================================================================
+class ShowBgpPolicyStatisticsDampening(ShowBgpPolicyStatistics):
+    
+    def cli(self, address_family, vrf=''):
+        if vrf:
+            cmd = 'show bgp vrf {vrf} {af} policy statistics dampening'\
+                  .format(vrf=vrf, af=address_family)
+        else:
+            cmd = 'show bgp {af} policy statistics dampening'\
+                  .format(af=address_family)
+        return super().cli(cmd)
+
+    def xml(self, address_family, vrf=''):
+        if vrf:
+            cmd = 'show bgp vrf {vrf} {af} policy statistics dampening'\
+                  .format(vrf=vrf, af=address_family)
+        else:
+            cmd = 'show bgp {af} policy statistics dampening'\
+                  .format(af=address_family)
+        return super().xml(cmd)
 
 # vim: ft=python et sw=4

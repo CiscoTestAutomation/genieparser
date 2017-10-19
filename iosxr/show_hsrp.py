@@ -31,39 +31,38 @@ def regexp(expression):
 
 class ShowHsrpSummarySchema(MetaParser):
 
-    schema = {'hsrp_summary':
-                    {'address_family':
-                        {Any():
-                            {'state':
-                                {Any():
-                                    {'sessions': int,
-                                     'slaves': int,
-                                     'total': int,
-                                     },
-                                 },
-                             'intf_total': int,
-                             'intf_up': int,
-                             'intf_down': int,
-                             'vritual_addresses_total': int,
-                             'virtual_addresses_active': int,
-                             'virtual_addresses_inactive': int,
-                             },
-                         },
-                     'num_tracked_objects': int,
-                     'tracked_objects_up': int,
-                     'tracked_objects_down': int,
-                     'num_bfd_sessions': int,
-                     'bfd_sessions_up': int,
-                     'bfd_sessions_down': int,
-                     'bfd_sessions_inactive': int,
-                     },
-             }
-
+    schema = \
+                {'address_family': {
+                    Any(): {
+                        'state': {
+                            Any(): {
+                                'sessions': int,
+                                'slaves': int,
+                                'total': int,
+                            },
+                        },
+                        'intf_total': int,
+                        'intf_up': int,
+                        'intf_down': int,
+                        'vritual_addresses_total': int,
+                        'virtual_addresses_active': int,
+                        'virtual_addresses_inactive': int,
+                        },
+                    },
+                    'num_tracked_objects': int,
+                    'tracked_objects_up': int,
+                    'tracked_objects_down': int,
+                    'num_bfd_sessions': int,
+                    'bfd_sessions_up': int,
+                    'bfd_sessions_down': int,
+                    'bfd_sessions_inactive': int,
+                }
+             
 
 class ShowHsrpSummary(ShowHsrpSummarySchema):
 
     def cli(self):
-        cmd = 'show hsrp summary'.format()
+        cmd = 'show hsrp summary'
         out = self.device.execute(cmd)
         
         # Init vars
@@ -81,16 +80,15 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
                              ' +(?P<v6_slaves>[0-9]+) +(?P<v6_total>[0-9]+)$')
             m = p1.match(line)
             if m:
-                if 'hsrp_summary' not in hsrp_summary_dict:
-                    hsrp_summary_dict['hsrp_summary'] = {}
-                    hsrp_summary_dict['hsrp_summary']['address_family'] = {}
-                    hsrp_summary_dict['hsrp_summary']['address_family']\
+                if 'address_family' not in hsrp_summary_dict:
+                    hsrp_summary_dict['address_family'] = {}
+                    hsrp_summary_dict['address_family']\
                         ['ipv4'] = {}
-                    ipv4 = hsrp_summary_dict['hsrp_summary']['address_family']\
+                    ipv4 = hsrp_summary_dict['address_family']\
                         ['ipv4']
-                    hsrp_summary_dict['hsrp_summary']['address_family']\
+                    hsrp_summary_dict['address_family']\
                         ['ipv6'] = {}
-                    ipv6 = hsrp_summary_dict['hsrp_summary']['address_family']\
+                    ipv6 = hsrp_summary_dict['address_family']\
                         ['ipv6']
                     ipv4['state'] = {}
                     ipv6['state'] = {}
@@ -180,11 +178,11 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
                              ' +(?P<tracked_objects_down>[0-9]+) +down\)$')
             m = p6.match(line)
             if m:
-                hsrp_summary_dict['hsrp_summary']['num_tracked_objects'] = \
+                hsrp_summary_dict['num_tracked_objects'] = \
                     int(m.groupdict()['num_tracked_objects'])
-                hsrp_summary_dict['hsrp_summary']['tracked_objects_up'] = \
+                hsrp_summary_dict['tracked_objects_up'] = \
                     int(m.groupdict()['tracked_objects_up'])
-                hsrp_summary_dict['hsrp_summary']['tracked_objects_down'] = \
+                hsrp_summary_dict['tracked_objects_down'] = \
                     int(m.groupdict()['tracked_objects_down'])
                 continue
 
@@ -195,13 +193,13 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
                              ' +(?P<bfd_sessions_inactive>[0-9]+) +inactive\)$')
             m = p7.match(line)
             if m:
-                hsrp_summary_dict['hsrp_summary']['num_bfd_sessions'] = \
+                hsrp_summary_dict['num_bfd_sessions'] = \
                     int(m.groupdict()['num_bfd_sessions'])
-                hsrp_summary_dict['hsrp_summary']['bfd_sessions_up'] = \
+                hsrp_summary_dict['bfd_sessions_up'] = \
                     int(m.groupdict()['bfd_sessions_up'])
-                hsrp_summary_dict['hsrp_summary']['bfd_sessions_down'] = \
+                hsrp_summary_dict['bfd_sessions_down'] = \
                     int(m.groupdict()['bfd_sessions_down'])
-                hsrp_summary_dict['hsrp_summary']['bfd_sessions_inactive'] = \
+                hsrp_summary_dict['bfd_sessions_inactive'] = \
                     int(m.groupdict()['bfd_sessions_inactive'])
                 continue
 
@@ -213,60 +211,176 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
 # ======================================
 
 class ShowHsrpDetailSchema(MetaParser):
-    
-    schema = {'hsrp_detail':
-                    {'group':
-                        {Any():
-                            {'interface':
-                                {Any():
-                                    {'address_family':
-                                        {Any():
-                                             {'version': int,
-                                             Optional('local_state'): str,
-                                             Optional('priority'): int,
-                                             Optional('preempt'): bool,
-                                             Optional('preempt_delay'): int,
-                                             'hellotime': int,
-                                             'holdtime': int,
-                                             Optional('config_hellotime'): int,
-                                             Optional('config_holdtime'): int,
-                                             Optional('active_priority'): int,
-                                             Optional('standby_priority'): int,
-                                             Optional('active_expire'): str,
-                                             Optional('standby_expire'): str,
-                                             'min_delay': int,
-                                             'reload_delay': int,
-                                             'ip_address': str,
-                                             'active_router': str,
-                                             'standby_router': str,
-                                             'standby_virtual_mac_addr': str,
-                                             'standby_state': str,
-                                             Optional('authentication_text'): str,
-                                             'num_state_changes': int,
-                                             'last_state_change': str,
-                                             'last_coup_sent': str,
-                                             'last_coup_received': str,
-                                             'last_resign_sent': str,
-                                             'last_resign_received': str,
-                                             Optional('track_objects'):
-                                                {Optional('num_tracked_objects'): int,
-                                                 Optional('num_tracked_objects_up'): int,
-                                                 Any():
-                                                        {Optional('priority_decrement'): int},
-                                                 },
-                                            },
-                                        },
-                                    }
-                                 },
-                             },
-                         },
-                     },
+
+    schema = {
+        Any(): {
+            'interface': str,
+            Optional('bfd'): {
+                'enabled': bool,
+                'detection_multiplier': int,
+                'interval': int,
+            },            Optional('use_bia'): bool,
+            Optional('delay'): {
+                'minimum_delay': int,
+                'reload_delay': int,
+            },
+            'redirects_disable': bool,
+            'address_family': {
+                Any(): {
+                    'version': {
+                        Any(): {
+                            'groups': {
+                                Any(): {
+                                    Optional('bfd'): {
+                                        'address': str,
+                                        'interface_name': str,
+                                        Optional('state'): str,
+                                    },
+                                    Optional('tracked_interfaces'): {
+                                        Any(): {
+                                            'interface_name': str,
+                                            'priority_decrement': int,
+                                        }
+                                    },
+                                    Optional('tracked_objects'): {
+                                        'num_tracked_objects': int,
+                                        'num_tracked_objects_up': int,
+                                        Any(): {
+                                            'object_name': str,
+                                            'priority_decrement': int,
+                                        }
+                                    },
+                                    'timers': {
+                                        'hello_msec_flag': bool,
+                                        'hello_msec': int,
+                                        Optional('hello_sec'): int,
+                                        'hold_msec_flag': bool,
+                                        'hold_msec': int,
+                                        Optional('hold_sec'): int,
+                                        Optional('cfgd_hello_msec'): int,
+                                        Optional('cfgd_hold_msec'): int,
+                                    },
+                                    Optional('primary_ipv4_address'): {
+                                        'address': str,
+                                    },
+                                    Optional('authentication'): str,
+                                    Optional('link_local_ipv6_address'): {
+                                        Optional('address'): str,
+                                        Optional('auto_configure'): str,
+                                    },
+                                    Optional('statistics'): {
+                                        Optional('last_resign_received'): str,
+                                        Optional('last_resign_sent'): str,
+                                        Optional('last_coup_received'): str,
+                                        Optional('last_coup_sent'): str,
+                                        Optional('num_state_changes'): int,
+                                        Optional('last_state_change'): str,
+                                    },
+                                    'priority': int,
+                                    Optional('preempt'): bool,
+                                    Optional('preempt_delay'): int,
+                                    Optional('session_name'): str,
+                                    Optional('num_of_slaves'): int,
+                                    Optional('virtual_mac_address'): str,
+                                    'group_number': int,
+                                    Optional('active_router'): str,
+                                    Optional('standby_router'): str,
+                                    Optional('active_ip_address'): str,
+                                    Optional('active_ipv6_address'): str,
+                                    Optional('active_mac_address'): str,
+                                    Optional('standby_ip_address'): str,
+                                    Optional('standby_ipv6_address'): str,
+                                    Optional('standby_mac_address'): str,
+                                    Optional('active_priority'): int,
+                                    Optional('standby_priority'): int,
+                                    Optional('active_state'): str,
+                                    Optional('standby_state'): str,
+                                    Optional('active_expire'): str,
+                                    Optional('standby_expire'): str,
+                                    'hsrp_router_state': str,
+                                }
+                            },
+                            Optional('slave_groups'): {
+                                Any(): {
+                                    'follow': str,
+                                    Optional('bfd'): {
+                                        'address': str,
+                                        'interface_name': str,
+                                    },
+                                    Optional('tracked_interfaces'): {
+                                        Any(): {
+                                            'interface_name': str,
+                                            'priority_decrement': int,
+                                        }
+                                    },
+                                    Optional('tracked_objects'): {
+                                        'num_tracked_objects': int,
+                                        'num_tracked_objects_up': int,
+                                        Any(): {
+                                            'object_name': str,
+                                            'priority_decrement': int,
+                                        }
+                                    },
+                                    Optional('timers'): {
+                                        'hello_msec_flag': bool,
+                                        'hello_msec': int,
+                                        Optional('hello_sec'): int,
+                                        'hold_msec_flag': bool,
+                                        'hold_msec': int,
+                                        Optional('hold_sec'): int,
+                                        Optional('cfgd_hello_msec'): int,
+                                        Optional('cfgd_hold_msec'): int,
+                                    },
+                                    Optional('primary_ipv4_address'): {
+                                        'address': str,
+                                    },
+                                    Optional('authentication'): str,
+                                    Optional('link_local_ipv6_address'): {
+                                        Optional('address'): str,
+                                        Optional('auto_configure'): str,
+                                    },
+                                    Optional('statistics'): {
+                                        Optional('last_resign_received'): str,
+                                        Optional('last_resign_sent'): str,
+                                        Optional('last_coup_received'): str,
+                                        Optional('last_coup_sent'): str,
+                                        Optional('num_state_changes'): int,
+                                        Optional('last_state_change'): str,
+                                    },
+                                    'priority': int,
+                                    Optional('preempt'): bool,
+                                    Optional('preempt_delay'): int,
+                                    Optional('session_name'): str,
+                                    Optional('virtual_mac_address'): str,
+                                    'group_number': int,
+                                    Optional('active_router'): str,
+                                    Optional('standby_router'): str,
+                                    Optional('active_ip_address'): str,
+                                    Optional('active_ipv6_address'): str,
+                                    Optional('active_mac_address'): str,
+                                    Optional('standby_ip_address'): str,
+                                    Optional('standby_ipv6_address'): str,
+                                    Optional('active_priority'): int,
+                                    Optional('standby_priority'): int,
+                                    Optional('active_state'): str,
+                                    Optional('standby_state'): str,
+                                    Optional('active_expire'): str,
+                                    Optional('standby_expire'): str,
+                                    'hsrp_router_state': str,
+                                }
+                            }
+                        }
+                    }
                 }
+            }
+        }        
+    }
+
 
 class ShowHsrpDetail(ShowHsrpDetailSchema):
 
     def cli(self):
-        cmd = 'show hsrp detail'.format()
+        cmd = 'show hsrp detail'
         out = self.device.execute(cmd)
         
         # Init vars
@@ -276,105 +390,185 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
             line = line.rstrip()
 
             # GigabitEthernet0/0/0/1 - IPv4 Group 5 (version 1)
-            p1 = re.compile(r'\s*(?P<intf>[a-zA-Z0-9\/\.]+)'
-                             ' +\- +(?P<af>[a-zA-Z0-9]+)'
-                             ' +Group +(?P<group>[0-9]+)'
+            p1 = re.compile(r'\s*(?P<interface>[a-zA-Z0-9\/\.]+)'
+                             ' +\- +(?P<address_family>[a-zA-Z0-9]+)'
+                             ' +Group +(?P<group_number>[0-9]+)'
                              ' +\(version +(?P<version>[0-9]+)\)$')
             m = p1.match(line)
             if m:
-                if 'hsrp_detail' not in hsrp_detail_dict:
-                    hsrp_detail_dict['hsrp_detail'] = {}
-                    hsrp_detail_dict['hsrp_detail']['group'] = {}
-                
-                group = int(m.groupdict()['group'])
-                interface = m.groupdict()['intf']
+                interface = m.groupdict()['interface']
+                address_family = m.groupdict()['address_family'].lower()
+                if m.groupdict()['version']:
+                    version = int(m.groupdict()['version'])                    
+                if m.groupdict()['group_number']:
+                    group_number = int(m.groupdict()['group_number'])
 
-                if group not in hsrp_detail_dict['hsrp_detail']['group']:
-                    hsrp_detail_dict['hsrp_detail']['group'][group] = {}
-                    hsrp_detail_dict['hsrp_detail']['group'][group]\
-                        ['interface'] = {}
-                
-                if interface not in hsrp_detail_dict['hsrp_detail']['group']\
-                        [group]['interface']:
-                    hsrp_detail_dict['hsrp_detail']['group'][group]\
-                        ['interface'][interface] = {}
+                if interface not in hsrp_detail_dict:
+                    hsrp_detail_dict[interface] = {}
+                    hsrp_detail_dict[interface]['interface'] = interface
+                if 'address_family' not in hsrp_detail_dict[interface]:
+                    hsrp_detail_dict[interface]['address_family'] = {}
+                if address_family not in hsrp_detail_dict[interface]\
+                    ['address_family']:
+                    hsrp_detail_dict[interface]['address_family']\
+                        [address_family] = {}
+                if 'version' not in hsrp_detail_dict[interface]\
+                    ['address_family'][address_family]:
+                    hsrp_detail_dict[interface]['address_family']\
+                        [address_family]['version'] = {}
+                if version not in hsrp_detail_dict[interface]\
+                    ['address_family'][address_family]['version']:
+                    hsrp_detail_dict[interface]['address_family']\
+                        [address_family]['version'][version] = {}
+                if 'groups' not in hsrp_detail_dict[interface]\
+                    ['address_family'][address_family]['version'][version]:
+                    hsrp_detail_dict[interface]['address_family']\
+                        [address_family]['version'][version]['groups'] = {}
+                if group_number not in hsrp_detail_dict[interface]\
+                    ['address_family'][address_family]['version'][version]\
+                    ['groups']:
+                    hsrp_detail_dict[interface]['address_family']\
+                        [address_family]['version'][version]['groups']\
+                        [group_number] = {}
+                    group_key = {}
+                    group_key['group_number'] = group_number
+                continue
 
-                if 'address_family' not in hsrp_detail_dict['hsrp_detail']\
-                    ['group'][group]['interface'][interface]:
-                    hsrp_detail_dict['hsrp_detail']['group'][group]['interface']\
-                        [interface]['address_family'] = {}
-
-                af = m.groupdict()['af'].lower()
-
-                if af not in hsrp_detail_dict['hsrp_detail']\
-                    ['group'][group]['interface'][interface]['address_family']:
-                    hsrp_detail_dict['hsrp_detail']['group'][group]\
-                        ['interface'][interface]['address_family'][af] = {}
-
-                    intf_key = hsrp_detail_dict['hsrp_detail']['group'][group]\
-                        ['interface'][interface]['address_family'][af]
-                        
-                    intf_key['version'] = int(m.groupdict()['version'])
-                    continue
-
-            # Local state is Active, priority 110, may preempt
-            p2 = re.compile(r'\s*Local +state +is +(?P<local_state>[a-zA-Z]+),'
-                             ' +priority +(?P<priority>[0-9]+),'
-                             ' +(?P<preempt>[a-zA-Z]+) preempt$')
+            # Label group10 (1 slaves)
+            p2 = re.compile(r'\s*[lL]abel +(?P<session_name>\S+) +'
+                '\((?P<num_of_slaves>\d+) slaves\)')
             m = p2.match(line)
             if m:
-                intf_key['local_state'] = m.groupdict()['local_state'].lower()
-                priority = int(m.groupdict()['priority'])
-                intf_key['priority'] = priority
+                group_key['session_name'] = m.groupdict()['session_name']
+                group_key['num_of_slaves'] = int(m.groupdict()['num_of_slaves'])
+                continue            
+
+            # Slave to group10
+            p2 = re.compile(r'\s*[sS]lave +to +(?P<follow>\S+)$')
+            m = p2.match(line)
+            if m:
+                group_key['follow'] = m.groupdict()['follow']
+                continue
+
+            # Local state is Active, priority 110, may preempt
+            # Local state is Init, priority 100, use bia
+            # Local state is Init, priority 100, may preempt, use bia
+            # Local state is Init
+            p2 = re.compile(r'\s*Local +state +is +(?P<hsrp_router_state>'
+                '[a-zA-Z]+)(, +priority +(?P<priority>[0-9]+))?(?P<preempt>, '
+                'may preempt)?(?P<use_bia>, use bia)?$')
+            m = p2.match(line)
+            if m:
+                group_key['hsrp_router_state'] \
+                    = m.groupdict()['hsrp_router_state'].lower()
+                if m.groupdict()['priority']:
+                    priority = int(m.groupdict()['priority'])
+                group_key['priority'] = priority
                 if m.groupdict()['preempt'] is not None:
-                    intf_key['preempt'] = True
-                    continue
+                    group_key['preempt'] = True
+                if m.groupdict()['use_bia'] is not None:
+                    hsrp_detail_dict[interface]['use_bia'] = True
+                else:
+                    hsrp_detail_dict[interface]['use_bia'] = False
+                continue
 
             # Preemption delay for at least 10 secs
             p3 = re.compile(r'\s*Preemption +delay +for +at +least'
                              ' +(?P<preempt_delay>[0-9]+) +secs$')
             m = p3.match(line)
             if m:
-                intf_key['preempt_delay'] = int(m.groupdict()['preempt_delay'])
+                group_key['preempt_delay'] = int(m.groupdict()['preempt_delay'])
                 continue
 
             # Hellotime 1000 msec holdtime 3000 msec
-            p4 = re.compile(r'\s*Hellotime +(?P<hellotime>[0-9]+) +msec'
-                             ' +holdtime +(?P<holdtime>[0-9]+) +msec$')
+            p4 = re.compile(r'\s*Hellotime +(?P<hello_msec>[0-9]+) +msec'
+                             ' +holdtime +(?P<hold_msec>[0-9]+) +msec$')
             m = p4.match(line)
             if m:
-                intf_key['hellotime'] = int(m.groupdict()['hellotime'])
-                intf_key['holdtime'] = int(m.groupdict()['holdtime'])
+                if 'timers' not in group_key:
+                    group_key['timers'] = {}
+                group_key['timers']['hello_msec'] \
+                    = int(m.groupdict()['hello_msec'])
+                group_key['timers']['hold_msec'] \
+                    = int(m.groupdict()['hold_msec'])
+                group_key['timers']['hello_msec_flag'] = True
+                group_key['timers']['hold_msec_flag'] = True
                 continue
 
             # Configured hellotime 1000 msec holdtime 3000 msec
             p5 = re.compile(r'\s*Configured +hellotime'
-                             ' +(?P<config_hellotime>[0-9]+) msec +holdtime'
-                             ' +(?P<config_holdtime>[0-9]+) +msec$')
+                             ' +(?P<cfgd_hello_msec>[0-9]+) msec +holdtime'
+                             ' +(?P<cfgd_hold_msec>[0-9]+) +msec$')
             m = p5.match(line)
             if m:
-                intf_key['config_hellotime'] = \
-                    int(m.groupdict()['config_hellotime'])
-                intf_key['config_holdtime'] = \
-                    int(m.groupdict()['config_holdtime'])
+                if 'timers' not in group_key:
+                    group_key['timers'] = {}
+                group_key['timers']['cfgd_hello_msec'] = \
+                    int(m.groupdict()['cfgd_hello_msec'])
+                group_key['timers']['cfgd_hold_msec'] = \
+                    int(m.groupdict()['cfgd_hold_msec'])
                 continue
 
             # Minimum delay 5 sec, reload delay 10 sec
-            p6 = re.compile(r'\s*Minimum +delay +(?P<min_delay>[0-9]+) +sec,'
-                             ' +reload +delay +(?P<reload_delay>[0-9]+) +sec$')
+            p6 = re.compile(r'\s*Minimum +delay +(?P<minimum_delay>[0-9]+)'
+                ' +sec, +reload +delay +(?P<reload_delay>[0-9]+) +sec$')
             m = p6.match(line)
             if m:
-                intf_key['min_delay'] = int(m.groupdict()['min_delay'])
-                intf_key['reload_delay'] = int(m.groupdict()['reload_delay'])
+                if 'delay' not in hsrp_detail_dict[interface]:
+                    hsrp_detail_dict[interface]['delay'] = {}
+                hsrp_detail_dict[interface]['delay']['minimum_delay'] \
+                    = int(m.groupdict()['minimum_delay'])
+                hsrp_detail_dict[interface]['delay']['reload_delay'] \
+                    = int(m.groupdict()['reload_delay'])
+                continue
+
+            # BFD enabled (GigabitEthernet0/0/0/1, 10.1.1.1): state inactive, interval 15 ms multiplier 3
+            # BFD enabled (Unknown, 0.0.0.0): state inactive, interval 0 ms multiplier 0
+            p7 = re.compile(r'\s*BFD enabled \((?P<bfd_interface_name>\S+), '
+                '(?P<bfd_address>\S+)\): state (?P<bfd_state>\S+), interval '
+                '(?P<bfd_interval>\d+) ms multiplier '
+                '(?P<bfd_detection_multiplier>\d+)$')
+            m = p7.match(line)
+            if m:
+                if 'bfd' not in hsrp_detail_dict[interface]:
+                    hsrp_detail_dict[interface]['bfd'] = {}
+                hsrp_detail_dict[interface]['bfd']['enabled'] = True
+                if m.groupdict()['bfd_interface_name'] != 'Unknown':
+                    hsrp_detail_dict[interface]['bfd']['detection_multiplier'] \
+                        = int(m.groupdict()['bfd_detection_multiplier'])
+                    hsrp_detail_dict[interface]['bfd']['interval'] \
+                        = int(m.groupdict()['bfd_interval'])
+                    if 'bfd' not in group_key:
+                        group_key['bfd'] = {}
+                    group_key['bfd']['address'] = m.groupdict()['bfd_address']
+                    group_key['bfd']['interface_name'] \
+                        = m.groupdict()['bfd_interface_name']
+                    group_key['bfd']['state'] = m.groupdict()['bfd_state']
                 continue
 
             # Hot standby IP address is 192.168.1.254 configured
             # Hot standby IP address is fe80::205:73ff:fea0:1 configured
             p7 = re.compile(r'\s*Hot +standby +IP +address +is'
-                             ' +(?P<ip_address>[\w\:\.]+) +configured$')
+                             ' +(?P<vip>[\w\:\.]+) +configured$')
             m = p7.match(line)
             if m:
-                intf_key['ip_address'] = m.groupdict()['ip_address']
+                vip = m.groupdict()['vip'].lower()
+                if ':' not in vip:
+                    if 'primary_ipv4_address' not in group_key:
+                        group_key['primary_ipv4_address'] = {}
+                    group_key['primary_ipv4_address']['address'] = vip
+                else:
+                    if 'fe80' in vip:
+                        if 'link_local_ipv6_address' not in group_key:
+                            group_key['link_local_ipv6_address'] = {}
+                        group_key['link_local_ipv6_address']['address'] = vip
+                    else:
+                        if 'global_ipv6_addresses' not in group_key:
+                            group_key['global_ipv6_addresses'] = {}
+                        if vip not in group_key['global_ipv6_addresses']:
+                            group_key['global_ipv6_addresses'][vip] = {}
+                        group_key['global_ipv6_addresses'][vip]['address'] = vip
+                
                 continue
 
             # Active router is 
@@ -383,7 +577,8 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
             p8 = re.compile(r'\s*Active +router +is'
                              ' +(?P<active_router>([\w\:\.]+)(, *[\w\.\:]+)?)'
                              '(, *priority (?P<priority>\d+))?'
-                             '( *(expired|expires +in +(?P<expire>[\w\:\.]+)))?$')
+                             '( *(expired|expires +in +'
+                             '(?P<expire>[\w\:\.]+)))?$')
             m = p8.match(line)
             if m:
                 role = m.groupdict()['active_router']
@@ -393,12 +588,17 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                     except:
                         pass
                     else:
-                        intf_key['active_priority'] = int(priority)
+                        group_key['active_priority'] = int(priority)
 
-                intf_key['active_router'] = role
+                group_key['active_router'] = role
+                if role != 'unknown' or role != 'local':
+                    if ':' not in role:
+                        group_key['active_ip_address'] = role
+                    else:
+                        group_key['active_ipv6_address'] = role
                     
                 if m.groupdict()['expire']:
-                    intf_key['active_expire'] = m.groupdict()['expire']
+                    group_key['active_expire'] = m.groupdict()['expire']
                 continue
 
             # Standby router is unknown expired
@@ -406,7 +606,8 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
             # Standby router is fe80::5000:1cff:fe0a:1, 5200.1c0a.0001 expires in 00:00:02
             p9 = re.compile(r'\s*Standby +router +is'
                              ' +(?P<standby_router>([\w\:\.]+)(, *[\w\.\:]+)?)'
-                             '( *(expired|expires +in +(?P<expire>[\w\:\.]+)))?$')
+                             '( *(expired|expires +in +(?P<expire>'
+                             '[\w\:\.]+)))?$')
             m = p9.match(line)
             if m:
                 role = m.groupdict()['standby_router']
@@ -416,32 +617,57 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                     except:
                         pass
                     else:
-                        intf_key['standby_priority'] = int(priority)
+                        group_key['standby_priority'] = int(priority)
 
-                intf_key['standby_router'] = role
-                    
+                group_key['standby_router'] = role
+                if role != 'unknown' or role != 'local':
+                    if ':' not in role:
+                        group_key['standby_ip_address'] = role
+                    else:
+                        group_key['standby_ipv6_address'] = role
+
                 if m.groupdict()['expire']:
-                    intf_key['standby_expire'] = m.groupdict()['expire']
+                    group_key['standby_expire'] = m.groupdict()['expire']
                 continue
 
             # Standby virtual mac address is 0000.0c07.ac05, state is active
             p10 = re.compile(r'\s*Standby +virtual +mac +address +is'
-                              ' +(?P<standby_virtual_mac_addr>[a-zA-Z0-9\.]+),'
+                              ' +(?P<virtual_mac_address>[a-zA-Z0-9\.]+),'
                               ' +state +is +(?P<standby_state>[a-zA-Z ]+)$')
             m = p10.match(line)
             if m:
-                intf_key['standby_virtual_mac_addr'] = \
-                    m.groupdict()['standby_virtual_mac_addr']
-                intf_key['standby_state'] = m.groupdict()['standby_state']
+                group_key['virtual_mac_address'] = \
+                    m.groupdict()['virtual_mac_address']
+                group_key['standby_state'] = m.groupdict()['standby_state']
+
+                # check if group belongs to slave_groups
+                if 'follow' in group_key:
+                    if 'slave_groups' not in hsrp_detail_dict[interface]\
+                        ['address_family'][address_family]['version'][version]:
+                        hsrp_detail_dict[interface]['address_family']\
+                            [address_family]['version'][version]\
+                            ['slave_groups'] = {}
+                    if group_number not in hsrp_detail_dict[interface]\
+                        ['address_family'][address_family]['version']\
+                        [version]['slave_groups']:
+                        hsrp_detail_dict[interface]['address_family']\
+                            [address_family]['version'][version]\
+                            ['slave_groups'][group_number] = {}
+                    hsrp_detail_dict[interface]['address_family']\
+                        [address_family]['version'][version]['slave_groups']\
+                        [group_number] = group_key
+                    del hsrp_detail_dict[interface]['address_family']\
+                        [address_family]['version'][version]['groups']\
+                        [group_number]
                 continue
 
             # Authentication text, string "cisco123"
             p11 = re.compile(r'\s*Authentication +text, +string'
-                              ' +\"(?P<authentication_text>[a-zA-Z0-9]+)\"$')
+                              ' +\"(?P<authentication>[a-zA-Z0-9]+)\"$')
             m = p11.match(line)
             if m:
-                intf_key['authentication_text'] = \
-                    m.groupdict()['authentication_text']
+                group_key['authentication'] = \
+                    m.groupdict()['authentication']
                 continue
 
             # 4 state changes, last state change 2d03h
@@ -451,10 +677,19 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                               ' +(?P<last_state_change>[a-zA-Z0-9\:\.]+)$')
             m = p12.match(line)
             if m:
-                intf_key['num_state_changes'] = \
+                if 'statistics' not in group_key:
+                    group_key['statistics'] = {}
+                group_key['statistics']['num_state_changes'] = \
                     int(m.groupdict()['num_state_changes'])
-                intf_key['last_state_change'] = \
+                group_key['statistics']['last_state_change'] = \
                     m.groupdict()['last_state_change']
+                continue
+
+            # Standby ICMP redirects disabled
+            p13 = re.compile(r'\s*Standby ICMP redirects disabled')
+            m = p13.match(line)
+            if m:
+                hsrp_detail_dict[interface]['redirects_disable'] = True
                 continue
 
             # Last coup sent:       Never
@@ -463,7 +698,12 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                               ' +(?P<last_coup_sent>[\w\s\:\.]+)$')
             m = p13.match(line)
             if m:
-                intf_key['last_coup_sent'] = m.groupdict()['last_coup_sent']
+                if 'redirects_disable' not in hsrp_detail_dict[interface]:
+                    hsrp_detail_dict[interface]['redirects_disable'] = False
+                if 'statistics' not in group_key:
+                    group_key['statistics'] = {}
+                group_key['statistics']['last_coup_sent'] \
+                    = m.groupdict()['last_coup_sent']
                 continue
 
             # Last coup received:   Never
@@ -471,7 +711,9 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                               ' +(?P<last_coup_received>[\w\s\:\.]+)$')
             m = p14.match(line)
             if m:
-                intf_key['last_coup_received'] = \
+                if 'statistics' not in group_key:
+                    group_key['statistics'] = {}
+                group_key['statistics']['last_coup_received'] = \
                     m.groupdict()['last_coup_received']
                 continue
 
@@ -480,7 +722,10 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                               ' +(?P<last_resign_sent>[\w\s\:\.]+)$')
             m = p15.match(line)
             if m:
-                intf_key['last_resign_sent'] = m.groupdict()['last_resign_sent']
+                if 'statistics' not in group_key:
+                    group_key['statistics'] = {}
+                group_key['statistics']['last_resign_sent'] \
+                    = m.groupdict()['last_resign_sent']
                 continue
 
             # Last resign received: Never
@@ -489,8 +734,12 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                               ' +(?P<last_resign_received>[\w\s\:\.]+)$')
             m = p16.match(line)
             if m:
-                intf_key['last_resign_received'] = \
+                if 'statistics' not in group_key:
+                    group_key['statistics'] = {}
+                group_key['statistics']['last_resign_received'] = \
                     m.groupdict()['last_resign_received']
+                hsrp_detail_dict[interface]['address_family'][address_family]\
+                    ['version'][version]['groups'][group_number] = group_key
                 continue
 
             # Tracking states for 1 object, 1 up:
@@ -500,29 +749,52 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                               ' +(?P<num_tracked_objects_up>[0-9]+) up:$')
             m = p17.match(line)
             if m:
+                if 'tracked_objects' not in group_key:
+                    group_key['tracked_objects'] = {}
                 track_found = True
-                intf_key['track_objects'] = {}
-                intf_key['track_objects']['num_tracked_objects'] = \
+                group_key['tracked_objects']['num_tracked_objects'] = \
                     int(m.groupdict()['num_tracked_objects'])
-                intf_key['track_objects']['num_tracked_objects_up'] = \
+                group_key['tracked_objects']['num_tracked_objects_up'] = \
                     int(m.groupdict()['num_tracked_objects_up'])
+                hsrp_detail_dict[interface]['address_family'][address_family]\
+                    ['version'][version]['groups'][group_number] = group_key
                 continue
 
             # Up   banana               Priority decrement: 20
             # Down   apple               Priority decrement: 50
-            p18 = re.compile(r'\s*(Up|Down)'
-                              ' +(?P<track_object_name>[a-zA-Z0-9]+) +Priority'
-                              ' +decrement: +(?P<priority_decrement>[0-9]+)$')
+            # Up   GigabitEthernet0/0/0/1 Priority decrement: 123
+            p18 = re.compile(r'\s*(?P<tracked_status>\S+) +'
+                '((?P<tracked_object>[a-zA-Z0-9]+)|'
+                '(?P<tracked_interface>[a-zA-Z0-9\/\.\-]+)) +'
+                'Priority +decrement: +'
+                '(?P<tracked_object_priority_decrement>[0-9]+)$')
             m = p18.match(line)
             if m:
-                if track_found:
-                    track_object_name = m.groupdict()['track_object_name']
-                    if track_object_name not in intf_key['track_objects']:
-                        intf_key['track_objects'][track_object_name] = {}
-                        intf_key['track_objects'][track_object_name]\
-                            ['priority_decrement'] = \
-                            int(m.groupdict()['priority_decrement'])
-                        continue
+                # if track_found:
+                tracked_object = m.groupdict()['tracked_object']
+                tracked_interface = m.groupdict()['tracked_interface']
+                if tracked_object:
+                    if 'tracked_objects' not in group_key:
+                        group_key['tracked_objects'] = {}
+                    if tracked_object not in group_key:
+                        group_key['tracked_objects'][tracked_object] = {}
+                    group_key['tracked_objects'][tracked_object]\
+                        ['object_name'] = tracked_object
+                    group_key['tracked_objects'][tracked_object]\
+                        ['priority_decrement'] = int(m.groupdict()\
+                        ['tracked_object_priority_decrement'])
+                elif tracked_interface:
+                    if 'tracked_interfaces' not in group_key:
+                        group_key['tracked_interfaces'] = {}
+                    if tracked_interface not in group_key['tracked_interfaces']:
+                        group_key['tracked_interfaces'][tracked_interface] = {}
+                    group_key['tracked_interfaces'][tracked_interface]\
+                        ['interface_name'] = tracked_interface
+                    group_key['tracked_interfaces'][tracked_interface]\
+                        ['priority_decrement'] = int(m.groupdict()\
+                        ['tracked_object_priority_decrement']) 
+                hsrp_detail_dict[interface]['address_family'][address_family]\
+                    ['version'][version]['groups'][group_number] = group_key
 
         return hsrp_detail_dict
 

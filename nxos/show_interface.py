@@ -21,13 +21,14 @@ from metaparser.util.schemaengine import Schema, \
                                          And, \
                                          Default, \
                                          Use
+                                         
+# import parser utils
+from parser.utils.common import Common
 
 
 #############################################################################
 # Parser For Show Interface
 #############################################################################
-
-
 class ShowInterfaceSchema(MetaParser):
 
     #schema for show interface
@@ -43,7 +44,7 @@ class ShowInterfaceSchema(MetaParser):
             Optional('link_state'): str,
             Optional('phys_address'): str,
             Optional('port_speed'): str,
-            'mtu': int,
+            Optional('mtu'): int,
             'enabled': bool,
             Optional('mac_address'): str,
             Optional('auto_negotiate'): bool,
@@ -69,7 +70,7 @@ class ShowInterfaceSchema(MetaParser):
                 {Optional('port_channel_member'): bool,
                 Optional('port_channel_int'): str,
             },
-            'bandwidth': int,
+            Optional('bandwidth'): int,
             Optional('counters'):
                 {Optional('rate'):
                    {Optional('load_interval'): int,
@@ -161,7 +162,7 @@ class ShowInterface(ShowInterfaceSchema):
             # Ethernet2/1.10 is down (Administratively down)
             p1 =  re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
                               ' *(?P<enabled>(down))'
-                              '( *\((?P<link_state>[a-zA-Z\s]+)\))?$')
+                              '( *\((?P<link_state>[a-zA-Z0-9\-\s]+)\))?$')
             m = p1.match(line)
             if m:
                 interface = m.groupdict()['interface']
@@ -217,10 +218,10 @@ class ShowInterface(ShowInterfaceSchema):
                 continue
 
             # Ethernet2/2 is up
-            p1_1 =  re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
+            p1_2 =  re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
                               ' *(?P<enabled>(up))'
                               '( *\((?P<link_state>[a-zA-Z\s]+)\))?$')
-            m = p1_1.match(line)
+            m = p1_2.match(line)
             if m:
                 interface = m.groupdict()['interface']
                 enabled = m.groupdict()['enabled']
@@ -251,9 +252,10 @@ class ShowInterface(ShowInterfaceSchema):
                 continue
 
             # admin state is down, Dedicated Interface, [parent interface is Ethernet2/1]
+            # admin state is up, Dedicated Interface
             p2_1 = re.compile(r'^\s*admin *state *is (?P<oper_status>[\w]+),'
-                               ' *Dedicated *Interface, \[parent *interface *is'
-                               ' *(?P<parent_interface>[a-zA-Z0-9\/\.]+)\]$')
+                               ' *Dedicated *Interface(, \[parent *interface *is'
+                               ' *(?P<parent_interface>[a-zA-Z0-9\/\.]+)\])?$')
             m = p2_1.match(line)
             if m:
                 oper_status = m.groupdict()['oper_status']
@@ -261,8 +263,9 @@ class ShowInterface(ShowInterfaceSchema):
 
                 interface_dict[interface]\
                         ['oper_status'] = oper_status
-                interface_dict[interface]\
-                ['parent_interface'] = parent_interface
+                if parent_interface:
+                    interface_dict[interface]\
+                        ['parent_interface'] = parent_interface
                 continue
 
             # Belongs to Po1
@@ -275,7 +278,7 @@ class ShowInterface(ShowInterfaceSchema):
                 interface_dict[interface]['port_channel']\
                     ['port_channel_member'] = True
                 interface_dict[interface]['port_channel']\
-                    ['port_channel_int'] = port_channel_int
+                    ['port_channel_int'] = Common.convert_intf_name(port_channel_int)
                 continue
 
             # Hardware: Ethernet, address: 5254.00c9.d26e (bia 5254.00c9.d26e)
@@ -543,6 +546,8 @@ class ShowInterface(ShowInterfaceSchema):
                 interface_dict[interface]['ethertype'] = ethertype
                 continue
 
+            # Members in this channel: Eth1/15, Eth1/16
+            
             #EEE (efficient-ethernet) : n/a
             p17 = re.compile(r'^\s*EEE *\(efficient-ethernet\) *:'
                               ' *(?P<efficient_ethernet>[A-Za-z\/]+)$')
@@ -1142,7 +1147,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     multicast_groups.append(mgroup)
 
                 ip_interface_vrf_all_dict[interface]['multicast_groups']\
-                 = multicast_groups
+                 = sorted(multicast_groups)
                 continue
 
             #IP MTU: 1600 bytes (using link MTU)
@@ -1281,7 +1286,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
             #IP interface statistics last reset: never
             p18 = re.compile(r'^\s*IP *interface *statistics *last *reset:'
-                              ' *(?P<int_stat_last_reset>[a-z]+)')
+                              ' *(?P<int_stat_last_reset>[a-zA-Z0-9\:]+)')
             m = p18.match(line)
             if m:
                 int_stat_last_reset = m.groupdict()['int_stat_last_reset']
@@ -1713,9 +1718,10 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
                 continue
 
             #Trunking Native Mode VLAN: 1 (default)
+            # Trunking Native Mode VLAN: 200 (VLAN0200)
             p6 = re.compile(r'^\s*Trunking *Native *Mode *VLAN:'
                              ' *(?P<native_vlan>[0-9]+)'
-                             ' *\((?P<native_vlan_mode>[a-z]+)\)$')
+                             ' *\((?P<native_vlan_mode>[a-zA-Z0-9\-\_]+)\)$')
             m = p6.match(line)
             if m:
                 native_vlan = int(m.groupdict()['native_vlan'])
@@ -1930,7 +1936,8 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
                 continue
 
             #Ethernet2/1, Interface status: protocol-up/link-up/admin-up, iod: 36
-            p2 = re.compile(r'^\s*(?:(?P<interface>[a-zA-Z0-9\/]+)), Interface'
+            #port-channel2.101, Interface status: protocol-down/link-down/admin-up, iod: 71
+            p2 = re.compile(r'^\s*(?:(?P<interface>[a-zA-Z0-9\/\-\.]+)), Interface'
                              ' *status: *(?P<interface_status>[a-z\-\/]+),'
                              ' *iod: *(?P<iod>[0-9]+)$')
             m = p2.match(line)
@@ -2118,7 +2125,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
                         ipv6_multicast_groups.append(address)
 
                     ipv6_interface_dict[interface]['ipv6']['ipv6_multicast_groups']\
-                     = ipv6_multicast_groups
+                     = sorted(ipv6_multicast_groups)
                     continue
 
             #IPv6 multicast (S,G) entries joined: none
@@ -2239,16 +2246,6 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
                 continue
 
         return ipv6_interface_dict
-
-
-def regexp(expression):
-    def match(value):
-        if re.match(expression,value):
-            return value
-        else:
-            raise TypeError("Value '%s' doesnt match regex '%s'"
-                              %(value, expression))
-    return match
 
 
 class ShowIpInterfaceBriefSchema(MetaParser):

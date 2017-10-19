@@ -5,10 +5,21 @@ Example parser class
 '''
 import xmltodict
 import re
-from ats import tcl
-from ats.tcl.keyedlist import KeyedList
+
 from metaparser import MetaParser
-from metaparser.util.schemaengine import Schema, Any, Optional, Or, And, Default, Use
+from metaparser.util.schemaengine import Schema, Any, Optional, Or, And, \
+                                         Default, Use
+
+try:
+    from ats import tcl
+    from ats.tcl.keyedlist import KeyedList
+
+    def OrKeyedList(default):
+        return Or(default, KeyedList({}))
+
+except ImportError:
+    def OrKeyedList(default):
+        return default
 
 def regexp(expression):
     def match(value):
@@ -56,10 +67,10 @@ class ShowIpOspfSchema(MetaParser):
                              Optional('reference_bandwidth'): str,
                              Optional('area'):
                                  {Optional(regexp('(.*)')):
-                                     {Optional('loopback_interfaces'): Or(str, KeyedList({})),
-                                      Optional('interfaces_in_this_area'): Or(str, KeyedList({})),
+                                     {Optional('loopback_interfaces'): OrKeyedList(str),
+                                      Optional('interfaces_in_this_area'): OrKeyedList(str),
                                       Optional('default_cost'): str,
-                                      Optional('active_interfaces'): Or(str, KeyedList({}))},
+                                      Optional('active_interfaces'): OrKeyedList(str)},
                                  },
                             }
                         },
@@ -284,6 +295,7 @@ class ShowIpOspfNeighborDetailSchema(MetaParser):
                 {Any():
                      {'neighbor': str,
                       'interface_address': str,
+                      Optional('interface_id'): str,
                       'area': str,
                       'state': str,
                       'state_changes': str,
@@ -319,11 +331,13 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema, MetaParser):
         entry = None
         for line in out.splitlines():
             line = line.rstrip()
-            p1 = re.compile(r'^\s*Neighbor\s+(?P<neighbor>\S+),\s*interface\s+address\s+(?P<interface_address>\S+)(,)?(\s)?(interface-id unknown)?$')
+            p1 = re.compile(r'^\s*Neighbor\s+(?P<neighbor>\S+),\s*interface\s+address\s+(?P<interface_address>\S+)(,)?(\s)?'
+                             '(interface-id +(?P<interface_id>\w+))?$')
             m = p1.match(line)
             if m:
                 interface_address = m.groupdict()['interface_address']
                 neighbor = m.groupdict()['neighbor']
+                interface_id = m.groupdict()['interface_id']
 
             p2 = re.compile(r'^\s*In\s+the\s+area\s+(?P<area>\S+)\s+via\s+interface\s+(?P<interface>\S+)$')
             m = p2.match(line)
@@ -336,10 +350,13 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema, MetaParser):
                 ospf_neigh_dict['intf'][intf]['area'] = m.groupdict()['area']
                 ospf_neigh_dict['intf'][intf]['interface_address'] = interface_address
                 ospf_neigh_dict['intf'][intf]['neighbor'] = neighbor
+                if interface_id and 'unknwon' not in interface_id:
+                    ospf_neigh_dict['intf'][intf]['interface_id'] = interface_id
                 continue
 
+            # Neighbor priority is 0, State is 2WAY, 2 state changes
             p3 = re.compile(r'^ *Neighbor +priority +is +(?P<neigh_pri>[0-9]+), '
-                            r'State +is +(?P<state>[a-zA-Z]+), '
+                            r'State +is +(?P<state>\w+), '
                             r'+(?P<state_changes>\d+) +state +changes$')
             m = p3.match(line)
             if m:
@@ -380,13 +397,13 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema, MetaParser):
         return result
 
 class ShowIpOspfInterfaceSchema(MetaParser):
-    schema = {Optional('intfs_all'): Or(list, KeyedList({})),
-              Optional('intfs_up'): Or(list, KeyedList({})),
-              Optional('intfs_down'): Or(list, KeyedList({})),
+    schema = {Optional('intfs_all'): OrKeyedList(list),
+              Optional('intfs_up'): OrKeyedList(list),
+              Optional('intfs_down'): OrKeyedList(list),
               'intf':
                 {Any():
                      {'intf_state': str,
-                      Optional('prot_state'): Or(str, KeyedList({})),
+                      Optional('prot_state'): OrKeyedList(str),
                       'addr': str,
                       'mask': str,
                       'area': str,
@@ -398,9 +415,9 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                       Optional('dead_timer'): str,
                       Optional('retransmit_timer'): str,
                       Optional('wait_timer'): str,
-                      Optional('tdelay'): Or(str, KeyedList({})),
-                      Optional('ospf_state'): Or(str, KeyedList({})),
-                      Optional('pri'): Or(str, KeyedList({}))}
+                      Optional('tdelay'): OrKeyedList(str),
+                      Optional('ospf_state'): OrKeyedList(str),
+                      Optional('pri'): OrKeyedList(str)}
                 },
             }
 
@@ -529,9 +546,9 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema,MetaParser):
                 retransmit_timer = m.groupdict()['retransmit_timer']
                 ospf_intf_dict['intf'][intf]['retransmit_timer'] = retransmit_timer
                 continue
-        ospf_intf_dict['intfs_all'] = intfs_all
-        ospf_intf_dict['intfs_up'] = intfs_up
-        ospf_intf_dict['intfs_down'] = intfs_down
+        ospf_intf_dict['intfs_all'] = sorted(intfs_all)
+        ospf_intf_dict['intfs_up'] = sorted(intfs_up)
+        ospf_intf_dict['intfs_down'] = sorted(intfs_down)
         return ospf_intf_dict
 
 

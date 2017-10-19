@@ -190,6 +190,70 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
         IP Multicast Routing Table for VRF "VRF"
       '''}
 
+    golden_parsed_output2 = {
+        'vrf': 
+            {'VRF1': 
+                {'address_family': 
+                    {'ipv4': {}}},
+            'blue': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'multicast_group': 
+                            {'232.0.0.0/8': 
+                                {'source_address': 
+                                    {'*': 
+                                        {'flags': 'pim ip',
+                                        'incoming_interface_list': 
+                                            {'Null': 
+                                                {'rpf_nbr': '0.0.0.0'}},
+                                        'oil_count': 0,
+                                        'uptime': '10w5d'}}}}}}},
+            'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'multicast_group': 
+                            {'228.0.0.0/8': 
+                                {'source_address': 
+                                    {'*': 
+                                        {'bidir': True,
+                                        'flags': 'pim ip',
+                                        'incoming_interface_list': 
+                                            {'Null': 
+                                                {'rpf_nbr': '0.0.0.0'}},
+                                        'oil_count': 0,
+                                        'uptime': '10w5d'}}},
+                            '232.0.0.0/8': 
+                                {'source_address': 
+                                    {'*': 
+                                        {'flags': 'pim ip',
+                                        'incoming_interface_list': 
+                                            {'Null': 
+                                                {'rpf_nbr': '0.0.0.0'}},
+                                        'oil_count': 0,
+                                        'uptime': '10w5d'}}}}}}}}}
+
+    golden_output2 = {'execute.return_value': '''\
+        IP Multicast Routing Table for VRF "default"
+
+        (*, 228.0.0.0/8), bidir, uptime: 10w5d, pim ip 
+          Incoming interface: Null, RPF nbr: 0.0.0.0
+          Outgoing interface list: (count: 0)
+
+        (*, 232.0.0.0/8), uptime: 10w5d, pim ip 
+          Incoming interface: Null, RPF nbr: 0.0.0.0
+          Outgoing interface list: (count: 0)
+
+
+        IP Multicast Routing Table for VRF "VRF1"
+
+
+        IP Multicast Routing Table for VRF "blue"
+
+        (*, 232.0.0.0/8), uptime: 10w5d, pim ip 
+          Incoming interface: Null, RPF nbr: 0.0.0.0
+          Outgoing interface list: (count: 0)
+        '''}
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         ip_mroute_vrf_all_obj = ShowIpMrouteVrfAll(device=self.device1)
@@ -201,6 +265,12 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
         ip_mroute_vrf_all_obj = ShowIpMrouteVrfAll(device=self.device)
         parsed_output = ip_mroute_vrf_all_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        ip_mroute_vrf_all_obj = ShowIpMrouteVrfAll(device=self.device)
+        parsed_output = ip_mroute_vrf_all_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 
 # =========================================
@@ -583,6 +653,71 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
         IPv6 Multicast Routing Table for VRF "VRF"
       '''}
 
+    golden_parsed_output2 = {
+        'vrf': 
+            {'VRF1': 
+                {'address_family': 
+                    {'ipv6': {}}},
+            'blue': 
+                {'address_family': 
+                    {'ipv6': 
+                        {'multicast_group': 
+                            {'ff30::/12': 
+                                {'source_address': 
+                                    {'*': 
+                                        {'flags': 'pim6 ipv6',
+                                        'incoming_interface_list': 
+                                            {'Null': 
+                                                {'rpf_nbr': '0::'}},
+                                        'oil_count': '0',
+                                        'uptime': '10w5d'}}}}}}},
+            'default': 
+                {'address_family': 
+                    {'ipv6': 
+                        {'multicast_group': 
+                            {'ff03:3::/64': 
+                                {'source_address': 
+                                    {'*': 
+                                        {'bidir': True,
+                                        'flags': 'pim6',
+                                        'incoming_interface_list': 
+                                            {'Null': 
+                                                {'rpf_nbr': '0::'}},
+                                        'oil_count': '0',
+                                        'uptime': '10w5d'}}},
+                            'ff30::/12': 
+                                {'source_address': 
+                                    {'*': 
+                                        {'flags': 'pim6 ipv6',
+                                        'incoming_interface_list': 
+                                            {'Null': 
+                                                {'rpf_nbr': '0::'}},
+                                        'oil_count': '0',
+                                        'uptime': '10w5d'}}}}}}}}}
+
+    golden_output2 = {'execute.return_value': '''\
+
+        IPv6 Multicast Routing Table for VRF "default"
+
+        (*, ff03:3::/64), bidir, uptime: 10w5d, pim6 
+          Incoming interface: Null, RPF nbr: 0::
+          Outgoing interface list: (count: 0)
+
+        (*, ff30::/12), uptime: 10w5d, pim6 ipv6 
+          Incoming interface: Null, RPF nbr: 0::
+          Outgoing interface list: (count: 0)
+
+
+        IPv6 Multicast Routing Table for VRF "VRF1"
+
+
+        IPv6 Multicast Routing Table for VRF "blue"
+
+        (*, ff30::/12), uptime: 10w5d, pim6 ipv6 
+          Incoming interface: Null, RPF nbr: 0::
+          Outgoing interface list: (count: 0)
+        '''}
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         ipv6_mroute_vrf_all_obj = ShowIpv6MrouteVrfAll(device=self.device1)
@@ -594,6 +729,12 @@ class test_show_ipv6_mroute_vrf_all(unittest.TestCase):
         ipv6_mroute_vrf_all_obj = ShowIpv6MrouteVrfAll(device=self.device)
         parsed_output = ipv6_mroute_vrf_all_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        ipv6_mroute_vrf_all_obj = ShowIpv6MrouteVrfAll(device=self.device)
+        parsed_output = ipv6_mroute_vrf_all_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 
 # ===============================================

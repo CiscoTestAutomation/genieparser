@@ -4,25 +4,11 @@ Example parser class
 
 '''
 
-import os
-import logging
-import pprint
+# python
 import re
-import unittest
-from collections import defaultdict
-
-from ats import tcl
-from ats.tcl.keyedlist import KeyedList
-from ats.log.utils import banner
-import xmltodict
-try:
-    import iptools
-    from cnetconf import testmodel
-except ImportError:
-    pass
+import logging
 
 from metaparser import MetaParser
-from metaparser.util import merge_dict, keynames_convert
 from metaparser.util.schemaengine import Schema, \
                                          Any, \
                                          Optional, \
@@ -31,17 +17,10 @@ from metaparser.util.schemaengine import Schema, \
                                          Default, \
                                          Use
 
+# import parser utils
+from parser.utils.common import Common
+
 logger = logging.getLogger(__name__)
-
-
-def regexp(expression):
-    def match(value):
-        if re.match(expression,value):
-            return value
-        else:
-            raise TypeError("Value '%s' doesnt match regex '%s'"
-                              %(value, expression))
-    return match
 
 
 class ShowIpInterfaceBriefSchema(MetaParser):
@@ -470,21 +449,6 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
 # show ipv6 vrf all interface
 
 
-
-# python
-import re
-
-# metaparser
-from metaparser import MetaParser
-from metaparser.util.schemaengine import Schema, \
-                                         Any, \
-                                         Optional, \
-                                         Or, \
-                                         And, \
-                                         Default, \
-                                         Use
-
-
 #############################################################################
 # Parser For Show Interfaces detail
 #############################################################################
@@ -501,7 +465,8 @@ class ShowInterfacesDetailSchema(MetaParser):
              Optional('phys_address'): str,
              Optional('port_speed'): str,          
              Optional('mtu'): int,
-             Optional('line_protocol'): str,                   
+             Optional('line_protocol'): str,   
+             Optional('oper_status'): str,                 
              Optional('enabled'): bool,          
              Optional('mac_address'): str,
              Optional('auto_negotiate'): bool,
@@ -602,7 +567,8 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
 
                 if interface not in interface_detail_dict:
                     interface_detail_dict[interface] = {}
-                interface_detail_dict[interface]['line_protocol'] = line_protocol                
+                interface_detail_dict[interface]['line_protocol'] = line_protocol
+                interface_detail_dict[interface]['oper_status'] = 'down'            
                 interface_detail_dict[interface]['enabled'] = False
                 continue
 
@@ -619,6 +585,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                 if interface not in interface_detail_dict:
                     interface_detail_dict[interface] = {}
                 interface_detail_dict[interface]['line_protocol'] = line_protocol
+                interface_detail_dict[interface]['oper_status'] = 'up'
                 interface_detail_dict[interface]['enabled'] = True
                 continue
 
@@ -2117,10 +2084,92 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
         return ipv6_vrf_all_interface_dict
 
 
+#############################################################################
+# Parser For Show etherent tags
+#############################################################################
 
+class ShowEthernetTagsSchema(MetaParser):
 
+    #schema for show ethernet tags
 
+    schema = {
+        Any():
+            {Optional('status'): str,
+            Optional('outer_vlan'): str,
+            Optional('vlan_id'): str,
+            Optional('inner_vlan'): str,
+            Optional('xtra'): str,
+            Optional('mtu'): int,
+            Optional('rewrite_num_of_tags_pop'): int,
+            Optional('rewrite_num_of_tags_push'): int
+            },
+        }
 
+class ShowEthernetTags(ShowEthernetTagsSchema):
 
+    #parser for show ethernet tags
 
+    def cli(self):
 
+        out = self.device.execute('show ethernet tags')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+            # Interface               St  MTU  Ly Outer            Inner            Xtra -,+
+            # Gi0/0/0/0.501           Up  1518 L3 .1Q:501          -                -    1 0
+            p1 = re.compile(r'^(?P<interface>[\w\/\.]+)'
+                             ' +(?P<status>\w+)'
+                             ' +(?P<mtu>\d+)'
+                             ' +(?P<layer>\w+)'
+                             ' +(?P<outer_vlan>\S+)'
+                             ' +(?P<inner_vlan>\S+)'
+                             ' +(?P<xtra>\S+)'
+                             ' +(?P<rewrite_num_of_tags_pop>\d+)'
+                             ' +(?P<rewrite_num_of_tags_push>\d+)$')
+            m = p1.match(line)
+            if m:
+                interface = Common.convert_intf_name(m.groupdict()['interface'])
+                status = m.groupdict()['status']
+                outer_vlan = m.groupdict()['outer_vlan']
+                mtu = m.groupdict()['mtu']
+                layer = m.groupdict()['layer']
+                inner_vlan = m.groupdict()['inner_vlan']
+                xtra = m.groupdict()['xtra']
+                rewrite_num_of_tags_pop = m.groupdict()['rewrite_num_of_tags_pop']
+                rewrite_num_of_tags_push = m.groupdict()['rewrite_num_of_tags_push']
+
+                if interface not in ret_dict:
+                    ret_dict[interface] = {}
+
+                if status and status is not '-':
+                    ret_dict[interface]['status'] = status.lower()
+
+                if outer_vlan and outer_vlan is not '-':
+                    ret_dict[interface]['outer_vlan'] = outer_vlan
+                    try:
+                        vlan_id = re.match('[\w\.]+:(\d+)', outer_vlan).groups()[0]
+                        ret_dict[interface]['vlan_id'] = vlan_id
+                    except:
+                        pass
+
+                if mtu and mtu is not '-':
+                    ret_dict[interface]['mtu'] = int(mtu)
+
+                if layer and xtra is not '-':
+                    ret_dict[interface]['layer'] = layer.lower()
+
+                if inner_vlan and inner_vlan is not '-':
+                    ret_dict[interface]['inner_vlan'] = inner_vlan
+
+                if xtra and xtra is not '-':
+                    ret_dict[interface]['xtra'] = xtra
+
+                if rewrite_num_of_tags_pop and rewrite_num_of_tags_pop is not '-':
+                    ret_dict[interface]['rewrite_num_of_tags_pop'] = int(rewrite_num_of_tags_pop)
+
+                if rewrite_num_of_tags_push and rewrite_num_of_tags_push is not '-':
+                    ret_dict[interface]['rewrite_num_of_tags_push'] = int(rewrite_num_of_tags_push)
+
+        return ret_dict

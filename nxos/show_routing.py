@@ -12,6 +12,9 @@ import re
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
+                                         
+# import parser utils
+from parser.utils.common import Common
 
 # =================================
 # Parser for 'show routing vrf all'
@@ -68,20 +71,6 @@ class ShowRoutingVrfAllSchema(MetaParser):
 class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
    
     ''' Parser for 'show routing vrf all' '''
-
-    def convert_intf_name(self, intf):
-        # Please add more when face other type of interface
-        convert = {'Eth': 'Ethernet',
-                   'Lo': 'Loopback',
-                   'Null': 'Null',
-                   'mgmt': 'mgmt'}
-        int_type = re.search('([a-zA-Z]+)', intf).group(0)
-        int_port = re.search('([\d\/\.]+)', intf).group(0)
-        if int_type in convert.keys():
-            return(convert[int_type] + int_port)
-        else:
-            return(intf)
-
     
     def cli(self, ip=''):
 
@@ -189,7 +178,7 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
 
                 intf = m.groupdict()['int']
                 if intf:
-                    prot_dict[protocol]['interface'] = self.convert_intf_name(intf)
+                    prot_dict[protocol]['interface'] = Common.convert_intf_name(intf)
 
                 preference = m.groupdict()['preference']
                 if preference:

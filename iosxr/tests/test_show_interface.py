@@ -8,7 +8,10 @@ from ats.topology import Device
 from metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from parser.iosxr.show_interface import ShowInterfacesDetail, ShowVlanInterface, ShowIpv4VrfAllInterface, ShowIpv6VrfAllInterface
+from parser.iosxr.show_interface import ShowInterfacesDetail, \
+                                        ShowVlanInterface, \
+                                        ShowIpv4VrfAllInterface, \
+                                        ShowIpv6VrfAllInterface, ShowEthernetTags
 
 #############################################################################
 # unitest For Show Interfaces Detail
@@ -67,6 +70,7 @@ class test_show_interface(unittest.TestCase):
                             'last_input': 'never',
                             'last_output': 'never',
                             'line_protocol': 'administratively down',
+                            'oper_status': 'down',
                             'location': 'unknown',
                             'mac_address': 'aaaa.bbbb.cccc',
                             'mtu': 1600,
@@ -104,6 +108,7 @@ class test_show_interface(unittest.TestCase):
                                'last_input': 'never',
                                'last_output': 'never',
                                'line_protocol': 'administratively down',
+                               'oper_status': 'down',
                                'mac_address': 'aaaa.bbbb.cccc',
                                'mtu': 1608,
                                'reliability': '255/255',
@@ -137,6 +142,7 @@ class test_show_interface(unittest.TestCase):
                                'last_input': 'never',
                                'last_output': 'never',
                                'line_protocol': 'administratively down',
+                               'oper_status': 'down',
                                'mac_address': 'aaaa.bbbb.cccc',
                                'mtu': 1604,
                                'reliability': '255/255',
@@ -194,6 +200,7 @@ class test_show_interface(unittest.TestCase):
                             'last_link_flapped': '1w5d',
                             'last_output': '00:01:09',
                             'line_protocol': 'up',
+                            'oper_status': 'up',
                             'location': 'unknown',
                             'mac_address': '5254.0078.ebe0',
                             'mtu': 1514,
@@ -249,6 +256,7 @@ class test_show_interface(unittest.TestCase):
                        'last_input': 'never',
                        'last_output': 'never',
                        'line_protocol': 'administratively down',
+                       'oper_status': 'down',
                        'location': 'unknown',
                        'mac_address': '5254.00c3.6c43',
                        'mtu': 1514,
@@ -281,6 +289,7 @@ class test_show_interface(unittest.TestCase):
            'last_input': 'never',
            'last_output': 'never',
            'line_protocol': 'up',
+           'oper_status': 'up',
            'mtu': 1500,
            'reliability': '255/255',
            'rxload': 'unknown',
@@ -1059,6 +1068,114 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         ipv6_vrf_all_interface_obj = ShowIpv6VrfAllInterface(device=self.device)
         parsed_output = ipv6_vrf_all_interface_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+#############################################################################
+# unitest For show ethernet tags
+#############################################################################
+
+class test_show_ethernet_tags(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "GigabitEthernet0/0/0/0.511": {
+              "rewrite_num_of_tags_push": 0,
+              "status": "up",
+              "rewrite_num_of_tags_pop": 1,
+              "mtu": 1518,
+              "outer_vlan": ".1Q:511",
+              "vlan_id": "511"
+         },
+         "GigabitEthernet0/0/0/0.510": {
+              "rewrite_num_of_tags_push": 0,
+              "status": "up",
+              "rewrite_num_of_tags_pop": 1,
+              "mtu": 1518,
+              "outer_vlan": ".1Q:510",
+              "vlan_id": "510"
+         },
+         "GigabitEthernet0/0/0/0.503": {
+              "rewrite_num_of_tags_push": 0,
+              "status": "up",
+              "rewrite_num_of_tags_pop": 1,
+              "mtu": 1518,
+              "outer_vlan": ".1Q:503",
+              "vlan_id": "503"
+         },
+         "GigabitEthernet0/0/0/0.501": {
+              "rewrite_num_of_tags_push": 0,
+              "status": "up",
+              "rewrite_num_of_tags_pop": 1,
+              "mtu": 1518,
+              "outer_vlan": ".1Q:501",
+              "vlan_id": "501"
+         },
+         "GigabitEthernet0/0/0/0.502": {
+              "rewrite_num_of_tags_push": 0,
+              "status": "up",
+              "rewrite_num_of_tags_pop": 1,
+              "mtu": 1518,
+              "outer_vlan": ".1Q:502",
+              "vlan_id": "502"
+         },
+         "GigabitEthernet0/0/0/0.504": {
+              "rewrite_num_of_tags_push": 0,
+              "status": "up",
+              "rewrite_num_of_tags_pop": 1,
+              "mtu": 1518,
+              "outer_vlan": ".1Q:504",
+              "vlan_id": "504"
+         },
+         "GigabitEthernet0/0/0/0.505": {
+              "rewrite_num_of_tags_push": 0,
+              "status": "up",
+              "rewrite_num_of_tags_pop": 1,
+              "mtu": 1518,
+              "outer_vlan": ".1Q:505",
+              "vlan_id": "505"
+         },
+         "GigabitEthernet0/0/0/1.501": {
+              "rewrite_num_of_tags_push": 0,
+              "status": "up",
+              "rewrite_num_of_tags_pop": 1,
+              "mtu": 1518,
+              "outer_vlan": ".1Q:501",
+              "vlan_id": "501"
+         }
+
+    }
+
+    golden_output = {'execute.return_value': '''
+        St:    AD - Administratively Down, Dn - Down, Up - Up
+        Ly:    L2 - Switched layer 2 service, L3 = Terminated layer 3 service,
+        Xtra   C - Match on Cos, E  - Match on Ethertype, M - Match on source MAC
+        -,+:   Ingress rewrite operation; number of tags to pop and push respectively
+
+        Interface               St  MTU  Ly Outer            Inner            Xtra -,+
+        Gi0/0/0/0.501           Up  1518 L3 .1Q:501          -                -    1 0
+        Gi0/0/0/0.502           Up  1518 L3 .1Q:502          -                -    1 0
+        Gi0/0/0/0.503           Up  1518 L3 .1Q:503          -                -    1 0
+        Gi0/0/0/0.504           Up  1518 L3 .1Q:504          -                -    1 0
+        Gi0/0/0/0.505           Up  1518 L3 .1Q:505          -                -    1 0
+        Gi0/0/0/0.510           Up  1518 L3 .1Q:510          -                -    1 0
+        Gi0/0/0/0.511           Up  1518 L3 .1Q:511          -                -    1 0
+        Gi0/0/0/1.501           Up  1518 L3 .1Q:501          -                -    1 0
+
+
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowEthernetTags(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowEthernetTags(device=self.device)
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
         
 if __name__ == '__main__':

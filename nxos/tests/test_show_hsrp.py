@@ -8,7 +8,7 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Parser
-from parser.nxos.show_hsrp import ShowHsrpSummary, ShowHsrpAll
+from parser.nxos.show_hsrp import ShowHsrpSummary, ShowHsrpAll, ShowHsrpDelay
 
 # Metaparser
 from metaparser.util.exceptions import SchemaEmptyParserError
@@ -24,26 +24,29 @@ class test_show_hsrp_summary(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     
     golden_parsed_output = {
-    'hsrp_summary': {
-        'active': 0,
         'global_hsrp_bfd': 'enabled',
         'intf_total': 1,
-        'listen': 0,
         'nsf': 'enabled',
         'nsf_time': 10,
         'pkt_unknown_groups': 0,
-        'rx_good': 0,
-        'standby': 0,
-        'total_groups': 3,
         'total_mts_rx': 85,
-        'tx_fail': 0,
-        'tx_pass': 0,
-        'v1_ipv4': 0,
-        'v2_ipv4': 3,
-        'v2_ipv6': 0,
-        'v6_active': 0,
-        'v6_listen': 0,
-        'v6_standby': 0}}
+        'stats': {
+            'total_groups': 3,
+            'active': 0,
+            'listen': 0,
+            'standby': 0,
+            'v1_ipv4': 0,
+            'v2_ipv4': 3,
+            'v2_ipv6': 0,
+            'v6_active': 0,
+            'v6_listen': 0,
+            'v6_standby': 0
+        },
+        'total_packets': {
+            'rx_good': 0,
+            'tx_fail': 0,
+            'tx_pass': 0,
+        }}
 
     golden_output = {'execute.return_value': '''
         HSRP Summary:
@@ -72,7 +75,6 @@ class test_show_hsrp_summary(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         hsrp_summary_obj = ShowHsrpSummary(device=self.device)
         parsed_output = hsrp_summary_obj.parse()
-        #import pprint ; pprint.pprint(parsed_output)
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_empty(self):
@@ -91,32 +93,54 @@ class test_show_hsrp_all(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     
-    golden_parsed_output = {
-    'hsrp_all': {
-        'group': {
-            0: {
-                'interface': {
-                    'Ethernet4/1': {
-                        'address_family': {
-                            'ipv4': {
-                                'active_router': 'unknown',
-                                'authentication_text': 'cisco123',
-                                'configured_priority': 110,
-                                'hellotime': 1,
-                                'holdtime': 3,
-                                'ip_redundancy_name': 'hsrp-Eth4/1-0',
-                                'last_state_change': 'never',
-                                'local_state': 'initial(interface '
-                                               'down)',
-                                'lower_fwd_threshold': 1,
-                                'num_state_changes': 0,
-                                'preempt': True,
-                                'priority': 110,
-                                'standby_router': 'unknown',
-                                'upper_fwd_threshold': 110,
-                                'version': 2,
-                                'virtual_ip_address': '192.168.1.254',
-                                'virtual_mac_addr': '0000.0c9f.f000',}}}}}}}}
+    golden_parsed_output = \
+    {
+      'Ethernet4/1': {
+        'address_family': {
+          'ipv4': {
+            'version': {
+              2: {
+                'groups': {
+                  0: {
+                  'active_router': 'unknown',
+                  'authentication': 'cisco123',
+                  'configured_priority': 110,
+                  'group_number': 0,
+                  'hsrp_router_state': 'initial',
+                  'hsrp_router_state_reason': 'interface '
+                  'down',
+                  'last_state_change': 'never',
+                  'lower_fwd_threshold': 1,
+                  'num_state_changes': 0,
+                  'preempt': True,
+                    'primary_ipv4_address': {
+                    'address': '192.168.1.254',
+                    'virtual_ip_learn': False
+                    },
+                  'priority': 110,
+                  'session_name': 'hsrp-Eth4/1-0',
+                  'standby_router': 'unknown',
+                    'timers': {
+                    'hello_msec_flag': False,
+                    'hello_sec': 1,
+                    'hold_msec_flag': False,
+                    'hold_sec': 3
+                    },
+                  'upper_fwd_threshold': 110,
+                  'virtual_mac_address': '0000.0c9f.f000',
+                  'virtual_mac_address_status': 'default'
+                  }
+                }
+              }
+            }
+          }
+        },
+      'interface': 'Ethernet4/1',
+      'use_bia': False
+      }
+    }
+
+
 
     golden_output = {'execute.return_value': '''
     Ethernet4/1 - Group 0 (HSRP-V2) (IPv4)
@@ -134,89 +158,132 @@ class test_show_hsrp_all(unittest.TestCase):
 
 
 
-    golden_parsed_output_1 = {
-        "hsrp_all": {
-              "group": {
-                   0: {
-                        "interface": {
-                             "Ethernet1/3": {
-                                  "address_family": {
-                                       "ipv4": {
-                                            "standby_expire": 2.429,
-                                            "virtual_mac_addr": "0000.0c9f.f000",
-                                            "standby_router": "192.168.1.2",
-                                            "priority": 110,
-                                            "virtual_ip_address": "192.168.1.254",
-                                            "ip_redundancy_name": "hsrp-Eth1/3-0",
-                                            "preempt": True,
-                                            "active_priority": 110,
-                                            "last_state_change": "00:01:43",
-                                            "configured_priority": 110,
-                                            "holdtime": 3,
-                                            "authentication_text": "cisco123",
-                                            "num_state_changes": 10,
-                                            "version": 2,
-                                            "hellotime": 1,
-                                            "active_router": "local",
-                                            "standby_priority": 90,
-                                            "local_state": "active",
-                                            "upper_fwd_threshold": 110,
-                                            "lower_fwd_threshold": 0
-                                       }
-                                  }
-                             }
-                        }
-                   },
-                   2: {
-                        "interface": {
-                             "Ethernet1/3": {
-                                  "address_family": {
-                                       "ipv6": {
-                                            "standby_expire": 8.96,
-                                            "virtual_mac_addr": "0005.73a0.0002",
-                                            "standby_router": "fe80::20c:29ff:fe69:14bb",
-                                            "priority": 100,
-                                            "authentication_text": "cisco",
-                                            "ip_redundancy_name": "hsrp-Eth1/3-2-V6",
-                                            "active_priority": 100,
-                                            "last_state_change": "02:43:40",
-                                            "configured_priority": 100,
-                                            "holdtime": 10,
-                                            "local_state": "active",
-                                            "num_state_changes": 2,
-                                            "lower_fwd_threshold": 0,
-                                            "hellotime": 3,
-                                            "active_router": "local",
-                                            "standby_priority": 90,
-                                            "upper_fwd_threshold": 100,
-                                            "secondary_vips": "192:168::1",
-                                            "virtual_ip_address": "fe80::5:73ff:fea0:2",
-                                            "version": 2
-                                       },
-                                       "ipv4": {
-                                            "virtual_mac_addr": "0000.0c9f.f002",
-                                            "standby_router": "unknown",
-                                            "priority": 1,
-                                            "authentication_text": "cisco",
-                                            "ip_redundancy_name": "hsrp-Eth1/3-2",
-                                            "configured_priority": 1,
-                                            "last_state_change": "never",
-                                            "holdtime": 10,
-                                            "local_state": "disabled(virtual ip not cfged)",
-                                            "num_state_changes": 0,
-                                            "lower_fwd_threshold": 0,
-                                            "hellotime": 3,
-                                            "active_router": "unknown",
-                                            "upper_fwd_threshold": 1,
-                                            "version": 2
-                                       }
-                                  }
-                             }
-                        }
-                   }
+    golden_parsed_output_1 = \
+    {
+      'Ethernet1/3': {
+        'address_family': {
+          'ipv4': {
+            'version': {
+              2: {
+                'groups': {
+                  0: {
+                  'active_priority': 110,
+                  'active_router': 'local',
+                  'authentication': 'cisco123',
+                  'configured_priority': 110,
+                  'group_number': 0,
+                  'hsrp_router_state': 'active',
+                  'last_state_change': '00:01:43',
+                  'lower_fwd_threshold': 0,
+                  'num_state_changes': 10,
+                  'preempt': True,
+                    'primary_ipv4_address': {
+                    'address': '192.168.1.254',
+                    'virtual_ip_learn': False
+                    },
+                  'priority': 110,
+                  'session_name': 'hsrp-Eth1/3-0',
+                  'standby_expire': 2.429,
+                  'standby_ip_address': '192.168.1.2',
+                  'standby_priority': 90,
+                  'standby_router': '192.168.1.2',
+                    'timers': {
+                    'hello_msec_flag': False,
+                    'hello_sec': 1,
+                    'hold_msec_flag': False,
+                    'hold_sec': 3
+                    },
+                    'tracked_objects': {
+                      1: {
+                      'object_name': 1,
+                      'priority_decrement': 22,
+                      'status': 'UP'
+                      }
+                    },
+                  'upper_fwd_threshold': 110,
+                  'virtual_mac_address': '0000.0c9f.f000',
+                  'virtual_mac_address_status': 'default'
+                  },
+                  2: {
+                  'active_router': 'unknown',
+                  'authentication': 'cisco',
+                  'configured_priority': 1,
+                  'group_number': 2,
+                  'hsrp_router_state': 'disabled',
+                  'hsrp_router_state_reason': 'virtual '
+                  'ip '
+                  'not '
+                  'cfged',
+                  'last_state_change': 'never',
+                  'lower_fwd_threshold': 0,
+                  'num_state_changes': 0,
+                  'priority': 1,
+                  'session_name': 'hsrp-Eth1/3-2',
+                  'standby_router': 'unknown',
+                    'timers': {
+                    'hello_msec_flag': False,
+                    'hello_sec': 3,
+                    'hold_msec_flag': False,
+                    'hold_sec': 10
+                    },
+                  'upper_fwd_threshold': 1,
+                  'virtual_mac_address': '0000.0c9f.f002',
+                  'virtual_mac_address_status': 'default'
+                  }
+                }
               }
-         }
+            }
+          },
+          'ipv6': {
+            'version': {
+              2: {
+                'groups': {
+                  2: {
+                  'active_priority': 100,
+                  'active_router': 'local',
+                  'authentication': 'cisco',
+                  'configured_priority': 100,
+                    'global_ipv6_addresses': {
+                      '192:168::1': {
+                      'address': '192:168::1'
+                      }
+                    },
+                  'group_number': 2,
+                  'hsrp_router_state': 'active',
+                  'last_state_change': '02:43:40',
+                    'link_local_ipv6_address': {
+                    'address': 'fe80::5:73ff:fea0:2',
+                    'auto_configure': True
+                    },
+                  'lower_fwd_threshold': 0,
+                  'num_state_changes': 2,
+                  'priority': 100,
+                  'secondary_vips': ['192:168::1'],
+                  'session_name': 'hsrp-Eth1/3-2-V6',
+                  'standby_expire': 8.96,
+                  'standby_ipv6_address': 'fe80::20c:29ff:fe69:14bb',
+                  'standby_priority': 90,
+                  'standby_router': 'fe80::20c:29ff:fe69:14bb',
+                    'timers': {
+                    'hello_msec_flag': False,
+                    'hello_sec': 3,
+                    'hold_msec_flag': False,
+                    'hold_sec': 10
+                    },
+                  'upper_fwd_threshold': 100,
+                  'virtual_mac_address': '0005.73a0.0002',
+                  'virtual_mac_address_status': 'default'
+                  }
+                }
+              }
+            }
+          }
+        },
+      'interface': 'Ethernet1/3',
+      'use_bia': False
+      }
     }
+
 
     golden_output_1 = {'execute.return_value': '''
       Ethernet1/3 - Group 0 (HSRP-V2) (IPv4)
@@ -230,6 +297,7 @@ class test_show_hsrp_all(unittest.TestCase):
         Authentication MD5, key-string "cisco123"
         Virtual mac address is 0000.0c9f.f000 (Default MAC)
         10 state changes, last state change 00:01:43
+          Track object 1 state UP decrement 22        
         IP redundancy name is hsrp-Eth1/3-0 (default)
 
       Ethernet1/3 - Group 2 (HSRP-V2) (IPv4)
@@ -280,6 +348,48 @@ class test_show_hsrp_all(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = hsrp_all_obj.parse()
 
+# ======================================
+#   Unit test for 'show hsrp delay'
+# ======================================
+
+class test_show_hsrp_delay(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'GigabitEthernet1': {
+            'delay': {
+                'minimum_delay': 99,
+                'reload_delay': 888,
+            }
+        },
+        'GigabitEthernet3': {
+            'delay': {
+                'minimum_delay': 1,
+                'reload_delay': 5,
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+        Interface          Minimum Reload
+        GigabitEthernet1   99      888
+        GigabitEthernet3   1       5
+        '''}
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        hsrp_delay_obj = ShowHsrpDelay(device=self.device)
+        parsed_output = hsrp_delay_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        hsrp_delay_obj = ShowHsrpDelay(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = hsrp_delay_obj.parse()
 
 if __name__ == '__main__':
     unittest.main()

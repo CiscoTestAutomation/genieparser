@@ -7,8 +7,13 @@ __all__ = (
 )
 
 import os
-from ats import tcl
-from ats.tcl import tclobj, tclstr, TclCommand
+
+try:
+    from ats import tcl
+    from ats.tcl import tclstr, TclCommand
+except ImportError:
+    pass
+
 from metaparser import MetaParser
 
 
@@ -48,7 +53,7 @@ def tcl_package_require_caas_parsers():
 
 
 def tcl_invoke_caas_abstract_parser(device, exec, *,
-                                    cast_=tcl.cast_keyed_list,
+                                    cast_ = None,
                                     **kwargs):
     tcl_package_require_caas_parsers()
 
@@ -59,7 +64,9 @@ def tcl_invoke_caas_abstract_parser(device, exec, *,
     kwargs['device'] = device
     kwargs['exec'] = exec
 
-    return tcl_invoke_ats_cmd('::caas::abstract', cast_=cast_, **kwargs)
+    return tcl_invoke_ats_cmd('::caas::abstract',
+                              cast_ = cast_ or tcl.cast_keyed_list,
+                              **kwargs)
 
 
 class CaasMetaParser(MetaParser):
