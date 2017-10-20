@@ -113,7 +113,7 @@ class ShowVersion(ShowVersionSchema):
                     version_dict['platform']['software']['bios_version'] = bios_version
                 continue
 
-            p4 = re.compile(r'^\s*kickstart: +version +(?P<kickstart_version>[a-z0-9\.\(\)\[\]\s]+)$')
+            p4 = re.compile(r'^\s*kickstart: +version +(?P<kickstart_version>[\w\.\(\)\[\]\s]+)$')
             m = p4.match(line)
             if m:
                 kickstart_version = str(m.groupdict()['kickstart_version'])
@@ -122,7 +122,7 @@ class ShowVersion(ShowVersionSchema):
                     version_dict['platform']['software']['kickstart_version'] = kickstart_version
                 continue
 
-            p5 = re.compile(r'^\s*system: +version +(?P<system_version>[a-z0-9\.\(\)\[\]\s]+)$')
+            p5 = re.compile(r'^\s*system: +version +(?P<system_version>[\w\.\(\)\[\]\s]+)$')
             m = p5.match(line)
             if m:
                 system_version = str(m.groupdict()['system_version'])
@@ -149,7 +149,7 @@ class ShowVersion(ShowVersionSchema):
                     version_dict['platform']['software']['bios_compile_time'] = bios_compile_time
                 continue
 
-            p8 = re.compile(r'^\s*kickstart +image +file +is: +(?P<kickstart_image_file>[a-z\:\/0-9\-\.]+)$')
+            p8 = re.compile(r'^\s*kickstart +image +file +is: +(?P<kickstart_image_file>[\w\:\/\-\.]+)$')
             m = p8.match(line)
             if m:
                 kickstart_image_file = str(m.groupdict()['kickstart_image_file'])
@@ -167,7 +167,7 @@ class ShowVersion(ShowVersionSchema):
                     version_dict['platform']['software']['kickstart_compile_time'] = kickstart_compile_time
                 continue
 
-            p10 = re.compile(r'^\s*system +image +file +is: +(?P<system_image_file>[a-z\:\/0-9\-\.]+)$')
+            p10 = re.compile(r'^\s*system +image +file +is: +(?P<system_image_file>[\w\:\/\-\.]+)$')
             m = p10.match(line)
             if m:
                 system_image_file = str(m.groupdict()['system_image_file'])
