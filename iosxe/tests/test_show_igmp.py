@@ -242,7 +242,8 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                                "flags": "L",
                                                "foward": True,
                                                "csr_exp": "stopped",
-                                               "v3_exp": "stopped"
+                                               "v3_exp": "stopped",
+                                               "last_reporter": "10.1.2.1"
                                           }
                                      },
                                      "last_reporter": "10.1.2.1"
@@ -257,14 +258,16 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                                "flags": "S",
                                                "foward": True,
                                                "csr_exp": "stopped",
-                                               "v3_exp": "stopped"
+                                               "v3_exp": "stopped",
+                                               "last_reporter": "0.0.0.0"
                                           },
                                           "2.2.2.2": {
                                                "up_time": "00:05:06",
                                                "flags": "S",
                                                "foward": True,
                                                "csr_exp": "stopped",
-                                               "v3_exp": "stopped"
+                                               "v3_exp": "stopped",
+                                               "last_reporter": "0.0.0.0"
                                           }
                                      },
                                      "last_reporter": "0.0.0.0"
@@ -285,7 +288,8 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                                "flags": "S",
                                                "foward": True,
                                                "csr_exp": "stopped",
-                                               "v3_exp": "stopped"
+                                               "v3_exp": "stopped",
+                                               "last_reporter": "0.0.0.0"
                                           }
                                      },
                                      "last_reporter": "0.0.0.0"
@@ -319,7 +323,8 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                                "flags": "L",
                                                "foward": True,
                                                "csr_exp": "stopped",
-                                               "v3_exp": "stopped"
+                                               "v3_exp": "stopped",
+                                               "last_reporter": "10.1.2.1"
                                           }
                                      },
                                      "last_reporter": "10.1.2.1"
@@ -638,7 +643,8 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                                "flags": "L",
                                                "up_time": "00:06:23",
                                                "v3_exp": "stopped",
-                                               "csr_exp": "stopped"
+                                               "csr_exp": "stopped",
+                                               "last_reporter": "20.1.2.1"
                                           }
                                      },
                                      "up_time": "00:06:23"
@@ -666,7 +672,8 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                                "flags": "L",
                                                "up_time": "00:06:24",
                                                "v3_exp": "stopped",
-                                               "csr_exp": "stopped"
+                                               "csr_exp": "stopped",
+                                               "last_reporter": "20.1.2.1"
                                           }
                                      },
                                      "up_time": "00:06:24"
@@ -687,14 +694,16 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                                "flags": "S",
                                                "up_time": "00:03:56",
                                                "v3_exp": "stopped",
-                                               "csr_exp": "stopped"
+                                               "csr_exp": "stopped",
+                                               "last_reporter": "0.0.0.0"
                                           },
                                           "2.2.2.2": {
                                                "foward": True,
                                                "flags": "S",
                                                "up_time": "00:05:57",
                                                "v3_exp": "stopped",
-                                               "csr_exp": "stopped"
+                                               "csr_exp": "stopped",
+                                               "last_reporter": "0.0.0.0"
                                           }
                                      },
                                      "up_time": "00:05:59"
@@ -715,7 +724,8 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                                "flags": "S",
                                                "up_time": "00:06:06",
                                                "v3_exp": "stopped",
-                                               "csr_exp": "stopped"
+                                               "csr_exp": "stopped",
+                                               "last_reporter": "0.0.0.0"
                                           }
                                      },
                                      "up_time": "00:06:06"

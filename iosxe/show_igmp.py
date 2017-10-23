@@ -362,6 +362,8 @@ class ShowIpIgmpGroupsDetailSchema(MetaParser):
                                             'foward': bool,
                                             'flags': str,
                                             'up_time': str,
+                                            'last_reporter': str,
+                                            Optional('expire'): str,
                                         },
                                     },
                                 }
@@ -519,6 +521,14 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
 
                 ret_dict['vrf'][vrf]['interface'][intf]['group'][group]\
                     ['source'][source]['flags'] = source_flags
+                    
+                if last_reporter:
+                    ret_dict['vrf'][vrf]['interface'][intf]['group'][group]\
+                        ['source'][source]['last_reporter'] = last_reporter
+
+                if expire:
+                    ret_dict['vrf'][vrf]['interface'][intf]['group'][group]\
+                        ['source'][source]['expire'] = expire
 
                 # join_group or static_group structure
                 if key:
