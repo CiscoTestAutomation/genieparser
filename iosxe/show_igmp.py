@@ -322,6 +322,8 @@ class ShowIpIgmpGroupsDetailSchema(MetaParser):
                         Any(): {
                             'join_group': {
                                 Any(): {
+                                    'group': str,
+                                    'source': str,
                                     Optional('expire'): str,
                                     'up_time': str,
                                     'last_reporter': str,
@@ -334,6 +336,8 @@ class ShowIpIgmpGroupsDetailSchema(MetaParser):
                             },
                             'static_group': {
                                 Any(): {
+                                    'group': str,
+                                    'source': str,
                                     Optional('expire'): str,
                                     'up_time': str,
                                     'last_reporter': str,
@@ -526,6 +530,8 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
                     ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['csr_exp'] = csr_exp
                     ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['foward'] = foward
                     ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['flags'] = flags
+                    ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['group'] = group
+                    ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['source'] = source
 
                     # create structure for pre define keys
                     key_value_dict = {'expire': expire,
@@ -545,7 +551,9 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
                 if key:
                     static_join_group = group + ' ' + source
                     if static_join_group not in ret_dict['vrf'][vrf]['interface'][intf][key]:
-                        ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group] = {}                    
+                        ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group] = {}    
+                    ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['group'] = group
+                    ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['source'] = source                
 
                     # create structure for pre define keys
                     key_value_dict = {'expire': expire,

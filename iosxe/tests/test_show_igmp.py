@@ -327,11 +327,15 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                            },
                            "static_group": {
                                 "239.6.6.6 *": {
+                                     "group": "239.6.6.6",
+                                     "source": "*",
                                      "up_time": "00:05:06",
                                      "flags": "SG",
                                      "last_reporter": "0.0.0.0"
                                 },
                                 "239.5.5.5 *": {
+                                     "group": "239.5.5.5",
+                                     "source": "*",
                                      "up_time": "00:05:06",
                                      "flags": "SG",
                                      "last_reporter": "0.0.0.0"
@@ -339,6 +343,8 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                            },
                            "join_group": {
                                 "239.8.8.8 2.2.2.2": {
+                                     "group": "239.8.8.8",
+                                     "source": "2.2.2.2",
                                      "up_time": "00:05:06",
                                      "foward": True,
                                      "csr_exp": "stopped",
@@ -347,6 +353,8 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "last_reporter": "0.0.0.0"
                                 },
                                 "239.8.8.8 2.2.2.1": {
+                                     "group": "239.8.8.8",
+                                     "source": "2.2.2.1",
                                      "up_time": "00:05:06",
                                      "foward": True,
                                      "csr_exp": "stopped",
@@ -355,6 +363,8 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "last_reporter": "0.0.0.0"
                                 },
                                 "239.4.4.4 1.1.1.2": {
+                                     "group": "239.4.4.4",
+                                     "source": "1.1.1.2",
                                      "up_time": "00:05:06",
                                      "foward": True,
                                      "csr_exp": "stopped",
@@ -363,17 +373,23 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "last_reporter": "10.1.2.1"
                                 },
                                 "239.9.9.9 *": {
+                                     "group": "239.9.9.9",
+                                     "source": "*",
                                      "expire": "00:06:06",
                                      "up_time": "00:23:15",
                                      "flags": "Ac",
                                      "last_reporter": "10.1.2.2"
                                 },
                                 "224.0.1.40 *": {
+                                     "group": "224.0.1.40",
+                                     "source": "*",
                                      "up_time": "00:25:33",
                                      "flags": "L U",
                                      "last_reporter": "10.1.2.1"
                                 },
                                 "239.7.7.7 2.2.2.1": {
+                                     "group": "239.7.7.7",
+                                     "source": "2.2.2.1",
                                      "up_time": "00:05:06",
                                      "foward": True,
                                      "csr_exp": "stopped",
@@ -382,6 +398,8 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "last_reporter": "0.0.0.0"
                                 },
                                 "239.3.3.3 1.1.1.1": {
+                                     "group": "239.3.3.3",
+                                     "source": "1.1.1.1",
                                      "up_time": "00:05:06",
                                      "foward": True,
                                      "csr_exp": "stopped",
@@ -390,11 +408,15 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "last_reporter": "10.1.2.1"
                                 },
                                 "239.2.2.2 *": {
+                                     "group": "239.2.2.2",
+                                     "source": "*",
                                      "up_time": "00:05:06",
                                      "flags": "L U",
                                      "last_reporter": "10.1.2.1"
                                 },
                                 "239.1.1.1 *": {
+                                     "group": "239.1.1.1",
+                                     "source": "*",
                                      "up_time": "00:05:06",
                                      "flags": "L U",
                                      "last_reporter": "10.1.2.1"
@@ -516,11 +538,15 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                       "GigabitEthernet2": {
                            "static_group": {
                                 "239.5.5.5 *": {
+                                     "group": "239.5.5.5",
+                                     "source": "*",
                                      "last_reporter": "0.0.0.0",
                                      "up_time": "00:06:17",
                                      "flags": "SG"
                                 },
                                 "239.6.6.6 *": {
+                                     "group": "239.6.6.6",
+                                     "source": "*",
                                      "last_reporter": "0.0.0.0",
                                      "up_time": "00:06:14",
                                      "flags": "SG"
@@ -528,6 +554,8 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                            },
                            "join_group": {
                                 "239.8.8.8 2.2.2.2": {
+                                     "group": "239.8.8.8",
+                                     "source": "2.2.2.2",
                                      "last_reporter": "0.0.0.0",
                                      "flags": "SS",
                                      "foward": True,
@@ -536,6 +564,8 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "v3_exp": "stopped"
                                 },
                                 "239.3.3.3 1.1.1.1": {
+                                     "group": "239.3.3.3",
+                                     "source": "1.1.1.1",
                                      "last_reporter": "20.1.2.1",
                                      "flags": "L",
                                      "foward": True,
@@ -544,12 +574,16 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "v3_exp": "stopped"
                                 },
                                 "239.1.1.1 *": {
+                                     "group": "239.1.1.1",
+                                     "source": "*",
                                      "last_reporter": "20.1.2.1",
                                      "up_time": "00:06:24",
                                      "flags": "L U",
                                      "expire": "never"
                                 },
                                 "239.4.4.4 1.1.1.2": {
+                                     "group": "239.4.4.4",
+                                     "source": "1.1.1.2",
                                      "last_reporter": "20.1.2.1",
                                      "flags": "L",
                                      "foward": True,
@@ -558,6 +592,8 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "v3_exp": "stopped"
                                 },
                                 "239.7.7.7 2.2.2.1": {
+                                     "group": "239.7.7.7",
+                                     "source": "2.2.2.1",
                                      "last_reporter": "0.0.0.0",
                                      "flags": "SS",
                                      "foward": True,
@@ -566,12 +602,16 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "v3_exp": "stopped"
                                 },
                                 "239.2.2.2 *": {
+                                     "group": "239.2.2.2",
+                                     "source": "*",
                                      "last_reporter": "20.1.2.1",
                                      "up_time": "00:06:24",
                                      "flags": "L U",
                                      "expire": "never"
                                 },
                                 "239.8.8.8 2.2.2.1": {
+                                     "group": "239.8.8.8",
+                                     "source": "2.2.2.1",
                                      "last_reporter": "0.0.0.0",
                                      "flags": "SS",
                                      "foward": True,
@@ -580,6 +620,8 @@ class test_show_ip_igmp_groups_detail(unittest.TestCase):
                                      "v3_exp": "stopped"
                                 },
                                 "224.0.1.40 *": {
+                                     "group": "224.0.1.40",
+                                     "source": "*",
                                      "last_reporter": "20.1.2.1",
                                      "up_time": "00:25:55",
                                      "flags": "L U"
