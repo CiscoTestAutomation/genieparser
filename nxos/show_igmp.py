@@ -99,7 +99,6 @@ class ShowIpIgmpInterfaceSchema(MetaParser):
                                     }
                                 },
                                 Optional('errors'): {
-                                    'reason': str,
                                     'router_alert_check': int,
                                 }
                             },
@@ -433,14 +432,12 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # Errors:
             #   Packets dropped due to router-alert check: 19
-            p26 = re.compile(r'^Packets +dropped +due +to +(?P<reason>\S+) +check: +(?P<count>\d+)$')
+            p26 = re.compile(r'^Packets +dropped +due +to +router\-alert +check: +(?P<count>\d+)$')
             m = p26.match(line)
             if m:
                 if 'errors' not in ret_dict['vrfs'][vrf]['interface'][intf]['statistics']:
                     ret_dict['vrfs'][vrf]['interface'][intf]['statistics']['errors'] = {}
 
-                ret_dict['vrfs'][vrf]['interface'][intf]['statistics']['errors']['reason'] = \
-                    m.groupdict()['reason']
                 ret_dict['vrfs'][vrf]['interface'][intf]['statistics']['errors']['router_alert_check'] = \
                     int(m.groupdict()['count'])
                 continue

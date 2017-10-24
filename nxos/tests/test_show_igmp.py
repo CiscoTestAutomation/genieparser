@@ -91,7 +91,6 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                            "statistics": {
                                 "errors": {
                                      "router_alert_check": 19,
-                                     "reason": "router-alert"
                                 },
                                 "general": {
                                      "sent": {
