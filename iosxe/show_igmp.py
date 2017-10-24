@@ -30,13 +30,13 @@ class ShowIpIgmpInterfaceSchema(MetaParser):
 
     schema = {'vrf':
                 {Any(): {
-                    'global_max_groups': int,
-                    'global_active_groups': int,
+                    Optional('global_max_groups'): int,
+                    Optional('global_active_groups'): int,
                     'interface': {
                         Any(): {
                             'oper_status': str,
-                            'line_protocol': str,
-                            'interface_adress': str,
+                            'interface_status': str,
+                            Optional('interface_adress'): str,
                             'enable': bool,
                             'host_version': int,
                             'router_version': int,
@@ -45,20 +45,24 @@ class ShowIpIgmpInterfaceSchema(MetaParser):
                             'querier_timeout': int,
                             Optional('configured_querier_timeout'): int,
                             'query_max_response_time': int,
-                            'last_member_query_interval': int,
-                            'last_member_query_count': int,
+                            Optional('last_member_query_interval'): int,
+                            Optional('last_member_query_count'): int,
                             Optional('group_policy'): str,
-                            'max_groups': int,
-                            'active_groups': int,
-                            'joins': int,
-                            'leaves': int,
+                            Optional('max_groups'): int,
+                            Optional('active_groups'): int,
+                            Optional('counters'): {
+                                'joins': int,
+                                'leaves': int,
+                            },
                             Optional('multicast'): {
                                 Optional('routing_enable'): bool,
                                 Optional('ttl_threshold'): int,
                                 Optional('designated_router'): str,
                                 Optional('routing_table'): str,
+                                Optional('dr_this_system'): bool,
                             },
-                            'querier': str,
+                            Optional('querier'): str,
+                            Optional('querier_this_sytem'): True,
                             Optional('joined_group'): {
                                 Any(): {
                                     'number_of_users': int,
@@ -107,11 +111,16 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
                 continue
 
             # GigabitEthernet1 is up, line protocol is up
-            p2 = re.compile(r'^(?P<intf>[\w\-\.\/]+) +is +(?P<oper_status>\w+), +'
-                             'line +protocol +is +(?P<line_protocol>\w+)$')
+            p2 = re.compile(r'^(?P<intf>[\w\-\.\/]+) +is +(?P<intf_status>\w+), +'
+                             'line +protocol +is +(?P<oper_status>\w+)$')
             m = p2.match(line)
             if m:
                 intf = m.groupdict()['intf']
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+
                 if 'interface' not in ret_dict['vrf'][vrf]:
                     ret_dict['vrf'][vrf]['interface'] = {}
                 if intf not in ret_dict['vrf'][vrf]['interface']:
@@ -119,8 +128,8 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
                 ret_dict['vrf'][vrf]['interface'][intf]['oper_status'] = \
                     m.groupdict()['oper_status'].lower()
-                ret_dict['vrf'][vrf]['interface'][intf]['line_protocol'] = \
-                    m.groupdict()['line_protocol'].lower()
+                ret_dict['vrf'][vrf]['interface'][intf]['interface_status'] = \
+                    m.groupdict()['intf_status'].lower()
                 continue
 
             # Internet address is 10.1.2.1/24
@@ -224,10 +233,12 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             # IGMP activity: 13 joins, 3 leaves
             p15 = re.compile(r'^IGMP +activity: +(?P<joins>\d+) +joins, +(?P<leaves>\d+) +leaves$')
             m = p15.match(line)
-            if m:                
-                ret_dict['vrf'][vrf]['interface'][intf]['joins'] = \
+            if m:
+                if 'counters' not in ret_dict['vrf'][vrf]['interface'][intf]:
+                    ret_dict['vrf'][vrf]['interface'][intf]['counters'] = {}
+                ret_dict['vrf'][vrf]['interface'][intf]['counters']['joins'] = \
                     int(m.groupdict()['joins'])
-                ret_dict['vrf'][vrf]['interface'][intf]['leaves'] = \
+                ret_dict['vrf'][vrf]['interface'][intf]['counters']['leaves'] = \
                     int(m.groupdict()['leaves'])
                 continue
 
@@ -268,6 +279,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
                     ret_dict['vrf'][vrf]['interface'][intf]['multicast'] = {}
                 ret_dict['vrf'][vrf]['interface'][intf]['multicast']['designated_router'] = \
                     m.groupdict()['ip']
+                ret_dict['vrf'][vrf]['interface'][intf]['multicast']['dr_this_system'] = True
                 continue
 
             # IGMP querying router is 10.1.2.1 (this system)
@@ -277,6 +289,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             if m:
                 ret_dict['vrf'][vrf]['interface'][intf]['querier'] = \
                     m.groupdict()['querier']
+                ret_dict['vrf'][vrf]['interface'][intf]['querier_this_sytem'] = True
                 continue
 
             # Multicast groups joined by this system (number of users):
@@ -320,31 +333,31 @@ class ShowIpIgmpGroupsDetailSchema(MetaParser):
                 {Any(): {
                     'interface': {
                         Any(): {
-                            'join_group': {
+                            Optional('join_group'): {
                                 Any(): {
                                     'group': str,
                                     'source': str,
                                     Optional('expire'): str,
                                     'up_time': str,
                                     'last_reporter': str,
-                                    'flags': str,
+                                    Optional('flags'): str,
                                     Optional('v3_exp'): str,
                                     Optional('csr_exp'):str,
-                                    Optional('foward'): bool,
+                                    Optional('forward'): bool,
                                     Optional('source_flags'): str,
                                 }
                             },
-                            'static_group': {
+                            Optional('static_group'): {
                                 Any(): {
                                     'group': str,
                                     'source': str,
                                     Optional('expire'): str,
                                     'up_time': str,
                                     'last_reporter': str,
-                                    'flags': str,
+                                    Optional('flags'): str,
                                     Optional('v3_exp'): str,
                                     Optional('csr_exp'):str,
-                                    Optional('foward'): bool,
+                                    Optional('forward'): bool,
                                     Optional('source_flags'): str,
                                 }
                             },
@@ -354,16 +367,14 @@ class ShowIpIgmpGroupsDetailSchema(MetaParser):
                                     'up_time': str,
                                     'group_mode': str,
                                     'last_reporter': str,
-                                    'flags': str,
+                                    Optional('flags'): str,
                                     Optional('source'): {
                                         Any(): {
                                             'v3_exp': str,
                                             'csr_exp':str,
-                                            'foward': bool,
-                                            'flags': str,
+                                            'forward': bool,
+                                            Optional('flags'): str,
                                             'up_time': str,
-                                            'last_reporter': str,
-                                            Optional('expire'): str,
                                         },
                                     },
                                 }
@@ -401,7 +412,7 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
 
         # initial variables
         ret_dict = {}
-        key = None
+        keys = None
         expire = None
         up_time = None
         last_reporter = None
@@ -438,21 +449,28 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
                 continue
 
             # Flags:                L U
-            p3 = re.compile(r'^Flags: +(?P<flags>[\w\s]+)$')
+            p3 = re.compile(r'^Flags:( *(?P<flags>[\w\s]+))?$')
             m = p3.match(line)
             if m:
                 flags = m.groupdict()['flags']
-                if 'SG' in flags:
-                    key = 'static_group'
-                    if key not in ret_dict['vrf'][vrf]['interface'][intf]:
-                        ret_dict['vrf'][vrf]['interface'][intf][key] = {}
-                else:
-                    key = 'join_group'
-                    if key not in ret_dict['vrf'][vrf]['interface'][intf]:
-                        ret_dict['vrf'][vrf]['interface'][intf][key] = {}
 
                 # flags
-                ret_dict['vrf'][vrf]['interface'][intf]['group'][group]['flags'] = flags
+                if flags:
+                    if 'SG' in flags:
+                        keys = ['static_group']
+                        if 'static_group' not in ret_dict['vrf'][vrf]['interface'][intf]:
+                            ret_dict['vrf'][vrf]['interface'][intf]['static_group'] = {}
+                        if flags.replace('SG', ''):
+                            keys.append('join_group')
+                            if 'join_group' not in ret_dict['vrf'][vrf]['interface'][intf]:
+                                ret_dict['vrf'][vrf]['interface'][intf]['join_group'] = {}
+                    else:
+                        keys = ['join_group']
+                        if 'join_group' not in ret_dict['vrf'][vrf]['interface'][intf]:
+                            ret_dict['vrf'][vrf]['interface'][intf]['join_group'] = {}
+                    ret_dict['vrf'][vrf]['interface'][intf]['group'][group]['flags'] = flags
+                else:
+                    keys = None
                 continue
 
             # Uptime:                00:05:06
@@ -490,14 +508,14 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
                              '(?P<up_time>[\w\.\:]+) +'
                              '(?P<v3_exp>\w+) +'
                              '(?P<csr_exp>\w+) +'
-                             '(?P<foward>\w+) +'
+                             '(?P<forward>\w+) +'
                              '(?P<source_flags>\w+)$')
             m = p7.match(line)
             if m:
                 source = m.groupdict()['source']
                 v3_exp = m.groupdict()['v3_exp']
                 csr_exp = m.groupdict()['csr_exp']
-                foward = True if m.groupdict()['foward'].lower() == 'yes' else False
+                forward = True if m.groupdict()['forward'].lower() == 'yes' else False
                 source_flags = m.groupdict()['source_flags']
 
 
@@ -517,40 +535,33 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
                     ['source'][source]['csr_exp'] = csr_exp
 
                 ret_dict['vrf'][vrf]['interface'][intf]['group'][group]\
-                    ['source'][source]['foward'] = foward
+                    ['source'][source]['forward'] = forward
 
                 ret_dict['vrf'][vrf]['interface'][intf]['group'][group]\
                     ['source'][source]['flags'] = source_flags
-                    
-                if last_reporter:
-                    ret_dict['vrf'][vrf]['interface'][intf]['group'][group]\
-                        ['source'][source]['last_reporter'] = last_reporter
-
-                if expire:
-                    ret_dict['vrf'][vrf]['interface'][intf]['group'][group]\
-                        ['source'][source]['expire'] = expire
 
                 # join_group or static_group structure
-                if key:
+                if keys:
                     static_join_group = group + ' ' + source
-                    if static_join_group not in ret_dict['vrf'][vrf]['interface'][intf][key]:
-                        ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group] = {}
+                    for key in keys:
+                        if static_join_group not in ret_dict['vrf'][vrf]['interface'][intf][key]:
+                            ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group] = {}
 
-                    ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['v3_exp'] = v3_exp
-                    ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['csr_exp'] = csr_exp
-                    ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['foward'] = foward
-                    ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['flags'] = flags
-                    ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['group'] = group
-                    ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['source'] = source
+                        ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['v3_exp'] = v3_exp
+                        ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['csr_exp'] = csr_exp
+                        ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['forward'] = forward
+                        ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['flags'] = flags
+                        ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['group'] = group
+                        ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['source'] = source
 
-                    # create structure for pre define keys
-                    key_value_dict = {'expire': expire,
-                                      'up_time': up_time,
-                                      'last_reporter': last_reporter,
-                                      'flags': flags}
+                        # create structure for pre define keys
+                        key_value_dict = {'expire': expire,
+                                          'up_time': up_time,
+                                          'last_reporter': last_reporter,
+                                          'flags': flags}
 
-                    ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group].update(
-                        self.build_pre_define_key(key_value_dict=key_value_dict))
+                        ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group].update(
+                            self.build_pre_define_key(key_value_dict=key_value_dict))
 
             # Source list is empty
             p7_1 = re.compile(r'^Source +list +is +empty$')
@@ -558,21 +569,22 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
             if m:
                 source = '*'
                 # join_group or static_group structure
-                if key:
+                if keys:
                     static_join_group = group + ' ' + source
-                    if static_join_group not in ret_dict['vrf'][vrf]['interface'][intf][key]:
-                        ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group] = {}    
-                    ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['group'] = group
-                    ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['source'] = source                
+                    for key in keys:
+                        if static_join_group not in ret_dict['vrf'][vrf]['interface'][intf][key]:
+                            ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group] = {}    
+                        ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['group'] = group
+                        ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['source'] = source                
 
-                    # create structure for pre define keys
-                    key_value_dict = {'expire': expire,
-                                      'up_time': up_time,
-                                      'last_reporter': last_reporter,
-                                      'flags': flags}
+                        # create structure for pre define keys
+                        key_value_dict = {'expire': expire,
+                                          'up_time': up_time,
+                                          'last_reporter': last_reporter,
+                                          'flags': flags}
 
-                    ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group].update(
-                        self.build_pre_define_key(key_value_dict=key_value_dict))
+                        ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group].update(
+                            self.build_pre_define_key(key_value_dict=key_value_dict))
 
                 continue
 
@@ -617,7 +629,7 @@ class ShowIpIgmpSsmMapping(ShowIpIgmpSsmMappingSchema):
 
         # initial variables
         ret_dict = {}
-        group_address = None
+        group_address = ''
         database = None
 
         for line in out.splitlines():
@@ -649,16 +661,17 @@ class ShowIpIgmpSsmMapping(ShowIpIgmpSsmMappingSchema):
                     ret_dict['vrf'][vrf]['ssm_map'] = {}
 
                 source_addr = m.groupdict()['source_addr']
-                if source_addr not in ret_dict['vrf'][vrf]['ssm_map']:
-                    ret_dict['vrf'][vrf]['ssm_map'][source_addr] = {}
+                ssm = source_addr + ' ' + group_address
+                if ssm not in ret_dict['vrf'][vrf]['ssm_map']:
+                    ret_dict['vrf'][vrf]['ssm_map'][ssm] = {}
 
-                ret_dict['vrf'][vrf]['ssm_map'][source_addr]['source_addr'] = source_addr
+                ret_dict['vrf'][vrf]['ssm_map'][ssm]['source_addr'] = source_addr
 
                 if group_address:
-                    ret_dict['vrf'][vrf]['ssm_map'][source_addr]['group_address'] = group_address
+                    ret_dict['vrf'][vrf]['ssm_map'][ssm]['group_address'] = group_address
 
                 if database:
-                    ret_dict['vrf'][vrf]['ssm_map'][source_addr]['database'] = database.lower()
+                    ret_dict['vrf'][vrf]['ssm_map'][ssm]['database'] = database.lower()
                 continue
 
             # 1.1.1.2
@@ -666,16 +679,17 @@ class ShowIpIgmpSsmMapping(ShowIpIgmpSsmMappingSchema):
             m = p3_1.match(line)
             if m:
                 source_addr = m.groupdict()['source_addr']
-                if source_addr not in ret_dict['vrf'][vrf]['ssm_map']:
-                    ret_dict['vrf'][vrf]['ssm_map'][source_addr] = {}
+                ssm = source_addr + ' ' + group_address
+                if ssm not in ret_dict['vrf'][vrf]['ssm_map']:
+                    ret_dict['vrf'][vrf]['ssm_map'][ssm] = {}
 
-                ret_dict['vrf'][vrf]['ssm_map'][source_addr]['source_addr'] = source_addr
+                ret_dict['vrf'][vrf]['ssm_map'][ssm]['source_addr'] = source_addr
 
                 if group_address:
-                    ret_dict['vrf'][vrf]['ssm_map'][source_addr]['group_address'] = group_address
+                    ret_dict['vrf'][vrf]['ssm_map'][ssm]['group_address'] = group_address
 
                 if database:
-                    ret_dict['vrf'][vrf]['ssm_map'][source_addr]['database'] = database.lower()
+                    ret_dict['vrf'][vrf]['ssm_map'][ssm]['database'] = database.lower()
                 continue
 
         return ret_dict
