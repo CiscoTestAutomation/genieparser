@@ -70,7 +70,7 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                            "query_interval": 133,
                            "enable": True,
                            "querier": "10.1.2.1",
-                           "querier_this_sytem": True,
+                           "query_this_system": True,
                            "configured_query_interval": 133,
                            "last_member_query_interval": 100,
                            "host_version": 3
@@ -155,7 +155,7 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                            "query_interval": 133,
                            "enable": True,
                            "querier": "20.1.2.1",
-                           "querier_this_sytem": True,
+                           "query_this_system": True,
                            "configured_query_interval": 133,
                            "last_member_query_interval": 100,
                            "host_version": 3

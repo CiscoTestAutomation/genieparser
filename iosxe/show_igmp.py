@@ -62,7 +62,7 @@ class ShowIpIgmpInterfaceSchema(MetaParser):
                                 Optional('dr_this_system'): bool,
                             },
                             Optional('querier'): str,
-                            Optional('querier_this_sytem'): True,
+                            Optional('query_this_system'): True,
                             Optional('joined_group'): {
                                 Any(): {
                                     'number_of_users': int,
@@ -292,7 +292,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
                 ret_dict['vrf'][vrf]['interface'][intf]['querier'] = \
                     m.groupdict()['querier']
                 if "this system" in str(m.groupdict()['dummy']):
-                    ret_dict['vrf'][vrf]['interface'][intf]['querier_this_sytem'] = True
+                    ret_dict['vrf'][vrf]['interface'][intf]['query_this_system'] = True
                 continue
 
             # Multicast groups joined by this system (number of users):
