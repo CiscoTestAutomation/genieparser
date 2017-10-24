@@ -31,8 +31,7 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                  "groups_count": 2,
                  "interface": {
                       "Ethernet2/2": {
-                           "startup_query_count": 2,
-                           "default_query_max_response_time": 10,
+                           "query_max_response_time": 10,
                            "vrf_name": "default",
                            "statistics": {
                                 "general": {
@@ -48,13 +47,20 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                                      }
                                 }
                            },
-                           "query_max_response_time": 10,
+                           "configured_query_max_response_time": 10,
                            "pim_dr": True,
                            "vrf_id": 1,
                            "querier": "10.1.3.1",
                            "membership_count": 0,
-                           "last_member_query_count": 2,
-                           "default_startup_query_interval": 31,
+                           "last_member": {
+                               "query_count": 2,
+                               "mrt": 1,
+                           },
+                           "startup_query": {
+                               "interval": 31,
+                               "configured_interval": 31,
+                               "count": 2,
+                           },
                            "link_status": "up",
                            "subnet": "10.1.3.0/24",
                            "address": "10.1.3.1",
@@ -63,31 +69,28 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                            "enable_refcount": 1,
                            "enable": True,
                            "next_query_sent_in": "00:00:55",
-                           "query_interval": 125,
+                           "configured_query_interval": 125,
                            "old_membership_count": 0,
-                           "default_group_timeout": 260,
-                           "robustness_variable": 2,
-                           "vpc_svi": True,
-                           "querier_version": 2,
-                           "last_member_mrt": 1,
-                           "version": 2,
-                           "default_query_interval": 125,
-                           "default_querier_timeout": 255,
-                           "immediate_leave": False,
                            "group_timeout": 260,
-                           "host_version": 2,
-                           "startup_query_interval": 31,
+                           "configured_robustness_variable": 2,
+                           "vpc_svi": False,
+                           "querier_version": 2,
+                           "version": 2,
+                           "query_interval": 125,
                            "querier_timeout": 255,
-                           "default_robustness_variable": 2,
+                           "immediate_leave": False,
+                           "configured_group_timeout": 260,
+                           "host_version": 2,
+                           "configured_querier_timeout": 255,
+                           "robustness_variable": 2,
                            "oper_status": "up"
                       },
                       "Ethernet2/1": {
-                           "startup_query_count": 5,
-                           "default_query_max_response_time": 15,
+                           "query_max_response_time": 15,
                            "vrf_name": "default",
                            "statistics": {
                                 "errors": {
-                                     "check_count": 19,
+                                     "router_alert_check": 19,
                                      "reason": "router-alert"
                                 },
                                 "general": {
@@ -107,14 +110,21 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                                      }
                                 }
                            },
-                           "query_max_response_time": 15,
+                           "configured_query_max_response_time": 15,
                            "max_groups": 10,
                            "vrf_id": 1,
                            "querier": "10.1.2.1",
                            "membership_count": 4,
-                           "last_member_query_count": 5,
+                           "last_member": {
+                               "query_count": 5,
+                               "mrt": 1,
+                           },
+                           "startup_query": {
+                               "interval": 33,
+                               "configured_interval": 31,
+                               "count": 5,
+                           },
                            "pim_dr": True,
-                           "default_startup_query_interval": 33,
                            "link_status": "up",
                            "subnet": "10.1.2.0/24",
                            "address": "10.1.2.1",
@@ -124,23 +134,21 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                            "enable": True,
                            "group_policy": "access-group-filter",
                            "next_query_sent_in": "00:00:47",
-                           "query_interval": 133,
+                           "configured_query_interval": 133,
                            "old_membership_count": 0,
-                           "default_group_timeout": 680,
-                           "robustness_variable": 5,
-                           "vpc_svi": True,
+                           "group_timeout": 680,
+                           "configured_robustness_variable": 5,
+                           "vpc_svi": False,
                            "querier_version": 3,
-                           "last_member_mrt": 1,
                            "available_groups": 10,
                            "version": 3,
-                           "default_query_interval": 133,
-                           "default_querier_timeout": 672,
+                           "query_interval": 133,
+                           "querier_timeout": 672,
                            "immediate_leave": True,
-                           "group_timeout": 260,
+                           "configured_group_timeout": 260,
                            "host_version": 3,
-                           "startup_query_interval": 31,
-                           "querier_timeout": 255,
-                           "default_robustness_variable": 5,
+                           "configured_querier_timeout": 255,
+                           "robustness_variable": 5,
                            "oper_status": "up"
                       }
                  }
@@ -149,8 +157,7 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                  "groups_count": 2,
                  "interface": {
                       "Ethernet2/4": {
-                           "startup_query_count": 5,
-                           "default_query_max_response_time": 15,
+                           "query_max_response_time": 15,
                            "vrf_name": "VRF1",
                            "statistics": {
                                 "general": {
@@ -170,14 +177,21 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                                      }
                                 }
                            },
-                           "query_max_response_time": 15,
+                           "configured_query_max_response_time": 15,
                            "max_groups": 10,
                            "vrf_id": 3,
                            "querier": "20.1.2.1",
                            "membership_count": 4,
-                           "last_member_query_count": 5,
+                           "last_member": {
+                               "query_count": 5,
+                               "mrt": 1,
+                           },
+                           "startup_query": {
+                               "interval": 33,
+                               "configured_interval": 31,
+                               "count": 5,
+                           },
                            "pim_dr": True,
-                           "default_startup_query_interval": 33,
                            "link_status": "up",
                            "subnet": "20.1.2.0/24",
                            "address": "20.1.2.1",
@@ -187,28 +201,25 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                            "enable": True,
                            "group_policy": "access-group-filter",
                            "next_query_sent_in": "00:00:06",
-                           "query_interval": 133,
+                           "configured_query_interval": 133,
                            "old_membership_count": 0,
-                           "default_group_timeout": 680,
-                           "robustness_variable": 5,
-                           "vpc_svi": True,
+                           "group_timeout": 680,
+                           "configured_robustness_variable": 5,
+                           "vpc_svi": False,
                            "querier_version": 3,
-                           "last_member_mrt": 1,
                            "available_groups": 10,
                            "version": 3,
-                           "default_query_interval": 133,
-                           "default_querier_timeout": 672,
+                           "query_interval": 133,
+                           "querier_timeout": 672,
                            "immediate_leave": True,
-                           "group_timeout": 260,
+                           "configured_group_timeout": 260,
                            "host_version": 3,
-                           "startup_query_interval": 31,
-                           "querier_timeout": 255,
-                           "default_robustness_variable": 5,
+                           "configured_querier_timeout": 255,
+                           "robustness_variable": 5,
                            "oper_status": "up"
                       },
                       "Ethernet2/3": {
-                           "startup_query_count": 2,
-                           "default_query_max_response_time": 10,
+                           "query_max_response_time": 10,
                            "vrf_name": "VRF1",
                            "statistics": {
                                 "general": {
@@ -224,13 +235,20 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                                      }
                                 }
                            },
-                           "query_max_response_time": 10,
+                           "configured_query_max_response_time": 10,
                            "pim_dr": True,
                            "vrf_id": 3,
                            "querier": "20.1.3.1",
                            "membership_count": 0,
-                           "last_member_query_count": 2,
-                           "default_startup_query_interval": 31,
+                           "last_member": {
+                               "query_count": 2,
+                               "mrt": 1,
+                           },
+                           "startup_query": {
+                               "interval": 31,
+                               "configured_interval": 31,
+                               "count": 2,
+                           },
                            "link_status": "up",
                            "subnet": "20.1.3.0/24",
                            "address": "20.1.3.1",
@@ -239,22 +257,20 @@ class test_show_ip_igmp_interface(unittest.TestCase):
                            "enable_refcount": 1,
                            "enable": True,
                            "next_query_sent_in": "00:00:47",
-                           "query_interval": 125,
+                           "configured_query_interval": 125,
                            "old_membership_count": 0,
-                           "default_group_timeout": 260,
-                           "robustness_variable": 2,
-                           "vpc_svi": True,
-                           "querier_version": 2,
-                           "last_member_mrt": 1,
-                           "version": 2,
-                           "default_query_interval": 125,
-                           "default_querier_timeout": 255,
-                           "immediate_leave": False,
                            "group_timeout": 260,
-                           "host_version": 2,
-                           "startup_query_interval": 31,
+                           "configured_robustness_variable": 2,
+                           "vpc_svi": False,
+                           "querier_version": 2,
+                           "version": 2,
+                           "query_interval": 125,
                            "querier_timeout": 255,
-                           "default_robustness_variable": 2,
+                           "immediate_leave": False,
+                           "configured_group_timeout": 260,
+                           "host_version": 2,
+                           "configured_querier_timeout": 255,
+                           "robustness_variable": 2,
                            "oper_status": "up"
                       }
                  }
@@ -451,9 +467,6 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                      "up_time": "00:15:27"
                                 },
                                 "239.8.8.8": {
-                                     "last_reporter": "20.1.2.1",
-                                     "up_time": "00:15:27",
-                                     "type": "S",
                                      "source": {
                                           "2.2.2.2": {
                                                "expire": "never",
@@ -462,7 +475,6 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                                "up_time": "00:15:27"
                                           }
                                      },
-                                     "expire": "never"
                                 },
                                 "239.5.5.5": {
                                      "expire": "never",
@@ -471,9 +483,6 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                      "up_time": "00:15:27"
                                 },
                                 "239.7.7.7": {
-                                     "last_reporter": "20.1.2.1",
-                                     "up_time": "00:15:27",
-                                     "type": "S",
                                      "source": {
                                           "2.2.2.1": {
                                                "expire": "never",
@@ -482,7 +491,6 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                                "up_time": "00:15:27"
                                           }
                                      },
-                                     "expire": "never"
                                 }
                            }
                       }
@@ -500,9 +508,6 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                      "up_time": "00:20:53"
                                 },
                                 "239.8.8.8": {
-                                     "last_reporter": "10.1.2.1",
-                                     "up_time": "00:20:34",
-                                     "type": "S",
                                      "source": {
                                           "2.2.2.2": {
                                                "expire": "never",
@@ -511,7 +516,6 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                                "up_time": "00:20:34"
                                           }
                                      },
-                                     "expire": "never"
                                 },
                                 "239.5.5.5": {
                                      "expire": "never",
@@ -520,9 +524,6 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                      "up_time": "00:21:00"
                                 },
                                 "239.7.7.7": {
-                                     "last_reporter": "10.1.2.1",
-                                     "up_time": "00:20:42",
-                                     "type": "S",
                                      "source": {
                                           "2.2.2.1": {
                                                "expire": "never",
@@ -531,7 +532,6 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                                "up_time": "00:20:42"
                                           }
                                      },
-                                     "expire": "never"
                                 }
                            }
                       }
@@ -576,9 +576,6 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                      "up_time": "00:20:53"
                                 },
                                 "239.8.8.8": {
-                                     "last_reporter": "10.1.2.1",
-                                     "up_time": "00:20:34",
-                                     "type": "S",
                                      "source": {
                                           "2.2.2.2": {
                                                "expire": "never",
@@ -587,7 +584,6 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                                "up_time": "00:20:34"
                                           }
                                      },
-                                     "expire": "never"
                                 },
                                 "239.5.5.5": {
                                      "expire": "never",
@@ -596,9 +592,6 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                      "up_time": "00:21:00"
                                 },
                                 "239.7.7.7": {
-                                     "last_reporter": "10.1.2.1",
-                                     "up_time": "00:20:42",
-                                     "type": "S",
                                      "source": {
                                           "2.2.2.1": {
                                                "expire": "never",
@@ -607,7 +600,6 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                                                "up_time": "00:20:42"
                                           }
                                      },
-                                     "expire": "never"
                                 }
                            }
                       }
@@ -711,8 +703,6 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                                "type": "static"
                                           }
                                      },
-                                     "last_reporter": "01:06:47",
-                                     "type": "static"
                                 },
                                 "239.2.2.2": {
                                      "last_reporter": "00:00:18",
@@ -725,8 +715,6 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                                "type": "local"
                                           }
                                      },
-                                     "last_reporter": "00:00:06",
-                                     "type": "local"
                                 },
                                 "239.6.6.6": {
                                      "last_reporter": "01:06:47",
@@ -743,8 +731,6 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                                "type": "local"
                                           }
                                      },
-                                     "last_reporter": "00:00:11",
-                                     "type": "local"
                                 },
                                 "239.7.7.7": {
                                      "source": {
@@ -753,8 +739,6 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                                "type": "static"
                                           }
                                      },
-                                     "last_reporter": "01:06:47",
-                                     "type": "static"
                                 }
                            }
                       }
@@ -811,8 +795,6 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                                "type": "static"
                                           }
                                      },
-                                     "last_reporter": "01:06:47",
-                                     "type": "static"
                                 },
                                 "239.2.2.2": {
                                      "last_reporter": "00:00:54",
@@ -825,8 +807,6 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                                "type": "local"
                                           }
                                      },
-                                     "last_reporter": "00:00:55",
-                                     "type": "local"
                                 },
                                 "239.6.6.6": {
                                      "last_reporter": "01:06:47",
@@ -843,8 +823,6 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                                "type": "local"
                                           }
                                      },
-                                     "last_reporter": "00:01:01",
-                                     "type": "local"
                                 },
                                 "239.7.7.7": {
                                      "source": {
@@ -853,8 +831,6 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                                "type": "static"
                                           }
                                      },
-                                     "last_reporter": "01:06:47",
-                                     "type": "static"
                                 }}}}}}
     }
 
@@ -935,8 +911,6 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                                "type": "static"
                                           }
                                      },
-                                     "last_reporter": "01:06:47",
-                                     "type": "static"
                                 },
                                 "239.2.2.2": {
                                      "last_reporter": "00:00:54",
@@ -949,8 +923,6 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                                "type": "local"
                                           }
                                      },
-                                     "last_reporter": "00:00:55",
-                                     "type": "local"
                                 },
                                 "239.6.6.6": {
                                      "last_reporter": "01:06:47",
@@ -967,8 +939,6 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                                "type": "local"
                                           }
                                      },
-                                     "last_reporter": "00:01:01",
-                                     "type": "local"
                                 },
                                 "239.7.7.7": {
                                      "source": {
@@ -977,8 +947,6 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
                                                "type": "static"
                                           }
                                      },
-                                     "last_reporter": "01:06:47",
-                                     "type": "static"
                                 }}}}}}
     }
 
@@ -1012,7 +980,6 @@ class test_show_ip_igmp_local_groups(unittest.TestCase):
         obj = ShowIpIgmpLocalGroups(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
-
 
 if __name__ == '__main__':
     unittest.main()

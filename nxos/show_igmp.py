@@ -43,36 +43,41 @@ class ShowIpIgmpInterfaceSchema(MetaParser):
                             'enable': bool,
                             'link_status': str,
                             'oper_status': str,
-                            'address': str,
-                            'subnet': str,
-                            'querier': str,
-                            'querier_version': int,
-                            'next_query_sent_in': str,
-                            'membership_count': int,
-                            'old_membership_count': int,
-                            'version': int,
-                            'host_version': int,
-                            'query_interval': int,
-                            'default_query_interval': int,
-                            'query_max_response_time': int,
-                            'default_query_max_response_time': int,
-                            'startup_query_interval': int,
-                            'default_startup_query_interval': int,
-                            'startup_query_count': int,
-                            'last_member_mrt': int,
-                            'last_member_query_count': int,
-                            'group_timeout': int,
-                            'default_group_timeout': int,
-                            'querier_timeout': int,
-                            'default_querier_timeout': int,
-                            'unsolicited_report_interval': int,
-                            'robustness_variable': int,
-                            'default_robustness_variable': int,
-                            'link_local_groups_reporting': bool,
-                            'enable_refcount': int,
-                            'immediate_leave': bool,
-                            'vrf_name': str,
-                            'vrf_id': int,
+                            Optional('address'): str,
+                            Optional('subnet'): str,
+                            Optional('querier'): str,
+                            Optional('querier_version'): int,
+                            Optional('next_query_sent_in'): str,
+                            Optional('membership_count'): int,
+                            Optional('old_membership_count'): int,
+                            Optional('version'): int,
+                            Optional('host_version'): int,
+                            Optional('configured_query_interval'): int,
+                            Optional('query_interval'): int,
+                            Optional('configured_query_max_response_time'): int,
+                            Optional('query_max_response_time'): int,
+                            Optional('startup_query'): {
+                                Optional('configured_interval'): int,
+                                Optional('interval'): int,
+                                Optional('count'): int,
+
+                                },
+                            Optional('last_member'): {                                
+                                Optional('mrt'): int,
+                                Optional('query_count'): int,
+                            },
+                            Optional('configured_group_timeout'): int,
+                            Optional('group_timeout'): int,
+                            Optional('configured_querier_timeout'): int,
+                            Optional('querier_timeout'): int,
+                            Optional('unsolicited_report_interval'): int,
+                            Optional('configured_robustness_variable'): int,
+                            Optional('robustness_variable'): int,
+                            Optional('link_local_groups_reporting'): bool,
+                            Optional('enable_refcount'): int,
+                            Optional('immediate_leave'): bool,
+                            Optional('vrf_name'): str,
+                            Optional('vrf_id'): int,
                             Optional('group_policy'): str,
                             Optional('max_groups'): int,
                             Optional('available_groups'): int,
@@ -95,11 +100,11 @@ class ShowIpIgmpInterfaceSchema(MetaParser):
                                 },
                                 Optional('errors'): {
                                     'reason': str,
-                                    'check_count': int,
+                                    'router_alert_check': int,
                                 }
                             },
-                            'pim_dr': bool,
-                            'vpc_svi': bool,
+                            Optional('pim_dr'): bool,
+                            Optional('vpc_svi'): bool,
                         }
                     },
                 },
@@ -211,9 +216,9 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
                              'configured +value: +(?P<conf_intvl>\d+) +secs$')
             m = p8.match(line)
             if m:
-                ret_dict['vrfs'][vrf]['interface'][intf]['default_query_interval'] = \
-                    int(m.groupdict()['intverval'])
                 ret_dict['vrfs'][vrf]['interface'][intf]['query_interval'] = \
+                    int(m.groupdict()['intverval'])
+                ret_dict['vrfs'][vrf]['interface'][intf]['configured_query_interval'] = \
                     int(m.groupdict()['conf_intvl'])
                 continue
 
@@ -222,9 +227,9 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
                              'configured +value: +(?P<conf_time>\d+) +secs$')
             m = p9.match(line)
             if m:
-                ret_dict['vrfs'][vrf]['interface'][intf]['default_query_max_response_time'] = \
-                    int(m.groupdict()['time'])
                 ret_dict['vrfs'][vrf]['interface'][intf]['query_max_response_time'] = \
+                    int(m.groupdict()['time'])
+                ret_dict['vrfs'][vrf]['interface'][intf]['configured_query_max_response_time'] = \
                     int(m.groupdict()['conf_time'])
                 continue
 
@@ -233,9 +238,11 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
                              'configured +value: +(?P<conf_intvl>\d+) +secs$')
             m = p10.match(line)
             if m:
-                ret_dict['vrfs'][vrf]['interface'][intf]['default_startup_query_interval'] = \
+                if 'startup_query' not in ret_dict['vrfs'][vrf]['interface'][intf]:
+                    ret_dict['vrfs'][vrf]['interface'][intf]['startup_query'] = {}
+                ret_dict['vrfs'][vrf]['interface'][intf]['startup_query']['interval'] = \
                     int(m.groupdict()['intvl'])
-                ret_dict['vrfs'][vrf]['interface'][intf]['startup_query_interval'] = \
+                ret_dict['vrfs'][vrf]['interface'][intf]['startup_query']['configured_interval'] = \
                     int(m.groupdict()['conf_intvl'])
                 continue
 
@@ -243,7 +250,9 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             p11 = re.compile(r'^IGMP +startup +query +count: +(?P<count>\d+)$')
             m = p11.match(line)
             if m:
-                ret_dict['vrfs'][vrf]['interface'][intf]['startup_query_count'] = \
+                if 'startup_query' not in ret_dict['vrfs'][vrf]['interface'][intf]:
+                    ret_dict['vrfs'][vrf]['interface'][intf]['startup_query'] = {}
+                ret_dict['vrfs'][vrf]['interface'][intf]['startup_query']['count'] = \
                     int(m.groupdict()['count'])
                 continue
 
@@ -251,7 +260,9 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             p12 = re.compile(r'^IGMP +last +member +mrt: +(?P<mrt>\d+) +secs$')
             m = p12.match(line)
             if m:
-                ret_dict['vrfs'][vrf]['interface'][intf]['last_member_mrt'] = \
+                if 'last_member' not in ret_dict['vrfs'][vrf]['interface'][intf]:
+                    ret_dict['vrfs'][vrf]['interface'][intf]['last_member'] = {}
+                ret_dict['vrfs'][vrf]['interface'][intf]['last_member']['mrt'] = \
                     int(m.groupdict()['mrt'])
                 continue
 
@@ -259,7 +270,9 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             p13 = re.compile(r'^IGMP +last +member +query +count: +(?P<count>\d+)$')
             m = p13.match(line)
             if m:
-                ret_dict['vrfs'][vrf]['interface'][intf]['last_member_query_count'] = \
+                if 'last_member' not in ret_dict['vrfs'][vrf]['interface'][intf]:
+                    ret_dict['vrfs'][vrf]['interface'][intf]['last_member'] = {}
+                ret_dict['vrfs'][vrf]['interface'][intf]['last_member']['query_count'] = \
                     int(m.groupdict()['count'])
                 continue
 
@@ -268,9 +281,9 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
                              'configured +value: +(?P<conf_timeout>\d+) +secs$')
             m = p14.match(line)
             if m:
-                ret_dict['vrfs'][vrf]['interface'][intf]['default_group_timeout'] = \
-                    int(m.groupdict()['timeout'])
                 ret_dict['vrfs'][vrf]['interface'][intf]['group_timeout'] = \
+                    int(m.groupdict()['timeout'])
+                ret_dict['vrfs'][vrf]['interface'][intf]['configured_group_timeout'] = \
                     int(m.groupdict()['conf_timeout'])
                 continue
 
@@ -279,9 +292,9 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
                              'configured +value: +(?P<conf_timeout>\d+) +secs$')
             m = p15.match(line)
             if m:
-                ret_dict['vrfs'][vrf]['interface'][intf]['default_querier_timeout'] = \
-                    int(m.groupdict()['timeout'])
                 ret_dict['vrfs'][vrf]['interface'][intf]['querier_timeout'] = \
+                    int(m.groupdict()['timeout'])
+                ret_dict['vrfs'][vrf]['interface'][intf]['configured_querier_timeout'] = \
                     int(m.groupdict()['conf_timeout'])
                 continue
 
@@ -298,9 +311,9 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
                              'configured +value: +(?P<val2>\d+)$')
             m = p17.match(line)
             if m:
-                ret_dict['vrfs'][vrf]['interface'][intf]['default_robustness_variable'] = \
-                    int(m.groupdict()['val1'])
                 ret_dict['vrfs'][vrf]['interface'][intf]['robustness_variable'] = \
+                    int(m.groupdict()['val1'])
+                ret_dict['vrfs'][vrf]['interface'][intf]['configured_robustness_variable'] = \
                     int(m.groupdict()['val2'])
                 continue
 
@@ -428,7 +441,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
                 ret_dict['vrfs'][vrf]['interface'][intf]['statistics']['errors']['reason'] = \
                     m.groupdict()['reason']
-                ret_dict['vrfs'][vrf]['interface'][intf]['statistics']['errors']['check_count'] = \
+                ret_dict['vrfs'][vrf]['interface'][intf]['statistics']['errors']['router_alert_check'] = \
                     int(m.groupdict()['count'])
                 continue
 
@@ -445,7 +458,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             m = p28.match(line)
             if m:
                 ret_dict['vrfs'][vrf]['interface'][intf]['vpc_svi'] = True \
-                    if 'no' in m.groupdict()['status'].lower() else False
+                    if 'no' not in m.groupdict()['status'].lower() else False
                 continue
                 
             # Interface vPC CFS statistics:
@@ -478,10 +491,10 @@ class ShowIpIgmpGroupsSchema(MetaParser):
                                             'type': str,
                                         }
                                     },
-                                    'expire': str,
-                                    'up_time': str,
-                                    'last_reporter': str,
-                                    'type': str,
+                                    Optional('expire'): str,
+                                    Optional('up_time'): str,
+                                    Optional('last_reporter'): str,
+                                    Optional('type'): str,
                                 }
                             }
                         },
@@ -553,15 +566,6 @@ class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
                 if group not in ret_dict['vrfs'][vrf]['interface'][intf]['group']:
                     ret_dict['vrfs'][vrf]['interface'][intf]['group'][group] = {}
 
-                ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['expire'] = \
-                    m.groupdict()['expires']
-                ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['type'] = \
-                    m.groupdict()['type']
-                ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['up_time'] = \
-                    m.groupdict()['uptime']
-                ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['last_reporter'] = \
-                    m.groupdict()['last_reporter']
-
                 if source_flag:
                     if 'source' not in ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]:
                         ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['source'] = {}
@@ -575,6 +579,15 @@ class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
                     ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['source'][source]['up_time'] = \
                         m.groupdict()['uptime']
                     ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['source'][source]['last_reporter'] = \
+                        m.groupdict()['last_reporter']
+                else:
+                    ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['expire'] = \
+                        m.groupdict()['expires']
+                    ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['type'] = \
+                        m.groupdict()['type']
+                    ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['up_time'] = \
+                        m.groupdict()['uptime']
+                    ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['last_reporter'] = \
                         m.groupdict()['last_reporter']
 
                 source_flag = False
@@ -598,13 +611,13 @@ class ShowIpIgmpLocalGroupsSchema(MetaParser):
                 Any(): {
                     Optional('interface'): {
                         Any(): {
-                            'join_group': {
+                            Optional('join_group'): {
                                 Any(): {
                                     'group': str,
                                     'source': str
                                 },
                             },
-                            'static_group': {
+                            Optional('static_group'): {
                                 Any(): {
                                     'group': str,
                                     'source': str
@@ -618,8 +631,8 @@ class ShowIpIgmpLocalGroupsSchema(MetaParser):
                                             'type': str,
                                         }
                                     },
-                                    'last_reporter': str,
-                                    'type': str,
+                                    Optional('last_reporter'): str,
+                                    Optional('type'): str,
                                 }
                             }
                         },
@@ -679,10 +692,6 @@ class ShowIpIgmpLocalGroups(ShowIpIgmpLocalGroupsSchema):
 
                 group_type = m.groupdict()['type'].lower()
 
-                ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['type'] = group_type                    
-                ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['last_reporter'] = \
-                    m.groupdict()['last_reporter']
-
 
                 source = m.groupdict()['source']
                 if source != '*':
@@ -695,6 +704,10 @@ class ShowIpIgmpLocalGroups(ShowIpIgmpLocalGroupsSchema):
                         ['source'][source]['type'] = group_type
                     ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]\
                         ['source'][source]['last_reporter'] = m.groupdict()['last_reporter']
+                else:
+                    ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['type'] = group_type                    
+                    ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['last_reporter'] = \
+                        m.groupdict()['last_reporter']
 
                 # build static_group and join_group info
                 if group_type == 'static':
