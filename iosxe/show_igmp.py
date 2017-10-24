@@ -272,24 +272,27 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # Multicast designated router (DR) is 10.1.2.1 (this system)
             p19 = re.compile(r'^Multicast +designated +router +\(DR\) +'
-                              'is +(?P<ip>[\w\.\:]+)( *\([\w\s]+\))?$')
+                              'is +(?P<ip>[\w\.\:]+)(?P<dummy> *\([\w\s]+\))?$')
             m = p19.match(line)
             if m:
                 if 'multicast' not in ret_dict['vrf'][vrf]['interface'][intf]:
                     ret_dict['vrf'][vrf]['interface'][intf]['multicast'] = {}
                 ret_dict['vrf'][vrf]['interface'][intf]['multicast']['designated_router'] = \
                     m.groupdict()['ip']
-                ret_dict['vrf'][vrf]['interface'][intf]['multicast']['dr_this_system'] = True
+
+                if "this system" in str(m.groupdict()['dummy']):
+                    ret_dict['vrf'][vrf]['interface'][intf]['multicast']['dr_this_system'] = True
                 continue
 
             # IGMP querying router is 10.1.2.1 (this system)
             p20 = re.compile(r'^IGMP +querying +router +is +(?P<querier>[\w\.\:]+)'
-                              '( *\([\w\s]+\))?$')
+                              '(?P<dummy> *\([\w\s]+\))?$')
             m = p20.match(line)
             if m:
                 ret_dict['vrf'][vrf]['interface'][intf]['querier'] = \
                     m.groupdict()['querier']
-                ret_dict['vrf'][vrf]['interface'][intf]['querier_this_sytem'] = True
+                if "this system" in str(m.groupdict()['dummy']):
+                    ret_dict['vrf'][vrf]['interface'][intf]['querier_this_sytem'] = True
                 continue
 
             # Multicast groups joined by this system (number of users):
@@ -420,8 +423,10 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
 
         for line in out.splitlines():
             line = line.strip()
+            line = line.replace('\t', '    ')
 
             # Interface:        GigabitEthernet1
+            # Interface:\tVlan211
             p1 = re.compile(r'^Interface: +(?P<intf>[\w\.\-\/]+)$')
             m = p1.match(line)
             if m:
@@ -453,7 +458,6 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
             m = p3.match(line)
             if m:
                 flags = m.groupdict()['flags']
-
                 # flags
                 if flags:
                     if 'SG' in flags:
