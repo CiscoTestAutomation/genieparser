@@ -1,4 +1,4 @@
-''' show_igmp.py
+''' show_mld.py
 
 NXOS parsers for the following show commands:
 
