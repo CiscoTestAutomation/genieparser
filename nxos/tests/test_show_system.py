@@ -105,7 +105,6 @@ class test_show_system_internal_sysmgr_service_name(unittest.TestCase):
         '''}
 
     def test_show_system_internal_sysmgr_service_name_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowSystemInternalSysmgrServiceName(device=self.device)
         parsed_output = obj.parse(service_name='ospf')
