@@ -1863,6 +1863,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
 
         # Init vars
         parsed_dict = {}
+        af_name = ''
 
         for line in out.splitlines():
             if line.strip():
@@ -2010,17 +2011,18 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                     parsed_dict['vrf'][vrf_name]['neighbor']\
                         [neighbor_id]['address_family'] = {}
 
-                if af_name not in parsed_dict['vrf'][vrf_name]['neighbor']\
-                        [neighbor_id]['address_family']:
-                    parsed_dict['vrf'][vrf_name]['neighbor']\
-                        [neighbor_id]['address_family'][af_name] = {}
+                if af_name:
+                    if af_name not in parsed_dict['vrf'][vrf_name]['neighbor']\
+                            [neighbor_id]['address_family']:
+                        parsed_dict['vrf'][vrf_name]['neighbor']\
+                            [neighbor_id]['address_family'][af_name] = {}
 
-                parsed_dict['vrf'][vrf_name]['neighbor']\
-                    [neighbor_id]['address_family'][af_name]['session_state'] = session_state.lower()
-
-                if m.groupdict()['up_down'] and m.groupdict()['time']:
                     parsed_dict['vrf'][vrf_name]['neighbor']\
-                        [neighbor_id]['address_family'][af_name][up_down+'_time'] = up_down_time
+                        [neighbor_id]['address_family'][af_name]['session_state'] = session_state.lower()
+
+                    if m.groupdict()['up_down'] and m.groupdict()['time']:
+                        parsed_dict['vrf'][vrf_name]['neighbor']\
+                            [neighbor_id]['address_family'][af_name][up_down+'_time'] = up_down_time
 
                 continue
 
@@ -2052,15 +2054,16 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
                     parsed_dict['vrf'][vrf_name]['neighbor']\
                         [neighbor_id]['address_family'] = {}
 
-                if af_name not in parsed_dict['vrf'][vrf_name]['neighbor']\
-                        [neighbor_id]['address_family']:
-                    parsed_dict['vrf'][vrf_name]['neighbor']\
-                        [neighbor_id]['address_family'][af_name] = {}
+                if af_name:
+                    if af_name not in parsed_dict['vrf'][vrf_name]['neighbor']\
+                            [neighbor_id]['address_family']:
+                        parsed_dict['vrf'][vrf_name]['neighbor']\
+                            [neighbor_id]['address_family'][af_name] = {}
 
-                parsed_dict['vrf'][vrf_name]['neighbor']\
-                    [neighbor_id]['address_family'][af_name]['last_read'] = last_read
-                parsed_dict['vrf'][vrf_name]['neighbor'] \
-                    [neighbor_id]['address_family'][af_name]['last_write'] = last_write
+                    parsed_dict['vrf'][vrf_name]['neighbor']\
+                        [neighbor_id]['address_family'][af_name]['last_read'] = last_read
+                    parsed_dict['vrf'][vrf_name]['neighbor'] \
+                        [neighbor_id]['address_family'][af_name]['last_write'] = last_write
 
 
                 continue

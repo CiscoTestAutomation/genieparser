@@ -13,22 +13,8 @@ from metaparser import MetaParser
 from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
 
-
-def convert_intf_name(intf):
-    # Please add more when face other type of interface
-    convert = {'Eth': 'Ethernet',
-               'Lo': 'Loopback',
-               'Po': 'Port-channel',
-               'Null': 'Null',
-               'Gi': 'GigabitEthernet',
-               'Te': 'TenGigabitEthernet',
-               'mgmt': 'mgmt'}
-    int_type = re.search('([a-zA-Z]+)', intf).group(0)
-    int_port = re.search('([\d\/\.]+)', intf).group(0)
-    if int_type in convert.keys():
-        return(convert[int_type] + int_port)
-    else:
-        return(intf)
+# import parser utils
+from parser.utils.common import Common
 
 
 class ShowVrfDetailSchema(MetaParser):
@@ -146,7 +132,7 @@ class ShowVrfDetail(ShowVrfDetailSchema):
             m = p3_1.match(line)
             if m and intf_conf:
                 intfs = m.groupdict()['intf'].split()
-                intf_list = [convert_intf_name(item) for item in intfs]
+                intf_list = [Common.convert_intf_name(item) for item in intfs]
                 vrf_dict[vrf]['interfaces'] = intf_list
                 intf_conf = False
                 continue

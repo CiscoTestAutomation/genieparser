@@ -1,9 +1,9 @@
 ''' show_prefix_list.py
 
-IOSXE parsers for the following show commands:
+NXOS parsers for the following show commands:
 
-    * show ip prefix-list detail
-    * show ipv6 prefix-list detail
+    * show ip prefix-list
+    * show ipv6 prefix-list
 
 '''
 
@@ -16,37 +16,32 @@ from metaparser.util.schemaengine import Schema, Any, Optional
 
 
 # ==============================================
-# Parser for 'show ip prefix-list detail'
-# Parser for 'show ipv6 prefix-list detail'
+# Parser for 'show ip prefix-list'
+# Parser for 'show ipv6 prefix-list'
 # ==============================================
 
-class ShowIpPrefixListDefailSchema(MetaParser):
-    # Schema for 'show ip prefix-list detail'
-    # Schema for 'show ipv6 prefix-list detail'
+class ShowIpPrefixListSchema(MetaParser):
+    # Schema for 'show ip prefix-list'
+    # Schema for 'show ipv6 prefix-list'
 
     schema = {'prefix_set_name':         
                 {Any(): {
                     'prefix_set_name': str,
                     'protocol': str,
-                    'count': int,
-                    'range_entries': int,
-                    'sequences': str,
-                    'refcount': int,
+                    'entries': int,
                     'prefixes':
                         {Any():
                             {'prefix': str,
                              'masklength_range': str,
                              'sequence': int,
-                             'hit_count': int,
-                             'refcount': int,
-                             'action': str,
+                             'action': str
                             }
                         },
                     },
                 },
             }
 
-class ShowIpPrefixListDefail(ShowIpPrefixListDefailSchema):
+class ShowIpPrefixList(ShowIpPrefixListSchema):
     # Parser for 'show ip prefix-list detail'
     # Parser for 'show ipv6 prefix-list detail'
 
@@ -57,7 +52,7 @@ class ShowIpPrefixListDefail(ShowIpPrefixListDefailSchema):
 
         # excute command to get output
         protocol = 'ipv4' if af == 'ip' else af
-        out = self.device.execute('show {} prefix-list detail'.format(af))
+        out = self.device.execute('show {} prefix-list'.format(af))
 
         # initial variables
         ret_dict = {}
@@ -65,9 +60,10 @@ class ShowIpPrefixListDefail(ShowIpPrefixListDefailSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # ip prefix-list test:
-            # ipv6 prefix-list test6:
-            p1 = re.compile(r'^(ipv6|ip) +prefix\-list +(?P<name>\S+)\:$')
+            # ip prefix-list test: 5 entries
+            # ipv6 prefix-list test6: 4 entries
+            p1 = re.compile(r'^(ipv6|ip) +prefix\-list +(?P<name>\S+)\: +'
+                             '(?P<entries>\d+) +entries$')
             m = p1.match(line)
             if m:
                 name = m.groupdict()['name']
@@ -78,30 +74,18 @@ class ShowIpPrefixListDefail(ShowIpPrefixListDefailSchema):
                     ret_dict['prefix_set_name'][name] = {}
 
                 ret_dict['prefix_set_name'][name]['prefix_set_name'] = name
-                continue
-
-            # count: 5, range entries: 4, sequences: 5 - 25, refcount: 2
-            p2 = re.compile(r'^count: +(?P<count>\d+), +'
-                             'range entries: +(?P<entries>\d+), +'
-                             'sequences: +(?P<sequences>[\d\-\s]+), +'
-                             'refcount: +(?P<refcount>\d+)$')
-            m = p2.match(line)
-            if m:
-                ret_dict['prefix_set_name'][name]['count'] = int(m.groupdict()['count'])
-                ret_dict['prefix_set_name'][name]['range_entries'] = int(m.groupdict()['entries'])
-                ret_dict['prefix_set_name'][name]['sequences'] = m.groupdict()['sequences']
-                ret_dict['prefix_set_name'][name]['refcount'] = int(m.groupdict()['refcount'])
                 ret_dict['prefix_set_name'][name]['protocol'] = protocol
+                ret_dict['prefix_set_name'][name]['entries'] = int(m.groupdict()['entries'])
                 continue
 
-            # seq 5 permit 35.0.0.0/8 (hit count: 0, refcount: 1)
-            # seq 5 permit 2001:DB8:1::/64 (hit count: 0, refcount: 1)
-            # seq 20 permit 37.0.0.0/8 ge 24 (hit count: 0, refcount: 2)
-            # seq 25 permit 38.0.0.0/8 ge 16 le 24 (hit count: 0, refcount: 3)
+            # seq 5 permit 35.0.0.0/8
+            # seq 5 permit 2001:DB8:1::/64
+            # seq 20 permit 37.0.0.0/8 ge 24
+            # seq 25 permit 38.0.0.0/8 ge 16 le 24
+            # seq 10 permit 192.0.2.0/24 eq 25
             p3 = re.compile(r'^seq +(?P<seq>\d+) +(?P<action>\w+) +'
                              '(?P<prefixes>(?P<prefix>[\w\.\|:]+)\/(?P<mask>\d+))'
-                             '( *(?P<range>[lge\d\s]+))?'
-                             ' +\(hit +count: +(?P<hit_count>\d+), +refcount: +(?P<refcount>\d+)\)$')
+                             '( *(?P<range>[lgeq\d\s]+))?$')
             m = p3.match(line)
             if m:
                 prefixes = m.groupdict()['prefixes']
@@ -135,6 +119,11 @@ class ShowIpPrefixListDefail(ShowIpPrefixListDefailSchema):
                         max_val = '32' if af == 'ip' else '128'
                         masklength_range = '{val1}..{val2}'.format(val1=match.groupdict()['val1'],
                                                                    val2=max_val)
+                    # eq 25
+                    match = re.compile(r'^eq +(?P<val1>\d+)$').match(dummy)
+                    if match:
+                        val = match.groupdict()['val1']
+                        masklength_range = '{val1}..{val2}'.format(val1=val, val2=val)
 
                 # compose the level key vaule
                 key = '{prefixes} {masklength_range} {action}'.format(prefixes=prefixes,
@@ -147,18 +136,16 @@ class ShowIpPrefixListDefail(ShowIpPrefixListDefailSchema):
                 ret_dict['prefix_set_name'][name]['prefixes'][key]['masklength_range'] = masklength_range
                 ret_dict['prefix_set_name'][name]['prefixes'][key]['action'] = action
                 ret_dict['prefix_set_name'][name]['prefixes'][key]['sequence'] = int(m.groupdict()['seq'])
-                ret_dict['prefix_set_name'][name]['prefixes'][key]['hit_count'] = int(m.groupdict()['hit_count'])
-                ret_dict['prefix_set_name'][name]['prefixes'][key]['refcount'] = int(m.groupdict()['refcount'])
                 continue
 
         return ret_dict
 
 
 # ===========================================
-# Parser for 'show ipv6 prefix-list detail'
+# Parser for 'show ipv6 prefix-list'
 # ===========================================
-class ShowIpv6PrefixListDefail(ShowIpPrefixListDefail):
-    # Parser for 'show ipv6 prefix-list detail'
+class ShowIpv6PrefixList(ShowIpPrefixList):
+    # Parser for 'show ipv6 prefix-list'
     def cli(self):
         return super().cli(af='ipv6')
 
