@@ -1,7 +1,7 @@
 ''' show_system.py
 
 NXOS parsers for the following show commands:
-    * 'show system internal sysmgr service name <feature_name>'
+    * 'show system internal sysmgr service name <WORD>'
 '''
 
 # Python
@@ -14,10 +14,10 @@ from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
 
 
 # ====================================================================
-# Parser for 'show system internal sysmgr service name <feature_name>'
+# Parser for 'show system internal sysmgr service name <WORD>'
 # ====================================================================
 class ShowSystemInternalSysmgrServiceNameSchema(MetaParser):    
-    '''Schema for show checkpoint summary'''
+    '''Schema for show system internal sysmgr service name <WORD>'''
     schema = {'instance':
                 {Any():
                     {'tag':
@@ -42,10 +42,10 @@ class ShowSystemInternalSysmgrServiceNameSchema(MetaParser):
 
 class ShowSystemInternalSysmgrServiceName(
     ShowSystemInternalSysmgrServiceNameSchema):
-    '''Parser for show system internal sysmgr service name <feature_name>'''
+    '''Parser for show system internal sysmgr service name <WORD>'''
 
-    def cli(self, service_name):
-        cmd = 'show system internal sysmgr service name {}'.format(service_name)
+    def cli(self, process):
+        cmd = 'show system internal sysmgr service name {}'.format(process)
         out = self.device.execute(cmd)
         ret_dict = {}
 
