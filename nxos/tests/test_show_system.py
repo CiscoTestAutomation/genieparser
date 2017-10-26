@@ -107,14 +107,14 @@ class test_show_system_internal_sysmgr_service_name(unittest.TestCase):
     def test_show_system_internal_sysmgr_service_name_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowSystemInternalSysmgrServiceName(device=self.device)
-        parsed_output = obj.parse(service_name='ospf')
+        parsed_output = obj.parse(process='ospf')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_show_system_internal_sysmgr_service_name_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowSystemInternalSysmgrServiceName(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(service_name='ospf')
+            parsed_output = obj.parse(process='ospf')
 
 if __name__ == '__main__':
     unittest.main()
