@@ -85,12 +85,13 @@ class ShowSystemInternalSysmgrServiceName(
                 continue
 
             # State: SRV_STATE_WAIT_SPAWN_CONDITION (entered at time Tue Mar 26 17:31:06 2013).
-            p3 = re.compile(r'^State: *(?P<state>\w+) *'
+            # State: SRV_STATE_HAP_FAILED [unstable] (entered at time Thu Oct 26 13:46:32 2017).
+            p3 = re.compile(r'^State: *(?P<state>[\w\s\[\]]+) *'
                              '\(entered +at +time +'
                              '(?P<state_start_date>[\w\s\:]+)\).$')
             m = p3.match(line)
             if m:
-                state = m.groupdict()['state']
+                state = m.groupdict()['state'].strip()
                 state_start_date = m.groupdict()['state_start_date']
                 continue
 
