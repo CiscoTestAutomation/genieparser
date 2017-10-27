@@ -111,7 +111,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
                 continue
 
             # GigabitEthernet1 is up, line protocol is up
-            p2 = re.compile(r'^(?P<intf>[\w\-\.\/]+) +is +(?P<intf_status>\w+), +'
+            p2 = re.compile(r'^(?P<intf>[\w\-\.\/]+) +is +(?P<intf_status>[\w\s]+), +'
                              'line +protocol +is +(?P<oper_status>\w+)$')
             m = p2.match(line)
             if m:
@@ -141,10 +141,12 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
                 continue
 
             # IGMP is enabled on interface
-            p4 = re.compile(r'^IGMP +is +enabled +on +interface$')
+            p4 = re.compile(r'^IGMP +is +(?P<status>\w+) +on +interface$')
             m = p4.match(line)
-            if m:                
-                ret_dict['vrf'][vrf]['interface'][intf]['enable'] = True
+            if m:      
+                status = m.groupdict()['status'].lower()          
+                ret_dict['vrf'][vrf]['interface'][intf]['enable'] = True if \
+                    'enable' in status else False
                 continue
             
             # Current IGMP host version is 3
