@@ -62,7 +62,7 @@ class ShowIpIgmpInterfaceSchema(MetaParser):
                                 Optional('dr_this_system'): bool,
                             },
                             Optional('querier'): str,
-                            Optional('query_this_system'): True,
+                            Optional('query_this_system'): bool,
                             Optional('joined_group'): {
                                 Any(): {
                                     'number_of_users': int,
