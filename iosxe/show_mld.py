@@ -421,7 +421,7 @@ class ShowIpv6MldGroupsDetail(ShowIpv6MldGroupsDetailSchema):
 # Parser for 'show ipv6 mld vrf <WORD> ssm-map <WORD>'
 # ========================================================
 
-class ShowIpv6MldSsmMappingSchema(MetaParser):
+class ShowIpv6MldSsmMapSchema(MetaParser):
     # Schema for 'show ipv6 mld ssm-map <WROD>'
     # Schema for 'show ipv6 mld vrf <WORD> ssm-map <WORD>'
 
@@ -439,7 +439,7 @@ class ShowIpv6MldSsmMappingSchema(MetaParser):
             }
         }
 
-class ShowIpv6MldSsmMapping(ShowIpv6MldSsmMappingSchema):
+class ShowIpv6MldSsmMap(ShowIpv6MldSsmMapSchema):
     # Schema for 'show ipv6 mld ssm-map <WROD>'
     # Schema for 'show ipv6 mld vrf <WORD> ssm-map <WORD>'
 

@@ -12,7 +12,7 @@ from metaparser.util.exceptions import SchemaEmptyParserError, \
 # Parser
 from parser.iosxe.show_mld import ShowIpv6MldInterface, \
                                    ShowIpv6MldGroupsDetail, \
-                                   ShowIpv6MldSsmMapping
+                                   ShowIpv6MldSsmMap
 
 
 # ==================================================
@@ -491,19 +491,19 @@ class test_show_ipv6_mld_ssm_mapping(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowIpv6MldSsmMapping(device=self.device)
+        obj = ShowIpv6MldSsmMap(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(group='ff35:1::1')
 
     def test_golden_default_vrf(self):
         self.device = Mock(**self.golden_output)
-        obj = ShowIpv6MldSsmMapping(device=self.device)
+        obj = ShowIpv6MldSsmMap(device=self.device)
         parsed_output = obj.parse(group='ff35:1::1')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_golden_non_default_vrf(self):
         self.device = Mock(**self.golden_output_1)
-        obj = ShowIpv6MldSsmMapping(device=self.device)
+        obj = ShowIpv6MldSsmMap(device=self.device)
         parsed_output = obj.parse(vrf='VRF1', group='ff35:1::1')
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
