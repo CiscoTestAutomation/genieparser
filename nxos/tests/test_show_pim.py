@@ -28,7 +28,9 @@ class test_show_ip_pim_interface(unittest.TestCase):
                     'Ethernet2/2':{
                         'address_family':{
                             'ipv4':{
-                                'oper_status': 'protocol-up/link-up/admin-up',
+                                'oper_status': 'up',
+                                'link_status': 'up',
+                                'admin_status': 'up',
                                 'address': ['10.11.33.11'],
                                 'ip_subnet': '10.11.33.0/24',
                                 'dr_address': '10.11.33.11' ,
@@ -92,7 +94,9 @@ class test_show_ip_pim_interface(unittest.TestCase):
                     'Ethernet2/3':{
                         'address_family': {
                             'ipv4': {
-                                'oper_status': 'protocol-up/link-up/admin-up',
+                                'oper_status': 'up',
+                                'link_status': 'up',
+                                'admin_status': 'up',
                                 'address': ['10.11.66.11'],
                                 'ip_subnet': '10.11.66.0/24',
                                 'dr_address': '10.11.66.11',
@@ -160,7 +164,9 @@ class test_show_ip_pim_interface(unittest.TestCase):
                     'Ethernet2/1': {
                         'address_family': {
                             'ipv4': {
-                                'oper_status': 'protocol-up/link-up/admin-up',
+                                'oper_status': 'up',
+                                'link_status': 'up',
+                                'admin_status': 'up',
                                 'address': ['10.1.5.1'],
                                 'ip_subnet': '10.1.5.0/24',
                                 'dr_address': '10.1.5.1',

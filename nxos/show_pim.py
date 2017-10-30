@@ -17,6 +17,8 @@ class ShowIpPimInterfaceSchema(MetaParser):
                         'address_family': {
                             Any(): {
                                 Optional('oper_status'): str,
+                                Optional('link_status'): str,
+                                Optional('admin_status'): str,
                                 Optional('address'): list,
                                 Optional('ip_subnet'): str,
                                 Optional('dr_address'): str,
@@ -144,12 +146,17 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
                 nbr_count = configured_dr_priority = ip_subnet = neighbor_holdtime = neighbor_filter = vpc_svi = bad_version_packets = ""
 
             # Ethernet2/2, Interface status: protocol-up/link-up/admin-up
-            p2 = re.compile(r'^\s*(?P<interface_name>[\w\/]+),'
-                            ' +Interface +status: +(?P<interface_status>[\w\-\/]+)$')
+            p2 = re.compile(r'^\s*(?P<interface_name>[\w\/]+),?'
+                            ' +Interface +status:'
+                            ' +protocol-(?P<oper_status>[\w]+)(/)?'
+                            'link\-(?P<link_status>[\w]+)(/)?'
+                            'admin\-(?P<admin_status>[\w]+)$')
             m = p2.match(line)
             if m:
                 interface_name = m.groupdict()['interface_name']
-                interface_status = m.groupdict()['interface_status']
+                oper_status = m.groupdict()['oper_status']
+                link_status = m.groupdict()['link_status']
+                admin_status = m.groupdict()['admin_status']
 
             # IP address: 10.11.33.11, IP subnet: 10.11.33.0/24
             p3 = re.compile(r'^\s*IP +address: +(?P<address>[\w\.]+),'
@@ -407,10 +414,16 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
                 if af_name not in parsed_dict['vrf'][vrf]['interfaces'][interface_name]['address_family']:
                     parsed_dict['vrf'][vrf]['interfaces'][interface_name]['address_family'][af_name] = {}
 
-                if interface_status:
+                if oper_status:
                     parsed_dict['vrf'][vrf]['interfaces'][interface_name]['address_family'][af_name]\
-                        ['oper_status'] = interface_status
-                if  address:
+                        ['oper_status'] = oper_status
+                if link_status:
+                    parsed_dict['vrf'][vrf]['interfaces'][interface_name]['address_family'][af_name]\
+                        ['link_status'] = link_status
+                if admin_status:
+                    parsed_dict['vrf'][vrf]['interfaces'][interface_name]['address_family'][af_name]\
+                        ['admin_status'] = admin_status
+                if address:
                     parsed_dict['vrf'][vrf]['interfaces'][interface_name]['address_family'][af_name] \
                         ['address'] = address.split()
                 if ip_subnet:
