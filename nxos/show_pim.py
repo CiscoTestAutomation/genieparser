@@ -482,7 +482,7 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
 
                 if jp_interval:
                     parsed_dict['vrf'][vrf]['interfaces'][interface_name]['address_family'][af_name] \
-                        ['jp_interval'] = int(jp_interval)
+                        ['jp_interval'] = int(jp_interval)*60
                 if jp_next_sending:
                     parsed_dict['vrf'][vrf]['interfaces'][interface_name]['address_family'][af_name] \
                         ['jp_next_sending'] = int(jp_next_sending)
