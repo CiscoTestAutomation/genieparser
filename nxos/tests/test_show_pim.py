@@ -48,7 +48,7 @@ class test_show_ip_pim_interface(unittest.TestCase):
                                 'jp_inbound_policy': 'v4jp-policy',
                                 'jp_outbound_policy': 'v4jp-policy',
                                 'jp_interval': 60,
-                                'jp_next_sending': 1,
+                                'jp_next_sending': 60,
                                 'bfd': {
                                     'enable': False,
                                 },
@@ -114,7 +114,7 @@ class test_show_ip_pim_interface(unittest.TestCase):
                                 'jp_inbound_policy': 'none configured',
                                 'jp_outbound_policy': 'none configured',
                                 'jp_interval': 60,
-                                'jp_next_sending': 1,
+                                'jp_next_sending': 60,
                                 'bfd': {
                                     'enable': False,
                                 },
@@ -184,7 +184,7 @@ class test_show_ip_pim_interface(unittest.TestCase):
                                 'jp_inbound_policy': 'none configured',
                                 'jp_outbound_policy': 'none configured',
                                 'jp_interval': 60,
-                                'jp_next_sending': 1,
+                                'jp_next_sending': 60,
                                 'bfd': {
                                     'enable': False,
                                 },
