@@ -214,13 +214,13 @@ class test_show_ipv6_mld_groups_detail(unittest.TestCase):
                                                "expires": "00:06:42"
                                           }
                                      },
-                                     "router_mode": "include",
+                                     "filter_mode": "include",
                                      "host_mode": "include",
                                      "last_reporter": "FE80::5054:FF:FE7C:DC70"
                                 },
                                 "FF25:2::1": {
                                      "up_time": "08:14:01",
-                                     "router_mode": "exclude",
+                                     "filter_mode": "exclude",
                                      "last_reporter": "FE80::5054:FF:FE7C:DC70",
                                      "host_mode": "exclude",
                                      "expires": "never"
@@ -235,13 +235,13 @@ class test_show_ipv6_mld_groups_detail(unittest.TestCase):
                                                "expires": "00:06:42"
                                           }
                                      },
-                                     "router_mode": "include",
+                                     "filter_mode": "include",
                                      "host_mode": "include",
                                      "last_reporter": "FE80::5054:FF:FE7C:DC70"
                                 },
                                 "FF45:1::1": {
                                      "up_time": "00:42:32",
-                                     "router_mode": "exclude",
+                                     "filter_mode": "exclude",
                                      "last_reporter": "FE80::5054:FF:FE7C:DC70",
                                      "host_mode": "exclude",
                                      "expires": "never"
@@ -320,13 +320,13 @@ class test_show_ipv6_mld_groups_detail(unittest.TestCase):
                                                "expires": "00:12:23"
                                           }
                                      },
-                                     "router_mode": "include",
+                                     "filter_mode": "include",
                                      "host_mode": "include",
                                      "last_reporter": "FE80::5054:FF:FEDD:BB49"
                                 },
                                 "FF25:2::1": {
                                      "up_time": "08:14:18",
-                                     "router_mode": "exclude",
+                                     "filter_mode": "exclude",
                                      "last_reporter": "FE80::5054:FF:FEDD:BB49",
                                      "host_mode": "exclude",
                                      "expires": "never"
@@ -341,13 +341,13 @@ class test_show_ipv6_mld_groups_detail(unittest.TestCase):
                                                "expires": "00:12:23"
                                           }
                                      },
-                                     "router_mode": "include",
+                                     "filter_mode": "include",
                                      "host_mode": "include",
                                      "last_reporter": "FE80::5054:FF:FEDD:BB49"
                                 },
                                 "FF45:1::1": {
                                      "up_time": "00:42:30",
-                                     "router_mode": "exclude",
+                                     "filter_mode": "exclude",
                                      "last_reporter": "FE80::5054:FF:FEDD:BB49",
                                      "host_mode": "exclude",
                                      "expires": "never"

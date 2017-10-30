@@ -6,8 +6,8 @@ IOSXE parsers for the following show commands:
     * show ipv6 mld vrf <WORD> interface 
     * show ipv6 mld groups detail
     * show ipv6 mld vrf <WORD> groups detail
-    * show ipv6 mld ssm-mapping <WORD>
-    * show ipv6 mld vrf <WORD> ssm-mapping <WORD>
+    * show ipv6 mld ssm-map <WORD>
+    * show ipv6 mld vrf <WORD> ssm-map <WORD>
 
 '''
 
@@ -246,7 +246,7 @@ class ShowIpv6MldGroupsDetailSchema(MetaParser):
                             'group': {
                                 Any(): {
                                     'up_time': str,
-                                    'router_mode': str,
+                                    'filter_mode': str,
                                     'host_mode': str,
                                     'last_reporter': str,
                                     Optional('expires'): str,
@@ -334,13 +334,13 @@ class ShowIpv6MldGroupsDetail(ShowIpv6MldGroupsDetailSchema):
 
             # Router mode:        INCLUDE
             # Router mode:        EXCLUDE (Expires: 00:06:06)
-            p5 = re.compile(r'^Router +mode: +(?P<router_mode>\w+)'
+            p5 = re.compile(r'^Router +mode: +(?P<filter_mode>\w+)'
                              '( *\(Expires: +(?P<expire>[\w\.\:]+)\))?$')
             m = p5.match(line)
             if m:
-                router_mode = m.groupdict()['router_mode']
+                filter_mode = m.groupdict()['filter_mode']
                 expire = m.groupdict()['expire']
-                ret_dict['vrf'][vrf]['interface'][intf]['group'][group]['router_mode'] = router_mode.lower()
+                ret_dict['vrf'][vrf]['interface'][intf]['group'][group]['filter_mode'] = filter_mode.lower()
                 if expire:
                     ret_dict['vrf'][vrf]['interface'][intf]['group'][group]['expires'] = expire
                 continue
@@ -417,13 +417,13 @@ class ShowIpv6MldGroupsDetail(ShowIpv6MldGroupsDetailSchema):
 
 
 # ========================================================
-# Parser for 'show ipv6 mld ssm-mapping <WROD>'
-# Parser for 'show ipv6 mld vrf <WORD> ssm-mapping <WORD>'
+# Parser for 'show ipv6 mld ssm-map <WROD>'
+# Parser for 'show ipv6 mld vrf <WORD> ssm-map <WORD>'
 # ========================================================
 
 class ShowIpv6MldSsmMappingSchema(MetaParser):
-    # Schema for 'show ipv6 mld ssm-mapping <WROD>'
-    # Schema for 'show ipv6 mld vrf <WORD> ssm-mapping <WORD>'
+    # Schema for 'show ipv6 mld ssm-map <WROD>'
+    # Schema for 'show ipv6 mld vrf <WORD> ssm-map <WORD>'
 
     schema = {'vrf':
                 {Any(): {
@@ -440,13 +440,13 @@ class ShowIpv6MldSsmMappingSchema(MetaParser):
         }
 
 class ShowIpv6MldSsmMapping(ShowIpv6MldSsmMappingSchema):
-    # Schema for 'show ipv6 mld ssm-mapping <WROD>'
-    # Schema for 'show ipv6 mld vrf <WORD> ssm-mapping <WORD>'
+    # Schema for 'show ipv6 mld ssm-map <WROD>'
+    # Schema for 'show ipv6 mld vrf <WORD> ssm-map <WORD>'
 
     def cli(self, group, vrf=''):
 
-        cmd = 'show ipv6 mld ssm-mapping {group}'.format(group=group) if not vrf else \
-              'show ipv6 mld vrf {vrf} ssm-mapping {group}'.format(vrf=vrf, group=group)
+        cmd = 'show ipv6 mld ssm-map {group}'.format(group=group) if not vrf else \
+              'show ipv6 mld vrf {vrf} ssm-map {group}'.format(vrf=vrf, group=group)
 
         vrf = 'default' if not vrf else vrf
 
