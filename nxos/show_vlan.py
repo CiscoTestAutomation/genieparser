@@ -4,10 +4,9 @@ Example parser class
 
 '''
 import re
-import logging
+
 
 from metaparser import MetaParser
-from metaparser.util import merge_dict, keynames_convert
 from metaparser.util.schemaengine import Schema, \
                                          Any, \
                                          Optional, \
@@ -15,8 +14,91 @@ from metaparser.util.schemaengine import Schema, \
                                          And, \
                                          Default, \
                                          Use
+from parser.utils.common import Common
 
+# ====================================================
+#  schema for show vlan
+# ====================================================
+class ShowVlanSchema(MetaParser):
+    schema = {
+        'vlans':{
+            Any():{
+                Optional('vlan_id'): int,
+                Optional('name'): str,
+                Optional('mode'): str,
+                Optional('type'): str,
+                Optional('status'): str,
+                Optional('interfaces'): list,
+                },
+            },
+    }
 
+# ====================================================
+#  parser for show vlan
+# ====================================================
+class ShowVlan(ShowVlanSchema):
+    '''
+    show vlan
+    '''
+
+    def cli(self):
+        cmd = 'show vlan'
+        out = self.device.execute(cmd)
+
+        vlan_dict = {}
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+            # VLAN Name                             Status    Ports
+            # 1    default                          active    Gi1/0/1, Gi1/0/2, Gi1/0/3, Gi1/0/5, Gi1/0/6, Gi1/0/12,
+            p1 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<name>[a-zA-Z0-9\-]+)'
+                            ' +(?P<status>[active|suspended]+) *(?P<interfaces>[\w\s\/\,]+)?$')
+            m = p1.match(line)
+            if m:
+                vlan_id = m.groupdict()['vlan_id']
+                if 'vlans' not in vlan_dict:
+                    vlan_dict['vlans'] = {}
+
+                if vlan_id not in vlan_dict:
+                    vlan_dict['vlans'][vlan_id] = {}
+
+                vlan_dict['vlans'][vlan_id]['vlan_id'] = int(vlan_id)
+                vlan_dict['vlans'][vlan_id]['name'] = m.groupdict()['name']
+                vlan_dict['vlans'][vlan_id]['status'] = m.groupdict()['status']
+                if m.groupdict()['interfaces']:
+                    vlan_dict['vlans'][vlan_id]['interfaces'] = \
+                        [Common.convert_intf_name(i) for i in m.groupdict()['interfaces'].split(',')]
+                continue
+
+            #                                                Gi1/0/19, Gi1/0/20, Gi1/0/21, Gi1/0/22
+            p2 = re.compile(r'^\s*(?P<space>\s{48})(?P<interfaces>[\w\s\/\,]+)$')
+            m = p2.match(line)
+            if m:
+                vlan_dict['vlans'][vlan_id]['interfaces'] = vlan_dict['vlans'][vlan_id]['interfaces']+\
+                [Common.convert_intf_name(i) for i in m.groupdict()['interfaces'].split(',')]
+                continue
+
+            # VLAN Type         Vlan-mode
+            # 1    enet         CE
+            p3 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<vlan_type>[\w]+)'
+                            ' +(?P<vlan_mode>[\w]+)?$')
+            m = p3.match(line)
+            if m:
+                vlan_id = m.groupdict()['vlan_id']
+                if vlan_id in vlan_dict['vlans']:
+                    vlan_dict['vlans'][vlan_id]['mode'] = m.groupdict()['vlan_mode'].lower()
+                    vlan_dict['vlans'][vlan_id]['type'] = m.groupdict()['vlan_type']
+                continue
+
+        return vlan_dict
+
+############################################################
+#  Old Parsers
+# may be in feature we need to delete or improve them
+#############################################################
 def regexp(expression):
     def match(value):
         if re.match(expression,value):
@@ -26,7 +108,7 @@ def regexp(expression):
                               %(value, expression))
     return match
 
-class ShowVlanSchema(MetaParser):
+class ShowVlanOldSchema(MetaParser):
     schema = {'vlan_id':
                 {Any():
                     {'name': str,
@@ -50,7 +132,7 @@ class ShowVlanSchema(MetaParser):
                 },
             }
 
-class ShowVlan(ShowVlanSchema, MetaParser):
+class ShowVlanOld(ShowVlanOldSchema, MetaParser):
     """ parser class - implements detail parsing mechanisms for cli, xml, and
     yang output.
     """

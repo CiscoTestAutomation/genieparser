@@ -9,10 +9,110 @@ from metaparser.util.exceptions import SchemaEmptyParserError
 from parser.nxos.show_vlan import ShowVlan, \
                                              ShowVlanInternalInfo, \
                                              ShowVlanFilter, \
-                                             ShowVlanAccessMap
+                                             ShowVlanAccessMap,\
+                                             ShowVlanOld
 
-
+# =========================================
+#  show vlan
+# =========================================
 class test_show_vlan(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_output_vlan_1 = {'execute.return_value': '''
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Po4, Po100, Eth1/2, Eth1/3
+                                                Eth1/4, Eth1/5, Eth1/6, Eth1/7
+                                                Eth1/8, Eth1/9, Eth1/10, Eth1/11
+                                                Eth1/12, Eth1/13, Eth1/14
+                                                Eth2/1, Eth2/2, Eth2/3, Eth2/4
+                                                Eth2/5, Eth2/6
+2    VLAN0002                         active    Po4, Po100, Eth1/7, Eth1/8
+                                                Eth1/28
+3    VLAN0003                         active    Po4, Po100, Eth1/7, Eth1/8
+                                                Eth1/28
+4    VLAN0004                         active    Po4, Po100, Eth1/7, Eth1/8
+                                                Eth1/28
+5    VLAN0005                         active    Po4, Po100, Eth1/7, Eth1/8
+                                                Eth1/28
+
+VLAN Type         Vlan-mode
+ ---- -----        ----------
+ 1    enet         CE
+ 23   enet         CE
+ 100  enet         CE
+ 101  enet         CE
+ 102  enet         CE
+ 103  enet         CE
+ 104  enet         CE
+ 105  enet         CE
+ 106  enet         CE
+         107  enet         CE
+        '''}
+    golden_parsed_output_vlan_1 = {
+        'vlans':{
+            '1':{
+                'vlan_id': 1,
+                'name': 'default',
+                'status': 'active',
+                'interfaces': ['Port-channel4', 'Port-channel100', 'Ethernet1/2',
+                               'Ethernet1/3', 'Ethernet1/4', 'Ethernet1/5',
+                               'Ethernet1/6', 'Ethernet1/7', 'Ethernet1/8',
+                               'Ethernet1/9', 'Ethernet1/10', 'Ethernet1/11',
+                               'Ethernet1/12', 'Ethernet1/13', 'Ethernet1/14',
+                               'Ethernet2/1','Ethernet2/2','Ethernet2/3','Ethernet2/4',
+                               'Ethernet2/5','Ethernet2/6'],
+                'mode': 'ce',
+                'type': 'enet',
+                },
+            '2': {
+                'vlan_id': 2,
+                'name': 'VLAN0002',
+                'status': 'active',
+                'interfaces': ['Port-channel4', 'Port-channel100', 'Ethernet1/7',
+                               'Ethernet1/8','Ethernet1/28']
+                },
+            '3': {
+                'vlan_id': 3,
+                'name': 'VLAN0003',
+                'status': 'active',
+                'interfaces': ['Port-channel4', 'Port-channel100', 'Ethernet1/7',
+                               'Ethernet1/8', 'Ethernet1/28']
+                },
+            '4': {
+                'vlan_id': 4,
+                'name': 'VLAN0004',
+                'status': 'active',
+                'interfaces': ['Port-channel4', 'Port-channel100', 'Ethernet1/7',
+                               'Ethernet1/8', 'Ethernet1/28']
+                },
+            '5': {
+                'vlan_id': 5,
+                'name': 'VLAN0005',
+                'status': 'active',
+                'interfaces': ['Port-channel4', 'Port-channel100', 'Ethernet1/7',
+                               'Ethernet1/8', 'Ethernet1/28']
+            },
+        },
+    }
+    def test_empty_1(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowVlan(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_vlan_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_vlan_1)
+        obj = ShowVlan(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_vlan_1)
+
+#################################################
+# Old unittests with old structure
+# may be in future need to be removed or improved
+###################################################
+class test_show_vlan_old(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
@@ -104,13 +204,13 @@ class test_show_vlan(unittest.TestCase):
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        vlan_obj = ShowVlan(device=self.device)
+        vlan_obj = ShowVlanOld(device=self.device)
         parsed_output = vlan_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
-        vlan_obj = ShowVlan(device=self.device1)
+        vlan_obj = ShowVlanOld(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = vlan_obj.parse()
 
