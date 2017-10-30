@@ -17,7 +17,7 @@ class ShowIpPimInterfaceSchema(MetaParser):
                         'address_family': {
                             Any(): {
                                 Optional('oper_status'): str,
-                                Optional('address'): str,
+                                Optional('address'): list,
                                 Optional('ip_subnet'): str,
                                 Optional('dr_address'): str,
                                 Optional('dr_priority'): int,
@@ -412,7 +412,7 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
                         ['oper_status'] = interface_status
                 if  address:
                     parsed_dict['vrf'][vrf]['interfaces'][interface_name]['address_family'][af_name] \
-                        ['address'] = address
+                        ['address'] = address.split()
                 if ip_subnet:
                     parsed_dict['vrf'][vrf]['interfaces'][interface_name]['address_family'][af_name] \
                         ['ip_subnet'] = ip_subnet

@@ -29,7 +29,7 @@ class test_show_ip_pim_interface(unittest.TestCase):
                         'address_family':{
                             'ipv4':{
                                 'oper_status': 'protocol-up/link-up/admin-up',
-                                'address': '10.11.33.11',
+                                'address': ['10.11.33.11'],
                                 'ip_subnet': '10.11.33.0/24',
                                 'dr_address': '10.11.33.11' ,
                                 'dr_priority': 144,
@@ -93,7 +93,7 @@ class test_show_ip_pim_interface(unittest.TestCase):
                         'address_family': {
                             'ipv4': {
                                 'oper_status': 'protocol-up/link-up/admin-up',
-                                'address': '10.11.66.11',
+                                'address': ['10.11.66.11'],
                                 'ip_subnet': '10.11.66.0/24',
                                 'dr_address': '10.11.66.11',
                                 'dr_priority': 1,
@@ -161,7 +161,7 @@ class test_show_ip_pim_interface(unittest.TestCase):
                         'address_family': {
                             'ipv4': {
                                 'oper_status': 'protocol-up/link-up/admin-up',
-                                'address': '10.1.5.1',
+                                'address': ['10.1.5.1'],
                                 'ip_subnet': '10.1.5.0/24',
                                 'dr_address': '10.1.5.1',
                                 'dr_priority': 1,
