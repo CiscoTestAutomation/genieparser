@@ -211,7 +211,7 @@ class test_show_ipv6_mld_groups_detail(unittest.TestCase):
                                                "forward": True,
                                                "up_time": "08:13:22",
                                                "flags": "Remote Local 2D",
-                                               "expires": "00:06:42"
+                                               "expire": "00:06:42"
                                           }
                                      },
                                      "filter_mode": "include",
@@ -223,7 +223,7 @@ class test_show_ipv6_mld_groups_detail(unittest.TestCase):
                                      "filter_mode": "exclude",
                                      "last_reporter": "FE80::5054:FF:FE7C:DC70",
                                      "host_mode": "exclude",
-                                     "expires": "never"
+                                     "expire": "never"
                                 },
                                 "FF35:1::1": {
                                      "up_time": "00:42:41",
@@ -232,7 +232,7 @@ class test_show_ipv6_mld_groups_detail(unittest.TestCase):
                                                "forward": True,
                                                "up_time": "00:42:41",
                                                "flags": "Remote Local E",
-                                               "expires": "00:06:42"
+                                               "expire": "00:06:42"
                                           }
                                      },
                                      "filter_mode": "include",
@@ -244,7 +244,7 @@ class test_show_ipv6_mld_groups_detail(unittest.TestCase):
                                      "filter_mode": "exclude",
                                      "last_reporter": "FE80::5054:FF:FE7C:DC70",
                                      "host_mode": "exclude",
-                                     "expires": "never"
+                                     "expire": "never"
                                 }
                            },
                            "join_group": {
@@ -317,7 +317,7 @@ class test_show_ipv6_mld_groups_detail(unittest.TestCase):
                                                "forward": True,
                                                "up_time": "08:13:56",
                                                "flags": "Remote Local 2D",
-                                               "expires": "00:12:23"
+                                               "expire": "00:12:23"
                                           }
                                      },
                                      "filter_mode": "include",
@@ -329,7 +329,7 @@ class test_show_ipv6_mld_groups_detail(unittest.TestCase):
                                      "filter_mode": "exclude",
                                      "last_reporter": "FE80::5054:FF:FEDD:BB49",
                                      "host_mode": "exclude",
-                                     "expires": "never"
+                                     "expire": "never"
                                 },
                                 "FF35:1::1": {
                                      "up_time": "00:42:30",
@@ -338,7 +338,7 @@ class test_show_ipv6_mld_groups_detail(unittest.TestCase):
                                                "forward": True,
                                                "up_time": "00:42:30",
                                                "flags": "Remote Local E",
-                                               "expires": "00:12:23"
+                                               "expire": "00:12:23"
                                           }
                                      },
                                      "filter_mode": "include",
@@ -350,7 +350,7 @@ class test_show_ipv6_mld_groups_detail(unittest.TestCase):
                                      "filter_mode": "exclude",
                                      "last_reporter": "FE80::5054:FF:FEDD:BB49",
                                      "host_mode": "exclude",
-                                     "expires": "never"
+                                     "expire": "never"
                                 }
                            },
                            "join_group": {

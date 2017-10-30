@@ -249,10 +249,10 @@ class ShowIpv6MldGroupsDetailSchema(MetaParser):
                                     'filter_mode': str,
                                     'host_mode': str,
                                     'last_reporter': str,
-                                    Optional('expires'): str,
+                                    Optional('expire'): str,
                                     Optional('source'): {
                                         Any(): {
-                                            Optional('expires'): str,
+                                            Optional('expire'): str,
                                             'forward': bool,
                                             Optional('flags'): str,
                                             'up_time': str,
@@ -342,7 +342,7 @@ class ShowIpv6MldGroupsDetail(ShowIpv6MldGroupsDetailSchema):
                 expire = m.groupdict()['expire']
                 ret_dict['vrf'][vrf]['interface'][intf]['group'][group]['filter_mode'] = filter_mode.lower()
                 if expire:
-                    ret_dict['vrf'][vrf]['interface'][intf]['group'][group]['expires'] = expire
+                    ret_dict['vrf'][vrf]['interface'][intf]['group'][group]['expire'] = expire
                 continue
 
             # Last reporter:        10.1.2.1
@@ -362,7 +362,7 @@ class ShowIpv6MldGroupsDetail(ShowIpv6MldGroupsDetailSchema):
             # 2001:DB8:2:2::2                         08:13:22  00:06:42  Yes  Remote Local 2D
             p7 = re.compile(r'^(?P<source>[\w\.\:]+) +'
                              '(?P<up_time>[\w\.\:]+) +'
-                             '(?P<expires>[\w\.\:]+) +'
+                             '(?P<expire>[\w\.\:]+) +'
                              '(?P<forward>\w+) +'
                              '(?P<flags>[\w\s]+)$')
             m = p7.match(line)
@@ -381,7 +381,7 @@ class ShowIpv6MldGroupsDetail(ShowIpv6MldGroupsDetailSchema):
                     ['source'][source]['up_time'] = m.groupdict()['up_time']
 
                 ret_dict['vrf'][vrf]['interface'][intf]['group'][group]\
-                    ['source'][source]['expires'] = m.groupdict()['expires']
+                    ['source'][source]['expire'] = m.groupdict()['expire']
 
                 ret_dict['vrf'][vrf]['interface'][intf]['group'][group]\
                     ['source'][source]['forward'] = True \
