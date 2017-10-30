@@ -95,9 +95,61 @@ class ShowVlan(ShowVlanSchema):
 
         return vlan_dict
 
+# ====================================================
+#  schema for show vlan id 1-4093 vn_segment
+# ====================================================
+class ShowVlanIdVnSegmentSchema(MetaParser):
+    schema = {
+        'vlans': {
+            Any(): {
+                Optional('vlan_id'): int,
+                Optional('vn_segment_id'): int,
+            },
+        },
+    }
+
+# ====================================================
+#  parser for show vlan id 1-4093 vn-segment
+# ====================================================
+class ShowVlanIdVnSegment(ShowVlanIdVnSegmentSchema):
+    '''
+    show vlan id 1-4093 vn-segment
+    '''
+
+    def cli(self):
+        cmd = 'show vlan id 1-4093 vn-segment'
+        out = self.device.execute(cmd)
+
+        vlan_dict = {}
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+            # VLAN Segment-id
+            # ---- -----------
+            # 10   5010
+            p1 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<segment_id>[0-9]+)$')
+            m = p1.match(line)
+            if m:
+                vlan_id = m.groupdict()['vlan_id']
+                if 'vlans' not in vlan_dict:
+                    vlan_dict['vlans'] = {}
+
+                if vlan_id not in vlan_dict:
+                    vlan_dict['vlans'][vlan_id] = {}
+
+                vlan_dict['vlans'][vlan_id]['vlan_id'] = int(vlan_id)
+                vlan_dict['vlans'][vlan_id]['vn_segment_id'] = int(m.groupdict()['segment_id'])
+                continue
+
+        return vlan_dict
+
+
 ############################################################
-#  Old Parsers
-# may be in feature we need to delete or improve them
+#  Old Parsers are below
+#  may be in feature we need to delete or improve them
 #############################################################
 def regexp(expression):
     def match(value):
