@@ -54,7 +54,7 @@ VLAN Type         Vlan-mode
             '1':{
                 'vlan_id': 1,
                 'name': 'default',
-                'status': 'active',
+                'state': 'active',
                 'interfaces': ['Port-channel4', 'Port-channel100', 'Ethernet1/2',
                                'Ethernet1/3', 'Ethernet1/4', 'Ethernet1/5',
                                'Ethernet1/6', 'Ethernet1/7', 'Ethernet1/8',
@@ -68,28 +68,28 @@ VLAN Type         Vlan-mode
             '2': {
                 'vlan_id': 2,
                 'name': 'VLAN0002',
-                'status': 'active',
+                'state': 'active',
                 'interfaces': ['Port-channel4', 'Port-channel100', 'Ethernet1/7',
                                'Ethernet1/8','Ethernet1/28']
                 },
             '3': {
                 'vlan_id': 3,
                 'name': 'VLAN0003',
-                'status': 'active',
+                'state': 'active',
                 'interfaces': ['Port-channel4', 'Port-channel100', 'Ethernet1/7',
                                'Ethernet1/8', 'Ethernet1/28']
                 },
             '4': {
                 'vlan_id': 4,
                 'name': 'VLAN0004',
-                'status': 'active',
+                'state': 'active',
                 'interfaces': ['Port-channel4', 'Port-channel100', 'Ethernet1/7',
                                'Ethernet1/8', 'Ethernet1/28']
                 },
             '5': {
                 'vlan_id': 5,
                 'name': 'VLAN0005',
-                'status': 'active',
+                'state': 'active',
                 'interfaces': ['Port-channel4', 'Port-channel100', 'Ethernet1/7',
                                'Ethernet1/8', 'Ethernet1/28']
             },

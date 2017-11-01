@@ -27,7 +27,7 @@ class ShowVlanSchema(MetaParser):
                 Optional('name'): str,
                 Optional('mode'): str,
                 Optional('type'): str,
-                Optional('status'): str,
+                Optional('state'): str,
                 Optional('interfaces'): list,
                 },
             },
@@ -67,7 +67,7 @@ class ShowVlan(ShowVlanSchema):
 
                 vlan_dict['vlans'][vlan_id]['vlan_id'] = int(vlan_id)
                 vlan_dict['vlans'][vlan_id]['name'] = m.groupdict()['name']
-                vlan_dict['vlans'][vlan_id]['status'] = m.groupdict()['status']
+                vlan_dict['vlans'][vlan_id]['state'] = m.groupdict()['status']
                 if m.groupdict()['interfaces']:
                     vlan_dict['vlans'][vlan_id]['interfaces'] = \
                         [Common.convert_intf_name(i) for i in m.groupdict()['interfaces'].split(',')]
