@@ -39,7 +39,7 @@ class test_show_vlan(unittest.TestCase):
             '1':{
                 'vlan_id': 1,
                 'name': 'default',
-                'status': 'active',
+                'state': 'active',
                 'interfaces': ['GigabitEthernet1/0/1', 'GigabitEthernet1/0/2', 'GigabitEthernet1/0/3',
                                'GigabitEthernet1/0/5', 'GigabitEthernet1/0/6', 'GigabitEthernet1/0/12',
                                'GigabitEthernet1/0/13', 'GigabitEthernet1/0/14', 'GigabitEthernet1/0/15',
@@ -50,32 +50,32 @@ class test_show_vlan(unittest.TestCase):
             '2': {
                 'vlan_id': 2,
                 'name': 'VLAN0002',
-                'status': 'active',
+                'state': 'active',
                 },
             '20': {
                 'vlan_id': 20,
                 'name': 'VLAN0020',
-                'status': 'active',
+                'state': 'active',
                 },
             '100': {
                 'vlan_id': 100,
                 'name': 'V100',
-                'status': 'suspended',
+                'state': 'suspended',
                 },
             '101': {
                 'vlan_id': 101,
                 'name': 'VLAN0101',
-                'status': 'active',
+                'state': 'active',
             },
             '102': {
                 'vlan_id': 102,
                 'name': 'VLAN0102',
-                'status': 'active',
+                'state': 'active',
             },
             '103': {
                 'vlan_id': 103,
                 'name': 'VLAN0103',
-                'status': 'active',
+                'state': 'active',
             },
         },
     }
