@@ -428,7 +428,7 @@ class ShowIpv6MldGroupsSchema(MetaParser):
 
     schema = {'vrfs': {
                 Any(): {
-                    'total_entries': int,
+                    'groups_count': int,
                     Optional('interface'): {
                         Any(): {
                             'group': {
@@ -485,7 +485,7 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
                 if vrf not in ret_dict['vrfs']:
                     ret_dict['vrfs'][vrf] = {}
 
-                ret_dict['vrfs'][vrf]['total_entries'] = int(m.groupdict()['entries'])
+                ret_dict['vrfs'][vrf]['groups_count'] = int(m.groupdict()['entries'])
                 continue
 
             # (2001:db8:0:abcd::2, ff30::2)

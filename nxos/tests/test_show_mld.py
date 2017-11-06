@@ -377,7 +377,7 @@ class test_show_ip_igmp_groups(unittest.TestCase):
     golden_parsed_output = {
         "vrfs": {
             "default": {
-                 "total_entries": 2,
+                 "groups_count": 2,
                  "interface": {
                       "Ethernet2/1": {
                            "group": {
@@ -402,7 +402,7 @@ class test_show_ip_igmp_groups(unittest.TestCase):
                  }
             },
             "VRF1": {
-                 "total_entries": 2,
+                 "groups_count": 2,
                  "interface": {
                       "Ethernet2/2": {
                            "group": {
@@ -452,7 +452,7 @@ class test_show_ip_igmp_groups(unittest.TestCase):
     golden_parsed_output_1 = {
         "vrfs": {
             "default": {
-                 "total_entries": 2,
+                 "groups_count": 2,
                  "interface": {
                       "Ethernet2/1": {
                            "group": {
