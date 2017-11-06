@@ -391,9 +391,9 @@ class ShowIpv6MldGroupsDetail(ShowIpv6MldGroupsDetailSchema):
                     ['source'][source]['flags'] = flags
 
                 flag_list = flags.lower().split()
-                if 'local' in flag_list and 'e' in flag_list:
+                if ('4' in flag_list or '2d' in flag_list) and 'e' in flag_list:
                     keys = ['join_group', 'static_group']
-                elif 'local' in flag_list:
+                elif '4' in flag_list or '2d' in flag_list:
                     keys = ['join_group']
                 elif 'e' in flag_list:
                     keys = ['static_group']

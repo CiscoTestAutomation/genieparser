@@ -248,14 +248,10 @@ class test_show_ipv6_mld_groups_detail(unittest.TestCase):
                                 }
                            },
                            "join_group": {
-                                "FF35:1::1 2001:DB8:3:3::3": {
-                                     "group": "FF35:1::1",
-                                     "source": "2001:DB8:3:3::3"
-                                },
                                 "FF15:1::1 2001:DB8:2:2::2": {
                                      "group": "FF15:1::1",
                                      "source": "2001:DB8:2:2::2"
-                                }
+                                },
                            },
                            "static_group": {
                                 "FF35:1::1 2001:DB8:3:3::3": {
@@ -354,10 +350,6 @@ class test_show_ipv6_mld_groups_detail(unittest.TestCase):
                                 }
                            },
                            "join_group": {
-                                "FF35:1::1 2001:DB8:3:3::3": {
-                                     "group": "FF35:1::1",
-                                     "source": "2001:DB8:3:3::3"
-                                },
                                 "FF15:1::1 2001:DB8:2:2::2": {
                                      "group": "FF15:1::1",
                                      "source": "2001:DB8:2:2::2"
