@@ -29,6 +29,15 @@ class ShowVlanSchema(MetaParser):
                 Optional('type'): str,
                 Optional('state'): str,
                 Optional('interfaces'): list,
+                Optional('remote_span_vlan'): bool,
+                Optional('private_vlan'):
+                    {
+                        Optional('primary'): bool,
+                        Optional('association'): list,
+                        Optional('type'): str,
+                        Optional('ports'): list,
+                    },
+
                 },
             },
     }
@@ -92,6 +101,76 @@ class ShowVlan(ShowVlanSchema):
                     vlan_dict['vlans'][vlan_id]['mode'] = m.groupdict()['vlan_mode'].lower()
                     vlan_dict['vlans'][vlan_id]['type'] = m.groupdict()['vlan_type']
                 continue
+
+
+            # Remote SPAN VLANs
+            # -------------------------------------
+            # 201-202
+            p4 = re.compile(r'^\s*(?P<remote_span_vlans>[^--][0-9\-]+)?$')
+            m = p4.match(line)
+            if m:
+                if m.groupdict()['remote_span_vlans']:
+                    remote_span_vlans = m.groupdict()['remote_span_vlans'].split('-')
+
+                if remote_span_vlans:
+                    if 'vlans' not in vlan_dict:
+                        vlan_dict['vlans'] = {}
+                    for remote_vlan in remote_span_vlans:
+                        if remote_vlan not in vlan_dict['vlans']:
+                            vlan_dict['vlans'][remote_vlan] = {}
+                        vlan_dict['vlans'][remote_vlan]['remote_span_vlan'] = True
+                continue
+
+
+            # Primary Secondary Type              Ports
+            # ------- --------- ----------------- ------------------------------------------
+            # 2       301       community         Fa5/3, Fa5/25
+            #  2       302       community
+            #          10        community
+
+            p5 = re.compile(r'^\s*(?P<primary>\d+)? +(?P<secondary>\d+)'
+                            ' +(?P<type>[\w\-]+)( +(?P<interfaces>[\w\s\,\/]+))?$')
+            m = p5.match(line)
+
+            if m:
+                if m.groupdict()['primary']:
+                    primary = m.groupdict()['primary']
+                else:
+                    primary = ""
+                secondary = m.groupdict()['secondary']
+
+                private_vlan_type = m.groupdict()['type']
+                if m.groupdict()['interfaces']:
+                    private_vlan_interfaces = \
+                        [Common.convert_intf_name(i) for i in m.groupdict()['interfaces'].split(',')]
+
+                if 'vlans' not in vlan_dict:
+                    vlan_dict['vlans'] = {}
+                if m.groupdict()['primary']:
+                    if primary not in vlan_dict['vlans']:
+                        vlan_dict['vlans'][primary] = {}
+                    if 'private_vlan' not in vlan_dict['vlans'][primary]:
+                        vlan_dict['vlans'][primary]['private_vlan'] = {}
+                if primary:
+                    vlan_dict['vlans'][primary]['private_vlan']['primary'] = True
+                    if 'association' in vlan_dict['vlans'][primary]['private_vlan']:
+                        vlan_dict['vlans'][primary]['private_vlan']['association'] = \
+                            vlan_dict['vlans'][primary]['private_vlan']['association'] + [secondary]
+                    else:
+                        vlan_dict['vlans'][primary]['private_vlan']['association'] = secondary.split()
+
+                if secondary not in vlan_dict['vlans']:
+                    vlan_dict['vlans'][secondary] = {}
+
+                if 'private_vlan' not in vlan_dict['vlans'][secondary]:
+                    vlan_dict['vlans'][secondary]['private_vlan'] = {}
+                vlan_dict['vlans'][secondary]['private_vlan']['primary'] = False
+                vlan_dict['vlans'][secondary]['private_vlan']['type'] = private_vlan_type
+                if m.groupdict()['interfaces']:
+                    vlan_dict['vlans'][secondary]['private_vlan']['ports'] = private_vlan_interfaces
+
+                continue
+
 
         return vlan_dict
 

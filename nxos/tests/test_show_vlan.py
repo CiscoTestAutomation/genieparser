@@ -47,8 +47,19 @@ VLAN Type         Vlan-mode
  104  enet         CE
  105  enet         CE
  106  enet         CE
-         107  enet         CE
-        '''}
+ 107  enet         CE
+
+Remote SPAN VLANs
+-------------------------------------------------------------------------------
+301-302
+
+Primary  Secondary  Type             Ports
+-------  ---------  ---------------  -------------------------------------------
+         303        community        Fa2/3, Fa3/5
+403      500        non-operational
+
+  '''}
+
     golden_parsed_output_vlan_1 = {
         'vlans':{
             '1':{
@@ -92,7 +103,33 @@ VLAN Type         Vlan-mode
                 'state': 'active',
                 'interfaces': ['Port-channel4', 'Port-channel100', 'Ethernet1/7',
                                'Ethernet1/8', 'Ethernet1/28']
+                },
+            '301': {
+                'remote_span_vlan': True,
+                },
+            '302': {
+                'remote_span_vlan': True,
+                },
+            '303': {
+                'private_vlan': {
+                    'primary': False,
+                    'type': 'community',
+                    'ports': ['FastEthernet2/3', 'FastEthernet3/5']
+                    },
+                },
+            '500': {
+                'private_vlan': {
+                    'primary': False,
+                    'type': 'non-operational',
+                    },
+                },
+            '403': {
+                'private_vlan': {
+                    'primary': True,
+                    'association': ['500'],
+                },
             },
+
         },
     }
     def test_empty_1(self):
@@ -106,6 +143,7 @@ VLAN Type         Vlan-mode
         self.device = Mock(**self.golden_output_vlan_1)
         obj = ShowVlan(device=self.device)
         parsed_output = obj.parse()
+        import pdb;pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output_vlan_1)
 
 

@@ -37,6 +37,9 @@ class test_show_ip_igmp_snooping(unittest.TestCase):
         'vlans': {
             '1': {  # configuration_vlan_id
                 'ip_igmp_snooping': 'enabled',
+                'v1v2_report_suppression': 'enabled',
+                'v3_report_suppression': 'disabled',
+                'link_local_groups_suppression': 'enabled',
                 'lookup_mode': 'ip',
                 'switch_querier': 'disabled',
                 'igmp_explicit_tracking': 'enabled',
@@ -51,6 +54,9 @@ class test_show_ip_igmp_snooping(unittest.TestCase):
                 },
             '100': {  # configuration_vlan_id
                 'ip_igmp_snooping': 'enabled',
+                'v1v2_report_suppression': 'enabled',
+                'v3_report_suppression': 'disabled',
+                'link_local_groups_suppression': 'enabled',
                 'lookup_mode': 'ip',
                 'igmp_querier': {
                     'address': '50.1.1.1',
@@ -72,6 +78,9 @@ class test_show_ip_igmp_snooping(unittest.TestCase):
                 },
             '101': {  # configuration_vlan_id
                 'ip_igmp_snooping': 'enabled',
+                'v1v2_report_suppression': 'enabled',
+                'v3_report_suppression': 'disabled',
+                'link_local_groups_suppression': 'enabled',
                 'lookup_mode': 'ip',
                 'switch_querier': 'disabled',
                 'igmp_explicit_tracking': 'enabled',

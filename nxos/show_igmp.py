@@ -42,6 +42,9 @@ class ShowIpIgmpSnoopingSchema(MetaParser):
             Any(): { # configuration_vlan_id
                 Optional('ip_igmp_snooping'): str,
                 Optional('lookup_mode'): str,
+                Optional('v1v2_report_suppression'): str,
+                Optional('v3_report_suppression'): str,
+                Optional('link_local_groups_suppression'): str,
                 Optional('igmp_querier'): {
                     Optional('address'): str,
                     Optional('version'): int,
@@ -277,6 +280,31 @@ class ShowIpIgmpSnooping(ShowIpIgmpSnoopingSchema):
 
             if ip_igmp_snooping:
                 ret_dict['vlans'][configuration_vlan_id]['ip_igmp_snooping'] = ip_igmp_snooping
+
+            if configuration_vlan_id and v1v2_report_suppression:
+                if 'vlans' not in ret_dict:
+                    ret_dict['vlans'] = {}
+                if configuration_vlan_id not in ret_dict['vlans']:
+                    ret_dict['vlans'][configuration_vlan_id] = {}
+
+                ret_dict['vlans'][configuration_vlan_id]['v1v2_report_suppression'] = v1v2_report_suppression
+
+            if configuration_vlan_id and link_local_group_suppression_enabled:
+                if 'vlans' not in ret_dict:
+                    ret_dict['vlans'] = {}
+                if configuration_vlan_id not in ret_dict['vlans']:
+                    ret_dict['vlans'][configuration_vlan_id] = {}
+
+                ret_dict['vlans'][configuration_vlan_id]['link_local_groups_suppression'] =\
+                    link_local_group_suppression_enabled
+
+            if configuration_vlan_id and v3_report_suppression:
+                if 'vlans' not in ret_dict:
+                    ret_dict['vlans'] = {}
+                if configuration_vlan_id not in ret_dict['vlans']:
+                    ret_dict['vlans'][configuration_vlan_id] = {}
+
+                ret_dict['vlans'][configuration_vlan_id]['v3_report_suppression'] = v3_report_suppression
 
             if lookup_mode:
                 ret_dict['vlans'][configuration_vlan_id]['lookup_mode'] = lookup_mode
