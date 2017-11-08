@@ -36,6 +36,24 @@ class ShowVlanSchema(MetaParser):
                 Optional('name'): str,
                 Optional('state'): str,
                 Optional('interfaces'): list,
+                Optional('type'): str,
+                Optional('said'): int,
+                Optional('mtu'): int,
+                Optional('parent'): str,
+                Optional('ring_no'): str,
+                Optional('bridge_no'): str,
+                Optional('stp'): str,
+                Optional('bridge_mode'): str,
+                Optional('trans1'): int,
+                Optional('trans2'): int,
+                Optional('remote_span_vlan'): bool,
+                Optional('private_vlan'):
+                    {
+                        Optional('primary'): bool,
+                        Optional('association'): list,
+                        Optional('type'): str,
+                        Optional('ports'): list,
+                    },
                 },
             },
         }
@@ -52,6 +70,7 @@ class ShowVlan(ShowVlanSchema):
         out = self.device.execute(cmd)
 
         vlan_dict = {}
+        primary = ""
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
@@ -60,7 +79,7 @@ class ShowVlan(ShowVlanSchema):
             # VLAN Name                             Status    Ports
             # 1    default                          active    Gi1/0/1, Gi1/0/2, Gi1/0/3, Gi1/0/5, Gi1/0/6, Gi1/0/12,
             p1 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<name>[a-zA-Z0-9\-]+)'
-                            ' +(?P<status>[a-zA-Z\/]+) *(?P<interfaces>[\w\s\/\,]+)?$')
+                            ' +(?P<status>(active|suspended|act/unsup)+) *(?P<interfaces>[\w\s\/\,]+)?$')
             m = p1.match(line)
             if m:
                 vlan_id = m.groupdict()['vlan_id']
@@ -72,17 +91,138 @@ class ShowVlan(ShowVlanSchema):
 
                 vlan_dict['vlans'][vlan_id]['vlan_id'] = int(vlan_id)
                 vlan_dict['vlans'][vlan_id]['name'] = m.groupdict()['name']
-                vlan_dict['vlans'][vlan_id]['state'] = m.groupdict()['status']
+                if 'act/unsup' in m.groupdict()['status']:
+                    status = 'unsupport'
+                elif 'suspend' in m.groupdict()['status']:
+                    status = 'suspend'
+                else:
+                    status = m.groupdict()['status']
+                vlan_dict['vlans'][vlan_id]['state'] = status
                 if m.groupdict()['interfaces']:
                     vlan_dict['vlans'][vlan_id]['interfaces'] = \
                         [Common.convert_intf_name(i) for i in m.groupdict()['interfaces'].split(',')]
+
                 continue
+
             #                                                Gi1/0/19, Gi1/0/20, Gi1/0/21, Gi1/0/22
             p2 = re.compile(r'^\s*(?P<space>\s{48})(?P<interfaces>[\w\s\/\,]+)?$')
             m = p2.match(line)
             if m:
                 vlan_dict['vlans'][vlan_id]['interfaces'] = vlan_dict['vlans'][vlan_id]['interfaces']+\
                     [Common.convert_intf_name(i) for i in m.groupdict()['interfaces'].split(',')]
+                continue
+
+            # VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
+            # ---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
+            # 1    enet  100001     1500  -      -      -        -    -        0      0
+            p3 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<type>[a-zA-Z]+)'
+                            ' +(?P<said>\d+) +(?P<mtu>[\d\-]+) +(?P<parent>[\w\-]+)?'
+                            ' +(?P<ring_no>[\w\-]+)? +(?P<bridge_no>[\w\-]+)? +(?P<stp>[\w\-]+)?'
+                            ' +(?P<bridge_mode>[\w\-]+)? +(?P<trans1>[\d\-]+) +(?P<trans2>[\d\-]+)$')
+            m = p3.match(line)
+            if m:
+                vlan_id = m.groupdict()['vlan_id']
+                type = m.groupdict()['type']
+                said = m.groupdict()['said']
+                mtu = m.groupdict()['mtu']
+                parent = m.groupdict()['parent']
+                ring_no = m.groupdict()['ring_no']
+                bridge_no = m.groupdict()['bridge_no']
+                stp = m.groupdict()['stp']
+                bridge_mode = m.groupdict()['bridge_mode']
+                trans1 = m.groupdict()['trans1']
+                trans2 = m.groupdict()['trans2']
+
+                if 'vlans' not in vlan_dict:
+                    vlan_dict['vlans'] = {}
+
+                if vlan_id not in vlan_dict['vlans']:
+                    vlan_dict['vlans'][vlan_id] = {}
+
+                vlan_dict['vlans'][vlan_id]['type'] = type
+                vlan_dict['vlans'][vlan_id]['said'] = int(said)
+                vlan_dict['vlans'][vlan_id]['mtu'] = int(mtu)
+                if '-' not in parent.strip():
+                    vlan_dict['vlans'][vlan_id]['parent'] = parent
+                if '-' not in ring_no.strip():
+                    vlan_dict['vlans'][vlan_id]['ring_no'] = ring_no
+                if '-' not in bridge_no.strip():
+                    vlan_dict['vlans'][vlan_id]['bridge_no'] = bridge_no
+                if '-' not in stp.strip():
+                    vlan_dict['vlans'][vlan_id]['stp'] = stp
+                if '-' not in bridge_mode.strip():
+                    vlan_dict['vlans'][vlan_id]['bridge_mode'] = bridge_mode
+                vlan_dict['vlans'][vlan_id]['trans1'] = int(trans1)
+                vlan_dict['vlans'][vlan_id]['trans2'] = int(trans2)
+
+                continue
+
+            # Remote SPAN VLANs
+            # -------------------------------------
+            # 201-202
+            p4 = re.compile(r'^\s*(?P<remote_span_vlans>[^--][0-9\-]+)?$')
+            m = p4.match(line)
+            if m:
+                if m.groupdict()['remote_span_vlans']:
+                    remote_span_vlans = m.groupdict()['remote_span_vlans'].split('-')
+
+                if remote_span_vlans:
+                    if 'vlans' not in vlan_dict:
+                        vlan_dict['vlans'] = {}
+                    for remote_vlan in remote_span_vlans:
+                        if remote_vlan not in vlan_dict['vlans']:
+                            vlan_dict['vlans'][remote_vlan] = {}
+                        vlan_dict['vlans'][remote_vlan]['remote_span_vlan'] = True
+                continue
+
+
+            # Primary Secondary Type              Ports
+            # ------- --------- ----------------- ------------------------------------------
+            # 2       301       community         Fa5/3, Fa5/25
+            #  2       302       community
+            #          10        community
+
+            p5 = re.compile(r'^\s*(?P<primary>\d+)? +(?P<secondary>\d+)'
+                            ' +(?P<type>[\w\-]+)( +(?P<interfaces>[\w\s\,\/]+))?$')
+            m = p5.match(line)
+
+            if m:
+                if m.groupdict()['primary']:
+                    primary = m.groupdict()['primary']
+                else:
+                    primary = ""
+                secondary = m.groupdict()['secondary']
+
+                private_vlan_type = m.groupdict()['type']
+                if m.groupdict()['interfaces']:
+                    private_vlan_interfaces = \
+                        [Common.convert_intf_name(i) for i in m.groupdict()['interfaces'].split(',')]
+
+                if 'vlans' not in vlan_dict:
+                    vlan_dict['vlans'] = {}
+                if m.groupdict()['primary']:
+                    if primary not in vlan_dict['vlans']:
+                        vlan_dict['vlans'][primary] = {}
+                    if 'private_vlan' not in vlan_dict['vlans'][primary]:
+                        vlan_dict['vlans'][primary]['private_vlan'] = {}
+                if primary:
+                    vlan_dict['vlans'][primary]['private_vlan']['primary'] = True
+                    if 'association' in vlan_dict['vlans'][primary]['private_vlan']:
+                        vlan_dict['vlans'][primary]['private_vlan']['association'] = \
+                            vlan_dict['vlans'][primary]['private_vlan']['association'] + [secondary]
+                    else:
+                        vlan_dict['vlans'][primary]['private_vlan']['association'] = secondary.split()
+
+                if secondary not in vlan_dict['vlans']:
+                    vlan_dict['vlans'][secondary] = {}
+
+                if 'private_vlan' not in vlan_dict['vlans'][secondary]:
+                    vlan_dict['vlans'][secondary]['private_vlan'] = {}
+                vlan_dict['vlans'][secondary]['private_vlan']['primary'] = False
+                vlan_dict['vlans'][secondary]['private_vlan']['type'] = private_vlan_type
+                if m.groupdict()['interfaces']:
+                    vlan_dict['vlans'][secondary]['private_vlan']['ports'] = private_vlan_interfaces
+
                 continue
 
         return vlan_dict

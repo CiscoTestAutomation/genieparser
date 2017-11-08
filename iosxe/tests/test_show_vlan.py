@@ -22,16 +22,39 @@ class test_show_vlan(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_output_vlan_1 = {'execute.return_value': '''
-    VLAN Name                             Status    Ports
-    ---- -------------------------------- --------- -------------------------------
-    1    default                          active    Gi1/0/1, Gi1/0/2, Gi1/0/3, Gi1/0/5, Gi1/0/6, Gi1/0/12, Gi1/0/13, Gi1/0/14, Gi1/0/15, Gi1/0/16, Gi1/0/17, Gi1/0/18
-                                                    Gi1/0/19, Gi1/0/20, Gi1/0/21, Gi1/0/22
-    2    VLAN0002                         active
-    20   VLAN0020                         active
-    100  V100                             suspended
-    101  VLAN0101                         active
-    102  VLAN0102                         active
-    103  VLAN0103                         active
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Gi1/0/1, Gi1/0/2, Gi1/0/3, Gi1/0/5, Gi1/0/6, Gi1/0/12, Gi1/0/13, Gi1/0/14, Gi1/0/15, Gi1/0/16, Gi1/0/17, Gi1/0/18
+                                                Gi1/0/19, Gi1/0/20, Gi1/0/21, Gi1/0/22
+2    VLAN0002                         active
+20   VLAN0020                         active
+100  V100                             suspended
+101  VLAN0101                         active
+102  VLAN0102                         active
+103  VLAN0103                         active
+
+VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
+---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
+1    enet  100001     1500  -      -      -        -    -        0      0
+100  enet  100100     1500  -      -      -        -    -        0      0
+101  enet  100101     1500  -      -      -        -    -        0      0
+
+
+Remote SPAN VLANs
+------------------------------------------------------------------------------
+20-102
+
+Primary Secondary Type              Ports
+------- --------- ----------------- ------------------------------------------
+2       301       community         Fa5/3, Fa5/25
+ 2       302       community
+         10        community
+ 20      105       isolated
+ 100     151       non-operational
+         202       community
+         303       community
+ 101     402       non-operational
+
     '''
 }
     golden_parsed_output_vlan_1 = {
@@ -40,6 +63,11 @@ class test_show_vlan(unittest.TestCase):
                 'vlan_id': 1,
                 'name': 'default',
                 'state': 'active',
+                'mtu': 1500,
+                'said': 100001,
+                'trans1': 0,
+                'trans2': 0,
+                'type': 'enet',
                 'interfaces': ['GigabitEthernet1/0/1', 'GigabitEthernet1/0/2', 'GigabitEthernet1/0/3',
                                'GigabitEthernet1/0/5', 'GigabitEthernet1/0/6', 'GigabitEthernet1/0/12',
                                'GigabitEthernet1/0/13', 'GigabitEthernet1/0/14', 'GigabitEthernet1/0/15',
@@ -51,27 +79,104 @@ class test_show_vlan(unittest.TestCase):
                 'vlan_id': 2,
                 'name': 'VLAN0002',
                 'state': 'active',
+                'private_vlan':{
+                    'primary': True,
+                    'association': ['301', '302'],
+                    },
+                },
+            '301': {
+                'private_vlan': {
+                    'primary': False,
+                    'type': 'community',
+                    'ports': ['FastEthernet5/3', 'FastEthernet5/25']
+                    }
+                },
+            '302': {
+                'private_vlan': {
+                    'primary': False,
+                    'type': 'community',
+                    }
+                },
+            '10': {
+                'private_vlan': {
+                    'primary': False,
+                    'type': 'community',
+                    },
                 },
             '20': {
                 'vlan_id': 20,
                 'name': 'VLAN0020',
                 'state': 'active',
+                'remote_span_vlan':True,
+                'private_vlan': {
+                    'primary': True,
+                    'association': ['105'],
+                    },
+                },
+            '105': {
+                'private_vlan': {
+                    'primary': False,
+                    'type': 'isolated',
+                    },
                 },
             '100': {
                 'vlan_id': 100,
                 'name': 'V100',
-                'state': 'suspended',
+                'state': 'suspend',
+                'mtu': 1500,
+                'said': 100100,
+                'trans1': 0,
+                'trans2': 0,
+                'type': 'enet',
+                'private_vlan': {
+                    'primary': True,
+                    'association': ['151'],
+                    },
+                },
+            '151': {
+                'private_vlan': {
+                    'primary': False,
+                    'type': 'non-operational',
+                    },
+                },
+            '202': {
+                'private_vlan': {
+                    'primary': False,
+                    'type': 'community',
+                    },
+                },
+            '303': {
+                'private_vlan': {
+                    'primary': False,
+                    'type': 'community',
+                    },
                 },
             '101': {
                 'vlan_id': 101,
                 'name': 'VLAN0101',
                 'state': 'active',
-            },
+                'mtu': 1500,
+                'said': 100101,
+                'trans1': 0,
+                'trans2': 0,
+                'type': 'enet',
+                'private_vlan': {
+                    'primary': True,
+                    'association': ['402'],
+                    },
+                },
+            '402': {
+                'private_vlan': {
+                    'primary': False,
+                    'type': 'non-operational',
+                    },
+                },
             '102': {
                 'vlan_id': 102,
                 'name': 'VLAN0102',
                 'state': 'active',
-            },
+                'remote_span_vlan': True,
+                },
             '103': {
                 'vlan_id': 103,
                 'name': 'VLAN0103',
