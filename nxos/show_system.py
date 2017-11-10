@@ -67,6 +67,10 @@ class ShowSystemInternalSysmgrServiceName(
                     ret_dict['instance'][inst] = {}
                 process_name = m.groupdict()['process_name']
                 internal_id = int(m.groupdict()['internal_id'])
+
+                # initial for each process
+                pid = sap = restart_count = previous_pid = None
+                last_restart_date = reboot_state = last_terminate_reason = None
                 continue
 
             # UUID = 0x2C7, PID = 6547, SAP = 1008
@@ -80,8 +84,12 @@ class ShowSystemInternalSysmgrServiceName(
                 uuid = m.groupdict()['uuid']
                 if m.groupdict()['pid']:
                     pid = int(m.groupdict()['pid'])
+                else:
+                    pid = None
                 if m.groupdict()['sap']:
                     sap = int(m.groupdict()['sap'])
+                else:
+                    sap = None
                 continue
 
             # State: SRV_STATE_WAIT_SPAWN_CONDITION (entered at time Tue Mar 26 17:31:06 2013).
@@ -101,6 +109,8 @@ class ShowSystemInternalSysmgrServiceName(
             if m:
                 if m.groupdict()['restart_count']:
                     restart_count = int(m.groupdict()['restart_count'])
+                else:
+                    restart_count = None
                 continue
 
             # Time of last restart: Sat Jul  1 14:49:10 2017.
@@ -129,8 +139,7 @@ class ShowSystemInternalSysmgrServiceName(
             p7 = re.compile(r'^Previous +PID: +(?P<previous_pid>\d+)$')
             m = p7.match(line)
             if m:
-                if m.groupdict()['previous_pid']:
-                    previous_pid = int(m.groupdict()['previous_pid'])
+                previous_pid = int(m.groupdict()['previous_pid'])
                 continue
 
             # Reason of last termination: SYSMGR_DEATH_REASON_FAILURE_SIGNAL
@@ -171,52 +180,29 @@ class ShowSystemInternalSysmgrServiceName(
                 if 'state_start_date':
                     ret_dict['instance'][inst]['tag'][tag]['state_start_date'] = state_start_date
 
-                try:
-                    last_restart_date
-                except:
-                    pass
-                else:
+                if last_restart_date:
                     ret_dict['instance'][inst]['tag'][tag]\
                         ['last_restart_date'] = last_restart_date 
-                try:
-                    pid
-                except:
-                    pass
-                else:
+
+                if pid:
                     ret_dict['instance'][inst]['tag'][tag]['pid'] = pid 
-                try:
-                    previous_pid
-                except:
-                    pass
-                else:
+
+                if previous_pid:
                     ret_dict['instance'][inst]['tag'][tag]\
                         ['previous_pid'] = previous_pid 
-                try:
-                    sap
-                except:
-                    pass
-                else:
+
+                if sap:
                     ret_dict['instance'][inst]['tag'][tag]['sap'] = sap 
-                try:
-                    restart_count
-                except:
-                    pass
-                else:
+
+                if restart_count:
                     ret_dict['instance'][inst]['tag'][tag]\
                         ['restart_count'] = restart_count
 
-                try:
-                    reboot_state
-                except:
-                    pass
-                else:
+                if reboot_state:
                     ret_dict['instance'][inst]['tag'][tag]\
                         ['reboot_state'] = reboot_state
-                try:
-                    last_terminate_reason
-                except:
-                    pass
-                else:
+
+                if last_terminate_reason:
                     ret_dict['instance'][inst]['tag'][tag]\
                         ['last_terminate_reason'] = last_terminate_reason
                 continue
