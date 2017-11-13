@@ -42,7 +42,7 @@ VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
 
 Remote SPAN VLANs
 ------------------------------------------------------------------------------
-20-102
+20,21,102,24-27
 
 Primary Secondary Type              Ports
 ------- --------- ----------------- ------------------------------------------
@@ -113,6 +113,12 @@ Primary Secondary Type              Ports
                     'association': ['105'],
                     },
                 },
+            '21': {'remote_span_vlan': True},
+            '24': {'remote_span_vlan': True},
+            '25': {'remote_span_vlan': True},
+            '26': {'remote_span_vlan': True},
+            '27': {'remote_span_vlan': True},
+
             '105': {
                 'private_vlan': {
                     'primary': False,

@@ -160,19 +160,34 @@ class ShowVlan(ShowVlanSchema):
             # Remote SPAN VLANs
             # -------------------------------------
             # 201-202
-            p4 = re.compile(r'^\s*(?P<remote_span_vlans>[^--][0-9\-]+)?$')
+            # 201,202
+            # 201,202-205
+            p4 = re.compile(r'^\s*(?P<remote_span_vlans>[^--][0-9\-\,]+)?$')
             m = p4.match(line)
             if m:
                 if m.groupdict()['remote_span_vlans']:
-                    remote_span_vlans = m.groupdict()['remote_span_vlans'].split('-')
+                    remote_span_vlans = m.groupdict()['remote_span_vlans'].split(',')
 
                 if remote_span_vlans:
                     if 'vlans' not in vlan_dict:
                         vlan_dict['vlans'] = {}
                     for remote_vlan in remote_span_vlans:
-                        if remote_vlan not in vlan_dict['vlans']:
-                            vlan_dict['vlans'][remote_vlan] = {}
-                        vlan_dict['vlans'][remote_vlan]['remote_span_vlan'] = True
+                        if '-' in remote_vlan:
+                            remote_span_list = remote_vlan.split('-')
+                            initial = remote_span_list[0]
+                            end = remote_span_list[1]
+                            value = int(initial)
+                            while (value <= int(end)):
+                                if str(value) not in vlan_dict['vlans']:
+                                    vlan_dict['vlans'][str(value)] = {}
+                                vlan_dict['vlans'][str(value)]['remote_span_vlan'] = True
+                                value += 1
+
+                        else:
+                            if remote_vlan not in vlan_dict['vlans']:
+                                vlan_dict['vlans'][remote_vlan] = {}
+                            vlan_dict['vlans'][remote_vlan]['remote_span_vlan'] = True
+
                 continue
 
 
