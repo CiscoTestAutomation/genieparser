@@ -51,7 +51,7 @@ VLAN Type         Vlan-mode
 
 Remote SPAN VLANs
 -------------------------------------------------------------------------------
-301-302
+10,20,30-33
 
 Primary  Secondary  Type             Ports
 -------  ---------  ---------------  -------------------------------------------
@@ -104,12 +104,12 @@ Primary  Secondary  Type             Ports
                 'interfaces': ['Port-channel4', 'Port-channel100', 'Ethernet1/7',
                                'Ethernet1/8', 'Ethernet1/28']
                 },
-            '301': {
-                'remote_span_vlan': True,
-                },
-            '302': {
-                'remote_span_vlan': True,
-                },
+            '10': {'remote_span_vlan': True},
+            '20': {'remote_span_vlan': True},
+            '30': {'remote_span_vlan': True},
+            '31': {'remote_span_vlan': True},
+            '32': {'remote_span_vlan': True},
+            '33': {'remote_span_vlan': True},
             '303': {
                 'private_vlan': {
                     'primary': False,
