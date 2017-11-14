@@ -67,6 +67,7 @@ Primary  Secondary  Type             Ports
                 'vlan_id': 1,
                 'name': 'default',
                 'state': 'active',
+                'shutdown': False,
                 'interfaces': ['Port-channel4', 'Port-channel100', 'Ethernet1/2',
                                'Ethernet1/3', 'Ethernet1/4', 'Ethernet1/5',
                                'Ethernet1/6', 'Ethernet1/7', 'Ethernet1/8',
@@ -81,6 +82,7 @@ Primary  Secondary  Type             Ports
                 'vlan_id': 2,
                 'name': 'VLAN0002',
                 'state': 'active',
+                'shutdown': False,
                 'interfaces': ['Port-channel4', 'Port-channel100', 'Ethernet1/7',
                                'Ethernet1/8','Ethernet1/28']
                 },
@@ -88,6 +90,7 @@ Primary  Secondary  Type             Ports
                 'vlan_id': 3,
                 'name': 'VLAN0003',
                 'state': 'active',
+                'shutdown': False,
                 'interfaces': ['Port-channel4', 'Port-channel100', 'Ethernet1/7',
                                'Ethernet1/8', 'Ethernet1/28']
                 },
@@ -95,6 +98,7 @@ Primary  Secondary  Type             Ports
                 'vlan_id': 4,
                 'name': 'VLAN0004',
                 'state': 'active',
+                'shutdown': False,
                 'interfaces': ['Port-channel4', 'Port-channel100', 'Ethernet1/7',
                                'Ethernet1/8', 'Ethernet1/28']
                 },
@@ -102,6 +106,7 @@ Primary  Secondary  Type             Ports
                 'vlan_id': 5,
                 'name': 'VLAN0005',
                 'state': 'active',
+                'shutdown': False,
                 'interfaces': ['Port-channel4', 'Port-channel100', 'Ethernet1/7',
                                'Ethernet1/8', 'Ethernet1/28']
                 },
