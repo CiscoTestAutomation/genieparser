@@ -64,6 +64,7 @@ Primary Secondary Type              Ports
                 'vlan_id': 1,
                 'name': 'default',
                 'state': 'active',
+                'shutdown': False,
                 'mtu': 1500,
                 'said': 100001,
                 'trans1': 0,
@@ -80,6 +81,7 @@ Primary Secondary Type              Ports
                 'vlan_id': 2,
                 'name': 'VLAN0002',
                 'state': 'active',
+                'shutdown': False,
                 'private_vlan':{
                     'primary': True,
                     'association': ['301', '302'],
@@ -107,6 +109,7 @@ Primary Secondary Type              Ports
             '20': {
                 'vlan_id': 20,
                 'name': 'VLAN0020',
+                'shutdown': False,
                 'state': 'active',
                 'remote_span_vlan':True,
                 'private_vlan': {
@@ -130,6 +133,7 @@ Primary Secondary Type              Ports
                 'vlan_id': 100,
                 'name': 'V100',
                 'state': 'suspend',
+                'shutdown': False,
                 'mtu': 1500,
                 'said': 100100,
                 'trans1': 0,
@@ -160,6 +164,7 @@ Primary Secondary Type              Ports
                 },
             '101': {
                 'vlan_id': 101,
+                'shutdown': False,
                 'name': 'VLAN0101',
                 'state': 'active',
                 'mtu': 1500,
@@ -180,12 +185,14 @@ Primary Secondary Type              Ports
                 },
             '102': {
                 'vlan_id': 102,
+                'shutdown': False,
                 'name': 'VLAN0102',
                 'state': 'active',
                 'remote_span_vlan': True,
                 },
             '103': {
                 'vlan_id': 103,
+                'shutdown': False,
                 'name': 'VLAN0103',
                 'state': 'active',
                 },
