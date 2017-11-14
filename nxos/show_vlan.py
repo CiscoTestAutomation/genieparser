@@ -28,6 +28,7 @@ class ShowVlanSchema(MetaParser):
                 Optional('mode'): str,
                 Optional('type'): str,
                 Optional('state'): str,
+                Optional('shutdown'): bool,
                 Optional('interfaces'): list,
                 Optional('remote_span_vlan'): bool,
                 Optional('private_vlan'):
@@ -64,7 +65,7 @@ class ShowVlan(ShowVlanSchema):
             # VLAN Name                             Status    Ports
             # 1    default                          active    Gi1/0/1, Gi1/0/2, Gi1/0/3, Gi1/0/5, Gi1/0/6, Gi1/0/12,
             p1 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<name>[a-zA-Z0-9\-]+)'
-                            ' +(?P<status>[active|suspended]+) *(?P<interfaces>[\w\s\/\,]+)?$')
+                            ' +(?P<status>[active|suspended|act/unsup|sus/lshut]+) *(?P<interfaces>[\w\s\/\,]+)?$')
             m = p1.match(line)
             if m:
                 vlan_id = m.groupdict()['vlan_id']
@@ -76,7 +77,16 @@ class ShowVlan(ShowVlanSchema):
 
                 vlan_dict['vlans'][vlan_id]['vlan_id'] = int(vlan_id)
                 vlan_dict['vlans'][vlan_id]['name'] = m.groupdict()['name']
-                vlan_dict['vlans'][vlan_id]['state'] = m.groupdict()['status']
+                if 'act/unsup' in m.groupdict()['status']:
+                    status = 'unsupport'
+                elif 'suspend' in m.groupdict()['status']:
+                    status = 'suspend'
+                elif 'sus/lshut' in m.groupdict()['status']:
+                    status = 'shutdown'
+                    vlan_dict['vlans'][vlan_id]['shutdown'] = True
+                else:
+                    status = m.groupdict()['status']
+                vlan_dict['vlans'][vlan_id]['state'] = status
                 if m.groupdict()['interfaces']:
                     vlan_dict['vlans'][vlan_id]['interfaces'] = \
                         [Common.convert_intf_name(i) for i in m.groupdict()['interfaces'].split(',')]

@@ -35,6 +35,7 @@ VLAN Name                             Status    Ports
                                                 Eth1/28
 5    VLAN0005                         active    Po4, Po100, Eth1/7, Eth1/8
                                                 Eth1/28
+6    VLAN0006                         sus/lshut
 
 VLAN Type         Vlan-mode
  ---- -----        ----------
@@ -104,6 +105,12 @@ Primary  Secondary  Type             Ports
                 'interfaces': ['Port-channel4', 'Port-channel100', 'Ethernet1/7',
                                'Ethernet1/8', 'Ethernet1/28']
                 },
+            '6': {
+                'vlan_id': 6,
+                'name': 'VLAN0006',
+                'state': 'shutdown',
+                'shutdown': True,
+            },
             '10': {'remote_span_vlan': True},
             '20': {'remote_span_vlan': True},
             '30': {'remote_span_vlan': True},
