@@ -822,6 +822,29 @@ class ShowBoot(ShowBootSchema):
                         boot_dict['next_reload_boot_variable']['system_variable'] = m.groupdict()['system_variable']
                 continue
 
+
+            # NXOS variable = bootflash:/ISSUCleanGolden.system.gbin
+            p5_1 = re.compile(r'^\s*NXOS +variable += +(?P<image>[a-zA-z0-9\:\-\.\/\s]+)$')
+            m = p5_1.match(line)
+            if m:
+                if boot_variable is 'current':
+                    if sup_number:
+                        if sup_number is 'sup-1':
+                            boot_dict['current_boot_variable']['sup_number']['sup-1']['system_variable'] = m.groupdict()['image']
+                        elif sup_number is 'sup-2':
+                            boot_dict['current_boot_variable']['sup_number']['sup-2']['system_variable'] = m.groupdict()['image']
+                    else:
+                        boot_dict['current_boot_variable']['system_variable'] = m.groupdict()['image']
+                elif boot_variable is 'next':
+                    if sup_number:
+                        if sup_number is 'sup-1':
+                            boot_dict['next_reload_boot_variable']['sup_number']['sup-1']['system_variable'] = m.groupdict()['image']
+                        elif sup_number is 'sup-2':
+                            boot_dict['next_reload_boot_variable']['sup_number']['sup-2']['system_variable'] = m.groupdict()['image']
+                    else:
+                        boot_dict['next_reload_boot_variable']['system_variable'] = m.groupdict()['image']
+                continue
+
             p7 = re.compile(r'^\s*Boot POAP +(?P<boot_poap>[a-zA-z]+)$')
             m = p7.match(line)
             if m:
