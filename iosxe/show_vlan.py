@@ -35,6 +35,7 @@ class ShowVlanSchema(MetaParser):
                 Optional('vlan_id'): int,
                 Optional('name'): str,
                 Optional('state'): str,
+                Optional('shutdown'): bool,
                 Optional('interfaces'): list,
                 Optional('type'): str,
                 Optional('said'): int,
@@ -79,7 +80,7 @@ class ShowVlan(ShowVlanSchema):
             # VLAN Name                             Status    Ports
             # 1    default                          active    Gi1/0/1, Gi1/0/2, Gi1/0/3, Gi1/0/5, Gi1/0/6, Gi1/0/12,
             p1 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<name>[a-zA-Z0-9\-]+)'
-                            ' +(?P<status>(active|suspended|act/unsup)+) *(?P<interfaces>[\w\s\/\,]+)?$')
+                            ' +(?P<status>(active|suspended|act/unsup|sus/lshut)+) *(?P<interfaces>[\w\s\/\,]+)?$')
             m = p1.match(line)
             if m:
                 vlan_id = m.groupdict()['vlan_id']
@@ -95,6 +96,9 @@ class ShowVlan(ShowVlanSchema):
                     status = 'unsupport'
                 elif 'suspend' in m.groupdict()['status']:
                     status = 'suspend'
+                elif 'sus/lshut' in m.groupdict()['status']:
+                    status = 'shutdown'
+                    vlan_dict['vlans'][vlan_id]['shutdown'] = True
                 else:
                     status = m.groupdict()['status']
                 vlan_dict['vlans'][vlan_id]['state'] = status

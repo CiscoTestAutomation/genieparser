@@ -32,6 +32,7 @@ VLAN Name                             Status    Ports
 101  VLAN0101                         active
 102  VLAN0102                         active
 103  VLAN0103                         active
+104  VLAN0104                         sus/lshut
 
 VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
 ---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
@@ -187,6 +188,12 @@ Primary Secondary Type              Ports
                 'vlan_id': 103,
                 'name': 'VLAN0103',
                 'state': 'active',
+                },
+            '104': {
+                'vlan_id': 104,
+                'name': 'VLAN0104',
+                'state': 'shutdown',
+                'shutdown': True,
             },
         },
     }
