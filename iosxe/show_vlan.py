@@ -97,7 +97,7 @@ class ShowVlan(ShowVlanSchema):
                     status = 'unsupport'
                 elif 'suspend' in m.groupdict()['status']:
                     status = 'suspend'
-                elif 'sus/lshut' in m.groupdict()['status']:
+                elif 'shut' in m.groupdict()['status']:
                     status = 'shutdown'
                     vlan_dict['vlans'][vlan_id]['shutdown'] = True
                 else:
