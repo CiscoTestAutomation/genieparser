@@ -54,8 +54,9 @@ class ShowSystemInternalSysmgrServiceName(
 
             # Service "bfdc" ("bfdc", 3):
             # Service "__inst_012__isis" ("isis", 61):
-            p1 = re.compile(r'^Service +\"(?P<inst>\w+)\" *'
-                             '\(\"(?P<process_name>\w+)\", *'
+            # Service "feature-mgr" ("feature-mgr", 135):
+            p1 = re.compile(r'^Service +\"(?P<inst>[\w\-]+)\" *'
+                             '\(\"(?P<process_name>[\w\-]+)\", *'
                              '(?P<internal_id>\d+)\):$')
             m = p1.match(line)
             if m:
