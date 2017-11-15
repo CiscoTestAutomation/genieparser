@@ -955,7 +955,7 @@ class ShowModule(ShowModuleSchema):
                     module_dict['xbar'] = {}
                 continue
 
-            p3 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<ports>[0-9]+) +(?P<module_type>[a-zA-Z0-9\/\-\s]+) +(?P<model>[a-zA-Z0-9\-]+) +(?P<status>[a-zA-Z\-\s]+) ?\*?$')
+            p3 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<ports>[0-9]+) +(?P<module_type>[a-zA-Z0-9\/\-\s\+]+) +(?P<model>[a-zA-Z0-9\-]+) +(?P<status>[a-zA-Z\-\s]+) *\*?$')
             m = p3.match(line)
             if m:
                 header_number = m.groupdict()['number']
@@ -999,7 +999,7 @@ class ShowModule(ShowModuleSchema):
                     module_dict['xbar'][header_number]['status'] = m.groupdict()['status'].strip()
                 continue
 
-            p4 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<software>[A-Z0-9\(\)\.]+) +(?P<hardware>[0-9\.]+)( +)?(?P<world_wide_name>[A-Z\-]+)?$')
+            p4 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<software>[A-Z0-9\(\)\.]+) +(?P<hardware>[0-9\.]+)( +)?(?P<world_wide_name>[\w\-]+)?$')
             m = p4.match(line)
             if m:
                 header_number = m.groupdict()['number']

@@ -783,6 +783,174 @@ class test_show_module(unittest.TestCase):
 
 '''}
 
+    output = {'execute.return_value': '''
+        Mod Ports             Module-Type                       Model          Status
+        --- ----- ------------------------------------- --------------------- ---------
+        1    52   48x1/10G SFP+ 4x40G Ethernet Module   N9K-X9564PX           ok        
+        22   0    Fabric Module                         N9K-C9504-FM          ok        
+        24   0    Fabric Module                         N9K-C9504-FM          ok        
+        26   0    Fabric Module                         N9K-C9504-FM          ok        
+        27   0    Supervisor Module                     N9K-SUP-A             ha-standby
+        28   0    Supervisor Module                     N9K-SUP-A             active *  
+        29   0    System Controller                     N9K-SC-A              active    
+        30   0    System Controller                     N9K-SC-A              standby   
+
+        Mod  Sw                Hw     Slot
+        ---  ----------------  ------ ----
+        1    7.0(3)I5(0.125)   1.3    LC1 
+        22   7.0(3)I5(0.125)   1.1    FM2 
+        24   7.0(3)I5(0.125)   1.1    FM4 
+        26   7.0(3)I5(0.125)   1.1    FM6 
+        27   7.0(3)I5(0.125)   1.4    SUP1
+        28   7.0(3)I5(0.125)   1.4    SUP2
+        29   7.0(3)I5(0.125)   1.4    SC1 
+        30   7.0(3)I5(0.125)   1.4    SC2 
+
+
+        Mod  MAC-Address(es)                         Serial-Num
+        ---  --------------------------------------  ----------
+        1    88-1d-fc-84-e3-ec to 88-1d-fc-84-e4-2f  SAL18422J9D
+        22   NA                                      SAL18401T5J
+        24   NA                                      SAL18401T2L
+        26   NA                                      SAL18401T5S
+        27   e4-c7-22-be-01-0c to e4-c7-22-be-01-1d  SAL18422LG1
+        28   e4-c7-22-bd-f1-a6 to e4-c7-22-bd-f1-b7  SAL18412064
+        29   NA                                      SAL18422HKT
+        30   NA                                      SAL18422HKA
+
+        Mod  Online Diag Status
+        ---  ------------------
+        1    Pass
+        22   Pass
+        24   Pass
+        26   Pass
+        27   Pass
+        28   Pass
+        29   Pass
+        30   Pass
+        '''
+    }
+
+    parsed_output_1 = {
+        "slot": {
+            "rp": {
+                 "28": {
+                      "Supervisor Module": {
+                           "online_diag_status": "Pass",
+                           "ports": "0",
+                           "model": "N9K-SUP-A",
+                           "software": "7.0(3)I5(0.125)",
+                           "serial_number": "SAL18412064",
+                           "hardware": "1.4",
+                           "status": "active",
+                           "slot/world_wide_name": "SUP2",
+                           "mac_address": "e4-c7-22-bd-f1-a6 to e4-c7-22-bd-f1-b7"
+                      }
+                 },
+                 "27": {
+                      "Supervisor Module": {
+                           "online_diag_status": "Pass",
+                           "ports": "0",
+                           "model": "N9K-SUP-A",
+                           "software": "7.0(3)I5(0.125)",
+                           "serial_number": "SAL18422LG1",
+                           "hardware": "1.4",
+                           "status": "ha-standby",
+                           "slot/world_wide_name": "SUP1",
+                           "mac_address": "e4-c7-22-be-01-0c to e4-c7-22-be-01-1d"
+                      }
+                 }
+            },
+            "lc": {
+                 "1": {
+                      "48x1/10G SFP+ 4x40G Ethernet Module": {
+                           "online_diag_status": "Pass",
+                           "ports": "52",
+                           "model": "N9K-X9564PX",
+                           "software": "7.0(3)I5(0.125)",
+                           "serial_number": "SAL18422J9D",
+                           "hardware": "1.3",
+                           "status": "ok",
+                           "slot/world_wide_name": "LC1",
+                           "mac_address": "88-1d-fc-84-e3-ec to 88-1d-fc-84-e4-2f"
+                      }
+                 },
+                 "26": {
+                      "Fabric Module": {
+                           "online_diag_status": "Pass",
+                           "ports": "0",
+                           "model": "N9K-C9504-FM",
+                           "software": "7.0(3)I5(0.125)",
+                           "serial_number": "SAL18401T5S",
+                           "hardware": "1.1",
+                           "status": "ok",
+                           "slot/world_wide_name": "FM6",
+                           "mac_address": "NA"
+                      }
+                 },
+                 "30": {
+                      "System Controller": {
+                           "online_diag_status": "Pass",
+                           "ports": "0",
+                           "model": "N9K-SC-A",
+                           "software": "7.0(3)I5(0.125)",
+                           "serial_number": "SAL18422HKA",
+                           "hardware": "1.4",
+                           "status": "standby",
+                           "slot/world_wide_name": "SC2",
+                           "mac_address": "NA"
+                      }
+                 },
+                 "29": {
+                      "System Controller": {
+                           "online_diag_status": "Pass",
+                           "ports": "0",
+                           "model": "N9K-SC-A",
+                           "software": "7.0(3)I5(0.125)",
+                           "serial_number": "SAL18422HKT",
+                           "hardware": "1.4",
+                           "status": "active",
+                           "slot/world_wide_name": "SC1",
+                           "mac_address": "NA"
+                      }
+                 },
+                 "24": {
+                      "Fabric Module": {
+                           "online_diag_status": "Pass",
+                           "ports": "0",
+                           "model": "N9K-C9504-FM",
+                           "software": "7.0(3)I5(0.125)",
+                           "serial_number": "SAL18401T2L",
+                           "hardware": "1.1",
+                           "status": "ok",
+                           "slot/world_wide_name": "FM4",
+                           "mac_address": "NA"
+                      }
+                 },
+                 "22": {
+                      "Fabric Module": {
+                           "online_diag_status": "Pass",
+                           "ports": "0",
+                           "model": "N9K-C9504-FM",
+                           "software": "7.0(3)I5(0.125)",
+                           "serial_number": "SAL18401T5J",
+                           "hardware": "1.1",
+                           "status": "ok",
+                           "slot/world_wide_name": "FM2",
+                           "mac_address": "NA"
+                      }
+                 }
+            }
+       }
+    }
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.output)
+        module_obj = ShowModule(device=self.device)
+        parsed_output = module_obj.parse()
+        self.assertEqual(parsed_output,self.parsed_output_1)
+
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
