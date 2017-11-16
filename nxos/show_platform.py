@@ -875,12 +875,12 @@ class ShowModuleSchema(MetaParser):
                     {Any():
                       {Any():
                         {'ports': str,
-                         'model': str,
+                         Optional('model'): str,
                          'status': str,
-                         'software': str,
-                         'hardware': str,
-                         'mac_address': str,
-                         'serial_number': str,
+                         Optional('software'): str,
+                         Optional('hardware'): str,
+                         Optional('mac_address'): str,
+                         Optional('serial_number'): str,
                          Optional('online_diag_status'): str,
                          Optional('slot/world_wide_name'): str}
                       },
@@ -955,7 +955,7 @@ class ShowModule(ShowModuleSchema):
                     module_dict['xbar'] = {}
                 continue
 
-            p3 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<ports>[0-9]+) +(?P<module_type>[a-zA-Z0-9\/\-\s\+]+) +(?P<model>[a-zA-Z0-9\-]+) +(?P<status>[a-zA-Z\-\s]+) *\*?$')
+            p3 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<ports>[0-9]+) +(?P<module_type>[a-zA-Z0-9\/\-\s\+]+)( +(?P<model>[a-zA-Z0-9\-]+))? +(?P<status>[a-zA-Z\-\s]+) *\*?$')
             m = p3.match(line)
             if m:
                 header_number = m.groupdict()['number']
@@ -980,7 +980,8 @@ class ShowModule(ShowModuleSchema):
                         if rp_name not in module_dict['slot']['rp'][header_number]:
                             module_dict['slot']['rp'][header_number][rp_name] = {}
                         module_dict['slot']['rp'][header_number][rp_name]['ports'] = m.groupdict()['ports'].strip()
-                        module_dict['slot']['rp'][header_number][rp_name]['model'] = m.groupdict()['model'].strip()
+                        if m.groupdict()['model']:
+                            module_dict['slot']['rp'][header_number][rp_name]['model'] = m.groupdict()['model'].strip()
                         module_dict['slot']['rp'][header_number][rp_name]['status'] = m.groupdict()['status'].strip()
                     else:
                         if header_number not in module_dict['slot']['lc']:
@@ -988,14 +989,16 @@ class ShowModule(ShowModuleSchema):
                         if lc_name not in module_dict['slot']['lc'][header_number]:
                             module_dict['slot']['lc'][header_number][lc_name] = {}
                         module_dict['slot']['lc'][header_number][lc_name]['ports'] = m.groupdict()['ports'].strip()
-                        module_dict['slot']['lc'][header_number][lc_name]['model'] = m.groupdict()['model'].strip()
+                        if m.groupdict()['model']:
+                            module_dict['slot']['lc'][header_number][lc_name]['model'] = m.groupdict()['model'].strip()
                         module_dict['slot']['lc'][header_number][lc_name]['status'] = m.groupdict()['status'].strip()
                 elif table_header is 'xbar':
                     if header_number not in module_dict['xbar']:
                         module_dict['xbar'][header_number] = {}
                     module_dict['xbar'][header_number]['ports'] = m.groupdict()['ports'].strip()
                     module_dict['xbar'][header_number]['module_type'] = m.groupdict()['module_type'].strip()
-                    module_dict['xbar'][header_number]['model'] = m.groupdict()['model'].strip()
+                    if m.groupdict()['model']:
+                        module_dict['xbar'][header_number]['model'] = m.groupdict()['model'].strip()
                     module_dict['xbar'][header_number]['status'] = m.groupdict()['status'].strip()
                 continue
 
