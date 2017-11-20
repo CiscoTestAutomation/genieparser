@@ -61,7 +61,7 @@ class ShowProcesses(ShowProcessesSchema):
                              ' +(?P<start_cnt>\d+)'
                              ' +((?P<tty>\d+)|\-)'
                              ' +(?P<type>\w+)'
-                             ' +(?P<process>[\w\/\:\-]+)$')
+                             ' +(?P<process>[\w\/\:\-\.]+)$')
             m = p1.match(line)
             if m:
                 process = m.groupdict()['process']
