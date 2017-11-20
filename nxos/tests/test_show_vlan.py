@@ -64,7 +64,7 @@ Primary  Secondary  Type             Ports
     golden_parsed_output_vlan_1 = {
         'vlans':{
             '1':{
-                'vlan_id': 1,
+                'vlan_id': '1',
                 'name': 'default',
                 'state': 'active',
                 'shutdown': False,
@@ -79,7 +79,7 @@ Primary  Secondary  Type             Ports
                 'type': 'enet',
                 },
             '2': {
-                'vlan_id': 2,
+                'vlan_id': '2',
                 'name': 'VLAN0002',
                 'state': 'active',
                 'shutdown': False,
@@ -87,7 +87,7 @@ Primary  Secondary  Type             Ports
                                'Ethernet1/8','Ethernet1/28']
                 },
             '3': {
-                'vlan_id': 3,
+                'vlan_id': '3',
                 'name': 'VLAN0003',
                 'state': 'active',
                 'shutdown': False,
@@ -95,7 +95,7 @@ Primary  Secondary  Type             Ports
                                'Ethernet1/8', 'Ethernet1/28']
                 },
             '4': {
-                'vlan_id': 4,
+                'vlan_id': '4',
                 'name': 'VLAN0004',
                 'state': 'active',
                 'shutdown': False,
@@ -103,7 +103,7 @@ Primary  Secondary  Type             Ports
                                'Ethernet1/8', 'Ethernet1/28']
                 },
             '5': {
-                'vlan_id': 5,
+                'vlan_id': '5',
                 'name': 'VLAN0005',
                 'state': 'active',
                 'shutdown': False,
@@ -111,7 +111,7 @@ Primary  Secondary  Type             Ports
                                'Ethernet1/8', 'Ethernet1/28']
                 },
             '6': {
-                'vlan_id': 6,
+                'vlan_id': '6',
                 'name': 'VLAN0006',
                 'state': 'shutdown',
                 'shutdown': True,
@@ -178,31 +178,31 @@ class test_show_vlan_id_segmant(unittest.TestCase):
     golden_parsed_output_vlan_1 = {
         'vlans':{
             '10':{
-                'vlan_id': 10,
+                'vlan_id': '10',
                 'vn_segment_id': 5010,
                 },
             '20': {
-                'vlan_id': 20,
+                'vlan_id': '20',
                 'vn_segment_id': 5020,
             },
             '30': {
-                'vlan_id': 30,
+                'vlan_id': '30',
                 'vn_segment_id': 5030,
             },
             '40': {
-                'vlan_id': 40,
+                'vlan_id': '40',
                 'vn_segment_id': 5040,
             },
             '50': {
-                'vlan_id': 50,
+                'vlan_id': '50',
                 'vn_segment_id': 5050,
             },
             '555': {
-                'vlan_id': 555,
+                'vlan_id': '555',
                 'vn_segment_id': 5555,
             },
             '556': {
-                'vlan_id': 556,
+                'vlan_id': '556',
                 'vn_segment_id': 5556,
             },
 
