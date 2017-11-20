@@ -32,7 +32,7 @@ class ShowVlanSchema(MetaParser):
     schema = {
         'vlans':{
             Any():{
-                Optional('vlan_id'): int,
+                Optional('vlan_id'): str,
                 Optional('name'): str,
                 Optional('state'): str,
                 Optional('shutdown'): bool,
@@ -80,7 +80,7 @@ class ShowVlan(ShowVlanSchema):
             # VLAN Name                             Status    Ports
             # 1    default                          active    Gi1/0/1, Gi1/0/2, Gi1/0/3, Gi1/0/5, Gi1/0/6, Gi1/0/12,
             p1 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<name>[a-zA-Z0-9\-]+)'
-                            ' +(?P<status>(active|suspended|act/unsup|sus/lshut)+) *(?P<interfaces>[\w\s\/\,]+)?$')
+                            ' +(?P<status>(active|suspended|act/unsup|(.*)lshut)+) *(?P<interfaces>[\w\s\/\,]+)?$')
             m = p1.match(line)
             if m:
                 vlan_id = m.groupdict()['vlan_id']
@@ -90,13 +90,14 @@ class ShowVlan(ShowVlanSchema):
                 if vlan_id not in vlan_dict:
                     vlan_dict['vlans'][vlan_id] = {}
 
-                vlan_dict['vlans'][vlan_id]['vlan_id'] = int(vlan_id)
+                vlan_dict['vlans'][vlan_id]['vlan_id'] = vlan_id
                 vlan_dict['vlans'][vlan_id]['name'] = m.groupdict()['name']
                 vlan_dict['vlans'][vlan_id]['shutdown'] = False
                 if 'act/unsup' in m.groupdict()['status']:
                     status = 'unsupport'
                 elif 'suspend' in m.groupdict()['status']:
                     status = 'suspend'
+
                 elif 'shut' in m.groupdict()['status']:
                     status = 'shutdown'
                     vlan_dict['vlans'][vlan_id]['shutdown'] = True

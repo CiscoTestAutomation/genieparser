@@ -32,7 +32,7 @@ VLAN Name                             Status    Ports
 101  VLAN0101                         active
 102  VLAN0102                         active
 103  VLAN0103                         active
-104  VLAN0104                         sus/lshut
+104  VLAN0104                         act/lshut
 
 VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
 ---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
@@ -61,7 +61,7 @@ Primary Secondary Type              Ports
     golden_parsed_output_vlan_1 = {
         'vlans':{
             '1':{
-                'vlan_id': 1,
+                'vlan_id': '1',
                 'name': 'default',
                 'state': 'active',
                 'shutdown': False,
@@ -78,7 +78,7 @@ Primary Secondary Type              Ports
                                'GigabitEthernet1/0/22']
                 },
             '2': {
-                'vlan_id': 2,
+                'vlan_id': '2',
                 'name': 'VLAN0002',
                 'state': 'active',
                 'shutdown': False,
@@ -107,7 +107,7 @@ Primary Secondary Type              Ports
                     },
                 },
             '20': {
-                'vlan_id': 20,
+                'vlan_id': '20',
                 'name': 'VLAN0020',
                 'shutdown': False,
                 'state': 'active',
@@ -130,7 +130,7 @@ Primary Secondary Type              Ports
                     },
                 },
             '100': {
-                'vlan_id': 100,
+                'vlan_id': '100',
                 'name': 'V100',
                 'state': 'suspend',
                 'shutdown': False,
@@ -163,7 +163,7 @@ Primary Secondary Type              Ports
                     },
                 },
             '101': {
-                'vlan_id': 101,
+                'vlan_id': '101',
                 'shutdown': False,
                 'name': 'VLAN0101',
                 'state': 'active',
@@ -184,20 +184,20 @@ Primary Secondary Type              Ports
                     },
                 },
             '102': {
-                'vlan_id': 102,
+                'vlan_id': '102',
                 'shutdown': False,
                 'name': 'VLAN0102',
                 'state': 'active',
                 'remote_span_vlan': True,
                 },
             '103': {
-                'vlan_id': 103,
+                'vlan_id': '103',
                 'shutdown': False,
                 'name': 'VLAN0103',
                 'state': 'active',
                 },
             '104': {
-                'vlan_id': 104,
+                'vlan_id': '104',
                 'name': 'VLAN0104',
                 'state': 'shutdown',
                 'shutdown': True,
