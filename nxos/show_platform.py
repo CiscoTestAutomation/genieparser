@@ -560,22 +560,10 @@ class ShowRedundancyStatusSchema(MetaParser):
     schema = {'redundancy_mode':
                   {'administrative': str,
                    'operational': str},
-              Optional('supervisor_1'):
+              Any():
                   {'redundancy_state': str,
                    'supervisor_state': str,
                    'internal_state':str},
-              Optional('supervisor_2'):
-                  {Optional('redundancy_state'): str,
-                   Optional('supervisor_state'): str,
-                   Optional('internal_state'):str},
-              Optional('supervisor_3'):
-                  {Optional('redundancy_state'): str,
-                   Optional('supervisor_state'): str,
-                   Optional('internal_state'):str},
-              Optional('supervisor_4'):
-                  {Optional('redundancy_state'): str,
-                   Optional('supervisor_state'): str,
-                   Optional('internal_state'):str},
               Optional('system_start_time'): str,
               Optional('system_uptime'): str,
               Optional('kernel_uptime'): str,
