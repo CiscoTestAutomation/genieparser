@@ -222,7 +222,8 @@ class ShowVlanIdVnSegment(ShowVlanIdVnSegmentSchema):
     '''
 
     def cli(self):
-        cmd = 'show vlan id 1-4093 vn-segment'
+        #cmd = 'show vlan id 1-4093 vn-segment'   # N9k doesnot accept  1-4093
+        cmd = 'show vlan id 1-3967 vn-segment'
         out = self.device.execute(cmd)
 
         vlan_dict = {}
