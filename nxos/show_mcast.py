@@ -67,7 +67,7 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
         for line in out.splitlines():
             line = line.rstrip()
 
-            # IP Multicast Routing Table for VRF "default 
+            # IP Multicast Routing Table for VRF "default" 
             p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) [mM]ulticast'
                              ' +[rR]outing +[tT]able +for +VRF '
                             '+(?P<vrf>[a-zA-Z0-9\"]+)$')
@@ -94,7 +94,7 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
                              ' +(?P<multicast_group>[0-9\.\/]+)\),'
                              ' *(?P<bidir>(\S+))? *uptime:'
                              ' +(?P<uptime>[0-9a-zA-Z\:\.]+)(,)?(?:'
-                             ' *(?P<flag>[a-zA-Z\s]+))?$')
+                             ' *(?P<flag>[a-zA-Z\(\)\s]+))?$')
             m = p2.match(line)
             if m:
                 source_address = m.groupdict()['source_address']
@@ -161,7 +161,7 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
             # loopback2, uptime: 3d11h, igmp 
             p5 = re.compile(r'^\s*(?:(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+),)?'
                              ' +uptime: +(?:(?P<oil_uptime>[a-zA-Z0-9\:]+),)?'
-                             ' +(?:(?P<oil_flags>[a-zA-Z\s]+))?$')
+                             ' +(?:(?P<oil_flags>[a-zA-Z\(\)\s]+))?( *\((?P<rpf>\w+)\))?$')
             m = p5.match(line)
             if m:
                 outgoing_interface = m.groupdict()['outgoing_interface']

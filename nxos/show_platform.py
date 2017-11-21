@@ -560,22 +560,10 @@ class ShowRedundancyStatusSchema(MetaParser):
     schema = {'redundancy_mode':
                   {'administrative': str,
                    'operational': str},
-              Optional('supervisor_1'):
+              Any():
                   {'redundancy_state': str,
                    'supervisor_state': str,
                    'internal_state':str},
-              Optional('supervisor_2'):
-                  {Optional('redundancy_state'): str,
-                   Optional('supervisor_state'): str,
-                   Optional('internal_state'):str},
-              Optional('supervisor_3'):
-                  {Optional('redundancy_state'): str,
-                   Optional('supervisor_state'): str,
-                   Optional('internal_state'):str},
-              Optional('supervisor_4'):
-                  {Optional('redundancy_state'): str,
-                   Optional('supervisor_state'): str,
-                   Optional('internal_state'):str},
               Optional('system_start_time'): str,
               Optional('system_uptime'): str,
               Optional('kernel_uptime'): str,
@@ -822,6 +810,29 @@ class ShowBoot(ShowBootSchema):
                         boot_dict['next_reload_boot_variable']['system_variable'] = m.groupdict()['system_variable']
                 continue
 
+
+            # NXOS variable = bootflash:/ISSUCleanGolden.system.gbin
+            p5_1 = re.compile(r'^\s*NXOS +variable += +(?P<image>[a-zA-z0-9\:\-\.\/\s]+)$')
+            m = p5_1.match(line)
+            if m:
+                if boot_variable is 'current':
+                    if sup_number:
+                        if sup_number is 'sup-1':
+                            boot_dict['current_boot_variable']['sup_number']['sup-1']['system_variable'] = m.groupdict()['image']
+                        elif sup_number is 'sup-2':
+                            boot_dict['current_boot_variable']['sup_number']['sup-2']['system_variable'] = m.groupdict()['image']
+                    else:
+                        boot_dict['current_boot_variable']['system_variable'] = m.groupdict()['image']
+                elif boot_variable is 'next':
+                    if sup_number:
+                        if sup_number is 'sup-1':
+                            boot_dict['next_reload_boot_variable']['sup_number']['sup-1']['system_variable'] = m.groupdict()['image']
+                        elif sup_number is 'sup-2':
+                            boot_dict['next_reload_boot_variable']['sup_number']['sup-2']['system_variable'] = m.groupdict()['image']
+                    else:
+                        boot_dict['next_reload_boot_variable']['system_variable'] = m.groupdict()['image']
+                continue
+
             p7 = re.compile(r'^\s*Boot POAP +(?P<boot_poap>[a-zA-z]+)$')
             m = p7.match(line)
             if m:
@@ -852,12 +863,12 @@ class ShowModuleSchema(MetaParser):
                     {Any():
                       {Any():
                         {'ports': str,
-                         'model': str,
+                         Optional('model'): str,
                          'status': str,
-                         'software': str,
-                         'hardware': str,
-                         'mac_address': str,
-                         'serial_number': str,
+                         Optional('software'): str,
+                         Optional('hardware'): str,
+                         Optional('mac_address'): str,
+                         Optional('serial_number'): str,
                          Optional('online_diag_status'): str,
                          Optional('slot/world_wide_name'): str}
                       },
@@ -932,8 +943,11 @@ class ShowModule(ShowModuleSchema):
                     module_dict['xbar'] = {}
                 continue
 
-            p3 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<ports>[0-9]+) +(?P<module_type>[a-zA-Z0-9\/\-\s]+) +(?P<model>[a-zA-Z0-9\-]+) +(?P<status>[a-zA-Z\-\s]+) ?\*?$')
+            p3 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<ports>[0-9]+) +(?P<module_type>[a-zA-Z0-9\/\-\s\+]+) +(?P<model>[a-zA-Z0-9\-]+) +(?P<status>[a-zA-Z\-\s]+) *\*?$')
+            p3_1 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<ports>[0-9]+) +(?P<module_type>[a-zA-Z0-9\/\-\s\+]+) +(?P<status>[a-zA-Z\-\s]+) *\*?$')
             m = p3.match(line)
+            m1 = p3_1.match(line)
+            m = m if m else m1
             if m:
                 header_number = m.groupdict()['number']
                 module_type = m.groupdict()['module_type']
@@ -957,7 +971,8 @@ class ShowModule(ShowModuleSchema):
                         if rp_name not in module_dict['slot']['rp'][header_number]:
                             module_dict['slot']['rp'][header_number][rp_name] = {}
                         module_dict['slot']['rp'][header_number][rp_name]['ports'] = m.groupdict()['ports'].strip()
-                        module_dict['slot']['rp'][header_number][rp_name]['model'] = m.groupdict()['model'].strip()
+                        if m.groupdict()['model']:
+                            module_dict['slot']['rp'][header_number][rp_name]['model'] = m.groupdict()['model'].strip()
                         module_dict['slot']['rp'][header_number][rp_name]['status'] = m.groupdict()['status'].strip()
                     else:
                         if header_number not in module_dict['slot']['lc']:
@@ -965,18 +980,20 @@ class ShowModule(ShowModuleSchema):
                         if lc_name not in module_dict['slot']['lc'][header_number]:
                             module_dict['slot']['lc'][header_number][lc_name] = {}
                         module_dict['slot']['lc'][header_number][lc_name]['ports'] = m.groupdict()['ports'].strip()
-                        module_dict['slot']['lc'][header_number][lc_name]['model'] = m.groupdict()['model'].strip()
+                        if m.groupdict()['model']:
+                            module_dict['slot']['lc'][header_number][lc_name]['model'] = m.groupdict()['model'].strip()
                         module_dict['slot']['lc'][header_number][lc_name]['status'] = m.groupdict()['status'].strip()
                 elif table_header is 'xbar':
                     if header_number not in module_dict['xbar']:
                         module_dict['xbar'][header_number] = {}
                     module_dict['xbar'][header_number]['ports'] = m.groupdict()['ports'].strip()
                     module_dict['xbar'][header_number]['module_type'] = m.groupdict()['module_type'].strip()
-                    module_dict['xbar'][header_number]['model'] = m.groupdict()['model'].strip()
+                    if m.groupdict()['model']:
+                        module_dict['xbar'][header_number]['model'] = m.groupdict()['model'].strip()
                     module_dict['xbar'][header_number]['status'] = m.groupdict()['status'].strip()
                 continue
 
-            p4 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<software>[A-Z0-9\(\)\.]+) +(?P<hardware>[0-9\.]+)( +)?(?P<world_wide_name>[A-Z\-]+)?$')
+            p4 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<software>[A-Z0-9\(\)\.]+) +(?P<hardware>[0-9\.]+)( +)?(?P<world_wide_name>[\w\-]+)?$')
             m = p4.match(line)
             if m:
                 header_number = m.groupdict()['number']
