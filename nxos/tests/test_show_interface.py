@@ -290,6 +290,7 @@ class test_show_interface(unittest.TestCase):
                                 'rx': True,
                                 'tx': True},
                    'delay': 10,
+                   'description': 'Connection to pe1',
                    'enabled': False,
                    'encapsulations': {'encapsulation': 'arpa'},
                    'ethertype': '0x8100',
