@@ -6,16 +6,15 @@ from ats.topology import Device
 
 from metaparser.util.exceptions import SchemaEmptyParserError
 
-from parser.nxos.show_vlan import ShowVlan, ShowVlanIdVnSegment, \
+from parser.nxos.show_vlan import ShowVlan, ShowVlanNew, ShowVlanIdVnSegment, \
                                              ShowVlanInternalInfo, \
                                              ShowVlanFilter, \
-                                             ShowVlanAccessMap,\
-                                             ShowVlanOld
+                                             ShowVlanAccessMap\
 
 # =========================================
 #  show vlan
 # =========================================
-class test_show_vlan(unittest.TestCase):
+class test_show_vlan_new(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_output_vlan_1 = {'execute.return_value': '''
@@ -146,14 +145,14 @@ Primary  Secondary  Type             Ports
     }
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowVlan(device=self.device)
+        obj = ShowVlanNew(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_show_vlan_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_vlan_1)
-        obj = ShowVlan(device=self.device)
+        obj = ShowVlanNew(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_vlan_1)
 
@@ -228,7 +227,7 @@ class test_show_vlan_id_segmant(unittest.TestCase):
 # Old unittests with old structure
 # may be in future need to be removed or improved
 ###################################################
-class test_show_vlan_old(unittest.TestCase):
+class test_show_vlan(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
@@ -320,13 +319,13 @@ class test_show_vlan_old(unittest.TestCase):
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        vlan_obj = ShowVlanOld(device=self.device)
+        vlan_obj = ShowVlan(device=self.device)
         parsed_output = vlan_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
-        vlan_obj = ShowVlanOld(device=self.device1)
+        vlan_obj = ShowVlan(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = vlan_obj.parse()
 

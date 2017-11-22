@@ -19,7 +19,7 @@ from parser.utils.common import Common
 # ====================================================
 #  schema for show vlan
 # ====================================================
-class ShowVlanSchema(MetaParser):
+class ShowVlanNewSchema(MetaParser):
     schema = {
         'vlans':{
             Any():{
@@ -46,7 +46,7 @@ class ShowVlanSchema(MetaParser):
 # ====================================================
 #  parser for show vlan
 # ====================================================
-class ShowVlan(ShowVlanSchema):
+class ShowVlanNew(ShowVlanNewSchema):
     '''
     show vlan
     '''
@@ -266,7 +266,7 @@ def regexp(expression):
                               %(value, expression))
     return match
 
-class ShowVlanOldSchema(MetaParser):
+class ShowVlanSchema(MetaParser):
     schema = {'vlan_id':
                 {Any():
                     {'name': str,
@@ -290,7 +290,7 @@ class ShowVlanOldSchema(MetaParser):
                 },
             }
 
-class ShowVlanOld(ShowVlanOldSchema, MetaParser):
+class ShowVlan(ShowVlanSchema, MetaParser):
     """ parser class - implements detail parsing mechanisms for cli, xml, and
     yang output.
     """
