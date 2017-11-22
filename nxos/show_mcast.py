@@ -119,7 +119,7 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
                 mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
                     ['source_address'][source_address]['uptime'] = uptime
                 mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
-                    ['source_address'][source_address]['flags'] = flag
+                    ['source_address'][source_address]['flags'] = ' '.join(sorted(flag.split()))
                 if bidir:
                     mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
                         ['source_address'][source_address]['bidir'] = True
@@ -182,7 +182,7 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
                 [outgoing_interface]['oil_uptime'] = oil_uptime
                 mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
                 ['source_address'][source_address]['outgoing_interface_list']\
-                [outgoing_interface]['oil_flags'] = oil_flags
+                [outgoing_interface]['oil_flags'] = ' '.join(sorted(oil_flags.split()))
                 continue
 
         return mroute_dict

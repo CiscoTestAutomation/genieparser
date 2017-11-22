@@ -2114,8 +2114,9 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             if multicast_groups:
                 # ff02::1:ffbb:cccc  ff02::1:ff00:3  ff02::1:ff00:2  ff02::2   
-                # ff02::1  ff02::1:ff00:1  ff02::1:ffbb:cccc  ff02::1:ff00:0  
-                p11 = re.compile(r'^\s*(?P<ipv6_multicast_group_addresses>[a-z0-9\:\s]+)$')
+                # ff02::1  ff02::1:ff00:1  ff02::1:ffbb:cccc  ff02::1:ff00:0
+                # ff02::1:ffad:beef  ff02::1:ff00:1(2)  ff02::2(2)  ff02::1(2)
+                p11 = re.compile(r'^\s*(?P<ipv6_multicast_group_addresses>[a-z0-9\(\)\:\s]+)$')
                 m = p11.match(line)
                 if m:
                     ipv6_multicast_group_addresses = str(m.groupdict()['ipv6_multicast_group_addresses'])
