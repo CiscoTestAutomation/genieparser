@@ -6,7 +6,7 @@ from ats.topology import Device
 
 from metaparser.util.exceptions import SchemaEmptyParserError
 
-from parser.nxos.show_vlan import ShowVlan, ShowVlanNew, ShowVlanIdVnSegment, \
+from parser.nxos.show_vlan import ShowVlan, ShowVlanOld, ShowVlanIdVnSegment, \
                                              ShowVlanInternalInfo, \
                                              ShowVlanFilter, \
                                              ShowVlanAccessMap\
@@ -14,7 +14,7 @@ from parser.nxos.show_vlan import ShowVlan, ShowVlanNew, ShowVlanIdVnSegment, \
 # =========================================
 #  show vlan
 # =========================================
-class test_show_vlan_new(unittest.TestCase):
+class test_show_vlan(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_output_vlan_1 = {'execute.return_value': '''
@@ -145,14 +145,14 @@ Primary  Secondary  Type             Ports
     }
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowVlanNew(device=self.device)
+        obj = ShowVlan(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_show_vlan_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_vlan_1)
-        obj = ShowVlanNew(device=self.device)
+        obj = ShowVlan(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_vlan_1)
 
@@ -319,13 +319,13 @@ class test_show_vlan(unittest.TestCase):
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        vlan_obj = ShowVlan(device=self.device)
+        vlan_obj = ShowVlanOld(device=self.device)
         parsed_output = vlan_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
-        vlan_obj = ShowVlan(device=self.device1)
+        vlan_obj = ShowVlanOld(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = vlan_obj.parse()
 

@@ -19,7 +19,7 @@ from parser.utils.common import Common
 # ====================================================
 #  schema for show vlan
 # ====================================================
-class ShowVlanNewSchema(MetaParser):
+class ShowVlanSchema(MetaParser):
     schema = {
         'vlans':{
             Any():{
@@ -46,7 +46,7 @@ class ShowVlanNewSchema(MetaParser):
 # ====================================================
 #  parser for show vlan
 # ====================================================
-class ShowVlanNew(ShowVlanNewSchema):
+class ShowVlan(ShowVlanSchema):
     '''
     show vlan
     '''
@@ -201,7 +201,7 @@ class ShowVlanNew(ShowVlanNewSchema):
         return vlan_dict
 
 # ====================================================
-#  schema for show vlan id 1-4093 vn_segment
+#  schema for show vlan id 1-3967 vn_segment
 # ====================================================
 class ShowVlanIdVnSegmentSchema(MetaParser):
     schema = {
@@ -214,15 +214,14 @@ class ShowVlanIdVnSegmentSchema(MetaParser):
     }
 
 # ====================================================
-#  parser for show vlan id 1-4093 vn-segment
+#  parser for show vlan id 1-3967 vn-segment
 # ====================================================
 class ShowVlanIdVnSegment(ShowVlanIdVnSegmentSchema):
     '''
-    show vlan id 1-4093 vn-segment
+    show vlan id 1-3967 vn-segment
     '''
 
     def cli(self):
-        #cmd = 'show vlan id 1-4093 vn-segment'   # N9k doesnot accept  1-4093
         cmd = 'show vlan id 1-3967 vn-segment'
         out = self.device.execute(cmd)
 
@@ -266,7 +265,7 @@ def regexp(expression):
                               %(value, expression))
     return match
 
-class ShowVlanSchema(MetaParser):
+class ShowVlanOldSchema(MetaParser):
     schema = {'vlan_id':
                 {Any():
                     {'name': str,
@@ -290,7 +289,7 @@ class ShowVlanSchema(MetaParser):
                 },
             }
 
-class ShowVlan(ShowVlanSchema, MetaParser):
+class ShowVlanOld(ShowVlanOldSchema, MetaParser):
     """ parser class - implements detail parsing mechanisms for cli, xml, and
     yang output.
     """
