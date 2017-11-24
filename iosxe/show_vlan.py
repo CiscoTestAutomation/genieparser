@@ -212,7 +212,7 @@ class ShowVlan(ShowVlanSchema):
             m = p5.match(line)
 
             if m:
-                if m.groupdict()['primary']:
+                if m.groupdict()['primary'] and m.groupdict()['primary'].lower() != "none":
                     primary = m.groupdict()['primary']
                 else:
                     primary = ""
