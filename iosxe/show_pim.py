@@ -1509,3 +1509,294 @@ class ShowIpPimInterfaceDetail(ShowIpPimInterfaceDetailSchema):
                 continue
 
         return ret_dict
+
+
+# ===========================================================
+# schema Parser for 'show ip/ipv6 pim [vrf <WORD>] neighbor'
+# ===========================================================
+class ShowPimNeighborSchema(MetaParser):
+
+    '''Schema for show ip/ipv6 pim [vrf <WORD>] neighbor'''
+
+    schema = {
+        'vrf':{
+            Any():{
+                'interfaces':{
+                    Any():{
+                        'address_family':{
+                            Any():{
+                                'neighbors':{
+                                    Any():{
+                                        Optional('expiration'): str,
+                                        Optional('dr_priority'): int,
+                                        Optional('up_time'): str,
+                                        Optional('interface'): str,
+                                        Optional('bidir_capable'): bool,
+                                        Optional('designated_router'): bool,
+                                        Optional('default_dr_prioirty'): bool,
+                                        Optional('proxy_capable'): bool,
+                                        Optional('state_refresh_capable'): bool,
+                                        Optional('genid_capable'): bool,
+                                        Optional('dr_load_balancing_capable'): bool,
+                                        Optional('version'): str,
+                                    },
+                                    Optional('secondary_address'): list, # only for IPv6
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+# ==========================================================
+# Parser Parser for 'show ip/ipv6 pim [vrf <WORD>] neighbor'
+# Parser Parser for 'show ipv6 pim [vrf <WORD>] neighbor detail'
+# ==========================================================
+class ShowPimNeighbor(ShowPimNeighborSchema):
+    '''Parser for show ip/ipv6 pim [vrf <WORD>] neighbor
+                  show ipv6 pim [vrf <word>] neighbor detail'''
+
+    def cli(self , af='ip', vrf=''):
+
+        cmd = 'show {af} pim vrf {vrf} neighbor'.format(af=af, vrf=vrf) \
+              if vrf else 'show {af} pim neighbor'.format(af=af)
+
+        out = self.device.execute(cmd)
+        af= 'ipv4' if af == 'ip' else af
+        vrf = 'default' if not vrf else vrf
+
+        # Init dictionary
+        ret_dict = {}
+        sub_dict = {}
+
+        # mode key mapping table
+        mode_tbl = {'B': 'bidir_capable',
+                    'DR': 'designated_router',
+                    'N': 'default_dr_prioirty',
+                    'P': 'proxy_capable',
+                    'S': 'state_refresh_capable',
+                    'G': 'genid_capable',
+                    'L': 'dr_load_balancing_capable'}
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Neighbor          Interface                Uptime/Expires    Ver   DR
+            # Address                                                            Prio/Mode
+            # 201.0.2.1         Port-channel2.100        1d09h/00:01:39    v2    1 / S P G
+            p1 = re.compile(r'^(?P<nei_address>[\d\.]+) +'
+                             '(?P<intf>[\w\.\/\-]+) +'
+                             '(?P<uptime>[\w\.\:]+)/(?P<expires>[\w\.\:]+) +'
+                             '(?P<ver>\w+) +'
+                             '(?P<dr_prio>\d+) */ *(?P<mode>[\w\s]+)$')
+            m1 = p1.match(line)
+
+
+            # Neighbor Address           Interface          Uptime    Expires  Mode DR pri
+            # FE80::21A:30FF:FE47:6EC1   Port-channel2.100  1d09h     00:01:17 B G     1
+            p2 = re.compile(r'^(?P<nei_address>[\w\:]+) +'
+                             '(?P<intf>[\w\.\/\-]+) +'
+                             '(?P<uptime>[\w\.\:]+) +'
+                             '(?P<expires>[\w\.\:]+) +'
+                             '(?P<mode>[\w\s]+) +'
+                             '(?P<dr_prio>\d+)$')
+            m2 = p2.match(line)
+
+            if m1:
+                m= m1
+            elif m2:
+                m = m2
+            else:
+                m = None
+
+            if m:
+                intf = m.groupdict()['intf']
+                nei = m.groupdict()['nei_address']
+
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+
+                if 'interfaces' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['interfaces'] = {}
+                if intf not in ret_dict['vrf'][vrf]['interfaces']:
+                    ret_dict['vrf'][vrf]['interfaces'][intf] = {}
+
+                if 'address_family' not in ret_dict['vrf'][vrf]['interfaces'][intf]:
+                    ret_dict['vrf'][vrf]['interfaces'][intf]['address_family'] = {}
+                if af not in ret_dict['vrf'][vrf]['interfaces'][intf]['address_family']:
+                    ret_dict['vrf'][vrf]['interfaces'][intf]['address_family'][af] = {}
+
+                if 'neighbors' not in ret_dict['vrf'][vrf]['interfaces'][intf]['address_family'][af]:
+                    ret_dict['vrf'][vrf]['interfaces'][intf]['address_family'][af]['neighbors'] = {}
+                if nei not in ret_dict['vrf'][vrf]['interfaces'][intf]['address_family'][af]['neighbors']:
+                    ret_dict['vrf'][vrf]['interfaces'][intf]['address_family'][af]['neighbors'][nei] = {}
+
+                sub_dict = ret_dict['vrf'][vrf]['interfaces'][intf]['address_family'][af]['neighbors'][nei]
+
+                sub_dict['expiration'] = m.groupdict()['expires']
+                sub_dict['dr_priority'] = int(m.groupdict()['dr_prio'])
+                sub_dict['up_time'] = m.groupdict()['uptime']
+                sub_dict['interface'] = intf
+                try:
+                    sub_dict['version'] = m.groupdict()['ver']
+                except:
+                    pass
+
+                mode_list = m.groupdict()['mode']
+                if mode_list:
+                    for mode in mode_list.strip().split():
+                        sub_dict[mode_tbl[mode]] = True                    
+                continue
+
+            # 2001::2:1
+            p3 = re.compile(r'^(?P<secondary_address>[\w\:]+)$')
+            m = p3.match(line)
+            if m:
+                ret_dict['vrf'][vrf]['interfaces'][intf]['address_family'\
+                    ][af]['neighbors']['secondary_address'] = m.groupdict()['secondary_address'].split()
+                continue
+
+        return ret_dict
+
+
+# ==========================================================
+#  parser for 'show ip pim [vrf <WORD>] neighbor'
+# ==========================================================
+class ShowIpPimNeighbor(ShowPimNeighbor):
+    '''Parser for show ip pim [vrf <WORD>] neighbor'''
+
+    def cli(self, vrf=''):
+        return super().cli(af='ip', vrf=vrf)
+
+# ==========================================================
+#  parser for 'show ipv6 pim [vrf <WORD>] neighbor'
+# ==========================================================
+class ShowIpv6PimNeighbor(ShowPimNeighbor):
+    '''Parser for show ipv6 pim [vrf <WORD>] neighbor'''
+
+    def cli(self, vrf=''):
+        return super().cli(af='ipv6', vrf=vrf)
+
+
+# ==========================================================
+#  parser for 'show ipv6 pim [vrf <WORD>] neighbor detail'
+# ==========================================================
+class ShowIpv6PimNeighborDetail(ShowPimNeighbor):
+    '''Parser for show ipv6 pim [vrf <WORD>] neighbor detail'''
+
+    def cli(self, vrf=''):
+        return super().cli(af='ipv6', vrf=vrf)
+
+
+# ===========================================================
+# schema Parser for 'show ip pim [vrf <WORD>] interface df'
+# ===========================================================
+class ShowIpPimInterfaceDfSchema(MetaParser):
+
+    '''Schema for show ip pim [vrf <WORD>] interface df'''
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        Optional('rp'): {
+                            Optional('bidir'): {
+                                Optional('interface_df_election'): {
+                                    Any(): {
+                                        Optional('address'): str,
+                                        Optional('metric'): int,
+                                        Optional('interface_name'): str,
+                                        Optional('df_address'): str,
+                                        Optional('df_uptime'): str,
+                                        Optional('winner_metric'): int,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+# ==========================================================
+# Parser Parser for 'show ip pim [vrf <WORD>] interface df'
+# ==========================================================
+class ShowIpPimInterfaceDf(ShowIpPimInterfaceDfSchema):
+    '''Parser for show ip pim [vrf <WORD>] interface df'''
+
+    def cli(self , vrf=''):
+
+        cmd = 'show ip pim vrf {vrf} interface df'.format(vrf=vrf) if vrf else \
+              'show ip pim interface df'
+
+        out = self.device.execute(cmd)
+        af= 'ipv4'
+        vrf = 'default' if not vrf else vrf
+
+        # Init dictionary
+        ret_dict = {}
+        sub_dict = {}
+
+        intf = None
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Interface          RP               DF Winner        Metric          Uptime
+            # Ethernet3/3        10.10.0.2        10.4.0.2         0               00:03:49
+            #                    10.10.0.3        10.4.0.3         0               00:01:49
+            # Ethernet0/1        20.1.0.1        *10.4.0.4         20              00:00:39 
+            p1 = re.compile(r'^((?P<intf>[\w\.\/\-]+) +)?'
+                             '(?P<address>[\w\.\:]+) +'
+                             '(?P<df>\*)?(?P<df_address>[\w\.\:]+) +'
+                             '(?P<metric>\d+) +'
+                             '(?P<uptime>[\w\.\:]+)$')
+            m = p1.match(line)
+            if m:
+                if m.groupdict()['intf']:
+                    intf = m.groupdict()['intf']
+                address = m.groupdict()['address']
+
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+
+                if 'address_family' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['address_family'] = {}
+                if af not in ret_dict['vrf'][vrf]['address_family']:
+                    ret_dict['vrf'][vrf]['address_family'][af] = {}
+
+                if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['rp'] = {}
+                if 'bidir' not in ret_dict['vrf'][vrf]['address_family'][af]['rp']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['rp']['bidir'] = {}
+                if 'interface_df_election' not in ret_dict['vrf'][vrf]\
+                    ['address_family'][af]['rp']['bidir']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['rp']\
+                        ['bidir']['interface_df_election'] = {}
+
+                if intf:
+                    key = address + ' ' + intf
+                    if key not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['rp']['bidir']['interface_df_election']:
+                        ret_dict['vrf'][vrf]['address_family'][af]['rp']\
+                            ['bidir']['interface_df_election'][key] = {}
+                        sub_dict = ret_dict['vrf'][vrf]['address_family'][af]['rp']\
+                            ['bidir']['interface_df_election'][key]
+                        sub_dict['interface_name'] = intf
+
+                sub_dict['address'] = address
+                sub_dict['metric'] = int(m.groupdict()['metric'])
+                sub_dict['df_address'] = m.groupdict()['df_address']
+                sub_dict['df_uptime'] = m.groupdict()['uptime']
+                sub_dict['winner_metric'] = int(m.groupdict()['metric'])                  
+                continue
+        return ret_dict
