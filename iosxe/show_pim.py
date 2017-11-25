@@ -14,6 +14,9 @@ import re
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Schema, Any, Optional
 
+# parser utils
+from parser.utils.common import Common
+
 
 # =============================================
 # Parser for 'show ipv6 pim interface'
@@ -1612,7 +1615,7 @@ class ShowPimNeighbor(ShowPimNeighborSchema):
                 m = None
 
             if m:
-                intf = m.groupdict()['intf']
+                intf = Common.convert_intf_name(m.groupdict()['intf'])
                 nei = m.groupdict()['nei_address']
 
                 if 'vrf' not in ret_dict:

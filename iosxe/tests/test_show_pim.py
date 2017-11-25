@@ -1450,7 +1450,7 @@ class test_show_ipv6_pim_neighbor_detail(unittest.TestCase):
                                   }
                              }
                         },
-                        "Gi0/2/3.100": {
+                        "GigabitEthernet0/2/3.100": {
                              "address_family": {
                                   "ipv6": {
                                        "neighbors": {
@@ -1462,7 +1462,7 @@ class test_show_ipv6_pim_neighbor_detail(unittest.TestCase):
                                                  "designated_router": True,
                                                  "dr_priority": 1,
                                                  "expiration": "00:01:25",
-                                                 "interface": "Gi0/2/3.100",
+                                                 "interface": "GigabitEthernet0/2/3.100",
                                                  "genid_capable": True,
                                                  "bidir_capable": True
                                             }
@@ -1470,7 +1470,7 @@ class test_show_ipv6_pim_neighbor_detail(unittest.TestCase):
                                   }
                              }
                         },
-                        "Gi0/2/0.101": {
+                        "GigabitEthernet0/2/0.101": {
                              "address_family": {
                                   "ipv6": {
                                        "neighbors": {
@@ -1478,7 +1478,7 @@ class test_show_ipv6_pim_neighbor_detail(unittest.TestCase):
                                                  "up_time": "3w3d",
                                                  "dr_priority": 1,
                                                  "expiration": "00:01:24",
-                                                 "interface": "Gi0/2/0.101",
+                                                 "interface": "GigabitEthernet0/2/0.101",
                                                  "genid_capable": True,
                                                  "bidir_capable": True
                                             },
@@ -1489,7 +1489,7 @@ class test_show_ipv6_pim_neighbor_detail(unittest.TestCase):
                                   }
                              }
                         },
-                        "Gi0/2/3.101": {
+                        "GigabitEthernet0/2/3.101": {
                              "address_family": {
                                   "ipv6": {
                                        "neighbors": {
@@ -1501,7 +1501,7 @@ class test_show_ipv6_pim_neighbor_detail(unittest.TestCase):
                                                  "designated_router": True,
                                                  "dr_priority": 1,
                                                  "expiration": "00:01:42",
-                                                 "interface": "Gi0/2/3.101",
+                                                 "interface": "GigabitEthernet0/2/3.101",
                                                  "genid_capable": True,
                                                  "bidir_capable": True
                                             }
@@ -1509,7 +1509,7 @@ class test_show_ipv6_pim_neighbor_detail(unittest.TestCase):
                                   }
                              }
                         },
-                        "Gi0/2/0.100": {
+                        "GigabitEthernet0/2/0.100": {
                              "address_family": {
                                   "ipv6": {
                                        "neighbors": {
@@ -1517,7 +1517,7 @@ class test_show_ipv6_pim_neighbor_detail(unittest.TestCase):
                                                  "up_time": "3w3d",
                                                  "dr_priority": 1,
                                                  "expiration": "00:01:33",
-                                                 "interface": "Gi0/2/0.100",
+                                                 "interface": "GigabitEthernet0/2/0.100",
                                                  "genid_capable": True,
                                                  "bidir_capable": True
                                             },
@@ -1710,7 +1710,7 @@ class test_show_ip_pim_interface_df(unittest.TestCase):
                               }
                          }
                     }
-               }
+                }
             }
         }
     }
