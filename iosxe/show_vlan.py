@@ -207,7 +207,7 @@ class ShowVlan(ShowVlanSchema):
             #  2       302       community
             #          10        community
 
-            p5 = re.compile(r'^\s*(?P<primary>\d+)? +(?P<secondary>\d+)'
+            p5 = re.compile(r'^\s*(?P<primary>[0-9a-zA-A]+)? +(?P<secondary>\d+)'
                             ' +(?P<type>[\w\-]+)( +(?P<interfaces>[\w\s\,\/]+))?$')
             m = p5.match(line)
 
@@ -225,7 +225,7 @@ class ShowVlan(ShowVlanSchema):
 
                 if 'vlans' not in vlan_dict:
                     vlan_dict['vlans'] = {}
-                if m.groupdict()['primary']:
+                if m.groupdict()['primary'] and m.groupdict()['primary'].lower() != "none":
                     if primary not in vlan_dict['vlans']:
                         vlan_dict['vlans'][primary] = {}
                     if 'private_vlan' not in vlan_dict['vlans'][primary]:

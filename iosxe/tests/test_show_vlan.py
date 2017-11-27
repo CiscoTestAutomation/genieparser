@@ -52,7 +52,7 @@ Primary Secondary Type              Ports
          10        community
  20      105       isolated
  100     151       non-operational
-         202       community
+ none    202       community
          303       community
  101     402       non-operational
 
