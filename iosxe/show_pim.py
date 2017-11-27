@@ -874,8 +874,26 @@ class ShowIpPimRpMappingSchema(MetaParser):
                                     Optional('info_source_address'): str,
                                     Optional('bsr_version'): str,
                                     Optional('up_time'): str,
+                                    Optional('mode'): str,
                                     Optional('expiration'): str,
                                     Optional('info_source_type'): str,
+                                },
+                            },
+                            Optional('static_rp'):{
+                                Any():{
+                                    Optional('sm'): {                                    
+                                        Optional('policy_name'): str,
+                                        Optional('override'): bool,
+                                    },
+                                    Optional('bidir'): {
+                                    },
+                                },
+                            },
+                            Optional('bsr'):{
+                                'rp':{
+                                    Optional('rp_address'): str,
+                                    Optional('group_policy'): str,
+                                    Optional('up_time'): str,
                                 },
                             },
                         },
@@ -917,15 +935,50 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
 
             # Group(s) 224.0.0.0/4
             # Group(s) 224.0.0.0/4, Static
-            p1 = re.compile(r'^\s*Group\(s\)\:? +(?P<group>[0-9a-zA-Z\:\.\/]+)(, +(?P<protocol>[\w\s\S]+))?$')
+            # Group(s): 224.0.0.0/4, Static, Bidir Mode 
+            p1 = re.compile(r'^\s*Group\(s\)\:? +(?P<group>[0-9a-zA-Z\:\.\/]+)'
+                             '(, +(?P<protocol>\S+))?'
+                             '(, +(?P<mode>[\w\s]+))?$')
             m = p1.match(line)
+            if m:
+                rp_group_protocol = ""
+                acl = None
+
+                group = m.groupdict()['group']
+                if m.groupdict()['protocol']:
+                    protocol_static = m.groupdict()['protocol'].lower()
+                else:
+                    protocol_static = ""
+                mode = m.groupdict()['mode']
+                if mode:
+                    if 'bidir' in mode.lower():
+                        mode = 'BIDIR'
+                else:
+                    mode = 'SM'
+                continue
+
+            # Acl: STATIC_RP_V4, Static-Override
+            p1_1 = re.compile(r'^\s*Acl: +(?P<group>\S+)'
+                             '(, +(?P<protocol>\S+))?'
+                             '(, +(?P<mode>[\w\s]+))?$')
+            m = p1_1.match(line)
             if m:
                 rp_group_protocol = ""
                 protocol_static = ""
 
                 group = m.groupdict()['group']
-                if m.groupdict()['protocol']:
-                    protocol_static = m.groupdict()['protocol'].lower()
+                protocol = m.groupdict()['protocol']
+                if protocol:
+                    if 'static' in protocol.lower():
+                        protocol_static = 'static'
+                    
+                    if 'override' in protocol.lower():
+                        override = True
+                    else:
+                        override = False
+
+                mode = 'SM'
+                acl = True
                 continue
 
             # RP 3.3.3.3 (?), v2
@@ -937,27 +990,73 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
                 rp_group_protocol = ""
 
                 rp_address = m.groupdict()['rp_address']
+
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+                if 'address_family' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['address_family'] = {}
+                if af_name not in ret_dict['vrf'][vrf]['address_family']:
+                    ret_dict['vrf'][vrf]['address_family'][af_name] = {}
+
+                if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] = {}
+
+                # static_rp
+                if protocol_static and 'static' in protocol_static:
+
+                    if acl:
+                        if 'static_rp' not in ret_dict['vrf'][vrf]['address_family']\
+                            [af_name]['rp']:
+                            ret_dict['vrf'][vrf]['address_family'][af_name]['rp']\
+                                ['static_rp'] = {}
+                        if rp_address not in ret_dict['vrf'][vrf]['address_family']\
+                            [af_name]['rp']['static_rp']:
+                            ret_dict['vrf'][vrf]['address_family'][af_name]['rp']\
+                                ['static_rp'][rp_address] = {}
+                        if 'sm' not in ret_dict['vrf'][vrf]['address_family']\
+                            [af_name]['rp']['static_rp'][rp_address]:
+                            ret_dict['vrf'][vrf]['address_family']\
+                                [af_name]['rp']['static_rp'][rp_address]['sm'] = {}
+
+                        ret_dict['vrf'][vrf]['address_family']\
+                            [af_name]['rp']['static_rp'][rp_address]['sm']\
+                                ['policy_name'] = group
+                        try:
+                            ret_dict['vrf'][vrf]['address_family']\
+                                [af_name]['rp']['static_rp'][rp_address]['sm']\
+                                    ['override'] = override
+                        except:
+                            pass
+
+                    if 'bidir' in mode.lower():
+                        if 'static_rp' not in ret_dict['vrf'][vrf]['address_family']\
+                            [af_name]['rp']:
+                            ret_dict['vrf'][vrf]['address_family'][af_name]['rp']\
+                                ['static_rp'] = {}
+                        if rp_address not in ret_dict['vrf'][vrf]['address_family']\
+                            [af_name]['rp']['static_rp']:
+                            ret_dict['vrf'][vrf]['address_family'][af_name]['rp']\
+                                ['static_rp'][rp_address] = {}
+                        if 'bidir' not in ret_dict['vrf'][vrf]['address_family']\
+                            [af_name]['rp']['static_rp'][rp_address]:
+                            ret_dict['vrf'][vrf]['address_family']\
+                                [af_name]['rp']['static_rp'][rp_address]['bidir'] = {}
+
+
                 if m.groupdict()['rp_address_host']:
                     rp_address_host = m.groupdict()['rp_address_host']
+
                 if m.groupdict()['rp_version']:
                     rp_version = m.groupdict()['rp_version']
+
                 if group:
                     rp_group = group + " " + rp_address
                 if protocol_static:
                     rp_group_protocol = rp_group + " " + protocol_static
 
                 if rp_group_protocol:
-                    if 'vrf' not in ret_dict:
-                        ret_dict['vrf'] = {}
-                    if vrf not in ret_dict['vrf']:
-                        ret_dict['vrf'][vrf] = {}
-                    if 'address_family' not in ret_dict['vrf'][vrf]:
-                        ret_dict['vrf'][vrf]['address_family'] = {}
-                    if af_name not in ret_dict['vrf'][vrf]['address_family']:
-                        ret_dict['vrf'][vrf]['address_family'][af_name] = {}
-
-                    if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
-                        ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] = {}
                     if 'rp_mappings' not in ret_dict['vrf'][vrf]['address_family'][af_name]['rp']:
                         ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['rp_mappings'] = {}
                     if rp_group_protocol not in ret_dict['vrf'][vrf]['address_family'] \
@@ -969,7 +1068,7 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
                         ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['rp_list'] = {}
 
                     if protocol_static:
-                        rp_address_protocol = rp_address + " " + protocol_static
+                        rp_address_protocol = rp_address + " " + mode + ' ' + protocol_static
                         if rp_address_protocol not in ret_dict['vrf'][vrf]['address_family'][af_name]['rp'][
                             'rp_list']:
                             ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['rp_list'][
@@ -980,6 +1079,9 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
 
                         ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
                             ['rp_list'][rp_address_protocol]['address'] = rp_address
+
+                        ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
+                            ['rp_list'][rp_address_protocol]['mode'] = mode
 
                         ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
                             ['rp_mappings'][rp_group_protocol]['protocol'] = protocol_static
@@ -993,7 +1095,6 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
                     if m.groupdict()['rp_address_host']:
                         ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
                             ['rp_mappings'][rp_group_protocol]['rp_address_host'] = rp_address_host
-
                 continue
 
             # Info source: 4.4.4.4 (?), via bootstrap, priority 5, holdtime 150
@@ -1022,6 +1123,19 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
 
                         if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
                             ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] = {}
+
+                        # bsr  ---  rp
+                        if 'bootstrap' in protocol_others:
+                            if 'bsr' not in ret_dict['vrf'][vrf]['address_family'][af_name]['rp']:
+                                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] = {}
+                            if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr']:
+                                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr']['rp'] = {}
+                            ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr']['rp']\
+                                ['rp_address'] = rp_address
+                            ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr']['rp']\
+                                ['group_policy'] = group
+
+
                         if 'rp_mappings' not in ret_dict['vrf'][vrf]['address_family'][af_name]['rp']:
                             ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['rp_mappings'] = {}
 
@@ -1031,7 +1145,7 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
                                 ['rp_mappings'][rp_group_protocol] = {}
 
                         if info_source_address:
-                            address_info_source_type = rp_address + " " + protocol_others
+                            address_info_source_type = rp_address + " " + mode + ' ' + protocol_others
 
                             if 'rp_list' not in ret_dict['vrf'][vrf]['address_family'][af_name]['rp']:
                                 ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
@@ -1048,6 +1162,10 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
                             ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
                                 ['rp_list'][address_info_source_type]['address'] \
                                 = rp_address
+
+                            ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
+                                ['rp_list'][address_info_source_type]['mode'] \
+                                = mode
 
                             ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
                                 ['rp_list'][address_info_source_type]['info_source_type'] \
@@ -1077,7 +1195,7 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
                         if m.groupdict()['rp_address_host']:
                             ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
                                 ['rp_mappings'][rp_group_protocol]['rp_address_host'] = rp_address_host
-                            # continue
+                continue
 
             # Uptime: 00:00:19, expires: 00:02:19
             p4 = re.compile(r'^\s*Uptime: +(?P<uptime>[\w\d\S\:]+),'
@@ -1086,6 +1204,12 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
             if m:
                 up_time = m.groupdict()['uptime']
                 expiration = m.groupdict()['expires']
+
+                try:                    
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr']['rp']\
+                        ['up_time'] = up_time
+                except:
+                    pass
 
                 if 'vrf' not in ret_dict:
                     ret_dict['vrf'] = {}
@@ -1149,18 +1273,22 @@ class ShowIpPimInterfaceDetailSchema(MetaParser):
                                  Optional('hello_packets_in'): int,
                                  Optional('hello_packets_out'): int,
                                  Optional('oper_status'): str,
+                                 Optional('enable'): bool,
                                  Optional('address'): list,
                                  Optional('multicast'):{
                                      Optional('switching'): str,
                                      Optional('packets_in'): int,
                                      Optional('packets_out'): int,
                                      Optional('ttl_threshold'): int,
-                                     Optional('tag_switching'): str,
+                                     Optional('tag_switching'): bool,
                                  },
                                  Optional('pim_status'): str,
                                  Optional('version'): int,
                                  Optional('mode'): str,
-                                 Optional('sm'): {},
+                                 Optional('sm'): {
+                                    Optional('passive'): bool,
+                                 },
+                                 Optional('dm'): {},
                                  Optional('dr_address'): str,
                                  Optional('neighbor_count'): int,
                                  Optional('jp_interval'): int,
@@ -1168,9 +1296,10 @@ class ShowIpPimInterfaceDetailSchema(MetaParser):
                                  Optional('state_refresh_origination'): str,
                                  Optional('nbma_mode'): str,
                                  Optional('atm_multipoint_signalling'): str,
-                                 Optional('bsr_border'): str,
+                                 Optional('bsr_border'): bool,
                                  Optional('neighbors_rpf_proxy_capable'): bool,
                                  Optional('none_dr_join'): bool,
+                                 Optional('neighbor_filter'): str,
                              },
                          },
                      },
@@ -1200,12 +1329,7 @@ class ShowIpPimInterfaceDetail(ShowIpPimInterfaceDetailSchema):
 
         # initial variables
         ret_dict = {}
-        intf_name = oper_status = nbr_count = nbma_mode = hello_packet_in = ""
-        hello_interval = hello_packet_out= address = dr_address = multi_packet_in= ""
-        multi_packet_out = mode = version = pim_status = state_refresh_origination = ""
-        state_refresh_processing = multi_switching = tagswitching = atm_multipoint = ""
-        jp_interval = neighbors_rpf_proxy_capable = bsr_border = bfd = ttl_threshold = ""
-        non_dr_join = ""
+
         # excute command to get output
         out = self.device.execute(cmd)
 
@@ -1214,157 +1338,14 @@ class ShowIpPimInterfaceDetail(ShowIpPimInterfaceDetailSchema):
             line = line.strip()
 
             # GigabitEthernet3 is up, line protocol is up
-            p1 = re.compile(r'^\s*(?P<intf_name>[\w\d\S]+) +is +up,'
+            p1 = re.compile(r'^\s*(?P<intf_name>[\w\d\S]+) +is +(?P<enable>\S+),'
                             ' +line +protocol +is +(?P<oper_status>\w+)$')
             m = p1.match(line)
             if m:
-                intf_name = ""
                 intf_name = m.groupdict()['intf_name']
                 oper_status = m.groupdict()['oper_status']
+                enable = True if 'up' in m.groupdict()['enable'] else False
 
-            # Internet address is 10.1.2.1/24
-            p2 = re.compile(r'^\s*Internet +address +is +(?P<address>[\w\d\S]+)$')
-            m = p2.match(line)
-            if m:
-                address = m.groupdict()['address']
-
-            # Multicast switching: fast
-            p3 = re.compile(r'^\s*Multicast +switching: +(?P<multi_switching>\w+)$')
-            m = p3.match(line)
-            if m:
-                multi_switching = m.groupdict()['multi_switching']
-
-            # Multicast packets in/out: 5/0
-            p4 = re.compile(r'^\s*Multicast +packets +in/out:'
-                            ' +(?P<in>\d+)/(?P<out>\d+)$')
-            m = p4.match(line)
-            if m:
-                multi_packet_in = int(m.groupdict()['in'])
-                multi_packet_out = int(m.groupdict()['out'])
-
-            # Multicast TTL threshold: 0
-            p5 = re.compile(r'^\s*Multicast +TTL +threshold:'
-                            ' +(?P<ttl_threshold>\d+)$')
-            m = p5.match(line)
-            if m:
-                ttl_threshold = int(m.groupdict()['ttl_threshold'])
-
-            # PIM: enabled
-            p6 = re.compile(r'^\s*PIM:'
-                            ' +(?P<status>\w+)$')
-            m = p6.match(line)
-            if m:
-                pim_status = m.groupdict()['status']
-
-            # PIM version: 2, mode: sparse
-            p7 = re.compile(r'^\s*PIM +version:'
-                            ' +(?P<version>\d+), +mode: +(?P<mode>\w+)$')
-            m = p7.match(line)
-            if m:
-                version = int(m.groupdict()['version'])
-                mode = m.groupdict()['mode']
-
-            # PIM DR: 10.1.2.2
-            # PIM DR: 1.1.1.1 (this system)
-            p8 = re.compile(r'^\s*PIM +DR:'
-                            ' +(?P<dr_address>[\w\d\S]+)(\s+(?P<info>[\w\S\s]+))?$')
-            m = p8.match(line)
-            if m:
-                dr_address = m.groupdict()['dr_address']
-
-            # PIM neighbor count: 1
-            p9 = re.compile(r'^\s*PIM +neighbor +count:'
-                            ' +(?P<nbr_count>\d+)$')
-            m = p9.match(line)
-            if m:
-                nbr_count = int(m.groupdict()['nbr_count'])
-
-            # PIM Hello/Query interval: 30 seconds
-            p10 = re.compile(r'^\s*PIM +[h|H]ello/[q|Q]uery +interval:'
-                            ' +(?P<hello_interval>\d+) +seconds$')
-            m = p10.match(line)
-            if m:
-                hello_interval = int(m.groupdict()['hello_interval'])
-
-            # PIM Hello packets in/out: 8/10
-            p11 = re.compile(r'^\s*PIM +Hello +packets +in/out:'
-                             ' +(?P<h_in>\d+)/(?P<h_out>\d+)$')
-            m = p11.match(line)
-            if m:
-                hello_packet_in = int(m.groupdict()['h_in'])
-                hello_packet_out = int(m.groupdict()['h_out'])
-
-            # PIM J/P interval: 60 seconds
-            p12 = re.compile(r'^\s*PIM +J/P +interval:'
-                             ' +(?P<jp_interval>\d+) +seconds$')
-            m = p12.match(line)
-            if m:
-                jp_interval = int(m.groupdict()['jp_interval'])
-
-            # PIM State-Refresh processing: enabled
-            p13 = re.compile(r'^\s*PIM +[s|S]tate-[r|R]efresh +processing:'
-                             ' +(?P<state_refresh_processing>\w+)$')
-            m = p13.match(line)
-            if m:
-                state_refresh_processing = m.groupdict()['state_refresh_processing']
-
-            # PIM State-Refresh origination: disabled
-            p14 = re.compile(r'^\s*PIM +[s|S]tate-[r|R]efresh +origination:'
-                             ' +(?P<state_refresh_origination>\w+)$')
-            m = p14.match(line)
-            if m:
-                state_refresh_origination = m.groupdict()['state_refresh_origination']
-
-            # PIM NBMA mode: disabled
-            p15 = re.compile(r'^\s*PIM +NBMA +mode:'
-                             ' +(?P<nbma_mode>\w+)$')
-            m = p15.match(line)
-            if m:
-                nbma_mode = m.groupdict()['nbma_mode']
-
-            # PIM ATM multipoint signalling: disabled
-            p16 = re.compile(r'^\s*PIM +ATM +multipoint +signalling:'
-                             ' +(?P<atm_multipoint>\w+)$')
-            m = p16.match(line)
-            if m:
-                atm_multipoint = m.groupdict()['atm_multipoint']
-
-            # PIM domain border: disabled
-            p17 = re.compile(r'^\s*PIM +domain +border:'
-                             ' +(?P<domain_border>\w+)$')
-            m = p17.match(line)
-            if m:
-                bsr_border = m.groupdict()['domain_border']
-
-            # PIM neighbors rpf proxy capable: TRUE
-            p18 = re.compile(r'^\s*PIM +neighbors +rpf +proxy +capable:'
-                             ' +(?P<neighbors_rpf_proxy_capable>\w+)$')
-            m = p18.match(line)
-            if m:
-                neighbors_rpf_proxy_capable = m.groupdict()['neighbors_rpf_proxy_capable']
-
-            # PIM BFD: disabled
-            p19 = re.compile(r'^\s*PIM +BFD:'
-                             ' +(?P<bfd>\w+)$')
-            m = p19.match(line)
-            if m:
-                bfd = m.groupdict()['bfd']
-
-            # PIM Non-DR-Join: FALSE
-            p20 = re.compile(r'^\s*PIM +Non-DR-Join:'
-                             ' +(?P<non_dr_join>\w+)$')
-            m = p20.match(line)
-            if m:
-                non_dr_join = m.groupdict()['non_dr_join']
-
-            # Multicast Tagswitching: disabled
-            p21 = re.compile(r'^\s*Multicast +Tagswitching:'
-                             ' +(?P<tagswitching>\w+)$')
-            m = p21.match(line)
-            if m:
-                tagswitching = m.groupdict()['tagswitching']
-
-            if intf_name:
                 if 'vrf' not in ret_dict:
                     ret_dict['vrf'] = {}
                 if vrf not in ret_dict['vrf']:
@@ -1379,136 +1360,269 @@ class ShowIpPimInterfaceDetail(ShowIpPimInterfaceDetailSchema):
                 if af_name not in ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']:
                     ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name] = {}
 
-                if bfd:
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
+                    [af_name]['oper_status'] = oper_status
+
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
+                    [af_name]['enable'] = enable
+                continue
+
+            # Internet address is 10.1.2.1/24
+            p2 = re.compile(r'^\s*Internet +address +is +(?P<address>[\w\d\S]+)$')
+            m = p2.match(line)
+            if m:
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['address'] = m.groupdict()['address'].split()
+                continue
+
+            # Multicast switching: fast
+            p3 = re.compile(r'^\s*Multicast +switching: +(?P<multi_switching>\w+)$')
+            m = p3.match(line)
+            if m:
+                if 'multicast' not in ret_dict['vrf'][vrf]['interfaces']\
+                    [intf_name]['address_family'][af_name]:
                     ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
-                        [af_name]['bfd'] ={}
-                    if bfd.lower() == 'enabled':
-                        enable = True
-                    else:
-                        enable = False
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                            [af_name]['bfd']['enable'] = enable
+                        [af_name]['multicast'] = {}
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['multicast']['switching'] = m.groupdict()['multi_switching']
+                continue
 
-                if hello_interval is not None:
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['hello_interval'] = hello_interval
+            # Multicast packets in/out: 5/0
+            p4 = re.compile(r'^\s*Multicast +packets +in/out:'
+                            ' +(?P<in>\d+)/(?P<out>\d+)$')
+            m = p4.match(line)
+            if m:
+                multi_packet_in = int(m.groupdict()['in'])
+                multi_packet_out = int(m.groupdict()['out'])
 
-                if hello_packet_in is not None:
+                if 'multicast' not in ret_dict['vrf'][vrf]['interfaces']\
+                    [intf_name]['address_family'][af_name]:
                     ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['hello_packets_in'] = hello_packet_in
+                        [af_name]['multicast'] = {}
 
-                if hello_packet_out is not None:
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['hello_packets_out'] = hello_packet_out
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['multicast']['packets_in'] = multi_packet_in
 
-                if oper_status:
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['oper_status'] = oper_status
-                if address:
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['address'] = address.split()
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
+                    [af_name]['multicast']['packets_out'] = multi_packet_out
+                continue
 
-                if multi_switching:
-                    if 'multicast' not in ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
-                            [af_name]:
-                        ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                            [af_name]['multicast'] = {}
+            # Multicast TTL threshold: 0
+            p5 = re.compile(r'^\s*Multicast +TTL +threshold:'
+                            ' +(?P<ttl_threshold>\d+)$')
+            m = p5.match(line)
+            if m:
+                ttl_threshold = int(m.groupdict()['ttl_threshold'])
+                if 'multicast' not in ret_dict['vrf'][vrf]['interfaces']\
+                    [intf_name]['address_family'][af_name]:
                     ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                            [af_name]['multicast']['switching'] = multi_switching
+                        [af_name]['multicast'] = {}
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
+                    [af_name]['multicast']['ttl_threshold'] = ttl_threshold
+                continue
 
-                if multi_packet_in is not None:
-                    if 'multicast' not in ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                            [af_name]:
-                        ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                            [af_name]['multicast'] = {}
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['multicast']['packets_in'] = multi_packet_in
+            # PIM: enabled
+            p6 = re.compile(r'^\s*PIM:'
+                            ' +(?P<status>\w+)$')
+            m = p6.match(line)
+            if m:
+                pim_status = m.groupdict()['status']
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['pim_status'] = pim_status
+                continue
 
-                if multi_packet_out is not None:
-                    if 'multicast' not in ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                            [af_name]:
-                        ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                            [af_name]['multicast'] = {}
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['multicast']['packets_out'] = multi_packet_out
+            # PIM version: 2, mode: sparse
+            p7 = re.compile(r'^\s*PIM +version:'
+                            ' +(?P<version>\d+), +mode: +(?P<mode>\w+)$')
+            m = p7.match(line)
+            if m:
+                version = int(m.groupdict()['version'])
+                mode = m.groupdict()['mode'].lower()
 
-                if ttl_threshold is not None:
-                    if 'multicast' not in ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                            [af_name]:
-                        ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                            [af_name]['multicast'] = {}
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['multicast']['ttl_threshold'] = ttl_threshold
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]\
+                    ['address_family'][af_name]['version'] = version
 
-                if tagswitching:
-                    if 'multicast' not in ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                            [af_name]:
-                        ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                            [af_name]['multicast'] = {}
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['multicast']['tag_switching'] = tagswitching
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['mode'] = mode
 
-                if pim_status:
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['pim_status'] = pim_status
+                if mode == 'sparse':
+                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['sm'] = {}
+                elif mode == 'dense':
+                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['dm'] = {}
+                elif mode == 'passive':
+                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['sm'] = {}
+                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['sm']['passive'] = True
+                continue
 
-                if version is not None:
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['version'] = version
+            # PIM DR: 10.1.2.2
+            # PIM DR: 1.1.1.1 (this system)
+            p8 = re.compile(r'^\s*PIM +DR:'
+                            ' +(?P<dr_address>[\w\d\S]+)(\s+(?P<info>[\w\S\s]+))?$')
+            m = p8.match(line)
+            if m:
+                dr_address = m.groupdict()['dr_address']
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['dr_address'] = dr_address
+                continue
 
-                if mode:
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['mode'] = mode
-                    if mode.lower() == 'sparse':
-                        ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['sm'] = {}
+            # PIM neighbor count: 1
+            p9 = re.compile(r'^\s*PIM +neighbor +count:'
+                            ' +(?P<nbr_count>\d+)$')
+            m = p9.match(line)
+            if m:
+                nbr_count = int(m.groupdict()['nbr_count'])
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['neighbor_count'] = nbr_count
+                continue
 
-                if dr_address:
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['dr_address'] = dr_address
-                if nbr_count is not None:
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['neighbor_count'] = nbr_count
+            # PIM Hello/Query interval: 30 seconds
+            p10 = re.compile(r'^\s*PIM +[h|H]ello/[q|Q]uery +interval:'
+                            ' +(?P<hello_interval>\d+) +seconds$')
+            m = p10.match(line)
+            if m:
+                hello_interval = int(m.groupdict()['hello_interval'])
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['hello_interval'] = hello_interval
+                continue
 
-                if jp_interval is not None:
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['jp_interval'] = jp_interval
+            # PIM Hello packets in/out: 8/10
+            p11 = re.compile(r'^\s*PIM +Hello +packets +in/out:'
+                             ' +(?P<h_in>\d+)/(?P<h_out>\d+)$')
+            m = p11.match(line)
+            if m:
+                hello_packet_in = int(m.groupdict()['h_in'])
+                hello_packet_out = int(m.groupdict()['h_out'])
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['hello_packets_in'] = hello_packet_in
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['hello_packets_out'] = hello_packet_out
+                continue
 
-                if  state_refresh_processing:
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['state_refresh_processing'] = state_refresh_processing
+            # PIM J/P interval: 60 seconds
+            p12 = re.compile(r'^\s*PIM +J/P +interval:'
+                             ' +(?P<jp_interval>\d+) +seconds$')
+            m = p12.match(line)
+            if m:
+                jp_interval = int(m.groupdict()['jp_interval'])
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['jp_interval'] = jp_interval
+                continue
 
-                if state_refresh_origination:
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['state_refresh_origination'] = state_refresh_origination
+            # PIM State-Refresh processing: enabled
+            p13 = re.compile(r'^\s*PIM +[s|S]tate-[r|R]efresh +processing:'
+                             ' +(?P<state_refresh_processing>\w+)$')
+            m = p13.match(line)
+            if m:
+                state_refresh_processing = m.groupdict()['state_refresh_processing']
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['state_refresh_processing'] = state_refresh_processing
+                continue
 
-                if nbma_mode:
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['nbma_mode'] = nbma_mode
+            # PIM State-Refresh origination: disabled
+            p14 = re.compile(r'^\s*PIM +[s|S]tate-[r|R]efresh +origination:'
+                             ' +(?P<state_refresh_origination>\w+)$')
+            m = p14.match(line)
+            if m:
+                state_refresh_origination = m.groupdict()['state_refresh_origination']
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['state_refresh_origination'] = state_refresh_origination
+                continue
 
-                if atm_multipoint:
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['atm_multipoint_signalling'] = atm_multipoint
+            # PIM NBMA mode: disabled
+            p15 = re.compile(r'^\s*PIM +NBMA +mode:'
+                             ' +(?P<nbma_mode>\w+)$')
+            m = p15.match(line)
+            if m:
+                nbma_mode = m.groupdict()['nbma_mode']
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['nbma_mode'] = nbma_mode
+                continue
 
-                if  bsr_border:
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['bsr_border'] = bsr_border
+            # PIM ATM multipoint signalling: disabled
+            p16 = re.compile(r'^\s*PIM +ATM +multipoint +signalling:'
+                             ' +(?P<atm_multipoint>\w+)$')
+            m = p16.match(line)
+            if m:
+                atm_multipoint = m.groupdict()['atm_multipoint']
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['atm_multipoint_signalling'] = atm_multipoint
+                continue
 
-                if neighbors_rpf_proxy_capable:
-                    if neighbors_rpf_proxy_capable.lower() == 'true':
-                        nbr_val = True
-                    else:
-                        nbr_val = False
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['neighbors_rpf_proxy_capable'] = nbr_val
+            # PIM domain border: disabled
+            p17 = re.compile(r'^\s*PIM +domain +border:'
+                             ' +(?P<domain_border>\w+)$')
+            m = p17.match(line)
+            if m:
+                bsr_border = m.groupdict()['domain_border']
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['bsr_border'] = False if 'disabled' in bsr_border else True
+                continue
 
-                if non_dr_join:
-                    if non_dr_join.lower() == 'true':
-                        dr_join_val = True
-                    else:
-                        dr_join_val = False
+            # PIM neighbors rpf proxy capable: TRUE
+            p18 = re.compile(r'^\s*PIM +neighbors +rpf +proxy +capable:'
+                             ' +(?P<neighbors_rpf_proxy_capable>\w+)$')
+            m = p18.match(line)
+            if m:
+                nbr_val = m.groupdict()['neighbors_rpf_proxy_capable']
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
+                    [af_name]['neighbors_rpf_proxy_capable'] = True if nbr_val.lower() == 'true' \
+                                                               else False
+                continue
+
+            # PIM BFD: disabled
+            p19 = re.compile(r'^\s*PIM +BFD:'
+                             ' +(?P<bfd>\w+)$')
+            m = p19.match(line)
+            if m:
+                bfd = m.groupdict()['bfd']
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family']\
+                    [af_name]['bfd'] ={}
+                if bfd.lower() == 'enabled':
+                    enable = True
+                else:
+                    enable = False
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
+                        [af_name]['bfd']['enable'] = enable
+
+            # PIM Non-DR-Join: FALSE
+            p20 = re.compile(r'^\s*PIM +Non-DR-Join:'
+                             ' +(?P<non_dr_join>\w+)$')
+            m = p20.match(line)
+            if m:
+                non_dr_join = m.groupdict()['non_dr_join']
+                if non_dr_join.lower() == 'true':
+                    dr_join_val = True
+                else:
+                    dr_join_val = False
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
+                    [af_name]['none_dr_join'] = dr_join_val
+                continue
+
+            # Multicast Tagswitching: disabled
+            p21 = re.compile(r'^\s*Multicast +Tagswitching:'
+                             ' +(?P<tagswitching>\w+)$')
+            m = p21.match(line)
+            if m:
+                tagswitching = m.groupdict()['tagswitching']
+                if 'multicast' not in ret_dict['vrf'][vrf]['interfaces']\
+                    [intf_name]['address_family'][af_name]:
                     ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
-                        [af_name]['none_dr_join'] = dr_join_val
+                        [af_name]['multicast'] = {}
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
+                    [af_name]['multicast']['tag_switching'] = False if 'disabled' \
+                                                              in tagswitching else True
+                continue
+
+            # PIM neighbor filter: 7
+            p22 = re.compile(r'^\s*PIM +neighbor +filter: +(?P<nei_filter>\d+)$')
+            m = p22.match(line)
+            if m:
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] \
+                    [af_name]['neighbor_filter'] = m.groupdict()['nei_filter']
                 continue
 
         return ret_dict

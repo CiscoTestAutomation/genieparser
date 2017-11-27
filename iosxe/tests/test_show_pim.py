@@ -778,92 +778,99 @@ class test_show_ip_pim_rp_mapping(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output_mapping_1 = {
-        'vrf':
-            {
-            'default':
-                {
-                'address_family':
-                    {
-                      'ipv4':
-                          {
-                            'rp':
-                                {
-                                'rp_mappings': {
-                                    '224.0.0.0/4 3.3.3.3 bootstrap': {
-                                      'group': '224.0.0.0/4',
-                                      'rp_address': '3.3.3.3',
-                                      'rp_address_host': '?',
-                                      'up_time': '00:00:19',
-                                      'expiration': '00:02:19',
-                                      'priority': 5,
-                                      'hold_time': 150,
-                                      'protocol': 'bootstrap',
-                                    },
-                                    '224.0.0.0/4 2.2.2.2 bootstrap': {
-                                        'group': '224.0.0.0/4',
-                                        'rp_address': '2.2.2.2',
-                                        'rp_address_host': '?',
-                                        'up_time': '00:00:35',
-                                        'expiration': '00:02:03',
-                                        'priority': 10,
-                                        'hold_time': 150,
-                                        'protocol': 'bootstrap',
-                                    },
-                                    '224.0.0.0/4 3.3.3.3 static': {
-                                        'group': '224.0.0.0/4',
-                                        'rp_address_host': '?',
-                                        'rp_address': '3.3.3.3',
-                                        'protocol': 'static',
-                                    },
-                                    '224.0.0.0/4 20.0.0.3 autorp': {
-                                        'group': '224.0.0.0/4',
-                                        'rp_address_host': '?',
-                                        'rp_address': '20.0.0.3',
-                                        'up_time': '00:22:08',
-                                        'expiration': '00:02:40',
-                                        'protocol': 'autorp',
-                                    },
-
-                                },
-                                 'rp_list': {
-                                    '3.3.3.3 bootstrap': {
-                                          'address': '3.3.3.3',
-                                          'up_time': '00:00:19',
-                                          'expiration': '00:02:19',
-                                          'bsr_version':'v2',
-                                          'info_source_type': "bootstrap",
-                                          "info_source_address": "4.4.4.4",
-                                          },
-                                     '3.3.3.3 static': {
-                                         'address': '3.3.3.3',
-                                         "info_source_type": "static",
-                                     },
-                                     '2.2.2.2 bootstrap': {
-                                         'address': '2.2.2.2',
-                                         'bsr_version': 'v2',
-                                         'up_time': '00:00:35',
-                                         'expiration': '00:02:03',
-                                         "info_source_type": "bootstrap",
-                                         "info_source_address": "4.4.4.4",
-                                     },
-                                     '20.0.0.3 autorp': {
-                                         'address': '20.0.0.3',
-                                         'bsr_version': 'v2v1',
-                                         'up_time': '00:22:08',
-                                         'expiration': '00:02:40',
-                                         "info_source_type": "autorp",
-                                         'info_source_address': '20.0.0.2',
-                                        },
-                                    },
-                                },
-
-                            },
-                        },
-
-                    },
-                },
-
-            }
+        "vrf": {
+              "default": {
+                   "address_family": {
+                        "ipv4": {
+                             "rp": {
+                                  "rp_list": {
+                                       "3.3.3.3 BIDIR static": {
+                                            "info_source_type": "static",
+                                            "address": "3.3.3.3",
+                                            'mode': 'BIDIR'
+                                       },
+                                       "20.0.0.3 SM autorp": {
+                                            "address": "20.0.0.3",
+                                            "info_source_address": "20.0.0.2",
+                                            "bsr_version": "v2v1",
+                                            "info_source_type": "autorp",
+                                            "expiration": "00:02:40",
+                                            "up_time": "00:22:08",
+                                            'mode': 'SM'
+                                       },
+                                       "2.2.2.2 SM bootstrap": {
+                                            "address": "2.2.2.2",
+                                            "info_source_address": "4.4.4.4",
+                                            "bsr_version": "v2",
+                                            "info_source_type": "bootstrap",
+                                            "expiration": "00:02:03",
+                                            "up_time": "00:00:35",
+                                            'mode': 'SM'
+                                       },
+                                       "3.3.3.3 SM bootstrap": {
+                                            "address": "3.3.3.3",
+                                            "info_source_address": "4.4.4.4",
+                                            "bsr_version": "v2",
+                                            "info_source_type": "bootstrap",
+                                            "expiration": "00:02:19",
+                                            "up_time": "00:00:19",
+                                            'mode': 'SM'
+                                       }
+                                  },
+                                  "rp_mappings": {
+                                       "224.0.0.0/4 20.0.0.3 autorp": {
+                                            "group": "224.0.0.0/4",
+                                            "rp_address_host": "?",
+                                            "protocol": "autorp",
+                                            "expiration": "00:02:40",
+                                            "rp_address": "20.0.0.3",
+                                            "up_time": "00:22:08"
+                                       },
+                                       "224.0.0.0/4 2.2.2.2 bootstrap": {
+                                            "group": "224.0.0.0/4",
+                                            "rp_address_host": "?",
+                                            "hold_time": 150,
+                                            "priority": 10,
+                                            "protocol": "bootstrap",
+                                            "expiration": "00:02:03",
+                                            "rp_address": "2.2.2.2",
+                                            "up_time": "00:00:35"
+                                       },
+                                       "224.0.0.0/4 3.3.3.3 bootstrap": {
+                                            "group": "224.0.0.0/4",
+                                            "rp_address_host": "?",
+                                            "hold_time": 150,
+                                            "priority": 5,
+                                            "protocol": "bootstrap",
+                                            "expiration": "00:02:19",
+                                            "rp_address": "3.3.3.3",
+                                            "up_time": "00:00:19"
+                                       },
+                                       "224.0.0.0/4 3.3.3.3 static": {
+                                            "group": "224.0.0.0/4",
+                                            "protocol": "static",
+                                            "rp_address": "3.3.3.3",
+                                            "rp_address_host": "?"
+                                       }
+                                  },
+                                  "static_rp": {
+                                       "3.3.3.3": {
+                                            "bidir": {}
+                                       }
+                                  },
+                                  "bsr": {
+                                       "rp": {
+                                            "rp_address": "2.2.2.2",
+                                            "up_time": "00:22:08",
+                                            "group_policy": "224.0.0.0/4"
+                                       }
+                                  },
+                             }
+                        }
+                   }
+              }
+         }
+    }
     golden_output_mapping_1 = {'execute.return_value': '''
     R1_xe#show ip pim rp mapping
     PIM Group-to-RP Mappings
@@ -875,7 +882,8 @@ class test_show_ip_pim_rp_mapping(unittest.TestCase):
       RP 2.2.2.2 (?), v2
         Info source: 4.4.4.4 (?), via bootstrap, priority 10, holdtime 150
          Uptime: 00:00:35, expires: 00:02:03
-    Group(s): 224.0.0.0/4, Static
+
+    Group(s): 224.0.0.0/4, Static, Bidir Mode 
         RP: 3.3.3.3 (?)
 
     Group(s) 224.0.0.0/4
@@ -886,34 +894,51 @@ class test_show_ip_pim_rp_mapping(unittest.TestCase):
      '''}
 
     golden_parsed_output_mapping_2 = {
-        'vrf':
-            {'VRF1':
-                {
-                'address_family':
-                    {'ipv4':
-                        {
-                        'rp':
-                            {
-                            'rp_mappings': {
-                                '224.0.0.0/4 10.1.5.5 static': {
-                                    'group': '224.0.0.0/4',
-                                    'rp_address_host': '?',
-                                    'rp_address': '10.1.5.5',
-                                    'protocol': 'static',
-                                    },
-                                },
-                            'rp_list': {
-                                '10.1.5.5 static': {
-                                      'address': '10.1.5.5',
-                                      'info_source_type': 'static',
-                                      },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
+        "vrf": {
+              "VRF1": {
+                   "address_family": {
+                        "ipv4": {
+                             "rp": {
+                                  "rp_mappings": {
+                                       "STATIC_RP_V4 200.11.3.1 static": {
+                                            "rp_address_host": "?",
+                                            "protocol": "static",
+                                            "rp_address": "200.11.3.1",
+                                            "group": "STATIC_RP_V4"
+                                       },
+                                       "224.0.0.0/4 10.1.5.5 static": {
+                                            "rp_address_host": "?",
+                                            "protocol": "static",
+                                            "rp_address": "10.1.5.5",
+                                            "group": "224.0.0.0/4"
+                                       }
+                                  },
+                                  "rp_list": {
+                                       "10.1.5.5 SM static": {
+                                            "mode": "SM",
+                                            "address": "10.1.5.5",
+                                            "info_source_type": "static"
+                                       },
+                                       "200.11.3.1 SM static": {
+                                            "mode": "SM",
+                                            "address": "200.11.3.1",
+                                            "info_source_type": "static"
+                                       }
+                                  },
+                                  "static_rp": {
+                                       "200.11.3.1": {
+                                            "sm": {
+                                                 "policy_name": "STATIC_RP_V4",
+                                                 "override": True
+                                            }
+                                       }
+                                  }
+                             }
+                        }
+                   }
+              }
         }
+    }
 
     golden_output_mapping_2 = {'execute.return_value':'''
     R1_xe#show ip pim vrf VRF1 rp mapping
@@ -921,6 +946,8 @@ class test_show_ip_pim_rp_mapping(unittest.TestCase):
 
         Group(s): 224.0.0.0/4, Static
             RP: 10.1.5.5 (?)
+        Acl: STATIC_RP_V4, Static-Override
+            RP: 200.11.3.1 (?)
     '''}
 
     golden_output_mapping_3 = {'execute.return_value': '''
@@ -974,13 +1001,15 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
                                 'hello_packets_in': 8,
                                 'hello_packets_out': 10,
                                 'oper_status': 'up',
+                                'enable': True,
+                                'neighbor_filter': '7',
                                 'address': ['10.1.2.1/24'],
                                 'multicast': {
                                     'switching': 'fast',
                                     'packets_in': 5,
                                     'packets_out': 0,
                                     'ttl_threshold': 0,
-                                    'tag_switching': 'disabled',
+                                    'tag_switching': False,
                                 },
                                 'pim_status': 'enabled',
                                 'version': 2,
@@ -993,12 +1022,12 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
                                 'state_refresh_origination': 'disabled',
                                 'nbma_mode': 'disabled',
                                 'atm_multipoint_signalling': 'disabled',
-                                'bsr_border': 'disabled',
+                                'bsr_border': False,
                                 'neighbors_rpf_proxy_capable': True,
                                 'none_dr_join': False,
                             },
                         },
-                },
+                    },
                     'GigabitEthernet2': {
                         'address_family': {
                             'ipv4': {
@@ -1009,18 +1038,19 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
                                 'hello_packets_in': 7,
                                 'hello_packets_out': 10,
                                 'oper_status': 'up',
+                                'enable': True,
                                 'address': ['10.1.3.1/24'],
                                 'multicast': {
                                     'switching': 'fast',
                                     'packets_in': 5,
                                     'packets_out': 0,
                                     'ttl_threshold': 0,
-                                    'tag_switching': 'disabled',
+                                    'tag_switching': False,
                                 },
                                 'pim_status': 'enabled',
                                 'version': 2,
-                                'mode': 'sparse',
-                                'sm': {},
+                                'mode': 'dense',
+                                'dm': {},
                                 'dr_address': '10.1.3.3',
                                 'neighbor_count': 1,
                                 'jp_interval': 60,
@@ -1028,7 +1058,7 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
                                 'state_refresh_origination': 'disabled',
                                 'nbma_mode': 'disabled',
                                 'atm_multipoint_signalling': 'disabled',
-                                'bsr_border': 'disabled',
+                                'bsr_border': False,
                                 'neighbors_rpf_proxy_capable': True,
                                 'none_dr_join': False,
                             },
@@ -1044,13 +1074,14 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
                                 'hello_packets_in': 8,
                                 'hello_packets_out': 8,
                                 'oper_status': 'up',
+                                'enable': True,
                                 'address': ['1.1.1.1/32'],
                                 'multicast': {
                                     'switching': 'fast',
                                     'packets_in': 0,
                                     'packets_out': 0,
                                     'ttl_threshold': 0,
-                                    'tag_switching': 'disabled',
+                                    'tag_switching': False,
                                 },
                                 'pim_status': 'enabled',
                                 'version': 2,
@@ -1063,7 +1094,7 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
                                 'state_refresh_origination': 'disabled',
                                 'nbma_mode': 'disabled',
                                 'atm_multipoint_signalling': 'disabled',
-                                'bsr_border': 'disabled',
+                                'bsr_border': False,
                                 'neighbors_rpf_proxy_capable': False,
                                 'none_dr_join': False,
                             },
@@ -1084,6 +1115,7 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
             PIM version: 2, mode: sparse
             PIM DR: 10.1.2.2
             PIM neighbor count: 1
+            PIM neighbor filter: 7
             PIM Hello/Query interval: 30 seconds
             PIM Hello packets in/out: 8/10
             PIM J/P interval: 60 seconds
@@ -1102,7 +1134,7 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
           Multicast packets in/out: 5/0
           Multicast TTL threshold: 0
           PIM: enabled
-            PIM version: 2, mode: sparse
+            PIM version: 2, mode: dense
             PIM DR: 10.1.3.3
             PIM neighbor count: 1
             PIM Hello/Query interval: 30 seconds
@@ -1156,18 +1188,21 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
                                 'hello_packets_in': 6,
                                 'hello_packets_out': 6,
                                 'oper_status': 'up',
+                                'enable': True,
                                 'address': ['10.1.5.1/24'],
                                 'multicast': {
                                     'switching': 'fast',
                                     'packets_in': 4,
                                     'packets_out': 0,
                                     'ttl_threshold': 0,
-                                    'tag_switching': 'disabled',
+                                    'tag_switching': False,
                                 },
                                 'pim_status': 'enabled',
                                 'version': 2,
-                                'mode': 'sparse',
-                                'sm': {},
+                                'mode': 'passive',
+                                'sm': {
+                                    'passive': True,
+                                },
                                 'dr_address': '10.1.5.5',
                                 'neighbor_count': 1,
                                 'jp_interval': 60,
@@ -1175,7 +1210,7 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
                                 'state_refresh_origination': 'disabled',
                                 'nbma_mode': 'disabled',
                                 'atm_multipoint_signalling': 'disabled',
-                                'bsr_border': 'disabled',
+                                'bsr_border': False,
                                 'neighbors_rpf_proxy_capable': True,
                                 'none_dr_join': False,
                                 },
@@ -1193,7 +1228,7 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
           Multicast packets in/out: 4/0
           Multicast TTL threshold: 0
           PIM: enabled
-            PIM version: 2, mode: sparse
+            PIM version: 2, mode: passive
             PIM DR: 10.1.5.5
             PIM neighbor count: 1
             PIM Hello/Query interval: 30 seconds
