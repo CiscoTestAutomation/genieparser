@@ -206,6 +206,7 @@ class ShowVlan(ShowVlanSchema):
             # 2       301       community         Fa5/3, Fa5/25
             #  2       302       community
             #          10        community
+            #  none    20        community
 
             p5 = re.compile(r'^\s*(?P<primary>[0-9a-zA-Z]+)? +(?P<secondary>\d+)'
                             ' +(?P<type>[\w\-]+)( +(?P<interfaces>[\w\s\,\/]+))?$')
