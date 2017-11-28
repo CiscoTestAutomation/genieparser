@@ -15,9 +15,11 @@ class ShowRouteMapAllSchema(MetaParser):
                 {Any():
                     {'conditions':
                         {Optional('match_med_eq'): int,
+                         Optional('match_local_pref_eq'): int,
                          Optional('match_nexthop_in'): list,
                          Optional('match_nexthop_in_v6'): list,
                          Optional('match_level_eq'): str,
+                         Optional('match_route_type'): str,
                          Optional('match_community_list'): str,
                          Optional('match_ext_community_list'): str,
                          Optional('match_as_path_list'): str,
@@ -33,11 +35,11 @@ class ShowRouteMapAllSchema(MetaParser):
                          Optional('set_next_hop'): list, 
                          Optional('set_next_hop_v6'): list, 
                          Optional('set_next_hop_self'): bool, 
-                         Optional('set_med'): int, 
                          Optional('set_as_path_prepend'): str,
                          Optional('set_as_path_group'): list, 
                          Optional('set_as_path_prepend_repeat_n'): int,
                          Optional('set_community'): str,
+                         Optional('match_tag_list'): str,
                          Optional('set_community_additive'): bool,
                          Optional('set_community_no_advertise'): bool,
                          Optional('set_community_no_export'): bool,
@@ -49,10 +51,11 @@ class ShowRouteMapAllSchema(MetaParser):
                          Optional('set_ext_community_delete'): str,
                          Optional('set_level'): str,
                          Optional('set_weight'): int,
-                         Optional('set_ospf_metric_type'): str,
                          Optional('set_metric'): int,
+                         Optional('set_ospf_metric_type'): str,
+                         Optional('set_metric_type'): str,
                          'route_disposition': str,
-                         Optional('set_tag'): int
+                         Optional('set_tag'): str
                         },
                     },
                 },
@@ -91,7 +94,10 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 if 'conditions' not in route_map_dict[name]['statements'][statements]:
                     route_map_dict[name]['statements'][statements]['conditions'] = {}
                     set_as_path_group = []
-                    continue
+
+                route_map_dict[name]['statements'][statements]['actions']\
+                ['set_next_hop_self'] = False
+                continue
                     
             # description <description>
             p1_1 = re.compile(r'^\s*description +(?P<description>[a-zA-Z0-9]+)$')
@@ -258,8 +264,12 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
             p14 = re.compile(r'^\s*tag *(?P<set_tag>[0-9]+)$')
             m = p14.match(line)
             if m:
-                route_map_dict[name]['statements'][statements]['actions']\
-                ['set_tag'] = int(m.groupdict()['set_tag'])
+                if clause_type == 'Match':
+                    route_map_dict[name]['statements'][statements]['conditions']\
+                    ['match_tag_list'] = str(m.groupdict()['set_tag'])
+                else:
+                    route_map_dict[name]['statements'][statements]['actions']\
+                    ['set_tag'] = str(m.groupdict()['set_tag'])
                 continue
 
             # weight 50
@@ -286,12 +296,18 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 ['set_distance'] = int(m.groupdict()['set_distance'])
                 continue
 
-            #metric-type external 
+            # metric-type external ---- > set_metric_type
+            # metric-type type-1   ---- > set_ospf_metric_type
             p16 = re.compile(r'^\s*metric-type *(?P<set_ospf_metric_type>[0-9a-z\-]+)$')
             m = p16.match(line)
             if m:
-                route_map_dict[name]['statements'][statements]['actions']\
-                ['set_ospf_metric_type'] = str(m.groupdict()['set_ospf_metric_type'])
+                if m.groupdict()['set_ospf_metric_type'] == 'interanl' or\
+                    m.groupdict()['set_ospf_metric_type'] == 'external':
+                    route_map_dict[name]['statements'][statements]['actions']\
+                    ['set_metric_type'] = str(m.groupdict()['set_ospf_metric_type'])
+                else:
+                    route_map_dict[name]['statements'][statements]['actions']\
+                    ['set_ospf_metric_type'] = str(m.groupdict()['set_ospf_metric_type'])
                 continue
 
             #level level-1 
@@ -302,12 +318,16 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 ['set_level'] = str(m.groupdict()['set_level'])
                 continue
 
-            #local-preference 20
-            p18 = re.compile(r'^\s*local-preference *(?P<set_local_pref>[0-9]+)$')
+            #local-preference 111
+            p18 = re.compile(r'^\s*local-preference *(?P<match_local_pref_eq>[0-9]+)$')
             m = p18.match(line)
             if m:
-                route_map_dict[name]['statements'][statements]['actions']\
-                ['set_local_pref'] = int(m.groupdict()['set_local_pref'])
+                if clause_type == 'Match':
+                    route_map_dict[name]['statements'][statements]['conditions']\
+                    ['match_local_pref_eq'] = int(m.groupdict()['match_local_pref_eq'])
+                else:
+                    route_map_dict[name]['statements'][statements]['actions']\
+                    ['set_local_pref'] = int(m.groupdict()['match_local_pref_eq'])
                 continue
 
             #origin igp
@@ -392,12 +412,15 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
             m = p23.match(line)
             if m:
                 if m.groupdict()['set_ext_community_rt']:
-                    set_ext_community_rt = m.groupdict()['set_ext_community_rt'].strip().split()
+                    set_ext_community_rt = \
+                        m.groupdict()['set_ext_community_rt'].\
+                            replace('RT:','').strip().split()
                     if m.groupdict()['set_ext_community_rt_additive']:
                         set_ext_community_rt_additive = m.groupdict()\
                         ['set_ext_community_rt_additive']
                         route_map_dict[name]['statements'][statements]['actions']\
                         ['set_ext_community_rt_additive'] = True
+
                     route_map_dict[name]['statements'][statements]['actions']\
                     ['set_ext_community_rt'] = set_ext_community_rt
                     route_map_dict[name]['statements'][statements]['actions']\

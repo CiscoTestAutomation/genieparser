@@ -299,7 +299,7 @@ class ShowInterface(ShowInterfaceSchema):
                 continue
 
             #Description: desc
-            p4 = re.compile(r'^\s*Description: *(?P<description>\S+)$')
+            p4 = re.compile(r'^\s*Description: *(?P<description>.*)$')
             m = p4.match(line)
             if m:
                 description = m.groupdict()['description']
@@ -964,7 +964,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
             # IP Interface Status for VRF "VRF1"
             p1 = re.compile(r'^\s*IP *Interface *Status *for *VRF'
-                             ' *(?P<vrf>[a-zA-Z0-9\"]+)$')
+                             ' *(?P<vrf>\S+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -1888,7 +1888,7 @@ class ShowIpv6InterfaceVrfAllSchema(MetaParser):
                      'multicast_bytes_originated': int,
                      'multicast_bytes_consumed': int,
                     },
-                'ipv6_subnet': str,
+                Optional('ipv6_subnet'): str,
                 'ipv6_link_local': str,
                 'ipv6_link_local_state': str,
                 'ipv6_ll_state': str,
@@ -1928,7 +1928,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             #IPv6 Interface Status for VRF "VRF1"
             p1 = re.compile(r'^\s*IPv6 *Interface *Status *for *VRF'
-                             ' *(?P<vrf>[a-zA-Z0-9\"]+)$')
+                             ' *(?P<vrf>\S+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -2026,6 +2026,9 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
                 ipv6_link_local_state = m.groupdict()['ipv6_link_local_state']
                 ipv6_ll_state = m.groupdict()['ipv6_ll_state'].lower()
 
+                if 'ipv6' not in ipv6_interface_dict[interface]:
+                    ipv6_interface_dict[interface]['ipv6'] = {}
+
                 ipv6_interface_dict[interface]['ipv6']['ipv6_link_local'] = ipv6_link_local
                 ipv6_interface_dict[interface]['ipv6']['ipv6_link_local_state'] = ipv6_link_local_state
                 ipv6_interface_dict[interface]['ipv6']['ipv6_ll_state'] = ipv6_ll_state
@@ -2111,8 +2114,9 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             if multicast_groups:
                 # ff02::1:ffbb:cccc  ff02::1:ff00:3  ff02::1:ff00:2  ff02::2   
-                # ff02::1  ff02::1:ff00:1  ff02::1:ffbb:cccc  ff02::1:ff00:0  
-                p11 = re.compile(r'^\s*(?P<ipv6_multicast_group_addresses>[a-z0-9\:\s]+)$')
+                # ff02::1  ff02::1:ff00:1  ff02::1:ffbb:cccc  ff02::1:ff00:0
+                # ff02::1:ffad:beef  ff02::1:ff00:1(2)  ff02::2(2)  ff02::1(2)
+                p11 = re.compile(r'^\s*(?P<ipv6_multicast_group_addresses>[a-z0-9\(\)\:\s]+)$')
                 m = p11.match(line)
                 if m:
                     ipv6_multicast_group_addresses = str(m.groupdict()['ipv6_multicast_group_addresses'])

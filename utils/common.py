@@ -39,7 +39,7 @@ class Common():
         convert = {'Eth': 'Ethernet',
                    'Lo': 'Loopback',
                    'Fa': 'FastEthernet',
-                   'Po': 'Port-channel',
+	               'Po': 'Port-channel',
                    'Null': 'Null',
                    'Gi': 'GigabitEthernet',
                    'Te': 'TenGigabitEthernet',

@@ -19,9 +19,10 @@ class test_show_route_map(unittest.TestCase):
                                 {'10':
                                   {'actions':
                                     {'route_disposition': 'permit',
+                                     'set_next_hop_self': False,
                                     'set_next_hop_v6': ['2001:DB8:1::1',
                                                         '2001:DB8:2::1'],
-                                     'set_tag': 10},
+                                     'set_tag': '10'},
                                    'conditions':
                                     {'match_interface': 'GigabitEthernet1',
                                      'match_nexthop_in_v6': ['test'],
@@ -33,20 +34,20 @@ class test_show_route_map(unittest.TestCase):
                                     {'route_disposition': 'permit',
                                      'set_community': '6553700',
                                      'set_community_delete': 'test',
-                                     'set_ext_community_rt': ['RT:100:10',
-                                                             'RT:100:100',
-                                                             'RT:200:200'],
+                                     'set_ext_community_rt': ['100:10',
+                                                             '100:100',
+                                                             '200:200'],
                                      'set_ext_community_rt_additive': True,
                                      'set_ext_community_soo': '100:10',
                                      'set_ext_community_vpn': '100:100',
                                      'set_local_pref': 111,
-                                     'set_ospf_metric_type': 'external',
+                                     'set_metric_type': 'external',
                                      'set_metric': 100,
                                      'set_next_hop_self': True,
                                      'set_next_hop': ['1.1.1.1', '2.2.2.2'],
                                      'set_next_hop_v6': ['2001:DB8:1::1', '2001:DB8:2::1'],
                                      'set_route_origin': 'incomplete',
-                                     'set_tag': 10},
+                                     'set_tag': '10'},
                                    'conditions':
                                     {'match_med_eq': 100}
                                   },
@@ -56,6 +57,7 @@ class test_show_route_map(unittest.TestCase):
                                      'set_metric': -20,
                                      'set_ospf_metric_type': 'type-1',
                                      'set_next_hop': ['3.3.3.3'],
+                                     'set_next_hop_self': False,
                                      'set_next_hop_v6': ['2001:DB8:3::1'],
                                      'set_route_origin': 'igp'},
                                    'conditions':

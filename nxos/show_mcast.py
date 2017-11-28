@@ -67,7 +67,7 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
         for line in out.splitlines():
             line = line.rstrip()
 
-            # IP Multicast Routing Table for VRF "default 
+            # IP Multicast Routing Table for VRF "default" 
             p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) [mM]ulticast'
                              ' +[rR]outing +[tT]able +for +VRF '
                             '+(?P<vrf>[a-zA-Z0-9\"]+)$')
@@ -94,7 +94,7 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
                              ' +(?P<multicast_group>[0-9\.\/]+)\),'
                              ' *(?P<bidir>(\S+))? *uptime:'
                              ' +(?P<uptime>[0-9a-zA-Z\:\.]+)(,)?(?:'
-                             ' *(?P<flag>[a-zA-Z\s]+))?$')
+                             ' *(?P<flag>[a-zA-Z\(\)\s]+))?$')
             m = p2.match(line)
             if m:
                 source_address = m.groupdict()['source_address']
@@ -119,7 +119,7 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
                 mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
                     ['source_address'][source_address]['uptime'] = uptime
                 mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
-                    ['source_address'][source_address]['flags'] = flag
+                    ['source_address'][source_address]['flags'] = ' '.join(sorted(flag.split()))
                 if bidir:
                     mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
                         ['source_address'][source_address]['bidir'] = True
@@ -161,7 +161,7 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
             # loopback2, uptime: 3d11h, igmp 
             p5 = re.compile(r'^\s*(?:(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+),)?'
                              ' +uptime: +(?:(?P<oil_uptime>[a-zA-Z0-9\:]+),)?'
-                             ' +(?:(?P<oil_flags>[a-zA-Z\s]+))?$')
+                             ' +(?:(?P<oil_flags>[a-zA-Z\(\)\s]+))?( *\((?P<rpf>\w+)\))?$')
             m = p5.match(line)
             if m:
                 outgoing_interface = m.groupdict()['outgoing_interface']
@@ -182,7 +182,7 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
                 [outgoing_interface]['oil_uptime'] = oil_uptime
                 mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
                 ['source_address'][source_address]['outgoing_interface_list']\
-                [outgoing_interface]['oil_flags'] = oil_flags
+                [outgoing_interface]['oil_flags'] = ' '.join(sorted(oil_flags.split()))
                 continue
 
         return mroute_dict

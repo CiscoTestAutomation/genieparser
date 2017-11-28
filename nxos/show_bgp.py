@@ -7306,7 +7306,7 @@ class ShowBgpPolicyStatisticsSchema(MetaParser):
     schema = {
         'vrf': {
             Any(): {
-                'rpm_handle_count': int,
+                Optional('rpm_handle_count'): int,
                 Optional('route_map'): {
                     Any():{
                         Any(): {
@@ -7337,7 +7337,7 @@ class ShowBgpPolicyStatistics(ShowBgpPolicyStatisticsSchema):
 
         # extract vrf info if specified,
         # if not, vrf is default
-        m = re.compile(r'^show +bgp +vrf +(?P<vrf>\w+)').match(cmd)
+        m = re.compile(r'^show +bgp +vrf +(?P<vrf>\S+)').match(cmd)
         if m:
             vrf = m.groupdict()['vrf']
             if vrf == 'all':
@@ -7393,6 +7393,12 @@ class ShowBgpPolicyStatistics(ShowBgpPolicyStatisticsSchema):
             m = p4.match(line)
             if m:
                 name = m.groupdict()['name']
+
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
 
                 if 'route_map' not in ret_dict['vrf'][vrf]:
                     ret_dict['vrf'][vrf]['route_map'] = {}

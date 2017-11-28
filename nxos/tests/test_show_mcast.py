@@ -36,8 +36,7 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
                             {'232.0.0.0/8': 
                                 {'source_address': 
                                     {'*': 
-                                        {'flags': 'pim '
-                                                 'ip',
+                                        {'flags': 'ip pim',
                                         'incoming_interface_list': 
                                             {'Null': 
                                                 {'rpf_nbr': '0.0.0.0'}},
@@ -46,9 +45,7 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
                             '239.5.5.5/32': 
                                 {'source_address': 
                                     {'*': 
-                                        {'flags': 'igmp '
-                                                 'ip '
-                                                 'pim',
+                                        {'flags': 'igmp ip pim',
                                         'incoming_interface_list': 
                                             {'Null': 
                                                 {'rpf_nbr': '0.0.0.0'}},
@@ -65,9 +62,7 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
                             {'224.192.1.10/32': 
                                 {'source_address': 
                                     {'*': 
-                                        {'flags': 'igmp '
-                                                  'ip '
-                                                  'pim',
+                                        {'flags': 'igmp ip pim',
                                         'incoming_interface_list': 
                                             {'port-channel8': 
                                                 {'rpf_nbr': '159.103.50.233'}},
@@ -84,8 +79,7 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
                                                 'oil_uptime': '09:11:22'}},
                                        'uptime': '09:15:11'},
                                     '192.168.112.3/32': 
-                                        {'flags': 'pim '
-                                                  'ip',
+                                        {'flags': 'ip pim',
                                         'incoming_interface_list': 
                                             {'Vlan807': 
                                                 {'rpf_nbr': '159.103.211.228'}},
@@ -96,8 +90,7 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
                                                 'oil_uptime': '09:31:16'}},
                                         'uptime': '09:31:16'},
                                     '192.168.112.4/32': 
-                                        {'flags': 'pim '
-                                                  'ip',
+                                        {'flags': 'ip pim',
                                         'incoming_interface_list': 
                                             {'Ethernet1/1.10': 
                                                 {'rpf_nbr': '159.103.211.228'}},
@@ -114,8 +107,8 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
                             {'232.0.0.0/8': 
                                 {'source_address': 
                                     {'*': 
-                                        {'flags': 'pim '
-                                                  'ip',
+                                        {'flags': 'ip '
+                                                  'pim',
                                         'incoming_interface_list': 
                                             {'Null': 
                                                 {'rpf_nbr': '0.0.0.0'}},
@@ -125,8 +118,8 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
                                 {'source_address': 
                                     {'*': 
                                         {'flags': 'igmp '
-                                                  'pim '
-                                                  'ip',
+                                                  'ip '
+                                                  'pim',
                                         'incoming_interface_list': 
                                             {'Ethernet9/13': 
                                                 {'rpf_nbr': '10.2.3.2'}},
@@ -202,7 +195,7 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
                             {'232.0.0.0/8': 
                                 {'source_address': 
                                     {'*': 
-                                        {'flags': 'pim ip',
+                                        {'flags': 'ip pim',
                                         'incoming_interface_list': 
                                             {'Null': 
                                                 {'rpf_nbr': '0.0.0.0'}},
@@ -216,7 +209,7 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
                                 {'source_address': 
                                     {'*': 
                                         {'bidir': True,
-                                        'flags': 'pim ip',
+                                        'flags': 'ip pim',
                                         'incoming_interface_list': 
                                             {'Null': 
                                                 {'rpf_nbr': '0.0.0.0'}},
@@ -225,7 +218,7 @@ class test_show_ip_mroute_vrf_all(unittest.TestCase):
                             '232.0.0.0/8': 
                                 {'source_address': 
                                     {'*': 
-                                        {'flags': 'pim ip',
+                                        {'flags': 'ip pim',
                                         'incoming_interface_list': 
                                             {'Null': 
                                                 {'rpf_nbr': '0.0.0.0'}},
