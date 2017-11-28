@@ -291,7 +291,7 @@ class test_show_ip_pim_interface(unittest.TestCase):
                                         'hello_interval': 30,
                                         'neighbor_count': 1,
                                         'version': 2,
-                                        'mode': 'sparse-mode',
+                                        'mode': 'dense-mode',
                                         'dr_address': '10.1.5.5',
                                         'address': ['10.1.5.1'],
                                     },
@@ -304,7 +304,7 @@ class test_show_ip_pim_interface(unittest.TestCase):
     golden_output_interface_2 = {'execute.return_value': '''
     Address          Interface                Ver/   Nbr    Query  DR         DR
                                           Mode   Count  Intvl  Prior
-    10.1.5.1         GigabitEthernet3         v2/S   1      30     1          10.1.5.5
+    10.1.5.1         GigabitEthernet3         v2/D   1      30     1          10.1.5.5
 
     '''}
 
