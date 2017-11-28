@@ -73,7 +73,7 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
                              ' +(?P<nbr_count>\d+) +(?P<hello_int>\d+) +(?P<dr_pri>\d+)$')
             m = p1.match(line)
             if m:
-                intf = m.groupdict()['intf']
+                intf = Common.convert_intf_name(m.groupdict()['intf'])
                 if 'vrf' not in ret_dict:
                     ret_dict['vrf'] = {}
                 if vrf not in ret_dict['vrf']:
@@ -176,9 +176,6 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
         # initial variables
         ret_dict = {}
         af_name = 'ipv6'
-        address = can_address = can_hash_mask_lenght = can_priority = ""
-        up_time = priority = rpf_interface = rpf_address = hash_mask = ""
-        bs_timer = scope_range_list = ""
 
         # execute command to get output
         out = self.device.execute(cmd)
@@ -192,6 +189,28 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
             m = p1.match(line)
             if m:
                 scope_range_list = m.groupdict()['scope_range_list']
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+                if 'address_family' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['address_family'] = {}
+                if af_name not in ret_dict['vrf'][vrf]['address_family']:
+                    ret_dict['vrf'][vrf]['address_family'][af_name] = {}
+                if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
+                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] = {}
+                if 'bsr' not in ret_dict['vrf'][vrf]['address_family'] \
+                        [af_name]['rp']:
+                    ret_dict['vrf'][vrf]['address_family'][af_name] \
+                        ['rp']['bsr'] = {}                
+
+                if 'bsr' not in ret_dict['vrf'][vrf]['address_family'] \
+                        [af_name]['rp']['bsr']:
+                    ret_dict['vrf'][vrf]['address_family'][af_name] \
+                        ['rp']['bsr']['bsr'] = {}
+
+                ret_dict['vrf'][vrf]['address_family'][af_name] \
+                    ['rp']['bsr']['bsr']['scope_range_list'] = scope_range_list
                 continue
 
             # BSR Address: 2001:1:1:1::1
@@ -199,6 +218,8 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
             m = p2.match(line)
             if m:
                 address = m.groupdict()['bsr_address']
+                ret_dict['vrf'][vrf]['address_family'][af_name]\
+                    ['rp']['bsr']['bsr']['address'] = address
                 continue
 
             # Uptime: 00:00:07, BSR Priority: 0, Hash mask length: 126
@@ -210,6 +231,12 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
                 up_time = m.groupdict()['up_time']
                 priority = int(m.groupdict()['priority'])
                 hash_mask = int(m.groupdict()['hash_mask_length'])
+                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
+                    ['bsr']['up_time'] = up_time
+                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
+                    ['bsr']['hash_mask_length'] = hash_mask
+                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
+                    ['bsr']['priority'] = priority
                 continue
 
             # RPF: FE80::21E:F6FF:FE2D:3600,Loopback0
@@ -219,6 +246,10 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
             if m:
                 rpf_address = m.groupdict()['rpf']
                 rpf_interface = m.groupdict()['interface']
+                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
+                    ['bsr']['rpf_address'] = rpf_address
+                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
+                    ['bsr']['rpf_interface'] = rpf_interface
                 continue
 
             # BS Timer: 00:00:52
@@ -226,6 +257,8 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
             m = p5.match(line)
             if m:
                 bs_timer = m.groupdict()['bs_timer']
+                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
+                    ['bsr']['expires'] = bs_timer
                 continue
 
             # Candidate BSR address: 2001:1:1:1::1, priority: 0, hash mask length: 126
@@ -237,56 +270,7 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
                 can_address = m.groupdict()['can_address']
                 can_priority = int(m.groupdict()['can_priority'])
                 can_hash_mask_lenght = int(m.groupdict()['can_hash_mask_lenght'])
-                continue
 
-            if 'vrf' not in ret_dict:
-                ret_dict['vrf'] = {}
-            if vrf not in ret_dict['vrf']:
-                ret_dict['vrf'][vrf] = {}
-            if 'address_family' not in ret_dict['vrf'][vrf]:
-                ret_dict['vrf'][vrf]['address_family'] = {}
-            if af_name not in ret_dict['vrf'][vrf]['address_family']:
-                ret_dict['vrf'][vrf]['address_family'][af_name] = {}
-            if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
-                ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] = {}
-            if 'bsr' not in ret_dict['vrf'][vrf]['address_family'] \
-                    [af_name]['rp']:
-                ret_dict['vrf'][vrf]['address_family'][af_name] \
-                    ['rp']['bsr'] = {}
-
-            if 'bsr' not in ret_dict['vrf'][vrf]['address_family'] \
-                    [af_name]['rp']['bsr']:
-                ret_dict['vrf'][vrf]['address_family'][af_name] \
-                    ['rp']['bsr']['bsr'] = {}
-            if address:
-                ret_dict['vrf'][vrf]['address_family'][af_name] \
-                    ['rp']['bsr']['bsr']['address'] = address
-
-            if scope_range_list:
-                ret_dict['vrf'][vrf]['address_family'][af_name] \
-                    ['rp']['bsr']['bsr']['scope_range_list'] = scope_range_list
-
-            if up_time:
-                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
-                    ['bsr']['up_time'] = up_time
-
-            if hash_mask is not None:
-                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
-                    ['bsr']['hash_mask_length'] = hash_mask
-            if priority is not None:
-                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
-                    ['bsr']['priority'] = priority
-            if bs_timer:
-                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
-                    ['bsr']['expires'] = bs_timer
-            if rpf_address:
-                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
-                    ['bsr']['rpf_address'] = rpf_address
-            if rpf_interface:
-                ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr'] \
-                    ['bsr']['rpf_interface'] = rpf_interface
-
-            if can_address:
                 if 'bsr_candidate' not in ret_dict['vrf'][vrf]['address_family'] \
                         [af_name]['rp']['bsr']:
                     ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
@@ -294,22 +278,12 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
                 ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
                     ['bsr']['bsr_candidate']['address'] = can_address
 
-            if can_priority is not None:
-                if 'bsr_candidate' not in ret_dict['vrf'][vrf]['address_family'] \
-                        [af_name]['rp']['bsr']:
-                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
-                        ['bsr']['bsr_candidate'] = {}
-                ret_dict['vrf'][vrf]['address_family'][af_name] \
-                    ['rp']['bsr']['bsr_candidate']['priority'] = can_priority
-
-            if can_hash_mask_lenght is not None:
-                if 'bsr_candidate' not in ret_dict['vrf'][vrf]['address_family'] \
-                        [af_name]['rp']['bsr']:
-                    ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] \
-                        ['bsr']['bsr_candidate'] = {}
                 ret_dict['vrf'][vrf]['address_family'][af_name] \
                     ['rp']['bsr']['bsr_candidate']['hash_mask_length'] = can_hash_mask_lenght
-            continue
+
+                ret_dict['vrf'][vrf]['address_family'][af_name] \
+                    ['rp']['bsr']['bsr_candidate']['priority'] = can_priority
+                continue
 
         return ret_dict
 
