@@ -12,7 +12,177 @@ from metaparser.util.exceptions import SchemaEmptyParserError, \
 # Parser
 from parser.nxos.show_igmp import ShowIpIgmpInterface, \
                                   ShowIpIgmpGroups, \
-                                  ShowIpIgmpLocalGroups
+                                  ShowIpIgmpLocalGroups, \
+                                  ShowIpIgmpSnooping
+
+
+#=========================================================
+# Unit test for show ip igmp snooping
+#
+#=========================================================
+class test_show_ip_igmp_snooping(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_snooping_1 = \
+        {
+        'global_configuration': {
+            'enabled': 'enabled',
+            'v1v2_report_suppression': 'enabled',
+            'v3_report_suppression': 'disabled',
+            'link_local_groups_suppression': 'enabled',
+            'vpc_multicast_optimization': 'disabled',
+        },
+        'vlans': {
+            '1': {  # configuration_vlan_id
+                'ip_igmp_snooping': 'enabled',
+                'v1v2_report_suppression': 'enabled',
+                'v3_report_suppression': 'disabled',
+                'link_local_groups_suppression': 'enabled',
+                'lookup_mode': 'ip',
+                'switch_querier': 'disabled',
+                'igmp_explicit_tracking': 'enabled',
+                'v2_fast_leave': 'disabled',
+                'router_ports_count': 1,
+                'groups_count': 0,
+                'vlan_vpc_function': 'enabled',
+                'active_ports': ['Po20','Po30'],
+                'report_flooding': 'disabled',
+                'report_flooding_interfaces': 'n/a',
+                'group_address_for_proxy_leaves': 'no',
+                },
+            '100': {  # configuration_vlan_id
+                'ip_igmp_snooping': 'enabled',
+                'v1v2_report_suppression': 'enabled',
+                'v3_report_suppression': 'disabled',
+                'link_local_groups_suppression': 'enabled',
+                'lookup_mode': 'ip',
+                'igmp_querier': {
+                    'address': '50.1.1.1',
+                    'version': 2,
+                    'interval': 125,
+                    'last_member_query_interval': 1,
+                    'robustness': 2,
+                },
+                'switch_querier': 'disabled',
+                'igmp_explicit_tracking': 'enabled',
+                'v2_fast_leave': 'disabled',
+                'router_ports_count': 2,
+                'groups_count': 0,
+                'vlan_vpc_function': 'enabled',
+                'active_ports': ['Po20', 'Po30'],
+                'report_flooding': 'disabled',
+                'report_flooding_interfaces': 'n/a',
+                'group_address_for_proxy_leaves': 'no',
+                },
+            '101': {  # configuration_vlan_id
+                'ip_igmp_snooping': 'enabled',
+                'v1v2_report_suppression': 'enabled',
+                'v3_report_suppression': 'disabled',
+                'link_local_groups_suppression': 'enabled',
+                'lookup_mode': 'ip',
+                'switch_querier': 'disabled',
+                'igmp_explicit_tracking': 'enabled',
+                'v2_fast_leave': 'disabled',
+                'router_ports_count': 1,
+                'groups_count': 0,
+                'vlan_vpc_function': 'enabled',
+                'active_ports': ['Po20', 'Po30'],
+                'report_flooding': 'disabled',
+                'report_flooding_interfaces': 'n/a',
+                'group_address_for_proxy_leaves': 'no',
+            },
+        },
+    }
+
+    golden_output_snooping_1 = {'execute.return_value': '''
+N95_1# show ip igmp snooping
+Global IGMP Snooping Information:
+  IGMP Snooping enabled
+  IGMPv1/v2 Report Suppression enabled
+  IGMPv3 Report Suppression disabled
+  Link Local Groups Suppression enabled
+  VPC Multicast optimization disabled
+
+IGMP Snooping information for vlan 1
+  IGMP snooping enabled
+  Lookup mode: IP
+  IGMP querier none
+  Switch-querier disabled
+  IGMP Explicit tracking enabled
+  IGMPv2 Fast leave disabled
+  IGMPv1/v2 Report suppression enabled
+  IGMPv3 Report suppression disabled
+  Link Local Groups suppression enabled
+  Router port detection using PIM Hellos, IGMP Queries
+  Number of router-ports: 1
+  Number of groups: 0
+  VLAN vPC function enabled
+  Active ports:
+    Po20        Po30
+  Report Flooding: Disabled
+  Interfaces for Report Flooding: n/a
+  Use Group Address for Proxy Leaves: no
+
+IGMP Snooping information for vlan 100
+  IGMP snooping enabled
+  Lookup mode: IP
+  IGMP querier present, address: 50.1.1.1, version: 2, i/f Vlan100
+  Querier interval: 125 secs
+  Querier last member query interval: 1 secs
+  Querier robustness: 2
+  Switch-querier disabled
+  IGMP Explicit tracking enabled
+  IGMPv2 Fast leave disabled
+  IGMPv1/v2 Report suppression enabled
+  IGMPv3 Report suppression disabled
+  Link Local Groups suppression enabled
+  Router port detection using PIM Hellos, IGMP Queries
+  Number of router-ports: 2
+  Number of groups: 0
+  VLAN vPC function enabled
+  Active ports:
+    Po20        Po30
+  Report Flooding: Disabled
+  Interfaces for Report Flooding: n/a
+  Use Group Address for Proxy Leaves: no
+
+IGMP Snooping information for vlan 101
+  IGMP snooping enabled
+  Lookup mode: IP
+  IGMP querier none
+  Switch-querier disabled
+  IGMP Explicit tracking enabled
+  IGMPv2 Fast leave disabled
+  IGMPv1/v2 Report suppression enabled
+  IGMPv3 Report suppression disabled
+  Link Local Groups suppression enabled
+  Router port detection using PIM Hellos, IGMP Queries
+  Number of router-ports: 1
+  Number of groups: 0
+  VLAN vPC function enabled
+  Active ports:
+    Po20        Po30
+  Report Flooding: Disabled
+  Interfaces for Report Flooding: n/a
+  Use Group Address for Proxy Leaves: no
+
+
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpIgmpSnooping(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_snooping_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_snooping_1)
+        obj = ShowIpIgmpSnooping(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_snooping_1)
 
 
 # ==============================================
