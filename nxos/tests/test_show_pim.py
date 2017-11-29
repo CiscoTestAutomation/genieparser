@@ -416,7 +416,8 @@ class test_show_ipv6_pim_rp_vrf_all(unittest.TestCase):
                                           "rp_address": "2001:db8:1:1::1",
                                           "group_policy": "ff05::1/8",
                                           "up_time": "03:29:13"
-                                     }
+                                     },
+                                     "rp_candidate_next_advertisement": "00:02:20"
                                 }
                            },
                            "sm": {
@@ -550,7 +551,8 @@ class test_show_ipv6_pim_rp_vrf_all(unittest.TestCase):
                                           "group_policy": "ff05::1/8",
                                           "up_time": "03:29:13"
                                      },
-                                     "bsr_next_bootstrap": "00:00:15"
+                                     "bsr_next_bootstrap": "00:00:15",
+                                     "rp_candidate_next_advertisement": "00:02:20"
                                 }
                            },
                            "sm": {
@@ -637,7 +639,6 @@ class test_show_ipv6_pim_rp_vrf_all(unittest.TestCase):
         self.device = Mock(**self.golden_output_rp_1)
         obj = ShowIpv6PimRp(device=self.device)
         parsed_output = obj.parse(vrf='all')
-        import pdb; pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output_rp_1)
 
 
@@ -2274,6 +2275,7 @@ class test_show_ip_pim_rp(unittest.TestCase):
                                           "group_policy": "224.0.0.0/5"
                                      },
                                      "bsr_next_bootstrap": "00:00:01",
+                                     'rp_candidate_next_advertisement': '00:02:05',
                                      "bsr_address": {
                                           "10.1.5.1": {
                                                "mode": "SM",
@@ -2499,6 +2501,7 @@ class test_show_ip_pim_rp(unittest.TestCase):
                                           "address": "1.1.1.1"
                                      },
                                      "bsr_next_bootstrap": "00:00:42",
+                                     'rp_candidate_next_advertisement': '00:02:18',
                                      "bsr_address": {
                                           "2.2.2.2": {
                                                "priority": 10,
@@ -2573,7 +2576,8 @@ class test_show_ip_pim_rp(unittest.TestCase):
                                           "hash_mask_length": 0,
                                           "priority": 0,
                                           "address": "10.1.5.5"
-                                     }
+                                     },
+                                     'rp_candidate_next_advertisement': '00:02:10'
                                 },
                                 "rp_mappings": {
                                      "239.0.0.0/24 10.1.5.1 bootstrap": {

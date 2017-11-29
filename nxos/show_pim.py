@@ -1246,6 +1246,9 @@ class ShowPimRp(ShowPimRpSchema):
                     parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
                         ['bsr']['bsr_address'][rp_source]['priority'] = priority
 
+                    parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
+                        ['bsr']['rp_candidate_next_advertisement'] = expires
+
 
                 # rp  bsr  rp
                 if info_source_type_conversion == 'bootstrap':
