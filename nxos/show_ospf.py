@@ -2,44 +2,22 @@
 
 NXOS parsers for the following show commands:
 
-Completed:
     * show ip ospf
     * show ip ospf vrf <WORD>
     * show ip ospf mpls ldp interface 
     * show ip ospf mpls ldp interface vrf <WORD>
-    * show ip ospf sham-links
-    * show ip ospf sham-links vrf <WORD>
-    * show ip ospf virtual-links
-    * show ip ospf virtual-links vrf <WORD>
-
-Pending:
-    * show ip ospf interface
-    * show ip ospf interface vrf <WORD>
-    
-    * show ip route ospf
-    * show ip route ospf vrf <WORD>
-    
-    * show ip ospf neighbors detail
-    * show ip ospf neighbors detail vrf <WORD>
-
-    * show ip ospf database external detail
-    * show ip ospf database external detail vrf <WORD>
-
     * show ip ospf database router detail
     * show ip ospf database router detail vrf <WORD>
-    
     * show ip ospf database network detail
     * show ip ospf database network detail vrf <WORD>
-    
     * show ip ospf database summary detail
     * show ip ospf database summary detail vrf <WORD>
-    
+    * show ip ospf database external detail
+    * show ip ospf database external detail vrf <WORD>
     * show ip ospf database opaque-area detail
     * show ip ospf database opaque-area detail vrf <WORD>
-    
-    * show ip ospf database opaque-as detaill
+    * show ip ospf database opaque-as detail
     * show ip ospf database opaque-as detail vrf <WORD>
-    
     * show ip ospf database opaque-link detail
     * show ip ospf database opaque-link detail vrf <WORD>
 '''
@@ -1379,11 +1357,3 @@ class ShowIpOspfShamLinks(ShowIpOspfShamLinksSchema, ShowIpOspfLinksSuperParser)
               'show ip ospf sham-links vrf {vrf}'.format(vrf=vrf)
 
         return super().cli(cmd)
-
-
-# ================================================
-# Schema for 'show ip ospf interface [vrf <WORD>]'
-# ================================================
-class ShowIpOspfInterfaceSchema(MetaParser):
-
-    ''' Schema for "show ip ospf interface [vrf <WORD>]" '''
