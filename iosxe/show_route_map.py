@@ -35,7 +35,6 @@ class ShowRouteMapAllSchema(MetaParser):
                          Optional('set_next_hop'): list, 
                          Optional('set_next_hop_v6'): list, 
                          Optional('set_next_hop_self'): bool, 
-                         Optional('set_med'): int, 
                          Optional('set_as_path_prepend'): str,
                          Optional('set_as_path_group'): list, 
                          Optional('set_as_path_prepend_repeat_n'): int,
@@ -52,8 +51,8 @@ class ShowRouteMapAllSchema(MetaParser):
                          Optional('set_ext_community_delete'): str,
                          Optional('set_level'): str,
                          Optional('set_weight'): int,
-                         Optional('set_ospf_metric_type'): str,
                          Optional('set_metric'): int,
+                         Optional('set_ospf_metric_type'): str,
                          Optional('set_metric_type'): str,
                          'route_disposition': str,
                          Optional('set_tag'): str

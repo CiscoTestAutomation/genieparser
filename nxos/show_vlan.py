@@ -4,10 +4,9 @@ Example parser class
 
 '''
 import re
-import logging
+
 
 from metaparser import MetaParser
-from metaparser.util import merge_dict, keynames_convert
 from metaparser.util.schemaengine import Schema, \
                                          Any, \
                                          Optional, \
@@ -15,8 +14,248 @@ from metaparser.util.schemaengine import Schema, \
                                          And, \
                                          Default, \
                                          Use
+from parser.utils.common import Common
+
+# ====================================================
+#  schema for show vlan
+# ====================================================
+class ShowVlanSchema(MetaParser):
+    schema = {
+        'vlans':{
+            Any():{
+                Optional('vlan_id'): str,
+                Optional('name'): str,
+                Optional('mode'): str,
+                Optional('type'): str,
+                Optional('state'): str,
+                Optional('shutdown'): bool,
+                Optional('interfaces'): list,
+                Optional('remote_span_vlan'): bool,
+                Optional('private_vlan'):
+                    {
+                        Optional('primary'): bool,
+                        Optional('association'): list,
+                        Optional('type'): str,
+                        Optional('ports'): list,
+                    },
+
+                },
+            },
+    }
+
+# ====================================================
+#  parser for show vlan
+# ====================================================
+class ShowVlan(ShowVlanSchema):
+    '''
+    show vlan
+    '''
+
+    def cli(self):
+        cmd = 'show vlan'
+        out = self.device.execute(cmd)
+
+        vlan_dict = {}
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+            # VLAN Name                             Status    Ports
+            # 1    default                          active    Gi1/0/1, Gi1/0/2, Gi1/0/3, Gi1/0/5, Gi1/0/6, Gi1/0/12,
+            p1 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<name>[a-zA-Z0-9\-]+)'
+                            ' +(?P<status>[active|suspended|act/unsup|(.*)/lshut]+) *(?P<interfaces>[\w\s\/\,]+)?$')
+            m = p1.match(line)
+            if m:
+                vlan_id = m.groupdict()['vlan_id']
+                if 'vlans' not in vlan_dict:
+                    vlan_dict['vlans'] = {}
+
+                if vlan_id not in vlan_dict:
+                    vlan_dict['vlans'][vlan_id] = {}
+
+                vlan_dict['vlans'][vlan_id]['vlan_id'] = vlan_id
+                vlan_dict['vlans'][vlan_id]['name'] = m.groupdict()['name']
+                vlan_dict['vlans'][vlan_id]['shutdown'] = False
+                if 'act/unsup' in m.groupdict()['status']:
+                    status = 'unsupport'
+                elif 'suspend' in m.groupdict()['status']:
+                    status = 'suspend'
+                elif 'shut' in m.groupdict()['status']:
+                    status = 'shutdown'
+                    vlan_dict['vlans'][vlan_id]['shutdown'] = True
+                else:
+                    status = m.groupdict()['status']
+                vlan_dict['vlans'][vlan_id]['state'] = status
+                if m.groupdict()['interfaces']:
+                    vlan_dict['vlans'][vlan_id]['interfaces'] = \
+                        [Common.convert_intf_name(i) for i in m.groupdict()['interfaces'].split(',')]
+                continue
+
+            #                                                Gi1/0/19, Gi1/0/20, Gi1/0/21, Gi1/0/22
+            p2 = re.compile(r'^\s*(?P<space>\s{48})(?P<interfaces>[\w\s\/\,]+)$')
+            m = p2.match(line)
+            if m:
+                vlan_dict['vlans'][vlan_id]['interfaces'] = vlan_dict['vlans'][vlan_id]['interfaces']+\
+                [Common.convert_intf_name(i) for i in m.groupdict()['interfaces'].split(',')]
+                continue
+
+            # VLAN Type         Vlan-mode
+            # 1    enet         CE
+            p3 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<vlan_type>[\w]+)'
+                            ' +(?P<vlan_mode>[\w]+)?$')
+            m = p3.match(line)
+            if m:
+                vlan_id = m.groupdict()['vlan_id']
+                if vlan_id in vlan_dict['vlans']:
+                    vlan_dict['vlans'][vlan_id]['mode'] = m.groupdict()['vlan_mode'].lower()
+                    vlan_dict['vlans'][vlan_id]['type'] = m.groupdict()['vlan_type']
+                continue
 
 
+            # Remote SPAN VLANs
+            # -------------------------------------
+            # 201-202
+            # 201,202
+            # 201,204,201-220
+            p4 = re.compile(r'^\s*(?P<remote_span_vlans>[^--][0-9\-\,]+)?$')
+            m = p4.match(line)
+            if m:
+                remote_span_vlans = ""
+                if m.groupdict()['remote_span_vlans']:
+                    remote_span_vlans = m.groupdict()['remote_span_vlans'].split(',')
+
+                if remote_span_vlans:
+                    if 'vlans' not in vlan_dict:
+                        vlan_dict['vlans'] = {}
+                    for remote_vlan in remote_span_vlans:
+                        if '-' in remote_vlan:
+                            remote_span_list = remote_vlan.split('-')
+                            initial = remote_span_list[0]
+                            end = remote_span_list[1]
+                            value = int(initial)
+                            while (value <= int(end)):
+                                if str(value) not in vlan_dict['vlans']:
+                                    vlan_dict['vlans'][str(value)] = {}
+                                vlan_dict['vlans'][str(value)]['remote_span_vlan'] = True
+                                value += 1
+
+                        else:
+                            if remote_vlan not in vlan_dict['vlans']:
+                                vlan_dict['vlans'][remote_vlan] = {}
+                            vlan_dict['vlans'][remote_vlan]['remote_span_vlan'] = True
+                continue
+
+
+            # Primary Secondary Type              Ports
+            # ------- --------- ----------------- ------------------------------------------
+            # 2       301       community         Fa5/3, Fa5/25
+            #  2       302       community
+            #          10        community
+
+            p5 = re.compile(r'^\s*(?P<primary>\d+)? +(?P<secondary>\d+)'
+                            ' +(?P<type>[\w\-]+)( +(?P<interfaces>[\w\s\,\/]+))?$')
+            m = p5.match(line)
+
+            if m:
+                if m.groupdict()['primary']:
+                    primary = m.groupdict()['primary']
+                else:
+                    primary = ""
+                secondary = m.groupdict()['secondary']
+
+                private_vlan_type = m.groupdict()['type']
+                if m.groupdict()['interfaces']:
+                    private_vlan_interfaces = \
+                        [Common.convert_intf_name(i) for i in m.groupdict()['interfaces'].split(',')]
+
+                if 'vlans' not in vlan_dict:
+                    vlan_dict['vlans'] = {}
+                if m.groupdict()['primary']:
+                    if primary not in vlan_dict['vlans']:
+                        vlan_dict['vlans'][primary] = {}
+                    if 'private_vlan' not in vlan_dict['vlans'][primary]:
+                        vlan_dict['vlans'][primary]['private_vlan'] = {}
+                if primary:
+                    vlan_dict['vlans'][primary]['private_vlan']['primary'] = True
+                    if 'association' in vlan_dict['vlans'][primary]['private_vlan']:
+                        vlan_dict['vlans'][primary]['private_vlan']['association'] = \
+                            vlan_dict['vlans'][primary]['private_vlan']['association'] + [secondary]
+                    else:
+                        vlan_dict['vlans'][primary]['private_vlan']['association'] = secondary.split()
+
+                if secondary not in vlan_dict['vlans']:
+                    vlan_dict['vlans'][secondary] = {}
+
+                if 'private_vlan' not in vlan_dict['vlans'][secondary]:
+                    vlan_dict['vlans'][secondary]['private_vlan'] = {}
+                vlan_dict['vlans'][secondary]['private_vlan']['primary'] = False
+                vlan_dict['vlans'][secondary]['private_vlan']['type'] = private_vlan_type
+                if m.groupdict()['interfaces']:
+                    vlan_dict['vlans'][secondary]['private_vlan']['ports'] = private_vlan_interfaces
+
+                continue
+
+
+        return vlan_dict
+
+# ====================================================
+#  schema for show vlan id 1-3967 vn_segment
+# ====================================================
+class ShowVlanIdVnSegmentSchema(MetaParser):
+    schema = {
+        'vlans': {
+            Any(): {
+                Optional('vlan_id'): str,
+                Optional('vn_segment_id'): int,
+            },
+        },
+    }
+
+# ====================================================
+#  parser for show vlan id 1-3967 vn-segment
+# ====================================================
+class ShowVlanIdVnSegment(ShowVlanIdVnSegmentSchema):
+    '''
+    show vlan id 1-3967 vn-segment
+    '''
+
+    def cli(self):
+        cmd = 'show vlan id 1-3967 vn-segment'
+        out = self.device.execute(cmd)
+
+        vlan_dict = {}
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+            # VLAN Segment-id
+            # ---- -----------
+            # 10   5010
+            p1 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<segment_id>[0-9]+)$')
+            m = p1.match(line)
+            if m:
+                vlan_id = m.groupdict()['vlan_id']
+                if 'vlans' not in vlan_dict:
+                    vlan_dict['vlans'] = {}
+
+                if vlan_id not in vlan_dict:
+                    vlan_dict['vlans'][vlan_id] = {}
+
+                vlan_dict['vlans'][vlan_id]['vlan_id'] = vlan_id
+                vlan_dict['vlans'][vlan_id]['vn_segment_id'] = int(m.groupdict()['segment_id'])
+                continue
+
+        return vlan_dict
+
+
+############################################################
+#  Old Parsers are below
+#  may be in feature we need to delete or improve them
+#############################################################
 def regexp(expression):
     def match(value):
         if re.match(expression,value):
@@ -26,7 +265,7 @@ def regexp(expression):
                               %(value, expression))
     return match
 
-class ShowVlanSchema(MetaParser):
+class ShowVlanOldSchema(MetaParser):
     schema = {'vlan_id':
                 {Any():
                     {'name': str,
@@ -50,7 +289,7 @@ class ShowVlanSchema(MetaParser):
                 },
             }
 
-class ShowVlan(ShowVlanSchema, MetaParser):
+class ShowVlanOld(ShowVlanOldSchema, MetaParser):
     """ parser class - implements detail parsing mechanisms for cli, xml, and
     yang output.
     """
