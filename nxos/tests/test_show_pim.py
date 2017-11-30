@@ -22,7 +22,7 @@ from parser.nxos.show_pim import ShowIpPimInterface,\
                                  ShowIpv6PimRoute,\
                                  ShowIpPimDf,\
                                  ShowIpv6PimDf,\
-                                 ShowIpv6PimRpVrfAll,\
+                                 ShowIpv6PimRp,\
                                  ShowIpv6PimInterface
 
 
@@ -364,142 +364,290 @@ class test_show_ipv6_pim_rp_vrf_all(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output_rp_1 = {
-        'vrf':{
-            'default':
-                {
-                'address_family':
-                    {'ipv6':
-                         {
-                        'rp':{
-                            'bsr': {
-                                'bsr_candidate':{
-                                    'address': '2001:db8:1:1::1',
-                                    'hash_mask_length': 128,
-                                    'priority': 99,
+        "vrf": {
+            "VRF1": {
+                 "address_family": {
+                      "ipv6": {
+                           "rp": {
+                                "rp_list": {
+                                     "2001:db8:1:1::1 SM bootstrap": {
+                                          "df_ordinal": 0,
+                                          "info_source_address": "2001:db8:1:1::1",
+                                          "info_source_type": "bootstrap",
+                                          "mode": "SM",
+                                          "group_ranges": "ff05::1/8",
+                                          "expiration": "00:02:20",
+                                          "priority": 192,
+                                          "up_time": "03:29:13",
+                                          "address": "2001:db8:1:1::1"
+                                     }
                                 },
-                                'bsr':{
-                                    'address': '2001:db8:1:1::1',
-                                    'hash_mask_length': 128,
-                                    'priority': 99,
+                                "rp_mappings": {
+                                     "ff05::1/8 2001:db8:1:1::1 bootstrap": {
+                                          "group": "ff05::1/8",
+                                          "rp_address": "2001:db8:1:1::1",
+                                          "expiration": "00:02:20",
+                                          "protocol": "bootstrap",
+                                          "up_time": "03:29:13"
+                                     }
                                 },
-                                'bsr_next_bootstrap': '00:00:15',
-                                },
-                            'rp_list': {
-                                '2001:db8:1:1::1 bootstrap': {
-                                    'address': '2001:db8:1:1::1' ,
-                                    'info_source_address': '2001:db8:1:1::1',
-                                    'info_source_type': 'bootstrap',
-                                    'up_time': '03:29:13',
-                                    'expiration': '00:02:20',
-                                    'priority': 192,
-                                    'df_ordinal':0,
-                                    'mode': 'SM',
-                                    'group_ranges':'ff05::1/8',
-                                },
-                                '2001:db8:12:12::12 static': {
-                                    'address': '2001:db8:12:12::12',
-                                    'info_source_type': 'static',
-                                    'up_time': '00:58:17',
-                                    'expiration': '0.000000',
-                                    'priority':0,
-                                    'df_ordinal': 7,
-                                    'mode':'BIDIR',
-                                    'group_ranges': 'ff08::/16',
-                                },
-                                '2001:db8:111:111::111 static': {
-                                    'address': '2001:db8:111:111::111',
-                                    'info_source_type': 'static',
-                                    'up_time': '00:00:52',
-                                    'expiration': '0.000000',
-                                    'priority': 0,
-                                    'df_ordinal': 0,
-                                    'mode': 'SM',
-                                    'group_ranges': 'ff09::/16',
-                                },
-                            },
-                        },
-                        'sm': {
-                            'asm': {
-                                'anycast_rp': {
-                                    '2001:db8:111:111::111 2001:db8:1:2::2': {
-                                        'anycast_address': '2001:db8:111:111::111',
-                                    },
-                                    '2001:db8:111:111::111 2001:db8:3:4::5': {
-                                        'anycast_address': '2001:db8:111:111::111',
-                                    }
-                                },
-                            },
-                        },
-                    },
-                },
+                                "bsr": {
+                                     "bsr_address": {
+                                          "2001:db8:1:1::1": {
+                                               "mode": "SM",
+                                               "policy": "ff05::1/8",
+                                               "priority": 192,
+                                               "address": "2001:db8:1:1::1"
+                                          }
+                                     },
+                                     "bsr": {
+                                          "priority": 99,
+                                          "hash_mask_length": 128,
+                                          "expires": "00:01:37",
+                                          "address": "2001:db8:1:1::1",
+                                          "up_time": "00:09:14"
+                                     },
+                                     "bsr_candidate": {
+                                          "hash_mask_length": 128,
+                                          "priority": 99,
+                                          "address": "2001:db8:1:1::1"
+                                     },
+                                     "rp": {
+                                          "rp_address": "2001:db8:1:1::1",
+                                          "group_policy": "ff05::1/8",
+                                          "up_time": "03:29:13"
+                                     },
+                                     "rp_candidate_next_advertisement": "00:02:20"
+                                }
+                           },
+                           "sm": {
+                                "asm": {
+                                     "anycast_rp": {
+                                          "2001:db8:111:111::111 2001:db8:3:4::5": {
+                                               "anycast_address": "2001:db8:111:111::111"
+                                          },
+                                          "2001:db8:111:111::111 2001:db8:1:2::2": {
+                                               "anycast_address": "2001:db8:111:111::111"
+                                          }
+                                     }
+                                }
+                           }
+                      }
+                 }
             },
-        },
+            "default": {
+                 "address_family": {
+                      "ipv6": {
+                           "rp": {
+                                "rp_list": {
+                                     "2001:db8:1:1::1 SM bootstrap": {
+                                          "df_ordinal": 0,
+                                          "info_source_address": "2001:db8:1:1::1",
+                                          "info_source_type": "bootstrap",
+                                          "mode": "SM",
+                                          "group_ranges": "ff05::1/8",
+                                          "expiration": "00:02:20",
+                                          "priority": 192,
+                                          "up_time": "03:29:13",
+                                          "address": "2001:db8:1:1::1"
+                                     },
+                                     "2010::1 SM static": {
+                                          "expiration": "0.000000",
+                                          "info_source_type": "static",
+                                          "mode": "SM",
+                                          "group_ranges": "ff1e::3002/128 ff1e::3001/128",
+                                          "df_ordinal": 0,
+                                          "up_time": "00:00:02",
+                                          "address": "2010::1"
+                                     },
+                                     "2001:db8:12:12::12 BIDIR static": {
+                                          "expiration": "0.000000",
+                                          "info_source_type": "static",
+                                          "mode": "BIDIR",
+                                          "group_ranges": "ff08::/16",
+                                          "df_ordinal": 7,
+                                          "up_time": "00:58:17",
+                                          "address": "2001:db8:12:12::12"
+                                     },
+                                     "2001:db8:111:111::111 SM static": {
+                                          "expiration": "0.000000",
+                                          "info_source_type": "static",
+                                          "mode": "SM",
+                                          "group_ranges": "ff09::/16",
+                                          "df_ordinal": 0,
+                                          "up_time": "00:00:52",
+                                          "address": "2001:db8:111:111::111"
+                                     }
+                                },
+                                "rp_mappings": {
+                                     "ff09::/16 2001:db8:111:111::111 static": {
+                                          "group": "ff09::/16",
+                                          "rp_address": "2001:db8:111:111::111",
+                                          "expiration": "0.000000",
+                                          "protocol": "static",
+                                          "up_time": "00:00:52"
+                                     },
+                                     "ff05::1/8 2001:db8:1:1::1 bootstrap": {
+                                          "group": "ff05::1/8",
+                                          "rp_address": "2001:db8:1:1::1",
+                                          "expiration": "00:02:20",
+                                          "protocol": "bootstrap",
+                                          "up_time": "03:29:13"
+                                     },
+                                     "ff08::/16 2001:db8:12:12::12 static": {
+                                          "group": "ff08::/16",
+                                          "rp_address": "2001:db8:12:12::12",
+                                          "expiration": "0.000000",
+                                          "protocol": "static",
+                                          "up_time": "00:58:17"
+                                     },
+                                     "ff1e::3002/128 ff1e::3001/128 2010::1 static": {
+                                          "group": "ff1e::3002/128 ff1e::3001/128",
+                                          "rp_address": "2010::1",
+                                          "expiration": "0.000000",
+                                          "protocol": "static",
+                                          "up_time": "00:00:02"
+                                     }
+                                },
+                                "static_rp": {
+                                     "2001:db8:111:111::111": {
+                                          "sm": {
+                                               "policy_name": "ff09::/16"
+                                          }
+                                     },
+                                     "2010::1": {
+                                          "sm": {
+                                               "route_map": "PIM6-STATIC-RP",
+                                               "policy_name": "ff1e::3002/128 ff1e::3001/128"
+                                          }
+                                     },
+                                     "2001:db8:12:12::12": {
+                                          "bidir": {
+                                               "policy_name": "ff08::/16"
+                                          }
+                                     }
+                                },
+                                "bsr": {
+                                     "bsr_address": {
+                                          "2001:db8:1:1::1": {
+                                               "mode": "SM",
+                                               "policy": "ff05::1/8",
+                                               "priority": 192,
+                                               "address": "2001:db8:1:1::1"
+                                          }
+                                     },
+                                     "bsr": {
+                                          "hash_mask_length": 128,
+                                          "priority": 99,
+                                          "address": "2001:db8:1:1::1"
+                                     },
+                                     "bsr_candidate": {
+                                          "hash_mask_length": 128,
+                                          "priority": 99,
+                                          "address": "2001:db8:1:1::1"
+                                     },
+                                     "rp": {
+                                          "rp_address": "2001:db8:1:1::1",
+                                          "group_policy": "ff05::1/8",
+                                          "up_time": "03:29:13"
+                                     },
+                                     "bsr_next_bootstrap": "00:00:15",
+                                     "rp_candidate_next_advertisement": "00:02:20"
+                                }
+                           },
+                           "sm": {
+                                "asm": {
+                                     "anycast_rp": {
+                                          "2001:db8:111:111::111 2001:db8:3:4::5": {
+                                               "anycast_address": "2001:db8:111:111::111"
+                                          },
+                                          "2001:db8:111:111::111 2001:db8:1:2::2": {
+                                               "anycast_address": "2001:db8:111:111::111"
+                                          }
+                                     }
+                                }
+                           }
+                      }
+                 }
+            }
+       }
     }
     golden_output_rp_1 = {'execute.return_value': '''
-    R1# show ipv6 pim rp vrf all
-PIM6 RP Status Information for VRF "default"
-BSR: 2001:db8:1:1::1*, next Bootstrap message in: 00:00:15,
-      priority: 99, hash-length: 128
-Auto-RP disabled
-BSR RP Candidate policy: None
-BSR RP policy: None
-Auto-RP Announce policy: None
-Auto-RP Discovery policy: None
+        R1# show ipv6 pim rp vrf all
+        PIM6 RP Status Information for VRF "default"
+        BSR: 2001:db8:1:1::1*, next Bootstrap message in: 00:00:15,
+              priority: 99, hash-length: 128
+        Auto-RP disabled
+        BSR RP Candidate policy: None
+        BSR RP policy: None
+        Auto-RP Announce policy: None
+        Auto-RP Discovery policy: None
 
-Anycast-RP 2001:db8:111:111::111 members:
-  2001:db8:1:2::2  2001:db8:3:4::5
+        Anycast-RP 2001:db8:111:111::111 members:
+          2001:db8:1:2::2  2001:db8:3:4::5
 
-RP: 2001:db8:1:1::1*, (0), uptime: 03:29:13, expires: 00:02:20,
- priority: 192, RP-source: 2001:db8:1:1::1 (B), group ranges:
-      ff05::1/8
-RP: 2001:db8:12:12::12, (7), uptime: 00:58:17, expires: 0.000000,
- priority: 0, RP-source: (local), group ranges:
-      ff08::/16 (bidir)
-RP: 2001:db8:111:111::111, (0), uptime: 00:00:52, expires: 0.000000,
- priority: 0, RP-source: (local), group ranges:
-      ff09::/16
+        RP: 2001:db8:1:1::1*, (0), uptime: 03:29:13, expires: 00:02:20,
+         priority: 192, RP-source: 2001:db8:1:1::1 (B), group ranges:
+              ff05::1/8
+        RP: 2001:db8:12:12::12, (7), uptime: 00:58:17, expires: 0.000000,
+         priority: 0, RP-source: (local), group ranges:
+              ff08::/16 (bidir)
+        RP: 2001:db8:111:111::111, (0), uptime: 00:00:52, expires: 0.000000,
+         priority: 0, RP-source: (local), group ranges:
+              ff09::/16
+        RP: 2010::1, (0), uptime: 00:00:02, expires: 0.000000,
+         priority: 0, RP-source: (local), group-map: PIM6-STATIC-RP, group ranges:
+              ff1e::3002/128 ff1e::3001/128
 
-PIM6 RP Status Information for VRF "VRF1"
-BSR: Not Operational
-Auto-RP disabled
-BSR RP Candidate policy: None
-BSR RP policy: None
-Auto-RP Announce policy: None
-Auto-RP Discovery policy: None
+        PIM6 RP Status Information for VRF "VRF1"
+        BSR: 2001:db8:1:1::1, uptime: 00:09:14, expires: 00:01:37,
+              priority: 99, hash-length: 128
+        Auto-RP disabled
+        BSR RP Candidate policy: None
+        BSR RP policy: None
+        Auto-RP Announce policy: None
+        Auto-RP Discovery policy: None
+
+        Anycast-RP 2001:db8:111:111::111 members:
+          2001:db8:1:2::2  2001:db8:3:4::5
+
+        RP: 2001:db8:1:1::1*, (0), uptime: 03:29:13, expires: 00:02:20,
+         priority: 192, RP-source: 2001:db8:1:1::1 (B), group ranges:
+              ff05::1/8
     '''}
 
 
     golden_output_rp_2 = {'execute.return_value': '''
-R2_nx# show ipv6 pim rp vrf all
-PIM6 RP Status Information for VRF "default"
-BSR: Not Operational
-Auto-RP disabled
-BSR RP Candidate policy: None
-BSR RP policy: None
-Auto-RP Announce policy: None
-Auto-RP Discovery policy: None
+        R2_nx# show ipv6 pim rp vrf all
+        PIM6 RP Status Information for VRF "default"
+        BSR: Not Operational
+        Auto-RP disabled
+        BSR RP Candidate policy: None
+        BSR RP policy: None
+        Auto-RP Announce policy: None
+        Auto-RP Discovery policy: None
         '''}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowIpv6PimRpVrfAll(device=self.device)
+        obj = ShowIpv6PimRp(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_golden_ip_pim_rp_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_rp_1)
-        obj = ShowIpv6PimRpVrfAll(device=self.device)
-        parsed_output = obj.parse()
+        obj = ShowIpv6PimRp(device=self.device)
+        parsed_output = obj.parse(vrf='all')
         self.assertEqual(parsed_output, self.golden_parsed_output_rp_1)
 
 
     def test_golden_ip_pim_rp_2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_rp_2)
-        obj = ShowIpv6PimRpVrfAll(device=self.device)
+        obj = ShowIpv6PimRp(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
+            parsed_output = obj.parse(vrf='all')
 
 
 # ============================================
@@ -929,7 +1077,7 @@ class test_show_ipv6_pim_neighbor(unittest.TestCase):
                             'ipv6':{
                                 'neighbors':{
                                    'fe80::5054:ff:fe5b:aa80':{
-                                       'bfd_status': 'n/a',
+                                       'bfd_status': False,
                                        'expiration': '00:01:28',
                                        'dr_priority': 1,
                                        'up_time': '07:31:36',
@@ -953,7 +1101,7 @@ class test_show_ipv6_pim_neighbor(unittest.TestCase):
                                 'ipv6': {
                                     'neighbors': {
                                         'fe80::5054:ff:fec2:b74f': {
-                                            'bfd_status': 'n/a',
+                                            'bfd_status': False,
                                             'expiration': '00:01:21',
                                             'dr_priority': 1,
                                             'up_time': '6d19h',
@@ -1009,7 +1157,7 @@ class test_show_ipv6_pim_neighbor(unittest.TestCase):
                                 'ipv6': {
                                     'neighbors': {
                                         'fe80::5054:ff:fec2:b74f': {
-                                            'bfd_status': 'n/a',
+                                            'bfd_status': False,
                                             'expiration': '00:01:21',
                                             'dr_priority': 1,
                                             'up_time': '6d19h',
@@ -1309,7 +1457,7 @@ class test_show_ip_pim_neighbor(unittest.TestCase):
                             'ipv4':{
                                 'neighbors':{
                                    '10.11.33.33':{
-                                       'bfd_status': 'n/a',
+                                       'bfd_status': False,
                                        'expiration': '00:01:25',
                                        'dr_priority': 1,
                                        'up_time': '07:31:30',
@@ -1318,7 +1466,7 @@ class test_show_ip_pim_neighbor(unittest.TestCase):
 
                                     },
                                     '10.11.33.43': {
-                                        'bfd_status': 'n/a',
+                                        'bfd_status': False,
                                         'expiration': '00:01:25',
                                         'dr_priority': 1,
                                         'up_time': '07:31:30',
@@ -1371,7 +1519,7 @@ class test_show_ip_pim_neighbor(unittest.TestCase):
                                 'ipv4': {
                                     'neighbors': {
                                         '10.11.33.33': {
-                                            'bfd_status': 'n/a',
+                                            'bfd_status': False,
                                             'expiration': '00:01:25',
                                             'dr_priority': 1,
                                             'up_time': '07:31:30',
@@ -2019,309 +2167,468 @@ class test_show_ip_pim_rp(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output_rp_1 = {
-        'vrf':{
-            'default':
-                {
-                'address_family':
-                    {'ipv4':
-                         {
-                        'rp':{
-                            'bsr':{
-                                'bsr_next_bootstrap': '00:00:01',
-                                '10.1.5.1':{
-                                    'address':'10.1.5.1',
-                                    'hash_mask_length':30,
-                                    'priority':111,
+        "vrf": {
+            "default": {
+                 "address_family": {
+                      "ipv4": {
+                           "rp": {
+                                "autorp": {
+                                     "address": "10.1.5.1",
+                                     "bsr_next_discovery": "00:00:42"
                                 },
-                            },
-                            'autorp': {
-                                'address': '10.1.5.1',
-                                'bsr_next_discovery': '00:00:42',
-                            },
-                            'rp_list': {
-                                '2.2.2.2 static': {
-                                    'address': '2.2.2.2' ,
-                                    'info_source_type': 'static',
-                                    'up_time': '03:52:52',
-                                    'expiration': 'never',
-                                    'priority': 0,
-                                    'df_ordinal':0,
-                                    'group_ranges':['224.0.0.0/4'],
+                                "static_rp": {
+                                     "10.111.111.111": {
+                                          "sm": {
+                                               "policy_name": "224.0.0.0/4"
+                                          }
+                                     },
+                                     "2.2.2.2": {
+                                          "sm": {
+                                               "policy_name": "224.0.0.0/4"
+                                          }
+                                     },
+                                     "12.12.12.12": {
+                                          "bidir": {
+                                               "policy_name": "233.0.0.0/24"
+                                          }
+                                     }
                                 },
-                                '10.1.5.1 bootstrap': {
-                                    'address': '10.1.5.1',
-                                    'info_source_address': '10.1.5.1',
-                                    'info_source_type': 'bootstrap',
-                                    'up_time': '01:56:07',
-                                    'expiration': '00:02:05',
-                                    'priority':92,
-                                    'df_ordinal': 0,
-                                    'group_ranges': ['224.0.0.0/5'],
+                                "rp_list": {
+                                     "10.111.111.111 SM static": {
+                                          "mode": "SM",
+                                          "group_ranges": "224.0.0.0/4",
+                                          "df_ordinal": 0,
+                                          "expiration": "never",
+                                          "up_time": "00:01:06",
+                                          "address": "10.111.111.111",
+                                          "info_source_type": "static"
+                                     },
+                                     "2.2.2.2 SM static": {
+                                          "mode": "SM",
+                                          "group_ranges": "224.0.0.0/4",
+                                          "df_ordinal": 0,
+                                          "expiration": "never",
+                                          "up_time": "03:52:52",
+                                          "address": "2.2.2.2",
+                                          "info_source_type": "static"
+                                     },
+                                     "12.12.12.12 BIDIR static": {
+                                          "mode": "BIDIR",
+                                          "group_ranges": "233.0.0.0/24",
+                                          "df_ordinal": 1,
+                                          "expiration": "never",
+                                          "up_time": "00:00:54",
+                                          "address": "12.12.12.12",
+                                          "info_source_type": "static"
+                                     },
+                                     "10.1.5.1 SM bootstrap": {
+                                          "mode": "SM",
+                                          "group_ranges": "224.0.0.0/5",
+                                          "df_ordinal": 0,
+                                          "expiration": "00:02:05",
+                                          "up_time": "01:56:07",
+                                          "priority": 92,
+                                          "address": "10.1.5.1",
+                                          "info_source_address": "10.1.5.1",
+                                          "info_source_type": "bootstrap"
+                                     }
                                 },
-                                '12.12.12.12 static': {
-                                    'address': '12.12.12.12',
-                                    'info_source_type': 'static',
-                                    'up_time': '00:00:54',
-                                    'expiration': 'never',
-                                    'priority': 0,
-                                    'df_ordinal': 1,
-                                    'group_ranges': ['233.0.0.0/24'],
+                                "rp_mappings": {
+                                     "224.0.0.0/4 2.2.2.2 static": {
+                                          "group": "224.0.0.0/4",
+                                          "protocol": "static",
+                                          "rp_address": "2.2.2.2",
+                                          "up_time": "03:52:52",
+                                          "expiration": "never"
+                                     },
+                                     "224.0.0.0/4 10.111.111.111 static": {
+                                          "group": "224.0.0.0/4",
+                                          "protocol": "static",
+                                          "rp_address": "10.111.111.111",
+                                          "up_time": "00:01:06",
+                                          "expiration": "never"
+                                     },
+                                     "224.0.0.0/5 10.1.5.1 bootstrap": {
+                                          "group": "224.0.0.0/5",
+                                          "protocol": "bootstrap",
+                                          "rp_address": "10.1.5.1",
+                                          "up_time": "01:56:07",
+                                          "expiration": "00:02:05"
+                                     },
+                                     "233.0.0.0/24 12.12.12.12 static": {
+                                          "group": "233.0.0.0/24",
+                                          "protocol": "static",
+                                          "rp_address": "12.12.12.12",
+                                          "up_time": "00:00:54",
+                                          "expiration": "never"
+                                     }
                                 },
-                                '10.111.111.111 static': {
-                                    'address': '10.111.111.111',
-                                    'info_source_type': 'static',
-                                    'up_time': '00:01:06',
-                                    'expiration': 'never',
-                                    'priority': 0,
-                                    'df_ordinal':0,
-                                    'group_ranges': ['224.0.0.0/4'],
-                                },
-                            },
-                        },
-                        'sm': {
-                            'asm': {
-                                'anycast_rp': {
-                                    '10.111.111.111 10.1.2.1': {
-                                        'anycast_address': '10.111.111.111',
-                                    },
-                                    '10.111.111.111 10.1.5.1': {
-                                        'anycast_address': '10.111.111.111',
-                                    }
-                                },
-                            },
-                        },
-                    },
-                },
+                                "bsr": {
+                                     "bsr_candidate": {
+                                          "hash_mask_length": 30,
+                                          "priority": 111,
+                                          "address": "10.1.5.1"
+                                     },
+                                     "rp": {
+                                          "up_time": "01:56:07",
+                                          "rp_address": "10.1.5.1",
+                                          "group_policy": "224.0.0.0/5"
+                                     },
+                                     "bsr_next_bootstrap": "00:00:01",
+                                     'rp_candidate_next_advertisement': '00:02:05',
+                                     "bsr_address": {
+                                          "10.1.5.1": {
+                                               "mode": "SM",
+                                               "priority": 92,
+                                               "address": "10.1.5.1",
+                                               "policy": "224.0.0.0/5"
+                                          }
+                                     },
+                                     "bsr": {
+                                          "hash_mask_length": 30,
+                                          "priority": 111,
+                                          "address": "10.1.5.1"
+                                     }
+                                }
+                           },
+                           "sm": {
+                                "asm": {
+                                     "anycast_rp": {
+                                          "10.111.111.111 10.1.5.1": {
+                                               "anycast_address": "10.111.111.111"
+                                          },
+                                          "10.111.111.111 10.1.2.1": {
+                                               "anycast_address": "10.111.111.111"
+                                          }
+                                     }
+                                }
+                           }
+                      }
+                 }
             },
-            'VRF1':
-                {
-                'address_family':
-                    {'ipv4':
-                        {
-                        'rp': {
-                            'autorp': {
-                                'address': '11.11.11.11',
-                                'bsr_next_discovery': '00:00:15',
-                            },
-                            'rp_list': {
-                                '33.33.33.33 static': {
-                                    'address': '33.33.33.33',
-                                    'info_source_type': 'static',
-                                    'up_time': '03:52:52',
-                                    'expiration': 'never',
-                                    'priority': 0,
-                                    'df_ordinal': 0,
-                                    'group_ranges': ['224.0.0.0/4'],
+            "VRF1": {
+                 "address_family": {
+                      "ipv4": {
+                           "rp": {
+                                "autorp": {
+                                     "send_rp_announce": {
+                                          "rp_source": "200.12.0.2",
+                                          "bidir": True,
+                                          "scope": 0,
+                                          "group_list": "226.0.0.0/8",
+                                          "group": "226.0.0.0"
+                                     },
+                                     "address": "11.11.11.11",
+                                     "bsr_next_discovery": "00:00:15"
                                 },
-                            },
-                        },
-                    },
-                },
-            },
-        },
+                                "static_rp": {
+                                     "33.33.33.33": {
+                                          "sm": {
+                                               "policy_name": "224.0.0.0/4"
+                                          }
+                                     }
+                                },
+                                "rp_list": {
+                                     "200.12.0.2 BIDIR autorp": {
+                                          "mode": "BIDIR",
+                                          "group_ranges": "226.0.0.0/8",
+                                          "df_ordinal": 0,
+                                          "expiration": "never",
+                                          "up_time": "04:30:45",
+                                          "priority": 255,
+                                          "address": "200.12.0.2",
+                                          "info_source_address": "200.12.0.2",
+                                          "info_source_type": "autorp"
+                                     },
+                                     "33.33.33.33 SM static": {
+                                          "mode": "SM",
+                                          "group_ranges": "224.0.0.0/4",
+                                          "df_ordinal": 0,
+                                          "expiration": "never",
+                                          "up_time": "03:52:52",
+                                          "address": "33.33.33.33",
+                                          "info_source_type": "static"
+                                     }
+                                },
+                                "rp_mappings": {
+                                     "224.0.0.0/4 33.33.33.33 static": {
+                                          "group": "224.0.0.0/4",
+                                          "protocol": "static",
+                                          "rp_address": "33.33.33.33",
+                                          "up_time": "03:52:52",
+                                          "expiration": "never"
+                                     },
+                                     "226.0.0.0/8 200.12.0.2 autorp": {
+                                          "group": "226.0.0.0/8",
+                                          "protocol": "autorp",
+                                          "rp_address": "200.12.0.2",
+                                          "up_time": "04:30:45",
+                                          "expiration": "never"
+                                     }
+                                }
+                           }
+                      }
+                 }
+            }
+       }
+
     }
     golden_output_rp_1 = {'execute.return_value': '''
-R1# show ip pim rp vrf all
-PIM RP Status Information for VRF "VRF1"
-BSR: Not Operational
-Auto-RP RPA: 11.11.11.11*, next Discovery message in: 00:00:15
-BSR RP Candidate policy: None
-BSR RP policy: None
-Auto-RP Announce policy: None
-Auto-RP Discovery policy: None
+        R1# show ip pim rp vrf all
+        PIM RP Status Information for VRF "VRF1"
+        BSR: Not Operational
+        Auto-RP RPA: 11.11.11.11*, next Discovery message in: 00:00:15
+        BSR RP Candidate policy: None
+        BSR RP policy: None
+        Auto-RP Announce policy: None
+        Auto-RP Discovery policy: None
 
-RP: 33.33.33.33, (0), uptime: 03:52:52, expires: never,
-  priority: 0, RP-source: (local), group ranges:
-      224.0.0.0/4
+        RP: 33.33.33.33, (0), 
+          uptime: 03:52:52  priority: 0,
+          RP-source: (local),
+          group ranges:
+              224.0.0.0/4, expires: never
+        RP: 200.12.0.2, (0), 
+          uptime: 04:30:45   priority: 255, 
+          RP-source: 200.12.0.2 (A),
+          group ranges:
+            226.0.0.0/8   (bidir)  ,  expires: 00:02:24 (A)
 
-PIM RP Status Information for VRF "VRF2"
-BSR disabled
-Auto-RP disabled
-BSR RP Candidate policy: None
-BSR RP policy: None
-Auto-RP Announce policy: None
-Auto-RP Discovery policy: None
+        PIM RP Status Information for VRF "VRF2"
+        BSR disabled
+        Auto-RP disabled
+        BSR RP Candidate policy: None
+        BSR RP policy: None
+        Auto-RP Announce policy: None
+        Auto-RP Discovery policy: None
 
-PIM RP Status Information for VRF "default"
-BSR: 10.1.5.1*, next Bootstrap message in: 00:00:01,
-     priority: 111, hash-length: 30
-Auto-RP RPA: 10.1.5.1*, next Discovery message in: 00:00:42
-BSR RP Candidate policy: None
-BSR RP policy: None
-Auto-RP Announce policy: None
-Auto-RP Discovery policy: None
+        PIM RP Status Information for VRF "default"
+        BSR: 10.1.5.1*, next Bootstrap message in: 00:00:01,
+             priority: 111, hash-length: 30
+        Auto-RP RPA: 10.1.5.1*, next Discovery message in: 00:00:42
+        BSR RP Candidate policy: None
+        BSR RP policy: None
+        Auto-RP Announce policy: None
+        Auto-RP Discovery policy: None
 
-Anycast-RP 10.111.111.111 members:
-  10.1.2.1*  10.1.5.1*
+        Anycast-RP 10.111.111.111 members:
+          10.1.2.1*  10.1.5.1*
 
-RP: 2.2.2.2, (0), uptime: 03:52:52, expires: never,
-  priority: 0, RP-source: (local), group ranges:
-      224.0.0.0/4
-RP: 10.1.5.1*, (0), uptime: 01:56:07, expires: 00:02:05,
-  priority: 92, RP-source: 10.1.5.1 (B), group ranges:
-      224.0.0.0/5
-RP: 12.12.12.12, (1), uptime: 00:00:54, expires: never,
-  priority: 0, RP-source: (local), group ranges:
-      233.0.0.0/24  (bidir)
-RP: 10.111.111.111, (0), uptime: 00:01:06, expires: never,
-  priority: 0, RP-source: (local), group ranges:
-      224.0.0.0/4
+        RP: 2.2.2.2, (0), uptime: 03:52:52, expires: never,
+          priority: 0, RP-source: (local), group ranges:
+              224.0.0.0/4
+        RP: 10.1.5.1*, (0), uptime: 01:56:07, expires: 00:02:05,
+          priority: 92, RP-source: 10.1.5.1 (B), group ranges:
+              224.0.0.0/5
+        RP: 12.12.12.12, (1), uptime: 00:00:54, expires: never,
+          priority: 0, RP-source: (local), group ranges:
+              233.0.0.0/24  (bidir)
+        RP: 10.111.111.111, (0), uptime: 00:01:06, expires: never,
+          priority: 0, RP-source: (local), group ranges:
+              224.0.0.0/4
     '''}
 
 
     golden_output_rp_2 = {'execute.return_value': '''
-    R2_nx# show ip pim rp vrf all
-PIM RP Status Information for VRF "default"
-BSR: Not Operational
-Auto-RP disabled
-BSR RP Candidate policy: None
-BSR RP policy: None
-Auto-RP Announce policy: None
-Auto-RP Discovery policy: None
+        R2_nx# show ip pim rp vrf all
+        PIM RP Status Information for VRF "default"
+        BSR: Not Operational
+        Auto-RP disabled
+        BSR RP Candidate policy: None
+        BSR RP policy: None
+        Auto-RP Announce policy: None
+        Auto-RP Discovery policy: None
 
         '''}
 
 
     golden_output_rp_3 = {'execute.return_value': '''
-R1_nx# show ip pim rp vrf all
-PIM RP Status Information for VRF "VRF1"
-BSR: 10.1.5.5, uptime: 18:04:20, expires: 00:01:50,
-     priority: 0, hash-length: 0
-Auto-RP disabled
-BSR RP Candidate policy: None
-BSR RP policy: None
-Auto-RP Announce policy: None
-Auto-RP Discovery policy: None
+        R1_nx# show ip pim rp vrf all
+        PIM RP Status Information for VRF "VRF1"
+        BSR: 10.1.5.5, uptime: 18:04:20, expires: 00:01:50,
+             priority: 0, hash-length: 0
+        Auto-RP disabled
+        BSR RP Candidate policy: None
+        BSR RP policy: None
+        Auto-RP Announce policy: None
+        Auto-RP Discovery policy: None
 
-RP: 10.1.5.1*, (0), uptime: 18:04:19, expires: 00:02:10,
-  priority: 5, RP-source: 10.1.5.5 (B), group ranges:
-      239.0.0.0/24
-RP: 10.1.5.5, (0), uptime: 18:07:42, expires: never,
-  priority: 0, RP-source: (local), group ranges:
-      224.0.0.0/4
+        RP: 10.1.5.1*, (0), uptime: 18:04:19, expires: 00:02:10,
+          priority: 5, RP-source: 10.1.5.5 (B), group ranges:
+              239.0.0.0/24
+        RP: 10.1.5.5, (0), uptime: 18:07:42, expires: never,
+          priority: 0, RP-source: (local), group ranges:
+              224.0.0.0/4
 
-PIM RP Status Information for VRF "VRF2"
-BSR disabled
-Auto-RP disabled
-BSR RP Candidate policy: None
-BSR RP policy: None
-Auto-RP Announce policy: None
-Auto-RP Discovery policy: None
+        PIM RP Status Information for VRF "VRF2"
+        BSR disabled
+        Auto-RP disabled
+        BSR RP Candidate policy: None
+        BSR RP policy: None
+        Auto-RP Announce policy: None
+        Auto-RP Discovery policy: None
 
 
-PIM RP Status Information for VRF "default"
-BSR: 1.1.1.1*, next Bootstrap message in: 00:00:42,
-     priority: 64, hash-length: 30
-Auto-RP disabled
-BSR RP Candidate policy: None
-BSR RP policy: None
-Auto-RP Announce policy: None
-Auto-RP Discovery policy: None
+        PIM RP Status Information for VRF "default"
+        BSR: 1.1.1.1*, next Bootstrap message in: 00:00:42,
+             priority: 64, hash-length: 30
+        Auto-RP disabled
+        BSR RP Candidate policy: None
+        BSR RP policy: None
+        Auto-RP Announce policy: None
+        Auto-RP Discovery policy: None
 
-RP: 2.2.2.2, (0), uptime: 18:05:36, expires: 00:02:18,
-  priority: 10, RP-source: 2.2.2.2 (B), group ranges:
-      239.0.0.0/24
-RP: 3.3.3.3, (0), uptime: 18:07:42, expires: 00:01:50 (B),
-  priority: 5, RP-source: 3.3.3.3 (B), (local), group ranges:
-      239.0.0.0/24   224.0.0.0/4
+        RP: 2.2.2.2, (0), uptime: 18:05:36, expires: 00:02:18,
+          priority: 10, RP-source: 2.2.2.2 (B), group ranges:
+              239.0.0.0/24
+        RP: 3.3.3.3, (0), uptime: 18:07:42, expires: 00:01:50 (B),
+          priority: 5, RP-source: 3.3.3.3 (B), (local), group ranges:
+              239.0.0.0/24   224.0.0.0/4
     '''
 
 }
 
     golden_parsed_output_rp_3 = {
-        'vrf': {
-            'default':
-                {
-                    'address_family':
-                        {'ipv4':
-                            {
-                            'rp': {
-                                'bsr': {
-                                    '1.1.1.1':{
-                                        'address': '1.1.1.1',
-                                        'hash_mask_length': 30,
-                                        'priority': 64,
-                                    },
-                                    'bsr_next_bootstrap': '00:00:42',
+        "vrf": {
+            "default": {
+                 "address_family": {
+                      "ipv4": {
+                           "rp": {
+                                "bsr": {
+                                     "bsr": {
+                                          "hash_mask_length": 30,
+                                          "priority": 64,
+                                          "address": "1.1.1.1"
+                                     },
+                                     "bsr_next_bootstrap": "00:00:42",
+                                     'rp_candidate_next_advertisement': '00:02:18',
+                                     "bsr_address": {
+                                          "2.2.2.2": {
+                                               "priority": 10,
+                                               "address": "2.2.2.2",
+                                               "mode": "SM",
+                                               "policy": "239.0.0.0/24"
+                                          }
+                                     },
+                                     "rp": {
+                                          "group_policy": "239.0.0.0/24",
+                                          "up_time": "18:05:36",
+                                          "rp_address": "2.2.2.2"
+                                     },
+                                     "bsr_candidate": {
+                                          "hash_mask_length": 30,
+                                          "priority": 64,
+                                          "address": "1.1.1.1"
+                                     }
                                 },
-                                'rp_list': {
-                                    '2.2.2.2 bootstrap': {
-                                        'address': '2.2.2.2',
-                                        'info_source_address': '2.2.2.2',
-                                        'info_source_type': 'bootstrap',
-                                        'up_time': '18:05:36',
-                                        'expiration': '00:02:18',
-                                        'priority': 10,
-                                        'df_ordinal': 0,
-                                        'group_ranges': ['239.0.0.0/24'],
-                                    },
-                                    '3.3.3.3 bootstrap': {
-                                        'address': '3.3.3.3',
-                                        'info_source_address': '3.3.3.3',
-                                        'info_source_type': 'bootstrap',
-                                        'up_time': '18:07:42',
-                                        'expiration': '00:01:50',
-                                        'priority': 5,
-                                        'df_ordinal': 0,
-                                        'group_ranges': ['239.0.0.0/24','224.0.0.0/4'],
-                                    },
-                                    '3.3.3.3 static': {
-                                        'address': '3.3.3.3',
-                                        'info_source_address': '3.3.3.3',
-                                        'info_source_type': 'static',
-                                        'up_time': '18:07:42',
-                                        'expiration': '00:01:50',
-                                        'priority': 5,
-                                        'df_ordinal': 0,
-                                        'group_ranges': ['239.0.0.0/24','224.0.0.0/4'],
-                                    },
-
+                                "rp_mappings": {
+                                     "239.0.0.0/24 2.2.2.2 bootstrap": {
+                                          "protocol": "bootstrap",
+                                          "expiration": "00:02:18",
+                                          "group": "239.0.0.0/24",
+                                          "up_time": "18:05:36",
+                                          "rp_address": "2.2.2.2"
+                                     }
                                 },
-                            },
-
-                        },
-                    },
-                },
-            'VRF1':
-                {
-                'address_family':
-                    {'ipv4':
-                        {'rp': {
-                            'bsr':{
-                                'bsr_candidate':{
-                                    'uptime': '18:04:20',
-                                    'expires':'00:01:50',
-                                    'address': '10.1.5.5',
-                                    'hash_mask_length': 0,
-                                    'priority': 0,
-                                    },
-                                },
-                            'rp_list': {
-                                '10.1.5.1 bootstrap': {
-                                    'address': '10.1.5.1',
-                                    'info_source_address': '10.1.5.5',
-                                    'info_source_type': 'bootstrap',
-                                    'up_time': '18:04:19',
-                                    'expiration': '00:02:10',
-                                    'priority': 5,
-                                    'df_ordinal': 0,
-                                    'group_ranges': ['239.0.0.0/24'],
-                                },
-                                '10.1.5.5 static': {
-                                    'address': '10.1.5.5',
-                                    'info_source_type': 'static',
-                                    'up_time': '18:07:42',
-                                    'expiration': 'never',
-                                    'priority': 0,
-                                    'df_ordinal': 0,
-                                    'group_ranges': ['224.0.0.0/4'],
-                                },
-                            },
-                        },
-                    },
-                },
+                                "rp_list": {
+                                     "2.2.2.2 SM bootstrap": {
+                                          "info_source_address": "2.2.2.2",
+                                          "priority": 10,
+                                          "address": "2.2.2.2",
+                                          "mode": "SM",
+                                          "group_ranges": "239.0.0.0/24",
+                                          "df_ordinal": 0,
+                                          "expiration": "00:02:18",
+                                          "up_time": "18:05:36",
+                                          "info_source_type": "bootstrap"
+                                     }
+                                }
+                           }
+                      }
+                 }
             },
-        },
+            "VRF1": {
+                 "address_family": {
+                      "ipv4": {
+                           "rp": {
+                                "bsr": {
+                                     "bsr": {
+                                          "hash_mask_length": 0,
+                                          "priority": 0,
+                                          "address": "10.1.5.5",
+                                          "up_time": "18:04:20",
+                                          "expires": "00:01:50"
+                                     },
+                                     "bsr_address": {
+                                          "10.1.5.5": {
+                                               "priority": 5,
+                                               "address": "10.1.5.5",
+                                               "mode": "SM",
+                                               "policy": "239.0.0.0/24"
+                                          }
+                                     },
+                                     "rp": {
+                                          "group_policy": "239.0.0.0/24",
+                                          "up_time": "18:04:19",
+                                          "rp_address": "10.1.5.5"
+                                     },
+                                     "bsr_candidate": {
+                                          "hash_mask_length": 0,
+                                          "priority": 0,
+                                          "address": "10.1.5.5"
+                                     },
+                                     'rp_candidate_next_advertisement': '00:02:10'
+                                },
+                                "rp_mappings": {
+                                     "239.0.0.0/24 10.1.5.1 bootstrap": {
+                                          "protocol": "bootstrap",
+                                          "expiration": "00:02:10",
+                                          "group": "239.0.0.0/24",
+                                          "up_time": "18:04:19",
+                                          "rp_address": "10.1.5.1"
+                                     },
+                                     "224.0.0.0/4 10.1.5.5 static": {
+                                          "protocol": "static",
+                                          "expiration": "never",
+                                          "group": "224.0.0.0/4",
+                                          "up_time": "18:07:42",
+                                          "rp_address": "10.1.5.5"
+                                     }
+                                },
+                                "rp_list": {
+                                     "10.1.5.5 SM static": {
+                                          "address": "10.1.5.5",
+                                          "mode": "SM",
+                                          "group_ranges": "224.0.0.0/4",
+                                          "df_ordinal": 0,
+                                          "expiration": "never",
+                                          "up_time": "18:07:42",
+                                          "info_source_type": "static"
+                                     },
+                                     "10.1.5.1 SM bootstrap": {
+                                          "info_source_address": "10.1.5.5",
+                                          "priority": 5,
+                                          "address": "10.1.5.1",
+                                          "mode": "SM",
+                                          "group_ranges": "239.0.0.0/24",
+                                          "df_ordinal": 0,
+                                          "expiration": "00:02:10",
+                                          "up_time": "18:04:19",
+                                          "info_source_type": "bootstrap"
+                                     }
+                                },
+                                "static_rp": {
+                                     "10.1.5.5": {
+                                          "sm": {
+                                               "policy_name": "224.0.0.0/4"
+                                          }
+                                     }
+                                }
+                           }
+                      }
+                 }
+            }
+       }
     }
 
 
@@ -2335,7 +2642,7 @@ RP: 3.3.3.3, (0), uptime: 18:07:42, expires: 00:01:50 (B),
         self.maxDiff = None
         self.device = Mock(**self.golden_output_rp_1)
         obj = ShowIpPimRp(device=self.device)
-        parsed_output = obj.parse()
+        parsed_output = obj.parse(vrf='all')
         self.assertEqual(parsed_output, self.golden_parsed_output_rp_1)
 
 
@@ -2350,8 +2657,9 @@ RP: 3.3.3.3, (0), uptime: 18:07:42, expires: 00:01:50 (B),
         self.maxDiff = None
         self.device = Mock(**self.golden_output_rp_3)
         obj = ShowIpPimRp(device=self.device)
-        parsed_output = obj.parse()
+        parsed_output = obj.parse(vrf='all')
         self.assertEqual(parsed_output, self.golden_parsed_output_rp_3)
+
 
 # ============================================
 # Parser for 'show ip pim interface'
