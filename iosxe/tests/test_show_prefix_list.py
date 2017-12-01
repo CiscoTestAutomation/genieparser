@@ -10,8 +10,8 @@ from metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
 # Parser
-from parser.iosxe.show_prefix_list import ShowIpPrefixListDefail, \
-                                          ShowIpv6PrefixListDefail
+from parser.iosxe.show_prefix_list import ShowIpPrefixListDetail, \
+                                          ShowIpv6PrefixListDetail
 
 
 # ==============================================
@@ -90,13 +90,13 @@ class test_show_ip_prefix_list_detail(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowIpPrefixListDefail(device=self.device)
+        obj = ShowIpPrefixListDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        obj = ShowIpPrefixListDefail(device=self.device)
+        obj = ShowIpPrefixListDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
@@ -158,13 +158,13 @@ class test_show_ipv6_prefix_list_detail(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowIpv6PrefixListDefail(device=self.device)
+        obj = ShowIpv6PrefixListDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        obj = ShowIpv6PrefixListDefail(device=self.device)
+        obj = ShowIpv6PrefixListDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
