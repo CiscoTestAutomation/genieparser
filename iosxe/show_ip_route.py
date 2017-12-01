@@ -51,7 +51,7 @@ class ShowIpRouteSchema(MetaParser):
 
 class ShowIpRoute(ShowIpRouteSchema):
 
-    def cli(self, protocol, ip, vrf=''):
+    def cli(self, protocol, vrf='', ip='ip'):
 
         # Calling the corresponding show command
         if ip:
@@ -217,5 +217,5 @@ class ShowIpRoute(ShowIpRouteSchema):
 
 
 class ShowIpv6Route(ShowIpRoute):
-    def cli(self, protocol, ip, vrf = ''):
-        return(super().cli(protocol=protocol, ip=ip, vrf=vrf))
+    def cli(self, protocol, ip='ipv6', vrf = ''):
+        return(super().cli(protocol=protocol, ip='ipv6', vrf=vrf))

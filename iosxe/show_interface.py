@@ -835,11 +835,12 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         typically contains 3 steps: exe
         cuting, transforming, returning
         '''
-
         parsed_dict = {}
+        output = self.device.execute(self.cmd)
 
-        res = parsergen.oper_fill_tabular(device=self.device,
-                                          show_command=self.cmd,
+        res = parsergen.oper_fill_tabular(device_output=output,
+                                          device_os='iosxe',
+                                          table_terminal_pattern=r"^\n",
                                           header_fields=
                                            [ "Interface",
                                              "IP-Address",
@@ -862,7 +863,6 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
                 del res.entries[intf]['Interface']
 
             parsed_dict['interface'] = res.entries
-
         return (parsed_dict)
 
     def yang(self):
