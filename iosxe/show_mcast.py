@@ -45,6 +45,8 @@ class ShowIpMrouteSchema(MetaParser):
                                             {Optional('uptime'): str,
                                              Optional('expire'): str,
                                              Optional('flags'): str,
+                                             Optional('rp_bit'): bool,
+                                             Optional('msdp_learned'): bool,                                             
                                              Optional('rp'): str,
                                              Optional('rpf_nbr'): str,
                                              Optional('rpf_info'): str,
@@ -151,7 +153,17 @@ class ShowIpMroute(ShowIpMrouteSchema):
 
                 sub_dict['uptime'] = m.groupdict()['uptime']
                 sub_dict['expire'] = m.groupdict()['expires']
-                sub_dict['flags'] = m.groupdict()['flags']
+                flags = m.groupdict()['flags']
+                sub_dict['flags'] = flags
+                if "M" in flags:
+                    sub_dict['msdp_learned'] = True
+                else:
+                    sub_dict['msdp_learned'] = False
+                if "R" in flags:
+                    sub_dict['rp_bit'] = True
+                else:
+                    sub_dict['rp_bit'] = False
+
                 
                 rendezvous_point = m.groupdict()['rendezvous_point']
                 if rendezvous_point:

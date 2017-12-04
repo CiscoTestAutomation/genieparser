@@ -20,7 +20,7 @@ from metaparser.util.schemaengine import Schema, Any, Optional
 # Parser for 'show ipv6 prefix-list detail'
 # ==============================================
 
-class ShowIpPrefixListDefailSchema(MetaParser):
+class ShowIpPrefixListDetailSchema(MetaParser):
     # Schema for 'show ip prefix-list detail'
     # Schema for 'show ipv6 prefix-list detail'
 
@@ -46,7 +46,7 @@ class ShowIpPrefixListDefailSchema(MetaParser):
                 },
             }
 
-class ShowIpPrefixListDefail(ShowIpPrefixListDefailSchema):
+class ShowIpPrefixListDetail(ShowIpPrefixListDetailSchema):
     # Parser for 'show ip prefix-list detail'
     # Parser for 'show ipv6 prefix-list detail'
 
@@ -157,7 +157,7 @@ class ShowIpPrefixListDefail(ShowIpPrefixListDefailSchema):
 # ===========================================
 # Parser for 'show ipv6 prefix-list detail'
 # ===========================================
-class ShowIpv6PrefixListDefail(ShowIpPrefixListDefail):
+class ShowIpv6PrefixListDetail(ShowIpPrefixListDetail):
     # Parser for 'show ipv6 prefix-list detail'
     def cli(self):
         return super().cli(af='ipv6')

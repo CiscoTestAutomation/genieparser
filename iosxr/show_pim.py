@@ -360,11 +360,12 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
         
         # Init vars
         parsed_dict = {}
+        created = False
 
         for line in out.splitlines():
             line = line.rstrip()
 
-            if line:
+            if not created:
                 if 'vrf' not in parsed_dict:
                     parsed_dict['vrf'] = {}
                 if vrf not in parsed_dict['vrf']:
@@ -374,7 +375,7 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
                 if af not in parsed_dict['vrf'][vrf]['address_family']:
                     parsed_dict['vrf'][vrf]['address_family'][af] = {}
                     sub_dict = parsed_dict['vrf'][vrf]['address_family'][af]
-                    continue
+                created = True
 
             # ISIS Mcast Topology Not configured
             p1 = re.compile(r'^\s*ISIS +Mcast +Topology'

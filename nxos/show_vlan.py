@@ -65,7 +65,7 @@ class ShowVlan(ShowVlanSchema):
             # VLAN Name                             Status    Ports
             # 1    default                          active    Gi1/0/1, Gi1/0/2, Gi1/0/3, Gi1/0/5, Gi1/0/6, Gi1/0/12,
             p1 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<name>[a-zA-Z0-9\-]+)'
-                            ' +(?P<status>[active|suspended|act/unsup|(.*)/lshut]+) *(?P<interfaces>[\w\s\/\,]+)?$')
+                            ' +(?P<status>[active|suspended|act/unsup|sus|(.*)/lshut]+) *(?P<interfaces>[\w\s\/\,]+)?$')
             m = p1.match(line)
             if m:
                 vlan_id = m.groupdict()['vlan_id']

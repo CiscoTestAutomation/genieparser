@@ -37,12 +37,16 @@ class test_show_ip_mroute(unittest.TestCase):
                                                "expire": "stopped",
                                                "rp": "1.1.1.1",
                                                "flags": "SPF",
+                                               'msdp_learned': False,
+                                               'rp_bit': False,
                                                "uptime": "00:00:03",
                                                "rpf_nbr": "0.0.0.0",
                                           },
                                           "1.1.1.1": {
                                                "expire": "00:02:57",
                                                "flags": "PFT",
+                                               'msdp_learned': False,
+                                               'rp_bit': False,
                                                "uptime": "00:00:03",
                                                "rpf_info": "registering",
                                                "rpf_nbr": "0.0.0.0",
@@ -56,6 +60,8 @@ class test_show_ip_mroute(unittest.TestCase):
                                           "10.1.3.1": {
                                                "expire": "00:02:57",
                                                "flags": "PFT",
+                                               'msdp_learned': False,
+                                               'rp_bit': False,
                                                "uptime": "00:00:03",
                                                "rpf_info": "registering",
                                                "rpf_nbr": "0.0.0.0",
@@ -80,6 +86,8 @@ class test_show_ip_mroute(unittest.TestCase):
                                                     }
                                                },
                                                "flags": "SCL",
+                                               'msdp_learned': False,
+                                               'rp_bit': False,
                                                "rp": "2.2.2.2",
                                                "uptime": "2d09h",
                                                "rpf_nbr": "0.0.0.0",
@@ -99,6 +107,8 @@ class test_show_ip_mroute(unittest.TestCase):
                                                     }
                                                },
                                                "flags": "SJ",
+                                               'msdp_learned': False,
+                                               'rp_bit': False,
                                                "rp": "172.16.0.0",
                                                "uptime": "00:03:57",
                                                "rpf_nbr": "224.0.0.0224.0.0.0"}}}}}}}}}
@@ -156,6 +166,8 @@ class test_show_ip_mroute(unittest.TestCase):
                                                "expire": "00:02:55",
                                                "uptime": "00:00:04",
                                                "flags": "PFT",
+                                               'msdp_learned': False,
+                                               'rp_bit': False,
                                                "rpf_info": "registering",
                                                "rpf_nbr": "0.0.0.0",
                                                "incoming_interface_list": {
@@ -169,6 +181,8 @@ class test_show_ip_mroute(unittest.TestCase):
                                                "expire": "stopped",
                                                "uptime": "00:00:04",
                                                "flags": "SPF",
+                                               'msdp_learned': False,
+                                               'rp_bit': False,
                                                "rp": "11.11.11.11",
                                                "rpf_nbr": "0.0.0.0",
                                           }
@@ -188,6 +202,8 @@ class test_show_ip_mroute(unittest.TestCase):
                                                     }
                                                },
                                                "flags": "SJCL",
+                                               'msdp_learned': False,
+                                               'rp_bit': False,
                                                "rp": "11.11.11.11"}}}}}}}}}
 
     golden_output2 = {'execute.return_value': '''\
@@ -276,6 +292,8 @@ class test_show_ipv6_mroute(unittest.TestCase):
                                                },
                                                "uptime": "00:02:06",
                                                "flags": "SFT",
+                                               'rp_bit': False,
+                                               'msdp_learned': False,
                                                "rpf_nbr": "2001:DB8:999::99",
                                                "expire": "00:01:23"
                                           },
@@ -295,6 +313,8 @@ class test_show_ipv6_mroute(unittest.TestCase):
                                                "uptime": "00:04:45",
                                                "rp": "2001:DB8:6::6",
                                                "flags": "S",
+                                               'msdp_learned': False,
+                                               'rp_bit': False,
                                                "rpf_nbr": "6:6:6::6",
                                                "expire": "00:02:47"
                                           }}}}}}}}}
@@ -342,6 +362,8 @@ class test_show_ipv6_mroute(unittest.TestCase):
                                                },
                                                "uptime": "00:02:06",
                                                "flags": "SFT",
+                                               'msdp_learned': False,
+                                               'rp_bit': False,
                                                "rpf_nbr": "2001:DB8:999::99",
                                                "expire": "00:01:23"
                                           },
@@ -361,6 +383,8 @@ class test_show_ipv6_mroute(unittest.TestCase):
                                                "uptime": "00:04:45",
                                                "rp": "2001:DB8:6::6",
                                                "flags": "S",
+                                               'msdp_learned': False,
+                                               'rp_bit': False,
                                                "rpf_nbr": "6:6:6::6",
                                                "expire": "00:02:47"
                                           }}}}}}}}}
