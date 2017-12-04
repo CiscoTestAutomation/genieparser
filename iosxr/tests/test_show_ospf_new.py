@@ -505,9 +505,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
             Last retransmission scan time is 0 msec, maximum is 0 msec
             LS Ack list: NSR-sync pending 0, high water mark 0
 
-
         Total neighbor count: 2
-
 
         * Indicates MADJ interface
         # Indicates Neighbor awaiting BFD session up
@@ -528,7 +526,6 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
             Last retransmission scan length is 3, maximum is 3
             Last retransmission scan time is 0 msec, maximum is 0 msec
             LS Ack list: NSR-sync pending 0, high water mark 0
-
 
         Total neighbor count: 1
         '''}
