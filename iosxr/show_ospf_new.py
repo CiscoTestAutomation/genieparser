@@ -73,8 +73,9 @@ class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
                                                 Optional('max_flood_scan_length'): int,
                                                 Optional('last_flood_scan_time_msec'): int,
                                                 Optional('max_flood_scan_time_msec'): int,
-                                                Optional('ls_ack_list_current_length'): int,
-                                                Optional('ls_ack_list_high_water_mark'): int,
+                                                Optional('ls_ack_list'): str,
+                                                Optional('ls_ack_list_length'): int,
+                                                Optional('high_water_mark'): int,
                                                 Optional('nbr_count'): int,
                                                 Optional('adj_nbr_count'): int,
                                                 Optional('adj_nbr'): str,
@@ -139,6 +140,7 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                         ['instance']:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
                         [instance] = {}
+                    continue
 
             # GigabitEthernet0/0/0/2 is up, line protocol is up
             p2 = re.compile(r'^(?P<interface>(\S+)) +is'
@@ -307,14 +309,15 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # LS Ack List: current length 0, high water mark 7
-            p13 = re.compile(r'^LS +Ack +List: +current +length +(?P<num>(\d+))'
-                              ', +high +water +mark +(?P<num2>(\d+))$')
+            p13 = re.compile(r'^LS +Ack +List: +(?P<ls_ack_list>(\S+)) +length'
+                              ' +(?P<num>(\d+)), +high +water +mark'
+                              ' +(?P<num2>(\d+))$')
             m = p13.match(line)
             if m:
-                sub_dict['ls_ack_list_current_length'] = \
-                    int(m.groupdict()['num'])
-                sub_dict['ls_ack_list_high_water_mark'] = \
-                    int(m.groupdict()['num2'])
+                sub_dict['ls_ack_list'] = str(m.groupdict()['ls_ack_list'])
+                sub_dict['ls_ack_list_length'] = int(m.groupdict()['num'])
+                sub_dict['high_water_mark'] = int(m.groupdict()['num2'])
+                continue
 
             # Neighbor Count is 1, Adjacent neighbor count is 1
             p14 = re.compile(r'^Neighbor +Count +is +(?P<nbr_count>(\d+)),'
@@ -384,5 +387,286 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 if m.groupdict()['mode']:
                     sub_dict['bfd']['mode'] = str(m.groupdict()['mode'])
                     continue
+
+        return ret_dict
+
+
+# ========================================================
+# Schema for 'show ospf vrf all-inclusive neighbor detail'
+# ========================================================
+class ShowOspfVrfAllInclusiveNeighborDetailSchema(MetaParser):
+
+    ''' Schema for "show ospf vrf all-inclusive neighbor detail" '''
+
+    schema = {
+        'vrf': 
+            {Any(): 
+                {'address_family': 
+                    {Any(): 
+                        {'instance': 
+                            {Any(): 
+                                {'total_neighbor_count': int,
+                                'areas': 
+                                    {Any(): 
+                                        {'interfaces': 
+                                            {Any(): 
+                                                {'neighbors': 
+                                                    {Any(): 
+                                                        {'neighbor_router_id': str,
+                                                        'address': str,
+                                                        'priority': int,
+                                                        'state': str,
+                                                        'num_state_changes': int,
+                                                        'dr_ip_addr': str,
+                                                        'bdr_ip_addr': str,
+                                                        Optional('options'): str,
+                                                        Optional('lls_options'): str,
+                                                        Optional('dead_timer'): str,
+                                                        Optional('neighbor_uptime'): str,
+                                                        Optional('dbd_retrans'): int,
+                                                        Optional('index'): str,
+                                                        Optional('retransmission_queue_length'): int,
+                                                        Optional('num_retransmission'): int,
+                                                        Optional('first'): str,
+                                                        Optional('next'): str,
+                                                        Optional('last_retrans_scan_length'): int,
+                                                        Optional('last_retrans_max_scan_length'): int,
+                                                        Optional('last_retrans_scan_time_msec'): int,
+                                                        Optional('last_retrans_max_scan_time_msec'): int,
+                                                        Optional('ls_ack_list'): str,
+                                                        Optional('ls_ack_list_pending'): int,
+                                                        Optional('high_water_mark'): int,
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# ========================================================
+# Parser for 'show ospf vrf all-inclusive neighbor detail'
+# ========================================================
+class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetailSchema):
+
+    ''' Parser for "show ospf vrf all-inclusive neighbor detail" '''
+
+    def cli(self):
+
+        # Execute command on device
+        out = self.device.execute('show ospf vrf all-inclusive neighbor detail')
+
+        # Init vars
+        ret_dict = {}
+        af = 'ipv4' # this is ospf - always ipv4
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Neighbors for OSPF 1
+            # Neighbors for OSPF 1, VRF VRF1
+            p1 = re.compile(r'^Neighbors +for +OSPF +(?P<instance>(\S+))'
+                             '(?:, +VRF +(?P<vrf>(\S+)))?$')
+            m = p1.match(line)
+            if m:
+                instance = str(m.groupdict()['instance'])
+                if m.groupdict()['vrf']:
+                    vrf = str(m.groupdict()['vrf'])
+                else:
+                    vrf = 'default'
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+                if 'address_family' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['address_family'] = {}
+                if af not in ret_dict['vrf'][vrf]['address_family']:
+                    ret_dict['vrf'][vrf]['address_family'][af] = {}
+                if 'instance' not in ret_dict['vrf'][vrf]['address_family'][af]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance'] = {}
+                if instance not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance] = {}
+                    continue
+
+            # Neighbor 2.2.2.2, interface address 10.2.3.2
+            p2 = re.compile(r'^Neighbor +(?P<neighbor>(\S+)), +interface'
+                             ' +address +(?P<address>(\S+))$')
+            m = p2.match(line)
+            if m:
+                neighbor = str(m.groupdict()['neighbor'])
+                address = str(m.groupdict()['address'])
+                continue
+
+            # In the area 0 via interface GigabitEthernet0/0/0/2 
+            p3 = re.compile(r'^In +the +area +(?P<area>(\S+)) +via +interface'
+                             ' +(?P<intf>(\S+))$')
+            m = p3.match(line)
+            if m:
+                area = str(m.groupdict()['area'])
+                interface = str(m.groupdict()['intf'])
+                if 'areas' not in ret_dict['vrf'][vrf]['address_family']\
+                        [af]['instance'][instance]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'] = {}
+                if area not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area] = {}
+                if 'interfaces' not in ret_dict['vrf'][vrf]['address_family']\
+                        [af]['instance'][instance]['areas'][area]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area]['interfaces'] = {}
+                if interface not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area]['interfaces']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area]['interfaces'][interface] = {}
+                if 'neighbors' not in ret_dict['vrf'][vrf]['address_family']\
+                        [af]['instance'][instance]['areas'][area]['interfaces']\
+                        [interface]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area]['interfaces'][interface]\
+                        ['neighbors'] = {}
+                if neighbor not in ret_dict['vrf'][vrf]['address_family']\
+                        [af]['instance'][instance]['areas'][area]['interfaces']\
+                        [interface]['neighbors']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area]['interfaces'][interface]\
+                        ['neighbors'][neighbor] = {}
+                # Set sub_dict
+                sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
+                            ['instance'][instance]['areas'][area]['interfaces']\
+                            [interface]['neighbors'][neighbor]
+                sub_dict['neighbor_router_id'] = neighbor
+                sub_dict['address'] = address
+                continue
+
+            # Neighbor priority is 1, State is FULL, 6 state changes
+            p4 = re.compile(r'^Neighbor +priority +is +(?P<priority>(\d+)),'
+                             ' +State +is +(?P<state>(\S+)),'
+                             ' +(?P<num>(\d+)) +state +changes$')
+            m = p4.match(line)
+            if m:
+                sub_dict['priority'] = int(m.groupdict()['priority'])
+                sub_dict['state'] = str(m.groupdict()['state'])
+                sub_dict['num_state_changes'] = int(m.groupdict()['num'])
+                continue
+
+            # DR is 10.2.3.3 BDR is 10.2.3.2
+            p5 = re.compile(r'^DR +is +(?P<dr_ip_addr>(\S+))'
+                             ' +BDR +is +(?P<bdr_ip_addr>(\S+))$')
+            m = p5.match(line)
+            if m:
+                sub_dict['dr_ip_addr'] = str(m.groupdict()['dr_ip_addr'])
+                sub_dict['bdr_ip_addr'] = str(m.groupdict()['bdr_ip_addr'])
+                continue
+
+            # Options is 0x42
+            p6_1 = re.compile(r'^Options +is +(?P<options>(\S+))$')
+            m = p6_1.match(line)
+            if m:
+                sub_dict['options'] = str(m.groupdict()['options'])
+                continue
+
+            # LLS Options is 0x1 (LR)
+            p6_2 = re.compile(r'^LLS +Options +is +(?P<lls_options>(.*))$')
+            m = p6_2.match(line)
+            if m:
+                sub_dict['lls_options'] = str(m.groupdict()['lls_options'])
+                continue
+
+            # Dead timer due in 00:00:38
+            p7 = re.compile(r'^Dead +timer +due +in +(?P<dead_timer>(\S+))$')
+            m = p7.match(line)
+            if m:
+                sub_dict['dead_timer'] = str(m.groupdict()['dead_timer'])
+                continue
+
+            # Neighbor is up for 08:22:07
+            p8 = re.compile(r'^Neighbor +is +up +for +(?P<uptime>(\S+))$')
+            m = p8.match(line)
+            if m:
+                sub_dict['neighbor_uptime'] = str(m.groupdict()['uptime'])
+                continue
+
+            # Number of DBD retrans during last exchange 0
+            p9 = re.compile(r'^Number +of +DBD +retrans +during +last'
+                             ' +exchange +(?P<dbd_retrans>(\d+))$')
+            m = p9.match(line)
+            if m:
+                sub_dict['dbd_retrans'] = int(m.groupdict()['dbd_retrans'])
+                continue
+
+            # Index 1/1, retransmission queue length 0, number of retransmission 0
+            p10 = re.compile(r'^Index +(?P<index>(\S+)) +retransmission +queue'
+                             ' +length +(?P<ql>(\d+)), +number +of'
+                             ' +retransmission +(?P<num_retrans>(\d+))$')
+            m = p10.match(line)
+            if m:
+                sub_dict['index'] = str(m.groupdict()['index'])
+                sub_dict['retransmission_queue_length'] = \
+                    int(m.groupdict()['ql'])
+                sub_dict['num_retransmission'] = \
+                    int(m.groupdict()['num_retrans'])
+                continue
+
+            # First 0(0)/0(0) Next 0(0)/0(0)
+            p11 = re.compile(r'^First +(?P<first>(\S+)) +Next +(?P<next>(\S+))$')
+            m = p11.match(line)
+            if m:
+                sub_dict['first'] = str(m.groupdict()['first'])
+                sub_dict['next'] = str(m.groupdict()['next'])
+                continue
+
+            # Last retransmission scan length is 0, maximum is 0
+            p12 = re.compile(r'^Last +retransmission +scan +length +is'
+                              ' +(?P<num1>(\d+)), +maximum +is'
+                              ' +(?P<num2>(\d+))$')
+            m = p12.match(line)
+            if m:
+                sub_dict['last_retrans_scan_length'] = \
+                    int(m.groupdict()['num1'])
+                sub_dict['last_retrans_max_scan_length'] = \
+                    int(m.groupdict()['num2'])
+                continue
+
+            # Last retransmission scan time is 0 msec, maximum is 0 msec
+            p13 = re.compile(r'^Last +retransmission +scan +time +is'
+                              ' +(?P<num1>(\d+)) +msec, +maximum +is'
+                              ' +(?P<num2>(\d+)) +msec$')
+            m = p13.match(line)
+            if m:
+                sub_dict['last_retrans_scan_time_msec'] = \
+                    int(m.groupdict()['num1'])
+                sub_dict['last_retrans_max_scan_time_msec'] = \
+                    int(m.groupdict()['num2'])
+                continue
+
+            # LS Ack list: NSR-sync pending 0, high water mark 0
+            p14 = re.compile(r'^LS +Ack +list: +(?P<ls_ack_list>(\S+))'
+                              ' +pending +(?P<pending>(\d+)), +high +water'
+                              ' +mark +(?P<mark>(\d+))$')
+            m = p14.match(line)
+            if m:
+                sub_dict['ls_ack_list'] = str(m.groupdict()['ls_ack_list'])
+                sub_dict['ls_ack_list_pending'] = int(m.groupdict()['pending'])
+                sub_dict['high_water_mark'] = int(m.groupdict()['mark'])
+                continue
+
+            # Total neighbor count: 2
+            p15 = re.compile(r'^Total +neighbor +count: +(?P<num>(\d+))$')
+            m = p15.match(line)
+            if m:
+                ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                    [instance]['total_neighbor_count'] = \
+                        int(m.groupdict()['num'])
 
         return ret_dict

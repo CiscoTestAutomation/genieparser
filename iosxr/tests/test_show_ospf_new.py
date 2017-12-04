@@ -11,7 +11,8 @@ from ats.topology import loader
 from metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # nxos show_ospf
-from parser.iosxr.show_ospf_new import ShowOspfVrfAllInclusiveInterface
+from parser.iosxr.show_ospf_new import ShowOspfVrfAllInclusiveInterface,\
+                                       ShowOspfVrfAllInclusiveNeighborDetail
 
 
 # ======================================================
@@ -57,8 +58,9 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'last_flood_scan_length': 1,
                                                 'last_flood_scan_time_msec': 0,
                                                 'line_protocol': True,
-                                                'ls_ack_list_current_length': 0,
-                                                'ls_ack_list_high_water_mark': 11,
+                                                'ls_ack_list': 'current',
+                                                'ls_ack_list_length': 0,
+                                                'high_water_mark': 11,
                                                 'max_flood_scan_length': 5,
                                                 'max_flood_scan_time_msec': 0,
                                                 'max_pkt_sz': 1500,
@@ -93,8 +95,9 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'last_flood_scan_length': 1,
                                                 'last_flood_scan_time_msec': 0,
                                                 'line_protocol': True,
-                                                'ls_ack_list_current_length': 0,
-                                                'ls_ack_list_high_water_mark': 9,
+                                                'ls_ack_list': 'current',
+                                                'ls_ack_list_length': 0,
+                                                'high_water_mark': 9,
                                                 'max_flood_scan_length': 7,
                                                 'max_flood_scan_time_msec': 0,
                                                 'multi_area_intf_count': 0,
@@ -135,8 +138,9 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'last_flood_scan_length': 1,
                                                 'last_flood_scan_time_msec': 0,
                                                 'line_protocol': True,
-                                                'ls_ack_list_current_length': 0,
-                                                'ls_ack_list_high_water_mark': 5,
+                                                'ls_ack_list': 'current',
+                                                'ls_ack_list_length': 0,
+                                                'high_water_mark': 5,
                                                 'max_flood_scan_length': 3,
                                                 'max_flood_scan_time_msec': 0,
                                                 'max_pkt_sz': 1500,
@@ -174,8 +178,9 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'last_flood_scan_length': 1,
                                                 'last_flood_scan_time_msec': 0,
                                                 'line_protocol': True,
-                                                'ls_ack_list_current_length': 0,
-                                                'ls_ack_list_high_water_mark': 7,
+                                                'ls_ack_list': 'current',
+                                                'ls_ack_list_length': 0,
+                                                'high_water_mark': 7,
                                                 'max_flood_scan_length': 3,
                                                 'max_flood_scan_time_msec': 0,
                                                 'max_pkt_sz': 1500,
@@ -220,8 +225,9 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'last_flood_scan_length': 0,
                                                 'last_flood_scan_time_msec': 0,
                                                 'line_protocol': True,
-                                                'ls_ack_list_current_length': 0,
-                                                'ls_ack_list_high_water_mark': 0,
+                                                'ls_ack_list': 'current',
+                                                'ls_ack_list_length': 0,
+                                                'high_water_mark': 0,
                                                 'max_flood_scan_length': 0,
                                                 'max_flood_scan_time_msec': 0,
                                                 'multi_area_intf_count': 0,
@@ -346,6 +352,198 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowOspfVrfAllInclusiveInterface(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
+# ============================================================
+#  Unit test for 'show ospf vrf all-inclusive neighbor detail'
+# ============================================================
+class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
+
+    '''Unit test for "show ospf vrf all-inclusive neighbor detail" '''
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'vrf': 
+            {'VRF1': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'1': 
+                                        {'interfaces': 
+                                            {'GigabitEthernet0/0/0/1': 
+                                                {'neighbors': 
+                                                    {'77.77.77.77': 
+                                                        {'address': '20.3.7.7',
+                                                        'bdr_ip_addr': '20.3.7.3',
+                                                        'dbd_retrans': 0,
+                                                        'dead_timer': '00:00:32',
+                                                        'dr_ip_addr': '20.3.7.7',
+                                                        'first': '0(0)/0(0)',
+                                                        'high_water_mark': 0,
+                                                        'index': '1/1,',
+                                                        'last_retrans_max_scan_length': 3,
+                                                        'last_retrans_max_scan_time_msec': 0,
+                                                        'last_retrans_scan_length': 3,
+                                                        'last_retrans_scan_time_msec': 0,
+                                                        'lls_options': '0x1 (LR)',
+                                                        'ls_ack_list': 'NSR-sync',
+                                                        'ls_ack_list_pending': 0,
+                                                        'neighbor_router_id': '77.77.77.77',
+                                                        'neighbor_uptime': '23:24:56',
+                                                        'next': '0(0)/0(0)',
+                                                        'num_retransmission': 15,
+                                                        'num_state_changes': 6,
+                                                        'options': '0x52',
+                                                        'priority': 1,
+                                                        'retransmission_queue_length': 0,
+                                                        'state': 'FULL'}}}}}},
+                                'total_neighbor_count': 1}}}}},
+            'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0': 
+                                        {'interfaces': 
+                                            {'GigabitEthernet0/0/0/0': 
+                                                {'neighbors': 
+                                                    {'4.4.4.4': 
+                                                        {'address': '10.3.4.4',
+                                                        'bdr_ip_addr': '10.3.4.3',
+                                                        'dbd_retrans': 0,
+                                                        'dead_timer': '00:00:30',
+                                                        'dr_ip_addr': '10.3.4.4',
+                                                        'first': '0(0)/0(0)',
+                                                        'high_water_mark': 0,
+                                                        'index': '2/2,',
+                                                        'last_retrans_max_scan_length': 0,
+                                                        'last_retrans_max_scan_time_msec': 0,
+                                                        'last_retrans_scan_length': 0,
+                                                        'last_retrans_scan_time_msec': 0,
+                                                        'lls_options': '0x1 (LR)',
+                                                        'ls_ack_list': 'NSR-sync',
+                                                        'ls_ack_list_pending': 0,
+                                                        'neighbor_router_id': '4.4.4.4',
+                                                        'neighbor_uptime': '1d01h',
+                                                        'next': '0(0)/0(0)',
+                                                        'num_retransmission': 0,
+                                                        'num_state_changes': 6,
+                                                        'options': '0x52',
+                                                        'priority': 1,
+                                                        'retransmission_queue_length': 0,
+                                                        'state': 'FULL'}}},
+                                            'GigabitEthernet0/0/0/2': 
+                                                {'neighbors': 
+                                                    {'2.2.2.2': 
+                                                        {'address': '10.2.3.2',
+                                                        'bdr_ip_addr': '10.2.3.2',
+                                                        'dbd_retrans': 0,
+                                                        'dead_timer': '00:00:38',
+                                                        'dr_ip_addr': '10.2.3.3',
+                                                        'first': '0(0)/0(0)',
+                                                        'high_water_mark': 0,
+                                                        'index': '1/1,',
+                                                        'last_retrans_max_scan_length': 0,
+                                                        'last_retrans_max_scan_time_msec': 0,
+                                                        'last_retrans_scan_length': 0,
+                                                        'last_retrans_scan_time_msec': 0,
+                                                        'ls_ack_list': 'NSR-sync',
+                                                        'ls_ack_list_pending': 0,
+                                                        'neighbor_router_id': '2.2.2.2',
+                                                        'neighbor_uptime': '08:22:07',
+                                                        'next': '0(0)/0(0)',
+                                                        'num_retransmission': 0,
+                                                        'num_state_changes': 6,
+                                                        'options': '0x42',
+                                                        'priority': 1,
+                                                        'retransmission_queue_length': 0,
+                                                        'state': 'FULL'}}}}}},
+                                'total_neighbor_count': 2}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive neighbor detail 
+        Thu Nov  2 21:28:53.636 UTC
+
+        * Indicates MADJ interface
+        # Indicates Neighbor awaiting BFD session up
+
+        Neighbors for OSPF 1
+
+         Neighbor 4.4.4.4, interface address 10.3.4.4
+            In the area 0 via interface GigabitEthernet0/0/0/0 
+            Neighbor priority is 1, State is FULL, 6 state changes
+            DR is 10.3.4.4 BDR is 10.3.4.3
+            Options is 0x52  
+            LLS Options is 0x1 (LR)
+            Dead timer due in 00:00:30
+            Neighbor is up for 1d01h
+            Number of DBD retrans during last exchange 0
+            Index 2/2, retransmission queue length 0, number of retransmission 0
+            First 0(0)/0(0) Next 0(0)/0(0)
+            Last retransmission scan length is 0, maximum is 0
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+            LS Ack list: NSR-sync pending 0, high water mark 0
+
+         Neighbor 2.2.2.2, interface address 10.2.3.2
+            In the area 0 via interface GigabitEthernet0/0/0/2 
+            Neighbor priority is 1, State is FULL, 6 state changes
+            DR is 10.2.3.3 BDR is 10.2.3.2
+            Options is 0x42  
+            Dead timer due in 00:00:38
+            Neighbor is up for 08:22:07
+            Number of DBD retrans during last exchange 0
+            Index 1/1, retransmission queue length 0, number of retransmission 0
+            First 0(0)/0(0) Next 0(0)/0(0)
+            Last retransmission scan length is 0, maximum is 0
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+            LS Ack list: NSR-sync pending 0, high water mark 0
+
+
+        Total neighbor count: 2
+
+
+        * Indicates MADJ interface
+        # Indicates Neighbor awaiting BFD session up
+
+        Neighbors for OSPF 1, VRF VRF1
+
+         Neighbor 77.77.77.77, interface address 20.3.7.7
+            In the area 1 via interface GigabitEthernet0/0/0/1 
+            Neighbor priority is 1, State is FULL, 6 state changes
+            DR is 20.3.7.7 BDR is 20.3.7.3
+            Options is 0x52  
+            LLS Options is 0x1 (LR)
+            Dead timer due in 00:00:32
+            Neighbor is up for 23:24:56
+            Number of DBD retrans during last exchange 0
+            Index 1/1, retransmission queue length 0, number of retransmission 15
+            First 0(0)/0(0) Next 0(0)/0(0)
+            Last retransmission scan length is 3, maximum is 3
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+            LS Ack list: NSR-sync pending 0, high water mark 0
+
+
+        Total neighbor count: 1
+        '''}
+
+    def test_full(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowOspfVrfAllInclusiveNeighborDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfVrfAllInclusiveNeighborDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
