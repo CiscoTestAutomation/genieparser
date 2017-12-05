@@ -29,16 +29,15 @@ class ShowVtpStatusSchema(MetaParser):
                 'device_id': str,
                 'conf_last_modified_by': str,
                 'conf_last_modified_time': str,
-                'local_update_id': str,
-                'local_update_interface': str,
-                'vlan': {                   
-                    'operating_mode': str,
-                    'enabled': bool,
-                    'maximum_vlans': int,
-                    'existing_vlans': int,
-                    'configuration_revision': int,
-                    'md5_digest': list,
-                }
+                'updater_id': str,
+                'updater_interface': str,
+                Optional('updater_reason'): str,
+                'operating_mode': str,
+                'enabled': bool,
+                'maximum_vlans': int,
+                'existing_vlans': int,
+                'configuration_revision': int,
+                'md5_digest': str,
 
             }
         }
@@ -127,11 +126,12 @@ class ShowVtpStatus(ShowVtpStatusSchema):
             # Local updater ID is 201.0.12.1 on interface Vl100 (lowest numbered VLAN interface found)
             p8 = re.compile(r'^Local +updater +ID +is +(?P<id>[\w\.\:]+) +on +'
                              'interface +(?P<intf>[\w\.\/\-]+) *'
-                             '(\(lowest numbered VLAN interface found\))?$')
+                             '(\((?P<reason>[\S\s]+)\))?$')
             m = p8.match(line)
             if m:
-                ret_dict['vtp']['local_update_id'] = m.groupdict()['id']
-                ret_dict['vtp']['local_update_interface'] = m.groupdict()['intf']
+                ret_dict['vtp']['updater_id'] = m.groupdict()['id']
+                ret_dict['vtp']['updater_interface'] = m.groupdict()['intf']
+                ret_dict['vtp']['updater_reason'] = m.groupdict()['reason']
                 continue
 
 
@@ -141,36 +141,34 @@ class ShowVtpStatus(ShowVtpStatusSchema):
             p9 = re.compile(r'^VTP +Operating +Mode +: (?P<val>\S+)$')
             m = p9.match(line)
             if m:
-                if 'vlan' not in ret_dict['vtp']:
-                    ret_dict['vtp']['vlan'] = {}
                 status = m.groupdict()['val'].lower()
-                ret_dict['vtp']['vlan']['operating_mode'] = status
+                ret_dict['vtp']['operating_mode'] = status
 
                 if status in ['server', 'client']:
-                    ret_dict['vtp']['vlan']['enabled'] = True
+                    ret_dict['vtp']['enabled'] = True
                 else:
-                    ret_dict['vtp']['vlan']['enabled'] = False
+                    ret_dict['vtp']['enabled'] = False
                 continue
 
             # Maximum VLANs supported locally   : 1005
             p10 = re.compile(r'^Maximum +VLANs +supported +locally +: (?P<val>\d+)$')
             m = p10.match(line)
             if m:
-                ret_dict['vtp']['vlan']['maximum_vlans'] = int(m.groupdict()['val'])
+                ret_dict['vtp']['maximum_vlans'] = int(m.groupdict()['val'])
                 continue
 
             # Number of existing VLANs          : 53
             p11 = re.compile(r'^Number +of +existing +VLANs +: (?P<val>\d+)$')
             m = p11.match(line)
             if m:
-                ret_dict['vtp']['vlan']['existing_vlans'] = int(m.groupdict()['val'])
+                ret_dict['vtp']['existing_vlans'] = int(m.groupdict()['val'])
                 continue
 
             # Configuration Revision            : 55
             p12 = re.compile(r'^Configuration +Revision +: (?P<val>\d+)$')
             m = p12.match(line)
             if m:
-                ret_dict['vtp']['vlan']['configuration_revision'] = int(m.groupdict()['val'])
+                ret_dict['vtp']['configuration_revision'] = int(m.groupdict()['val'])
                 continue
 
             # MD5 digest                        : 0x9E 0x35 0x3C 0x74 0xDD 0xE9 0x3D 0x62 
@@ -178,14 +176,14 @@ class ShowVtpStatus(ShowVtpStatusSchema):
             m = p13.match(line)
             if m:
                 digest = m.groupdict()['val'].split()
-                ret_dict['vtp']['vlan']['md5_digest'] = sorted(digest)
+                ret_dict['vtp']['md5_digest'] = ' '.join(sorted(digest))
                 continue
             #                                     0xDE 0x2D 0x66 0x67 0x70 0x72 0x55 0x38
             p13_1 = re.compile(r'^(?P<val>[\w\s]+)$')
             m = p13_1.match(line)
             if m:
                 digest.extend(m.groupdict()['val'].split())
-                ret_dict['vtp']['vlan']['md5_digest'] = sorted(digest)
+                ret_dict['vtp']['md5_digest'] = ' '.join(sorted(digest))
                 continue
 
 

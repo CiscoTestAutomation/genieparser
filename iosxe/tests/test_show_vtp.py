@@ -26,33 +26,16 @@ class test_show_vtp_status(unittest.TestCase):
         "pruning_mode": False,
         "device_id": "3820.5622.a580",
         "traps_generation": False,
-        "local_update_id": "201.0.12.1",
-        "local_update_interface": "Vl100",
-        "vlan": {
-           "configuration_revision": 55,
-           "maximum_vlans": 1005,
-           "md5_digest": [
-                "0x2D",
-                "0x35",
-                "0x38",
-                "0x3C",
-                "0x3D",
-                "0x55",
-                "0x62",
-                "0x66",
-                "0x67",
-                "0x70",
-                "0x72",
-                "0x74",
-                "0x9E",
-                "0xDD",
-                "0xDE",
-                "0xE9"
-           ],
-           "existing_vlans": 53,
-           "enabled": True,
-           "operating_mode": "server"
-        },
+        "updater_id": "201.0.12.1",
+        "updater_interface": "Vl100",
+        "updater_reason": "lowest numbered VLAN interface found",
+        "configuration_revision": 55,
+        "maximum_vlans": 1005,
+        "md5_digest": '0x2D 0x35 0x38 0x3C 0x3D 0x55 0x62 0x66 0x67 0x70 '\
+                      '0x72 0x74 0x9E 0xDD 0xDE 0xE9',
+        "existing_vlans": 53,
+        "enabled": True,
+        "operating_mode": "server",
         "conf_last_modified_time": "12-5-17 09:35:46",
         "conf_last_modified_by": "201.0.12.1",
         "version": "1",
@@ -92,6 +75,7 @@ class test_show_vtp_status(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowVtpStatus(device=self.device)
         parsed_output = obj.parse()
+        self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
