@@ -22,7 +22,7 @@ class ShowVtpStatusSchema(MetaParser):
 
     schema = {'vtp': {
                 Optional('version_capable'): list,
-                'version_running': str,
+                'version': str,
                 Optional('domain_name'): str,
                 'pruning_mode': bool,
                 'traps_generation': bool,
@@ -66,8 +66,8 @@ class ShowVtpStatus(ShowVtpStatusSchema):
                     ret_dict['vtp'] = {}
 
                 try:
-                    val = m.groupdict()['val']
-                    val = list( range( int(val[0], int(val[1]) + 1 )))
+                    val = m.groupdict()['val'].split('to')
+                    val = list( range( int(val[0]), int(val[1]) + 1 ))
                     ret_dict['vtp']['version_capable'] = val
                 except:
                     pass
@@ -80,7 +80,7 @@ class ShowVtpStatus(ShowVtpStatusSchema):
             if m:
                 if 'vtp' not in ret_dict:
                     ret_dict['vtp'] = {}
-                ret_dict['vtp']['version_running'] = m.groupdict()['val']
+                ret_dict['vtp']['version'] = m.groupdict()['val']
                 continue
 
             # VTP Domain Name                 : 

@@ -55,7 +55,8 @@ class test_show_vtp_status(unittest.TestCase):
         },
         "conf_last_modified_time": "12-5-17 09:35:46",
         "conf_last_modified_by": "201.0.12.1",
-        "version_running": "1"
+        "version": "1",
+        "version_capable": [1,2,3],
         }
 
     }
