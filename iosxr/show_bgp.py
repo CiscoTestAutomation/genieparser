@@ -2055,18 +2055,10 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                  Optional('bgp_neighbor_counters'):
                                     {Optional('messages'):
                                          {Optional('sent'):
-                                            {Optional('opens'): int,
-                                             Optional('updates'): int,
-                                             Optional('notifications'): int,
-                                             Optional('keepalives'): int,
-                                             Optional('route_refreshes'): int,
+                                            {Any(): int,
                                             },
                                          Optional('received'):
-                                            {Optional('opens'): int,
-                                             Optional('updates'): int,
-                                             Optional('notifications'): int,
-                                             Optional('keepalives'): int,
-                                             Optional('route_refreshes'): int,
+                                            {Any(): int,
                                             },
                                         },
                                     },
