@@ -1090,6 +1090,8 @@ class ShowPimRp(ShowPimRpSchema):
                     info_source_type_conversion = 'static'
                 if info_source_type.lower() == 'b':
                     info_source_type_conversion = 'bootstrap'
+                if info_source_type.lower() == 'a':
+                    info_source_type_conversion = 'autorp'
 
                 continue
 
