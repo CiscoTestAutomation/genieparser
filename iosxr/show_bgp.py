@@ -2055,18 +2055,10 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                  Optional('bgp_neighbor_counters'):
                                     {Optional('messages'):
                                          {Optional('sent'):
-                                            {Optional('opens'): int,
-                                             Optional('updates'): int,
-                                             Optional('notifications'): int,
-                                             Optional('keepalives'): int,
-                                             Optional('route_refreshes'): int,
+                                            {Any(): int,
                                             },
                                          Optional('received'):
-                                            {Optional('opens'): int,
-                                             Optional('updates'): int,
-                                             Optional('notifications'): int,
-                                             Optional('keepalives'): int,
-                                             Optional('route_refreshes'): int,
+                                            {Any(): int,
                                             },
                                         },
                                     },
@@ -2570,9 +2562,9 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
             #    Route_Refresh:  ---                        0  ---                        0
             #    Total:                                    58                            56
             p29 = re.compile(r'^(?P<name>[a-zA-Z\s]+) *: *'
-                              '(?P<last_sent>\w+\s\d+\s[\d\:\.]+) *'
+                              '(?P<last_sent>\w+ *\d+ *[\d\:\.]+) *'
                               '(?P<sent>[0-9]+) *'
-                              '(?P<last_received>\w+\s\d+\s[\d\:\.]+) *'
+                              '(?P<last_received>\w+ *\d+ *[\d\:\.]+) *'
                               '(?P<received>[0-9]+)$')
             m = p29.match(line)
 

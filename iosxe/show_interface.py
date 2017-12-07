@@ -1367,8 +1367,8 @@ class ShowIpInterfaceSchema(MetaParser):
                     Optional('ipv4'): {
                         Any(): {
                             'ip': str,
-                            'prefix_length': str,
-                            'secondary': bool,
+                            Optional('prefix_length'): str,
+                            Optional('secondary'): bool,
                             Optional('broadcase_address'): str,
                         },
                     },
@@ -1930,6 +1930,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                 unnumbered_dict[interface]['unnumbered_intf'] = unnumbered_intf
                 unnumbered_dict[interface]['unnumbered_ip'] = unnumbered_ip
 
+
                 if unnumbered_intf in interface_dict:
                     if 'ipv4' in interface_dict[unnumbered_intf]:
                         for address in interface_dict[unnumbered_intf]['ipv4']:
@@ -1943,6 +1944,13 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                                 interface_dict[interface]['ipv4'][address]['prefix_length'] = m.groups()[1]
                                 interface_dict[interface]['ipv4'][address]['secondary'] = False
                                 break
+                else:
+                    address = unnumbered_ip 
+                    if 'ipv4' not in interface_dict[interface]:
+                        interface_dict[interface]['ipv4'] = {}
+                    if address not in interface_dict[interface]['ipv4']:
+                        interface_dict[interface]['ipv4'][address] = {}
+                    interface_dict[interface]['ipv4'][address]['ip'] = address
                 continue
 
         return interface_dict

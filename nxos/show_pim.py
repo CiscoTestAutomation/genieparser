@@ -1090,6 +1090,8 @@ class ShowPimRp(ShowPimRpSchema):
                     info_source_type_conversion = 'static'
                 if info_source_type.lower() == 'b':
                     info_source_type_conversion = 'bootstrap'
+                if info_source_type.lower() == 'a':
+                    info_source_type_conversion = 'autorp'
 
                 continue
 
@@ -1771,11 +1773,12 @@ class ShowIpv6PimRoute(ShowIpv6PimRouteSchema):
 
             # (*, ff08::/16), RP 2001:db8:12:12::12, bidir, expires 00:02:31 Route Fabric owned : FALSE, RP-bit
             # (*, ff30::/12), expires 00:02:31 Route Fabric owned : FALSE
+            # (*, ff30::/12), expires 0.000000 Route Fabric owned : FALSE (00:00:02)
             p2 = re.compile(r'^\s*\((?P<source_address>[\S]+)'
                             ', +(?P<group>[\S]+)\),'
                             '( +RP +(?P<rp>[\S\-]+),)?( +(?P<mode>\w+),)?'
                             ' +expires +(?P<expires>[\w\.\:\(\)\s]+)'
-                            ' +Route +Fabric +owned +: (?P<fabric_owned>[\w]+)'
+                            ' +Route +Fabric +owned +: ((?P<fabric_owned>[\w]+)( *(?P<dummy>\S+))?)'
                             '(, +(?P<rp_bit>[\S]+))?$')
             m = p2.match(line)
             if m:
