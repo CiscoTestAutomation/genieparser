@@ -40,7 +40,7 @@ class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
                                                 'line_protocol': bool,
                                                 'ip_address': str,
                                                 'demand_circuit': bool,
-                                                'process_id': int,
+                                                'process_id': str,
                                                 'router_id': str,
                                                 'interface_type': str,
                                                 'bfd': 
@@ -195,14 +195,14 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
             # Process ID 1, Router ID 3.3.3.3, Network Type POINT_TO_POINT
             # Process ID 1, Router ID 3.3.3.3, Network Type BROADCAST, Cost: 1
             # Process ID 1, VRF VRF1, Router ID 3.3.3.3, Network Type SHAM_LINK, Cost: 111
-            p4 = re.compile(r'^Process +ID +(?P<pid>(\d+))'
+            p4 = re.compile(r'^Process +ID +(?P<pid>(\S+))'
                              '(?:, +VRF +(?P<vrf>(\S+)))?'
                              ', +Router +ID +(?P<router_id>(\S+))'
                              ', +Network +Type +(?P<intf_type>(\S+))'
                              '(?:, +Cost: +(?P<cost>(\d+)))?$')
             m = p4.match(line)
             if m:
-                sub_dict['process_id'] = int(m.groupdict()['pid'])
+                sub_dict['process_id'] = str(m.groupdict()['pid'])
                 sub_dict['router_id'] = str(m.groupdict()['router_id'])
                 sub_dict['interface_type'] = str(m.groupdict()['intf_type'])
                 if m.groupdict()['cost']:
@@ -210,17 +210,19 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # Transmit Delay is 1 sec, State DR, Priority 1, MTU 1500, MaxPktSz 1500
-            p5 = re.compile(r'^Transmit +Delay is +(?P<delay>(\d+))'
-                             ' +sec, +State +(?P<state>(\S+)), +Priority'
-                             ' +(?P<priority>(\d+)), +MTU +(?P<mtu>(\d+)),'
+            p5 = re.compile(r'^Transmit +Delay is +(?P<delay>(\d+)) +sec,'
+                             ' +State +(?P<state>(\S+)),'
+                             '(?: +Priority +(?P<priority>(\d+)),)?'
+                             ' +MTU +(?P<mtu>(\d+)),'
                              ' +MaxPktSz +(?P<max_pkt_sz>(\d+))$')
             m = p5.match(line)
             if m:
                 sub_dict['transmit_delay'] = int(m.groupdict()['delay'])
                 sub_dict['state'] = str(m.groupdict()['state'])
-                sub_dict['priority'] = int(m.groupdict()['priority'])
                 sub_dict['mtu'] = int(m.groupdict()['mtu'])
                 sub_dict['max_pkt_sz'] = int(m.groupdict()['max_pkt_sz'])
+                if m.groupdict()['priority']:
+                    sub_dict['priority'] = int(m.groupdict()['priority'])
                 continue
 
             # Designated Router (ID) 3.3.3.3, Interface address 10.2.3.3

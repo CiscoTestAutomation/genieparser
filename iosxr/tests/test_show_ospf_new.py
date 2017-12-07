@@ -10,7 +10,7 @@ from ats.topology import loader
 # Metaparser
 from metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
-# nxos show_ospf
+# iosxr show_ospf
 from parser.iosxr.show_ospf_new import ShowOspfVrfAllInclusiveInterface,\
                                        ShowOspfVrfAllInclusiveNeighborDetail
 
