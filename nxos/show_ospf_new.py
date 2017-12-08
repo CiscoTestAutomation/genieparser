@@ -1,15 +1,6 @@
 ''' show_ospf.py
 
 NXOS parsers for the following show commands:
-
-    * show ip ospf
-    * show ip ospf vrf <WORD>
-    * show ip ospf mpls ldp interface 
-    * show ip ospf mpls ldp interface vrf <WORD>
-    * show ip ospf sham-links
-    * show ip ospf sham-links vrf <WORD>
-    * show ip ospf virtual-links
-    * show ip ospf virtual-links vrf <WORD>
     * show ip ospf interface
     * show ip ospf interface vrf <WORD>
     * show ip ospf neighbors detail
@@ -22,6 +13,15 @@ NXOS parsers for the following show commands:
     * show ip ospf database summary detail vrf <WORD>
     * show ip ospf database router detail
     * show ip ospf database router detail vrf <WORD>
+
+    * show ip ospf
+    * show ip ospf vrf <WORD>
+    * show ip ospf mpls ldp interface 
+    * show ip ospf mpls ldp interface vrf <WORD>
+    * show ip ospf sham-links
+    * show ip ospf sham-links vrf <WORD>
+    * show ip ospf virtual-links
+    * show ip ospf virtual-links vrf <WORD>
 '''
 
 # Python
@@ -75,8 +75,9 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                 Optional('retransmit_interval'): int,
                                                 Optional('wait_timer'): int,
                                                 Optional('hello_timer'): str,
-                                                Optional('opaque_lsa_links'): int,
-                                                Optional('checksum'): int,
+                                                Optional('statistics'): 
+                                                    {'link_scope_lsa_count': int,
+                                                    'link_scope_lsa_cksum_sum': int,},
                                                 Optional('authentication'): {
                                                     Optional('auth_trailer_key_chain'): {
                                                         Optional('key_chain'): str},
@@ -249,8 +250,9 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 continue
 
             # Designated Router ID: 3.3.3.3, address: 10.2.3.3
-            p7_1 = re.compile(r'^Designated +Router +ID: (?P<router_id>(\S+)),'
-                             ' +address: +(?P<ip_addr>(\S+))$')
+            p7_1 = re.compile(r'^(D|d)esignated +(R|r)outer +(ID|Id):'
+                               ' (?P<router_id>(\S+)), +address:'
+                               ' +(?P<ip_addr>(\S+))$')
             m = p7_1.match(line)
             if m:
                 sub_dict['dr_router_id'] = str(m.groupdict()['router_id'])
@@ -258,8 +260,9 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 continue
 
             # Backup Designated Router ID: 2.2.2.2, address: 10.2.3.2
-            p7_2 = re.compile(r'^Backup +Router +ID: (?P<router_id>(\S+)),'
-                             ' +address: +(?P<ip_addr>(\S+))$')
+            p7_2 = re.compile(r'^(B|b)ackup +(R|r)outer +(ID|Id):'
+                               ' (?P<router_id>(\S+)), +address:'
+                               ' +(?P<ip_addr>(\S+))$')
             m = p7_2.match(line)
             if m:
                 sub_dict['bdr_router_id'] = str(m.groupdict()['router_id'])
@@ -338,12 +341,18 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
             # Number of opaque link LSAs: 0, checksum sum 0
             p12 = re.compile(r'^Number +of +opaque +link +LSAs:'
-                              ' +(?P<opaque>(\d+)), +checksum +sum'
+                              ' +(?P<count>(\d+)), +checksum +sum'
                               ' +(?P<checksum>(\d+))$')
             m = p12.match(line)
             if m:
-                sub_dict['opaque_lsa_links'] = int(m.groupdict()['opaque'])
-                sub_dict['checksum'] = int(m.groupdict()['checksum'])
+                count = int(m.groupdict()['count'])
+                checksum = int(m.groupdict()['checksum'])
+                if 'statistics' not in sub_dict:
+                    sub_dict['statistics'] = {}
+                sub_dict['statistics']['link_scope_lsa_count'] = \
+                    int(m.groupdict()['count'])
+                sub_dict['statistics']['link_scope_lsa_cksum_sum'] = \
+                    int(m.groupdict()['checksum'])
                 continue
 
             # BFD is enabled
@@ -378,18 +387,18 @@ class ShowIpOspfNeighborDetailSchema(MetaParser):
                                                         {'neighbor_router_id': str,
                                                         'address': str,
                                                         'state': str,
-                                                        'num_state_changes': int,
                                                         'last_state_change': str,
                                                         Optional('neighbor_priority'): int,
                                                         Optional('dr_ip_addr'): str,
                                                         Optional('bdr_ip_addr'): str,
+                                                        Optional('dr_router_id'): str,
+                                                        Optional('bdr_router_id'): str,
                                                         'hello_options': str,
                                                         'dbd_options': str,
                                                         'last_non_hello_packet_received': str,
                                                         'dead_timer': str,
                                                         Optional('statistics'): {
                                                             Optional('nbr_event_count'): int,
-                                                            Optional('nbr_retrans_qlen'): str,
                                                             },
                                                         },
                                                      },
@@ -509,9 +518,11 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
             m = p3.match(line)
             if m:
                 sub_dict['state'] = str(m.groupdict()['state']).lower()
-                sub_dict['num_state_changes'] = int(m.groupdict()['changes'])
                 sub_dict['last_state_change'] = str(m.groupdict()['last'])
-                continue
+                if 'statistics' not in sub_dict:
+                    sub_dict['statistics'] = {}
+                    sub_dict['statistics']['nbr_event_count'] = int(m.groupdict()['changes'])
+                    continue
 
             # Neighbor priority is 1
             p4 = re.compile(r'^Neighbor +priority +is +(?P<priority>(\S+))$')
@@ -574,6 +585,9 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
         # Init vars
         ret_dict = {}
         af = 'ipv4'
+        mt_id = 0
+        lsa_type_mapping = {'summary network': 'network summary',
+                            'router link': 'router links'}
 
         for line in out.splitlines():
             line = line.strip()
@@ -606,19 +620,40 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
 
             # Type-5 AS External Link States (Area 0.0.0.0)
             # Opaque Area Link States (Area 0.0.0.0)
+            # Summary Network Link States (Area 0.0.0.0)
+            # Network Link States (Area 0.0.0.0)
             p2 = re.compile(r'^(?P<lsa_type>(.*)) +Link +States'
-                             ' +\(Area +(?P<area>(\S+))\)$')
+                             '(?: +\(Area +(?P<area>(\S+))\))?$')
             m = p2.match(line)
             if m:
                 lsa_type = str(m.groupdict()['lsa_type'])
-                area = str(m.groupdict()['area'])
+                if m.groupdict()['area']:
+                    area = str(m.groupdict()['area'])
+
+                if 'database' not in ret_dict['vrf'][vrf]['address_family']\
+                        [af]['instance'][instance]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['database'] = {}
+                if 'lsa_types' not in ret_dict['vrf'][vrf]['address_family']\
+                        [af]['instance'][instance]['database']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['database']['lsa_types'] = {}
+                if lsa_type not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['database']['lsa_types']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['database']['lsa_types'][lsa_type] = {}
+
+                # Set sub_dict
+                sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
+                            ['instance'][instance]['database']['lsa_types']\
+                            [lsa_type]
                 continue
 
             # LS age: 1565
-            p3 = re.compile(r'^LS +age: +(?P<lsa_id>(\d+))$')
+            p3 = re.compile(r'^LS +age: +(?P<age>(\d+))$')
             m = p3.match(line)
             if m:
-                lsa_id = str(m.groupdict()['lsa_id'])
+                age = int(m.groupdict()['age'])
                 continue
 
             # Options: 0x20 (No TOS-capability, DC)
@@ -633,28 +668,16 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
             m = p5.match(line)
             if m:
                 lsa_type = str(m.groupdict()['lsa_type'])
-                if 'database' not in ret_dict['vrf'][vrf]['address_family']\
-                        [af]['instance'][instance]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['database'] = {}
-                if 'lsa_types' not in ret_dict['vrf'][vrf]['address_family']\
-                        [af]['instance'][instance]['database']:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['database']['lsa_types'] = {}
-                if lsa_type not in ret_dict['vrf'][vrf]['address_family'][af]\
-                        ['instance'][instance]['database']['lsa_types']:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['database']['lsa_types'][lsa_type] = {}
-                    continue
+                continue
 
             # Link State ID: 1.1.1.1
             # Link State ID: 44.44.44.44 (Network address)
             # Link State ID: 10.1.2.1 (Designated Router address)
-            p5 = re.compile(r'^Link +State +ID: +(?P<link_state_id>(\S+))'
+            p5 = re.compile(r'^Link +State +ID: +(?P<lsa_id>(\S+))'
                              '(?: +\(.*\))?$')
             m = p5.match(line)
             if m:
-                link_state_id = str(m.groupdict()['link_state_id'])
+                lsa_id = str(m.groupdict()['lsa_id'])
                 continue
 
             # Advertising Router: 4.4.4.4
@@ -663,34 +686,43 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
             if m:
                 adv_router = str(m.groupdict()['adv_router'])
                 lsa = lsa_id + ' ' + adv_router
-                if 'lsas' not in ret_dict['vrf'][vrf]['address_family'][af]\
-                        ['instance'][instance]['database']['lsa_types']\
-                        [lsa_type]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['database']['lsa_types'][lsa_type]\
-                        ['lsas'] = {}
-                if lsa not in ret_dict['vrf'][vrf]['address_family'][af]\
-                        ['instance'][instance]['database']['lsa_types']\
-                        [lsa_type]['lsas']:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['database']['lsa_types'][lsa_type]\
-                        ['lsas'][lsa] = {}
-                # Set sub_dict
-                lsa_dict = ret_dict['vrf'][vrf]['address_family'][af]\
-                            ['instance'][instance]['database']['lsa_types']\
-                            [lsa_type]['lsas'][lsa]
-                # Init dicts
-                if 'ospfv2' not in lsa_dict:
-                    lsa_dict['ospfv2'] = {}
-                if 'body' not in lsa_dict['ospfv2']:
-                    lsa_dict['ospfv2']['body'] = {}
-                if db_type not in lsa_dict['ospfv2']['body']:
-                    lsa_dict['ospfv2']['body'][db_type] = {}
+                
+                # Create schema structure
+                if 'lsas' not in sub_dict:
+                    sub_dict['lsas'] = {}
+                if lsa not in sub_dict['lsas']:
+                    sub_dict['lsas'][lsa] = {}
+                if 'ospfv2' not in sub_dict['lsas'][lsa]:
+                    sub_dict['lsas'][lsa]['ospfv2'] = {}
+
                 # Set db_dict
-                db_dict = lsa_dict['ospfv2']['body'][db_type]
+                if 'body' not in sub_dict['lsas'][lsa]['ospfv2']:
+                    sub_dict['lsas'][lsa]['ospfv2']['body'] = {}
+                if db_type not in sub_dict['lsas'][lsa]['ospfv2']['body']:
+                    sub_dict['lsas'][lsa]['ospfv2']['body'][db_type] = {}
+                db_dict = sub_dict['lsas'][lsa]['ospfv2']['body'][db_type]
+
+                # Create 'topologies' sub_dict if 'summary' or 'database'
+                if db_type in ['summary', 'external']:
+                    if 'topologies' not in db_dict:
+                        db_dict['topologies'] = {}
+                    if mt_id not in db_dict['topologies']:
+                        db_dict['topologies'][mt_id] = {}
+                    db_topo_dict = db_dict['topologies'][mt_id]
+                    db_topo_dict['mt_id'] = mt_id
+
+                # Set header dict
+                if 'header' not in sub_dict['lsas'][lsa]['ospfv2']:
+                    sub_dict['lsas'][lsa]['ospfv2']['header'] = {}
+                header_dict = sub_dict['lsas'][lsa]['ospfv2']['header']
+
                 try:
-                    db_dict['options'] = options
-                    db_dict['link_state_id'] = link_state_id
+                    # Set previously parsed values
+                    header_dict['age'] = age
+                    header_dict['option'] = options
+                    header_dict['type'] = lsa_type
+                    header_dict['lsa_id'] = lsa_id
+                    header_dict['adv_router'] = adv_router
                     continue
                 except:
                     pass
@@ -699,21 +731,21 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
             p7 = re.compile(r'^LS +Seq +Number: +(?P<ls_seq_num>(\S+))$')
             m = p7.match(line)
             if m:
-                db_dict['ls_seq_num'] = str(m.groupdict()['ls_seq_num'])
+                header_dict['seq_num'] = str(m.groupdict()['ls_seq_num'])
                 continue
 
             # Checksum: 0x7d61
-            p8 = re.compile(r'^Checksum: +(?P<flags>(\S+))$')
+            p8 = re.compile(r'^Checksum: +(?P<checksum>(\S+))$')
             m = p8.match(line)
             if m:
-                db_dict['flags'] = str(m.groupdict()['flags'])
+                header_dict['checksum'] = str(m.groupdict()['checksum'])
                 continue
 
             # Length: 36
             p9 = re.compile(r'^Length: +(?P<length>(\d+))$')
             m = p9.match(line)
             if m:
-                db_dict['length'] = int(m.groupdict()['length'])
+                header_dict['length'] = int(m.groupdict()['length'])
                 continue
 
             # Network Mask: /32
@@ -724,46 +756,52 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 continue
 
             # Metric Type: 2 (Larger than any link state path)
-            p11 = re.compile(r'^Metric +Type: +(?P<mt_id>(.*))$')
+            p11 = re.compile(r'^Metric +Type: +2 +\(.*\)$')
             m = p11.match(line)
             if m:
-                db_dict['mt_id'] = str(m.groupdict()['mt_id'])
+                db_topo_dict['flags'] = "E"
                 continue
 
             # TOS: 0
             # TOS: 0 Metric: 1
-            p12 = re.compile(r'^TOS:? +(?P<tos>(\d+))(?: +Metric:'
-                              ' +(?P<metric>(\d+)))?$')
+            p12 = re.compile(r'^TOS:? +(?P<tos>(\d+))'
+                              '(?: +Metric: +(?P<metric>(\d+)))?$')
             m = p12.match(line)
             if m:
-                tos = int(m.groupdict()['tos'])
-                metric = m.groupdict()['metric']
-                if db_type is 'router':
-                    continue
-                db_dict['tos'] = tos
-                if m.groupdict()['metric']:
-                    db_dict['metric'] = metric
-                    continue
+                if db_type == 'router':
+                    tos = int(m.groupdict()['tos'])
+                    if m.groupdict()['metric']:
+                        metric = int(m.groupdict()['metric'])
+                        continue
+                else:
+                    db_topo_dict['tos'] = int(m.groupdict()['tos'])
+                    if m.groupdict()['metric']:
+                        db_topo_dict['metric'] = int(m.groupdict()['metric'])
+                        continue
 
             # Metric: 20
             p13 = re.compile(r'^Metric: +(?P<metric>(\d+))$')
             m = p13.match(line)
             if m:
-                db_dict['metric'] = str(m.groupdict()['metric'])
-                continue
+                if db_type == 'router':
+                    metric = int(m.groupdict()['metric'])
+                    continue
+                else: 
+                    db_topo_dict['metric'] = int(m.groupdict()['metric'])
+                    continue
 
             # Forward Address: 0.0.0.0
-            p14 = re.compile(r'^Forward +Address: +(?P<fwd_addr>(\S+))$')
+            p14 = re.compile(r'^Forward +Address: +(?P<addr>(\S+))$')
             m = p14.match(line)
             if m:
-                db_dict['forwarding_address'] = str(m.groupdict()['fwd_addr'])
+                db_topo_dict['forwarding_address'] = str(m.groupdict()['addr'])
                 continue
 
             # External Route Tag: 0
             p15 = re.compile(r'^External +Route +Tag: +(?P<tag>(\S+))$')
             m = p15.match(line)
             if m:
-                db_dict['external_route_tag'] = str(m.groupdict()['tag'])            
+                db_topo_dict['external_route_tag'] = str(m.groupdict()['tag'])            
                 continue
 
             # Attached Router: 66.66.66.66
@@ -785,45 +823,140 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 continue
 
             # Link connected to: a Stub Network
-            p18 = re.compile(r'^Link +connected +to: +a +(?P<link>(.*))$')
+            p18 = re.compile(r'^Link +connected +to: +a +(?P<type>(.*))$')
             m = p18.match(line)
             if m:
-                link = str(m.groupdict()['link']).lower()
+                link_type = str(m.groupdict()['type']).lower()
+                continue
+
+            # (Link ID) Network/Subnet Number: 1.1.1.1
+            p19_1 = re.compile(r'^\(Link +ID\) +Network\/Subnet +Number:'
+                                ' +(?P<link_id>(\S+))$')
+            m = p19_1.match(line)
+            if m:
+                link_id = str(m.groupdict()['link_id'])
+
+                # Create dict structures
                 if 'links' not in db_dict:
                     db_dict['links'] = {}
-                if link not in db_dict['links']:
-                    db_dict['links'][link] = {}
+                if link_id not in db_dict['links']:
+                    db_dict['links'][link_id] = {}
+                db_dict['links'][link_id]['link_id'] = link_id
+
+                # Set previously parsed values
                 try:
-                    db_dict['links'][link]['tos'] = tos
-                    db_dict['links'][link]['metric'] = metric
+                    db_dict['links'][link_id]['type'] = link_type
+                except:
+                    pass
+                
+                # Create topology dict under link_id
+                if 'topologies' not in db_dict['links'][link_id]:
+                    db_dict['links'][link_id]['topologies'] = {}
+                if mt_id not in db_dict['links'][link_id]['topologies']:
+                    db_dict['links'][link_id]['topologies'][mt_id] = {}
+                try:
+                    # Set previously parsed values
+                    db_dict['links'][link_id]['topologies'][mt_id]['mt_id'] = mt_id
+                    db_dict['links'][link_id]['topologies'][mt_id]['metric'] = metric
+                    db_dict['links'][link_id]['topologies'][mt_id]['tos'] = tos
                     continue
                 except:
                     pass
-            
-            # (Link ID) Network/Subnet Number: 1.1.1.1
+
             # (Link ID) Designated Router address: 20.6.7.6
-            p19 = re.compile(r'^\(Link +ID\) +Network\/Subnet +Number:'
-                              ' +(?P<id>(\S+))$')
-            m = p19.match(line)
+            p19_2 = re.compile(r'^\(Link +ID\) +Designated +Router +address:'
+                                ' +(?P<link_id>(\S+))$')
+            m = p19_2.match(line)
             if m:
-                db_dict['links'][link]['link_id'] = str(m.groupdict()['id'])
+                link_id = str(m.groupdict()['link_id'])
+
+                # Create dict structures
+                if 'links' not in db_dict:
+                    db_dict['links'] = {}
+                if link_id not in db_dict['links']:
+                    db_dict['links'][link_id] = {}
+                db_dict['links'][link_id]['link_id'] = link_id
+
+                # Set previously parsed values
+                try:
+                    db_dict['links'][link_id]['type'] = link_type
+                except:
+                    pass
+                
+                # Create topology dict under link_id
+                if 'topologies' not in db_dict['links'][link_id]:
+                    db_dict['links'][link_id]['topologies'] = {}
+                if mt_id not in db_dict['links'][link_id]['topologies']:
+                    db_dict['links'][link_id]['topologies'][mt_id] = {}
+                try:
+                    # Set previously parsed values
+                    db_dict['links'][link_id]['topologies'][mt_id]['mt_id'] = mt_id
+                    db_dict['links'][link_id]['topologies'][mt_id]['metric'] = metric
+                    db_dict['links'][link_id]['topologies'][mt_id]['tos'] = tos
+                    continue
+                except:
+                    pass
+
+            # (Link ID) Neighboring Router ID: 22.22.22.22
+            p19_3 = re.compile(r'^\(Link +ID\) +Neighboring +Router +ID:'
+                                ' +(?P<link_id>(\S+))$')
+            m = p19_3.match(line)
+            if m:
+                link_id = str(m.groupdict()['link_id'])
+
+                # Create dict structures
+                if 'links' not in db_dict:
+                    db_dict['links'] = {}
+                if link_id not in db_dict['links']:
+                    db_dict['links'][link_id] = {}
+                db_dict['links'][link_id]['link_id'] = link_id
+
+                # Set previously parsed values
+                try:
+                    db_dict['links'][link_id]['type'] = link_type
+                except:
+                    pass
+                
+                # Create topology dict under link_id
+                if 'topologies' not in db_dict['links'][link_id]:
+                    db_dict['links'][link_id]['topologies'] = {}
+                if mt_id not in db_dict['links'][link_id]['topologies']:
+                    db_dict['links'][link_id]['topologies'][mt_id] = {}
+                try:
+                    # Set previously parsed values
+                    db_dict['links'][link_id]['topologies'][mt_id]['mt_id'] = mt_id
+                    db_dict['links'][link_id]['topologies'][mt_id]['metric'] = metric
+                    db_dict['links'][link_id]['topologies'][mt_id]['tos'] = tos
+                    continue
+                except:
+                    pass
 
             # (Link Data) Network Mask: 255.255.255.255
-            # (Link Data) Router Interface address: 20.6.7.6
-            p20 = re.compile(r'^\(Link +Data\) +Network +Mask:'
-                              ' +(?P<data>(\S+))$')
-            m = p20.match(line)
+            p20_1 = re.compile(r'^\(Link +Data\) +Network +Mask:'
+                                ' +(?P<link_data>(\S+))$')
+            m = p20_1.match(line)
             if m:
-                db_dict['links'][link]['link_data'] = str(m.groupdict()['data'])
+                db_dict['links'][link_id]['link_data'] = \
+                    str(m.groupdict()['link_data'])
+                continue
+
+            # (Link Data) Router Interface address: 20.6.7.6
+            p20_2 = re.compile(r'^\(Link +Data\) +Router +Interface +address:'
+                                ' +(?P<link_data>(\S+))$')
+            m = p20_2.match(line)
+            if m:
+                db_dict['links'][link_id]['link_data'] = \
+                    str(m.groupdict()['link_data'])
+                continue
 
             # Number of TOS metrics: 0
             p21 = re.compile(r'^Number +of +TOS +metrics: +(?P<num>(\d+))$')
             m = p21.match(line)
             if m:
-                db_dict['links'][link]['num_tos_metrics'] = \
+                db_dict['links'][link_id]['num_tos_metrics'] = \
                     int(m.groupdict()['num'])
                 continue
-        import pdb ; pdb.set_trace()
+
         return ret_dict
 
 
@@ -847,19 +980,29 @@ class ShowIpOspfDatabaseExternalDetailSchema(MetaParser):
                                             {'lsas': 
                                                 {Any(): 
                                                     {'ospfv2': 
-                                                        {'body': 
+                                                        {'header': 
+                                                            {'option': str,
+                                                            'lsa_id': str,
+                                                            'age': int,
+                                                            'type': str,
+                                                            'adv_router': str,
+                                                            'seq_num': str,
+                                                            'checksum': str,
+                                                            'length': int,
+                                                            Optional('opaque_type'): str,
+                                                            Optional('opaque_id'): str},
+                                                        'body': 
                                                             {'external': 
                                                                 {'network_mask': str,
-                                                                'mt_id': str,
-                                                                'flags': str,
-                                                                'metric': str,
-                                                                'forwarding_address': str,
-                                                                'external_route_tag': str,
-                                                                'options': str,
-                                                                'link_state_id': str,
-                                                                'length': int,
-                                                                'tos': int,
-                                                                'ls_seq_num': str,
+                                                                'topologies': 
+                                                                    {Any(): 
+                                                                        {'mt_id': int,
+                                                                        'tos': int,
+                                                                        'flags': str,
+                                                                        'metric': int,
+                                                                        'forwarding_address': str,
+                                                                        'external_route_tag': str},
+                                                                    },
                                                                 },
                                                             },
                                                         },
@@ -914,17 +1057,23 @@ class ShowIpOspfDatabaseNetworkDetailSchema(MetaParser):
                                             {'lsas': 
                                                 {Any(): 
                                                     {'ospfv2': 
-                                                        {'body': 
+                                                        {'header': 
+                                                            {'option': str,
+                                                            'lsa_id': str,
+                                                            'age': int,
+                                                            'type': str,
+                                                            'adv_router': str,
+                                                            'seq_num': str,
+                                                            'checksum': str,
+                                                            'length': int,
+                                                            Optional('opaque_type'): str,
+                                                            Optional('opaque_id'): str},
+                                                        'body': 
                                                             {'network': 
                                                                 {'network_mask': str,
                                                                 'attached_routers': 
                                                                     {Any(): {},
                                                                     },
-                                                                'flags': str,
-                                                                'options': str,
-                                                                'link_state_id': str,
-                                                                'length': int,
-                                                                'ls_seq_num': str,
                                                                 },
                                                             },
                                                         },
@@ -979,17 +1128,26 @@ class ShowIpOspfDatabaseSummaryDetailSchema(MetaParser):
                                             {'lsas': 
                                                 {Any(): 
                                                     {'ospfv2': 
-                                                        {'body': 
+                                                        {'header': 
+                                                            {'option': str,
+                                                            'lsa_id': str,
+                                                            'age': int,
+                                                            'type': str,
+                                                            'adv_router': str,
+                                                            'seq_num': str,
+                                                            'checksum': str,
+                                                            'length': int,
+                                                            Optional('opaque_type'): str,
+                                                            Optional('opaque_id'): str},
+                                                        'body': 
                                                             {'summary': 
                                                                 {'network_mask': str,
-                                                                'metric': str,
-                                                                Optional('mt_id'): str,
-                                                                'tos': int,
-                                                                'flags': str,
-                                                                'options': str,
-                                                                'link_state_id': str,
-                                                                'length': int,
-                                                                'ls_seq_num': str,
+                                                                'topologies': 
+                                                                    {Any(): 
+                                                                        {'mt_id': int,
+                                                                        'tos': int,
+                                                                        'metric': int},
+                                                                    },
                                                                 },
                                                             },
                                                         },
@@ -1044,21 +1202,31 @@ class ShowIpOspfDatabaseRouterDetailSchema(MetaParser):
                                             {'lsas': 
                                                 {Any(): 
                                                     {'ospfv2': 
-                                                        {'body': 
+                                                        {'header': 
+                                                            {'option': str,
+                                                            'lsa_id': str,
+                                                            'age': int,
+                                                            'type': str,
+                                                            'adv_router': str,
+                                                            'seq_num': str,
+                                                            'checksum': str,
+                                                            'length': int},
+                                                        'body': 
                                                             {'router': 
-                                                                {'num_of_links': int,
-                                                                'flags': str,
-                                                                'options': str,
-                                                                'link_state_id': str,
-                                                                'length': int,
-                                                                'ls_seq_num': str,
+                                                                {Optional('flags'): str,
+                                                                'num_of_links': int,
                                                                 'links':
                                                                     {Any(): 
                                                                         {'link_id': str,
                                                                         'link_data': str,
+                                                                        'type': str,
                                                                         'num_tos_metrics': int,
-                                                                        'metric': str,
-                                                                        'tos': int,
+                                                                        'topologies': 
+                                                                            {Any(): 
+                                                                                {'mt_id': int,
+                                                                                Optional('metric'): int,
+                                                                                Optional('tos'): int},
+                                                                            },
                                                                         },
                                                                     },
                                                                 },
