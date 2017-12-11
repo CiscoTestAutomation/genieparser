@@ -16,7 +16,8 @@ from parser.nxos.show_ospf_new import ShowIpOspfInterface,\
                                       ShowIpOspfDatabaseExternalDetail,\
                                       ShowIpOspfDatabaseNetworkDetail,\
                                       ShowIpOspfDatabaseSummaryDetail,\
-                                      ShowIpOspfDatabaseRouterDetail
+                                      ShowIpOspfDatabaseRouterDetail,\
+                                      ShowIpOspfDatabaseOpaqueAreaDetail
 
 
 # ===============================================
@@ -2234,6 +2235,286 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
             parsed_output = obj.parse()
 
 
+# =================================================================
+#  Unit test for 'show ip ospf database opaque-area detail vrf all'
+# =================================================================
+class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
+
+    '''Unit test for "show ip ospf database opaque-area detail vrf all" '''
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {}
+
+    golden_output1 = {'execute.return_value': '''
+        R2_ospf_nx# show ip ospf database opaque-area detail vrf all
+        OSPF Router with ID (2.2.2.2) (Process ID 1 VRF default)
+
+                Opaque Area Link States (Area 0.0.0.0)
+
+       LS age: 385
+       Options: 0x20 (No TOS-capability, DC)
+       LS Type: Opaque Area Link
+       Link State ID: 1.0.0.0 
+       Opaque Type: 1
+       Opaque ID: 0
+       Advertising Router: 1.1.1.1
+       LS Seq Number: 0x80000003
+       Checksum: 0x54d3
+       Length: 28
+       Fragment number: 0
+
+         MPLS TE router ID : 1.1.1.1
+
+         Number of Links : 0
+
+       LS age: 1612
+       Options: 0x2 (No TOS-capability, No DC)
+       LS Type: Opaque Area Link
+       Link State ID: 1.0.0.0 
+       Opaque Type: 1
+       Opaque ID: 0
+       Advertising Router: 2.2.2.2
+       LS Seq Number: 0x80000003
+       Checksum: 0x1c22
+       Length: 28
+       Fragment number: 0
+
+         MPLS TE router ID : 2.2.2.2
+
+         Number of Links : 0
+
+       LS age: 113
+       Options: 0x20 (No TOS-capability, DC)
+       LS Type: Opaque Area Link
+       Link State ID: 1.0.0.0 
+       Opaque Type: 1
+       Opaque ID: 0
+       Advertising Router: 3.3.3.3
+       LS Seq Number: 0x80000003
+       Checksum: 0x5cbb
+       Length: 28
+       Fragment number: 0
+
+         MPLS TE router ID : 3.3.3.3
+
+         Number of Links : 0
+
+       LS age: 385
+       Options: 0x20 (No TOS-capability, DC)
+       LS Type: Opaque Area Link
+       Link State ID: 1.0.0.1 
+       Opaque Type: 1
+       Opaque ID: 1
+       Advertising Router: 1.1.1.1
+       LS Seq Number: 0x80000003
+       Checksum: 0x6387
+       Length: 124
+       Fragment number: 1
+
+         Link connected to Broadcast network
+         Link ID : 10.1.4.4
+         Interface Address : 10.1.4.1
+         Admin Metric : 1
+         Maximum Bandwidth : 125000000 
+         Maximum reservable bandwidth : 93750000  
+         Number of Priority : 8
+           Priority 0 : 93750000    Priority 1 : 93750000  
+           Priority 2 : 93750000    Priority 3 : 93750000  
+           Priority 4 : 93750000    Priority 5 : 93750000  
+           Priority 6 : 93750000    Priority 7 : 93750000  
+         Affinity Bit : 0x0
+          Unknown Sub-TLV      :  Type = 32770, Length = 4 Value = 00 00 00 01 
+
+         Number of Links : 1
+
+       LS age: 385
+       Options: 0x20 (No TOS-capability, DC)
+       LS Type: Opaque Area Link
+       Link State ID: 1.0.0.2 
+       Opaque Type: 1
+       Opaque ID: 2
+       Advertising Router: 1.1.1.1
+       LS Seq Number: 0x80000003
+       Checksum: 0xb23e
+       Length: 124
+       Fragment number: 2
+
+         Link connected to Broadcast network
+         Link ID : 10.1.2.1
+         Interface Address : 10.1.2.1
+         Admin Metric : 1
+         Maximum Bandwidth : 125000000 
+         Maximum reservable bandwidth : 93750000  
+         Number of Priority : 8
+           Priority 0 : 93750000    Priority 1 : 93750000  
+           Priority 2 : 93750000    Priority 3 : 93750000  
+           Priority 4 : 93750000    Priority 5 : 93750000  
+           Priority 6 : 93750000    Priority 7 : 93750000  
+         Affinity Bit : 0x0
+          Unknown Sub-TLV      :  Type = 32770, Length = 4 Value = 00 00 00 01 
+
+         Number of Links : 1
+
+       LS age: 113
+       Options: 0x20 (No TOS-capability, DC)
+       LS Type: Opaque Area Link
+       Link State ID: 1.0.0.4 
+       Opaque Type: 1
+       Opaque ID: 4
+       Advertising Router: 3.3.3.3
+       LS Seq Number: 0x80000003
+       Checksum: 0x8f5e
+       Length: 160
+       Fragment number: 4
+
+         Link connected to Broadcast network
+         Link ID : 10.3.4.4
+         Interface Address : 10.3.4.3
+         Admin Metric : 1
+         Maximum Bandwidth : 125000000 
+         Maximum reservable bandwidth : 93750000  
+         Number of Priority : 8
+           Priority 0 : 93750000    Priority 1 : 93750000  
+           Priority 2 : 93750000    Priority 3 : 93750000  
+           Priority 4 : 93750000    Priority 5 : 93750000  
+           Priority 6 : 93750000    Priority 7 : 93750000  
+         Affinity Bit : 0x0
+          Unknown Sub-TLV      :  Type = 32770, Length = 4 Value = 00 00 00 01 
+          Unknown Sub-TLV      :  Type = 32771, Length = 32 Value = 00 00 00 00 00 0
+           0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+           00 00 00 00 00 00 00 00 00 00 00 00 
+
+         Number of Links : 1
+
+       LS age: 113
+       Options: 0x20 (No TOS-capability, DC)
+       LS Type: Opaque Area Link
+       Link State ID: 1.0.0.6 
+       Opaque Type: 1
+       Opaque ID: 6
+       Advertising Router: 3.3.3.3
+       LS Seq Number: 0x80000003
+       Checksum: 0x03ed
+       Length: 160
+       Fragment number: 6
+
+         Link connected to Broadcast network
+         Link ID : 10.2.3.3
+         Interface Address : 10.2.3.3
+         Admin Metric : 1
+         Maximum Bandwidth : 125000000 
+         Maximum reservable bandwidth : 93750000  
+         Number of Priority : 8
+           Priority 0 : 93750000    Priority 1 : 93750000  
+           Priority 2 : 93750000    Priority 3 : 93750000  
+           Priority 4 : 93750000    Priority 5 : 93750000  
+           Priority 6 : 93750000    Priority 7 : 93750000  
+         Affinity Bit : 0x0
+          Unknown Sub-TLV      :  Type = 32770, Length = 4 Value = 00 00 00 01 
+          Unknown Sub-TLV      :  Type = 32771, Length = 32 Value = 00 00 00 00 00 0
+           0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+           00 00 00 00 00 00 00 00 00 00 00 00 
+
+         Number of Links : 1
+
+       LS age: 1202
+       Options: 0x2 (No TOS-capability, No DC)
+       LS Type: Opaque Area Link
+       Link State ID: 1.0.0.37 
+       Opaque Type: 1
+       Opaque ID: 37
+       Advertising Router: 2.2.2.2
+       LS Seq Number: 0x80000004
+       Checksum: 0xe492
+       Length: 116
+       Fragment number: 37
+
+         Link connected to Broadcast network
+         Link ID : 10.2.3.3
+         Interface Address : 10.2.3.2
+         Admin Metric : 1
+         Maximum Bandwidth : 125000000 
+         Maximum reservable bandwidth : 93750000  
+         Number of Priority : 8
+           Priority 0 : 93750000    Priority 1 : 93750000  
+           Priority 2 : 93750000    Priority 3 : 93750000  
+           Priority 4 : 93750000    Priority 5 : 93750000  
+           Priority 6 : 93750000    Priority 7 : 93750000  
+         Affinity Bit : 0x0
+
+         Number of Links : 1
+
+       LS age: 1191
+       Options: 0x2 (No TOS-capability, No DC)
+       LS Type: Opaque Area Link
+       Link State ID: 1.0.0.38 
+       Opaque Type: 1
+       Opaque ID: 38
+       Advertising Router: 2.2.2.2
+       LS Seq Number: 0x80000004
+       Checksum: 0x2350
+       Length: 116
+       Fragment number: 38
+
+         Link connected to Broadcast network
+         Link ID : 10.2.4.4
+         Interface Address : 10.2.4.2
+         Admin Metric : 1
+         Maximum Bandwidth : 125000000 
+         Maximum reservable bandwidth : 93750000  
+         Number of Priority : 8
+           Priority 0 : 93750000    Priority 1 : 93750000  
+           Priority 2 : 93750000    Priority 3 : 93750000  
+           Priority 4 : 93750000    Priority 5 : 93750000  
+           Priority 6 : 93750000    Priority 7 : 93750000  
+         Affinity Bit : 0x0
+
+         Number of Links : 1
+
+       LS age: 1191
+       Options: 0x2 (No TOS-capability, No DC)
+       LS Type: Opaque Area Link
+       Link State ID: 1.0.0.39 
+       Opaque Type: 1
+       Opaque ID: 39
+       Advertising Router: 2.2.2.2
+       LS Seq Number: 0x80000004
+       Checksum: 0x4239
+       Length: 116
+       Fragment number: 39
+
+         Link connected to Broadcast network
+         Link ID : 10.1.2.1
+         Interface Address : 10.1.2.2
+         Admin Metric : 1
+         Maximum Bandwidth : 125000000 
+         Maximum reservable bandwidth : 93750000  
+         Number of Priority : 8
+           Priority 0 : 93750000    Priority 1 : 93750000  
+           Priority 2 : 93750000    Priority 3 : 93750000  
+           Priority 4 : 93750000    Priority 5 : 93750000  
+           Priority 6 : 93750000    Priority 7 : 93750000  
+         Affinity Bit : 0x0
+
+         Number of Links : 1
+        '''}   
+
+    def test_full(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIpOspfDatabaseOpaqueAreaDetail(device=self.device)
+        parsed_output = obj.parse(vrf='all')
+        import pdb ; pdb.set_trace()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpOspfDatabaseOpaqueAreaDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
 if __name__ == '__main__':
     unittest.main()

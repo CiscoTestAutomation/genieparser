@@ -577,7 +577,7 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
 
     def cli(self, cmd, db_type):
 
-        assert db_type in ['external', 'network', 'summary', 'router', 'opaque-area']
+        assert db_type in ['external', 'network', 'summary', 'router', 'opaque']
 
         # Execute command on device
         out = self.device.execute(cmd)
@@ -719,11 +719,30 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 try:
                     # Set previously parsed values
                     header_dict['age'] = age
+                except:
+                    pass
+                try:
                     header_dict['option'] = options
+                except:
+                    pass
+                try:
                     header_dict['type'] = lsa_type
+                except:
+                    pass
+                try:
                     header_dict['lsa_id'] = lsa_id
+                except:
+                    pass
+                try:
                     header_dict['adv_router'] = adv_router
-                    continue
+                except:
+                    pass
+                try:
+                    header_dict['opaque_type'] = opaque_type
+                except:
+                    pass
+                try:
+                    header_dict['opaque_id'] = opaque_id
                 except:
                     pass
 
@@ -957,6 +976,35 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                     int(m.groupdict()['num'])
                 continue
 
+            # Opaque Type: 1
+            p22 = re.compile(r'^Opaque +Type: +(?P<type>(\d+))$')
+            m = p22.match(line)
+            if m:
+                opaque_type = int(m.groupdict()['type'])
+                continue
+            
+            # Opaque ID: 38
+            p23 = re.compile(r'^Opaque +ID: +(?P<id>(\d+))$')
+            m = p23.match(line)
+            if m:
+                opaque_id = int(m.groupdict()['id'])
+                continue
+
+            # Fragment number: 0
+            p24 = re.compile(r'^Fragment +number: +(?P<num>(\d+))$')
+            m = p24.match(line)
+            if m:
+                header_dict['fragment_number'] = int(m.groupdict()['num'])
+                continue
+
+            # MPLS TE router ID : 1.1.1.1
+            p25 = re.compile(r'^MPLS +TE +router +ID *: +(?P<mpls>(\S+))$')
+            m = p25.match(line)
+            if m:
+                header_dict['mpls_te_router_id'] = str(m.groupdict()['mpls'])
+                continue
+
+
         return ret_dict
 
 
@@ -988,9 +1036,7 @@ class ShowIpOspfDatabaseExternalDetailSchema(MetaParser):
                                                             'adv_router': str,
                                                             'seq_num': str,
                                                             'checksum': str,
-                                                            'length': int,
-                                                            Optional('opaque_type'): str,
-                                                            Optional('opaque_id'): str},
+                                                            'length': int},
                                                         'body': 
                                                             {'external': 
                                                                 {'network_mask': str,
@@ -1065,9 +1111,7 @@ class ShowIpOspfDatabaseNetworkDetailSchema(MetaParser):
                                                             'adv_router': str,
                                                             'seq_num': str,
                                                             'checksum': str,
-                                                            'length': int,
-                                                            Optional('opaque_type'): str,
-                                                            Optional('opaque_id'): str},
+                                                            'length': int},
                                                         'body': 
                                                             {'network': 
                                                                 {'network_mask': str,
@@ -1136,9 +1180,7 @@ class ShowIpOspfDatabaseSummaryDetailSchema(MetaParser):
                                                             'adv_router': str,
                                                             'seq_num': str,
                                                             'checksum': str,
-                                                            'length': int,
-                                                            Optional('opaque_type'): str,
-                                                            Optional('opaque_id'): str},
+                                                            'length': int},
                                                         'body': 
                                                             {'summary': 
                                                                 {'network_mask': str,
@@ -1261,3 +1303,76 @@ class ShowIpOspfDatabaseRouterDetail(ShowIpOspfDatabaseRouterDetailSchema, ShowI
             cmd += ' vrf {}'.format(vrf)
 
         return super().cli(cmd=cmd, db_type='router')
+
+
+# =============================================================
+# Schema for 'show ip ospf database opqaue-area detail [vrf <WORD>]'
+# =============================================================
+class ShowIpOspfDatabaseOpaqueAreaDetailSchema(MetaParser):
+
+    ''' Schema for "show ip ospf database opaque-area detail [vrf <WORD>]" '''
+
+    schema = {
+        'vrf': 
+            {Any(): 
+                {'address_family': 
+                    {Any(): 
+                        {'instance': 
+                            {Any(): 
+                                {'database': 
+                                    {'lsa_types': 
+                                        {Any(): 
+                                            {'lsas': 
+                                                {Any(): 
+                                                    {'ospfv2': 
+                                                        {'header': 
+                                                            {'option': str,
+                                                            'lsa_id': str,
+                                                            'age': int,
+                                                            'type': str,
+                                                            'adv_router': str,
+                                                            'seq_num': str,
+                                                            'checksum': str,
+                                                            'length': int,
+                                                            'opaque_type': int,
+                                                            'opaque_id': int,
+                                                            Optional('fragment_number'): int,
+                                                            Optional('mpls_te_router_id'): str},
+                                                        'body': 
+                                                            {'opaque': 
+                                                                {Optional('unknown_tlvs'): {},
+                                                                Optional('node_tag_tlvs'): {},
+                                                                Optional('router_address_tlv'): {},
+                                                                Optional('link_tlvs'): {},
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# ==================================================================
+# Parser for 'show ip ospf database opaque-area detail [vrf <WORD>]'
+# ==================================================================
+class ShowIpOspfDatabaseOpaqueAreaDetail(ShowIpOspfDatabaseOpaqueAreaDetailSchema, ShowIpOspfDatabaseDetailParser):
+
+    ''' Parser for "show ip ospf database opaque-area detail [vrf <WORD>]" '''
+
+    def cli(self, vrf=''):
+        # excute command to get output
+        # Build command
+        cmd = 'show ip ospf database opaque-area detail'
+        if vrf:
+            cmd += ' vrf {}'.format(vrf)
+
+        return super().cli(cmd=cmd, db_type='opaque')
