@@ -633,33 +633,38 @@ class test_show_inventory(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
-        'module_name': {
-            'module 0/RSP0/CPU0': {
-                'descr': 'ASR9K Route Switch '
-                         'Processor with 440G/slot '
-                         'Fabric and 6GB',
-                'pid': 'A9K-RSP440-TR',
-                'sn': 'FOC1808NEND',
-                'vid': 'V05'},
-            'module 0/RSP1/CPU0': {
-                'descr': 'ASR9K Route Switch '
-                         'Processor with 440G/slot '
-                         'Fabric and 6GB',
-                'pid': 'A9K-MPA-20X1GE',
-                'sn': 'FOC1811N49J',
-                'vid': 'V02'},
-            'module mau 0/0/0/0': {
-                'descr': 'Unknown or Unsupported '
-                         'CPAK Module',
-                'pid': 'GLC-T',
-                'sn': '00000MTC160107LP',
-                'vid': 'N/A'},
-            'module mau 0/0/0/1': {
-                'descr': 'Unknown or Unsupported '
-                         'CPAK Module',
-                'pid': 'GLC-T',
-                'sn': '00000MTC17150731',
-                'vid': 'N/A'}}}
+        "module_name": {
+          "module 0/RSP0/CPU0": {
+               "pid": "A9K-RSP440-TR",
+               "descr": "ASR9K Route Switch Processor with 440G/slot Fabric and 6GB",
+               "sn": "FOC1808NEND",
+               "vid": "V05"
+          },
+          "module mau 0/0/0/1": {
+               "pid": "GLC-T",
+               "descr": "Unknown or Unsupported CPAK Module",
+               "sn": "00000MTC17150731",
+               "vid": "N/A"
+          },
+          "module 0/RSP1/CPU0": {
+               "pid": "A9K-MOD80-SE",
+               "descr": "ASR9K Route Switch Processor with 440G/slot Fabric and 6GB",
+               "sn": "FOC1821NEET",
+               "vid": "V06"
+          },
+          "module 0/0/0": {
+               "pid": "A9K-MPA-20X1GE",
+               "descr": "ASR 9000 20-port 1GE Modular Port Adapter",
+               "sn": "FOC1811N49J",
+               "vid": "V02"
+          },
+          "module mau 0/0/0/0": {
+               "pid": "GLC-T",
+               "descr": "Unknown or Unsupported CPAK Module",
+               "sn": "00000MTC160107LP",
+               "vid": "N/A"
+          }
+     }}
 
     golden_output1 = {'execute.return_value': '''
         NAME: "module 0/RSP0/CPU0", DESCR: "ASR9K Route Switch Processor with 440G/slot Fabric and 6GB"
@@ -812,6 +817,7 @@ class test_show_redundancy_summary(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
+        "redundancy_communication": True,
         'node': {
             '0/RSP0/CPU0(A)': {
                 'node_detail': 'Node Not Ready, NSR: Not '

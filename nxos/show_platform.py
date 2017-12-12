@@ -562,8 +562,8 @@ class ShowRedundancyStatusSchema(MetaParser):
                    'operational': str},
               Any():
                   {'redundancy_state': str,
-                   'supervisor_state': str,
-                   'internal_state':str},
+                   Optional('supervisor_state'): str,
+                   Optional('internal_state'):str},
               Optional('system_start_time'): str,
               Optional('system_uptime'): str,
               Optional('kernel_uptime'): str,
