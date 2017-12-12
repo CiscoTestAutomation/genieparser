@@ -246,6 +246,7 @@ class ShowVersion(ShowVersionSchema):
                 continue
 
             # chassis, processor_type, main_mem and rtr_type
+            # cisco WS-C3650-24PD (MIPS) processor (revision H0) with 829481K/6147K bytes of memory.
             p8 = re.compile(
                 r'^\s*cisco +(?P<chassis>[a-zA-Z0-9\-]+) +\((?P<processor_type>.+)\) +processor.+ +with +(?P<main_mem>[0-9]+)[kK]\/[0-9]+[kK]')
             m = p8.match(line)
@@ -256,7 +257,8 @@ class ShowVersion(ShowVersionSchema):
                     = m.groupdict()['main_mem']
                 version_dict['version']['processor_type'] \
                     = m.groupdict()['processor_type']
-                if 'C3850' in version_dict['version']['chassis']:
+                if 'C3850' in version_dict['version']['chassis'] or \
+                   'C3650' in version_dict['version']['chassis']:
                     version_dict['version']['rtr_type'] = rtr_type = 'Edison'
                 elif 'ASR1' in version_dict['version']['chassis']:
                     version_dict['version']['rtr_type'] = rtr_type = 'ASR1K'
@@ -352,6 +354,8 @@ class ShowVersion(ShowVersionSchema):
                 r'^\s*[Ss]witch +uptime +\: +(?P<uptime>.+)$')
             m = p17.match(line)
             if m:
+                if 'switch_num' not in version_dict['version']:
+                    continue
                 version_dict['version']['switch_num'][switch_number]['uptime'] = m.groupdict()['uptime']
                 continue
 
@@ -360,6 +364,8 @@ class ShowVersion(ShowVersionSchema):
                 r'^\s*[Bb]ase +[Ee]thernet +MAC +[Aa]ddress +\: +(?P<mac_address>.+)$')
             m = p18.match(line)
             if m:
+                if 'switch_num' not in version_dict['version']:
+                    continue
                 version_dict['version']['switch_num'][switch_number]['mac_address'] = m.groupdict()['mac_address']
                 continue
             # mb_assembly_num
@@ -367,6 +373,8 @@ class ShowVersion(ShowVersionSchema):
                 r'^\s*[Mm]otherboard +[Aa]ssembly +[Nn]umber +\: +(?P<mb_assembly_num>.+)$')
             m = p19.match(line)
             if m:
+                if 'switch_num' not in version_dict['version']:
+                    continue
                 version_dict['version']['switch_num'][switch_number]['mb_assembly_num'] = m.groupdict()['mb_assembly_num']
                 continue
             # mb_sn
@@ -374,6 +382,8 @@ class ShowVersion(ShowVersionSchema):
                 r'^\s*[Mm]otherboard +[Ss]erial +[Nn]umber +\: +(?P<mb_sn>.+)$')
             m = p20.match(line)
             if m:
+                if 'switch_num' not in version_dict['version']:
+                    continue
                 version_dict['version']['switch_num'][switch_number]['mb_sn'] = m.groupdict()['mb_sn']
                 continue
             # model_rev_num
@@ -381,6 +391,8 @@ class ShowVersion(ShowVersionSchema):
                 r'^\s*[Mm]odel +[Rr]evision +[Nn]umber +\: +(?P<model_rev_num>.+)$')
             m = p21.match(line)
             if m:
+                if 'switch_num' not in version_dict['version']:
+                    continue
                 version_dict['version']['switch_num'][switch_number]['model_rev_num'] = m.groupdict()['model_rev_num']
                 continue
             # mb_rev_num
@@ -388,6 +400,8 @@ class ShowVersion(ShowVersionSchema):
                 r'^\s*[Mm]otherboard +[Rr]evision +[Nn]umber +\: +(?P<mb_rev_num>.+)$')
             m = p22.match(line)
             if m:
+                if 'switch_num' not in version_dict['version']:
+                    continue
                 version_dict['version']['switch_num'][switch_number]['mb_rev_num'] = m.groupdict()['mb_rev_num']
                 continue
             # model_num
@@ -395,6 +409,8 @@ class ShowVersion(ShowVersionSchema):
                 r'^\s*[Mm]odel +[Nn]umber +\: +(?P<model_num>.+)$')
             m = p23.match(line)
             if m:
+                if 'switch_num' not in version_dict['version']:
+                    continue
                 version_dict['version']['switch_num'][switch_number]['model_num'] = m.groupdict()['model_num']
                 continue
             # system_sn
@@ -402,6 +418,8 @@ class ShowVersion(ShowVersionSchema):
                 r'^\s*[Ss]ystem +[Ss]erial +[Nn]umber +\: +(?P<system_sn>.+)$')
             m = p24.match(line)
             if m:
+                if 'switch_num' not in version_dict['version']:
+                    continue
                 version_dict['version']['switch_num'][switch_number]['system_sn'] = m.groupdict()['system_sn']
                 continue
 
