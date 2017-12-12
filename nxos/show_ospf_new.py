@@ -205,6 +205,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     sub_dict['enable'] = bool_dict[enable]
                     sub_dict['line_protocol'] = line_protocol
                     sub_dict['ip_address'] = ip_address
+                    sub_dict['if_cfg'] = False
                 except:
                     pass
                     continue
@@ -213,6 +214,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
             p4 = re.compile(r'^Enabled +by +interface +configuration$')
             m = p4.match(line)
             if m:
+                sub_dict['if_cfg'] = True
                 continue
 
             # State BDR, Network type BROADCAST, cost 1
@@ -260,8 +262,8 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 continue
 
             # Backup Designated Router ID: 2.2.2.2, address: 10.2.3.2
-            p7_2 = re.compile(r'^(B|b)ackup +(R|r)outer +(ID|Id):'
-                               ' (?P<router_id>(\S+)), +address:'
+            p7_2 = re.compile(r'^(B|b)ackup +(D|d)esignated +(R|r)outer'
+                               ' +(ID|Id): +(?P<router_id>(\S+)), +address:'
                                ' +(?P<ip_addr>(\S+))$')
             m = p7_2.match(line)
             if m:
@@ -388,7 +390,55 @@ class ShowIpOspfNeighborDetailSchema(MetaParser):
                                                         'address': str,
                                                         'state': str,
                                                         'last_state_change': str,
-                                                        Optional('neighbor_priority'): int,
+                                                        Optional('priority'): int,
+                                                        Optional('dr_ip_addr'): str,
+                                                        Optional('bdr_ip_addr'): str,
+                                                        Optional('dr_router_id'): str,
+                                                        Optional('bdr_router_id'): str,
+                                                        'hello_options': str,
+                                                        'dbd_options': str,
+                                                        'last_non_hello_packet_received': str,
+                                                        'dead_timer': str,
+                                                        Optional('statistics'): {
+                                                            Optional('nbr_event_count'): int,
+                                                            },
+                                                        },
+                                                     },
+                                                },
+                                            },
+                                        Optional('virtual_links'): 
+                                            {Any(): 
+                                                {'neighbors':
+                                                     {Any(): 
+                                                        {'neighbor_router_id': str,
+                                                        'address': str,
+                                                        'state': str,
+                                                        'last_state_change': str,
+                                                        Optional('priority'): int,
+                                                        Optional('dr_ip_addr'): str,
+                                                        Optional('bdr_ip_addr'): str,
+                                                        Optional('dr_router_id'): str,
+                                                        Optional('bdr_router_id'): str,
+                                                        'hello_options': str,
+                                                        'dbd_options': str,
+                                                        'last_non_hello_packet_received': str,
+                                                        'dead_timer': str,
+                                                        Optional('statistics'): {
+                                                            Optional('nbr_event_count'): int,
+                                                            },
+                                                        },
+                                                     },
+                                                },
+                                            },
+                                        Optional('sham_links'):
+                                            {Any(): 
+                                                {'neighbors':
+                                                     {Any(): 
+                                                        {'neighbor_router_id': str,
+                                                        'address': str,
+                                                        'state': str,
+                                                        'last_state_change': str,
+                                                        Optional('priority'): int,
                                                         Optional('dr_ip_addr'): str,
                                                         Optional('bdr_ip_addr'): str,
                                                         Optional('dr_router_id'): str,
@@ -449,6 +499,8 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                 continue
 
             # Process ID 1 VRF default, in area 0.0.0.0 via interface Ethernet2/2
+            # Process ID 1 VRF VRF1, in area 0.0.0.1 via interface SL1-0.0.0.0-22.22.22.22-11.11.11.11
+            # Process ID 1 VRF default, in area 0.0.0.0 via interface VL1-0.0.0.1-4.4.4.4
             p2 = re.compile(r'^Process +ID +(?P<instance>(\S+)) +VRF'
                              ' +(?P<vrf>(\S+)), +in +area +(?P<area>(\S+))'
                              ' +via +interface +(?P<interface>(\S+))$')
@@ -458,6 +510,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                 vrf = str(m.groupdict()['vrf'])
                 area = str(m.groupdict()['area'])
                 interface = str(m.groupdict()['interface'])
+
                 if 'vrf' not in ret_dict:
                     ret_dict['vrf'] = {}
                 if vrf not in ret_dict['vrf']:
@@ -480,31 +533,59 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                         ['instance'][instance]['areas']:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
                         [instance]['areas'][area] = {}
-                if 'interfaces' not in ret_dict['vrf'][vrf]['address_family']\
+
+                # Determine if 'interface' or 'sham_link' or 'virtual_link'
+                if re.search('SL', interface):
+                    pattern = '(?P<link>\w+)-(?P<area_id>[\w\.\:]+)-(?P<local>[\w\.\:]+)-(?P<remote>[\w\.\:]+)'
+                    n = re.match(pattern, interface)
+                    link = str(n.groupdict()['link'])
+                    area_id = str(n.groupdict()['area_id'])
+                    local = str(n.groupdict()['local'])
+                    remote = str(n.groupdict()['remote'])
+                    # Set values for dict
+                    intf_type = 'sham_links'
+                    intf_name = local + ' ' + remote
+
+                elif re.search('VL', interface):
+                    pattern = '(?P<link>\w+)-(?P<area_id>[\w\.\:]+)-(?P<router_id>[\w\.\:]+)'
+                    n = re.match(pattern, interface)
+                    link = str(n.groupdict()['link'])
+                    area_id = str(n.groupdict()['area_id'])
+                    router_id = str(n.groupdict()['router_id'])
+                    # Set values for dict
+                    intf_type = 'virtual_links'
+                    intf_name = area_id + ' ' + router_id
+                else:
+                    # Set values for dict
+                    intf_type = 'interfaces'
+                    intf_name = interface
+
+                # Set interface/sham_link/virtual_link dict
+                if intf_type not in ret_dict['vrf'][vrf]['address_family']\
                         [af]['instance'][instance]['areas'][area]:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'][area]['interfaces'] = {}
-                if interface not in ret_dict['vrf'][vrf]['address_family'][af]\
-                        ['instance'][instance]['areas'][area]['interfaces']:
+                        [instance]['areas'][area][intf_type] = {}
+                if intf_name not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area][intf_type]:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'][area]['interfaces'][interface] = {}
+                        [instance]['areas'][area][intf_type][intf_name] = {}
                 if 'neighbors' not in ret_dict['vrf'][vrf]['address_family']\
                         [af]['instance'][instance]['areas'][area]\
-                        ['interfaces'][interface]:
+                        [intf_type][intf_name]:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'][area]['interfaces'][interface]\
+                        [instance]['areas'][area][intf_type][intf_name]\
                         ['neighbors'] = {}
                 if neighbor not in ret_dict['vrf'][vrf]['address_family']\
                         [af]['instance'][instance]['areas'][area]\
-                        ['interfaces'][interface]['neighbors']:
+                        [intf_type][intf_name]['neighbors']:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'][area]['interfaces'][interface]\
+                        [instance]['areas'][area][intf_type][intf_name]\
                         ['neighbors'][neighbor] = {}
 
                 # Set sub_dict
                 sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
-                            ['instance'][instance]['areas'][area]['interfaces']\
-                            [interface]['neighbors'][neighbor]
+                            ['instance'][instance]['areas'][area]\
+                            [intf_type][intf_name]['neighbors'][neighbor]
 
                 # Set previously parsed keys
                 sub_dict['neighbor_router_id'] = neighbor
@@ -528,7 +609,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
             p4 = re.compile(r'^Neighbor +priority +is +(?P<priority>(\S+))$')
             m = p4.match(line)
             if m:
-                sub_dict['neighbor_priority'] = int(m.groupdict()['priority'])
+                sub_dict['priority'] = int(m.groupdict()['priority'])
                 continue
 
             # DR is 10.2.3.3 BDR is 10.2.3.2
@@ -1004,6 +1085,26 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 header_dict['mpls_te_router_id'] = str(m.groupdict()['mpls'])
                 continue
 
+            # Number of Links : 0
+            p26 = re.compile(r'^Number +of +Links *: +(?P<links>(\d+))$')
+            m = p26.match(line)
+            if m:
+                header_dict['num_links'] = int(m.groupdict()['links'])
+                continue
+
+            # Link connected to Broadcast network
+            # Link ID : 10.1.4.4
+            # Interface Address : 10.1.4.1
+            # Admin Metric : 1
+            # Maximum Bandwidth : 125000000 
+            # Maximum reservable bandwidth : 93750000  
+            # Number of Priority : 8
+            # Priority 0 : 93750000    Priority 1 : 93750000  
+            # Priority 2 : 93750000    Priority 3 : 93750000  
+            # Priority 4 : 93750000    Priority 5 : 93750000  
+            # Priority 6 : 93750000    Priority 7 : 93750000  
+            # Affinity Bit : 0x0
+            # Unknown Sub-TLV      :  Type = 32770, Length = 4 Value = 00 00 00 01
 
         return ret_dict
 
@@ -1337,7 +1438,8 @@ class ShowIpOspfDatabaseOpaqueAreaDetailSchema(MetaParser):
                                                             'opaque_type': int,
                                                             'opaque_id': int,
                                                             Optional('fragment_number'): int,
-                                                            Optional('mpls_te_router_id'): str},
+                                                            Optional('mpls_te_router_id'): str,
+                                                            Optional('num_links'): int},
                                                         'body': 
                                                             {'opaque': 
                                                                 {Optional('unknown_tlvs'): {},
