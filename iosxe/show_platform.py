@@ -1285,3 +1285,128 @@ class ShowPlatform(ShowPlatformSchema):
                     continue
 
         return platform_dict
+
+
+class ShowBootSchema(MetaParser):
+    '''Schema for command 'show boot' '''
+
+    schema = {Optional('current_boot_variable'): str,
+              Optional('next_reload_boot_variable'): str,
+              Optional('manual_boot'): bool,
+              Optional('enable_break'): bool,
+              Optional('boot_mode'): str,
+              Optional('ipxe_timeout'): int,
+              Optional('active'): {              
+                  'configuration_register': str,
+                  'boot_variable': str,
+              },
+              Optional('standby'): {              
+                  'configuration_register': str,
+                  'boot_variable': str,
+              },
+    }
+
+class ShowBoot(ShowBootSchema):
+    '''parser for command 'show boot' '''
+
+    def cli(self):
+        cmd = 'show boot'.format()
+        out = self.device.execute(cmd)
+        boot_dict = {}
+        boot_variable = None
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Current Boot Variables:
+            p1 = re.compile(r'Current +Boot +Variables:$')
+            m = p1.match(line)
+            if m:
+                boot_variable = 'current'
+                continue
+
+            # Boot Variables on next reload:
+            p1_2 = re.compile(r'Boot +Variables +on +next +reload:$')
+            m = p1_2.match(line)
+            if m:
+                boot_variable = 'next'
+                continue
+
+            # BOOT variable = bootflash:/asr1000rpx.bin,12;
+            # BOOT variable = flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden;
+            p1_1 = re.compile(r'^BOOT +variable +=( *(?P<var>\S+);)?$')
+            m = p1_1.match(line)
+            if m:
+                boot = m.groupdict()['var']
+                if boot:
+                    if boot_variable == 'current':
+                        boot_dict['current_boot_variable'] = boot
+                    elif boot_variable == 'next':
+                        boot_dict['next_reload_boot_variable'] = boot
+                    else:
+                        if 'active' not in boot_dict:
+                            boot_dict['active'] = {}
+                        boot_dict['active']['boot_variable'] = boot
+                continue
+
+            # Standby BOOT variable = bootflash:/asr1000rpx.bin,12;
+            p2 = re.compile(r'^Standby +BOOT +variable +=( *(?P<var>\S+);)?$')
+            m = p2.match(line)
+            if m:
+                if m.groupdict()['var']:
+                    if 'standby' not in boot_dict:
+                        boot_dict['standby'] = {}
+                        boot_dict['standby']['boot_variable'] = m.groupdict()['var']
+                continue
+
+            # Configuration register is 0x2002
+            p3 = re.compile(r'^Configuration +register +is +(?P<var>\w+)$')
+            m = p3.match(line)
+            if m:
+                if 'active' not in boot_dict:
+                    boot_dict['active'] = {}
+                boot_dict['active']['configuration_register'] = m.groupdict()['var']
+                continue
+
+            # Standby Configuration register is 0x2002
+            p4 = re.compile(r'^Standby +Configuration +register'
+                             ' +is +(?P<var>\w+)$')
+            m = p4.match(line)
+            if m:
+                if 'standby' not in boot_dict:
+                    boot_dict['standby'] = {}
+                boot_dict['standby']['configuration_register'] = m.groupdict()['var']
+                continue
+
+            # Manual Boot = yes
+            p6 = re.compile(r'^Manual +Boot += +(?P<var>\w+)$')
+            m = p6.match(line)
+            if m:
+                boot_dict['manual_boot'] = True if \
+                    m.groupdict()['var'].lower() == 'yes' else\
+                        False
+                continue
+
+            # Enable Break = yes
+            p6 = re.compile(r'^Enable +Break += +(?P<var>\w+)$')
+            m = p6.match(line)
+            if m:
+                boot_dict['enable_break'] = True if \
+                    m.groupdict()['var'].lower() == 'yes' else\
+                        False
+                continue
+
+            # Boot Mode = DEVICE
+            p6 = re.compile(r'^Boot +Mode += +(?P<var>\w+)$')
+            m = p6.match(line)
+            if m:
+                boot_dict['boot_mode'] = m.groupdict()['var'].lower()
+                continue
+
+            # iPXE Timeout = 0
+            p6 = re.compile(r'^iPXE +Timeout += +(?P<var>\w+)$')
+            m = p6.match(line)
+            if m:
+                boot_dict['ipxe_timeout'] = int(m.groupdict()['var'])
+                continue
+        return boot_dict

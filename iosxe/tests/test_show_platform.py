@@ -6,10 +6,10 @@ from ats.topology import Device
 from metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
 from parser.iosxe.show_platform import ShowVersion,\
-                                                  Dir,\
-                                                  ShowRedundancy,\
-                                                  ShowInventory,\
-                                                  ShowPlatform
+                                       Dir,\
+                                       ShowRedundancy,\
+                                       ShowInventory,\
+                                       ShowPlatform, ShowBoot
 
 
 class test_show_version(unittest.TestCase):
@@ -1804,6 +1804,82 @@ F0        08041102            16.2(1r)
         self.maxDiff = None
         self.dev_asr1k = Mock(**self.golden_output_asr1k)
         platform_obj = ShowPlatform(device=self.dev_asr1k)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_asr1k)
+
+
+class test_show_boot(unittest.TestCase):
+    dev1 = Device(name='empty')
+    dev_asr1k = Device(name='asr1k')
+    dev_c3850 = Device(name='c3850')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_c3850 = {
+        "ipxe_timeout": 0,
+         "enable_break": True,
+         "current_boot_variable": "flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden",
+         "next_reload_boot_variable": "flash:ISSUCleanGolden",
+         "manual_boot": True,
+         "boot_mode": "device"
+    }
+
+    golden_output_c3850 = {'execute.return_value': '''\
+        ---------------------------
+        Switch 5
+        ---------------------------
+        Current Boot Variables:
+        BOOT variable = flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150907_031219.bin;flash:cat3k_caa-universalk9.BLD_POLARIS_DEV_LATEST_20150828_174328.SSA.bin;flash:ISSUCleanGolden;
+
+        Boot Variables on next reload:
+        BOOT variable = flash:ISSUCleanGolden;
+        Manual Boot = yes
+        Enable Break = yes
+        Boot Mode = DEVICE
+        iPXE Timeout = 0
+    '''
+    }
+
+    golden_parsed_output_asr1k = {
+        "standby": {
+            "boot_variable": "bootflash:/asr1000rpx.bin,12",
+            "configuration_register": "0x2002"
+        },
+        "active": {
+            "boot_variable": "bootflash:/asr1000rpx.bin,12",
+            "configuration_register": "0x2002"
+        }
+    }
+
+    golden_output_asr1k = {'execute.return_value': '''\
+        BOOT variable = bootflash:/asr1000rpx.bin,12;
+        CONFIG_FILE variable = 
+        BOOTLDR variable does not exist
+        Configuration register is 0x2002
+
+        Standby BOOT variable = bootflash:/asr1000rpx.bin,12;
+        Standby CONFIG_FILE variable = 
+        Standby BOOTLDR variable does not exist
+        Standby Configuration register is 0x2002
+    '''
+    }
+
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        platform_obj = ShowBoot(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden_c3850(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_c3850)
+        platform_obj = ShowBoot(device=self.dev_c3850)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+
+    def test_golden_asr1k(self):
+        self.maxDiff = None
+        self.dev_asr1k = Mock(**self.golden_output_asr1k)
+        platform_obj = ShowBoot(device=self.dev_asr1k)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_asr1k)
 
