@@ -1808,7 +1808,7 @@ F0        08041102            16.2(1r)
         self.assertEqual(parsed_output,self.golden_parsed_output_asr1k)
 
 
-class test_show_platform(unittest.TestCase):
+class test_show_boot(unittest.TestCase):
     dev1 = Device(name='empty')
     dev_asr1k = Device(name='asr1k')
     dev_c3850 = Device(name='c3850')
