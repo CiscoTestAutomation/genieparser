@@ -41,7 +41,10 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
                                     {'0.0.0.1': 
                                         {'interfaces': 
                                             {'Ethernet2/1': 
-                                                {'bfd': False,
+                                                {'bdr_ip_addr': '20.2.6.2',
+                                                'bdr_router_id': '22.22.22.22',
+                                                'bfd': 
+                                                    {'enable': False},
                                                 'cost': 40,
                                                 'dead_interval': 40,
                                                 'dr_ip_addr': '20.2.6.6',
@@ -49,74 +52,106 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
                                                 'enable': True,
                                                 'hello_interval': 10,
                                                 'hello_timer': '00:00:07',
+                                                'if_cfg': True,
                                                 'index': 2,
                                                 'interface_type': 'broadcast',
                                                 'ip_address': '20.2.6.2/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Ethernet2/1',
-                                                'num_nbrs_adjacent': 1,
-                                                'num_nbrs_flooding': 1,
-                                                'statistics': 
-                                                    {'link_scope_lsa_cksum_sum': 0,
-                                                    'link_scope_lsa_count': 0},
                                                 'passive': False,
                                                 'priority': 1,
                                                 'retransmit_interval': 5,
                                                 'state': 'bdr',
-                                                'total_neighbors': 1,
+                                                'statistics': 
+                                                    {'link_scope_lsa_cksum_sum': 0,
+                                                    'link_scope_lsa_count': 0,
+                                                    'num_nbrs_adjacent': 1,
+                                                    'num_nbrs_flooding': 1,
+                                                    'total_neighbors': 1},
                                                 'transmit_delay': 1,
-                                                'wait_timer': 40},
-                                            'SL1-0.0.0.0-22.22.22.22-11.11.11.11': 
-                                                {'bfd': False,
+                                                'wait_interval': 40}},
+                                        'sham_links': 
+                                            {'22.22.22.22 11.11.11.11': 
+                                                {'bfd': 
+                                                    {'enable': False},
                                                 'cost': 1,
                                                 'dead_interval': 40,
                                                 'enable': True,
                                                 'hello_interval': 10,
                                                 'hello_timer': '00:00:07',
+                                                'if_cfg': False,
                                                 'index': 6,
                                                 'interface_type': 'p2p',
                                                 'ip_address': '22.22.22.22',
                                                 'line_protocol': 'up',
                                                 'name': 'SL1-0.0.0.0-22.22.22.22-11.11.11.11',
-                                                'num_nbrs_adjacent': 1,
-                                                'num_nbrs_flooding': 1,
-                                                'statistics': 
-                                                    {'link_scope_lsa_cksum_sum': 0,
-                                                    'link_scope_lsa_count': 0},
                                                 'passive': False,
                                                 'retransmit_interval': 5,
                                                 'state': 'p2p',
-                                                'total_neighbors': 1,
+                                                'statistics': 
+                                                    {'link_scope_lsa_cksum_sum': 0,
+                                                    'link_scope_lsa_count': 0,
+                                                    'num_nbrs_adjacent': 1,
+                                                    'num_nbrs_flooding': 1,
+                                                    'total_neighbors': 1},
                                                 'transmit_delay': 1,
-                                                'wait_timer': 40},
-                                            'SL2-0.0.0.0-22.22.22.22-33.33.33.33': 
+                                                'wait_interval': 40},
+                                            '22.22.22.22 33.33.33.33': 
                                                 {'authentication': 
                                                     {'auth_trailer_key': 
                                                         {'crypto_algorithm': 'Simple'},
-                                                    'auth_trailer_key_chain': 
-                                                        {'key_chain': 'test'}},
-                                                'bfd': False,
-                                                'cost': 111,
-                                                'dead_interval': 13,
+                                                        'auth_trailer_key_chain': 
+                                                            {'key_chain': 'test'}},
+                                                    'bfd': 
+                                                        {'enable': False},
+                                                    'cost': 111,
+                                                    'dead_interval': 13,
+                                                    'enable': True,
+                                                    'hello_interval': 3,
+                                                    'hello_timer': '00:00:00',
+                                                    'if_cfg': False,
+                                                    'index': 7,
+                                                    'interface_type': 'p2p',
+                                                    'ip_address': '22.22.22.22',
+                                                    'line_protocol': 'up',
+                                                    'name': 'SL2-0.0.0.0-22.22.22.22-33.33.33.33',
+                                                    'passive': False,
+                                                    'retransmit_interval': 5,
+                                                    'state': 'p2p',
+                                                    'statistics': 
+                                                        {'link_scope_lsa_cksum_sum': 0,
+                                                        'link_scope_lsa_count': 0,
+                                                        'num_nbrs_adjacent': 0,
+                                                        'num_nbrs_flooding': 0,
+                                                        'total_neighbors': 0},
+                                                    'transmit_delay': 7,
+                                                    'wait_interval': 13}},
+                                        'virtual_links': 
+                                            {'0.0.0.0 8.8.8.8': 
+                                                {'bfd': 
+                                                    {'enable': False},
+                                                'cost': 1,
+                                                'dead_interval': 40,
                                                 'enable': True,
-                                                'hello_interval': 3,
-                                                'hello_timer': '00:00:00',
-                                                'index': 7,
+                                                'hello_interval': 10,
+                                                'hello_timer': '00:00:07',
+                                                'if_cfg': False,
+                                                'index': 6,
                                                 'interface_type': 'p2p',
                                                 'ip_address': '22.22.22.22',
                                                 'line_protocol': 'up',
-                                                'name': 'SL2-0.0.0.0-22.22.22.22-33.33.33.33',
-                                                'num_nbrs_adjacent': 0,
-                                                'num_nbrs_flooding': 0,
-                                                'statistics': 
-                                                    {'link_scope_lsa_cksum_sum': 0,
-                                                    'link_scope_lsa_count': 0},
+                                                'name': 'VL1-0.0.0.0-8.8.8.8-12.12.12.12',
                                                 'passive': False,
                                                 'retransmit_interval': 5,
                                                 'state': 'p2p',
-                                                'total_neighbors': 0,
-                                                'transmit_delay': 7,
-                                                'wait_timer': 13}}}}}}}}},
+                                                'statistics': 
+                                                    {'link_scope_lsa_cksum_sum': 0,
+                                                    'link_scope_lsa_count': 0,
+                                                    'num_nbrs_adjacent': 1,
+                                                    'num_nbrs_flooding': 1,
+                                                    'total_neighbors': 1},
+                                                'transmit_delay': 1,
+                                                'wait_interval': 40}}}}}}}}},
             'default': 
                 {'address_family': 
                     {'ipv4': 
@@ -126,7 +161,10 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
                                     {'0.0.0.0': 
                                         {'interfaces': 
                                             {'Ethernet2/2': 
-                                                {'bfd': False,
+                                                {'bdr_ip_addr': '10.2.3.2',
+                                                'bdr_router_id': '2.2.2.2',
+                                                'bfd': 
+                                                    {'enable': False},
                                                 'cost': 1,
                                                 'dead_interval': 40,
                                                 'dr_ip_addr': '10.2.3.3',
@@ -134,25 +172,29 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
                                                 'enable': True,
                                                 'hello_interval': 10,
                                                 'hello_timer': '00:00:02',
+                                                'if_cfg': True,
                                                 'index': 3,
                                                 'interface_type': 'broadcast',
                                                 'ip_address': '10.2.3.2/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Ethernet2/2',
-                                                'num_nbrs_adjacent': 1,
-                                                'num_nbrs_flooding': 1,
-                                                'statistics': 
-                                                    {'link_scope_lsa_cksum_sum': 0,
-                                                    'link_scope_lsa_count': 0},
                                                 'passive': False,
                                                 'priority': 1,
                                                 'retransmit_interval': 5,
                                                 'state': 'bdr',
-                                                'total_neighbors': 1,
+                                                'statistics': 
+                                                    {'link_scope_lsa_cksum_sum': 0,
+                                                    'link_scope_lsa_count': 0,
+                                                    'num_nbrs_adjacent': 1,
+                                                    'num_nbrs_flooding': 1,
+                                                    'total_neighbors': 1},
                                                 'transmit_delay': 1,
-                                                'wait_timer': 40},
+                                                'wait_interval': 40},
                                             'Ethernet2/3': 
-                                                {'bfd': False,
+                                                {'bdr_ip_addr': '10.2.4.2',
+                                                'bdr_router_id': '2.2.2.2',
+                                                'bfd': 
+                                                    {'enable': False},
                                                 'cost': 1,
                                                 'dead_interval': 40,
                                                 'dr_ip_addr': '10.2.4.4',
@@ -160,25 +202,29 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
                                                 'enable': True,
                                                 'hello_interval': 10,
                                                 'hello_timer': '00:00:00',
+                                                'if_cfg': True,
                                                 'index': 4,
                                                 'interface_type': 'broadcast',
                                                 'ip_address': '10.2.4.2/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Ethernet2/3',
-                                                'num_nbrs_adjacent': 1,
-                                                'num_nbrs_flooding': 1,
-                                                'statistics': 
-                                                    {'link_scope_lsa_cksum_sum': 0,
-                                                    'link_scope_lsa_count': 0},
                                                 'passive': False,
                                                 'priority': 1,
                                                 'retransmit_interval': 5,
                                                 'state': 'bdr',
-                                                'total_neighbors': 1,
+                                                'statistics': 
+                                                    {'link_scope_lsa_cksum_sum': 0,
+                                                    'link_scope_lsa_count': 0,
+                                                    'num_nbrs_adjacent': 1,
+                                                    'num_nbrs_flooding': 1,
+                                                    'total_neighbors': 1},
                                                 'transmit_delay': 1,
-                                                'wait_timer': 40},
+                                                'wait_interval': 40},
                                             'Ethernet2/4': 
-                                                {'bfd': False,
+                                                {'bdr_ip_addr': '10.1.2.2',
+                                                'bdr_router_id': '2.2.2.2',
+                                                'bfd': 
+                                                    {'enable': False},
                                                 'cost': 1,
                                                 'dead_interval': 40,
                                                 'dr_ip_addr': '10.1.2.1',
@@ -186,27 +232,30 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
                                                 'enable': True,
                                                 'hello_interval': 10,
                                                 'hello_timer': '00:00:00',
+                                                'if_cfg': True,
                                                 'index': 5,
                                                 'interface_type': 'broadcast',
                                                 'ip_address': '10.1.2.2/24',
                                                 'line_protocol': 'up',
                                                 'name': 'Ethernet2/4',
-                                                'num_nbrs_adjacent': 1,
-                                                'num_nbrs_flooding': 1,
-                                                'statistics': 
-                                                    {'link_scope_lsa_cksum_sum': 0,
-                                                    'link_scope_lsa_count': 0},
                                                 'passive': False,
                                                 'priority': 1,
                                                 'retransmit_interval': 5,
                                                 'state': 'bdr',
-                                                'total_neighbors': 1,
+                                                'statistics': 
+                                                    {'link_scope_lsa_cksum_sum': 0,
+                                                    'link_scope_lsa_count': 0,
+                                                    'num_nbrs_adjacent': 1,
+                                                    'num_nbrs_flooding': 1,
+                                                    'total_neighbors': 1},
                                                 'transmit_delay': 1,
-                                                'wait_timer': 40},
+                                                'wait_interval': 40},
                                             'loopback0': 
-                                                {'bfd': False,
+                                                {'bfd': 
+                                                    {'enable': False},
                                                 'cost': 1,
                                                 'enable': True,
+                                                'if_cfg': True,
                                                 'index': 1,
                                                 'interface_type': 'loopback',
                                                 'ip_address': '2.2.2.2/32',
@@ -280,6 +329,16 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
             Timer intervals: Hello 3, Dead 13, Wait 13, Retransmit 5
               Hello timer due in 00:00:00
             Simple authentication, using keychain test (ready)
+            Number of opaque link LSAs: 0, checksum sum 0
+         VL1-0.0.0.0-8.8.8.8-12.12.12.12 is up, line protocol is up
+            Unnumbered interface using IP address of loopback1 (22.22.22.22)
+            Process ID 1 VRF VRF1, area 0.0.0.1
+            State P2P, Network type P2P, cost 1
+            Index 6, Transmit delay 1 sec
+            1 Neighbors, flooding to 1, adjacent with 1
+            Timer intervals: Hello 10, Dead 40, Wait 40, Retransmit 5
+              Hello timer due in 00:00:07
+            No authentication
             Number of opaque link LSAs: 0, checksum sum 0
          Ethernet2/1 is up, line protocol is up
             IP address 20.2.6.2/24
@@ -2599,19 +2658,20 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
          Number of Links : 1
         '''}
 
-    # def test_full(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.golden_output1)
-    #     obj = ShowIpOspfDatabaseOpaqueAreaDetail(device=self.device)
-    #     parsed_output = obj.parse(vrf='all')
-    #     self.assertEqual(parsed_output, self.golden_parsed_output1)
+    def test_full(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIpOspfDatabaseOpaqueAreaDetail(device=self.device)
+        parsed_output = obj.parse(vrf='all')
+        import pdb ; pdb.set_trace()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-    # def test_empty(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.empty_output)
-    #     obj = ShowIpOspfDatabaseOpaqueAreaDetail(device=self.device)
-    #     with self.assertRaises(SchemaEmptyParserError):
-    #         parsed_output = obj.parse()
+    def test_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpOspfDatabaseOpaqueAreaDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
 
 
