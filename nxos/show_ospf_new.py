@@ -781,7 +781,6 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
         ret_dict = {}
         af = 'ipv4'
         mt_id = 0
-        link_tlv_counter = 0
         lsa_type_mapping = {'summary network': 'network summary',
                             'router link': 'router links'}
 
@@ -883,6 +882,10 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 adv_router = str(m.groupdict()['adv_router'])
                 lsa = lsa_id + ' ' + adv_router
                 
+                # Reset counters for this lsa
+                link_tlv_counter = 0
+                unknown_tlvs_counter = 0
+
                 # Create schema structure
                 if 'lsas' not in sub_dict:
                     sub_dict['lsas'] = {}
@@ -1219,11 +1222,23 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
 
                 # Set link type
                 opaque_link = str(m.groupdict()['link'])
-                opaque_link_type = 1
                 if opaque_link == 'Broadcast network':
                     opaque_link_type = 2
-                db_dict['link_tlvs'][link_tlv_counter]['link_type'] = \
-                    opaque_link_type
+                else:
+                    opaque_link_type = 1
+                db_dict['link_tlvs'][link_tlv_counter]\
+                    ['link_type'] = opaque_link_type
+                db_dict['link_tlvs'][link_tlv_counter]\
+                    ['link_name'] = opaque_link
+                
+                # Set remote_if_ipv4_addrs (if needed)
+                if opaque_link_type == 2:
+                    if 'remote_if_ipv4_addrs' not in db_dict['link_tlvs']\
+                            [link_tlv_counter]:
+                        db_dict['link_tlvs'][link_tlv_counter]\
+                            ['remote_if_ipv4_addrs'] = {}
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['remote_if_ipv4_addrs']['0.0.0.0'] = {}
                 continue
 
             # Link ID : 10.1.4.4
@@ -1235,6 +1250,19 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 continue
 
             # Interface Address : 10.1.4.1
+            p29 = re.compile(r'^Interface +Address *: +(?P<addr>(\S+))$')
+            m = p29.match(line)
+            if m:
+                addr = str(m.groupdict()['addr'])
+                if 'local_if_ipv4_addrs' not in db_dict['link_tlvs']\
+                        [link_tlv_counter]:
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['local_if_ipv4_addrs'] = {}
+                if addr not in db_dict['link_tlvs'][link_tlv_counter]\
+                        ['local_if_ipv4_addrs']:
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['local_if_ipv4_addrs'][addr] = {}
+                    continue
 
             # Admin Metric : 1
             p30 = re.compile(r'^Admin +Metric *: +(?P<te_metric>(\d+))$')
@@ -1272,12 +1300,63 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 continue
 
             # Number of Priority : 8
-            # Priority 0 : 93750000    Priority 1 : 93750000  
-            # Priority 2 : 93750000    Priority 3 : 93750000  
-            # Priority 4 : 93750000    Priority 5 : 93750000  
-            # Priority 6 : 93750000    Priority 7 : 93750000  
+            
+            # Priority 0 : 93750000    Priority 1 : 93750000
+            p34 = re.compile(r'^Priority +(?P<num1>(\d+)) *: +(?P<band1>(\d+))(?:'
+                             ' +Priority +(?P<num2>(\d+)) *: +(?P<band2>(\d+)))?$')
+            m = p34.match(line)
+            if m:
+                value1 = str(m.groupdict()['num1']) + ' ' + \
+                         str(m.groupdict()['band1'])
+                value2 = str(m.groupdict()['num2']) + ' ' + \
+                         str(m.groupdict()['band2'])
+                if 'unreserved_bandwidths' not in db_dict['link_tlvs']\
+                        [link_tlv_counter]:
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['unreserved_bandwidths'] = {}
+                if value1 not in db_dict['link_tlvs'][link_tlv_counter]\
+                        ['unreserved_bandwidths']:
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['unreserved_bandwidths'][value1] = {}
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['unreserved_bandwidths'][value1]['priority'] = \
+                        int(m.groupdict()['num1'])
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['unreserved_bandwidths'][value1]\
+                        ['unreserved_bandwidth'] = int(m.groupdict()['band1'])
+                if value2 not in db_dict['link_tlvs'][link_tlv_counter]\
+                        ['unreserved_bandwidths']:
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['unreserved_bandwidths'][value2] = {}
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['unreserved_bandwidths'][value2]['priority'] = \
+                            int(m.groupdict()['num2'])
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['unreserved_bandwidths'][value2]\
+                        ['unreserved_bandwidth'] = int(m.groupdict()['band2'])
+                    continue
 
-            # Unknown Sub-TLV      :  Type = 32770, Length = 4 Value = 00 00 00 01
+            # Unknown Sub-TLV   :  Type = 32770, Length = 4 Value = 00 00 00 01
+            p35 = re.compile(r'^Unknown +Sub-TLV *: +Type += +(?P<type>(\d+)),'
+                              ' +Length += +(?P<length>(\d+))'
+                              ' +Value += +(?P<value>(.*))$')
+            m = p35.match(line)
+            if m:
+                unknown_tlvs_counter += 1
+                if 'unknown_tlvs' not in db_dict['link_tlvs'][link_tlv_counter]:
+                    db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs'] = {}
+                if unknown_tlvs_counter not in db_dict['link_tlvs']\
+                        [link_tlv_counter]['unknown_tlvs']:
+                    db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs']\
+                        [unknown_tlvs_counter] = {}
+                db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs']\
+                    [unknown_tlvs_counter]['type'] = int(m.groupdict()['type'])
+                db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs']\
+                    [unknown_tlvs_counter]['length'] = int(m.groupdict()['length'])
+                db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs']\
+                    [unknown_tlvs_counter]['value'] = str(m.groupdict()['value'])
+                continue
+
 
         return ret_dict
 
@@ -1618,6 +1697,7 @@ class ShowIpOspfDatabaseOpaqueAreaDetailSchema(MetaParser):
                                                                 {Optional('link_tlvs'): 
                                                                     {Any(): 
                                                                         {'link_type': int,
+                                                                        'link_name': str,
                                                                         'link_id': str,
                                                                         'te_metric': int,
                                                                         'max_bandwidth': int,
@@ -1636,7 +1716,7 @@ class ShowIpOspfDatabaseOpaqueAreaDetailSchema(MetaParser):
                                                                             {Any(): 
                                                                                 {'type': int,
                                                                                 'length': int,
-                                                                                'value': int},
+                                                                                'value': str},
                                                                             },
                                                                         },
                                                                     },
