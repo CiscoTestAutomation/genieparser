@@ -772,7 +772,8 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
 
     def cli(self, cmd, db_type):
 
-        assert db_type in ['external', 'network', 'summary', 'router', 'opaque']
+        assert db_type in ['external', 'network', 'summary', 'router',
+                           'opaque']
 
         # Execute command on device
         out = self.device.execute(cmd)
@@ -781,8 +782,19 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
         ret_dict = {}
         af = 'ipv4'
         mt_id = 0
-        lsa_type_mapping = {'summary network': 'network summary',
-                            'router link': 'router links'}
+
+        # Router
+        # Network Link
+        # Summary Network
+        # Opaque Area
+        # Type-5 AS External
+        lsa_type_mapping = {
+            'router': 1,
+            'network': 2,
+            'summary': 3,
+            'external': 5,
+            'opaque': 10,
+            }
 
         for line in out.splitlines():
             line = line.strip()
@@ -817,31 +829,49 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
             # Opaque Area Link States (Area 0.0.0.0)
             # Summary Network Link States (Area 0.0.0.0)
             # Network Link States (Area 0.0.0.0)
-            p2 = re.compile(r'^(?P<lsa_type>(.*)) +Link +States'
+            p2 = re.compile(r'^(?P<lsa_type_name>(.*)) +Link +States'
                              '(?: +\(Area +(?P<area>(\S+))\))?$')
             m = p2.match(line)
             if m:
-                lsa_type = str(m.groupdict()['lsa_type'])
+                lsa_type = lsa_type_mapping[db_type]
+                
+                # Set area
                 if m.groupdict()['area']:
                     area = str(m.groupdict()['area'])
+                else:
+                    area = '0.0.0.0'
 
-                if 'database' not in ret_dict['vrf'][vrf]['address_family']\
-                        [af]['instance'][instance]:
+                # Create dict structure
+                if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['database'] = {}
+                        [instance]['areas'] = {}
+                if area not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area] = {}
+                if 'database' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area]['database'] = {}
                 if 'lsa_types' not in ret_dict['vrf'][vrf]['address_family']\
-                        [af]['instance'][instance]['database']:
+                        [af]['instance'][instance]['areas'][area]['database']:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['database']['lsa_types'] = {}
+                        [instance]['areas'][area]['database']['lsa_types'] = {}
                 if lsa_type not in ret_dict['vrf'][vrf]['address_family'][af]\
-                        ['instance'][instance]['database']['lsa_types']:
+                        ['instance'][instance]['areas'][area]['database']\
+                        ['lsa_types']:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['database']['lsa_types'][lsa_type] = {}
+                        [instance]['areas'][area]['database']['lsa_types']\
+                        [lsa_type] = {}
 
                 # Set sub_dict
                 sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
-                            ['instance'][instance]['database']['lsa_types']\
-                            [lsa_type]
+                            ['instance'][instance]['areas'][area]['database']\
+                            ['lsa_types'][lsa_type]
+
+                # Set lsa_type
+                sub_dict['lsa_type'] = lsa_type
                 continue
 
             # LS age: 1565
@@ -852,17 +882,19 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 continue
 
             # Options: 0x20 (No TOS-capability, DC)
-            p4 = re.compile(r'^Options: +(?P<options>(.*))$')
+            p4 = re.compile(r'^Options: +(?P<option>([a-zA-Z0-9]+))(?:'
+                             ' *\((?P<option_desc>(.*))\))?$')
             m = p4.match(line)
             if m:
-                options = str(m.groupdict()['options'])
+                option = str(m.groupdict()['option'])
+                option_desc = str(m.groupdict()['option_desc'])
                 continue
 
             # LS Type: Type-5 AS-External
             p5 = re.compile(r'^LS +Type: +(?P<lsa_type>(.*))$')
             m = p5.match(line)
             if m:
-                lsa_type = str(m.groupdict()['lsa_type'])
+                lsa_type = lsa_type_mapping[db_type]
                 continue
 
             # Link State ID: 1.1.1.1
@@ -891,10 +923,17 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                     sub_dict['lsas'] = {}
                 if lsa not in sub_dict['lsas']:
                     sub_dict['lsas'][lsa] = {}
-                if 'ospfv2' not in sub_dict['lsas'][lsa]:
-                    sub_dict['lsas'][lsa]['ospfv2'] = {}
+                
+                # Set keys under 'lsa'
+                sub_dict['lsas'][lsa]['adv_router'] = adv_router
+                try:
+                    sub_dict['lsas'][lsa]['lsa_id'] = lsa_id
+                except:
+                    pass
 
                 # Set db_dict
+                if 'ospfv2' not in sub_dict['lsas'][lsa]:
+                    sub_dict['lsas'][lsa]['ospfv2'] = {}
                 if 'body' not in sub_dict['lsas'][lsa]['ospfv2']:
                     sub_dict['lsas'][lsa]['ospfv2']['body'] = {}
                 if db_type not in sub_dict['lsas'][lsa]['ospfv2']['body']:
@@ -921,7 +960,7 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 except:
                     pass
                 try:
-                    header_dict['option'] = options
+                    header_dict['option'] = option
                 except:
                     pass
                 try:
@@ -967,10 +1006,10 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 continue
 
             # Network Mask: /32
-            p10 = re.compile(r'^Network +Mask: +(?P<net_mask>(\S+))$')
+            p10 = re.compile(r'^Network +Mask: +\/(?P<net_mask>(\S+))$')
             m = p10.match(line)
             if m:
-                db_dict['network_mask'] = str(m.groupdict()['net_mask'])
+                db_dict['network_mask'] = '.'.join([str((0xffffffff << (32 - int(m.groupdict()['net_mask'])) >> i) & 0xff) for i in [24, 16, 8, 0]])
                 continue
 
             # Metric Type: 2 (Larger than any link state path)
@@ -1302,8 +1341,9 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
             # Number of Priority : 8
             
             # Priority 0 : 93750000    Priority 1 : 93750000
-            p34 = re.compile(r'^Priority +(?P<num1>(\d+)) *: +(?P<band1>(\d+))(?:'
-                             ' +Priority +(?P<num2>(\d+)) *: +(?P<band2>(\d+)))?$')
+            p34 = re.compile(r'^Priority +(?P<num1>(\d+)) *:'
+                              ' +(?P<band1>(\d+))(?: +Priority +(?P<num2>(\d+))'
+                              ' *: +(?P<band2>(\d+)))?$')
             m = p34.match(line)
             if m:
                 value1 = str(m.groupdict()['num1']) + ' ' + \
@@ -1375,32 +1415,39 @@ class ShowIpOspfDatabaseExternalDetailSchema(MetaParser):
                     {Any(): 
                         {'instance': 
                             {Any(): 
-                                {'database': 
-                                    {'lsa_types': 
-                                        {Any(): 
-                                            {'lsas': 
+                                {'areas': 
+                                    {Any(): 
+                                        {'database': 
+                                            {'lsa_types': 
                                                 {Any(): 
-                                                    {'ospfv2': 
-                                                        {'header': 
-                                                            {'option': str,
-                                                            'lsa_id': str,
-                                                            'age': int,
-                                                            'type': str,
+                                                    {'lsa_type': int,
+                                                    'lsas': 
+                                                        {Any(): 
+                                                            {'lsa_id': str,
                                                             'adv_router': str,
-                                                            'seq_num': str,
-                                                            'checksum': str,
-                                                            'length': int},
-                                                        'body': 
-                                                            {'external': 
-                                                                {'network_mask': str,
-                                                                'topologies': 
-                                                                    {Any(): 
-                                                                        {'mt_id': int,
-                                                                        'tos': int,
-                                                                        'flags': str,
-                                                                        'metric': int,
-                                                                        'forwarding_address': str,
-                                                                        'external_route_tag': str},
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'option': str,
+                                                                    'lsa_id': str,
+                                                                    'age': int,
+                                                                    'type': int,
+                                                                    'adv_router': str,
+                                                                    'seq_num': str,
+                                                                    'checksum': str,
+                                                                    'length': int},
+                                                                'body': 
+                                                                    {'external': 
+                                                                        {'network_mask': str,
+                                                                        'topologies': 
+                                                                            {Any(): 
+                                                                                {'mt_id': int,
+                                                                                'tos': int,
+                                                                                'flags': str,
+                                                                                'metric': int,
+                                                                                'forwarding_address': str,
+                                                                                'external_route_tag': str},
+                                                                            },
+                                                                        },
                                                                     },
                                                                 },
                                                             },
@@ -1450,26 +1497,33 @@ class ShowIpOspfDatabaseNetworkDetailSchema(MetaParser):
                     {Any(): 
                         {'instance': 
                             {Any(): 
-                                {'database': 
-                                    {'lsa_types': 
-                                        {Any(): 
-                                            {'lsas': 
+                                {'areas': 
+                                    {Any(): 
+                                        {'database': 
+                                            {'lsa_types': 
                                                 {Any(): 
-                                                    {'ospfv2': 
-                                                        {'header': 
-                                                            {'option': str,
-                                                            'lsa_id': str,
-                                                            'age': int,
-                                                            'type': str,
+                                                    {'lsa_type': int,
+                                                    'lsas': 
+                                                        {Any(): 
+                                                            {'lsa_id': str,
                                                             'adv_router': str,
-                                                            'seq_num': str,
-                                                            'checksum': str,
-                                                            'length': int},
-                                                        'body': 
-                                                            {'network': 
-                                                                {'network_mask': str,
-                                                                'attached_routers': 
-                                                                    {Any(): {},
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'option': str,
+                                                                    'lsa_id': str,
+                                                                    'age': int,
+                                                                    'type': int,
+                                                                    'adv_router': str,
+                                                                    'seq_num': str,
+                                                                    'checksum': str,
+                                                                    'length': int},
+                                                                'body': 
+                                                                    {'network': 
+                                                                        {'network_mask': str,
+                                                                        'attached_routers': 
+                                                                            {Any(): {},
+                                                                            },
+                                                                        },
                                                                     },
                                                                 },
                                                             },
@@ -1519,29 +1573,36 @@ class ShowIpOspfDatabaseSummaryDetailSchema(MetaParser):
                     {Any(): 
                         {'instance': 
                             {Any(): 
-                                {'database': 
-                                    {'lsa_types': 
-                                        {Any(): 
-                                            {'lsas': 
+                                {'areas': 
+                                    {Any(): 
+                                        {'database': 
+                                            {'lsa_types': 
                                                 {Any(): 
-                                                    {'ospfv2': 
-                                                        {'header': 
-                                                            {'option': str,
-                                                            'lsa_id': str,
-                                                            'age': int,
-                                                            'type': str,
+                                                    {'lsa_type': int,
+                                                    'lsas': 
+                                                        {Any(): 
+                                                            {'lsa_id': str,
                                                             'adv_router': str,
-                                                            'seq_num': str,
-                                                            'checksum': str,
-                                                            'length': int},
-                                                        'body': 
-                                                            {'summary': 
-                                                                {'network_mask': str,
-                                                                'topologies': 
-                                                                    {Any(): 
-                                                                        {'mt_id': int,
-                                                                        'tos': int,
-                                                                        'metric': int},
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'option': str,
+                                                                    'lsa_id': str,
+                                                                    'age': int,
+                                                                    'type': int,
+                                                                    'adv_router': str,
+                                                                    'seq_num': str,
+                                                                    'checksum': str,
+                                                                    'length': int},
+                                                                'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': str,
+                                                                        'topologies': 
+                                                                            {Any(): 
+                                                                                {'mt_id': int,
+                                                                                'tos': int,
+                                                                                'metric': int},
+                                                                            },
+                                                                        },
                                                                     },
                                                                 },
                                                             },
@@ -1591,36 +1652,43 @@ class ShowIpOspfDatabaseRouterDetailSchema(MetaParser):
                     {Any(): 
                         {'instance': 
                             {Any(): 
-                                {'database': 
-                                    {'lsa_types': 
-                                        {Any(): 
-                                            {'lsas': 
+                                {'areas': 
+                                    {Any(): 
+                                        {'database': 
+                                            {'lsa_types': 
                                                 {Any(): 
-                                                    {'ospfv2': 
-                                                        {'header': 
-                                                            {'option': str,
-                                                            'lsa_id': str,
-                                                            'age': int,
-                                                            'type': str,
+                                                    {'lsa_type': int,
+                                                    'lsas': 
+                                                        {Any(): 
+                                                            {'lsa_id': str,
                                                             'adv_router': str,
-                                                            'seq_num': str,
-                                                            'checksum': str,
-                                                            'length': int},
-                                                        'body': 
-                                                            {'router': 
-                                                                {Optional('flags'): str,
-                                                                'num_of_links': int,
-                                                                'links':
-                                                                    {Any(): 
-                                                                        {'link_id': str,
-                                                                        'link_data': str,
-                                                                        'type': str,
-                                                                        'num_tos_metrics': int,
-                                                                        'topologies': 
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'option': str,
+                                                                    'lsa_id': str,
+                                                                    'age': int,
+                                                                    'type': int,
+                                                                    'adv_router': str,
+                                                                    'seq_num': str,
+                                                                    'checksum': str,
+                                                                    'length': int},
+                                                                'body': 
+                                                                    {'router': 
+                                                                        {Optional('flags'): str,
+                                                                        'num_of_links': int,
+                                                                        'links':
                                                                             {Any(): 
-                                                                                {'mt_id': int,
-                                                                                Optional('metric'): int,
-                                                                                Optional('tos'): int},
+                                                                                {'link_id': str,
+                                                                                'link_data': str,
+                                                                                'type': str,
+                                                                                'num_tos_metrics': int,
+                                                                                'topologies': 
+                                                                                    {Any(): 
+                                                                                        {'mt_id': int,
+                                                                                        Optional('metric'): int,
+                                                                                        Optional('tos'): int},
+                                                                                    },
+                                                                                },
                                                                             },
                                                                         },
                                                                     },
@@ -1672,51 +1740,58 @@ class ShowIpOspfDatabaseOpaqueAreaDetailSchema(MetaParser):
                     {Any(): 
                         {'instance': 
                             {Any(): 
-                                {'database': 
-                                    {'lsa_types': 
-                                        {Any(): 
-                                            {'lsas': 
+                                {'areas': 
+                                    {Any(): 
+                                        {'database': 
+                                            {'lsa_types': 
                                                 {Any(): 
-                                                    {'ospfv2': 
-                                                        {'header': 
-                                                            {'option': str,
-                                                            'lsa_id': str,
-                                                            'age': int,
-                                                            'type': str,
+                                                    {'lsa_type': int,
+                                                    'lsas': 
+                                                        {Any(): 
+                                                            {'lsa_id': str,
                                                             'adv_router': str,
-                                                            'seq_num': str,
-                                                            'checksum': str,
-                                                            'length': int,
-                                                            'opaque_type': int,
-                                                            'opaque_id': int,
-                                                            Optional('fragment_number'): int,
-                                                            Optional('mpls_te_router_id'): str,
-                                                            Optional('num_links'): int},
-                                                        'body': 
-                                                            {'opaque': 
-                                                                {Optional('link_tlvs'): 
-                                                                    {Any(): 
-                                                                        {'link_type': int,
-                                                                        'link_name': str,
-                                                                        'link_id': str,
-                                                                        'te_metric': int,
-                                                                        'max_bandwidth': int,
-                                                                        'max_reservable_bandwidth': int,
-                                                                        'admin_group': str,
-                                                                        Optional('local_if_ipv4_addrs'): 
-                                                                            {Any(): {}},
-                                                                        Optional('remote_if_ipv4_addrs'): 
-                                                                            {Any(): {}},
-                                                                        Optional('unreserved_bandwidths'): 
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'option': str,
+                                                                    'lsa_id': str,
+                                                                    'age': int,
+                                                                    'type': int,
+                                                                    'adv_router': str,
+                                                                    'seq_num': str,
+                                                                    'checksum': str,
+                                                                    'length': int,
+                                                                    'opaque_type': int,
+                                                                    'opaque_id': int,
+                                                                    Optional('fragment_number'): int,
+                                                                    Optional('mpls_te_router_id'): str,
+                                                                    Optional('num_links'): int},
+                                                                'body': 
+                                                                    {'opaque': 
+                                                                        {Optional('link_tlvs'): 
                                                                             {Any(): 
-                                                                                {'priority': int,
-                                                                                'unreserved_bandwidth': int},
-                                                                            },
-                                                                        Optional('unknown_tlvs'): 
-                                                                            {Any(): 
-                                                                                {'type': int,
-                                                                                'length': int,
-                                                                                'value': str},
+                                                                                {'link_type': int,
+                                                                                'link_name': str,
+                                                                                'link_id': str,
+                                                                                'te_metric': int,
+                                                                                'max_bandwidth': int,
+                                                                                'max_reservable_bandwidth': int,
+                                                                                'admin_group': str,
+                                                                                Optional('local_if_ipv4_addrs'): 
+                                                                                    {Any(): {}},
+                                                                                Optional('remote_if_ipv4_addrs'): 
+                                                                                    {Any(): {}},
+                                                                                Optional('unreserved_bandwidths'): 
+                                                                                    {Any(): 
+                                                                                        {'priority': int,
+                                                                                        'unreserved_bandwidth': int},
+                                                                                    },
+                                                                                Optional('unknown_tlvs'): 
+                                                                                    {Any(): 
+                                                                                        {'type': int,
+                                                                                        'length': int,
+                                                                                        'value': str},
+                                                                                    },
+                                                                                },
                                                                             },
                                                                         },
                                                                     },

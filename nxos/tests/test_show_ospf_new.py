@@ -25,7 +25,7 @@ from parser.nxos.show_ospf_new import ShowIpOspfInterface,\
 # ===============================================
 class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
 
-    '''Unit test for "show ip ospf interface vrf all" '''
+    '''Unit test for 'show ip ospf interface vrf all' '''
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -375,7 +375,7 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
 # ======================================================
 class test_show_ip_ospf_neighbors_detail_vrf_all(unittest.TestCase):
 
-    '''Unit test for "show ip ospf neighbors detail vrf all" '''
+    '''Unit test for 'show ip ospf neighbors detail vrf all' '''
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -635,7 +635,7 @@ class test_show_ip_ospf_neighbors_detail_vrf_all(unittest.TestCase):
 # ==============================================================
 class test_show_ip_ospf_database_external_detail_vrf_all(unittest.TestCase):
 
-    '''Unit test for "show ip ospf database external detail vrf all" '''
+    '''Unit test for 'show ip ospf database external detail vrf all' '''
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -647,33 +647,37 @@ class test_show_ip_ospf_database_external_detail_vrf_all(unittest.TestCase):
                     {'ipv4': 
                         {'instance': 
                             {'1': 
-                                {'database': 
-                                    {'lsa_types': 
-                                        {'Type-5 AS External': 
-                                            {'lsas': 
-                                                {'44.44.44.44 4.4.4.4': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'external': 
-                                                                {'network_mask': '/32',
-                                                                'topologies': 
-                                                                    {0: 
-                                                                        {'external_route_tag': '0',
-                                                                        'flags': 'E',
-                                                                        'forwarding_address': '0.0.0.0',
-                                                                        'metric': 20,
-                                                                        'mt_id': 0,
-                                                                        'tos': 0}}}},
-                                                        'header': 
-                                                            {'adv_router': '4.4.4.4',
-                                                            'age': 1565,
-                                                            'checksum': '0x7d61',
-                                                            'length': 36,
-                                                            'lsa_id': '44.44.44.44',
-                                                            'option': '0x20 (No TOS-capability, DC)',
-                                                            'seq_num': '0x80000002',
-                                                            'type': 'Type-5 '
-                                                             'AS-External'}}}}}}}}}}}}}}
+                                {'areas': 
+                                    {'0.0.0.0':
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {5: 
+                                                    {'lsa_type': 5,
+                                                    'lsas': 
+                                                        {'44.44.44.44 4.4.4.4': 
+                                                            {'lsa_id': '44.44.44.44',
+                                                            'adv_router': '4.4.4.4',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'external': 
+                                                                        {'network_mask': '255.255.255.255',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'external_route_tag': '0',
+                                                                                'flags': 'E',
+                                                                                'forwarding_address': '0.0.0.0',
+                                                                                'metric': 20,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '4.4.4.4',
+                                                                    'age': 1565,
+                                                                    'checksum': '0x7d61',
+                                                                    'length': 36,
+                                                                    'lsa_id': '44.44.44.44',
+                                                                    'option': '0x20',
+                                                                    'seq_num': '0x80000002',
+                                                                    'type': 5}}}}}}}}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         R2_ospf_nx# show ip ospf database external detail vrf all
@@ -717,7 +721,7 @@ class test_show_ip_ospf_database_external_detail_vrf_all(unittest.TestCase):
 # ==============================================================
 class test_show_ip_ospf_database_network_detail_vrf_all(unittest.TestCase):
 
-    '''Unit test for "show ip ospf database network detail vrf all" '''
+    '''Unit test for 'show ip ospf database network detail vrf all' '''
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -729,191 +733,215 @@ class test_show_ip_ospf_database_network_detail_vrf_all(unittest.TestCase):
                     {'ipv4': 
                         {'instance': 
                             {'1': 
-                                {'database': 
-                                    {'lsa_types': 
-                                        {'Network': 
-                                            {'lsas': 
-                                                {'20.1.5.1 11.11.11.11': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'network': 
-                                                                {'attached_routers': 
-                                                                    {'11.11.11.11': {},
-                                                                    '55.55.55.55': {}},
-                                                                'network_mask': '/24'}},
-                                                        'header': 
-                                                            {'adv_router': '11.11.11.11',
-                                                            'age': 1454,
-                                                            'checksum': '0xddd9',
-                                                            'length': 32,
-                                                            'lsa_id': '20.1.5.1',
-                                                            'option': '0x22 (No TOS-capability, DC)',
-                                                            'seq_num': '0x80000033',
-                                                            'type': 'Network Links'}}},
-                                                '20.2.6.6 66.66.66.66': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'network': 
-                                                                {'attached_routers': 
-                                                                    {'22.22.22.22': {},
-                                                                    '66.66.66.66': {}},
-                                                                'network_mask': '/24'}},
-                                                        'header': 
-                                                            {'adv_router': '66.66.66.66',
-                                                            'age': 1080,
-                                                            'checksum': '0x3f5f',
-                                                            'length': 32,
-                                                            'lsa_id': '20.2.6.6',
-                                                            'option': '0x22 (No TOS-capability, DC)',
-                                                            'seq_num': '0x80000010',
-                                                            'type': 'Network Links'}}},
-                                                '20.3.7.7 77.77.77.77': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'network': 
-                                                                {'attached_routers': 
-                                                                    {'3.3.3.3': {},
-                                                                    '77.77.77.77': {}},
-                                                                'network_mask': '/24'}},
-                                                        'header': 
+                                {'areas': 
+                                    {'0.0.0.1':
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {2: 
+                                                    {'lsa_type': 2,
+                                                    'lsas': 
+                                                        {'20.1.5.1 11.11.11.11': 
+                                                            {'lsa_id': '20.1.5.1',
+                                                            'adv_router': '11.11.11.11',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'network': 
+                                                                        {'attached_routers': 
+                                                                            {'11.11.11.11': {},
+                                                                            '55.55.55.55': {}},
+                                                                        'network_mask': '255.255.255.0'}},
+                                                                'header': 
+                                                                    {'adv_router': '11.11.11.11',
+                                                                    'age': 1454,
+                                                                    'checksum': '0xddd9',
+                                                                    'length': 32,
+                                                                    'lsa_id': '20.1.5.1',
+                                                                    'option': '0x22',
+                                                                    'seq_num': '0x80000033',
+                                                                    'type': 2}}},
+                                                        '20.2.6.6 66.66.66.66': 
+                                                            {'lsa_id': '20.2.6.6',
+                                                            'adv_router': '66.66.66.66',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'network': 
+                                                                        {'attached_routers': 
+                                                                            {'22.22.22.22': {},
+                                                                            '66.66.66.66': {}},
+                                                                        'network_mask': '255.255.255.0'}},
+                                                                'header': 
+                                                                    {'adv_router': '66.66.66.66',
+                                                                    'age': 1080,
+                                                                    'checksum': '0x3f5f',
+                                                                    'length': 32,
+                                                                    'lsa_id': '20.2.6.6',
+                                                                    'option': '0x22',
+                                                                    'seq_num': '0x80000010',
+                                                                    'type': 2}}},
+                                                        '20.3.7.7 77.77.77.77': 
                                                             {'adv_router': '77.77.77.77',
-                                                            'age': 812,
-                                                            'checksum': '0x5a1a',
-                                                            'length': 32,
                                                             'lsa_id': '20.3.7.7',
-                                                            'option': '0x22 (No TOS-capability, DC)',
-                                                            'seq_num': '0x8000002b',
-                                                            'type': 'Network Links'}}},
-                                                '20.5.6.6 66.66.66.66': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'network': 
-                                                                {'attached_routers': 
-                                                                    {'55.55.55.55': {},
-                                                                    '66.66.66.66': {}},
-                                                                'network_mask': '/24'}},
-                                                        'header': 
-                                                            {'adv_router': '66.66.66.66',
-                                                            'age': 573,
-                                                            'checksum': '0x5f9d',
-                                                            'length': 32,
-                                                            'lsa_id': '20.5.6.6',
-                                                            'option': '0x22 (No TOS-capability, DC)',
-                                                            'seq_num': '0x8000002a',
-                                                            'type': 'Network '
-                                                                    'Links'}}},
-                                                '20.6.7.6 66.66.66.66': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'network': 
-                                                                {'attached_routers': 
-                                                                    {'66.66.66.66': {},
-                                                                    '77.77.77.77': {}},
-                                                                'network_mask': '/24'}},
-                                                        'header': 
-                                                            {'adv_router': '66.66.66.66',
-                                                            'age': 1819,
-                                                            'checksum': '0x960b',
-                                                            'length': 32,
-                                                            'lsa_id': '20.6.7.6',
-                                                            'option': '0x22 (No TOS-capability, DC)',
-                                                            'seq_num': '0x8000002b',
-                                                            'type': 'Network '
-                                                                    'Links'}}}}}}}}}}}},
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'network': 
+                                                                        {'attached_routers': 
+                                                                            {'3.3.3.3': {},
+                                                                            '77.77.77.77': {}},
+                                                                        'network_mask': '255.255.255.0'}},
+                                                                'header': 
+                                                                    {'adv_router': '77.77.77.77',
+                                                                    'age': 812,
+                                                                    'checksum': '0x5a1a',
+                                                                    'length': 32,
+                                                                    'lsa_id': '20.3.7.7',
+                                                                    'option': '0x22',
+                                                                    'seq_num': '0x8000002b',
+                                                                    'type': 2}}},
+                                                        '20.5.6.6 66.66.66.66': 
+                                                            {'lsa_id': '20.5.6.6',
+                                                            'adv_router': '66.66.66.66',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'network': 
+                                                                        {'attached_routers': 
+                                                                            {'55.55.55.55': {},
+                                                                            '66.66.66.66': {}},
+                                                                        'network_mask': '255.255.255.0'}},
+                                                                'header': 
+                                                                    {'adv_router': '66.66.66.66',
+                                                                    'age': 573,
+                                                                    'checksum': '0x5f9d',
+                                                                    'length': 32,
+                                                                    'lsa_id': '20.5.6.6',
+                                                                    'option': '0x22',
+                                                                    'seq_num': '0x8000002a',
+                                                                    'type': 2}}},
+                                                        '20.6.7.6 66.66.66.66': 
+                                                            {'lsa_id': '20.6.7.6',
+                                                            'adv_router': '66.66.66.66',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'network': 
+                                                                        {'attached_routers': 
+                                                                            {'66.66.66.66': {},
+                                                                            '77.77.77.77': {}},
+                                                                        'network_mask': '255.255.255.0'}},
+                                                                'header': 
+                                                                    {'adv_router': '66.66.66.66',
+                                                                    'age': 1819,
+                                                                    'checksum': '0x960b',
+                                                                    'length': 32,
+                                                                    'lsa_id': '20.6.7.6',
+                                                                    'option': '0x22',
+                                                                    'seq_num': '0x8000002b',
+                                                                    'type': 2}}}}}}}}}}}}}},
             'default': 
                 {'address_family': 
                     {'ipv4': 
                         {'instance': 
                             {'1': 
-                                {'database': 
-                                    {'lsa_types': 
-                                        {'Network': 
-                                            {'lsas': 
-                                                {'10.1.2.1 1.1.1.1': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'network': 
-                                                                {'attached_routers': 
-                                                                    {'1.1.1.1': {},
-                                                                    '2.2.2.2': {}},
-                                                                'network_mask': '/24'}},
-                                                        'header': 
-                                                            {'adv_router': '1.1.1.1',
-                                                            'age': 772,
-                                                            'checksum': '0x3bd1',
-                                                            'length': 32,
-                                                            'lsa_id': '10.1.2.1',
-                                                            'option': '0x22 (No TOS-capability, DC)',
-                                                            'seq_num': '0x80000010',
-                                                            'type': 'Network Links'}}},
-                                                '10.1.4.4 4.4.4.4': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'network': 
-                                                                {'attached_routers': 
-                                                                    {'1.1.1.1': {},
-                                                                    '4.4.4.4': {}},
-                                                                'network_mask': '/24'}},
-                                                        'header': 
-                                                            {'adv_router': '4.4.4.4',
-                                                            'age': 1482,
-                                                            'checksum': '0xa232',
-                                                            'length': 32,
-                                                            'lsa_id': '10.1.4.4',
-                                                            'option': '0x22 (No TOS-capability, DC)',
-                                                            'seq_num': '0x8000002f',
-                                                            'type': 'Network Links'}}},
-                                                '10.2.3.3 3.3.3.3': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'network': 
-                                                                {'attached_routers': 
-                                                                    {'2.2.2.2': {},
-                                                                    '3.3.3.3': {}},
-                                                                'network_mask': '/24'}},
-                                                        'header': 
-                                                            {'adv_router': '3.3.3.3',
-                                                            'age': 788,
-                                                            'checksum': '0x28d0',
-                                                            'length': 32,
-                                                            'lsa_id': '10.2.3.3',
-                                                            'option': '0x22 (No TOS-capability, DC)',
-                                                            'seq_num': '0x80000010',
-                                                            'type': 'Network Links'}}},
-                                                '10.2.4.4 4.4.4.4': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'network': 
-                                                                {'attached_routers': 
-                                                                    {'2.2.2.2': {},
-                                                                    '4.4.4.4': {}},
-                                                                'network_mask': '/24'}},
-                                                        'header': 
-                                                            {'adv_router': '4.4.4.4',
-                                                            'age': 724,
-                                                            'checksum': '0x07e7',
-                                                            'length': 32,
-                                                            'lsa_id': '10.2.4.4',
-                                                            'option': '0x22 (No TOS-capability, DC)',
-                                                            'seq_num': '0x80000010',
-                                                            'type': 'Network Links'}}},
-                                                '10.3.4.4 4.4.4.4': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'network': 
-                                                                {'attached_routers': 
-                                                                    {'3.3.3.3': {},
-                                                                    '4.4.4.4': {}},
-                                                                'network_mask': '/24'}},
-                                                        'header': 
-                                                            {'adv_router': '4.4.4.4',
-                                                            'age': 987,
-                                                            'checksum': '0xeedb',
-                                                            'length': 32,
-                                                            'lsa_id': '10.3.4.4',
-                                                            'option': '0x22 (No TOS-capability, DC)',
-                                                            'seq_num': '0x8000002f',
-                                                            'type': 'Network Links'}}}}}}}}}}}}}}
+                                {'areas':
+                                    {'0.0.0.0':
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {2: 
+                                                    {'lsa_type': 2,
+                                                    'lsas': 
+                                                        {'10.1.2.1 1.1.1.1': 
+                                                            {'lsa_id': '10.1.2.1',
+                                                            'adv_router': '1.1.1.1',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'network': 
+                                                                        {'attached_routers': 
+                                                                            {'1.1.1.1': {},
+                                                                            '2.2.2.2': {}},
+                                                                        'network_mask': '255.255.255.0'}},
+                                                                'header': 
+                                                                    {'adv_router': '1.1.1.1',
+                                                                    'age': 772,
+                                                                    'checksum': '0x3bd1',
+                                                                    'length': 32,
+                                                                    'lsa_id': '10.1.2.1',
+                                                                    'option': '0x22',
+                                                                    'seq_num': '0x80000010',
+                                                                    'type': 2}}},
+                                                        '10.1.4.4 4.4.4.4': 
+                                                            {'lsa_id': '10.1.4.4',
+                                                            'adv_router': '4.4.4.4',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'network': 
+                                                                        {'attached_routers': 
+                                                                            {'1.1.1.1': {},
+                                                                            '4.4.4.4': {}},
+                                                                        'network_mask': '255.255.255.0'}},
+                                                                'header': 
+                                                                    {'adv_router': '4.4.4.4',
+                                                                    'age': 1482,
+                                                                    'checksum': '0xa232',
+                                                                    'length': 32,
+                                                                    'lsa_id': '10.1.4.4',
+                                                                    'option': '0x22',
+                                                                    'seq_num': '0x8000002f',
+                                                                    'type': 2}}},
+                                                        '10.2.3.3 3.3.3.3': 
+                                                            {'lsa_id': '10.2.3.3',
+                                                            'adv_router': '3.3.3.3',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'network': 
+                                                                        {'attached_routers': 
+                                                                            {'2.2.2.2': {},
+                                                                            '3.3.3.3': {}},
+                                                                        'network_mask': '255.255.255.0'}},
+                                                                'header': 
+                                                                    {'adv_router': '3.3.3.3',
+                                                                    'age': 788,
+                                                                    'checksum': '0x28d0',
+                                                                    'length': 32,
+                                                                    'lsa_id': '10.2.3.3',
+                                                                    'option': '0x22',
+                                                                    'seq_num': '0x80000010',
+                                                                    'type': 2}}},
+                                                        '10.2.4.4 4.4.4.4': 
+                                                            {'lsa_id': '10.2.4.4',
+                                                            'adv_router': '4.4.4.4',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'network': 
+                                                                        {'attached_routers': 
+                                                                            {'2.2.2.2': {},
+                                                                            '4.4.4.4': {}},
+                                                                        'network_mask': '255.255.255.0'}},
+                                                                'header': 
+                                                                    {'adv_router': '4.4.4.4',
+                                                                    'age': 724,
+                                                                    'checksum': '0x07e7',
+                                                                    'length': 32,
+                                                                    'lsa_id': '10.2.4.4',
+                                                                    'option': '0x22',
+                                                                    'seq_num': '0x80000010',
+                                                                    'type': 2}}},
+                                                        '10.3.4.4 4.4.4.4': 
+                                                            {'lsa_id': '10.3.4.4',
+                                                            'adv_router': '4.4.4.4',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'network': 
+                                                                        {'attached_routers': 
+                                                                            {'3.3.3.3': {},
+                                                                            '4.4.4.4': {}},
+                                                                        'network_mask': '255.255.255.0'}},
+                                                                'header': 
+                                                                    {'adv_router': '4.4.4.4',
+                                                                    'age': 987,
+                                                                    'checksum': '0xeedb',
+                                                                    'length': 32,
+                                                                    'lsa_id': '10.3.4.4',
+                                                                    'option': '0x22',
+                                                                    'seq_num': '0x8000002f',
+                                                                    'type': 2}}}}}}}}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         R2_ospf_nx# show ip ospf database network detail vrf all
@@ -1067,7 +1095,7 @@ class test_show_ip_ospf_database_network_detail_vrf_all(unittest.TestCase):
 # ==============================================================
 class test_show_ip_ospf_database_summary_detail_vrf_all(unittest.TestCase):
 
-    '''Unit test for "show ip ospf database summary detail vrf all" '''
+    '''Unit test for 'show ip ospf database summary detail vrf all' '''
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -1079,275 +1107,313 @@ class test_show_ip_ospf_database_summary_detail_vrf_all(unittest.TestCase):
                     {'ipv4': 
                         {'instance': 
                             {'1': 
-                                {'database': 
-                                    {'lsa_types': 
-                                        {'Summary Network': 
-                                            {'lsas': 
-                                                {'10.1.2.0 2.2.2.2': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'summary': 
-                                                                {'network_mask': '/24',
-                                                                'topologies': 
-                                                                    {0: 
-                                                                        {'metric': 4294,
-                                                                        'mt_id': 0,
-                                                                        'tos': 0}}}},
-                                                        'header': 
-                                                            {'adv_router': '2.2.2.2',
-                                                            'age': 788,
-                                                            'checksum': '0xfc54',
-                                                            'length': 28,
-                                                            'lsa_id': '10.1.2.0',
-                                                            'option': '0x22 (No TOS-capability, DC)',
-                                                            'seq_num': '0x80000001',
-                                                            'type': 'Network Summary'}}},
-                                                '10.1.2.0 3.3.3.3': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'summary': 
-                                                                {'network_mask': '/24',
-                                                                'topologies': 
-                                                                    {0: 
-                                                                        {'metric': 151,
-                                                                        'mt_id': 0,
-                                                                        'tos': 0}}}},
-                                                        'header': 
-                                                            {'adv_router': '3.3.3.3',
-                                                            'age': 632,
-                                                            'checksum': '0x5655',
-                                                            'length': 28,
-                                                            'lsa_id': '10.1.2.0',
-                                                            'option': '0x2 (No TOS-capability, No DC)',
-                                                           'seq_num': '0x80000002',
-                                                           'type': 'Network Summary'}}},
-                                                '10.1.3.0 3.3.3.3': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'summary': 
-                                                                {'network_mask': '/24',
-                                                                'topologies': 
-                                                                    {0: 
-                                                                        {'metric': 40,
-                                                                        'mt_id': 0,
-                                                                        'tos': 0}}}},
-                                                        'header': 
-                                                            {'adv_router': '3.3.3.3',
-                                                            'age': 642,
-                                                            'checksum': '0xf029',
-                                                            'length': 28,
-                                                            'lsa_id': '10.1.3.0',
-                                                            'option': '0x2 (No TOS-capability, No DC)',
-                                                           'seq_num': '0x80000002',
-                                                           'type': 'Network Summary'}}},
-                                                '10.2.3.0 2.2.2.2': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'summary': 
-                                                                {'network_mask': '/24',
-                                                                'topologies': 
-                                                                    {0: 
-                                                                        {'metric': 222,
-                                                                        'mt_id': 0,
-                                                                        'tos': 0}}}},
-                                                        'header': 
-                                                            {'adv_router': '2.2.2.2',
-                                                            'age': 788,
-                                                            'checksum': '0x4601',
-                                                            'length': 28,
-                                                            'lsa_id': '10.2.3.0',
-                                                            'option': '0x22 (No TOS-capability, DC)',
-                                                           'seq_num': '0x80000001',
-                                                           'type': 'Network Summary'}}},
-                                                '10.2.3.0 3.3.3.3': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'summary': 
-                                                                {'network_mask': '/24',
-                                                                'topologies': 
-                                                                    {0: 
-                                                                        {'metric': 262,
-                                                                        'mt_id': 0,
-                                                                        'tos': 0}}}},
-                                                        'header': 
-                                                            {'adv_router': '3.3.3.3',
-                                                            'age': 397,
-                                                            'checksum': '0x96a2',
-                                                            'length': 28,
-                                                            'lsa_id': '10.2.3.0',
-                                                            'option': '0x2 (No TOS-capability, No DC)',
-                                                            'seq_num': '0x80000003',
-                                                            'type': 'Network Summary'}}},
-                                                '2.2.2.2 2.2.2.2': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'summary': 
-                                                                {'network_mask': '/32',
-                                                                'topologies': 
-                                                                    {0: 
-                                                                        {'metric': 1,
-                                                                        'mt_id': 0,
-                                                                        'tos': 0}}}},
-                                                        'header': 
-                                                            {'adv_router': '2.2.2.2',
-                                                            'age': 789,
-                                                            'checksum': '0xfa31',
-                                                            'length': 28,
-                                                            'lsa_id': '2.2.2.2',
-                                                            'option': '0x22 (No TOS-capability, DC)',
-                                                            'seq_num': '0x80000001',
-                                                            'type': 'Network Summary'}}},
-                                                '20.1.3.0 1.1.1.1': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'summary': 
-                                                                {'network_mask': '/24',
-                                                                'topologies': 
-                                                                    {0: 
-                                                                        {'metric': 1,
-                                                                        'mt_id': 0,
-                                                                        'tos': 0}}}},
-                                                        'header': 
-                                                            {'adv_router': '1.1.1.1',
-                                                            'age': 694,
-                                                            'checksum': '0x43dc',
-                                                            'length': 28,
-                                                            'lsa_id': '20.1.3.0',
-                                                            'option': '0x22 (No TOS-capability, DC)',
-                                                            'seq_num': '0x80000001',
-                                                            'type': 'Network Summary'}}},
-                                                '20.1.3.0 3.3.3.3': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'summary': 
-                                                                {'network_mask': '/24',
-                                                                                                 'topologies': {0: {'metric': 40,
-                                                                                                                    'mt_id': 0,
-                                                                                                                    'tos': 0}}}},
-                                                        'header': 
-                                                            {'adv_router': '3.3.3.3',
-                                                            'age': 642,
-                                                            'checksum': '0x6ea1',
-                                                            'length': 28,
-                                                            'lsa_id': '20.1.3.0',
-                                                            'option': '0x2 (No TOS-capability, No DC)',
-                                                            'seq_num': '0x80000002',
-                                                            'type': 'Network '
-                                                            'Summary'}}},
-                                                '20.2.3.0 3.3.3.3': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'summary': 
-                                                                {'network_mask': '/24',
-                                                                'topologies': 
-                                                                    {0: 
-                                                                        {'metric': 40,
-                                                                        'mt_id': 0,
-                                                                        'tos': 0}}}},
-                                                        'header': 
-                                                            {'adv_router': '3.3.3.3',
-                                                            'age': 642,
-                                                            'checksum': '0x62ac',
-                                                            'length': 28,
-                                                            'lsa_id': '20.2.3.0',
-                                                            'option': '0x2 (No TOS-capability, No DC)',
-                                                            'seq_num': '0x80000002',
-                                                            'type': 'Network Summary'}}},
-                                                '20.2.4.0 3.3.3.3': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'summary': 
-                                                                {'network_mask': '/24',
-                                                                'topologies': 
-                                                                    {0: 
-                                                                        {'metric': 41,
-                                                                        'mt_id': 0,
-                                                                        'tos': 0}}}},
-                                                        'header': 
-                                                            {'adv_router': '3.3.3.3',
-                                                            'age': 401,
-                                                            'checksum': '0x5dad',
-                                                            'length': 28,
-                                                            'lsa_id': '20.2.4.0',
-                                                            'option': '0x2 (No TOS-capability, No DC)',
-                                                            'seq_num': '0x80000004',
-                                                            'type': 'Network Summary'}}},
-                                                '20.3.4.0 3.3.3.3': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'summary': 
-                                                                {'network_mask': '/24',
-                                                                'topologies': 
-                                                                    {0: 
-                                                                        {'metric': 40,
-                                                                        'mt_id': 0,
-                                                                        'tos': 0}}}},
-                                                        'header': 
-                                                            {'adv_router': '3.3.3.3',
-                                                            'age': 642,
-                                                            'checksum': '0x4bc1',
-                                                            'length': 28,
-                                                            'lsa_id': '20.3.4.0',
-                                                            'option': '0x2 (No TOS-capability, No DC)',
-                                                            'seq_num': '0x80000002',
-                                                            'type': 'Network Summary'}}},
-                                                '3.3.3.3 3.3.3.3': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'summary': 
-                                                                {'network_mask': '/32',
-                                                                'topologies': 
-                                                                    {0: 
-                                                                        {'metric': 1,
-                                                                        'mt_id': 0,
-                                                                        'tos': 0}}}},
-                                                        'header': 
-                                                            {'adv_router': '3.3.3.3',
-                                                            'age': 642,
-                                                            'checksum': '0x8eb4',
-                                                            'length': 28,
-                                                            'lsa_id': '3.3.3.3',
-                                                            'option': '0x2 (No TOS-capability, No DC)',
-                                                          'seq_num': '0x80000002',
-                                                          'type': 'Network Summary'}}},
-                                                '4.4.4.4 3.3.3.3': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'summary': 
-                                                                {'network_mask': '/32',
-                                                                'topologies': 
-                                                                    {0: 
-                                                                        {'metric': 41,
-                                                                        'mt_id': 0,
-                                                                        'tos': 0}}}},
-                                                        'header': 
-                                                            {'adv_router': '3.3.3.3',
-                                                            'age': 401,
-                                                            'checksum': '0xef26',
-                                                            'length': 28,
-                                                            'lsa_id': '4.4.4.4',
-                                                            'option': '0x2 (No TOS-capability, No DC)',
-                                                          'seq_num': '0x80000003',
-                                                          'type': 'Network Summary'}}},
-                                                '44.44.44.44 4.4.4.4': 
-                                                    {'ospfv2': 
-                                                        {'body': 
-                                                            {'summary': 
-                                                                {'network_mask': '/32',
-                                                                'topologies': 
-                                                                    {0: 
-                                                                        {'metric': 1,
-                                                                        'mt_id': 0,
-                                                                        'tos': 0}}}},
-                                                        'header': 
-                                                            {'adv_router': '4.4.4.4',
-                                                            'age': 403,
-                                                            'checksum': '0x2b50',
-                                                            'length': 28,
-                                                            'lsa_id': '44.44.44.44',
-                                                            'option': '0x22 (No TOS-capability, DC)',
-                                                            'seq_num': '0x80000001',
-                                                            'type': 'Network Summary'}}}}}}}}}}}}}}
+                                {'areas': 
+                                    {'0.0.0.1': 
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {3: 
+                                                    {'lsa_type': 3,
+                                                    'lsas': 
+                                                        {'10.1.2.0 2.2.2.2': 
+                                                            {'lsa_id': '10.1.2.0',
+                                                            'adv_router': '2.2.2.2',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.0',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 4294,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '2.2.2.2',
+                                                                    'age': 788,
+                                                                    'checksum': '0xfc54',
+                                                                    'length': 28,
+                                                                    'lsa_id': '10.1.2.0',
+                                                                    'option': '0x22',
+                                                                    'seq_num': '0x80000001',
+                                                                    'type': 3}}},
+                                                        '10.1.2.0 3.3.3.3': 
+                                                            {'lsa_id': '10.1.2.0',
+                                                            'adv_router': '3.3.3.3',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.0',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 151,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '3.3.3.3',
+                                                                    'age': 632,
+                                                                    'checksum': '0x5655',
+                                                                    'length': 28,
+                                                                    'lsa_id': '10.1.2.0',
+                                                                    'option': '0x2',
+                                                                   'seq_num': '0x80000002',
+                                                                   'type': 3}}},
+                                                        '10.1.3.0 3.3.3.3': 
+                                                            {'lsa_id': '10.1.3.0',
+                                                            'adv_router': '3.3.3.3',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.0',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 40,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '3.3.3.3',
+                                                                    'age': 642,
+                                                                    'checksum': '0xf029',
+                                                                    'length': 28,
+                                                                    'lsa_id': '10.1.3.0',
+                                                                    'option': '0x2',
+                                                                   'seq_num': '0x80000002',
+                                                                   'type': 3}}},
+                                                        '10.2.3.0 2.2.2.2': 
+                                                            {'lsa_id': '10.2.3.0',
+                                                            'adv_router': '2.2.2.2',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.0',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 222,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '2.2.2.2',
+                                                                    'age': 788,
+                                                                    'checksum': '0x4601',
+                                                                    'length': 28,
+                                                                    'lsa_id': '10.2.3.0',
+                                                                    'option': '0x22',
+                                                                   'seq_num': '0x80000001',
+                                                                   'type': 3}}},
+                                                        '10.2.3.0 3.3.3.3': 
+                                                            {'lsa_id': '10.2.3.0',
+                                                            'adv_router': '3.3.3.3',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.0',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 262,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '3.3.3.3',
+                                                                    'age': 397,
+                                                                    'checksum': '0x96a2',
+                                                                    'length': 28,
+                                                                    'lsa_id': '10.2.3.0',
+                                                                    'option': '0x2',
+                                                                    'seq_num': '0x80000003',
+                                                                    'type': 3}}},
+                                                        '2.2.2.2 2.2.2.2': 
+                                                            {'lsa_id': '2.2.2.2',
+                                                            'adv_router': '2.2.2.2',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.255',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 1,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '2.2.2.2',
+                                                                    'age': 789,
+                                                                    'checksum': '0xfa31',
+                                                                    'length': 28,
+                                                                    'lsa_id': '2.2.2.2',
+                                                                    'option': '0x22',
+                                                                    'seq_num': '0x80000001',
+                                                                    'type': 3}}},
+                                                        '3.3.3.3 3.3.3.3': 
+                                                            {'lsa_id': '3.3.3.3',
+                                                            'adv_router': '3.3.3.3',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.255',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 1,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '3.3.3.3',
+                                                                    'age': 642,
+                                                                    'checksum': '0x8eb4',
+                                                                    'length': 28,
+                                                                    'lsa_id': '3.3.3.3',
+                                                                    'option': '0x2',
+                                                                  'seq_num': '0x80000002',
+                                                                  'type': 3}}},
+                                                        '44.44.44.44 4.4.4.4': 
+                                                            {'lsa_id': '44.44.44.44',
+                                                            'adv_router': '4.4.4.4',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.255',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 1,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '4.4.4.4',
+                                                                    'age': 403,
+                                                                    'checksum': '0x2b50',
+                                                                    'length': 28,
+                                                                    'lsa_id': '44.44.44.44',
+                                                                    'option': '0x22',
+                                                                    'seq_num': '0x80000001',
+                                                                    'type': 3}}}}}}}},
+                                    '0.0.0.0': 
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {3: 
+                                                    {'lsa_type': 3,
+                                                    'lsas': 
+                                                        {'20.1.3.0 1.1.1.1': 
+                                                            {'lsa_id': '20.1.3.0',
+                                                            'adv_router': '1.1.1.1',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.0',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 1,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '1.1.1.1',
+                                                                    'age': 694,
+                                                                    'checksum': '0x43dc',
+                                                                    'length': 28,
+                                                                    'lsa_id': '20.1.3.0',
+                                                                    'option': '0x22',
+                                                                    'seq_num': '0x80000001',
+                                                                    'type': 3}}},
+                                                        '20.1.3.0 3.3.3.3': 
+                                                            {'lsa_id': '20.1.3.0',
+                                                            'adv_router': '3.3.3.3',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.0',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 40,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '3.3.3.3',
+                                                                    'age': 642,
+                                                                    'checksum': '0x6ea1',
+                                                                    'length': 28,
+                                                                    'lsa_id': '20.1.3.0',
+                                                                    'option': '0x2',
+                                                                    'seq_num': '0x80000002',
+                                                                    'type': 3}}},
+                                                        '20.2.3.0 3.3.3.3': 
+                                                            {'lsa_id': '20.2.3.0',
+                                                            'adv_router': '3.3.3.3',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.0',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 40,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '3.3.3.3',
+                                                                    'age': 642,
+                                                                    'checksum': '0x62ac',
+                                                                    'length': 28,
+                                                                    'lsa_id': '20.2.3.0',
+                                                                    'option': '0x2',
+                                                                    'seq_num': '0x80000002',
+                                                                    'type': 3}}},
+                                                        '20.2.4.0 3.3.3.3': 
+                                                            {'lsa_id': '20.2.4.0',
+                                                            'adv_router': '3.3.3.3',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.0',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 41,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '3.3.3.3',
+                                                                    'age': 401,
+                                                                    'checksum': '0x5dad',
+                                                                    'length': 28,
+                                                                    'lsa_id': '20.2.4.0',
+                                                                    'option': '0x2',
+                                                                    'seq_num': '0x80000004',
+                                                                    'type': 3}}},
+                                                        '20.3.4.0 3.3.3.3': 
+                                                            {'lsa_id': '20.3.4.0',
+                                                            'adv_router': '3.3.3.3',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.0',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 40,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '3.3.3.3',
+                                                                    'age': 642,
+                                                                    'checksum': '0x4bc1',
+                                                                    'length': 28,
+                                                                    'lsa_id': '20.3.4.0',
+                                                                    'option': '0x2',
+                                                                    'seq_num': '0x80000002',
+                                                                    'type': 3}}},
+                                                        '4.4.4.4 3.3.3.3': 
+                                                            {'lsa_id': '4.4.4.4',
+                                                            'adv_router': '3.3.3.3',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.255',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 41,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '3.3.3.3',
+                                                                    'age': 401,
+                                                                    'checksum': '0xef26',
+                                                                    'length': 28,
+                                                                    'lsa_id': '4.4.4.4',
+                                                                    'option': '0x2',
+                                                                  'seq_num': '0x80000003',
+                                                                  'type': 3}}}}}}}}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         R3_ospf_nx# show ip ospf database summary detail vrf all
@@ -1533,556 +1599,486 @@ class test_show_ip_ospf_database_summary_detail_vrf_all(unittest.TestCase):
 # ============================================================
 class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
 
-    '''Unit test for "show ip ospf database router detail vrf all" '''
+    '''Unit test for 'show ip ospf database router detail vrf all' '''
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
-        "vrf": {
-            "default": {
-                "address_family": {
-                    "ipv4": {
-                        "instance": {
-                            "1": {
-                                "database": {
-                                    "lsa_types": {
-                                        "Router": {
-                                            "lsas": {
-                                                "3.3.3.3 3.3.3.3": {
-                                                    "ospfv2": {
-                                                        "header": {
-                                                            "seq_num": "0x80000034",
-                                                            "lsa_id": "3.3.3.3",
-                                                            "checksum": "0x73f9",
-                                                            "adv_router": "3.3.3.3",
-                                                            "length": 60,
-                                                            "type": "Router Links",
-                                                            "option": "0x22 (No TOS-capability, DC)",
-                                                            "age": 217
-                                                        },
-                                                        "body": {
-                                                            "router": {
-                                                                "num_of_links": 3,
-                                                                "links": {
-                                                                    "10.3.4.4": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "transit network",
-                                                                        "link_data": "10.3.4.3",
-                                                                        "link_id": "10.3.4.4",
-                                                                        "num_tos_metrics": 0
-                                                                    },
-                                                                    "3.3.3.3": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "stub network",
-                                                                        "link_data": "255.255.255.255",
-                                                                        "link_id": "3.3.3.3",
-                                                                        "num_tos_metrics": 0
-                                                                    },
-                                                                    "10.2.3.3": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "transit network",
-                                                                        "link_data": "10.2.3.3",
-                                                                        "link_id": "10.2.3.3",
-                                                                        "num_tos_metrics": 0}}}}}},
-                                                "1.1.1.1 1.1.1.1": {
-                                                    "ospfv2": {
-                                                        "header": {
-                                                            "seq_num": "0x8000003e",
-                                                            "lsa_id": "1.1.1.1",
-                                                            "checksum": "0x6029",
-                                                            "adv_router": "1.1.1.1",
-                                                            "length": 60,
-                                                            "type": "Router Links",
-                                                            "option": "0x22 (No TOS-capability, DC)",
-                                                            "age": 723
-                                                        },
-                                                        "body": {
-                                                            "router": {
-                                                                "num_of_links": 3,
-                                                                "links": {
-                                                                    "1.1.1.1": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "stub network",
-                                                                        "link_data": "255.255.255.255",
-                                                                        "link_id": "1.1.1.1",
-                                                                        "num_tos_metrics": 0
-                                                                    },
-                                                                    "10.1.4.4": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "transit network",
-                                                                        "link_data": "10.1.4.1",
-                                                                        "link_id": "10.1.4.4",
-                                                                        "num_tos_metrics": 0
-                                                                    },
-                                                                    "10.1.2.1": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "transit network",
-                                                                        "link_data": "10.1.2.1",
-                                                                        "link_id": "10.1.2.1",
-                                                                        "num_tos_metrics": 0}}}}}},
-                                                "2.2.2.2 2.2.2.2": {
-                                                    "ospfv2": {
-                                                        "header": {
-                                                            "seq_num": "0x80000014",
-                                                            "lsa_id": "2.2.2.2",
-                                                            "checksum": "0x652b",
-                                                            "adv_router": "2.2.2.2",
-                                                            "length": 72,
-                                                            "type": "Router Links",
-                                                            "option": "0x2 (No TOS-capability, No DC)",
-                                                            "age": 1683
-                                                        },
-                                                        "body": {
-                                                            "router": {
-                                                                "num_of_links": 4,
-                                                                "links": {
-                                                                    "10.2.4.4": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "transit network",
-                                                                        "link_data": "10.2.4.2",
-                                                                        "link_id": "10.2.4.4",
-                                                                        "num_tos_metrics": 0
-                                                                    },
-                                                                    "2.2.2.2": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "stub network",
-                                                                        "link_data": "255.255.255.255",
-                                                                        "link_id": "2.2.2.2",
-                                                                        "num_tos_metrics": 0
-                                                                    },
-                                                                    "10.1.2.1": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "transit network",
-                                                                        "link_data": "10.1.2.2",
-                                                                        "link_id": "10.1.2.1",
-                                                                        "num_tos_metrics": 0
-                                                                    },
-                                                                    "10.2.3.3": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "transit network",
-                                                                        "link_data": "10.2.3.2",
-                                                                        "link_id": "10.2.3.3",
-                                                                        "num_tos_metrics": 0}}}}}},
-                                                "4.4.4.4 4.4.4.4": {
-                                                    "ospfv2": {
-                                                        "header": {
-                                                            "seq_num": "0x80000037",
-                                                            "lsa_id": "4.4.4.4",
-                                                            "checksum": "0xa37d",
-                                                            "adv_router": "4.4.4.4",
-                                                            "length": 72,
-                                                            "type": "Router Links",
-                                                            "option": "0x22 (No TOS-capability, DC)",
-                                                            "age": 1433
-                                                        },
-                                                        "body": {
-                                                            "router": {
-                                                                "num_of_links": 4,
-                                                                "links": {
-                                                                    "4.4.4.4": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "stub network",
-                                                                        "link_data": "255.255.255.255",
-                                                                        "link_id": "4.4.4.4",
-                                                                        "num_tos_metrics": 0
-                                                                    },
-                                                                    "10.2.4.4": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "transit network",
-                                                                        "link_data": "10.2.4.4",
-                                                                        "link_id": "10.2.4.4",
-                                                                        "num_tos_metrics": 0
-                                                                    },
-                                                                    "10.1.4.4": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "transit network",
-                                                                        "link_data": "10.1.4.4",
-                                                                        "link_id": "10.1.4.4",
-                                                                        "num_tos_metrics": 0
-                                                                    },
-                                                                    "10.3.4.4": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "transit network",
-                                                                        "link_data": "10.3.4.4",
-                                                                        "link_id": "10.3.4.4",
-                                                                        "num_tos_metrics": 0}}}}}}}}}}}}}}},
-            "VRF1": {
-                "address_family": {
-                    "ipv4": {
-                        "instance": {
-                            "1": {
-                                "database": {
-                                    "lsa_types": {
-                                        "Router": {
-                                            "lsas": {
-                                                "11.11.11.11 11.11.11.11": {
-                                                    "ospfv2": {
-                                                        "header": {
-                                                            "seq_num": "0x8000003f",
-                                                            "lsa_id": "11.11.11.11",
-                                                            "checksum": "0x9ae4",
-                                                            "adv_router": "11.11.11.11",
-                                                            "length": 48,
-                                                            "type": "Router Links",
-                                                            "option": "0x22 (No TOS-capability, DC)",
-                                                            "age": 646
-                                                        },
-                                                        "body": {
-                                                            "router": {
-                                                                "num_of_links": 2,
-                                                                "links": {
-                                                                    "22.22.22.22": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "router (point-to-point)",
-                                                                        "link_data": "0.0.0.14",
-                                                                        "link_id": "22.22.22.22",
-                                                                        "num_tos_metrics": 0
-                                                                    },
-                                                                    "20.1.5.1": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 111,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "transit network",
-                                                                        "link_data": "20.1.5.1",
-                                                                        "link_id": "20.1.5.1",
-                                                                        "num_tos_metrics": 0}}}}}},
-                                                "66.66.66.66 66.66.66.66": {
-                                                    "ospfv2": {
-                                                        "header": {
-                                                            "seq_num": "0x8000003d",
-                                                            "lsa_id": "66.66.66.66",
-                                                            "checksum": "0x1083",
-                                                            "adv_router": "66.66.66.66",
-                                                            "length": 72,
-                                                            "type": "Router Links",
-                                                            "option": "0x22 (No TOS-capability, DC)",
-                                                            "age": 524
-                                                        },
-                                                        "body": {
-                                                            "router": {
-                                                                "num_of_links": 4,
-                                                                "links": {
-                                                                    "66.66.66.66": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "stub network",
-                                                                        "link_data": "255.255.255.255",
-                                                                        "link_id": "66.66.66.66",
-                                                                        "num_tos_metrics": 0
-                                                                    },
-                                                                    "20.2.6.6": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 30,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "transit network",
-                                                                        "link_data": "20.2.6.6",
-                                                                        "link_id": "20.2.6.6",
-                                                                        "num_tos_metrics": 0
-                                                                    },
-                                                                    "20.6.7.6": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "transit network",
-                                                                        "link_data": "20.6.7.6",
-                                                                        "link_id": "20.6.7.6",
-                                                                        "num_tos_metrics": 0
-                                                                    },
-                                                                    "20.5.6.6": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "transit network",
-                                                                        "link_data": "20.5.6.6",
-                                                                        "link_id": "20.5.6.6",
-                                                                        "num_tos_metrics": 0}}}}}},
-                                                "55.55.55.55 55.55.55.55": {
-                                                    "ospfv2": {
-                                                        "header": {
-                                                            "seq_num": "0x80000038",
-                                                            "lsa_id": "55.55.55.55",
-                                                            "checksum": "0xe5bd",
-                                                            "adv_router": "55.55.55.55",
-                                                            "length": 60,
-                                                            "type": "Router Links",
-                                                            "option": "0x22 (No TOS-capability, DC)",
-                                                            "age": 304
-                                                        },
-                                                        "body": {
-                                                            "router": {
-                                                                "num_of_links": 3,
-                                                                "links": {
-                                                                    "55.55.55.55": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "stub network",
-                                                                        "link_data": "255.255.255.255",
-                                                                        "link_id": "55.55.55.55",
-                                                                        "num_tos_metrics": 0
-                                                                    },
-                                                                    "20.1.5.1": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 30,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "transit network",
-                                                                        "link_data": "20.1.5.5",
-                                                                        "link_id": "20.1.5.1",
-                                                                        "num_tos_metrics": 0
-                                                                    },
-                                                                    "20.5.6.6": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "transit network",
-                                                                        "link_data": "20.5.6.5",
-                                                                        "link_id": "20.5.6.6",
-                                                                        "num_tos_metrics": 0}}}}}},
-                                                "77.77.77.77 77.77.77.77": {
-                                                    "ospfv2": {
-                                                        "header": {
-                                                            "seq_num": "0x80000031",
-                                                            "lsa_id": "77.77.77.77",
-                                                            "checksum": "0x117a",
-                                                            "adv_router": "77.77.77.77",
-                                                            "length": 60,
-                                                            "type": "Router Links",
-                                                            "option": "0x22 (No TOS-capability, DC)",
-                                                            "age": 237
-                                                        },
-                                                        "body": {
-                                                            "router": {
-                                                                "num_of_links": 3,
-                                                                "links": {
-                                                                    "20.6.7.6": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "transit network",
-                                                                        "link_data": "20.6.7.7",
-                                                                        "link_id": "20.6.7.6",
-                                                                        "num_tos_metrics": 0
-                                                                    },
-                                                                    "20.3.7.7": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 30,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "transit network",
-                                                                        "link_data": "20.3.7.7",
-                                                                        "link_id": "20.3.7.7",
-                                                                        "num_tos_metrics": 0
-                                                                    },
-                                                                    "77.77.77.77": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 30,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "stub network",
-                                                                        "link_data": "255.255.255.255",
-                                                                        "link_id": "77.77.77.77",
-                                                                        "num_tos_metrics": 0}}}}}},
-                                                "22.22.22.22 22.22.22.22": {
-                                                    "ospfv2": {
-                                                        "header": {
-                                                            "seq_num": "0x8000001a",
-                                                            "lsa_id": "22.22.22.22",
-                                                            "checksum": "0xc21b",
-                                                            "adv_router": "22.22.22.22",
-                                                            "length": 48,
-                                                            "type": "Router Links",
-                                                            "option": "0x2 (No TOS-capability, No DC)",
-                                                            "age": 642
-                                                        },
-                                                        "body": {
-                                                            "router": {
-                                                                "num_of_links": 2,
-                                                                "links": {
-                                                                    "20.2.6.6": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "transit network",
-                                                                        "link_data": "20.2.6.2",
-                                                                        "link_id": "20.2.6.6",
-                                                                        "num_tos_metrics": 0
-                                                                    },
-                                                                    "11.11.11.11": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 40,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "router (point-to-point)",
-                                                                        "link_data": "0.0.0.6",
-                                                                        "link_id": "11.11.11.11",
-                                                                        "num_tos_metrics": 0}}}}}},
-                                                "3.3.3.3 3.3.3.3": {
-                                                    "ospfv2": {
-                                                        "header": {
-                                                            "seq_num": "0x80000036",
-                                                            "lsa_id": "3.3.3.3",
-                                                            "checksum": "0x5646",
-                                                            "adv_router": "3.3.3.3",
-                                                            "length": 36,
-                                                            "type": "Router Links",
-                                                            "option": "0x22 (No TOS-capability, DC)",
-                                                            "age": 1148
-                                                        },
-                                                        "body": {
-                                                            "router": {
-                                                                "num_of_links": 1,
-                                                                "links": {
-                                                                    "20.3.7.7": {
-                                                                        "topologies": {
-                                                                            0: {
-                                                                                "tos": 0,
-                                                                                "metric": 1,
-                                                                                "mt_id": 0
-                                                                            }
-                                                                        },
-                                                                        "type": "transit network",
-                                                                        "link_data": "20.3.7.3",
-                                                                        "link_id": "20.3.7.7",
-                                                                        "num_tos_metrics": 0}}}}}}}}}}}}}}}}}
+        'vrf': 
+            {'VRF1': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.1': 
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {1: 
+                                                    {'lsa_type': 1,
+                                                        'lsas': 
+                                                            {'11.11.11.11 11.11.11.11': 
+                                                                {'adv_router': '11.11.11.11',
+                                                                    'lsa_id': '11.11.11.11',
+                                                                    'ospfv2': 
+                                                                        {'body': 
+                                                                            {'router': 
+                                                                                {'links': 
+                                                                                    {'20.1.5.1': 
+                                                                                        {'link_data': '20.1.5.1',
+                                                                                        'link_id': '20.1.5.1',
+                                                                                        'num_tos_metrics': 0,
+                                                                                        'topologies': 
+                                                                                            {0: 
+                                                                                                {'metric': 111,
+                                                                                            'mt_id': 0,
+                                                                                            'tos': 0}},
+                                                                                            'type': 'transit network'},
+                                                                                    '22.22.22.22': 
+                                                                                        {'link_data': '0.0.0.14',
+                                                                                        'link_id': '22.22.22.22',
+                                                                                        'num_tos_metrics': 0,
+                                                                                        'topologies': 
+                                                                                            {0: 
+                                                                                                {'metric': 1,
+                                                                                                'mt_id': 0,
+                                                                                                'tos': 0}},
+                                                                                                'type': 'router (point-to-point)'}},
+                                                                                'num_of_links': 2}},
+                                                                    'header': 
+                                                                        {'adv_router': '11.11.11.11',
+                                                                        'age': 646,
+                                                                        'checksum': '0x9ae4',
+                                                                        'length': 48,
+                                                                        'lsa_id': '11.11.11.11',
+                                                                        'option': '0x22',
+                                                                        'seq_num': '0x8000003f',
+                                                                        'type': 1}}},
+                                                            '22.22.22.22 22.22.22.22': 
+                                                                {'adv_router': '22.22.22.22',
+                                                                'lsa_id': '22.22.22.22',
+                                                                'ospfv2': 
+                                                                    {'body': 
+                                                                        {'router': 
+                                                                            {'links': 
+                                                                                {'11.11.11.11': 
+                                                                                    {'link_data': '0.0.0.6',
+                                                                                    'link_id': '11.11.11.11',
+                                                                                    'num_tos_metrics': 0,
+                                                                                    'topologies': 
+                                                                                        {0: 
+                                                                                            {'metric': 40,
+                                                                                            'mt_id': 0,
+                                                                                            'tos': 0}},
+                                                                                            'type': 'router '
+                                                                                            '(point-to-point)'},
+                                                                                '20.2.6.6': 
+                                                                                    {'link_data': '20.2.6.2',
+                                                                                    'link_id': '20.2.6.6',
+                                                                                    'num_tos_metrics': 0,
+                                                                                    'topologies': 
+                                                                                        {0: 
+                                                                                            {'metric': 1,
+                                                                                            'mt_id': 0,
+                                                                                            'tos': 0}},
+                                                                                            'type': 'transit '
+                                                                                            'network'}},
+                                                                            'num_of_links': 2}},
+                                                                'header': 
+                                                                    {'adv_router': '22.22.22.22',
+                                                                    'age': 642,
+                                                                    'checksum': '0xc21b',
+                                                                    'length': 48,
+                                                                    'lsa_id': '22.22.22.22',
+                                                                    'option': '0x2',
+                                                                    'seq_num': '0x8000001a',
+                                                                    'type': 1}}},
+                                                            '3.3.3.3 3.3.3.3': 
+                                                                {'adv_router': '3.3.3.3',
+                                                                'lsa_id': '3.3.3.3',
+                                                                'ospfv2': 
+                                                                    {'body': 
+                                                                        {'router': 
+                                                                            {'links': 
+                                                                                {'20.3.7.7': 
+                                                                                    {'link_data': '20.3.7.3',
+                                                                                    'link_id': '20.3.7.7',
+                                                                                    'num_tos_metrics': 0,
+                                                                                    'topologies': 
+                                                                                        {0: 
+                                                                                            {'metric': 1,
+                                                                                            'mt_id': 0,
+                                                                                            'tos': 0}},
+                                                                                            'type': 'transit '
+                                                                                            'network'}},
+                                                                            'num_of_links': 1}},
+                                                                'header': 
+                                                                    {'adv_router': '3.3.3.3',
+                                                                    'age': 1148,
+                                                                    'checksum': '0x5646',
+                                                                    'length': 36,
+                                                                    'lsa_id': '3.3.3.3',
+                                                                    'option': '0x22',
+                                                                    'seq_num': '0x80000036',
+                                                                    'type': 1}}},
+                                                            '55.55.55.55 55.55.55.55': 
+                                                                {'adv_router': '55.55.55.55',
+                                                                'lsa_id': '55.55.55.55',
+                                                                'ospfv2': 
+                                                                    {'body': 
+                                                                        {'router': 
+                                                                            {'links': 
+                                                                                {'20.1.5.1': 
+                                                                                    {'link_data': '20.1.5.5',
+                                                                                    'link_id': '20.1.5.1',
+                                                                                    'num_tos_metrics': 0,
+                                                                                    'topologies': {0: {'metric': 30,
+                                                                                    'mt_id': 0,
+                                                                                    'tos': 0}},
+                                                                                    'type': 'transit '
+                                                                                    'network'},
+                                                                                '20.5.6.6': 
+                                                                                    {'link_data': '20.5.6.5',
+                                                                                    'link_id': '20.5.6.6',
+                                                                                    'num_tos_metrics': 0,
+                                                                                    'topologies': {0: {'metric': 1,
+                                                                                    'mt_id': 0,
+                                                                                    'tos': 0}},
+                                                                                    'type': 'transit '
+                                                                                    'network'},
+                                                                                '55.55.55.55': 
+                                                                                    {'link_data': '255.255.255.255',
+                                                                                    'link_id': '55.55.55.55',
+                                                                                    'num_tos_metrics': 0,
+                                                                                    'topologies': {0: {'metric': 1,
+                                                                                    'mt_id': 0,
+                                                                                    'tos': 0}},
+                                                                                    'type': 'stub '
+                                                                                    'network'}},
+                                                                                    'num_of_links': 3}},
+                                                                    'header': 
+                                                                        {'adv_router': '55.55.55.55',
+                                                                        'age': 304,
+                                                                        'checksum': '0xe5bd',
+                                                                        'length': 60,
+                                                                        'lsa_id': '55.55.55.55',
+                                                                        'option': '0x22',
+                                                                        'seq_num': '0x80000038',
+                                                                        'type': 1}}},
+                                                            '66.66.66.66 66.66.66.66': 
+                                                                {'adv_router': '66.66.66.66',
+                                                                'lsa_id': '66.66.66.66',
+                                                                'ospfv2': 
+                                                                    {'body': 
+                                                                        {'router': 
+                                                                            {'links': 
+                                                                                {'20.2.6.6': 
+                                                                                    {'link_data': '20.2.6.6',
+                                                                                    'link_id': '20.2.6.6',
+                                                                                    'num_tos_metrics': 0,
+                                                                                    'topologies': {0: {'metric': 30,
+                                                                                    'mt_id': 0,
+                                                                                    'tos': 0}},
+                                                                                    'type': 'transit '
+                                                                                    'network'},
+                                                                                '20.5.6.6': {'link_data': '20.5.6.6',
+                                                                                    'link_id': '20.5.6.6',
+                                                                                    'num_tos_metrics': 0,
+                                                                                    'topologies': {0: {'metric': 1,
+                                                                                    'mt_id': 0,
+                                                                                    'tos': 0}},
+                                                                                    'type': 'transit '
+                                                                                    'network'},
+                                                                                '20.6.7.6': {'link_data': '20.6.7.6',
+                                                                                    'link_id': '20.6.7.6',
+                                                                                    'num_tos_metrics': 0,
+                                                                                    'topologies': {0: {'metric': 1,
+                                                                                    'mt_id': 0,
+                                                                                    'tos': 0}},
+                                                                                    'type': 'transit '
+                                                                                    'network'},
+                                                                                '66.66.66.66': {'link_data': '255.255.255.255',
+                                                                                    'link_id': '66.66.66.66',
+                                                                                    'num_tos_metrics': 0,
+                                                                                    'topologies': {0: {'metric': 1,
+                                                                                    'mt_id': 0,
+                                                                                    'tos': 0}},
+                                                                                    'type': 'stub '
+                                                                                    'network'}},
+                                                                                    'num_of_links': 4}},
+                                                                    'header': 
+                                                                        {'adv_router': '66.66.66.66',
+                                                                        'age': 524,
+                                                                        'checksum': '0x1083',
+                                                                        'length': 72,
+                                                                        'lsa_id': '66.66.66.66',
+                                                                        'option': '0x22',
+                                                                        'seq_num': '0x8000003d',
+                                                                        'type': 1}}},
+                                                            '77.77.77.77 77.77.77.77': 
+                                                                {'adv_router': '77.77.77.77',
+                                                                'lsa_id': '77.77.77.77',
+                                                                'ospfv2': 
+                                                                    {'body': 
+                                                                        {'router': 
+                                                                            {'links': 
+                                                                                {'20.3.7.7': 
+                                                                                    {'link_data': '20.3.7.7',
+                                                                                    'link_id': '20.3.7.7',
+                                                                                    'num_tos_metrics': 0,
+                                                                                    'topologies': {0: {'metric': 30,
+                                                                                    'mt_id': 0,
+                                                                                    'tos': 0}},
+                                                                                    'type': 'transit '
+                                                                                    'network'},
+                                                                                '20.6.7.6': {'link_data': '20.6.7.7',
+                                                                                    'link_id': '20.6.7.6',
+                                                                                    'num_tos_metrics': 0,
+                                                                                    'topologies': {0: {'metric': 1,
+                                                                                    'mt_id': 0,
+                                                                                    'tos': 0}},
+                                                                                    'type': 'transit '
+                                                                                    'network'},
+                                                                                '77.77.77.77': {'link_data': '255.255.255.255',
+                                                                                    'link_id': '77.77.77.77',
+                                                                                    'num_tos_metrics': 0,
+                                                                                    'topologies': {0: {'metric': 30,
+                                                                                    'mt_id': 0,
+                                                                                    'tos': 0}},
+                                                                                    'type': 'stub '
+                                                                                    'network'}},
+                                                                                    'num_of_links': 3}},
+                                                                    'header': 
+                                                                        {'adv_router': '77.77.77.77',
+                                                                        'age': 237,
+                                                                        'checksum': '0x117a',
+                                                                        'length': 60,
+                                                                        'lsa_id': '77.77.77.77',
+                                                                        'option': '0x22',
+                                                                        'seq_num': '0x80000031',
+                                                                        'type': 1}}}}}}}}}}}}}},
+            'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.0': 
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {1: 
+                                                    {'lsa_type': 1,
+                                                    'lsas': 
+                                                        {'1.1.1.1 1.1.1.1': 
+                                                            {'adv_router': '1.1.1.1',
+                                                            'lsa_id': '1.1.1.1',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'router': 
+                                                                        {'links': 
+                                                                            {'1.1.1.1': 
+                                                                                {'link_data': '255.255.255.255',
+                                                                                'link_id': '1.1.1.1',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'mt_id': 0}},
+                                                                                        'type': 'stub network'},
+                                                                            '10.1.2.1': 
+                                                                                {'link_data': '10.1.2.1',
+                                                                                'link_id': '10.1.2.1',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                    'mt_id': 0,
+                                                                                    'tos': 0}},
+                                                                                'type': 'transit network'},
+                                                                            '10.1.4.4': 
+                                                                                {'link_data': '10.1.4.1',
+                                                                                'link_id': '10.1.4.4',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                        'type': 'transit network'}},
+                                                                        'num_of_links': 3}},
+                                                                'header': 
+                                                                    {'adv_router': '1.1.1.1',
+                                                                    'age': 723,
+                                                                    'checksum': '0x6029',
+                                                                    'length': 60,
+                                                                    'lsa_id': '1.1.1.1',
+                                                                    'option': '0x22',
+                                                                    'seq_num': '0x8000003e',
+                                                                    'type': 1}}},
+                                                        '2.2.2.2 2.2.2.2': {'adv_router': '2.2.2.2',
+                                                            'lsa_id': '2.2.2.2',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'router': 
+                                                                        {'links': 
+                                                                            {'10.1.2.1': 
+                                                                                {'link_data': '10.1.2.2',
+                                                                                'link_id': '10.1.2.1',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                        'type': 'transit network'},
+                                                                            '10.2.3.3': 
+                                                                                {'link_data': '10.2.3.2',
+                                                                                'link_id': '10.2.3.3',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                        'type': 'transit network'},
+                                                                            '10.2.4.4': 
+                                                                                {'link_data': '10.2.4.2',
+                                                                                'link_id': '10.2.4.4',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                        'type': 'transit network'},
+                                                                            '2.2.2.2': 
+                                                                                {'link_data': '255.255.255.255',
+                                                                                'link_id': '2.2.2.2',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                    'mt_id': 0,
+                                                                                    'tos': 0}},
+                                                                                    'type': 'stub network'}},
+                                                                        'num_of_links': 4}},
+                                                            'header': 
+                                                                {'adv_router': '2.2.2.2',
+                                                                'age': 1683,
+                                                                'checksum': '0x652b',
+                                                                'length': 72,
+                                                                'lsa_id': '2.2.2.2',
+                                                                'option': '0x2',
+                                                                'seq_num': '0x80000014',
+                                                                'type': 1}}},
+                                                        '3.3.3.3 3.3.3.3': 
+                                                            {'adv_router': '3.3.3.3',
+                                                            'lsa_id': '3.3.3.3',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'router': 
+                                                                        {'links': 
+                                                                            {'10.2.3.3': 
+                                                                                {'link_data': '10.2.3.3',
+                                                                                'link_id': '10.2.3.3',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                        'type': 'transit network'},
+                                                                            '10.3.4.4': 
+                                                                                {'link_data': '10.3.4.3',
+                                                                                'link_id': '10.3.4.4',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                        'type': 'transit network'},
+                                                                            '3.3.3.3': 
+                                                                                {'link_data': '255.255.255.255',
+                                                                                'link_id': '3.3.3.3',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                        'type': 'stub network'}},
+                                                                        'num_of_links': 3}},
+                                                            'header': 
+                                                                {'adv_router': '3.3.3.3',
+                                                                'age': 217,
+                                                                'checksum': '0x73f9',
+                                                                'length': 60,
+                                                                'lsa_id': '3.3.3.3',
+                                                                'option': '0x22',
+                                                                'seq_num': '0x80000034',
+                                                                'type': 1}}},
+                                                        '4.4.4.4 4.4.4.4': 
+                                                            {'adv_router': '4.4.4.4',
+                                                            'lsa_id': '4.4.4.4',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'router': 
+                                                                        {'links': 
+                                                                            {'10.1.4.4': 
+                                                                                {'link_data': '10.1.4.4',
+                                                                                'link_id': '10.1.4.4',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                        'type': 'transit '
+                                                                                        'network'},
+                                                                            '10.2.4.4': 
+                                                                                {'link_data': '10.2.4.4',
+                                                                                'link_id': '10.2.4.4',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                        'type': 'transit '
+                                                                                        'network'},
+                                                                            '10.3.4.4': 
+                                                                                {'link_data': '10.3.4.4',
+                                                                                'link_id': '10.3.4.4',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                        'type': 'transit '
+                                                                                        'network'},
+                                                                            '4.4.4.4': 
+                                                                                {'link_data': '255.255.255.255',
+                                                                                'link_id': '4.4.4.4',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                        'type': 'stub '
+                                                                                        'network'}},
+                                                                        'num_of_links': 4}},
+                                                            'header': 
+                                                                {'adv_router': '4.4.4.4',
+                                                                'age': 1433,
+                                                                'checksum': '0xa37d',
+                                                                'length': 72,
+                                                                'lsa_id': '4.4.4.4',
+                                                                'option': '0x22',
+                                                                'seq_num': '0x80000037',
+                                                                'type': 1}}}}}}}}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         R2_ospf_nx# show ip ospf database router detail vrf all
@@ -2397,7 +2393,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
 # =================================================================
 class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
 
-    '''Unit test for "show ip ospf database opaque-area detail vrf all" '''
+    '''Unit test for 'show ip ospf database opaque-area detail vrf all' '''
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -2409,409 +2405,458 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                     {'ipv4': 
                         {'instance': 
                             {'1': 
-                                {'database': {'lsa_types': {'Opaque Area': {'lsas': {'1.0.0.0 1.1.1.1': {'ospfv2': {'body': {'opaque': {}},
-                                                                                                                                                       'header': {'adv_router': '1.1.1.1',
-                                                                                                                                                                  'age': 385,
-                                                                                                                                                                  'checksum': '0x54d3',
-                                                                                                                                                                  'fragment_number': 0,
-                                                                                                                                                                  'length': 28,
-                                                                                                                                                                  'lsa_id': '1.0.0.0',
-                                                                                                                                                                  'mpls_te_router_id': '1.1.1.1',
-                                                                                                                                                                  'num_links': 0,
-                                                                                                                                                                  'opaque_id': 0,
-                                                                                                                                                                  'opaque_type': 1,
-                                                                                                                                                                  'option': '0x20 '
-                                                                                                                                                                            '(No '
-                                                                                                                                                                            'TOS-capability, '
-                                                                                                                                                                            'DC)',
-                                                                                                                                                                  'seq_num': '0x80000003',
-                                                                                                                                                                  'type': 'Opaque '
-                                                                                                                                                                          'Area '
-                                                                                                                                                                          'Link'}}},
-                                                                                                                        '1.0.0.0 2.2.2.2': {'ospfv2': {'body': {'opaque': {}},
-                                                                                                                                                       'header': {'adv_router': '2.2.2.2',
-                                                                                                                                                                  'age': 1612,
-                                                                                                                                                                  'checksum': '0x1c22',
-                                                                                                                                                                  'fragment_number': 0,
-                                                                                                                                                                  'length': 28,
-                                                                                                                                                                  'lsa_id': '1.0.0.0',
-                                                                                                                                                                  'mpls_te_router_id': '2.2.2.2',
-                                                                                                                                                                  'num_links': 0,
-                                                                                                                                                                  'opaque_id': 0,
-                                                                                                                                                                  'opaque_type': 1,
-                                                                                                                                                                  'option': '0x2 '
-                                                                                                                                                                            '(No '
-                                                                                                                                                                            'TOS-capability, '
-                                                                                                                                                                            'No '
-                                                                                                                                                                            'DC)',
-                                                                                                                                                                  'seq_num': '0x80000003',
-                                                                                                                                                                  'type': 'Opaque '
-                                                                                                                                                                          'Area '
-                                                                                                                                                                          'Link'}}},
-                                                                                                                        '1.0.0.0 3.3.3.3': {'ospfv2': {'body': {'opaque': {}},
-                                                                                                                                                       'header': {'adv_router': '3.3.3.3',
-                                                                                                                                                                  'age': 113,
-                                                                                                                                                                  'checksum': '0x5cbb',
-                                                                                                                                                                  'fragment_number': 0,
-                                                                                                                                                                  'length': 28,
-                                                                                                                                                                  'lsa_id': '1.0.0.0',
-                                                                                                                                                                  'mpls_te_router_id': '3.3.3.3',
-                                                                                                                                                                  'num_links': 0,
-                                                                                                                                                                  'opaque_id': 0,
-                                                                                                                                                                  'opaque_type': 1,
-                                                                                                                                                                  'option': '0x20 '
-                                                                                                                                                                            '(No '
-                                                                                                                                                                            'TOS-capability, '
-                                                                                                                                                                            'DC)',
-                                                                                                                                                                  'seq_num': '0x80000003',
-                                                                                                                                                                  'type': 'Opaque '
-                                                                                                                                                                          'Area '
-                                                                                                                                                                          'Link'}}},
-                                                                                                                        '1.0.0.1 1.1.1.1': {'ospfv2': {'body': {'opaque': {'link_tlvs': {1: {'admin_group': '0x0',
-                                                                                                                                                                                             'link_id': '10.1.4.4',
-                                                                                                                                                                                             'link_name': 'Broadcast '
-                                                                                                                                                                                                          'network',
-                                                                                                                                                                                             'link_type': 2,
-                                                                                                                                                                                             'local_if_ipv4_addrs': {'10.1.4.1': {}},
-                                                                                                                                                                                             'max_bandwidth': 125000000,
-                                                                                                                                                                                             'max_reservable_bandwidth': 93750000,
-                                                                                                                                                                                             'remote_if_ipv4_addrs': {'0.0.0.0': {}},
-                                                                                                                                                                                             'te_metric': 1,
-                                                                                                                                                                                             'unknown_tlvs': {1: {'length': 4,
-                                                                                                                                                                                                                  'type': 32770,
-                                                                                                                                                                                                                  'value': '00 '
-                                                                                                                                                                                                                           '00 '
-                                                                                                                                                                                                                           '00 '
-                                                                                                                                                                                                                           '01'}},
-                                                                                                                                                                                             'unreserved_bandwidths': {'0 93750000': {'priority': 0,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '1 93750000': {'priority': 1,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '2 93750000': {'priority': 2,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '3 93750000': {'priority': 3,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '4 93750000': {'priority': 4,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '5 93750000': {'priority': 5,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '6 93750000': {'priority': 6,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '7 93750000': {'priority': 7,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000}}}}}},
-                                                                                                                                                       'header': {'adv_router': '1.1.1.1',
-                                                                                                                                                                  'age': 385,
-                                                                                                                                                                  'checksum': '0x6387',
-                                                                                                                                                                  'fragment_number': 1,
-                                                                                                                                                                  'length': 124,
-                                                                                                                                                                  'lsa_id': '1.0.0.1',
-                                                                                                                                                                  'num_links': 1,
-                                                                                                                                                                  'opaque_id': 1,
-                                                                                                                                                                  'opaque_type': 1,
-                                                                                                                                                                  'option': '0x20 '
-                                                                                                                                                                            '(No '
-                                                                                                                                                                            'TOS-capability, '
-                                                                                                                                                                            'DC)',
-                                                                                                                                                                  'seq_num': '0x80000003',
-                                                                                                                                                                  'type': 'Opaque '
-                                                                                                                                                                          'Area '
-                                                                                                                                                                          'Link'}}},
-                                                                                                                        '1.0.0.2 1.1.1.1': {'ospfv2': {'body': {'opaque': {'link_tlvs': {1: {'admin_group': '0x0',
-                                                                                                                                                                                             'link_id': '10.1.2.1',
-                                                                                                                                                                                             'link_name': 'Broadcast '
-                                                                                                                                                                                                          'network',
-                                                                                                                                                                                             'link_type': 2,
-                                                                                                                                                                                             'local_if_ipv4_addrs': {'10.1.2.1': {}},
-                                                                                                                                                                                             'max_bandwidth': 125000000,
-                                                                                                                                                                                             'max_reservable_bandwidth': 93750000,
-                                                                                                                                                                                             'remote_if_ipv4_addrs': {'0.0.0.0': {}},
-                                                                                                                                                                                             'te_metric': 1,
-                                                                                                                                                                                             'unknown_tlvs': {1: {'length': 4,
-                                                                                                                                                                                                                  'type': 32770,
-                                                                                                                                                                                                                  'value': '00 '
-                                                                                                                                                                                                                           '00 '
-                                                                                                                                                                                                                           '00 '
-                                                                                                                                                                                                                           '01'}},
-                                                                                                                                                                                             'unreserved_bandwidths': {'0 93750000': {'priority': 0,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '1 93750000': {'priority': 1,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '2 93750000': {'priority': 2,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '3 93750000': {'priority': 3,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '4 93750000': {'priority': 4,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '5 93750000': {'priority': 5,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '6 93750000': {'priority': 6,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '7 93750000': {'priority': 7,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000}}}}}},
-                                                                                                                                                       'header': {'adv_router': '1.1.1.1',
-                                                                                                                                                                  'age': 385,
-                                                                                                                                                                  'checksum': '0xb23e',
-                                                                                                                                                                  'fragment_number': 2,
-                                                                                                                                                                  'length': 124,
-                                                                                                                                                                  'lsa_id': '1.0.0.2',
-                                                                                                                                                                  'num_links': 1,
-                                                                                                                                                                  'opaque_id': 2,
-                                                                                                                                                                  'opaque_type': 1,
-                                                                                                                                                                  'option': '0x20 '
-                                                                                                                                                                            '(No '
-                                                                                                                                                                            'TOS-capability, '
-                                                                                                                                                                            'DC)',
-                                                                                                                                                                  'seq_num': '0x80000003',
-                                                                                                                                                                  'type': 'Opaque '
-                                                                                                                                                                          'Area '
-                                                                                                                                                                          'Link'}}},
-                                                                                                                        '1.0.0.37 2.2.2.2': {'ospfv2': {'body': {'opaque': {'link_tlvs': {1: {'admin_group': '0x0',
-                                                                                                                                                                                              'link_id': '10.2.3.3',
-                                                                                                                                                                                              'link_name': 'Broadcast '
-                                                                                                                                                                                                           'network',
-                                                                                                                                                                                              'link_type': 2,
-                                                                                                                                                                                              'local_if_ipv4_addrs': {'10.2.3.2': {}},
-                                                                                                                                                                                              'max_bandwidth': 125000000,
-                                                                                                                                                                                              'max_reservable_bandwidth': 93750000,
-                                                                                                                                                                                              'remote_if_ipv4_addrs': {'0.0.0.0': {}},
-                                                                                                                                                                                              'te_metric': 1,
-                                                                                                                                                                                              'unreserved_bandwidths': {'0 93750000': {'priority': 0,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '1 93750000': {'priority': 1,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '2 93750000': {'priority': 2,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '3 93750000': {'priority': 3,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '4 93750000': {'priority': 4,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '5 93750000': {'priority': 5,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '6 93750000': {'priority': 6,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '7 93750000': {'priority': 7,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000}}}}}},
-                                                                                                                                                        'header': {'adv_router': '2.2.2.2',
-                                                                                                                                                                   'age': 1202,
-                                                                                                                                                                   'checksum': '0xe492',
-                                                                                                                                                                   'fragment_number': 37,
-                                                                                                                                                                   'length': 116,
-                                                                                                                                                                   'lsa_id': '1.0.0.37',
-                                                                                                                                                                   'num_links': 1,
-                                                                                                                                                                   'opaque_id': 37,
-                                                                                                                                                                   'opaque_type': 1,
-                                                                                                                                                                   'option': '0x2 '
-                                                                                                                                                                             '(No '
-                                                                                                                                                                             'TOS-capability, '
-                                                                                                                                                                             'No '
-                                                                                                                                                                             'DC)',
-                                                                                                                                                                   'seq_num': '0x80000004',
-                                                                                                                                                                   'type': 'Opaque '
-                                                                                                                                                                           'Area '
-                                                                                                                                                                           'Link'}}},
-                                                                                                                        '1.0.0.38 2.2.2.2': {'ospfv2': {'body': {'opaque': {'link_tlvs': {1: {'admin_group': '0x0',
-                                                                                                                                                                                              'link_id': '10.2.4.4',
-                                                                                                                                                                                              'link_name': 'Broadcast '
-                                                                                                                                                                                                           'network',
-                                                                                                                                                                                              'link_type': 2,
-                                                                                                                                                                                              'local_if_ipv4_addrs': {'10.2.4.2': {}},
-                                                                                                                                                                                              'max_bandwidth': 125000000,
-                                                                                                                                                                                              'max_reservable_bandwidth': 93750000,
-                                                                                                                                                                                              'remote_if_ipv4_addrs': {'0.0.0.0': {}},
-                                                                                                                                                                                              'te_metric': 1,
-                                                                                                                                                                                              'unreserved_bandwidths': {'0 93750000': {'priority': 0,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '1 93750000': {'priority': 1,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '2 93750000': {'priority': 2,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '3 93750000': {'priority': 3,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '4 93750000': {'priority': 4,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '5 93750000': {'priority': 5,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '6 93750000': {'priority': 6,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '7 93750000': {'priority': 7,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000}}}}}},
-                                                                                                                                                        'header': {'adv_router': '2.2.2.2',
-                                                                                                                                                                   'age': 1191,
-                                                                                                                                                                   'checksum': '0x2350',
-                                                                                                                                                                   'fragment_number': 38,
-                                                                                                                                                                   'length': 116,
-                                                                                                                                                                   'lsa_id': '1.0.0.38',
-                                                                                                                                                                   'num_links': 1,
-                                                                                                                                                                   'opaque_id': 38,
-                                                                                                                                                                   'opaque_type': 1,
-                                                                                                                                                                   'option': '0x2 '
-                                                                                                                                                                             '(No '
-                                                                                                                                                                             'TOS-capability, '
-                                                                                                                                                                             'No '
-                                                                                                                                                                             'DC)',
-                                                                                                                                                                   'seq_num': '0x80000004',
-                                                                                                                                                                   'type': 'Opaque '
-                                                                                                                                                                           'Area '
-                                                                                                                                                                           'Link'}}},
-                                                                                                                        '1.0.0.39 2.2.2.2': {'ospfv2': {'body': {'opaque': {'link_tlvs': {1: {'admin_group': '0x0',
-                                                                                                                                                                                              'link_id': '10.1.2.1',
-                                                                                                                                                                                              'link_name': 'Broadcast '
-                                                                                                                                                                                                           'network',
-                                                                                                                                                                                              'link_type': 2,
-                                                                                                                                                                                              'local_if_ipv4_addrs': {'10.1.2.2': {}},
-                                                                                                                                                                                              'max_bandwidth': 125000000,
-                                                                                                                                                                                              'max_reservable_bandwidth': 93750000,
-                                                                                                                                                                                              'remote_if_ipv4_addrs': {'0.0.0.0': {}},
-                                                                                                                                                                                              'te_metric': 1,
-                                                                                                                                                                                              'unreserved_bandwidths': {'0 93750000': {'priority': 0,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '1 93750000': {'priority': 1,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '2 93750000': {'priority': 2,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '3 93750000': {'priority': 3,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '4 93750000': {'priority': 4,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '5 93750000': {'priority': 5,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '6 93750000': {'priority': 6,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                        '7 93750000': {'priority': 7,
-                                                                                                                                                                                                                                       'unreserved_bandwidth': 93750000}}}}}},
-                                                                                                                                                        'header': {'adv_router': '2.2.2.2',
-                                                                                                                                                                   'age': 1191,
-                                                                                                                                                                   'checksum': '0x4239',
-                                                                                                                                                                   'fragment_number': 39,
-                                                                                                                                                                   'length': 116,
-                                                                                                                                                                   'lsa_id': '1.0.0.39',
-                                                                                                                                                                   'num_links': 1,
-                                                                                                                                                                   'opaque_id': 39,
-                                                                                                                                                                   'opaque_type': 1,
-                                                                                                                                                                   'option': '0x2 '
-                                                                                                                                                                             '(No '
-                                                                                                                                                                             'TOS-capability, '
-                                                                                                                                                                             'No '
-                                                                                                                                                                             'DC)',
-                                                                                                                                                                   'seq_num': '0x80000004',
-                                                                                                                                                                   'type': 'Opaque '
-                                                                                                                                                                           'Area '
-                                                                                                                                                                           'Link'}}},
-                                                                                                                        '1.0.0.4 3.3.3.3': {'ospfv2': {'body': {'opaque': {'link_tlvs': {1: {'admin_group': '0x0',
-                                                                                                                                                                                             'link_id': '10.3.4.4',
-                                                                                                                                                                                             'link_name': 'Broadcast '
-                                                                                                                                                                                                          'network',
-                                                                                                                                                                                             'link_type': 2,
-                                                                                                                                                                                             'local_if_ipv4_addrs': {'10.3.4.3': {}},
-                                                                                                                                                                                             'max_bandwidth': 125000000,
-                                                                                                                                                                                             'max_reservable_bandwidth': 93750000,
-                                                                                                                                                                                             'remote_if_ipv4_addrs': {'0.0.0.0': {}},
-                                                                                                                                                                                             'te_metric': 1,
-                                                                                                                                                                                             'unknown_tlvs': {1: {'length': 4,
-                                                                                                                                                                                                                  'type': 32770,
-                                                                                                                                                                                                                  'value': '00 '
-                                                                                                                                                                                                                           '00 '
-                                                                                                                                                                                                                           '00 '
-                                                                                                                                                                                                                           '01'},
-                                                                                                                                                                                                              2: {'length': 32,
-                                                                                                                                                                                                                  'type': 32771,
-                                                                                                                                                                                                                  'value': '00 '
-                                                                                                                                                                                                                           '00 '
-                                                                                                                                                                                                                           '00 '
-                                                                                                                                                                                                                           '00 '
-                                                                                                                                                                                                                           '00 '
-                                                                                                                                                                                                                           '0'}},
-                                                                                                                                                                                             'unreserved_bandwidths': {'0 93750000': {'priority': 0,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '1 93750000': {'priority': 1,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '2 93750000': {'priority': 2,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '3 93750000': {'priority': 3,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '4 93750000': {'priority': 4,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '5 93750000': {'priority': 5,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '6 93750000': {'priority': 6,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '7 93750000': {'priority': 7,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000}}}}}},
-                                                                                                                                                       'header': {'adv_router': '3.3.3.3',
-                                                                                                                                                                  'age': 113,
-                                                                                                                                                                  'checksum': '0x8f5e',
-                                                                                                                                                                  'fragment_number': 4,
-                                                                                                                                                                  'length': 160,
-                                                                                                                                                                  'lsa_id': '1.0.0.4',
-                                                                                                                                                                  'num_links': 1,
-                                                                                                                                                                  'opaque_id': 4,
-                                                                                                                                                                  'opaque_type': 1,
-                                                                                                                                                                  'option': '0x20 '
-                                                                                                                                                                            '(No '
-                                                                                                                                                                            'TOS-capability, '
-                                                                                                                                                                            'DC)',
-                                                                                                                                                                  'seq_num': '0x80000003',
-                                                                                                                                                                  'type': 'Opaque '
-                                                                                                                                                                          'Area '
-                                                                                                                                                                          'Link'}}},
-                                                                                                                        '1.0.0.6 3.3.3.3': {'ospfv2': {'body': {'opaque': {'link_tlvs': {1: {'admin_group': '0x0',
-                                                                                                                                                                                             'link_id': '10.2.3.3',
-                                                                                                                                                                                             'link_name': 'Broadcast '
-                                                                                                                                                                                                          'network',
-                                                                                                                                                                                             'link_type': 2,
-                                                                                                                                                                                             'local_if_ipv4_addrs': {'10.2.3.3': {}},
-                                                                                                                                                                                             'max_bandwidth': 125000000,
-                                                                                                                                                                                             'max_reservable_bandwidth': 93750000,
-                                                                                                                                                                                             'remote_if_ipv4_addrs': {'0.0.0.0': {}},
-                                                                                                                                                                                             'te_metric': 1,
-                                                                                                                                                                                             'unknown_tlvs': {1: {'length': 4,
-                                                                                                                                                                                                                  'type': 32770,
-                                                                                                                                                                                                                  'value': '00 '
-                                                                                                                                                                                                                           '00 '
-                                                                                                                                                                                                                           '00 '
-                                                                                                                                                                                                                           '01'},
-                                                                                                                                                                                                              2: {'length': 32,
-                                                                                                                                                                                                                  'type': 32771,
-                                                                                                                                                                                                                  'value': '00 '
-                                                                                                                                                                                                                           '00 '
-                                                                                                                                                                                                                           '00 '
-                                                                                                                                                                                                                           '00 '
-                                                                                                                                                                                                                           '00 '
-                                                                                                                                                                                                                           '0'}},
-                                                                                                                                                                                             'unreserved_bandwidths': {'0 93750000': {'priority': 0,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '1 93750000': {'priority': 1,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '2 93750000': {'priority': 2,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '3 93750000': {'priority': 3,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '4 93750000': {'priority': 4,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '5 93750000': {'priority': 5,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '6 93750000': {'priority': 6,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000},
-                                                                                                                                                                                                                       '7 93750000': {'priority': 7,
-                                                                                                                                                                                                                                      'unreserved_bandwidth': 93750000}}}}}},
-                                                                                                                                                       'header': {'adv_router': '3.3.3.3',
-                                                                                                                                                                  'age': 113,
-                                                                                                                                                                  'checksum': '0x03ed',
-                                                                                                                                                                  'fragment_number': 6,
-                                                                                                                                                                  'length': 160,
-                                                                                                                                                                  'lsa_id': '1.0.0.6',
-                                                                                                                                                                  'num_links': 1,
-                                                                                                                                                                  'opaque_id': 6,
-                                                                                                                                                                  'opaque_type': 1,
-                                                                                                                                                                  'option': '0x20 '
-                                                                                                                                                                            '(No '
-                                                                                                                                                                            'TOS-capability, '
-                                                                                                                                                                            'DC)',
-                                                                                                                                                                  'seq_num': '0x80000003',
-                                                                                                                                                                  'type': 'Opaque '
-                                                                                                                                                                          'Area '
-                                                                                                                                                                          'Link'}}}}}}}}}}}}}}
-
+                                {'areas': 
+                                    {'0.0.0.0': 
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {10: 
+                                                    {'lsa_type': 10,
+                                                    'lsas': 
+                                                        {'1.0.0.0 1.1.1.1': 
+                                                            {'adv_router': '1.1.1.1',
+                                                            'lsa_id': '1.0.0.0',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': {}},
+                                                                'header': 
+                                                                    {'adv_router': '1.1.1.1',
+                                                                    'age': 385,
+                                                                    'checksum': '0x54d3',
+                                                                    'fragment_number': 0,
+                                                                    'length': 28,
+                                                                    'lsa_id': '1.0.0.0',
+                                                                    'mpls_te_router_id': '1.1.1.1',
+                                                                    'num_links': 0,
+                                                                    'opaque_id': 0,
+                                                                    'opaque_type': 1,
+                                                                    'option': '0x20',
+                                                                    'seq_num': '0x80000003',
+                                                                    'type': 10}}},
+                                                        '1.0.0.0 2.2.2.2': 
+                                                            {'adv_router': '2.2.2.2',
+                                                            'lsa_id': '1.0.0.0',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': {}},
+                                                            'header': 
+                                                                {'adv_router': '2.2.2.2',
+                                                                'age': 1612,
+                                                                'checksum': '0x1c22',
+                                                                'fragment_number': 0,
+                                                                'length': 28,
+                                                                'lsa_id': '1.0.0.0',
+                                                                'mpls_te_router_id': '2.2.2.2',
+                                                                'num_links': 0,
+                                                                'opaque_id': 0,
+                                                                'opaque_type': 1,
+                                                                'option': '0x2',
+                                                                'seq_num': '0x80000003',
+                                                                'type': 10}}},
+                                                        '1.0.0.0 3.3.3.3': 
+                                                            {'adv_router': '3.3.3.3',
+                                                            'lsa_id': '1.0.0.0',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': {}},
+                                                            'header': 
+                                                                {'adv_router': '3.3.3.3',
+                                                                'age': 113,
+                                                                'checksum': '0x5cbb',
+                                                                'fragment_number': 0,
+                                                                'length': 28,
+                                                                'lsa_id': '1.0.0.0',
+                                                                'mpls_te_router_id': '3.3.3.3',
+                                                                'num_links': 0,
+                                                                'opaque_id': 0,
+                                                                'opaque_type': 1,
+                                                                'option': '0x20',
+                                                                'seq_num': '0x80000003',
+                                                                'type': 10}}},
+                                                        '1.0.0.1 1.1.1.1': 
+                                                            {'adv_router': '1.1.1.1',
+                                                            'lsa_id': '1.0.0.1',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': 
+                                                                        {'link_tlvs': 
+                                                                            {1: 
+                                                                                {'admin_group': '0x0',
+                                                                                'link_id': '10.1.4.4',
+                                                                                'link_name': 'Broadcast '
+                                                                                'network',
+                                                                                'link_type': 2,
+                                                                                'local_if_ipv4_addrs': 
+                                                                                    {'10.1.4.1': {}},
+                                                                                'max_bandwidth': 125000000,
+                                                                                'max_reservable_bandwidth': 93750000,
+                                                                                'remote_if_ipv4_addrs': 
+                                                                                    {'0.0.0.0': {}},
+                                                                                'te_metric': 1,
+                                                                                'unknown_tlvs': 
+                                                                                    {1: 
+                                                                                        {'length': 4,
+                                                                                        'type': 32770,
+                                                                                        'value': '00 00 00 01'}},
+                                                                                'unreserved_bandwidths': 
+                                                                                    {'0 93750000': 
+                                                                                        {'priority': 0,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '1 93750000': 
+                                                                                        {'priority': 1,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '2 93750000': 
+                                                                                        {'priority': 2,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '3 93750000': 
+                                                                                        {'priority': 3,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '4 93750000': 
+                                                                                        {'priority': 4,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '5 93750000': 
+                                                                                        {'priority': 5,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '6 93750000': 
+                                                                                        {'priority': 6,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '7 93750000': 
+                                                                                        {'priority': 7,
+                                                                                        'unreserved_bandwidth': 93750000}}}}}},
+                                                                'header': 
+                                                                    {'adv_router': '1.1.1.1',
+                                                                    'age': 385,
+                                                                    'checksum': '0x6387',
+                                                                    'fragment_number': 1,
+                                                                    'length': 124,
+                                                                    'lsa_id': '1.0.0.1',
+                                                                    'num_links': 1,
+                                                                    'opaque_id': 1,
+                                                                    'opaque_type': 1,
+                                                                    'option': '0x20',
+                                                                    'seq_num': '0x80000003',
+                                                                    'type': 10}}},
+                                                        '1.0.0.2 1.1.1.1': 
+                                                            {'adv_router': '1.1.1.1',
+                                                            'lsa_id': '1.0.0.2',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': 
+                                                                        {'link_tlvs': 
+                                                                            {1: 
+                                                                                {'admin_group': '0x0',
+                                                                                'link_id': '10.1.2.1',
+                                                                                'link_name': 'Broadcast '
+                                                                                'network',
+                                                                                'link_type': 2,
+                                                                                'local_if_ipv4_addrs': {'10.1.2.1': {}},
+                                                                                'max_bandwidth': 125000000,
+                                                                                'max_reservable_bandwidth': 93750000,
+                                                                                'remote_if_ipv4_addrs': 
+                                                                                    {'0.0.0.0': {}},
+                                                                                'te_metric': 1,
+                                                                                'unknown_tlvs': 
+                                                                                    {1: 
+                                                                                        {'length': 4,
+                                                                                        'type': 32770,
+                                                                                        'value': '00 00 00 01'}},
+                                                                                'unreserved_bandwidths': 
+                                                                                    {'0 93750000': 
+                                                                                        {'priority': 0,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '1 93750000': 
+                                                                                        {'priority': 1,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '2 93750000': 
+                                                                                        {'priority': 2,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '3 93750000': 
+                                                                                        {'priority': 3,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '4 93750000': 
+                                                                                        {'priority': 4,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '5 93750000': 
+                                                                                        {'priority': 5,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '6 93750000': 
+                                                                                        {'priority': 6,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '7 93750000': 
+                                                                                        {'priority': 7,
+                                                                                        'unreserved_bandwidth': 93750000}}}}}},
+                                                                'header': 
+                                                                    {'adv_router': '1.1.1.1',
+                                                                    'age': 385,
+                                                                    'checksum': '0xb23e',
+                                                                    'fragment_number': 2,
+                                                                    'length': 124,
+                                                                    'lsa_id': '1.0.0.2',
+                                                                    'num_links': 1,
+                                                                    'opaque_id': 2,
+                                                                    'opaque_type': 1,
+                                                                    'option': '0x20',
+                                                                    'seq_num': '0x80000003',
+                                                                    'type': 10}}},
+                                                        '1.0.0.37 2.2.2.2': 
+                                                            {'adv_router': '2.2.2.2',
+                                                            'lsa_id': '1.0.0.37',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': 
+                                                                        {'link_tlvs': 
+                                                                            {1: 
+                                                                                {'admin_group': '0x0',
+                                                                                'link_id': '10.2.3.3',
+                                                                                'link_name': 'Broadcast '
+                                                                                'network',
+                                                                                'link_type': 2,
+                                                                                'local_if_ipv4_addrs': {'10.2.3.2': {}},
+                                                                                'max_bandwidth': 125000000,
+                                                                                'max_reservable_bandwidth': 93750000,
+                                                                                'remote_if_ipv4_addrs': {'0.0.0.0': {}},
+                                                                                'te_metric': 1,
+                                                                                'unreserved_bandwidths': {'0 93750000': {'priority': 0,
+                                                                                'unreserved_bandwidth': 93750000},
+                                                                                '1 93750000': {'priority': 1,
+                                                                                'unreserved_bandwidth': 93750000},
+                                                                                '2 93750000': {'priority': 2,
+                                                                                'unreserved_bandwidth': 93750000},
+                                                                                '3 93750000': {'priority': 3,
+                                                                                'unreserved_bandwidth': 93750000},
+                                                                                '4 93750000': {'priority': 4,
+                                                                                'unreserved_bandwidth': 93750000},
+                                                                                '5 93750000': {'priority': 5,
+                                                                                'unreserved_bandwidth': 93750000},
+                                                                                '6 93750000': {'priority': 6,
+                                                                                'unreserved_bandwidth': 93750000},
+                                                                                '7 93750000': {'priority': 7,
+                                                                                'unreserved_bandwidth': 93750000}}}}}},
+                                                                'header': 
+                                                                    {'adv_router': '2.2.2.2',
+                                                                    'age': 1202,
+                                                                    'checksum': '0xe492',
+                                                                    'fragment_number': 37,
+                                                                    'length': 116,
+                                                                    'lsa_id': '1.0.0.37',
+                                                                    'num_links': 1,
+                                                                    'opaque_id': 37,
+                                                                    'opaque_type': 1,
+                                                                    'option': '0x2',
+                                                                    'seq_num': '0x80000004',
+                                                                    'type': 10}}},
+                                                        '1.0.0.38 2.2.2.2': 
+                                                            {'adv_router': '2.2.2.2',
+                                                            'lsa_id': '1.0.0.38',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': 
+                                                                        {'link_tlvs': 
+                                                                            {1: 
+                                                                                {'admin_group': '0x0',
+                                                                                'link_id': '10.2.4.4',
+                                                                                'link_name': 'Broadcast '
+                                                                                'network',
+                                                                                'link_type': 2,
+                                                                                'local_if_ipv4_addrs': {'10.2.4.2': {}},
+                                                                                'max_bandwidth': 125000000,
+                                                                                'max_reservable_bandwidth': 93750000,
+                                                                                'remote_if_ipv4_addrs': {'0.0.0.0': {}},
+                                                                                'te_metric': 1,
+                                                                                'unreserved_bandwidths': {'0 93750000': {'priority': 0,
+                                                                                'unreserved_bandwidth': 93750000},
+                                                                                '1 93750000': {'priority': 1,
+                                                                                'unreserved_bandwidth': 93750000},
+                                                                                '2 93750000': {'priority': 2,
+                                                                                'unreserved_bandwidth': 93750000},
+                                                                                '3 93750000': {'priority': 3,
+                                                                                'unreserved_bandwidth': 93750000},
+                                                                                '4 93750000': {'priority': 4,
+                                                                                'unreserved_bandwidth': 93750000},
+                                                                                '5 93750000': {'priority': 5,
+                                                                                'unreserved_bandwidth': 93750000},
+                                                                                '6 93750000': {'priority': 6,
+                                                                                'unreserved_bandwidth': 93750000},
+                                                                                '7 93750000': {'priority': 7,
+                                                                                'unreserved_bandwidth': 93750000}}}}}},
+                                                                'header': 
+                                                                    {'adv_router': '2.2.2.2',
+                                                                    'age': 1191,
+                                                                    'checksum': '0x2350',
+                                                                    'fragment_number': 38,
+                                                                    'length': 116,
+                                                                    'lsa_id': '1.0.0.38',
+                                                                    'num_links': 1,
+                                                                    'opaque_id': 38,
+                                                                    'opaque_type': 1,
+                                                                    'option': '0x2',
+                                                                    'seq_num': '0x80000004',
+                                                                    'type': 10}}},
+                                                        '1.0.0.39 2.2.2.2': 
+                                                            {'adv_router': '2.2.2.2',
+                                                            'lsa_id': '1.0.0.39',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': 
+                                                                        {'link_tlvs': 
+                                                                            {1: 
+                                                                                {'admin_group': '0x0',
+                                                                                'link_id': '10.1.2.1',
+                                                                                'link_name': 'Broadcast '
+                                                                                'network',
+                                                                                'link_type': 2,
+                                                                                'local_if_ipv4_addrs': 
+                                                                                    {'10.1.2.2': {}},
+                                                                                'max_bandwidth': 125000000,
+                                                                                'max_reservable_bandwidth': 93750000,
+                                                                                'remote_if_ipv4_addrs': 
+                                                                                    {'0.0.0.0': {}},
+                                                                                'te_metric': 1,
+                                                                                'unreserved_bandwidths': 
+                                                                                    {'0 93750000': 
+                                                                                        {'priority': 0,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '1 93750000': 
+                                                                                        {'priority': 1,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '2 93750000': 
+                                                                                        {'priority': 2,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '3 93750000': 
+                                                                                        {'priority': 3,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '4 93750000': 
+                                                                                        {'priority': 4,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '5 93750000': 
+                                                                                        {'priority': 5,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '6 93750000': 
+                                                                                        {'priority': 6,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '7 93750000': 
+                                                                                        {'priority': 7,
+                                                                                        'unreserved_bandwidth': 93750000}}}}}},
+                                                                'header': 
+                                                                    {'adv_router': '2.2.2.2',
+                                                                    'age': 1191,
+                                                                    'checksum': '0x4239',
+                                                                    'fragment_number': 39,
+                                                                    'length': 116,
+                                                                    'lsa_id': '1.0.0.39',
+                                                                    'num_links': 1,
+                                                                    'opaque_id': 39,
+                                                                    'opaque_type': 1,
+                                                                    'option': '0x2',
+                                                                    'seq_num': '0x80000004',
+                                                                    'type': 10}}},
+                                                        '1.0.0.4 3.3.3.3': {'adv_router': '3.3.3.3',
+                                                            'lsa_id': '1.0.0.4',
+                                                            'ospfv2': {'body': {'opaque': {'link_tlvs': {1: {'admin_group': '0x0',
+                                                            'link_id': '10.3.4.4',
+                                                            'link_name': 'Broadcast '
+                                                            'network',
+                                                            'link_type': 2,
+                                                            'local_if_ipv4_addrs': {'10.3.4.3': {}},
+                                                            'max_bandwidth': 125000000,
+                                                            'max_reservable_bandwidth': 93750000,
+                                                            'remote_if_ipv4_addrs': {'0.0.0.0': {}},
+                                                            'te_metric': 1,
+                                                            'unknown_tlvs': {1: {'length': 4,
+                                                            'type': 32770,
+                                                            'value': '00 '
+                                                            '00 '
+                                                            '00 '
+                                                            '01'},
+                                                            2: {'length': 32,
+                                                            'type': 32771,
+                                                            'value': '00 '
+                                                            '00 '
+                                                            '00 '
+                                                            '00 '
+                                                            '00 '
+                                                            '0'}},
+                                                            'unreserved_bandwidths': {'0 93750000': {'priority': 0,
+                                                            'unreserved_bandwidth': 93750000},
+                                                            '1 93750000': {'priority': 1,
+                                                            'unreserved_bandwidth': 93750000},
+                                                            '2 93750000': {'priority': 2,
+                                                            'unreserved_bandwidth': 93750000},
+                                                            '3 93750000': {'priority': 3,
+                                                            'unreserved_bandwidth': 93750000},
+                                                            '4 93750000': {'priority': 4,
+                                                            'unreserved_bandwidth': 93750000},
+                                                            '5 93750000': {'priority': 5,
+                                                            'unreserved_bandwidth': 93750000},
+                                                            '6 93750000': {'priority': 6,
+                                                            'unreserved_bandwidth': 93750000},
+                                                            '7 93750000': {'priority': 7,
+                                                            'unreserved_bandwidth': 93750000}}}}}},
+                                                            'header': {'adv_router': '3.3.3.3',
+                                                            'age': 113,
+                                                            'checksum': '0x8f5e',
+                                                            'fragment_number': 4,
+                                                            'length': 160,
+                                                            'lsa_id': '1.0.0.4',
+                                                            'num_links': 1,
+                                                            'opaque_id': 4,
+                                                            'opaque_type': 1,
+                                                            'option': '0x20',
+                                                            'seq_num': '0x80000003',
+                                                            'type': 10}}},
+                                                        '1.0.0.6 3.3.3.3': {'adv_router': '3.3.3.3',
+                                                            'lsa_id': '1.0.0.6',
+                                                            'ospfv2': {'body': {'opaque': {'link_tlvs': {1: {'admin_group': '0x0',
+                                                            'link_id': '10.2.3.3',
+                                                            'link_name': 'Broadcast '
+                                                            'network',
+                                                            'link_type': 2,
+                                                            'local_if_ipv4_addrs': {'10.2.3.3': {}},
+                                                            'max_bandwidth': 125000000,
+                                                            'max_reservable_bandwidth': 93750000,
+                                                            'remote_if_ipv4_addrs': {'0.0.0.0': {}},
+                                                            'te_metric': 1,
+                                                            'unknown_tlvs': {1: {'length': 4,
+                                                            'type': 32770,
+                                                            'value': '00 '
+                                                            '00 '
+                                                            '00 '
+                                                            '01'},
+                                                            2: {'length': 32,
+                                                            'type': 32771,
+                                                            'value': '00 '
+                                                            '00 '
+                                                            '00 '
+                                                            '00 '
+                                                            '00 '
+                                                            '0'}},
+                                                            'unreserved_bandwidths': {'0 93750000': {'priority': 0,
+                                                            'unreserved_bandwidth': 93750000},
+                                                            '1 93750000': {'priority': 1,
+                                                            'unreserved_bandwidth': 93750000},
+                                                            '2 93750000': {'priority': 2,
+                                                            'unreserved_bandwidth': 93750000},
+                                                            '3 93750000': {'priority': 3,
+                                                            'unreserved_bandwidth': 93750000},
+                                                            '4 93750000': {'priority': 4,
+                                                            'unreserved_bandwidth': 93750000},
+                                                            '5 93750000': {'priority': 5,
+                                                            'unreserved_bandwidth': 93750000},
+                                                            '6 93750000': {'priority': 6,
+                                                            'unreserved_bandwidth': 93750000},
+                                                            '7 93750000': {'priority': 7,
+                                                            'unreserved_bandwidth': 93750000}}}}}},
+                                                            'header': {'adv_router': '3.3.3.3',
+                                                            'age': 113,
+                                                            'checksum': '0x03ed',
+                                                            'fragment_number': 6,
+                                                            'length': 160,
+                                                            'lsa_id': '1.0.0.6',
+                                                            'num_links': 1,
+                                                            'opaque_id': 6,
+                                                            'opaque_type': 1,
+                                                            'option': '0x20',
+                                                            'seq_num': '0x80000003',
+                                                            'type': 10}}}}}}}}}}}}}}}}
     golden_output1 = {'execute.return_value': '''
         R2_ospf_nx# show ip ospf database opaque-area detail vrf all
         OSPF Router with ID (2.2.2.2) (Process ID 1 VRF default)
