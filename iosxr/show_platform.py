@@ -524,7 +524,7 @@ class ShowInstallActiveSummary(ShowInstallActiveSummarySchema):
 
             if previous_line_active_packages and line is not None:
                 clean_line = str(line).strip()
-                if line:
+                if line and '/' not in line:
                     install_active_dict['active_packages'].append(clean_line)
                     continue
 
@@ -719,6 +719,7 @@ class ShowRedundancySummarySchema(MetaParser):
                  Optional('node_detail'): str,
                 },
             },
+        Optional('redundancy_communication'): bool,
         }
 
 class ShowRedundancySummary(ShowRedundancySummarySchema):
@@ -729,6 +730,7 @@ class ShowRedundancySummary(ShowRedundancySummarySchema):
         
         # Init vars
         redundancy_summary = {}
+        redundancy_communication = False
         
         for line in out.splitlines():
             line = line.rstrip()
@@ -769,6 +771,10 @@ class ShowRedundancySummary(ShowRedundancySummarySchema):
                     standby_node
                 redundancy_summary['node'][node]['node_detail'] = \
                     str(m.groupdict()['node_detail'])
+
+                if re.search(r'NSR: +Ready', str(m.groupdict()['node_detail'])):
+                    redundancy_communication = True
+                redundancy_summary['redundancy_communication'] = redundancy_communication
                 if backup_node is not None:
                     redundancy_summary['node'][node]['backup_node'] = \
                         backup_node
