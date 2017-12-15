@@ -20,33 +20,33 @@ from metaparser.util.schemaengine import Schema, Any, Optional
 # Parser for 'show ipv6 prefix-list detail'
 # ==============================================
 
-class ShowIpPrefixListDefailSchema(MetaParser):
+class ShowIpPrefixListDetailSchema(MetaParser):
     # Schema for 'show ip prefix-list detail'
     # Schema for 'show ipv6 prefix-list detail'
 
     schema = {'prefix_set_name':         
                 {Any(): {
                     'prefix_set_name': str,
-                    'protocol': str,
-                    'count': int,
-                    'range_entries': int,
-                    'sequences': str,
-                    'refcount': int,
-                    'prefixes':
+                    Optional('protocol'): str,
+                    Optional('count'): int,
+                    Optional('range_entries'): int,
+                    Optional('sequences'): str,
+                    Optional('refcount'): int,
+                    Optional('prefixes'):
                         {Any():
-                            {'prefix': str,
-                             'masklength_range': str,
-                             'sequence': int,
-                             'hit_count': int,
-                             'refcount': int,
-                             'action': str,
+                            {Optional('prefix'): str,
+                             Optional('masklength_range'): str,
+                             Optional('sequence'): int,
+                             Optional('hit_count'): int,
+                             Optional('refcount'): int,
+                             Optional('action'): str,
                             }
                         },
                     },
                 },
             }
 
-class ShowIpPrefixListDefail(ShowIpPrefixListDefailSchema):
+class ShowIpPrefixListDetail(ShowIpPrefixListDetailSchema):
     # Parser for 'show ip prefix-list detail'
     # Parser for 'show ipv6 prefix-list detail'
 
@@ -81,15 +81,17 @@ class ShowIpPrefixListDefail(ShowIpPrefixListDefailSchema):
                 continue
 
             # count: 5, range entries: 4, sequences: 5 - 25, refcount: 2
+            # count: 0, range entries: 0, refcount: 1
             p2 = re.compile(r'^count: +(?P<count>\d+), +'
-                             'range entries: +(?P<entries>\d+), +'
-                             'sequences: +(?P<sequences>[\d\-\s]+), +'
+                             'range entries: +(?P<entries>\d+),( +'
+                             'sequences: +(?P<sequences>[\d\-\s]+),)? +'
                              'refcount: +(?P<refcount>\d+)$')
             m = p2.match(line)
             if m:
                 ret_dict['prefix_set_name'][name]['count'] = int(m.groupdict()['count'])
                 ret_dict['prefix_set_name'][name]['range_entries'] = int(m.groupdict()['entries'])
-                ret_dict['prefix_set_name'][name]['sequences'] = m.groupdict()['sequences']
+                if m.groupdict()['sequences']:
+                    ret_dict['prefix_set_name'][name]['sequences'] = m.groupdict()['sequences']
                 ret_dict['prefix_set_name'][name]['refcount'] = int(m.groupdict()['refcount'])
                 ret_dict['prefix_set_name'][name]['protocol'] = protocol
                 continue
@@ -157,7 +159,7 @@ class ShowIpPrefixListDefail(ShowIpPrefixListDefailSchema):
 # ===========================================
 # Parser for 'show ipv6 prefix-list detail'
 # ===========================================
-class ShowIpv6PrefixListDefail(ShowIpPrefixListDefail):
+class ShowIpv6PrefixListDetail(ShowIpPrefixListDetail):
     # Parser for 'show ipv6 prefix-list detail'
     def cli(self):
         return super().cli(af='ipv6')

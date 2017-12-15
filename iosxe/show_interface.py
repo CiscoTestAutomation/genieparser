@@ -835,9 +835,12 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         typically contains 3 steps: exe
         cuting, transforming, returning
         '''
+        parsed_dict = {}
+        output = self.device.execute(self.cmd)
 
-        res = parsergen.oper_fill_tabular(device=self.device,
-                                          show_command=self.cmd,
+        res = parsergen.oper_fill_tabular(device_output=output,
+                                          device_os='iosxe',
+                                          table_terminal_pattern=r"^\n",
                                           header_fields=
                                            [ "Interface",
                                              "IP-Address",
@@ -847,13 +850,20 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
                                              "Protocol" ],
                                           label_fields=
                                            [ "Interface",
-                                             "IP-Address",
-                                             "OK?",
-                                             "Method",
-                                             "Status",
-                                             "Protocol" ],
+                                             "ip_address",
+                                             "interface_is_ok",
+                                             "method",
+                                             "status",
+                                             "protocol" ],
                                           index=[0])
-        return (res)
+
+        # Building the schema out o fthe parsergen output
+        if res.entries:
+            for intf in res.entries:
+                del res.entries[intf]['Interface']
+
+            parsed_dict['interface'] = res.entries
+        return (parsed_dict)
 
     def yang(self):
         ''' parsing mechanism: yang
@@ -1357,8 +1367,8 @@ class ShowIpInterfaceSchema(MetaParser):
                     Optional('ipv4'): {
                         Any(): {
                             'ip': str,
-                            'prefix_length': str,
-                            'secondary': bool,
+                            Optional('prefix_length'): str,
+                            Optional('secondary'): bool,
                             Optional('broadcase_address'): str,
                         },
                     },
@@ -1920,6 +1930,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                 unnumbered_dict[interface]['unnumbered_intf'] = unnumbered_intf
                 unnumbered_dict[interface]['unnumbered_ip'] = unnumbered_ip
 
+
                 if unnumbered_intf in interface_dict:
                     if 'ipv4' in interface_dict[unnumbered_intf]:
                         for address in interface_dict[unnumbered_intf]['ipv4']:
@@ -1933,6 +1944,13 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                                 interface_dict[interface]['ipv4'][address]['prefix_length'] = m.groups()[1]
                                 interface_dict[interface]['ipv4'][address]['secondary'] = False
                                 break
+                else:
+                    address = unnumbered_ip 
+                    if 'ipv4' not in interface_dict[interface]:
+                        interface_dict[interface]['ipv4'] = {}
+                    if address not in interface_dict[interface]['ipv4']:
+                        interface_dict[interface]['ipv4'][address] = {}
+                    interface_dict[interface]['ipv4'][address]['ip'] = address
                 continue
 
         return interface_dict

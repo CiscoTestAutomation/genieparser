@@ -16,7 +16,11 @@ from parser.iosxe.show_pim import ShowIpv6PimInterface,\
                                   ShowIpv6PimBsrCandidateRp, \
                                   ShowIpPimRpMapping, \
                                   ShowIpv6PimBsrElection, \
-                                  ShowIpPimBsrRouter
+                                  ShowIpPimBsrRouter, \
+                                  ShowIpPimNeighbor, \
+                                  ShowIpv6PimNeighbor, \
+                                  ShowIpv6PimNeighborDetail, \
+                                  ShowIpPimInterfaceDf
 
 
 # ============================================
@@ -287,7 +291,7 @@ class test_show_ip_pim_interface(unittest.TestCase):
                                         'hello_interval': 30,
                                         'neighbor_count': 1,
                                         'version': 2,
-                                        'mode': 'sparse-mode',
+                                        'mode': 'dense-mode',
                                         'dr_address': '10.1.5.5',
                                         'address': ['10.1.5.1'],
                                     },
@@ -300,7 +304,7 @@ class test_show_ip_pim_interface(unittest.TestCase):
     golden_output_interface_2 = {'execute.return_value': '''
     Address          Interface                Ver/   Nbr    Query  DR         DR
                                           Mode   Count  Intvl  Prior
-    10.1.5.1         GigabitEthernet3         v2/S   1      30     1          10.1.5.5
+    10.1.5.1         GigabitEthernet3         v2/D   1      30     1          10.1.5.5
 
     '''}
 
@@ -774,92 +778,99 @@ class test_show_ip_pim_rp_mapping(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output_mapping_1 = {
-        'vrf':
-            {
-            'default':
-                {
-                'address_family':
-                    {
-                      'ipv4':
-                          {
-                            'rp':
-                                {
-                                'rp_mappings': {
-                                    '224.0.0.0/4 3.3.3.3 bootstrap': {
-                                      'group': '224.0.0.0/4',
-                                      'rp_address': '3.3.3.3',
-                                      'rp_address_host': '?',
-                                      'up_time': '00:00:19',
-                                      'expiration': '00:02:19',
-                                      'priority': 5,
-                                      'hold_time': 150,
-                                      'protocol': 'bootstrap',
-                                    },
-                                    '224.0.0.0/4 2.2.2.2 bootstrap': {
-                                        'group': '224.0.0.0/4',
-                                        'rp_address': '2.2.2.2',
-                                        'rp_address_host': '?',
-                                        'up_time': '00:00:35',
-                                        'expiration': '00:02:03',
-                                        'priority': 10,
-                                        'hold_time': 150,
-                                        'protocol': 'bootstrap',
-                                    },
-                                    '224.0.0.0/4 3.3.3.3 static': {
-                                        'group': '224.0.0.0/4',
-                                        'rp_address_host': '?',
-                                        'rp_address': '3.3.3.3',
-                                        'protocol': 'static',
-                                    },
-                                    '224.0.0.0/4 20.0.0.3 autorp': {
-                                        'group': '224.0.0.0/4',
-                                        'rp_address_host': '?',
-                                        'rp_address': '20.0.0.3',
-                                        'up_time': '00:22:08',
-                                        'expiration': '00:02:40',
-                                        'protocol': 'autorp',
-                                    },
-
-                                },
-                                 'rp_list': {
-                                    '3.3.3.3 bootstrap': {
-                                          'address': '3.3.3.3',
-                                          'up_time': '00:00:19',
-                                          'expiration': '00:02:19',
-                                          'bsr_version':'v2',
-                                          'info_source_type': "bootstrap",
-                                          "info_source_address": "4.4.4.4",
-                                          },
-                                     '3.3.3.3 static': {
-                                         'address': '3.3.3.3',
-                                         "info_source_type": "static",
-                                     },
-                                     '2.2.2.2 bootstrap': {
-                                         'address': '2.2.2.2',
-                                         'bsr_version': 'v2',
-                                         'up_time': '00:00:35',
-                                         'expiration': '00:02:03',
-                                         "info_source_type": "bootstrap",
-                                         "info_source_address": "4.4.4.4",
-                                     },
-                                     '20.0.0.3 autorp': {
-                                         'address': '20.0.0.3',
-                                         'bsr_version': 'v2v1',
-                                         'up_time': '00:22:08',
-                                         'expiration': '00:02:40',
-                                         "info_source_type": "autorp",
-                                         'info_source_address': '20.0.0.2',
-                                        },
-                                    },
-                                },
-
-                            },
-                        },
-
-                    },
-                },
-
-            }
+        "vrf": {
+              "default": {
+                   "address_family": {
+                        "ipv4": {
+                             "rp": {
+                                  "rp_list": {
+                                       "3.3.3.3 BIDIR static": {
+                                            "info_source_type": "static",
+                                            "address": "3.3.3.3",
+                                            'mode': 'BIDIR'
+                                       },
+                                       "20.0.0.3 SM autorp": {
+                                            "address": "20.0.0.3",
+                                            "info_source_address": "20.0.0.2",
+                                            "bsr_version": "v2v1",
+                                            "info_source_type": "autorp",
+                                            "expiration": "00:02:40",
+                                            "up_time": "00:22:08",
+                                            'mode': 'SM'
+                                       },
+                                       "2.2.2.2 SM bootstrap": {
+                                            "address": "2.2.2.2",
+                                            "info_source_address": "4.4.4.4",
+                                            "bsr_version": "v2",
+                                            "info_source_type": "bootstrap",
+                                            "expiration": "00:02:03",
+                                            "up_time": "00:00:35",
+                                            'mode': 'SM'
+                                       },
+                                       "3.3.3.3 SM bootstrap": {
+                                            "address": "3.3.3.3",
+                                            "info_source_address": "4.4.4.4",
+                                            "bsr_version": "v2",
+                                            "info_source_type": "bootstrap",
+                                            "expiration": "00:02:19",
+                                            "up_time": "00:00:19",
+                                            'mode': 'SM'
+                                       }
+                                  },
+                                  "rp_mappings": {
+                                       "224.0.0.0/4 20.0.0.3 autorp": {
+                                            "group": "224.0.0.0/4",
+                                            "rp_address_host": "?",
+                                            "protocol": "autorp",
+                                            "expiration": "00:02:40",
+                                            "rp_address": "20.0.0.3",
+                                            "up_time": "00:22:08"
+                                       },
+                                       "224.0.0.0/4 2.2.2.2 bootstrap": {
+                                            "group": "224.0.0.0/4",
+                                            "rp_address_host": "?",
+                                            "hold_time": 150,
+                                            "priority": 10,
+                                            "protocol": "bootstrap",
+                                            "expiration": "00:02:03",
+                                            "rp_address": "2.2.2.2",
+                                            "up_time": "00:00:35"
+                                       },
+                                       "224.0.0.0/4 3.3.3.3 bootstrap": {
+                                            "group": "224.0.0.0/4",
+                                            "rp_address_host": "?",
+                                            "hold_time": 150,
+                                            "priority": 5,
+                                            "protocol": "bootstrap",
+                                            "expiration": "00:02:19",
+                                            "rp_address": "3.3.3.3",
+                                            "up_time": "00:00:19"
+                                       },
+                                       "224.0.0.0/4 3.3.3.3 static": {
+                                            "group": "224.0.0.0/4",
+                                            "protocol": "static",
+                                            "rp_address": "3.3.3.3",
+                                            "rp_address_host": "?"
+                                       }
+                                  },
+                                  "static_rp": {
+                                       "3.3.3.3": {
+                                            "bidir": {}
+                                       }
+                                  },
+                                  "bsr": {
+                                       "rp": {
+                                            "rp_address": "2.2.2.2",
+                                            "up_time": "00:22:08",
+                                            "group_policy": "224.0.0.0/4"
+                                       }
+                                  },
+                             }
+                        }
+                   }
+              }
+         }
+    }
     golden_output_mapping_1 = {'execute.return_value': '''
     R1_xe#show ip pim rp mapping
     PIM Group-to-RP Mappings
@@ -871,7 +882,8 @@ class test_show_ip_pim_rp_mapping(unittest.TestCase):
       RP 2.2.2.2 (?), v2
         Info source: 4.4.4.4 (?), via bootstrap, priority 10, holdtime 150
          Uptime: 00:00:35, expires: 00:02:03
-    Group(s): 224.0.0.0/4, Static
+
+    Group(s): 224.0.0.0/4, Static, Bidir Mode 
         RP: 3.3.3.3 (?)
 
     Group(s) 224.0.0.0/4
@@ -882,34 +894,51 @@ class test_show_ip_pim_rp_mapping(unittest.TestCase):
      '''}
 
     golden_parsed_output_mapping_2 = {
-        'vrf':
-            {'VRF1':
-                {
-                'address_family':
-                    {'ipv4':
-                        {
-                        'rp':
-                            {
-                            'rp_mappings': {
-                                '224.0.0.0/4 10.1.5.5 static': {
-                                    'group': '224.0.0.0/4',
-                                    'rp_address_host': '?',
-                                    'rp_address': '10.1.5.5',
-                                    'protocol': 'static',
-                                    },
-                                },
-                            'rp_list': {
-                                '10.1.5.5 static': {
-                                      'address': '10.1.5.5',
-                                      'info_source_type': 'static',
-                                      },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
+        "vrf": {
+              "VRF1": {
+                   "address_family": {
+                        "ipv4": {
+                             "rp": {
+                                  "rp_mappings": {
+                                       "STATIC_RP_V4 200.11.3.1 static": {
+                                            "rp_address_host": "?",
+                                            "protocol": "static",
+                                            "rp_address": "200.11.3.1",
+                                            "group": "STATIC_RP_V4"
+                                       },
+                                       "224.0.0.0/4 10.1.5.5 static": {
+                                            "rp_address_host": "?",
+                                            "protocol": "static",
+                                            "rp_address": "10.1.5.5",
+                                            "group": "224.0.0.0/4"
+                                       }
+                                  },
+                                  "rp_list": {
+                                       "10.1.5.5 SM static": {
+                                            "mode": "SM",
+                                            "address": "10.1.5.5",
+                                            "info_source_type": "static"
+                                       },
+                                       "200.11.3.1 SM static": {
+                                            "mode": "SM",
+                                            "address": "200.11.3.1",
+                                            "info_source_type": "static"
+                                       }
+                                  },
+                                  "static_rp": {
+                                       "200.11.3.1": {
+                                            "sm": {
+                                                 "policy_name": "STATIC_RP_V4",
+                                                 "override": True
+                                            }
+                                       }
+                                  }
+                             }
+                        }
+                   }
+              }
         }
+    }
 
     golden_output_mapping_2 = {'execute.return_value':'''
     R1_xe#show ip pim vrf VRF1 rp mapping
@@ -917,6 +946,8 @@ class test_show_ip_pim_rp_mapping(unittest.TestCase):
 
         Group(s): 224.0.0.0/4, Static
             RP: 10.1.5.5 (?)
+        Acl: STATIC_RP_V4, Static-Override
+            RP: 200.11.3.1 (?)
     '''}
 
     golden_output_mapping_3 = {'execute.return_value': '''
@@ -970,13 +1001,15 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
                                 'hello_packets_in': 8,
                                 'hello_packets_out': 10,
                                 'oper_status': 'up',
+                                'enable': True,
+                                'neighbor_filter': '7',
                                 'address': ['10.1.2.1/24'],
                                 'multicast': {
                                     'switching': 'fast',
                                     'packets_in': 5,
                                     'packets_out': 0,
                                     'ttl_threshold': 0,
-                                    'tag_switching': 'disabled',
+                                    'tag_switching': False,
                                 },
                                 'pim_status': 'enabled',
                                 'version': 2,
@@ -989,12 +1022,12 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
                                 'state_refresh_origination': 'disabled',
                                 'nbma_mode': 'disabled',
                                 'atm_multipoint_signalling': 'disabled',
-                                'bsr_border': 'disabled',
+                                'bsr_border': False,
                                 'neighbors_rpf_proxy_capable': True,
                                 'none_dr_join': False,
                             },
                         },
-                },
+                    },
                     'GigabitEthernet2': {
                         'address_family': {
                             'ipv4': {
@@ -1005,18 +1038,19 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
                                 'hello_packets_in': 7,
                                 'hello_packets_out': 10,
                                 'oper_status': 'up',
+                                'enable': True,
                                 'address': ['10.1.3.1/24'],
                                 'multicast': {
                                     'switching': 'fast',
                                     'packets_in': 5,
                                     'packets_out': 0,
                                     'ttl_threshold': 0,
-                                    'tag_switching': 'disabled',
+                                    'tag_switching': False,
                                 },
                                 'pim_status': 'enabled',
                                 'version': 2,
-                                'mode': 'sparse',
-                                'sm': {},
+                                'mode': 'dense',
+                                'dm': {},
                                 'dr_address': '10.1.3.3',
                                 'neighbor_count': 1,
                                 'jp_interval': 60,
@@ -1024,7 +1058,7 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
                                 'state_refresh_origination': 'disabled',
                                 'nbma_mode': 'disabled',
                                 'atm_multipoint_signalling': 'disabled',
-                                'bsr_border': 'disabled',
+                                'bsr_border': False,
                                 'neighbors_rpf_proxy_capable': True,
                                 'none_dr_join': False,
                             },
@@ -1040,13 +1074,14 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
                                 'hello_packets_in': 8,
                                 'hello_packets_out': 8,
                                 'oper_status': 'up',
+                                'enable': True,
                                 'address': ['1.1.1.1/32'],
                                 'multicast': {
                                     'switching': 'fast',
                                     'packets_in': 0,
                                     'packets_out': 0,
                                     'ttl_threshold': 0,
-                                    'tag_switching': 'disabled',
+                                    'tag_switching': False,
                                 },
                                 'pim_status': 'enabled',
                                 'version': 2,
@@ -1059,7 +1094,7 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
                                 'state_refresh_origination': 'disabled',
                                 'nbma_mode': 'disabled',
                                 'atm_multipoint_signalling': 'disabled',
-                                'bsr_border': 'disabled',
+                                'bsr_border': False,
                                 'neighbors_rpf_proxy_capable': False,
                                 'none_dr_join': False,
                             },
@@ -1080,6 +1115,7 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
             PIM version: 2, mode: sparse
             PIM DR: 10.1.2.2
             PIM neighbor count: 1
+            PIM neighbor filter: 7
             PIM Hello/Query interval: 30 seconds
             PIM Hello packets in/out: 8/10
             PIM J/P interval: 60 seconds
@@ -1098,7 +1134,7 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
           Multicast packets in/out: 5/0
           Multicast TTL threshold: 0
           PIM: enabled
-            PIM version: 2, mode: sparse
+            PIM version: 2, mode: dense
             PIM DR: 10.1.3.3
             PIM neighbor count: 1
             PIM Hello/Query interval: 30 seconds
@@ -1152,18 +1188,21 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
                                 'hello_packets_in': 6,
                                 'hello_packets_out': 6,
                                 'oper_status': 'up',
+                                'enable': True,
                                 'address': ['10.1.5.1/24'],
                                 'multicast': {
                                     'switching': 'fast',
                                     'packets_in': 4,
                                     'packets_out': 0,
                                     'ttl_threshold': 0,
-                                    'tag_switching': 'disabled',
+                                    'tag_switching': False,
                                 },
                                 'pim_status': 'enabled',
                                 'version': 2,
-                                'mode': 'sparse',
-                                'sm': {},
+                                'mode': 'passive',
+                                'sm': {
+                                    'passive': True,
+                                },
                                 'dr_address': '10.1.5.5',
                                 'neighbor_count': 1,
                                 'jp_interval': 60,
@@ -1171,7 +1210,7 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
                                 'state_refresh_origination': 'disabled',
                                 'nbma_mode': 'disabled',
                                 'atm_multipoint_signalling': 'disabled',
-                                'bsr_border': 'disabled',
+                                'bsr_border': False,
                                 'neighbors_rpf_proxy_capable': True,
                                 'none_dr_join': False,
                                 },
@@ -1189,7 +1228,7 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
           Multicast packets in/out: 4/0
           Multicast TTL threshold: 0
           PIM: enabled
-            PIM version: 2, mode: sparse
+            PIM version: 2, mode: passive
             PIM DR: 10.1.5.5
             PIM neighbor count: 1
             PIM Hello/Query interval: 30 seconds
@@ -1226,6 +1265,515 @@ class test_show_ip_pim_interface_detail(unittest.TestCase):
         obj = ShowIpPimInterfaceDetail(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output,self.golden_parsed_output_intf_detail_2)
+
+
+# ============================================
+# Parser for 'show ip pim neighbor'
+# Parser for 'show ip pim vrf xxx neighborrrr'
+# ============================================
+class test_show_ip_pim_neighbor(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    parsed_output = {
+        "vrf": {
+              "default": {
+                   "interfaces": {
+                        "Port-channel1.100": {
+                             "address_family": {
+                                  "ipv4": {
+                                       "neighbors": {
+                                            "201.0.1.1": {
+                                                 "dr_priority": 1,
+                                                 "state_refresh_capable": True,
+                                                 "proxy_capable": True,
+                                                 "interface": "Port-channel1.100",
+                                                 "genid_capable": True,
+                                                 "version": "v2",
+                                                 "expiration": "00:01:40",
+                                                 "up_time": "4w4d"
+                                            }
+                                       }
+                                  }
+                             }
+                        },
+                        "GigabitEthernet0/2/3.100": {
+                             "address_family": {
+                                  "ipv4": {
+                                       "neighbors": {
+                                            "201.0.4.2": {
+                                                 "dr_priority": 1,
+                                                 "designated_router": True,
+                                                 "proxy_capable": True,
+                                                 "interface": "GigabitEthernet0/2/3.100",
+                                                 "bidir_capable": True,
+                                                 "expiration": "00:01:19",
+                                                 "version": "v2",
+                                                 "state_refresh_capable": True,
+                                                 "genid_capable": True,
+                                                 "up_time": "4w4d"
+                                            }
+                                       }
+                                  }
+                             }
+                        }
+                   }
+              }
+         }        
+    }
+    golden_output = {'execute.return_value': '''
+        PIM Neighbor Table
+        Mode: B - Bidir Capable, DR - Designated Router, N - Default DR Priority,
+              P - Proxy Capable, S - State Refresh Capable, G - GenID Capable,
+              L - DR Load-balancing Capable
+        Neighbor          Interface                Uptime/Expires    Ver   DR
+        Address                                                            Prio/Mode
+        201.0.1.1         Port-channel1.100        4w4d/00:01:40     v2    1 / S P G
+        201.0.4.2         GigabitEthernet0/2/3.100 4w4d/00:01:19     v2    1 / DR B S P G
+    
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpPimNeighbor(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_default_vrf(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpPimNeighbor(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output)
+
+
+# ============================================
+# Parser for 'show ipv6 pim neighbor'
+# Parser for 'show ipv6 pim vrf xxx neighbor'
+# ============================================
+class test_show_ipv6_pim_neighbor(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    parsed_output = {
+        "vrf": {
+              "default": {
+                   "interfaces": {
+                        "Port-channel2.103": {
+                             "address_family": {
+                                  "ipv6": {
+                                       "neighbors": {
+                                            "FE80::21A:30FF:FE47:6EC1": {
+                                                 "dr_priority": 1,
+                                                 "expiration": "00:01:31",
+                                                 "bidir_capable": True,
+                                                 "up_time": "1d13h",
+                                                 "interface": "Port-channel2.103",
+                                                 "genid_capable": True
+                                            }
+                                       }
+                                  }
+                             }
+                        },
+                        "Port-channel2.101": {
+                             "address_family": {
+                                  "ipv6": {
+                                       "neighbors": {
+                                            "FE80::21A:30FF:FE47:6EC1": {
+                                                 "dr_priority": 1,
+                                                 "expiration": "00:01:31",
+                                                 "bidir_capable": True,
+                                                 "up_time": "1d13h",
+                                                 "interface": "Port-channel2.101",
+                                                 "genid_capable": True
+                                            }
+                                       }
+                                  }
+                             }
+                        },
+                        "Port-channel2.100": {
+                             "address_family": {
+                                  "ipv6": {
+                                       "neighbors": {
+                                            "FE80::21A:30FF:FE47:6EC1": {
+                                                 "dr_priority": 1,
+                                                 "expiration": "00:01:36",
+                                                 "bidir_capable": True,
+                                                 "up_time": "1d13h",
+                                                 "interface": "Port-channel2.100",
+                                                 "genid_capable": True
+                                            }
+                                       }
+                                  }
+                             }
+                        }
+                   }
+              }
+         }        
+    }
+    golden_output = {'execute.return_value': '''
+        PIM Neighbor Table
+        Mode: B - Bidir Capable, G - GenID Capable
+        Neighbor Address           Interface          Uptime    Expires  Mode DR pri
+
+        FE80::21A:30FF:FE47:6EC1   Port-channel2.100  1d13h     00:01:36 B G     1
+        FE80::21A:30FF:FE47:6EC1   Port-channel2.101  1d13h     00:01:31 B G     1
+        FE80::21A:30FF:FE47:6EC1   Port-channel2.103  1d13h     00:01:31 B G     1    
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpv6PimNeighbor(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_default_vrf(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpv6PimNeighbor(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output)
+
+
+# ===================================================
+# Parser for 'show ipv6 pim neighbor detail'
+# Parser for 'show ipv6 pim vrf xxx neighbor detail'
+# ====================================================
+class test_show_ipv6_pim_neighbor_detail(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    parsed_output = {
+        "vrf": {
+              "default": {
+                   "interfaces": {
+                        "Port-channel1.100": {
+                             "address_family": {
+                                  "ipv6": {
+                                       "neighbors": {
+                                            "secondary_address": [
+                                                 "2001::1:1"
+                                            ],
+                                            "FE80::21A:30FF:FE47:6EC0": {
+                                                 "up_time": "3w3d",
+                                                 "dr_priority": 1,
+                                                 "expiration": "00:01:37",
+                                                 "interface": "Port-channel1.100",
+                                                 "genid_capable": True,
+                                                 "bidir_capable": True
+                                            }
+                                       }
+                                  }
+                             }
+                        },
+                        "Port-channel1.101": {
+                             "address_family": {
+                                  "ipv6": {
+                                       "neighbors": {
+                                            "secondary_address": [
+                                                 "2001:1::1:1"
+                                            ],
+                                            "FE80::21A:30FF:FE47:6EC0": {
+                                                 "up_time": "3w3d",
+                                                 "dr_priority": 1,
+                                                 "expiration": "00:01:38",
+                                                 "interface": "Port-channel1.101",
+                                                 "genid_capable": True,
+                                                 "bidir_capable": True
+                                            }
+                                       }
+                                  }
+                             }
+                        },
+                        "GigabitEthernet0/2/3.100": {
+                             "address_family": {
+                                  "ipv6": {
+                                       "neighbors": {
+                                            "secondary_address": [
+                                                 "2001::4:2"
+                                            ],
+                                            "FE80::2D7:8FFF:FECB:8602": {
+                                                 "up_time": "3w3d",
+                                                 "designated_router": True,
+                                                 "dr_priority": 1,
+                                                 "expiration": "00:01:25",
+                                                 "interface": "GigabitEthernet0/2/3.100",
+                                                 "genid_capable": True,
+                                                 "bidir_capable": True
+                                            }
+                                       }
+                                  }
+                             }
+                        },
+                        "GigabitEthernet0/2/0.101": {
+                             "address_family": {
+                                  "ipv6": {
+                                       "neighbors": {
+                                            "FE80::21A:30FF:FE47:6E01": {
+                                                 "up_time": "3w3d",
+                                                 "dr_priority": 1,
+                                                 "expiration": "00:01:24",
+                                                 "interface": "GigabitEthernet0/2/0.101",
+                                                 "genid_capable": True,
+                                                 "bidir_capable": True
+                                            },
+                                            "secondary_address": [
+                                                 "2001:1::1"
+                                            ]
+                                       }
+                                  }
+                             }
+                        },
+                        "GigabitEthernet0/2/3.101": {
+                             "address_family": {
+                                  "ipv6": {
+                                       "neighbors": {
+                                            "secondary_address": [
+                                                 "2001:1::4:2"
+                                            ],
+                                            "FE80::2D7:8FFF:FECB:8602": {
+                                                 "up_time": "3w3d",
+                                                 "designated_router": True,
+                                                 "dr_priority": 1,
+                                                 "expiration": "00:01:42",
+                                                 "interface": "GigabitEthernet0/2/3.101",
+                                                 "genid_capable": True,
+                                                 "bidir_capable": True
+                                            }
+                                       }
+                                  }
+                             }
+                        },
+                        "GigabitEthernet0/2/0.100": {
+                             "address_family": {
+                                  "ipv6": {
+                                       "neighbors": {
+                                            "FE80::21A:30FF:FE47:6E01": {
+                                                 "up_time": "3w3d",
+                                                 "dr_priority": 1,
+                                                 "expiration": "00:01:33",
+                                                 "interface": "GigabitEthernet0/2/0.100",
+                                                 "genid_capable": True,
+                                                 "bidir_capable": True
+                                            },
+                                            "secondary_address": [
+                                                 "2001::1"
+                                            ]
+                                       }
+                                  }
+                             }
+                        }
+                   }
+              }
+         }
+    }
+    golden_output = {'execute.return_value': '''
+        PIM Neighbor Table
+        Mode: B - Bidir Capable, G - GenID Capable
+        Neighbor Address(es)       Interface          Uptime    Expires  Mode DR pri
+        Address-list Hello option included as type 24 and 65001
+
+        FE80::21A:30FF:FE47:6EC0   Port-channel1.100  3w3d      00:01:37 B G     1
+        2001::1:1
+
+        FE80::21A:30FF:FE47:6EC0   Port-channel1.101  3w3d      00:01:38 B G     1
+        2001:1::1:1
+
+        FE80::21A:30FF:FE47:6E01   Gi0/2/0.100        3w3d      00:01:33 B G     1
+        2001::1
+
+        FE80::21A:30FF:FE47:6E01   Gi0/2/0.101        3w3d      00:01:24 B G     1
+        2001:1::1
+
+        FE80::2D7:8FFF:FECB:8602   Gi0/2/3.100        3w3d      00:01:25 B G  DR 1
+        2001::4:2
+
+        FE80::2D7:8FFF:FECB:8602   Gi0/2/3.101        3w3d      00:01:42 B G  DR 1
+        2001:1::4:2
+
+    
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpv6PimNeighborDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_default_vrf(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpv6PimNeighborDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output)
+
+
+# ============================================
+# Parser for 'show ip pim interface df'
+# Parser for 'show ip pim vrf xxx interface df'
+# ============================================
+class test_show_ip_pim_interface_df(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    parsed_output = {
+        "vrf": {
+            "default": {
+               "address_family": {
+                    "ipv4": {
+                         "rp": {
+                              "bidir": {
+                                   "interface_df_election": {
+                                        "10.10.0.2 Ethernet3/3": {
+                                             "df_address": "10.4.0.2",
+                                             "metric": 0,
+                                             "df_uptime": "00:03:49",
+                                             "address": "10.10.0.2",
+                                             "winner_metric": 0,
+                                             "interface_name": "Ethernet3/3"
+                                        },
+                                        "10.10.0.3 Ethernet3/3": {
+                                             "df_address": "10.4.0.3",
+                                             "metric": 0,
+                                             "df_uptime": "00:01:49",
+                                             "address": "10.10.0.3",
+                                             "winner_metric": 0,
+                                             "interface_name": "Ethernet3/3"
+                                        },
+                                        "10.10.0.3 Ethernet3/4": {
+                                             "df_address": "10.5.0.2",
+                                             "metric": 409600,
+                                             "df_uptime": "00:02:32",
+                                             "address": "10.10.0.3",
+                                             "winner_metric": 409600,
+                                             "interface_name": "Ethernet3/4"
+                                        },
+                                        "10.10.0.5 Ethernet3/4": {
+                                             "df_address": "10.5.0.2",
+                                             "metric": 435200,
+                                             "df_uptime": "00:02:16",
+                                             "address": "10.10.0.5",
+                                             "winner_metric": 435200,
+                                             "interface_name": "Ethernet3/4"
+                                        },
+                                        "10.10.0.2 Loopback0": {
+                                             "df_address": "10.10.0.2",
+                                             "metric": 0,
+                                             "df_uptime": "00:03:49",
+                                             "address": "10.10.0.2",
+                                             "winner_metric": 0,
+                                             "interface_name": "Loopback0"
+                                        },
+                                        "10.10.0.2 Ethernet3/4": {
+                                             "df_address": "10.5.0.2",
+                                             "metric": 0,
+                                             "df_uptime": "00:03:49",
+                                             "address": "10.10.0.2",
+                                             "winner_metric": 0,
+                                             "interface_name": "Ethernet3/4"
+                                        },
+                                        "10.10.0.3 Loopback0": {
+                                             "df_address": "10.10.0.2",
+                                             "metric": 409600,
+                                             "df_uptime": "00:02:32",
+                                             "address": "10.10.0.3",
+                                             "winner_metric": 409600,
+                                             "interface_name": "Loopback0"
+                                        },
+                                        "10.10.0.5 Loopback0": {
+                                             "df_address": "10.10.0.2",
+                                             "metric": 435200,
+                                             "df_uptime": "00:02:16",
+                                             "address": "10.10.0.5",
+                                             "winner_metric": 435200,
+                                             "interface_name": "Loopback0"
+                                        },
+                                        "10.10.0.5 Ethernet3/3": {
+                                             "df_address": "10.4.0.4",
+                                             "metric": 409600,
+                                             "df_uptime": "00:01:49",
+                                             "address": "10.10.0.5",
+                                             "winner_metric": 409600,
+                                             "interface_name": "Ethernet3/3"
+                                        }
+                                   }
+                              }
+                         }
+                    }
+               }
+            }
+        }
+    }
+    golden_output = {'execute.return_value': '''
+        Interface          RP               DF Winner        Metric          Uptime
+        Ethernet3/3        10.10.0.2        10.4.0.2         0               00:03:49
+                           10.10.0.3        10.4.0.3         0               00:01:49
+                           10.10.0.5        10.4.0.4         409600          00:01:49
+        Ethernet3/4        10.10.0.2        10.5.0.2         0               00:03:49
+                           10.10.0.3        10.5.0.2         409600          00:02:32
+                           10.10.0.5        10.5.0.2         435200          00:02:16
+        Loopback0          10.10.0.2        10.10.0.2        0               00:03:49
+                           10.10.0.3        10.10.0.2        409600          00:02:32
+                           10.10.0.5        10.10.0.2        435200          00:02:16   
+    '''}
+
+    parsed_output_1 = {
+        "vrf": {
+            "VRF1": {
+               "address_family": {
+                    "ipv4": {
+                         "rp": {
+                              "bidir": {
+                                   "interface_df_election": {
+                                        "20.1.0.1 Tunnel9": {
+                                             "address": "20.1.0.1",
+                                             "interface_name": "Tunnel9",
+                                             "metric": 20,
+                                             "df_address": "0.0.0.0",
+                                             "df_uptime": "00:00:00",
+                                             "winner_metric": 20
+                                        },
+                                        "20.1.0.1 Ethernet0/1": {
+                                             "address": "20.1.0.1",
+                                             "interface_name": "Ethernet0/1",
+                                             "metric": 20,
+                                             "df_address": "10.4.0.4",
+                                             "df_uptime": "00:00:39",
+                                             "winner_metric": 20
+                                        }
+                                   }
+                              }
+                         }
+                    }
+                }
+            }
+        }
+    }
+    golden_output_1 = {'execute.return_value': '''
+        * implies this system is the DF
+        Interface                RP               DF Winner        Metric     Uptime
+        Tunnel9                  20.1.0.1     0.0.0.0             20         00:00:00
+        Ethernet0/1              20.1.0.1    *10.4.0.4            20         00:00:39   
+    '''}
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpPimInterfaceDf(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_default_vrf(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpPimInterfaceDf(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output)
+
+    def test_golden_vrf(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowIpPimInterfaceDf(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output, self.parsed_output_1)
 
 
 if __name__ == '__main__':

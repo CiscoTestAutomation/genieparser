@@ -1616,6 +1616,7 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
             line = line.rstrip()
 
             # GigabitEthernet0/0/0/0 is Shutdown, ipv6 protocol is Down, Vrfid is VRF1 (0x60000002)
+            # nve100 is Up, ipv6 protocol is Unknown, Vrfid is default (0x60000000)
             p1 = re.compile(r'^\s*(?P<interface>\S+) +is +(?P<int_status>[a-zA-Z]+),'
                              ' +ipv6 +protocol +is +(?P<oper_status>[a-zA-Z]+),'
                              ' +Vrfid +is +(?P<vrf>\S+) +\((?P<vrf_id>[a-z0-9]+)\)$')
@@ -1630,10 +1631,10 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
                 if interface not in ipv6_vrf_all_interface_dict:
                     ipv6_vrf_all_interface_dict[interface] = {}
 
-                if oper_status == 'down':
-                    ipv6_vrf_all_interface_dict[interface]['ipv6_enabled'] = False
                 if oper_status == 'up':
                     ipv6_vrf_all_interface_dict[interface]['ipv6_enabled'] = True
+                else:
+                    ipv6_vrf_all_interface_dict[interface]['ipv6_enabled'] = False
 
                 ipv6_vrf_all_interface_dict[interface]['int_status'] = int_status
                 ipv6_vrf_all_interface_dict[interface]['oper_status'] = oper_status
