@@ -63,14 +63,14 @@ class ShowIpOspfSchema(MetaParser):
                                     {'paths': int,
                                     'throttle': 
                                         {'spf': 
-                                            {'start': float,
-                                            'hold': float,
-                                            'maximum': float},
+                                            {'start': int,
+                                            'hold': int,
+                                            'maximum': int},
                                         'lsa': 
-                                            {'start': float,
-                                            'hold': float,
-                                            'maximum': float,
-                                            Optional('minimum'): float,
+                                            {'start': int,
+                                            'hold': int,
+                                            'maximum': int,
+                                            Optional('minimum'): int,
                                             Optional('group_pacing'): int,
                                             Optional('numbers'): 
                                                 {Optional('external_lsas'): 
@@ -306,7 +306,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                     int(m.groupdict()['bd'])
                 sub_dict['auto_cost']['bandwidth_unit'] = \
                     m.groupdict()['unit'].lower()
-                if bd == 4000:
+                if bd == 40000:
                     # This is the default - set to False
                     sub_dict['auto_cost']['enable'] = False
                 else:
@@ -318,7 +318,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                               ' +(?P<time>[\d\.]+) +msecs,$')
             m = p12.match(line)
             if m:
-                start = float(m.groupdict()['time'])
+                start = int(float(m.groupdict()['time']))
                 if 'spf_control' not in sub_dict:
                     sub_dict['spf_control'] = {}
                 if 'throttle' not in sub_dict['spf_control']:
@@ -333,7 +333,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                               ' +(?P<time>[\d\.]+) +msecs,$')
             m = p13.match(line)
             if m:
-                hold = float(m.groupdict()['time'])
+                hold = int(float(m.groupdict()['time']))
                 if 'spf_control' not in sub_dict:
                     sub_dict['spf_control'] = {}
                 if 'throttle' not in sub_dict['spf_control']:
@@ -348,7 +348,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                               ' +(?P<time>[\d\.]+) +msecs$')
             m = p14.match(line)
             if m:
-                maximum = float(m.groupdict()['time'])
+                maximum = int(float(m.groupdict()['time']))
                 if 'spf_control' not in sub_dict:
                     sub_dict['spf_control'] = {}
                 if 'throttle' not in sub_dict['spf_control']:
@@ -363,7 +363,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                               ' +(?P<time>[\d\.]+) +msecs,$')
             m = p15.match(line)
             if m:
-                start = float(m.groupdict()['time'])
+                start = int(float(m.groupdict()['time']))
                 if 'spf_control' not in sub_dict:
                     sub_dict['spf_control'] = {}
                 if 'throttle' not in sub_dict['spf_control']:
@@ -378,7 +378,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                               ' +(?P<time>[\d\.]+) +msecs,$')
             m = p16.match(line)
             if m:
-                hold = float(m.groupdict()['time'])
+                hold = int(float(m.groupdict()['time']))
                 if 'spf_control' not in sub_dict:
                     sub_dict['spf_control'] = {}
                 if 'throttle' not in sub_dict['spf_control']:
@@ -393,7 +393,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                               ' +(?P<time>[\d\.]+) +msecs$')
             m = p17.match(line)
             if m:
-                maximum = float(m.groupdict()['time'])
+                maximum = int(float(m.groupdict()['time']))
                 if 'spf_control' not in sub_dict:
                     sub_dict['spf_control'] = {}
                 if 'throttle' not in sub_dict['spf_control']:
@@ -407,7 +407,7 @@ class ShowIpOspf(ShowIpOspfSchema):
             p18 = re.compile(r'^Minimum +LSA +arrival +(?P<time>[\d\.]+) +msec$')
             m = p18.match(line)
             if m:
-                minimum = float(m.groupdict()['time'])
+                minimum = int(float(m.groupdict()['time']))
                 if 'spf_control' not in sub_dict:
                     sub_dict['spf_control'] = {}
                 if 'throttle' not in sub_dict['spf_control']:
@@ -424,7 +424,8 @@ class ShowIpOspf(ShowIpOspfSchema):
             if m:
                 if 'database_control' not in sub_dict:
                     sub_dict['database_control'] = {}
-                sub_dict['database_control']['max_lsa'] = int(m.groupdict()['max'])
+                sub_dict['database_control']['max_lsa'] = \
+                    int(m.groupdict()['max'])
                 continue
 
             # Originating router LSA with maximum metric
@@ -646,7 +647,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                     int(m.groupdict()['num1'])
                 continue
 
-            #      Last SPF ran for 0.001386s
+            # Last SPF ran for 0.001386s
             p32 = re.compile(r'^Last +SPF +ran +for +(?P<num1>[\d\.]+)s$')
             m = p32.match(line)
             if m:
@@ -908,8 +909,14 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                              'Network +type +(?P<type>\w+)$')
             m = p4.match(line)
             if m:
-                sub_dict['state'] = m.groupdict()['state'].lower()
-                sub_dict['interface_type'] = m.groupdict()['type'].lower()
+                state = str(m.groupdict()['state']).lower()
+                interface_type = str(m.groupdict()['type']).lower()
+                if state == 'p2p':
+                    state = 'point_to_point'
+                if interface_type == 'p2p':
+                    interface_type =  'point_to_point'
+                sub_dict['state'] = state
+                sub_dict['interface_type'] = interface_type
                 continue
 
         return ret_dict
@@ -1092,11 +1099,14 @@ class ShowIpOspfLinksParser(MetaParser):
             m = p5.match(line)
             if m:
                 interface_type = str(m.groupdict()['interface_type']).lower()
-                if interface_type == 'p2p':
-                    interface_type = 'point-to-point'
-                sub_dict['interface_type'] = interface_type
-                sub_dict['state'] = str(m.groupdict()['state'])
+                state = str(m.groupdict()['state']).lower()
                 sub_dict['cost'] = int(m.groupdict()['cost'])
+                if interface_type == 'p2p':
+                    interface_type = 'point_to_point'
+                if state == 'p2p':
+                    state = 'point_to_point'
+                sub_dict['interface_type'] = interface_type
+                sub_dict['state'] = state
                 continue
 
             # Index 7, Transmit delay 1 sec

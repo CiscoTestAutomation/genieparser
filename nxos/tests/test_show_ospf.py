@@ -60,7 +60,7 @@ class test_show_ip_ospf(unittest.TestCase):
                                             'spf_runs_count': 33}}},
                                 'auto_cost': 
                                     {'bandwidth_unit': 'mbps',
-                                    'enable': True,
+                                    'enable': False,
                                     'reference_bandwidth': 40000},
                                 'enable': True,
                                 'discard_route_external': True,
@@ -96,9 +96,9 @@ class test_show_ip_ospf(unittest.TestCase):
                                     'throttle': 
                                         {'lsa': 
                                             {'group_pacing': 10,
-                                            'hold': 5000.0,
-                                            'maximum': 5000.0,
-                                            'minimum': 1000.0,
+                                            'hold': 5000,
+                                            'maximum': 5000,
+                                            'minimum': 1000,
                                             'numbers': 
                                                 {'external_lsas': 
                                                     {'checksum': '0',
@@ -108,9 +108,9 @@ class test_show_ip_ospf(unittest.TestCase):
                                                     'total': 0}},
                                             'start': 0.0},
                                             'spf': 
-                                                {'hold': 1000.0,
-                                                'maximum': 5000.0,
-                                                'start': 200.0}}}}}}}},
+                                                {'hold': 1000,
+                                                'maximum': 5000,
+                                                'start': 200}}}}}}}},
             'default': 
                 {'address_family': 
                     {'ipv4': 
@@ -140,7 +140,7 @@ class test_show_ip_ospf(unittest.TestCase):
                                             'spf_runs_count': 8}}},
                                 'auto_cost': 
                                     {'bandwidth_unit': 'mbps',
-                                    'enable': True,
+                                    'enable': False,
                                     'reference_bandwidth': 40000},
                                 'bfd': 
                                     {'enable': True},
@@ -180,9 +180,9 @@ class test_show_ip_ospf(unittest.TestCase):
                                     'throttle': 
                                         {'lsa': 
                                             {'group_pacing': 10,
-                                            'hold': 5000.0,
-                                            'maximum': 5000.0,
-                                            'minimum': 1000.0,
+                                            'hold': 5000,
+                                            'maximum': 5000,
+                                            'minimum': 1000,
                                             'numbers': 
                                                 {'external_lsas': 
                                                     {'checksum': '0x7d61',
@@ -192,9 +192,9 @@ class test_show_ip_ospf(unittest.TestCase):
                                                     'total': 0}},
                                             'start': 0.0},
                                             'spf': 
-                                                {'hold': 1000.0,
-                                                'maximum': 5000.0,
-                                                'start': 200.0}}},
+                                                {'hold': 1000,
+                                                'maximum': 5000,
+                                                'start': 200}}},
                                 'stub_router': 
                                     {'always': 
                                         {'always': True}}}}}}}}}
@@ -307,7 +307,7 @@ class test_show_ip_ospf(unittest.TestCase):
                                             'spf_runs_count': 2}}},
                                 'auto_cost': 
                                     {'bandwidth_unit': 'mbps',
-                                    'enable': True,
+                                    'enable': False,
                                     'reference_bandwidth': 40000},
                                 'enable': False,
                                 'discard_route_external': True,
@@ -344,21 +344,21 @@ class test_show_ip_ospf(unittest.TestCase):
                                     'throttle': 
                                         {'lsa': 
                                             {'group_pacing': 10,
-                                            'hold': 5000.0,
-                                            'maximum': 5000.0,
-                                            'minimum': 1000.0,
+                                            'hold': 5000,
+                                            'maximum': 5000,
+                                            'minimum': 1000,
                                             'numbers': 
                                                 {'external_lsas': 
                                                     {'checksum': '0',
                                                     'total': 0},
                                                 'opaque_as_lsas': 
                                                     {'checksum': '0',
-                                                    'total': 0}},
+                                                 'total': 0}},
                                             'start': 0.0},
                                             'spf': 
-                                                {'hold': 1000.0,
-                                            'maximum': 5000.0,
-                                            'start': 200.0}}}}}}}}}}
+                                                {'hold': 1000,
+                                            'maximum': 5000,
+                                            'start': 200}}}}}}}}}}
 
     golden_output_1 = {'execute.return_value': '''
         Routing Process 1 with ID 2.2.2.2 VRF default
@@ -453,17 +453,17 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                         'sham_links': 
                                             {'22.22.22.22 11.11.11.11': 
                                                 {'area': '0.0.0.1',
-                                                'interface_type': 'p2p',
+                                                'interface_type': 'point_to_point',
                                                 'mpls': 
                                                     {'ldp': 
                                                         {'autoconfig': False,
                                                         'autoconfig_area_id': '0.0.0.1',
                                                         'igp_sync': False}},
                                                 'name': '22.22.22.22 11.11.11.11',
-                                                'state': 'p2p'},
+                                                'state': 'point_to_point'},
                                             '22.22.22.22 33.33.33.33': 
                                                 {'area': '0.0.0.1',
-                                                'interface_type': 'p2p',
+                                                'interface_type': 'point_to_point',
                                                 'mpls': 
                                                     {'ldp': 
                                                         {'autoconfig': False,
@@ -471,7 +471,7 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                         'igp_sync': False}},
                                                 'name': '22.22.22.22 '
                                                 '33.33.33.33',
-                                                'state': 'p2p'}}}}}}}}},
+                                                'state': 'point_to_point'}}}}}}}}},
             'default': 
                 {'address_family': 
                     {'ipv4': 
@@ -701,7 +701,7 @@ class test_show_ip_ospf_virtual_links(unittest.TestCase):
                                                 'hello_timer': '00:00:05',
                                                 'index': 7,
                                                 'interface': 'Ethernet1/5',
-                                                'interface_type': 'point-to-point',
+                                                'interface_type': 'point_to_point',
                                                 'link_state': 'up',
                                                 'name': 'VL1',
                                                 'nbr_adjs': 1,
@@ -722,7 +722,7 @@ class test_show_ip_ospf_virtual_links(unittest.TestCase):
                                                 'remote_addr': '20.3.4.4',
                                                 'retransmit_interval': 5,
                                                 'router_id': '4.4.4.4',
-                                                'state': 'P2P',
+                                                'state': 'point_to_point',
                                                 'statistics': 
                                                     {'link_scope_lsa_cksum_sum': 0,
                                                     'link_scope_lsa_count': 0},
@@ -795,7 +795,7 @@ class test_show_ip_ospf_sham_links(unittest.TestCase):
                                                 'hello_interval': 10,
                                                 'hello_timer': '00:00:02',
                                                 'index': 6,
-                                                'interface_type': 'point-to-point',
+                                                'interface_type': 'point_to_point',
                                                 'link_state': 'up',
                                                 'local_id': '22.22.22.22',
                                                 'name': 'SL1',
@@ -820,7 +820,7 @@ class test_show_ip_ospf_sham_links(unittest.TestCase):
                                                         'statistics': {'nbr_event_count': 8}}},
                                                 'remote_id': '11.11.11.11',
                                                 'retransmit_interval': 5,
-                                                'state': 'P2P',
+                                                'state': 'point_to_point',
                                                 'statistics': 
                                                     {'link_scope_lsa_cksum_sum': 0,
                                                     'link_scope_lsa_count': 0},
@@ -846,13 +846,13 @@ class test_show_ip_ospf_sham_links(unittest.TestCase):
                                                 'nbr_adjs': 0,
                                                 'nbr_flood': 0,
                                                 'nbr_total': 0,
-                                                'interface_type': 'point-to-point',
+                                                'interface_type': 'point_to_point',
                                                 'link_state': 'up',
                                                 'local_id': '22.22.22.22',
                                                 'name': 'SL2',
                                                 'remote_id': '33.33.33.33',
                                                 'retransmit_interval': 5,
-                                                'state': 'P2P',
+                                                'state': 'point_to_point',
                                                 'statistics': 
                                                     {'link_scope_lsa_cksum_sum': 0,
                                                     'link_scope_lsa_count': 0},
