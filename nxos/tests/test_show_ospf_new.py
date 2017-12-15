@@ -676,6 +676,7 @@ class test_show_ip_ospf_database_external_detail_vrf_all(unittest.TestCase):
                                                                     'length': 36,
                                                                     'lsa_id': '44.44.44.44',
                                                                     'option': '0x20',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x80000002',
                                                                     'type': 5}}}}}}}}}}}}}}}}
 
@@ -757,6 +758,7 @@ class test_show_ip_ospf_database_network_detail_vrf_all(unittest.TestCase):
                                                                     'length': 32,
                                                                     'lsa_id': '20.1.5.1',
                                                                     'option': '0x22',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x80000033',
                                                                     'type': 2}}},
                                                         '20.2.6.6 66.66.66.66': 
@@ -776,6 +778,7 @@ class test_show_ip_ospf_database_network_detail_vrf_all(unittest.TestCase):
                                                                     'length': 32,
                                                                     'lsa_id': '20.2.6.6',
                                                                     'option': '0x22',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x80000010',
                                                                     'type': 2}}},
                                                         '20.3.7.7 77.77.77.77': 
@@ -795,6 +798,7 @@ class test_show_ip_ospf_database_network_detail_vrf_all(unittest.TestCase):
                                                                     'length': 32,
                                                                     'lsa_id': '20.3.7.7',
                                                                     'option': '0x22',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x8000002b',
                                                                     'type': 2}}},
                                                         '20.5.6.6 66.66.66.66': 
@@ -814,6 +818,7 @@ class test_show_ip_ospf_database_network_detail_vrf_all(unittest.TestCase):
                                                                     'length': 32,
                                                                     'lsa_id': '20.5.6.6',
                                                                     'option': '0x22',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x8000002a',
                                                                     'type': 2}}},
                                                         '20.6.7.6 66.66.66.66': 
@@ -833,6 +838,7 @@ class test_show_ip_ospf_database_network_detail_vrf_all(unittest.TestCase):
                                                                     'length': 32,
                                                                     'lsa_id': '20.6.7.6',
                                                                     'option': '0x22',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x8000002b',
                                                                     'type': 2}}}}}}}}}}}}}},
             'default': 
@@ -864,6 +870,7 @@ class test_show_ip_ospf_database_network_detail_vrf_all(unittest.TestCase):
                                                                     'length': 32,
                                                                     'lsa_id': '10.1.2.1',
                                                                     'option': '0x22',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x80000010',
                                                                     'type': 2}}},
                                                         '10.1.4.4 4.4.4.4': 
@@ -883,6 +890,7 @@ class test_show_ip_ospf_database_network_detail_vrf_all(unittest.TestCase):
                                                                     'length': 32,
                                                                     'lsa_id': '10.1.4.4',
                                                                     'option': '0x22',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x8000002f',
                                                                     'type': 2}}},
                                                         '10.2.3.3 3.3.3.3': 
@@ -902,6 +910,7 @@ class test_show_ip_ospf_database_network_detail_vrf_all(unittest.TestCase):
                                                                     'length': 32,
                                                                     'lsa_id': '10.2.3.3',
                                                                     'option': '0x22',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x80000010',
                                                                     'type': 2}}},
                                                         '10.2.4.4 4.4.4.4': 
@@ -921,6 +930,7 @@ class test_show_ip_ospf_database_network_detail_vrf_all(unittest.TestCase):
                                                                     'length': 32,
                                                                     'lsa_id': '10.2.4.4',
                                                                     'option': '0x22',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x80000010',
                                                                     'type': 2}}},
                                                         '10.3.4.4 4.4.4.4': 
@@ -940,6 +950,7 @@ class test_show_ip_ospf_database_network_detail_vrf_all(unittest.TestCase):
                                                                     'length': 32,
                                                                     'lsa_id': '10.3.4.4',
                                                                     'option': '0x22',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x8000002f',
                                                                     'type': 2}}}}}}}}}}}}}}}}
 
@@ -1133,6 +1144,7 @@ class test_show_ip_ospf_database_summary_detail_vrf_all(unittest.TestCase):
                                                                     'length': 28,
                                                                     'lsa_id': '10.1.2.0',
                                                                     'option': '0x22',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x80000001',
                                                                     'type': 3}}},
                                                         '10.1.2.0 3.3.3.3': 
@@ -1154,6 +1166,7 @@ class test_show_ip_ospf_database_summary_detail_vrf_all(unittest.TestCase):
                                                                     'length': 28,
                                                                     'lsa_id': '10.1.2.0',
                                                                     'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
                                                                    'seq_num': '0x80000002',
                                                                    'type': 3}}},
                                                         '10.1.3.0 3.3.3.3': 
@@ -1175,6 +1188,7 @@ class test_show_ip_ospf_database_summary_detail_vrf_all(unittest.TestCase):
                                                                     'length': 28,
                                                                     'lsa_id': '10.1.3.0',
                                                                     'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
                                                                    'seq_num': '0x80000002',
                                                                    'type': 3}}},
                                                         '10.2.3.0 2.2.2.2': 
@@ -1196,6 +1210,7 @@ class test_show_ip_ospf_database_summary_detail_vrf_all(unittest.TestCase):
                                                                     'length': 28,
                                                                     'lsa_id': '10.2.3.0',
                                                                     'option': '0x22',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                    'seq_num': '0x80000001',
                                                                    'type': 3}}},
                                                         '10.2.3.0 3.3.3.3': 
@@ -1217,6 +1232,7 @@ class test_show_ip_ospf_database_summary_detail_vrf_all(unittest.TestCase):
                                                                     'length': 28,
                                                                     'lsa_id': '10.2.3.0',
                                                                     'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
                                                                     'seq_num': '0x80000003',
                                                                     'type': 3}}},
                                                         '2.2.2.2 2.2.2.2': 
@@ -1238,6 +1254,7 @@ class test_show_ip_ospf_database_summary_detail_vrf_all(unittest.TestCase):
                                                                     'length': 28,
                                                                     'lsa_id': '2.2.2.2',
                                                                     'option': '0x22',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x80000001',
                                                                     'type': 3}}},
                                                         '3.3.3.3 3.3.3.3': 
@@ -1259,6 +1276,7 @@ class test_show_ip_ospf_database_summary_detail_vrf_all(unittest.TestCase):
                                                                     'length': 28,
                                                                     'lsa_id': '3.3.3.3',
                                                                     'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
                                                                   'seq_num': '0x80000002',
                                                                   'type': 3}}},
                                                         '44.44.44.44 4.4.4.4': 
@@ -1280,6 +1298,7 @@ class test_show_ip_ospf_database_summary_detail_vrf_all(unittest.TestCase):
                                                                     'length': 28,
                                                                     'lsa_id': '44.44.44.44',
                                                                     'option': '0x22',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x80000001',
                                                                     'type': 3}}}}}}}},
                                     '0.0.0.0': 
@@ -1307,6 +1326,7 @@ class test_show_ip_ospf_database_summary_detail_vrf_all(unittest.TestCase):
                                                                     'length': 28,
                                                                     'lsa_id': '20.1.3.0',
                                                                     'option': '0x22',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x80000001',
                                                                     'type': 3}}},
                                                         '20.1.3.0 3.3.3.3': 
@@ -1328,6 +1348,7 @@ class test_show_ip_ospf_database_summary_detail_vrf_all(unittest.TestCase):
                                                                     'length': 28,
                                                                     'lsa_id': '20.1.3.0',
                                                                     'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
                                                                     'seq_num': '0x80000002',
                                                                     'type': 3}}},
                                                         '20.2.3.0 3.3.3.3': 
@@ -1349,6 +1370,7 @@ class test_show_ip_ospf_database_summary_detail_vrf_all(unittest.TestCase):
                                                                     'length': 28,
                                                                     'lsa_id': '20.2.3.0',
                                                                     'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
                                                                     'seq_num': '0x80000002',
                                                                     'type': 3}}},
                                                         '20.2.4.0 3.3.3.3': 
@@ -1370,6 +1392,7 @@ class test_show_ip_ospf_database_summary_detail_vrf_all(unittest.TestCase):
                                                                     'length': 28,
                                                                     'lsa_id': '20.2.4.0',
                                                                     'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
                                                                     'seq_num': '0x80000004',
                                                                     'type': 3}}},
                                                         '20.3.4.0 3.3.3.3': 
@@ -1391,6 +1414,7 @@ class test_show_ip_ospf_database_summary_detail_vrf_all(unittest.TestCase):
                                                                     'length': 28,
                                                                     'lsa_id': '20.3.4.0',
                                                                     'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
                                                                     'seq_num': '0x80000002',
                                                                     'type': 3}}},
                                                         '4.4.4.4 3.3.3.3': 
@@ -1412,6 +1436,7 @@ class test_show_ip_ospf_database_summary_detail_vrf_all(unittest.TestCase):
                                                                     'length': 28,
                                                                     'lsa_id': '4.4.4.4',
                                                                     'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
                                                                   'seq_num': '0x80000003',
                                                                   'type': 3}}}}}}}}}}}}}}}}
 
@@ -1632,9 +1657,9 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                         'topologies': 
                                                                                             {0: 
                                                                                                 {'metric': 111,
-                                                                                            'mt_id': 0,
-                                                                                            'tos': 0}},
-                                                                                            'type': 'transit network'},
+                                                                                                'mt_id': 0,
+                                                                                                'tos': 0}},
+                                                                                        'type': 'transit network'},
                                                                                     '22.22.22.22': 
                                                                                         {'link_data': '0.0.0.14',
                                                                                         'link_id': '22.22.22.22',
@@ -1644,7 +1669,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                                 {'metric': 1,
                                                                                                 'mt_id': 0,
                                                                                                 'tos': 0}},
-                                                                                                'type': 'router (point-to-point)'}},
+                                                                                        'type': 'router (point-to-point)'}},
                                                                                 'num_of_links': 2}},
                                                                     'header': 
                                                                         {'adv_router': '11.11.11.11',
@@ -1653,6 +1678,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                         'length': 48,
                                                                         'lsa_id': '11.11.11.11',
                                                                         'option': '0x22',
+                                                                        'option_desc': 'No TOS-capability, DC',
                                                                         'seq_num': '0x8000003f',
                                                                         'type': 1}}},
                                                             '22.22.22.22 22.22.22.22': 
@@ -1671,8 +1697,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                             {'metric': 40,
                                                                                             'mt_id': 0,
                                                                                             'tos': 0}},
-                                                                                            'type': 'router '
-                                                                                            '(point-to-point)'},
+                                                                                    'type': 'router (point-to-point)'},
                                                                                 '20.2.6.6': 
                                                                                     {'link_data': '20.2.6.2',
                                                                                     'link_id': '20.2.6.6',
@@ -1682,8 +1707,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                             {'metric': 1,
                                                                                             'mt_id': 0,
                                                                                             'tos': 0}},
-                                                                                            'type': 'transit '
-                                                                                            'network'}},
+                                                                                    'type': 'transit network'}},
                                                                             'num_of_links': 2}},
                                                                 'header': 
                                                                     {'adv_router': '22.22.22.22',
@@ -1692,6 +1716,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                     'length': 48,
                                                                     'lsa_id': '22.22.22.22',
                                                                     'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
                                                                     'seq_num': '0x8000001a',
                                                                     'type': 1}}},
                                                             '3.3.3.3 3.3.3.3': 
@@ -1710,8 +1735,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                             {'metric': 1,
                                                                                             'mt_id': 0,
                                                                                             'tos': 0}},
-                                                                                            'type': 'transit '
-                                                                                            'network'}},
+                                                                                    'type': 'transit network'}},
                                                                             'num_of_links': 1}},
                                                                 'header': 
                                                                     {'adv_router': '3.3.3.3',
@@ -1720,6 +1744,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                     'length': 36,
                                                                     'lsa_id': '3.3.3.3',
                                                                     'option': '0x22',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x80000036',
                                                                     'type': 1}}},
                                                             '55.55.55.55 55.55.55.55': 
@@ -1733,30 +1758,33 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                     {'link_data': '20.1.5.5',
                                                                                     'link_id': '20.1.5.1',
                                                                                     'num_tos_metrics': 0,
-                                                                                    'topologies': {0: {'metric': 30,
-                                                                                    'mt_id': 0,
-                                                                                    'tos': 0}},
-                                                                                    'type': 'transit '
-                                                                                    'network'},
+                                                                                    'topologies': 
+                                                                                        {0: 
+                                                                                            {'metric': 30,
+                                                                                            'mt_id': 0,
+                                                                                            'tos': 0}},
+                                                                                            'type': 'transit network'},
                                                                                 '20.5.6.6': 
                                                                                     {'link_data': '20.5.6.5',
                                                                                     'link_id': '20.5.6.6',
                                                                                     'num_tos_metrics': 0,
-                                                                                    'topologies': {0: {'metric': 1,
-                                                                                    'mt_id': 0,
-                                                                                    'tos': 0}},
-                                                                                    'type': 'transit '
-                                                                                    'network'},
+                                                                                    'topologies': 
+                                                                                        {0: 
+                                                                                            {'metric': 1,
+                                                                                            'mt_id': 0,
+                                                                                            'tos': 0}},
+                                                                                    'type': 'transit network'},
                                                                                 '55.55.55.55': 
                                                                                     {'link_data': '255.255.255.255',
                                                                                     'link_id': '55.55.55.55',
                                                                                     'num_tos_metrics': 0,
-                                                                                    'topologies': {0: {'metric': 1,
-                                                                                    'mt_id': 0,
-                                                                                    'tos': 0}},
-                                                                                    'type': 'stub '
-                                                                                    'network'}},
-                                                                                    'num_of_links': 3}},
+                                                                                    'topologies': 
+                                                                                        {0: 
+                                                                                            {'metric': 1,
+                                                                                            'mt_id': 0,
+                                                                                            'tos': 0}},
+                                                                                    'type': 'stub network'}},
+                                                                            'num_of_links': 3}},
                                                                     'header': 
                                                                         {'adv_router': '55.55.55.55',
                                                                         'age': 304,
@@ -1764,6 +1792,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                         'length': 60,
                                                                         'lsa_id': '55.55.55.55',
                                                                         'option': '0x22',
+                                                                        'option_desc': 'No TOS-capability, DC',
                                                                         'seq_num': '0x80000038',
                                                                         'type': 1}}},
                                                             '66.66.66.66 66.66.66.66': 
@@ -1777,36 +1806,43 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                     {'link_data': '20.2.6.6',
                                                                                     'link_id': '20.2.6.6',
                                                                                     'num_tos_metrics': 0,
-                                                                                    'topologies': {0: {'metric': 30,
-                                                                                    'mt_id': 0,
-                                                                                    'tos': 0}},
-                                                                                    'type': 'transit '
-                                                                                    'network'},
-                                                                                '20.5.6.6': {'link_data': '20.5.6.6',
+                                                                                    'topologies': 
+                                                                                        {0: 
+                                                                                            {'metric': 30,
+                                                                                            'mt_id': 0,
+                                                                                            'tos': 0}},
+                                                                                            'type': 'transit network'},
+                                                                                '20.5.6.6': 
+                                                                                    {'link_data': '20.5.6.6',
                                                                                     'link_id': '20.5.6.6',
                                                                                     'num_tos_metrics': 0,
-                                                                                    'topologies': {0: {'metric': 1,
-                                                                                    'mt_id': 0,
-                                                                                    'tos': 0}},
-                                                                                    'type': 'transit '
-                                                                                    'network'},
-                                                                                '20.6.7.6': {'link_data': '20.6.7.6',
+                                                                                    'topologies': 
+                                                                                        {0: 
+                                                                                            {'metric': 1,
+                                                                                            'mt_id': 0,
+                                                                                            'tos': 0}},
+                                                                                    'type': 'transit network'},
+                                                                                '20.6.7.6': 
+                                                                                    {'link_data': '20.6.7.6',
                                                                                     'link_id': '20.6.7.6',
                                                                                     'num_tos_metrics': 0,
-                                                                                    'topologies': {0: {'metric': 1,
-                                                                                    'mt_id': 0,
-                                                                                    'tos': 0}},
-                                                                                    'type': 'transit '
-                                                                                    'network'},
-                                                                                '66.66.66.66': {'link_data': '255.255.255.255',
+                                                                                    'topologies': 
+                                                                                        {0: 
+                                                                                            {'metric': 1,
+                                                                                            'mt_id': 0,
+                                                                                            'tos': 0}},
+                                                                                    'type': 'transit network'},
+                                                                                '66.66.66.66': 
+                                                                                    {'link_data': '255.255.255.255',
                                                                                     'link_id': '66.66.66.66',
                                                                                     'num_tos_metrics': 0,
-                                                                                    'topologies': {0: {'metric': 1,
-                                                                                    'mt_id': 0,
-                                                                                    'tos': 0}},
-                                                                                    'type': 'stub '
-                                                                                    'network'}},
-                                                                                    'num_of_links': 4}},
+                                                                                    'topologies': 
+                                                                                        {0: 
+                                                                                            {'metric': 1,
+                                                                                            'mt_id': 0,
+                                                                                            'tos': 0}},
+                                                                                    'type': 'stub network'}},
+                                                                            'num_of_links': 4}},
                                                                     'header': 
                                                                         {'adv_router': '66.66.66.66',
                                                                         'age': 524,
@@ -1814,6 +1850,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                         'length': 72,
                                                                         'lsa_id': '66.66.66.66',
                                                                         'option': '0x22',
+                                                                        'option_desc': 'No TOS-capability, DC',
                                                                         'seq_num': '0x8000003d',
                                                                         'type': 1}}},
                                                             '77.77.77.77 77.77.77.77': 
@@ -1827,28 +1864,33 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                                     {'link_data': '20.3.7.7',
                                                                                     'link_id': '20.3.7.7',
                                                                                     'num_tos_metrics': 0,
-                                                                                    'topologies': {0: {'metric': 30,
-                                                                                    'mt_id': 0,
-                                                                                    'tos': 0}},
-                                                                                    'type': 'transit '
-                                                                                    'network'},
-                                                                                '20.6.7.6': {'link_data': '20.6.7.7',
+                                                                                    'topologies': 
+                                                                                        {0: 
+                                                                                            {'metric': 30,
+                                                                                            'mt_id': 0,
+                                                                                            'tos': 0}},
+                                                                                    'type': 'transit network'},
+                                                                                '20.6.7.6': 
+                                                                                    {'link_data': '20.6.7.7',
                                                                                     'link_id': '20.6.7.6',
                                                                                     'num_tos_metrics': 0,
-                                                                                    'topologies': {0: {'metric': 1,
-                                                                                    'mt_id': 0,
-                                                                                    'tos': 0}},
-                                                                                    'type': 'transit '
-                                                                                    'network'},
-                                                                                '77.77.77.77': {'link_data': '255.255.255.255',
+                                                                                    'topologies': 
+                                                                                        {0: 
+                                                                                            {'metric': 1,
+                                                                                            'mt_id': 0,
+                                                                                            'tos': 0}},
+                                                                                    'type': 'transit network'},
+                                                                                '77.77.77.77': 
+                                                                                    {'link_data': '255.255.255.255',
                                                                                     'link_id': '77.77.77.77',
                                                                                     'num_tos_metrics': 0,
-                                                                                    'topologies': {0: {'metric': 30,
-                                                                                    'mt_id': 0,
-                                                                                    'tos': 0}},
-                                                                                    'type': 'stub '
-                                                                                    'network'}},
-                                                                                    'num_of_links': 3}},
+                                                                                    'topologies': 
+                                                                                        {0: 
+                                                                                            {'metric': 30,
+                                                                                            'mt_id': 0,
+                                                                                            'tos': 0}},
+                                                                                    'type': 'stub network'}},
+                                                                            'num_of_links': 3}},
                                                                     'header': 
                                                                         {'adv_router': '77.77.77.77',
                                                                         'age': 237,
@@ -1856,6 +1898,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                         'length': 60,
                                                                         'lsa_id': '77.77.77.77',
                                                                         'option': '0x22',
+                                                                        'option_desc': 'No TOS-capability, DC',
                                                                         'seq_num': '0x80000031',
                                                                         'type': 1}}}}}}}}}}}}}},
             'default': 
@@ -1913,6 +1956,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                     'length': 60,
                                                                     'lsa_id': '1.1.1.1',
                                                                     'option': '0x22',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x8000003e',
                                                                     'type': 1}}},
                                                         '2.2.2.2 2.2.2.2': {'adv_router': '2.2.2.2',
@@ -1969,6 +2013,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                 'length': 72,
                                                                 'lsa_id': '2.2.2.2',
                                                                 'option': '0x2',
+                                                                'option_desc': 'No TOS-capability, No DC',
                                                                 'seq_num': '0x80000014',
                                                                 'type': 1}}},
                                                         '3.3.3.3 3.3.3.3': 
@@ -2016,6 +2061,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                 'length': 60,
                                                                 'lsa_id': '3.3.3.3',
                                                                 'option': '0x22',
+                                                                'option_desc': 'No TOS-capability, DC',
                                                                 'seq_num': '0x80000034',
                                                                 'type': 1}}},
                                                         '4.4.4.4 4.4.4.4': 
@@ -2077,6 +2123,7 @@ class test_show_ip_ospf_database_router_detail_vrf_all(unittest.TestCase):
                                                                 'length': 72,
                                                                 'lsa_id': '4.4.4.4',
                                                                 'option': '0x22',
+                                                                'option_desc': 'No TOS-capability, DC',
                                                                 'seq_num': '0x80000037',
                                                                 'type': 1}}}}}}}}}}}}}}}}
 
@@ -2430,6 +2477,7 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                                                                     'opaque_id': 0,
                                                                     'opaque_type': 1,
                                                                     'option': '0x20',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x80000003',
                                                                     'type': 10}}},
                                                         '1.0.0.0 2.2.2.2': 
@@ -2450,6 +2498,7 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                                                                 'opaque_id': 0,
                                                                 'opaque_type': 1,
                                                                 'option': '0x2',
+                                                                'option_desc': 'No TOS-capability, No DC',
                                                                 'seq_num': '0x80000003',
                                                                 'type': 10}}},
                                                         '1.0.0.0 3.3.3.3': 
@@ -2470,6 +2519,7 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                                                                 'opaque_id': 0,
                                                                 'opaque_type': 1,
                                                                 'option': '0x20',
+                                                                'option_desc': 'No TOS-capability, DC',
                                                                 'seq_num': '0x80000003',
                                                                 'type': 10}}},
                                                         '1.0.0.1 1.1.1.1': 
@@ -2533,6 +2583,7 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                                                                     'opaque_id': 1,
                                                                     'opaque_type': 1,
                                                                     'option': '0x20',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x80000003',
                                                                     'type': 10}}},
                                                         '1.0.0.2 1.1.1.1': 
@@ -2595,6 +2646,7 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                                                                     'opaque_id': 2,
                                                                     'opaque_type': 1,
                                                                     'option': '0x20',
+                                                                    'option_desc': 'No TOS-capability, DC',
                                                                     'seq_num': '0x80000003',
                                                                     'type': 10}}},
                                                         '1.0.0.37 2.2.2.2': 
@@ -2610,27 +2662,38 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                                                                                 'link_name': 'Broadcast '
                                                                                 'network',
                                                                                 'link_type': 2,
-                                                                                'local_if_ipv4_addrs': {'10.2.3.2': {}},
+                                                                                'local_if_ipv4_addrs': 
+                                                                                    {'10.2.3.2': {}},
                                                                                 'max_bandwidth': 125000000,
                                                                                 'max_reservable_bandwidth': 93750000,
-                                                                                'remote_if_ipv4_addrs': {'0.0.0.0': {}},
+                                                                                'remote_if_ipv4_addrs': 
+                                                                                    {'0.0.0.0': {}},
                                                                                 'te_metric': 1,
-                                                                                'unreserved_bandwidths': {'0 93750000': {'priority': 0,
-                                                                                'unreserved_bandwidth': 93750000},
-                                                                                '1 93750000': {'priority': 1,
-                                                                                'unreserved_bandwidth': 93750000},
-                                                                                '2 93750000': {'priority': 2,
-                                                                                'unreserved_bandwidth': 93750000},
-                                                                                '3 93750000': {'priority': 3,
-                                                                                'unreserved_bandwidth': 93750000},
-                                                                                '4 93750000': {'priority': 4,
-                                                                                'unreserved_bandwidth': 93750000},
-                                                                                '5 93750000': {'priority': 5,
-                                                                                'unreserved_bandwidth': 93750000},
-                                                                                '6 93750000': {'priority': 6,
-                                                                                'unreserved_bandwidth': 93750000},
-                                                                                '7 93750000': {'priority': 7,
-                                                                                'unreserved_bandwidth': 93750000}}}}}},
+                                                                                'unreserved_bandwidths': 
+                                                                                    {'0 93750000': 
+                                                                                        {'priority': 0,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '1 93750000': 
+                                                                                        {'priority': 1,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '2 93750000': 
+                                                                                        {'priority': 2,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '3 93750000': 
+                                                                                        {'priority': 3,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '4 93750000': 
+                                                                                        {'priority': 4,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '5 93750000': 
+                                                                                        {'priority': 5,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '6 93750000': 
+                                                                                        {'priority': 6,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '7 93750000': 
+                                                                                        {'priority': 7,
+                                                                                        'unreserved_bandwidth': 93750000}}}}}},
                                                                 'header': 
                                                                     {'adv_router': '2.2.2.2',
                                                                     'age': 1202,
@@ -2642,6 +2705,7 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                                                                     'opaque_id': 37,
                                                                     'opaque_type': 1,
                                                                     'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
                                                                     'seq_num': '0x80000004',
                                                                     'type': 10}}},
                                                         '1.0.0.38 2.2.2.2': 
@@ -2657,27 +2721,38 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                                                                                 'link_name': 'Broadcast '
                                                                                 'network',
                                                                                 'link_type': 2,
-                                                                                'local_if_ipv4_addrs': {'10.2.4.2': {}},
+                                                                                'local_if_ipv4_addrs': 
+                                                                                    {'10.2.4.2': {}},
                                                                                 'max_bandwidth': 125000000,
                                                                                 'max_reservable_bandwidth': 93750000,
-                                                                                'remote_if_ipv4_addrs': {'0.0.0.0': {}},
+                                                                                'remote_if_ipv4_addrs': 
+                                                                                    {'0.0.0.0': {}},
                                                                                 'te_metric': 1,
-                                                                                'unreserved_bandwidths': {'0 93750000': {'priority': 0,
-                                                                                'unreserved_bandwidth': 93750000},
-                                                                                '1 93750000': {'priority': 1,
-                                                                                'unreserved_bandwidth': 93750000},
-                                                                                '2 93750000': {'priority': 2,
-                                                                                'unreserved_bandwidth': 93750000},
-                                                                                '3 93750000': {'priority': 3,
-                                                                                'unreserved_bandwidth': 93750000},
-                                                                                '4 93750000': {'priority': 4,
-                                                                                'unreserved_bandwidth': 93750000},
-                                                                                '5 93750000': {'priority': 5,
-                                                                                'unreserved_bandwidth': 93750000},
-                                                                                '6 93750000': {'priority': 6,
-                                                                                'unreserved_bandwidth': 93750000},
-                                                                                '7 93750000': {'priority': 7,
-                                                                                'unreserved_bandwidth': 93750000}}}}}},
+                                                                                'unreserved_bandwidths': 
+                                                                                    {'0 93750000': 
+                                                                                        {'priority': 0,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '1 93750000': 
+                                                                                        {'priority': 1,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '2 93750000': 
+                                                                                        {'priority': 2,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '3 93750000': 
+                                                                                        {'priority': 3,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '4 93750000': 
+                                                                                        {'priority': 4,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '5 93750000': 
+                                                                                        {'priority': 5,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '6 93750000': 
+                                                                                        {'priority': 6,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '7 93750000': 
+                                                                                        {'priority': 7,
+                                                                                        'unreserved_bandwidth': 93750000}}}}}},
                                                                 'header': 
                                                                     {'adv_router': '2.2.2.2',
                                                                     'age': 1191,
@@ -2689,6 +2764,7 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                                                                     'opaque_id': 38,
                                                                     'opaque_type': 1,
                                                                     'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
                                                                     'seq_num': '0x80000004',
                                                                     'type': 10}}},
                                                         '1.0.0.39 2.2.2.2': 
@@ -2747,104 +2823,129 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                                                                     'opaque_id': 39,
                                                                     'opaque_type': 1,
                                                                     'option': '0x2',
+                                                                    'option_desc': 'No TOS-capability, No DC',
                                                                     'seq_num': '0x80000004',
                                                                     'type': 10}}},
-                                                        '1.0.0.4 3.3.3.3': {'adv_router': '3.3.3.3',
+                                                        '1.0.0.4 3.3.3.3': 
+                                                            {'adv_router': '3.3.3.3',
                                                             'lsa_id': '1.0.0.4',
-                                                            'ospfv2': {'body': {'opaque': {'link_tlvs': {1: {'admin_group': '0x0',
-                                                            'link_id': '10.3.4.4',
-                                                            'link_name': 'Broadcast '
-                                                            'network',
-                                                            'link_type': 2,
-                                                            'local_if_ipv4_addrs': {'10.3.4.3': {}},
-                                                            'max_bandwidth': 125000000,
-                                                            'max_reservable_bandwidth': 93750000,
-                                                            'remote_if_ipv4_addrs': {'0.0.0.0': {}},
-                                                            'te_metric': 1,
-                                                            'unknown_tlvs': {1: {'length': 4,
-                                                            'type': 32770,
-                                                            'value': '00 '
-                                                            '00 '
-                                                            '00 '
-                                                            '01'},
-                                                            2: {'length': 32,
-                                                            'type': 32771,
-                                                            'value': '00 '
-                                                            '00 '
-                                                            '00 '
-                                                            '00 '
-                                                            '00 '
-                                                            '0'}},
-                                                            'unreserved_bandwidths': {'0 93750000': {'priority': 0,
-                                                            'unreserved_bandwidth': 93750000},
-                                                            '1 93750000': {'priority': 1,
-                                                            'unreserved_bandwidth': 93750000},
-                                                            '2 93750000': {'priority': 2,
-                                                            'unreserved_bandwidth': 93750000},
-                                                            '3 93750000': {'priority': 3,
-                                                            'unreserved_bandwidth': 93750000},
-                                                            '4 93750000': {'priority': 4,
-                                                            'unreserved_bandwidth': 93750000},
-                                                            '5 93750000': {'priority': 5,
-                                                            'unreserved_bandwidth': 93750000},
-                                                            '6 93750000': {'priority': 6,
-                                                            'unreserved_bandwidth': 93750000},
-                                                            '7 93750000': {'priority': 7,
-                                                            'unreserved_bandwidth': 93750000}}}}}},
-                                                            'header': {'adv_router': '3.3.3.3',
-                                                            'age': 113,
-                                                            'checksum': '0x8f5e',
-                                                            'fragment_number': 4,
-                                                            'length': 160,
-                                                            'lsa_id': '1.0.0.4',
-                                                            'num_links': 1,
-                                                            'opaque_id': 4,
-                                                            'opaque_type': 1,
-                                                            'option': '0x20',
-                                                            'seq_num': '0x80000003',
-                                                            'type': 10}}},
-                                                        '1.0.0.6 3.3.3.3': {'adv_router': '3.3.3.3',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': 
+                                                                        {'link_tlvs': 
+                                                                            {1: 
+                                                                                {'admin_group': '0x0',
+                                                                                'link_id': '10.3.4.4',
+                                                                                'link_name': 'Broadcast '
+                                                                                'network',
+                                                                                'link_type': 2,
+                                                                                'local_if_ipv4_addrs': 
+                                                                                    {'10.3.4.3': {}},
+                                                                                'max_bandwidth': 125000000,
+                                                                                'max_reservable_bandwidth': 93750000,
+                                                                                'remote_if_ipv4_addrs': 
+                                                                                    {'0.0.0.0': {}},
+                                                                                'te_metric': 1,
+                                                                                'unknown_tlvs': 
+                                                                                    {1: 
+                                                                                        {'length': 4,
+                                                                                        'type': 32770,
+                                                                                        'value': '00 00 00 01'},
+                                                                                    2: {'length': 32,
+                                                                                        'type': 32771,
+                                                                                        'value': '00 00 00 00 00 0'}},
+                                                                                'unreserved_bandwidths': 
+                                                                                    {'0 93750000': 
+                                                                                        {'priority': 0,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '1 93750000': 
+                                                                                        {'priority': 1,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '2 93750000': 
+                                                                                        {'priority': 2,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '3 93750000': 
+                                                                                        {'priority': 3,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '4 93750000': 
+                                                                                        {'priority': 4,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '5 93750000': 
+                                                                                        {'priority': 5,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '6 93750000': 
+                                                                                        {'priority': 6,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '7 93750000': 
+                                                                                        {'priority': 7,
+                                                                                        'unreserved_bandwidth': 93750000}}}}}},
+                                                                'header': 
+                                                                    {'adv_router': '3.3.3.3',
+                                                                    'age': 113,
+                                                                    'checksum': '0x8f5e',
+                                                                    'fragment_number': 4,
+                                                                    'length': 160,
+                                                                    'lsa_id': '1.0.0.4',
+                                                                    'num_links': 1,
+                                                                    'opaque_id': 4,
+                                                                    'opaque_type': 1,
+                                                                    'option': '0x20',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'seq_num': '0x80000003',
+                                                                    'type': 10}}},
+                                                        '1.0.0.6 3.3.3.3': 
+                                                            {'adv_router': '3.3.3.3',
                                                             'lsa_id': '1.0.0.6',
-                                                            'ospfv2': {'body': {'opaque': {'link_tlvs': {1: {'admin_group': '0x0',
-                                                            'link_id': '10.2.3.3',
-                                                            'link_name': 'Broadcast '
-                                                            'network',
-                                                            'link_type': 2,
-                                                            'local_if_ipv4_addrs': {'10.2.3.3': {}},
-                                                            'max_bandwidth': 125000000,
-                                                            'max_reservable_bandwidth': 93750000,
-                                                            'remote_if_ipv4_addrs': {'0.0.0.0': {}},
-                                                            'te_metric': 1,
-                                                            'unknown_tlvs': {1: {'length': 4,
-                                                            'type': 32770,
-                                                            'value': '00 '
-                                                            '00 '
-                                                            '00 '
-                                                            '01'},
-                                                            2: {'length': 32,
-                                                            'type': 32771,
-                                                            'value': '00 '
-                                                            '00 '
-                                                            '00 '
-                                                            '00 '
-                                                            '00 '
-                                                            '0'}},
-                                                            'unreserved_bandwidths': {'0 93750000': {'priority': 0,
-                                                            'unreserved_bandwidth': 93750000},
-                                                            '1 93750000': {'priority': 1,
-                                                            'unreserved_bandwidth': 93750000},
-                                                            '2 93750000': {'priority': 2,
-                                                            'unreserved_bandwidth': 93750000},
-                                                            '3 93750000': {'priority': 3,
-                                                            'unreserved_bandwidth': 93750000},
-                                                            '4 93750000': {'priority': 4,
-                                                            'unreserved_bandwidth': 93750000},
-                                                            '5 93750000': {'priority': 5,
-                                                            'unreserved_bandwidth': 93750000},
-                                                            '6 93750000': {'priority': 6,
-                                                            'unreserved_bandwidth': 93750000},
-                                                            '7 93750000': {'priority': 7,
-                                                            'unreserved_bandwidth': 93750000}}}}}},
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'opaque': 
+                                                                        {'link_tlvs': 
+                                                                            {1: 
+                                                                                {'admin_group': '0x0',
+                                                                                'link_id': '10.2.3.3',
+                                                                                'link_name': 'Broadcast '
+                                                                                'network',
+                                                                                'link_type': 2,
+                                                                                'local_if_ipv4_addrs': 
+                                                                                    {'10.2.3.3': {}},
+                                                                                'max_bandwidth': 125000000,
+                                                                                'max_reservable_bandwidth': 93750000,
+                                                                                'remote_if_ipv4_addrs': 
+                                                                                    {'0.0.0.0': {}},
+                                                                                'te_metric': 1,
+                                                                                'unknown_tlvs': 
+                                                                                    {1: 
+                                                                                        {'length': 4,
+                                                                                        'type': 32770,
+                                                                                        'value': '00 00 00 01'},
+                                                                                    2: {'length': 32,
+                                                                                        'type': 32771,
+                                                                                        'value': '00 00 00 00 00 0'}},
+                                                                                'unreserved_bandwidths': 
+                                                                                    {'0 93750000': 
+                                                                                        {'priority': 0,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '1 93750000': 
+                                                                                        {'priority': 1,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '2 93750000': 
+                                                                                        {'priority': 2,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '3 93750000': 
+                                                                                        {'priority': 3,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '4 93750000': 
+                                                                                        {'priority': 4,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '5 93750000': 
+                                                                                        {'priority': 5,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '6 93750000': 
+                                                                                        {'priority': 6,
+                                                                                        'unreserved_bandwidth': 93750000},
+                                                                                    '7 93750000': 
+                                                                                        {'priority': 7,
+                                                                                        'unreserved_bandwidth': 93750000}}}}}},
                                                             'header': {'adv_router': '3.3.3.3',
                                                             'age': 113,
                                                             'checksum': '0x03ed',
@@ -2855,8 +2956,10 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                                                             'opaque_id': 6,
                                                             'opaque_type': 1,
                                                             'option': '0x20',
+                                                            'option_desc': 'No TOS-capability, DC',
                                                             'seq_num': '0x80000003',
                                                             'type': 10}}}}}}}}}}}}}}}}
+    
     golden_output1 = {'execute.return_value': '''
         R2_ospf_nx# show ip ospf database opaque-area detail vrf all
         OSPF Router with ID (2.2.2.2) (Process ID 1 VRF default)

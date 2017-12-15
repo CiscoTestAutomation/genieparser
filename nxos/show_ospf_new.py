@@ -964,6 +964,10 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 except:
                     pass
                 try:
+                    header_dict['option_desc'] = option_desc
+                except:
+                    pass
+                try:
                     header_dict['type'] = lsa_type
                 except:
                     pass
@@ -1428,6 +1432,7 @@ class ShowIpOspfDatabaseExternalDetailSchema(MetaParser):
                                                             'ospfv2': 
                                                                 {'header': 
                                                                     {'option': str,
+                                                                    'option_desc': str,
                                                                     'lsa_id': str,
                                                                     'age': int,
                                                                     'type': int,
@@ -1510,6 +1515,7 @@ class ShowIpOspfDatabaseNetworkDetailSchema(MetaParser):
                                                             'ospfv2': 
                                                                 {'header': 
                                                                     {'option': str,
+                                                                    'option_desc': str,
                                                                     'lsa_id': str,
                                                                     'age': int,
                                                                     'type': int,
@@ -1586,6 +1592,7 @@ class ShowIpOspfDatabaseSummaryDetailSchema(MetaParser):
                                                             'ospfv2': 
                                                                 {'header': 
                                                                     {'option': str,
+                                                                    'option_desc': str,
                                                                     'lsa_id': str,
                                                                     'age': int,
                                                                     'type': int,
@@ -1665,6 +1672,7 @@ class ShowIpOspfDatabaseRouterDetailSchema(MetaParser):
                                                             'ospfv2': 
                                                                 {'header': 
                                                                     {'option': str,
+                                                                    'option_desc': str,
                                                                     'lsa_id': str,
                                                                     'age': int,
                                                                     'type': int,
@@ -1753,6 +1761,7 @@ class ShowIpOspfDatabaseOpaqueAreaDetailSchema(MetaParser):
                                                             'ospfv2': 
                                                                 {'header': 
                                                                     {'option': str,
+                                                                    'option_desc': str,
                                                                     'lsa_id': str,
                                                                     'age': int,
                                                                     'type': int,
