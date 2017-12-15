@@ -6,20 +6,10 @@ NXOS parsers for the following show commands:
     * show ip ospf vrf <WORD>
     * show ip ospf mpls ldp interface 
     * show ip ospf mpls ldp interface vrf <WORD>
-    * show ip ospf database router detail
-    * show ip ospf database router detail vrf <WORD>
-    * show ip ospf database network detail
-    * show ip ospf database network detail vrf <WORD>
-    * show ip ospf database summary detail
-    * show ip ospf database summary detail vrf <WORD>
-    * show ip ospf database external detail
-    * show ip ospf database external detail vrf <WORD>
-    * show ip ospf database opaque-area detail
-    * show ip ospf database opaque-area detail vrf <WORD>
-    * show ip ospf database opaque-as detail
-    * show ip ospf database opaque-as detail vrf <WORD>
-    * show ip ospf database opaque-link detail
-    * show ip ospf database opaque-link detail vrf <WORD>
+    * show ip ospf virtual-links
+    * show ip ospf virtual-links vrf <WORD>
+    * show ip ospf sham-links
+    * show ip ospf sham-links vrf <WORD>
 '''
 
 # Python
@@ -39,113 +29,116 @@ class ShowIpOspfSchema(MetaParser):
     '''Schema for "show ip ospf [vrf <WORD>]" '''
 
     schema = {
-        'vrf': {
-            Any(): {
-                'address_family': {
-                    Any(): {
-                        'instance': {
-                            Any(): {
-                                'router_id': str,
+        'vrf': 
+            {Any(): 
+                {'address_family': 
+                    {Any(): 
+                        {'instance': 
+                            {Any(): 
+                                {'router_id': str,
                                 'instance': int,
-                                Optional('nsr'): {
-                                    'enable': bool
-                                },
-                                Optional('graceful_restart'): {
-                                    Any(): {
-                                        'enable': bool,
+                                Optional('nsr'): 
+                                    {'enable': bool},
+                                Optional('graceful_restart'): 
+                                    {Any(): 
+                                        {'enable': bool,
                                         'type': str,
                                         'restart_interval': int,
-                                        'exist_status': str
-                                    }
-                                },
+                                        'state': str,
+                                        'exist_status': str},
+                                    },
                                 'single_tos_routes_enable': bool,
                                 'opaque_lsa_enable': bool,
-                                'preference': {
-                                    'single_value': {
-                                        'all': int,
-                                    }
-                                },
-                                Optional('bfd'): {
-                                    'enable': bool
-                                },
-                                'auto_cost': {
-                                    'enable': bool,
+                                'preference': 
+                                    {'single_value': 
+                                        {'all': int},
+                                    },
+                                Optional('bfd'): 
+                                    {'enable': bool},
+                                'auto_cost': 
+                                    {'enable': bool,
                                     'reference_bandwidth': int,
-                                    'bandwidth_unit': str,
-                                },
-                                'spf_control': {
-                                    'paths': int,
-                                    'throttle': {
-                                        'spf': {
-                                            'start': int,
-                                            'hold': int,
-                                            'maximum': int
-                                        },
-                                        'lsa': {
-                                            'start': int,
-                                            'hold': int,
-                                            'maximum': int,
-                                            Optional('minimum'): int,
+                                    'bandwidth_unit': str},
+                                'spf_control': 
+                                    {'paths': int,
+                                    'throttle': 
+                                        {'spf': 
+                                            {'start': float,
+                                            'hold': float,
+                                            'maximum': float},
+                                        'lsa': 
+                                            {'start': float,
+                                            'hold': float,
+                                            'maximum': float,
+                                            Optional('minimum'): float,
                                             Optional('group_pacing'): int,
-                                            Optional('external'): int,
-                                            Optional('checksum'): str,
-                                            Optional('opaque_as'): int,
-                                            Optional('opaque_as_checksum'): str,
-                                        }
-                                    }
-                                },
-                                Optional('database_control'): {
-                                    'max_lsa': int
-                                },
-                                Optional('stub_router'): {
-                                    'always': {
-                                        'always': bool
-                                    }
-                                },
-                                'numbers': {
-                                    Any(): {
-                                        'number': int,
+                                            Optional('numbers'): 
+                                                {Optional('external_lsas'): 
+                                                    {Optional('total'): int,
+                                                    Optional('checksum'): str},
+                                                Optional('opaque_as_lsas'): 
+                                                    {Optional('total'): int,
+                                                    Optional('checksum'): str},
+                                                },
+                                            },
+                                        },
+                                    },
+                                'numbers': 
+                                    {'active_areas': 
+                                        {'total': int,
+                                        'nssa': int,
+                                        'normal': int,
+                                        'stub': int},
+                                    'areas': 
+                                        {'total': int,
+                                        'nssa': int,
                                         'normal': int,
                                         'stub': int,
-                                        'nssa': int
-                                    }
-                                },
+                                        },
+                                    },
+                                Optional('database_control'): 
+                                    {'max_lsa': int},
+                                Optional('stub_router'): 
+                                    {'always': 
+                                        {'always': bool},
+                                    },
                                 'enable': bool,
-                                'area': {
-                                    Any(): {
-                                        'area_type': str,
+                                Optional('discard_route_external'): bool,
+                                Optional('discard_route_internal'): bool,
+                                'areas': 
+                                    {Any(): 
+                                        {'area_type': str,
                                         'area_id': str,
                                         'existed': str,
                                         Optional('default_cost'): int,
-                                        'number': {                                            
-                                            'interfaces': int,
+                                        'numbers': 
+                                            {'interfaces': int,
                                             'active_interfaces': int,
                                             'passive_interfaces': int,
-                                            'loopback_interfaces': int
-                                        },
-                                        Optional('ranges'): {
-                                            'prefix': str,
-                                            'advertise': bool,
-                                            'cost': int,
-                                            'net': int,
-                                        },
+                                            'loopback_interfaces': int},
+                                        Optional('ranges'): 
+                                            {Any(): 
+                                                {'prefix': str,
+                                                'advertise': bool,
+                                                'cost': int,
+                                                'net': int},
+                                            },
                                         Optional('authentication'): str,
-                                        'statistics': {
-                                            'spf_runs_count': int,                                            
+                                        'statistics': 
+                                            {'spf_runs_count': int,                                            
                                             'spf_last_run_time': float,
                                             'area_scope_lsa_count': int,
                                             'area_scope_lsa_cksum_sum': str,
-                                            Optional('as_nssa_translator_event_count'): int,
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+                                            Optional('as_nssa_translator_event_count'): int}
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         }
-    }
 
 
 # ======================================
@@ -156,9 +149,16 @@ class ShowIpOspf(ShowIpOspfSchema):
     ''' Parser for "show ip ospf [vrf <WORD>]" '''
 
     def cli(self, vrf=''):
-        # excute command to get output
-        out = self.device.execute('show ip ospf' if not vrf else
-                                  'show ip ospf vrf {}'.format(vrf))
+        
+        # Build command
+        cmd = 'show ip ospf'
+        if vrf:
+            cmd += ' vrf {}'.format(vrf)
+
+        # Execute command
+        out = self.device.execute(cmd)
+        
+        # Init vars
         ret_dict = {}
         sub_dict = {}
 
@@ -181,11 +181,16 @@ class ShowIpOspf(ShowIpOspfSchema):
                     ret_dict['vrf'][vrf]['address_family'] = {}
                 if 'ipv4' not in ret_dict['vrf'][vrf]['address_family']:
                     ret_dict['vrf'][vrf]['address_family']['ipv4'] = {}
-                if 'instance' not in ret_dict['vrf'][vrf]['address_family']['ipv4']:
-                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance'] = {}
-                if instance not in ret_dict['vrf'][vrf]['address_family']['ipv4']['instance']:
-                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance'][instance] = {}
-                sub_dict = ret_dict['vrf'][vrf]['address_family']['ipv4']['instance'][instance]
+                if 'instance' not in ret_dict['vrf'][vrf]['address_family']\
+                        ['ipv4']:
+                    ret_dict['vrf'][vrf]['address_family']['ipv4']\
+                        ['instance'] = {}
+                if instance not in ret_dict['vrf'][vrf]['address_family']\
+                        ['ipv4']['instance']:
+                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance']\
+                        [instance] = {}
+                sub_dict = ret_dict['vrf'][vrf]['address_family']['ipv4']\
+                    ['instance'][instance]
 
                 # router_id
                 sub_dict['router_id'] = m.groupdict()['router_id']
@@ -195,7 +200,8 @@ class ShowIpOspf(ShowIpOspfSchema):
                 continue
 
             # Routing Process Instance Number 1
-            p2 = re.compile(r'^Routing +Process +Instance +Number +(?P<instance>\d+)$')
+            p2 = re.compile(r'^Routing +Process +Instance +Number'
+                             ' +(?P<instance>\d+)$')
             m = p2.match(line)
             if m:
                 sub_dict['instance'] = int(m.groupdict()['instance'])
@@ -226,26 +232,27 @@ class ShowIpOspf(ShowIpOspfSchema):
                              'state: +(?P<state>\w+)$')
             m = p5.match(line)
             if m:
+                restart_interval = int(m.groupdict()['interval'])
+                state = str(m.groupdict()['state'])
                 if 'graceful_restart' not in sub_dict:
                     sub_dict['graceful_restart'] = {}
-                restart_interval = int(m.groupdict()['interval'])
-                gr_type = 'ietf'
-                if gr_type not in sub_dict['graceful_restart']:
-                    sub_dict['graceful_restart'][gr_type] = {}
-
-                sub_dict['graceful_restart'][gr_type]['type'] = gr_type
-                sub_dict['graceful_restart'][gr_type]['restart_interval'] = restart_interval
+                if 'ietf' not in sub_dict['graceful_restart']:
+                    sub_dict['graceful_restart']['ietf'] = {}
+                sub_dict['graceful_restart']['ietf']['type'] = 'ietf'
+                sub_dict['graceful_restart']['ietf']['restart_interval'] = \
+                    restart_interval
+                sub_dict['graceful_restart']['ietf']['state'] = state
                 if gr_enable:
-                    sub_dict['graceful_restart'][gr_type]['enable'] = gr_enable
-                
+                    sub_dict['graceful_restart']['ietf']['enable'] = gr_enable
                 continue
 
             # Last graceful restart exit status: None
-            p6 = re.compile(r'^Last +graceful +restart +exit +status: +(?P<status>\w+)$')
+            p6 = re.compile(r'^Last +graceful +restart +exit +status:'
+                             ' +(?P<status>\w+)$')
             m = p6.match(line)
             if m:
                 try:
-                    sub_dict['graceful_restart'][gr_type]['exist_status'] = \
+                    sub_dict['graceful_restart']['ietf']['exist_status'] = \
                         m.groupdict()['status'].lower()
                 except:
                     pass
@@ -273,7 +280,8 @@ class ShowIpOspf(ShowIpOspfSchema):
                     sub_dict['preference'] = {}
                 if 'single_value' not in sub_dict['preference']:
                     sub_dict['preference']['single_value'] = {}
-                sub_dict['preference']['single_value']['all'] = int(m.groupdict()['pref_all'])
+                sub_dict['preference']['single_value']['all'] = \
+                    int(m.groupdict()['pref_all'])
                 continue
 
             # BFD is enabled
@@ -287,21 +295,30 @@ class ShowIpOspf(ShowIpOspfSchema):
                 continue
 
             # Reference Bandwidth is 40000 Mbps
-            p11 = re.compile(r'^Reference +Bandwidth +is +(?P<bd>\d+) +(?P<unit>\w+)$')
+            p11 = re.compile(r'^Reference +Bandwidth +is +(?P<bd>\d+)'
+                              ' +(?P<unit>\w+)$')
             m = p11.match(line)
             if m:
+                bd = int(m.groupdict()['bd'])
                 if 'auto_cost' not in sub_dict:
                     sub_dict['auto_cost'] = {}
-                sub_dict['auto_cost']['enable'] = True
-                sub_dict['auto_cost']['reference_bandwidth'] = int(m.groupdict()['bd'])
-                sub_dict['auto_cost']['bandwidth_unit'] = m.groupdict()['unit']
-                continue
+                sub_dict['auto_cost']['reference_bandwidth'] = \
+                    int(m.groupdict()['bd'])
+                sub_dict['auto_cost']['bandwidth_unit'] = \
+                    m.groupdict()['unit'].lower()
+                if bd == 4000:
+                    # This is the default - set to False
+                    sub_dict['auto_cost']['enable'] = False
+                else:
+                    sub_dict['auto_cost']['enable'] = True
+                    continue
 
             # SPF throttling delay time of 200.000 msecs,
-            p12 = re.compile(r'^SPF +throttling +delay +time +of +(?P<time>[\d\.]+) +msecs,$')
+            p12 = re.compile(r'^SPF +throttling +delay +time +of'
+                              ' +(?P<time>[\d\.]+) +msecs,$')
             m = p12.match(line)
             if m:
-                start = int(m.groupdict()['time'].replace('.', ''))
+                start = float(m.groupdict()['time'])
                 if 'spf_control' not in sub_dict:
                     sub_dict['spf_control'] = {}
                 if 'throttle' not in sub_dict['spf_control']:
@@ -312,10 +329,11 @@ class ShowIpOspf(ShowIpOspfSchema):
                 continue
 
             # SPF throttling hold time of 1000.000 msecs, 
-            p13 = re.compile(r'^SPF +throttling +hold +time +of +(?P<time>[\d\.]+) +msecs,$')
+            p13 = re.compile(r'^SPF +throttling +hold +time +of'
+                              ' +(?P<time>[\d\.]+) +msecs,$')
             m = p13.match(line)
             if m:
-                hold = int(m.groupdict()['time'].replace('.', ''))
+                hold = float(m.groupdict()['time'])
                 if 'spf_control' not in sub_dict:
                     sub_dict['spf_control'] = {}
                 if 'throttle' not in sub_dict['spf_control']:
@@ -326,10 +344,11 @@ class ShowIpOspf(ShowIpOspfSchema):
                 continue
 
             # SPF throttling maximum wait time of 5000.000 msecs
-            p14 = re.compile(r'^SPF +throttling +maximum +wait +time +of +(?P<time>[\d\.]+) +msecs$')
+            p14 = re.compile(r'^SPF +throttling +maximum +wait +time +of'
+                              ' +(?P<time>[\d\.]+) +msecs$')
             m = p14.match(line)
             if m:
-                maximum = int(m.groupdict()['time'].replace('.', ''))
+                maximum = float(m.groupdict()['time'])
                 if 'spf_control' not in sub_dict:
                     sub_dict['spf_control'] = {}
                 if 'throttle' not in sub_dict['spf_control']:
@@ -340,10 +359,11 @@ class ShowIpOspf(ShowIpOspfSchema):
                 continue
 
             # LSA throttling start time of 0.000 msecs,
-            p15 = re.compile(r'^LSA +throttling +start +time +of +(?P<time>[\d\.]+) +msecs,$')
+            p15 = re.compile(r'^LSA +throttling +start +time +of'
+                              ' +(?P<time>[\d\.]+) +msecs,$')
             m = p15.match(line)
             if m:
-                start = int(m.groupdict()['time'].replace('.', ''))
+                start = float(m.groupdict()['time'])
                 if 'spf_control' not in sub_dict:
                     sub_dict['spf_control'] = {}
                 if 'throttle' not in sub_dict['spf_control']:
@@ -354,10 +374,11 @@ class ShowIpOspf(ShowIpOspfSchema):
                 continue
 
             # LSA throttling hold interval of 5000.000 msecs, 
-            p16 = re.compile(r'^LSA +throttling +hold +interval +of +(?P<time>[\d\.]+) +msecs,$')
+            p16 = re.compile(r'^LSA +throttling +hold +interval +of'
+                              ' +(?P<time>[\d\.]+) +msecs,$')
             m = p16.match(line)
             if m:
-                hold = int(m.groupdict()['time'].replace('.', ''))
+                hold = float(m.groupdict()['time'])
                 if 'spf_control' not in sub_dict:
                     sub_dict['spf_control'] = {}
                 if 'throttle' not in sub_dict['spf_control']:
@@ -368,10 +389,11 @@ class ShowIpOspf(ShowIpOspfSchema):
                 continue
 
             # LSA throttling maximum wait time of 5000.000 msecs
-            p17 = re.compile(r'^LSA +throttling +maximum +wait +time +of +(?P<time>[\d\.]+) +msecs$')
+            p17 = re.compile(r'^LSA +throttling +maximum +wait +time +of'
+                              ' +(?P<time>[\d\.]+) +msecs$')
             m = p17.match(line)
             if m:
-                maximum = int(m.groupdict()['time'].replace('.', ''))
+                maximum = float(m.groupdict()['time'])
                 if 'spf_control' not in sub_dict:
                     sub_dict['spf_control'] = {}
                 if 'throttle' not in sub_dict['spf_control']:
@@ -382,10 +404,10 @@ class ShowIpOspf(ShowIpOspfSchema):
                 continue
 
             # Minimum LSA arrival 1000.000 msec
-            p18 = re.compile(r'^Minimum +LSA +arrival +(?P<time>[\d\.]+) +msecs$')
+            p18 = re.compile(r'^Minimum +LSA +arrival +(?P<time>[\d\.]+) +msec$')
             m = p18.match(line)
             if m:
-                minimum = int(m.groupdict()['time'].replace('.', ''))
+                minimum = float(m.groupdict()['time'])
                 if 'spf_control' not in sub_dict:
                     sub_dict['spf_control'] = {}
                 if 'throttle' not in sub_dict['spf_control']:
@@ -426,7 +448,8 @@ class ShowIpOspf(ShowIpOspfSchema):
                     sub_dict['spf_control']['throttle'] = {}
                 if 'lsa' not in sub_dict['spf_control']['throttle']:
                     sub_dict['spf_control']['throttle']['lsa'] = {}
-                sub_dict['spf_control']['throttle']['lsa']['group_pacing'] = int(m.groupdict()['time'])
+                sub_dict['spf_control']['throttle']['lsa']['group_pacing'] = \
+                    int(m.groupdict()['time'])
                 continue
 
             # Maximum paths to destination 8
@@ -439,8 +462,8 @@ class ShowIpOspf(ShowIpOspfSchema):
                 continue
 
             # Number of external LSAs 1, checksum sum 0x7d61
-            p22 = re.compile(r'^Number +of +external +LSAs +(?P<ext_num>\d+), +'
-                              'checksum +sum +(?P<chk_sum>\w+)$')
+            p22 = re.compile(r'^Number +of +external +LSAs +(?P<total>\d+), +'
+                              'checksum +sum +(?P<checksum>\w+)$')
             m = p22.match(line)
             if m:
                 if 'spf_control' not in sub_dict:
@@ -449,16 +472,21 @@ class ShowIpOspf(ShowIpOspfSchema):
                     sub_dict['spf_control']['throttle'] = {}
                 if 'lsa' not in sub_dict['spf_control']['throttle']:
                     sub_dict['spf_control']['throttle']['lsa'] = {}
-
-                sub_dict['spf_control']['throttle']['lsa']['external'] = \
-                    int(m.groupdict()['ext_num'])
-                sub_dict['spf_control']['throttle']['lsa']['checksum'] = \
-                    m.groupdict()['chk_sum']
+                if 'numbers' not in sub_dict['spf_control']['throttle']['lsa']:
+                    sub_dict['spf_control']['throttle']['lsa']['numbers'] = {}
+                if 'external_lsas' not in sub_dict['spf_control']['throttle']\
+                        ['lsa']['numbers']:
+                    sub_dict['spf_control']['throttle']['lsa']['numbers']\
+                        ['external_lsas'] = {}
+                sub_dict['spf_control']['throttle']['lsa']['numbers']\
+                    ['external_lsas']['total'] = int(m.groupdict()['total'])
+                sub_dict['spf_control']['throttle']['lsa']['numbers']\
+                    ['external_lsas']['checksum'] = str(m.groupdict()['checksum'])
                 continue
 
             # Number of opaque AS LSAs 0, checksum sum 0
-            p23 = re.compile(r'^Number +of +opaque +AS +LSAs +(?P<ext_num>\d+), +'
-                              'checksum +sum +(?P<chk_sum>\w+)$')
+            p23 = re.compile(r'^Number +of +opaque +AS +LSAs +(?P<total>\d+),'
+                              ' +checksum +sum +(?P<checksum>\w+)$')
             m = p23.match(line)
             if m:
                 if 'spf_control' not in sub_dict:
@@ -467,15 +495,20 @@ class ShowIpOspf(ShowIpOspfSchema):
                     sub_dict['spf_control']['throttle'] = {}
                 if 'lsa' not in sub_dict['spf_control']['throttle']:
                     sub_dict['spf_control']['throttle']['lsa'] = {}
-
-                sub_dict['spf_control']['throttle']['lsa']['opaque_as'] = \
-                    int(m.groupdict()['ext_num'])
-                sub_dict['spf_control']['throttle']['lsa']['opaque_as_checksum'] = \
-                    m.groupdict()['chk_sum']
+                if 'numbers' not in sub_dict['spf_control']['throttle']['lsa']:
+                    sub_dict['spf_control']['throttle']['lsa']['numbers'] = {}
+                if 'opaque_as_lsas' not in sub_dict['spf_control']['throttle']\
+                        ['lsa']['numbers']:
+                    sub_dict['spf_control']['throttle']['lsa']['numbers']\
+                        ['opaque_as_lsas'] = {}
+                sub_dict['spf_control']['throttle']['lsa']['numbers']\
+                    ['opaque_as_lsas']['total'] = int(m.groupdict()['total'])
+                sub_dict['spf_control']['throttle']['lsa']['numbers']\
+                    ['opaque_as_lsas']['checksum'] = str(m.groupdict()['checksum'])
                 continue
 
             # Number of areas is 1, 1 normal, 0 stub, 0 nssa
-            p24 = re.compile(r'^Number +of +areas +is +(?P<num>\d+), +'
+            p24 = re.compile(r'^Number +of +areas +is +(?P<total>\d+), +'
                               '(?P<normal>\d+) +normal, +'
                               '(?P<stub>\d+) +stub, +'
                               '(?P<nssa>\d+) +nssa$')
@@ -485,15 +518,19 @@ class ShowIpOspf(ShowIpOspfSchema):
                     sub_dict['numbers'] = {}
                 if 'areas' not in sub_dict['numbers']:
                     sub_dict['numbers']['areas'] = {}
-                sub_dict['numbers']['areas']['number'] = int(m.groupdict()['num'])
-                sub_dict['numbers']['areas']['normal'] = int(m.groupdict()['normal'])
-                sub_dict['numbers']['areas']['stub'] = int(m.groupdict()['stub'])
-                sub_dict['numbers']['areas']['nssa'] = int(m.groupdict()['nssa'])
+                sub_dict['numbers']['areas']['total'] = \
+                    int(m.groupdict()['total'])
+                sub_dict['numbers']['areas']['normal'] = \
+                    int(m.groupdict()['normal'])
+                sub_dict['numbers']['areas']['stub'] = \
+                    int(m.groupdict()['stub'])
+                sub_dict['numbers']['areas']['nssa'] = \
+                    int(m.groupdict()['nssa'])
                 continue
 
             # Number of active areas is 1, 1 normal, 0 stub, 0 nssa
-            p25 = re.compile(r'^Number +of +active +areas +is +(?P<num>\d+), +'
-                              '(?P<normal>\d+) +normal, +'
+            p25 = re.compile(r'^Number +of +active +areas +is +(?P<total>\d+),'
+                              ' +(?P<normal>\d+) +normal, +'
                               '(?P<stub>\d+) +stub, +'
                               '(?P<nssa>\d+) +nssa$')
             m = p25.match(line)
@@ -502,10 +539,14 @@ class ShowIpOspf(ShowIpOspfSchema):
                     sub_dict['numbers'] = {}
                 if 'active_areas' not in sub_dict['numbers']:
                     sub_dict['numbers']['active_areas'] = {}
-                sub_dict['numbers']['active_areas']['number'] = int(m.groupdict()['num'])
-                sub_dict['numbers']['active_areas']['normal'] = int(m.groupdict()['normal'])
-                sub_dict['numbers']['active_areas']['stub'] = int(m.groupdict()['stub'])
-                sub_dict['numbers']['active_areas']['nssa'] = int(m.groupdict()['nssa'])
+                sub_dict['numbers']['active_areas']['total'] = \
+                    int(m.groupdict()['total'])
+                sub_dict['numbers']['active_areas']['normal'] = \
+                    int(m.groupdict()['normal'])
+                sub_dict['numbers']['active_areas']['stub'] = \
+                    int(m.groupdict()['stub'])
+                sub_dict['numbers']['active_areas']['nssa'] = \
+                    int(m.groupdict()['nssa'])
                 continue
 
             # Install discard route for summarized external routes.
@@ -514,7 +555,8 @@ class ShowIpOspf(ShowIpOspfSchema):
                               'summarized +(?P<type>\w+) +routes.$')
             m = p26.match(line)
             if m:
-                # what key
+                sub_dict['discard_route_external'] = True
+                sub_dict['discard_route_internal'] = True
                 continue
 
             # Area BACKBONE(0.0.0.0) 
@@ -524,16 +566,13 @@ class ShowIpOspf(ShowIpOspfSchema):
                               '( *\((?P<status>\w+)\))?$')
             m = p27.match(line)
             if m:
-                if 'area' not in sub_dict:
-                    sub_dict['area'] = {}
-
                 area = m.groupdict()['area']
-                if area not in sub_dict['area']:
-                    sub_dict['area'][area] = {}
-                sub_dict['area'][area]['area_id'] = area
-
-                sub_dict['area'][area]['area_type'] = 'normal'
-
+                if 'areas' not in sub_dict:
+                    sub_dict['areas'] = {}
+                if area not in sub_dict['areas']:
+                    sub_dict['areas'][area] = {}
+                sub_dict['areas'][area]['area_id'] = area
+                sub_dict['areas'][area]['area_type'] = 'normal'
                 if m.groupdict()['status'] and  \
                   'inactive' in m.groupdict()['status'].lower():
                     sub_dict['enable'] = False
@@ -545,7 +584,8 @@ class ShowIpOspf(ShowIpOspfSchema):
             p34 = re.compile(r'^This +area +is +a +(?P<type>\w+) +area$')
             m = p34.match(line)
             if m:
-                sub_dict['area'][area]['area_type'] = m.groupdict()['type'].lower()
+                sub_dict['areas'][area]['area_type'] = \
+                    m.groupdict()['type'].lower()
                 continue
 
             # Generates stub default route with cost 1
@@ -553,51 +593,56 @@ class ShowIpOspf(ShowIpOspfSchema):
                               'cost +(?P<cost>\d+)$')
             m = p35.match(line)
             if m:
-                sub_dict['area'][area]['default_cost'] = int(m.groupdict()['cost'])
+                sub_dict['areas'][area]['default_cost'] = \
+                    int(m.groupdict()['cost'])
                 continue
 
-            #     Area has existed for 08:30:42
+            #  Area has existed for 08:30:42
             p28 = re.compile(r'^Area +has +existed +for +(?P<time>[\w\.\:]+)$')
             m = p28.match(line)
             if m:
-                sub_dict['area'][area]['existed'] = m.groupdict()['time']
+                sub_dict['areas'][area]['existed'] = m.groupdict()['time']
                 continue
 
-            #     Interfaces in this area: 4 Active interfaces: 4
+            # Interfaces in this area: 4 Active interfaces: 4
             p29 = re.compile(r'^Interfaces +in +this +area: +(?P<num1>\d+) +'
                               'Active +interfaces: +(?P<num2>\d+)$')
             m = p29.match(line)
             if m:
-                if 'number' not in sub_dict['area'][area]:
-                    sub_dict['area'][area]['number'] = {}
-                sub_dict['area'][area]['number']['interfaces'] = \
+                if 'numbers' not in sub_dict['areas'][area]:
+                    sub_dict['areas'][area]['numbers'] = {}
+                sub_dict['areas'][area]['numbers']['interfaces'] = \
                     int(m.groupdict()['num1'])
-                sub_dict['area'][area]['number']['active_interfaces'] = \
+                sub_dict['areas'][area]['numbers']['active_interfaces'] = \
                     int(m.groupdict()['num2'])
                 continue
 
-            #     Passive interfaces: 0  Loopback interfaces: 1
+            # Passive interfaces: 0  Loopback interfaces: 1
             p30 = re.compile(r'^Passive +interfaces: +(?P<num1>\d+) +'
                               'Loopback +interfaces: +(?P<num2>\d+)$')
             m = p30.match(line)
             if m:
-                if 'number' not in sub_dict['area'][area]:
-                    sub_dict['area'][area]['number'] = {}
-                sub_dict['area'][area]['number']['passive_interfaces'] = \
+                if 'numbers' not in sub_dict['areas'][area]:
+                    sub_dict['areas'][area]['numbers'] = {}
+                sub_dict['areas'][area]['numbers']['passive_interfaces'] = \
                     int(m.groupdict()['num1'])
-                sub_dict['area'][area]['number']['loopback_interfaces'] = \
+                sub_dict['areas'][area]['numbers']['loopback_interfaces'] = \
                     int(m.groupdict()['num2'])
                 continue
 
-            #     No authentication available
+            #  No authentication available
+            p30_1 = re.compile(r'No +authentication +available$')
+            m = p30_1.match(line)
+            if m:
+                sub_dict['areas'][area]['authentication'] = 'none'
 
-            #     SPF calculation has run 8 times
+            # SPF calculation has run 8 times
             p31 = re.compile(r'^SPF +calculation +has +run +(?P<num1>\d+) +times$')
             m = p31.match(line)
             if m:
-                if 'statistics' not in sub_dict['area'][area]:
-                    sub_dict['area'][area]['statistics'] = {}
-                sub_dict['area'][area]['statistics']['spf_runs_count'] = \
+                if 'statistics' not in sub_dict['areas'][area]:
+                    sub_dict['areas'][area]['statistics'] = {}
+                sub_dict['areas'][area]['statistics']['spf_runs_count'] = \
                     int(m.groupdict()['num1'])
                 continue
 
@@ -605,9 +650,9 @@ class ShowIpOspf(ShowIpOspfSchema):
             p32 = re.compile(r'^Last +SPF +ran +for +(?P<num1>[\d\.]+)s$')
             m = p32.match(line)
             if m:
-                if 'statistics' not in sub_dict['area'][area]:
-                    sub_dict['area'][area]['statistics'] = {}
-                sub_dict['area'][area]['statistics']['spf_last_run_time'] = \
+                if 'statistics' not in sub_dict['areas'][area]:
+                    sub_dict['areas'][area]['statistics'] = {}
+                sub_dict['areas'][area]['statistics']['spf_last_run_time'] = \
                     float(m.groupdict()['num1'])
                 continue
 
@@ -620,29 +665,32 @@ class ShowIpOspf(ShowIpOspfSchema):
                               'Cost +configured +(?P<cost>\d+)$')
             m = p36.match(line)
             if m:
-                if 'ranges' not in sub_dict['area'][area]:
-                    sub_dict['area'][area]['ranges'] = {}
-                sub_dict['area'][area]['ranges']['prefix'] = \
+                prefix = str(m.groupdict()['prefix'])
+                if 'ranges' not in sub_dict['areas'][area]:
+                    sub_dict['areas'][area]['ranges'] = {}
+                if prefix not in sub_dict['areas'][area]['ranges']:
+                    sub_dict['areas'][area]['ranges'][prefix] = {}
+                sub_dict['areas'][area]['ranges'][prefix]['prefix'] = \
                     m.groupdict()['prefix']
-                sub_dict['area'][area]['ranges']['cost'] = \
+                sub_dict['areas'][area]['ranges'][prefix]['cost'] = \
                     int(m.groupdict()['cost'])
-                sub_dict['area'][area]['ranges']['net'] = \
+                sub_dict['areas'][area]['ranges'][prefix]['net'] = \
                     int(m.groupdict()['net'])
-                sub_dict['area'][area]['ranges']['advertise'] = False if \
+                sub_dict['areas'][area]['ranges'][prefix]['advertise'] = False if\
                     'donot' in m.groupdict()['advertise'].lower() else True
                 continue
 
 
-            #     Number of LSAs: 19, checksum sum 0x7a137
+            # Number of LSAs: 19, checksum sum 0x7a137
             p33 = re.compile(r'^Number +of +LSAs: +(?P<num1>\d+), +'
                               'checksum +sum +(?P<num2>\w+)$')
             m = p33.match(line)
             if m:
-                if 'statistics' not in sub_dict['area'][area]:
-                    sub_dict['area'][area]['statistics'] = {}
-                sub_dict['area'][area]['statistics']['area_scope_lsa_count'] = \
+                if 'statistics' not in sub_dict['areas'][area]:
+                    sub_dict['areas'][area]['statistics'] = {}
+                sub_dict['areas'][area]['statistics']['area_scope_lsa_count'] = \
                     int(m.groupdict()['num1'])
-                sub_dict['area'][area]['statistics']\
+                sub_dict['areas'][area]['statistics']\
                     ['area_scope_lsa_cksum_sum'] = m.groupdict()['num1']
                 continue
 
@@ -657,32 +705,65 @@ class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
     ''' Schema for "show ip ospf mpls ldp interface [vrf <WORD>]" '''
 
     schema = {
-        'vrf': {
-            Any(): {
-                'address_family': {
-                    Any(): {
-                        'instance': {
-                            Any(): {
-                                'interface': {
-                                    Any(): {                                    
-                                        'area': str,
-                                        'interface': str,
-                                        'state': str,
-                                        'network_type': str,
-                                        'ldp': {                                                        
-                                            'autoconfig': bool,
-                                            'autoconfig_area_id': str,
-                                            'igp_sync': bool
-                                        }
+        'vrf': 
+            {Any(): 
+                {'address_family': 
+                    {Any(): 
+                        {'instance': 
+                            {Any(): 
+                                {'areas' :
+                                    {Any(): 
+                                        {'interfaces': 
+                                            {Any(): 
+                                                {'area': str,
+                                                'name': str,
+                                                'state': str,
+                                                'interface_type': str,
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': bool,
+                                                        'autoconfig_area_id': str,
+                                                        'igp_sync': bool},
+                                                    },
+                                                },
+                                            },
+                                        Optional('virtual_links'): 
+                                            {Any(): 
+                                                {'area': str,
+                                                'name': str,
+                                                'state': str,
+                                                'interface_type': str,
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': bool,
+                                                        'autoconfig_area_id': str,
+                                                        'igp_sync': bool},
+                                                    },
+                                                },
+                                            },
+                                        Optional('sham_links'): 
+                                            {Any(): 
+                                                {'area': str,
+                                                'name': str,
+                                                'state': str,
+                                                'interface_type': str,
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': bool,
+                                                        'autoconfig_area_id': str,
+                                                        'igp_sync': bool},
+                                                    },
+                                                },
+                                            },
+                                        },
                                     },
-                                }
+                                },
                             },
-                        }
+                        },
                     },
-                }
-            }
+                },
+            },
         }
-    }
 
 
 # =========================================================
@@ -693,9 +774,16 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
     ''' Parser for "show ip ospf mpls ldp interface [vrf <WORD>]" '''
 
     def cli(self, vrf=''):
-        # excute command to get output
-        out = self.device.execute('show ip ospf mpls ldp interface' if not vrf else
-                                  'show ip ospf mpls ldp interface vrf {}'.format(vrf))
+        
+        # Build cmd
+        cmd = 'show ip ospf mpls ldp interface'
+        if vrf:
+            cmd += ' vrf {}'.format(vrf)
+        
+        # Execute cmd
+        out = self.device.execute(cmd)
+
+        # Init vars
         ret_dict = {}
         sub_dict = {}
 
@@ -704,7 +792,7 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
 
             # Ethernet2/2 - Process ID 1 VRF default, area 0.0.0.0
             # SL1-0.0.0.0-22.22.22.22-11.11.11.11 - Process ID 1 VRF VRF1, area 0.0.0.1
-            p1 = re.compile(r'^(?P<intf>[\w\.\-\/]+) +\- +'
+            p1 = re.compile(r'^(?P<interface>[\w\.\-\/]+) +\- +'
                              'Process +ID +(?P<instance>\d+) +'
                              'VRF +(?P<vrf>\S+), +'
                              'area +(?P<area>[\w\.]+)$')
@@ -712,9 +800,35 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
             if m:
                 vrf = m.groupdict()['vrf']
                 instance = m.groupdict()['instance']
-                intf = m.groupdict()['intf']
                 area = m.groupdict()['area']
+                interface = m.groupdict()['interface']
 
+                # Determine if 'interface' or 'sham_link' or 'virtual_link'
+                if re.search('SL', interface):
+                    pattern = '(?P<link>\w+)-(?P<area_id>[\w\.\:]+)-(?P<local>[\w\.\:]+)-(?P<remote>[\w\.\:]+)'
+                    n = re.match(pattern, interface)
+                    link = str(n.groupdict()['link'])
+                    area_id = str(n.groupdict()['area_id'])
+                    local = str(n.groupdict()['local'])
+                    remote = str(n.groupdict()['remote'])
+                    # Set values for dict
+                    intf_type = 'sham_links'
+                    intf_name = local + ' ' + remote
+                elif re.search('VL', interface):
+                    pattern = '(?P<link>\w+)-(?P<area_id>[\w\.\:]+)-(?P<router_id>[\w\.\:]+)'
+                    n = re.match(pattern, interface)
+                    link = str(n.groupdict()['link'])
+                    area_id = str(n.groupdict()['area_id'])
+                    router_id = str(n.groupdict()['router_id'])
+                    # Set values for dict
+                    intf_type = 'virtual_links'
+                    intf_name = area_id + ' ' + router_id
+                else:
+                    # Set values for dict
+                    intf_type = 'interfaces'
+                    intf_name = interface
+
+                # Create dict structure
                 if 'vrf' not in ret_dict:
                     ret_dict['vrf'] = {}
                 if vrf not in ret_dict['vrf']:
@@ -723,53 +837,70 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                     ret_dict['vrf'][vrf]['address_family'] = {}
                 if 'ipv4' not in ret_dict['vrf'][vrf]['address_family']:
                     ret_dict['vrf'][vrf]['address_family']['ipv4'] = {}
-                if 'instance' not in ret_dict['vrf'][vrf]['address_family']['ipv4']:
-                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance'] = {}
-                if instance not in ret_dict['vrf'][vrf]['address_family']['ipv4']['instance']:
-                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance'][instance] = {}
-                if 'interface' not in ret_dict['vrf'][vrf]['address_family']['ipv4']['instance'][instance]:
-                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance'][instance]['interface'] = {}
-                if intf not in ret_dict['vrf'][vrf]['address_family']['ipv4']['instance'][instance]['interface']:
-                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance'][instance]['interface'][intf] = {}
-                sub_dict = ret_dict['vrf'][vrf]['address_family']['ipv4']['instance'][instance]['interface'][intf]
+                if 'instance' not in ret_dict['vrf'][vrf]['address_family']\
+                        ['ipv4']:
+                    ret_dict['vrf'][vrf]['address_family']['ipv4']\
+                        ['instance'] = {}
+                if instance not in ret_dict['vrf'][vrf]['address_family']\
+                        ['ipv4']['instance']:
+                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance']\
+                        [instance] = {}
+                if 'areas' not in ret_dict['vrf'][vrf]['address_family']['ipv4']\
+                        ['instance'][instance]:
+                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance']\
+                        [instance]['areas'] = {}
+                if area not in ret_dict['vrf'][vrf]['address_family']['ipv4']\
+                        ['instance'][instance]['areas']:
+                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance']\
+                        [instance]['areas'][area] = {}
+                if intf_type not in ret_dict['vrf'][vrf]['address_family']\
+                        ['ipv4']['instance'][instance]['areas'][area]:
+                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance']\
+                        [instance]['areas'][area][intf_type] = {}
+                if intf_name not in ret_dict['vrf'][vrf]['address_family']\
+                        ['ipv4']['instance'][instance]['areas'][area][intf_type]:
+                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance']\
+                        [instance]['areas'][area][intf_type][intf_name] = {}
+                sub_dict = ret_dict['vrf'][vrf]['address_family']['ipv4']\
+                            ['instance'][instance]['areas'][area]\
+                            [intf_type][intf_name]
 
-                # area
+                # Set keys
                 sub_dict['area'] = area
-
-                if 'ldp' not in sub_dict:
-                    sub_dict['ldp'] = {}
-                sub_dict['ldp']['autoconfig_area_id'] = area
-
-                # interface
-                sub_dict['interface'] = intf
+                sub_dict['name'] = intf_name
+                if 'mpls' not in sub_dict:
+                    sub_dict['mpls'] = {}
+                if 'ldp' not in sub_dict['mpls']:
+                    sub_dict['mpls']['ldp'] = {}
+                sub_dict['mpls']['ldp']['autoconfig_area_id'] = area
                 continue
 
             # LDP Autoconfig not enabled
             p2 = re.compile(r'^LDP +Autoconfig +not +enabled$')
             m = p2.match(line)
             if m:
-                sub_dict['ldp']['autoconfig'] = False
+                sub_dict['mpls']['ldp']['autoconfig'] = False
                 continue
 
             # LDP Autoconfig is enabled
             p2_1 = re.compile(r'^LDP +Autoconfig +is +enabled$')
             m = p2_1.match(line)
             if m:
-                sub_dict['ldp']['autoconfig'] = True
+                sub_dict['mpls']['ldp']['autoconfig'] = True
                 continue
 
             # LDP Sync is enabled, not required
             p3_1 = re.compile(r'^LDP +Sync +is +enabled, +not +required$')
             m = p3_1.match(line)
             if m:
-                sub_dict['ldp']['igp_sync'] = True
+                sub_dict['mpls']['ldp']['igp_sync'] = True
                 continue
 
             # LDP Sync not enabled, not required
             p3_2 = re.compile(r'^LDP +Sync +not +enabled, +not +required$')
             m = p3_2.match(line)
             if m:
-                sub_dict['ldp']['igp_sync'] = False
+                sub_dict['mpls']['ldp']['igp_sync'] = False
                 continue
 
             # State LOOPBACK, Network type LOOPBACK
@@ -778,27 +909,25 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
             m = p4.match(line)
             if m:
                 sub_dict['state'] = m.groupdict()['state'].lower()
-                sub_dict['network_type'] = m.groupdict()['type'].lower()
+                sub_dict['interface_type'] = m.groupdict()['type'].lower()
                 continue
 
         return ret_dict
 
 
-# ===========================================
-# Superparser for:
-# * 'show ip ospf sham-links [vrf <WORD>]'
-# * 'show ip ospf virtual-links [vrf <WORD>]'
-# ===========================================
-class ShowIpOspfLinksSuperParser(MetaParser):
+# =============================================
+# Parser for 'show ip ospf <WORD> [vrf <WORD>]'
+# =============================================
+class ShowIpOspfLinksParser(MetaParser):
 
-    ''' Parser for:
-        * "show ip ospf sham-links [vrf <WORD>]"
-        * "show ip ospf virtual-links [vrf <WORD>]"
-    '''
+    ''' Parser for "show ip ospf <LINK-TYPE> [vrf <WORD>]" '''
 
     def cli(self, cmd):
-        # excute command to get output
+        
+        # Cxcute command to get output
         out = self.device.execute(cmd)
+        
+        # Init vars
         ret_dict = {}
         sub_dict = {}
 
@@ -871,86 +1000,102 @@ class ShowIpOspfLinksSuperParser(MetaParser):
                     ret_dict['vrf'][vrf]['address_family'] = {}
                 if 'ipv4' not in ret_dict['vrf'][vrf]['address_family']:
                     ret_dict['vrf'][vrf]['address_family']['ipv4'] = {}
-                if 'instance' not in ret_dict['vrf'][vrf]['address_family']['ipv4']:
-                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance'] = {}
-                if inst not in ret_dict['vrf'][vrf]['address_family']['ipv4']['instance']:
-                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance'][inst] = {}
-                if 'area' not in ret_dict['vrf'][vrf]['address_family']['ipv4']['instance'][inst]:
-                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance'][inst]['area'] = {}
+                if 'instance' not in ret_dict['vrf'][vrf]['address_family']\
+                        ['ipv4']:
+                    ret_dict['vrf'][vrf]['address_family']['ipv4']\
+                        ['instance'] = {}
+                if inst not in ret_dict['vrf'][vrf]['address_family']['ipv4']\
+                        ['instance']:
+                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance']\
+                        [inst] = {}
+                if 'areas' not in ret_dict['vrf'][vrf]['address_family']['ipv4']\
+                        ['instance'][inst]:
+                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance']\
+                        [inst]['areas'] = {}
 
-
+                # Set area_id based on link_type
                 if link_type == 'virtual_links':
                     backbone_area_id = area_id
                     area_id = transit_area_id
-                    key = '{0} {1}'.format(transit_area_id, router_id)
+                    link_key = '{0} {1}'.format(transit_area_id, router_id)
                 else:
                     transit_area_id = area_id
-                    key = '{0} {1}'.format(local, remote)
+                    link_key = '{0} {1}'.format(local, remote)
 
-                if area_id not in ret_dict['vrf'][vrf]['address_family']['ipv4']['instance'][inst]['area']:
-                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance'][inst]['area'][area_id] = {}
-                if link_type not in ret_dict['vrf'][vrf]['address_family']['ipv4']['instance']\
-                  [inst]['area'][area_id]:
-                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance'][inst]\
-                      ['area'][area_id][link_type] = {}
+                if area_id not in ret_dict['vrf'][vrf]['address_family']\
+                        ['ipv4']['instance'][inst]['areas']:
+                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance']\
+                        [inst]['areas'][area_id] = {}
+                if link_type not in ret_dict['vrf'][vrf]['address_family']\
+                        ['ipv4']['instance'][inst]['areas'][area_id]:
+                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance']\
+                        [inst]['areas'][area_id][link_type] = {}
+                if link_key not in ret_dict['vrf'][vrf]['address_family']\
+                        ['ipv4']['instance'][inst]['areas'][area_id][link_type]:
+                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance']\
+                        [inst]['areas'][area_id][link_type][link_key] = {}
+                sub_dict = ret_dict['vrf'][vrf]['address_family']['ipv4']\
+                            ['instance'][inst]['areas'][area_id]\
+                            [link_type][link_key]
 
-                if key not in ret_dict['vrf'][vrf]['address_family']['ipv4']['instance']\
-                  [inst]['area'][area_id][link_type]:
-                    ret_dict['vrf'][vrf]['address_family']['ipv4']['instance'][inst]\
-                      ['area'][area_id][link_type][key] = {}
-
-                sub_dict = ret_dict['vrf'][vrf]['address_family']['ipv4']['instance'][inst]\
-                  ['area'][area_id][link_type][key]
-
-                # link
-                sub_dict['link'] = link
-
-                # link
-                sub_dict['link_state'] = state
-
-                # transit_area_id
-                sub_dict['transit_area_id'] = transit_area_id
-
-                # backbone_area_id
-                sub_dict['backbone_area_id'] = backbone_area_id
-
+                # Set previously parsed keys
                 try:
-                    # unnumbered_interface
-                    sub_dict['unnumbered_interface'] = unnumbered_interface
-
-                    # ip_address
-                    sub_dict['ip_address'] = ip_address
+                    sub_dict['name'] = link
                 except:
                     pass
-
-                # virtual-links
-                #   router_id, interface, remote_addr
+                try:
+                    sub_dict['link_state'] = state
+                except:
+                    pass
+                try:
+                    sub_dict['transit_area_id'] = transit_area_id
+                except:
+                    pass
+                try:
+                    sub_dict['backbone_area_id'] = backbone_area_id
+                except:
+                    pass
+                try:
+                    sub_dict['unnumbered_interface'] = unnumbered_interface
+                except:
+                    pass
+                try:
+                    sub_dict['unnumbered_ip_address'] = ip_address
+                except:
+                    pass
                 try:
                     sub_dict['router_id'] = router_id
+                except:
+                    pass
+                try:
                     sub_dict['interface'] = intf
+                except:
+                    pass
+                try:
                     sub_dict['remote_addr'] = remote_addr
                 except:
                     pass
-
-                # sham-linksl
-                #   local_id, remote_id
                 try:
                     sub_dict['local_id'] = local
+                except:
+                    pass
+                try:
                     sub_dict['remote_id'] = remote
                 except:
                     pass
-
                 continue
 
             # State P2P, Network type P2P, cost 40
             # State P2P, Network type P2P, cost 1
-            p5 = re.compile(r'^State +(?P<state>\w+), +'
-                             'Network +type +(?P<network_type>\w+), +'
-                             'cost +(?P<cost>\d+)$')
+            p5 = re.compile(r'^State +(?P<state>\w+), +Network +type'
+                             ' +(?P<interface_type>\w+), +cost +(?P<cost>\d+)$')
             m = p5.match(line)
             if m:
-                sub_dict['state'] = m.groupdict()['state']
-                sub_dict['network_type'] = m.groupdict()['network_type']
+                interface_type = str(m.groupdict()['interface_type']).lower()
+                if interface_type == 'p2p':
+                    interface_type = 'point-to-point'
+                sub_dict['interface_type'] = interface_type
+                sub_dict['state'] = str(m.groupdict()['state'])
                 sub_dict['cost'] = int(m.groupdict()['cost'])
                 continue
 
@@ -971,7 +1116,9 @@ class ShowIpOspfLinksSuperParser(MetaParser):
                              'adjacent +with +(?P<adjacent>\d+)$')
             m = p7.match(line)
             if m:
-                # not sure the structure
+                sub_dict['nbr_total'] = int(m.groupdict()['nbr_count'])
+                sub_dict['nbr_flood'] = int(m.groupdict()['flood'])
+                sub_dict['nbr_adjs'] = int(m.groupdict()['adjacent'])
                 continue
 
             # Timer intervals: Hello 10, Dead 40, Wait 40, Retransmit 5
@@ -1020,14 +1167,17 @@ class ShowIpOspfLinksSuperParser(MetaParser):
                 if 'auth_trailer_key' not in sub_dict['authentication']:
                     sub_dict['authentication']['auth_trailer_key'] = {}
 
-                sub_dict['authentication']['auth_trailer_key']['crypto_algorithm'] = crypto_algorithm
+                sub_dict['authentication']['auth_trailer_key']\
+                    ['crypto_algorithm'] = crypto_algorithm
 
                 if key_type == 'keychain':
                     if 'auth_trailer_key_chain' not in sub_dict['authentication']:
                         sub_dict['authentication']['auth_trailer_key_chain'] = {}
-                    sub_dict['authentication']['auth_trailer_key_chain']['key_chain'] = key
+                    sub_dict['authentication']['auth_trailer_key_chain']\
+                        ['key_chain'] = key
                     if status:
-                        sub_dict['authentication']['auth_trailer_key_chain']['status'] = status
+                        sub_dict['authentication']['auth_trailer_key_chain']\
+                            ['status'] = status
                 elif key_type:
                     sub_dict['authentication']['key_id'] = key
 
@@ -1035,8 +1185,8 @@ class ShowIpOspfLinksSuperParser(MetaParser):
 
             # Number of opaque link LSAs: 0, checksum sum 0
             # Number of opaque link LSAs: 0, checksum sum 0
-            p11 = re.compile(r'^Number +of +opaque +link +LSAs: +(?P<count>\d+), +'
-                              'checksum +sum +(?P<checksum>\d+)$')
+            p11 = re.compile(r'^Number +of +opaque +link +LSAs: +(?P<count>\d+),'
+                              ' +checksum +sum +(?P<checksum>\d+)$')
             m = p11.match(line)
             if m:
                 if 'statistics' not in sub_dict:
@@ -1176,17 +1326,17 @@ class ShowIpOspfVirtualLinksSchema(MetaParser):
                     Any(): {
                         'instance': {
                             Any(): {
-                                'area': {
+                                'areas': {
                                     Any(): {
                                       'virtual_links': {
                                           Any(): {
                                               'transit_area_id': str,
                                               'backbone_area_id': str,
                                               'router_id': str,
-                                              'link': str,
+                                              'name': str,
                                               'link_state': str,
                                               Optional('unnumbered_interface'): str,
-                                              Optional('ip_address'): str,
+                                              Optional('unnumbered_ip_address'): str,
                                               'interface': str,
                                               'remote_addr': str,
                                               'hello_interval': int,
@@ -1195,6 +1345,9 @@ class ShowIpOspfVirtualLinksSchema(MetaParser):
                                               'wait_interval': int,
                                               'transmit_delay': int,
                                               'index': int,
+                                              Optional('nbr_total'): int,
+                                              Optional('nbr_flood'): int,
+                                              Optional('nbr_adjs'): int,
                                               Optional('authentication'): {
                                                   Optional('auth_trailer_key_chain'): {
                                                       'key_chain': str,
@@ -1207,7 +1360,7 @@ class ShowIpOspfVirtualLinksSchema(MetaParser):
                                               },
                                               'cost': int,
                                               'state': str,
-                                              'network_type': str,
+                                              'interface_type': str,
                                               'hello_timer': str,
                                               Optional('wait_timer'): int,
                                               'statistics': {
@@ -1246,14 +1399,16 @@ class ShowIpOspfVirtualLinksSchema(MetaParser):
 # ====================================================
 # Parser for 'show ip ospf virtual-links [vrf <WORD>]'
 # ====================================================
-class ShowIpOspfVirtualLinks(ShowIpOspfVirtualLinksSchema, ShowIpOspfLinksSuperParser):
+class ShowIpOspfVirtualLinks(ShowIpOspfVirtualLinksSchema, ShowIpOspfLinksParser):
 
     ''' Parser for "show ip ospf virtual-links [vrf <WORD>]" '''
 
     def cli(self, vrf=''):
-        # excute command to get output
-        cmd = 'show ip ospf virtual-links' if not vrf else \
-              'show ip ospf virtual-links vrf {vrf}'.format(vrf=vrf)
+        
+        # Build command
+        cmd = 'show ip ospf virtual-links'
+        if vrf:
+            cmd += ' vrf {}'.format(vrf)
 
         return super().cli(cmd)
 
@@ -1272,7 +1427,7 @@ class ShowIpOspfShamLinksSchema(MetaParser):
                     Any(): {
                         'instance': {
                             Any(): {
-                                'area': {
+                                'areas': {
                                     Any(): {
                                       'sham_links': {
                                           Any(): {
@@ -1280,16 +1435,19 @@ class ShowIpOspfShamLinksSchema(MetaParser):
                                               'backbone_area_id': str,
                                               'local_id': str,
                                               'remote_id': str,
-                                              'link': str,
+                                              'name': str,
                                               'link_state': str,
                                               Optional('unnumbered_interface'): str,
-                                              Optional('ip_address'): str,
+                                              Optional('unnumbered_ip_address'): str,
                                               'hello_interval': int,
                                               'dead_interval': int,
                                               'retransmit_interval': int,
                                               'wait_interval': int,
                                               'transmit_delay': int,
                                               'index': int,
+                                              Optional('nbr_total'): int,
+                                              Optional('nbr_flood'): int,
+                                              Optional('nbr_adjs'): int,
                                               'destination': str,
                                               Optional('authentication'): {
                                                   Optional('auth_trailer_key_chain'): {
@@ -1303,7 +1461,7 @@ class ShowIpOspfShamLinksSchema(MetaParser):
                                               },
                                               'cost': int,
                                               'state': str,
-                                              'network_type': str,
+                                              'interface_type': str,
                                               'hello_timer': str,
                                               Optional('wait_timer'): int,
                                               'statistics': {
@@ -1347,13 +1505,15 @@ class ShowIpOspfShamLinksSchema(MetaParser):
 # =================================================
 # Parser for 'show ip ospf sham-links [vrf <WORD>]'
 # =================================================
-class ShowIpOspfShamLinks(ShowIpOspfShamLinksSchema, ShowIpOspfLinksSuperParser):
+class ShowIpOspfShamLinks(ShowIpOspfShamLinksSchema, ShowIpOspfLinksParser):
 
     ''' Parser for "show ip ospf sham-links [vrf <WORD>]" '''
 
     def cli(self, vrf=''):
-        # excute command to get output
-        cmd = 'show ip ospf sham-links' if not vrf else \
-              'show ip ospf sham-links vrf {vrf}'.format(vrf=vrf)
+        
+        # Build command
+        cmd = 'show ip ospf sham-links'
+        if vrf:
+            cmd += ' vrf {}'.format(vrf)
 
         return super().cli(cmd)

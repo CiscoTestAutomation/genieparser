@@ -15,11 +15,11 @@ from parser.nxos.show_ospf import ShowIpOspf, \
 # Metaparser
 from metaparser.util.exceptions import SchemaEmptyParserError
 
-# =============================================================
+
+# =====================================
 #  Unit test for 'show ip ospf'
 #  Unit test for 'show ip ospf vrf all'
-# =============================================================
-
+# =====================================
 class test_show_ip_ospf(unittest.TestCase):
 
     '''Unit test for show ip ospf
@@ -29,212 +29,175 @@ class test_show_ip_ospf(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        "vrf": {
-              "VRF1": {
-                   "address_family": {
-                        "ipv4": {
-                             "instance": {
-                                  "1": {
-                                       "single_tos_routes_enable": True,
-                                       "nsr": {
-                                            "enable": True
-                                       },
-                                       "router_id": "22.22.22.22",
-                                       "enable": True,
-                                       "spf_control": {
-                                            "throttle": {
-                                                 "lsa": {
-                                                      "start": 0,
-                                                      "checksum": "0",
-                                                      "opaque_as_checksum": "0",
-                                                      "external": 0,
-                                                      "hold": 5000000,
-                                                      "opaque_as": 0,
-                                                      "maximum": 5000000,
-                                                      "group_pacing": 10
-                                                 },
-                                                 "spf": {
-                                                      "start": 200000,
-                                                      "hold": 1000000,
-                                                      "maximum": 5000000
-                                                 }
-                                            },
-                                            "paths": 8
-                                       },
-                                       "area": {
-                                            "0.0.0.1": {
-                                                 "ranges": {
-                                                      "advertise": False,
-                                                      "net": 1,
-                                                      "prefix": "1.1.0.0/16",
-                                                      "cost": 31
-                                                 },
-                                                 "area_type": "stub",
-                                                 "existed": "08:30:42",
-                                                 "area_id": "0.0.0.1",
-                                                 "default_cost": 1,
-                                                 "statistics": {
-                                                      "spf_last_run_time": 0.000464,
-                                                      "spf_runs_count": 33,
-                                                      "area_scope_lsa_count": 11,
-                                                      "area_scope_lsa_cksum_sum": "11"
-                                                 },
-                                                 "number": {
-                                                      "passive_interfaces": 0,
-                                                      "loopback_interfaces": 0,
-                                                      "active_interfaces": 3,
-                                                      "interfaces": 3
-                                                 }
-                                            }
-                                       },
-
-                                       "instance": 1,
-                                       "graceful_restart": {
-                                            "ietf": {
-                                                 "type": "ietf",
-                                                 "exist_status": "none",
-                                                 "enable": True,
-                                                 "restart_interval": 60
-                                            }
-                                       },
-                                       "opaque_lsa_enable": True,
-                                       "preference": {
-                                            "single_value": {
-                                                 "all": 110
-                                            }
-                                       },
-                                       "numbers": {
-                                            "areas": {
-                                                 "normal": 1,
-                                                 "nssa": 0,
-                                                 "stub": 0,
-                                                 "number": 1
-                                            },
-                                            "active_areas": {
-                                                 "normal": 1,
-                                                 "nssa": 0,
-                                                 "stub": 0,
-                                                 "number": 1
-                                            }
-                                       },
-                                       "auto_cost": {
-                                            "reference_bandwidth": 40000,
-                                            "bandwidth_unit": "Mbps",
-                                            "enable": True
-                                       }
-                                  }
-                             }
-                        }
-                   }
-              },
-              "default": {
-                   "address_family": {
-                        "ipv4": {
-                             "instance": {
-                                  "1": {
-                                       "single_tos_routes_enable": True,
-                                       "nsr": {
-                                            "enable": True
-                                       },
-                                       "router_id": "2.2.2.2",
-                                       "enable": True,
-                                       "spf_control": {
-                                            "throttle": {
-                                                 "lsa": {
-                                                      "start": 0,
-                                                      "checksum": "0x7d61",
-                                                      "opaque_as_checksum": "0",
-                                                      "external": 1,
-                                                      "hold": 5000000,
-                                                      "opaque_as": 0,
-                                                      "maximum": 5000000,
-                                                      "group_pacing": 10
-                                                 },
-                                                 "spf": {
-                                                      "start": 200000,
-                                                      "hold": 1000000,
-                                                      "maximum": 5000000
-                                                 }
-                                            },
-                                            "paths": 8
-                                       },
-                                       "instance": 1,
-                                       "stub_router": {
-                                            "always": {
-                                                 "always": True
-                                            }
-                                       },
-                                       "database_control": {
-                                            "max_lsa": 123
-                                       },
-                                       "opaque_lsa_enable": True,
-                                       "bfd": {
-                                            "enable": True
-                                       },
-                                       "numbers": {
-                                            "areas": {
-                                                 "normal": 1,
-                                                 "nssa": 0,
-                                                 "stub": 0,
-                                                 "number": 1
-                                            },
-                                            "active_areas": {
-                                                 "normal": 1,
-                                                 "nssa": 0,
-                                                 "stub": 0,
-                                                 "number": 1
-                                            }
-                                       },
-                                       "graceful_restart": {
-                                            "ietf": {
-                                                 "type": "ietf",
-                                                 "exist_status": "none",
-                                                 "enable": True,
-                                                 "restart_interval": 60
-                                            }
-                                       },
-                                       "area": {
-                                            "0.0.0.0": {
-                                                 "ranges": {
-                                                      "advertise": True,
-                                                      "net": 0,
-                                                      "prefix": "1.1.1.0/24",
-                                                      "cost": 33
-                                                 },
-                                                 "area_type": "normal",
-                                                 "existed": "08:30:42",
-                                                 "area_id": "0.0.0.0",
-                                                 "statistics": {
-                                                      "spf_last_run_time": 0.001386,
-                                                      "spf_runs_count": 8,
-                                                      "area_scope_lsa_count": 19,
-                                                      "area_scope_lsa_cksum_sum": "19"
-                                                 },
-                                                 "number": {
-                                                      "passive_interfaces": 0,
-                                                      "loopback_interfaces": 1,
-                                                      "active_interfaces": 4,
-                                                      "interfaces": 4
-                                                 }
-                                            }
-                                       },
-                                       "auto_cost": {
-                                            "reference_bandwidth": 40000,
-                                            "bandwidth_unit": "Mbps",
-                                            "enable": True
-                                       },
-                                       "preference": {
-                                            "single_value": {
-                                                 "all": 110
-                                            }
-                                       }
-                                  }
-                             }
-                        }
-                   }
-              }
-         }
-    }
+        'vrf': 
+            {'VRF1': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.1': 
+                                        {'area_id': '0.0.0.1',
+                                        'area_type': 'stub',
+                                        'authentication': 'none',
+                                        'default_cost': 1,
+                                        'existed': '08:30:42',
+                                        'numbers': 
+                                            {'active_interfaces': 3,
+                                            'interfaces': 3,
+                                            'loopback_interfaces': 0,
+                                            'passive_interfaces': 0},
+                                        'ranges': 
+                                            {'1.1.0.0/16': 
+                                                {'advertise': False,
+                                                'cost': 31,
+                                                'net': 1,
+                                                'prefix': '1.1.0.0/16'}},
+                                        'statistics': 
+                                            {'area_scope_lsa_cksum_sum': '11',
+                                            'area_scope_lsa_count': 11,
+                                            'spf_last_run_time': 0.000464,
+                                            'spf_runs_count': 33}}},
+                                'auto_cost': 
+                                    {'bandwidth_unit': 'mbps',
+                                    'enable': True,
+                                    'reference_bandwidth': 40000},
+                                'enable': True,
+                                'discard_route_external': True,
+                                'discard_route_internal': True,
+                                'graceful_restart': 
+                                    {'ietf': 
+                                        {'enable': True,
+                                        'exist_status': 'none',
+                                        'restart_interval': 60,
+                                        'state': 'Inactive',
+                                        'type': 'ietf'}},
+                                'instance': 1,
+                                'nsr': 
+                                    {'enable': True},
+                                'numbers': 
+                                    {'active_areas': 
+                                        {'normal': 1,
+                                        'nssa': 0,
+                                        'stub': 0,
+                                        'total': 1},
+                                    'areas': 
+                                        {'normal': 1,
+                                        'nssa': 0,
+                                        'stub': 0,
+                                        'total': 1}},
+                                'opaque_lsa_enable': True,
+                                'preference': 
+                                    {'single_value': {'all': 110}},
+                                'router_id': '22.22.22.22',
+                                'single_tos_routes_enable': True,
+                                'spf_control': 
+                                    {'paths': 8,
+                                    'throttle': 
+                                        {'lsa': 
+                                            {'group_pacing': 10,
+                                            'hold': 5000.0,
+                                            'maximum': 5000.0,
+                                            'minimum': 1000.0,
+                                            'numbers': 
+                                                {'external_lsas': 
+                                                    {'checksum': '0',
+                                                    'total': 0},
+                                                'opaque_as_lsas': 
+                                                    {'checksum': '0',
+                                                    'total': 0}},
+                                            'start': 0.0},
+                                            'spf': 
+                                                {'hold': 1000.0,
+                                                'maximum': 5000.0,
+                                                'start': 200.0}}}}}}}},
+            'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.0': 
+                                        {'area_id': '0.0.0.0',
+                                        'area_type': 'normal',
+                                        'authentication': 'none',
+                                        'existed': '08:30:42',
+                                        'numbers': 
+                                            {'active_interfaces': 4,
+                                            'interfaces': 4,
+                                            'loopback_interfaces': 1,
+                                            'passive_interfaces': 0},
+                                        'ranges': 
+                                            {'1.1.1.0/24': 
+                                                {'advertise': True,
+                                                'cost': 33,
+                                                'net': 0,
+                                                'prefix': '1.1.1.0/24'}},
+                                        'statistics': 
+                                            {'area_scope_lsa_cksum_sum': '19',
+                                            'area_scope_lsa_count': 19,
+                                            'spf_last_run_time': 0.001386,
+                                            'spf_runs_count': 8}}},
+                                'auto_cost': 
+                                    {'bandwidth_unit': 'mbps',
+                                    'enable': True,
+                                    'reference_bandwidth': 40000},
+                                'bfd': 
+                                    {'enable': True},
+                                'database_control': 
+                                    {'max_lsa': 123},
+                                'enable': True,
+                                'discard_route_external': True,
+                                'discard_route_internal': True,
+                                'graceful_restart': 
+                                    {'ietf': 
+                                        {'enable': True,
+                                        'exist_status': 'none',
+                                        'restart_interval': 60,
+                                        'state': 'Inactive',
+                                        'type': 'ietf'}},
+                                'instance': 1,
+                                'nsr': 
+                                    {'enable': True},
+                                'numbers': 
+                                    {'active_areas': 
+                                        {'normal': 1,
+                                        'nssa': 0,
+                                        'stub': 0,
+                                        'total': 1},
+                                    'areas': 
+                                        {'normal': 1,
+                                        'nssa': 0,
+                                        'stub': 0,
+                                        'total': 1}},
+                                'opaque_lsa_enable': True,
+                                'preference': 
+                                    {'single_value': {'all': 110}},
+                                'router_id': '2.2.2.2',
+                                'single_tos_routes_enable': True,
+                                'spf_control': 
+                                    {'paths': 8,
+                                    'throttle': 
+                                        {'lsa': 
+                                            {'group_pacing': 10,
+                                            'hold': 5000.0,
+                                            'maximum': 5000.0,
+                                            'minimum': 1000.0,
+                                            'numbers': 
+                                                {'external_lsas': 
+                                                    {'checksum': '0x7d61',
+                                                    'total': 1},
+                                                'opaque_as_lsas': 
+                                                    {'checksum': '0',
+                                                    'total': 0}},
+                                            'start': 0.0},
+                                            'spf': 
+                                                {'hold': 1000.0,
+                                                'maximum': 5000.0,
+                                                'start': 200.0}}},
+                                'stub_router': 
+                                    {'always': 
+                                        {'always': True}}}}}}}}}
 
     golden_output = {'execute.return_value': '''
         Routing Process 1 with ID 2.2.2.2 VRF default
@@ -320,98 +283,82 @@ class test_show_ip_ospf(unittest.TestCase):
         '''}
 
     golden_parsed_output_1 = {
-        "vrf": {
-              "default": {
-                   "address_family": {
-                        "ipv4": {
-                             "instance": {
-                                  "1": {
-                                       "area": {
-                                            "0.0.0.0": {
-                                                 "area_id": "0.0.0.0",
-                                                 "area_type": "normal",
-                                                 "number": {
-                                                      "interfaces": 6,
-                                                      "loopback_interfaces": 4,
-                                                      "passive_interfaces": 0,
-                                                      "active_interfaces": 4
-                                                 },
-                                                 "statistics": {
-                                                      "spf_runs_count": 2,
-                                                      "spf_last_run_time": 0.000447,
-                                                      "area_scope_lsa_cksum_sum": "1",
-                                                      "area_scope_lsa_count": 1
-                                                 },
-                                                 "existed": "1w5d"
-                                            }
-                                       },
-                                       "preference": {
-                                            "single_value": {
-                                                 "all": 110
-                                            }
-                                       },
-                                       "spf_control": {
-                                            "throttle": {
-                                                 "lsa": {
-                                                      "start": 0,
-                                                      "opaque_as_checksum": "0",
-                                                      "checksum": "0",
-                                                      "hold": 5000000,
-                                                      "group_pacing": 10,
-                                                      "external": 0,
-                                                      "maximum": 5000000,
-                                                      "opaque_as": 0
-                                                 },
-                                                 "spf": {
-                                                      "start": 200000,
-                                                      "maximum": 5000000,
-                                                      "hold": 1000000
-                                                 }
-                                            },
-                                            "paths": 8
-                                       },
-                                       "graceful_restart": {
-                                            "ietf": {
-                                                 "exist_status": "none",
-                                                 "restart_interval": 60,
-                                                 "type": "ietf",
-                                                 "enable": True
-                                            }
-                                       },
-                                       "opaque_lsa_enable": True,
-                                       "numbers": {
-                                            "active_areas": {
-                                                 "stub": 0,
-                                                 "normal": 1,
-                                                 "number": 1,
-                                                 "nssa": 0
-                                            },
-                                            "areas": {
-                                                 "stub": 0,
-                                                 "normal": 1,
-                                                 "number": 1,
-                                                 "nssa": 0
-                                            }
-                                       },
-                                       "nsr": {
-                                            "enable": True
-                                       },
-                                       "instance": 1,
-                                       "router_id": "2.2.2.2",
-                                       "single_tos_routes_enable": True,
-                                       "auto_cost": {
-                                            "reference_bandwidth": 40000,
-                                            "bandwidth_unit": "Mbps",
-                                            "enable": True
-                                       },
-                                       "enable": False
-                                  }
-                             }
-                        }
-                   }
-              }
-         }
-    }
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.0': 
+                                        {'area_id': '0.0.0.0',
+                                        'area_type': 'normal',
+                                        'authentication': 'none',
+                                        'existed': '1w5d',
+                                        'numbers': 
+                                            {'active_interfaces': 4,
+                                            'interfaces': 6,
+                                            'loopback_interfaces': 4,
+                                            'passive_interfaces': 0},
+                                        'statistics': 
+                                            {'area_scope_lsa_cksum_sum': '1',
+                                            'area_scope_lsa_count': 1,
+                                            'spf_last_run_time': 0.000447,
+                                            'spf_runs_count': 2}}},
+                                'auto_cost': 
+                                    {'bandwidth_unit': 'mbps',
+                                    'enable': True,
+                                    'reference_bandwidth': 40000},
+                                'enable': False,
+                                'discard_route_external': True,
+                                'discard_route_internal': True,
+                                'graceful_restart': 
+                                    {'ietf': 
+                                        {'enable': True,
+                                        'exist_status': 'none',
+                                        'restart_interval': 60,
+                                        'state': 'Inactive',
+                                        'type': 'ietf'}},
+                                'instance': 1,
+                                'nsr': 
+                                    {'enable': True},
+                                'numbers': 
+                                    {'active_areas': 
+                                        {'normal': 1,
+                                        'nssa': 0,
+                                        'stub': 0,
+                                        'total': 1},
+                                    'areas': 
+                                        {'normal': 1,
+                                        'nssa': 0,
+                                        'stub': 0,
+                                        'total': 1}},
+                                'opaque_lsa_enable': True,
+                                'preference': 
+                                    {'single_value': 
+                                        {'all': 110}},
+                                'router_id': '2.2.2.2',
+                                'single_tos_routes_enable': True,
+                                'spf_control': 
+                                    {'paths': 8,
+                                    'throttle': 
+                                        {'lsa': 
+                                            {'group_pacing': 10,
+                                            'hold': 5000.0,
+                                            'maximum': 5000.0,
+                                            'minimum': 1000.0,
+                                            'numbers': 
+                                                {'external_lsas': 
+                                                    {'checksum': '0',
+                                                    'total': 0},
+                                                'opaque_as_lsas': 
+                                                    {'checksum': '0',
+                                                    'total': 0}},
+                                            'start': 0.0},
+                                            'spf': 
+                                                {'hold': 1000.0,
+                                            'maximum': 5000.0,
+                                            'start': 200.0}}}}}}}}}}
 
     golden_output_1 = {'execute.return_value': '''
         Routing Process 1 with ID 2.2.2.2 VRF default
@@ -448,8 +395,13 @@ class test_show_ip_ospf(unittest.TestCase):
              Last SPF ran for 0.000447s
             Area ranges are
             Number of LSAs: 1, checksum sum 0x9ccb
-        '''
-    }
+        '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpOspf(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
     def test_vrf_all(self):
         self.maxDiff = None
@@ -458,12 +410,6 @@ class test_show_ip_ospf(unittest.TestCase):
         parsed_output = obj.parse(vrf='all')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-    def test_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowIpOspf(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
     def test_default_vrf(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
@@ -471,11 +417,11 @@ class test_show_ip_ospf(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
-# =============================================================
+
+# ========================================================
 #  Unit test for 'show ip ospf mpls ldp interface'
 #  Unit test for 'show ip ospf mpls ldp interface vrf all'
-# =============================================================
-
+# ========================================================
 class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
 
     '''Unit test for show ip ospf mpls ldp interface
@@ -485,110 +431,95 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        "vrf": {
-              "VRF1": {
-                   "address_family": {
-                        "ipv4": {
-                             "instance": {
-                                  "1": {
-                                       "interface": {
-                                            "Ethernet2/1": {
-                                                 "ldp": {
-                                                      "autoconfig": False,
-                                                      "igp_sync": False,
-                                                      "autoconfig_area_id": "0.0.0.1"
-                                                 },
-                                                 "interface": "Ethernet2/1",
-                                                 "network_type": "broadcast",
-                                                 "state": "bdr",
-                                                 "area": "0.0.0.1"
-                                            },
-                                            "SL2-0.0.0.0-22.22.22.22-33.33.33.33": {
-                                                 "ldp": {
-                                                      "autoconfig": False,
-                                                      "igp_sync": False,
-                                                      "autoconfig_area_id": "0.0.0.1"
-                                                 },
-                                                 "interface": "SL2-0.0.0.0-22.22.22.22-33.33.33.33",
-                                                 "network_type": "p2p",
-                                                 "state": "p2p",
-                                                 "area": "0.0.0.1"
-                                            },
-                                            "SL1-0.0.0.0-22.22.22.22-11.11.11.11": {
-                                                 "ldp": {
-                                                      "autoconfig": False,
-                                                      "igp_sync": False,
-                                                      "autoconfig_area_id": "0.0.0.1"
-                                                 },
-                                                 "interface": "SL1-0.0.0.0-22.22.22.22-11.11.11.11",
-                                                 "network_type": "p2p",
-                                                 "state": "p2p",
-                                                 "area": "0.0.0.1"
-                                            }
-                                       }
-                                  }
-                             }
-                        }
-                   }
-              },
-              "default": {
-                   "address_family": {
-                        "ipv4": {
-                             "instance": {
-                                  "1": {
-                                       "interface": {
-                                            "loopback0": {
-                                                 "ldp": {
-                                                      "autoconfig": False,
-                                                      "igp_sync": False,
-                                                      "autoconfig_area_id": "0.0.0.0"
-                                                 },
-                                                 "interface": "loopback0",
-                                                 "network_type": "loopback",
-                                                 "state": "loopback",
-                                                 "area": "0.0.0.0"
-                                            },
-                                            "Ethernet2/4": {
-                                                 "ldp": {
-                                                      "autoconfig": False,
-                                                      "igp_sync": False,
-                                                      "autoconfig_area_id": "0.0.0.0"
-                                                 },
-                                                 "interface": "Ethernet2/4",
-                                                 "network_type": "broadcast",
-                                                 "state": "bdr",
-                                                 "area": "0.0.0.0"
-                                            },
-                                            "Ethernet2/2": {
-                                                 "ldp": {
-                                                      "autoconfig": False,
-                                                      "igp_sync": False,
-                                                      "autoconfig_area_id": "0.0.0.0"
-                                                 },
-                                                 "interface": "Ethernet2/2",
-                                                 "network_type": "broadcast",
-                                                 "state": "bdr",
-                                                 "area": "0.0.0.0"
-                                            },
-                                            "Ethernet2/3": {
-                                                 "ldp": {
-                                                      "autoconfig": False,
-                                                      "igp_sync": False,
-                                                      "autoconfig_area_id": "0.0.0.0"
-                                                 },
-                                                 "interface": "Ethernet2/3",
-                                                 "network_type": "broadcast",
-                                                 "state": "bdr",
-                                                 "area": "0.0.0.0"
-                                            }
-                                       }
-                                  }
-                             }
-                        }
-                   }
-              }
-         }
-    }
+        'vrf': 
+            {'VRF1': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.1': 
+                                        {'interfaces': 
+                                            {'Ethernet2/1': 
+                                                {'area': '0.0.0.1',
+                                                'interface_type': 'broadcast',
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': False,
+                                                        'autoconfig_area_id': '0.0.0.1',
+                                                        'igp_sync': False}},
+                                                'name': 'Ethernet2/1',
+                                                'state': 'bdr'}},
+                                        'sham_links': 
+                                            {'22.22.22.22 11.11.11.11': 
+                                                {'area': '0.0.0.1',
+                                                'interface_type': 'p2p',
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': False,
+                                                        'autoconfig_area_id': '0.0.0.1',
+                                                        'igp_sync': False}},
+                                                'name': '22.22.22.22 11.11.11.11',
+                                                'state': 'p2p'},
+                                            '22.22.22.22 33.33.33.33': 
+                                                {'area': '0.0.0.1',
+                                                'interface_type': 'p2p',
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': False,
+                                                        'autoconfig_area_id': '0.0.0.1',
+                                                        'igp_sync': False}},
+                                                'name': '22.22.22.22 '
+                                                '33.33.33.33',
+                                                'state': 'p2p'}}}}}}}}},
+            'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.0': 
+                                        {'interfaces': 
+                                            {'Ethernet2/2': 
+                                                {'area': '0.0.0.0',
+                                                'interface_type': 'broadcast',
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': False,
+                                                        'autoconfig_area_id': '0.0.0.0',
+                                                        'igp_sync': False}},
+                                                'name': 'Ethernet2/2',
+                                                'state': 'bdr'},
+                                            'Ethernet2/3': 
+                                                {'area': '0.0.0.0',
+                                                'interface_type': 'broadcast',
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': False,
+                                                        'autoconfig_area_id': '0.0.0.0',
+                                                        'igp_sync': False}},
+                                                'name': 'Ethernet2/3',
+                                                'state': 'bdr'},
+                                            'Ethernet2/4': 
+                                                {'area': '0.0.0.0',
+                                                'interface_type': 'broadcast',
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': False,
+                                                        'autoconfig_area_id': '0.0.0.0',
+                                                        'igp_sync': False}},
+                                                'name': 'Ethernet2/4',
+                                                'state': 'bdr'},
+                                            'loopback0': 
+                                                {'area': '0.0.0.0',
+                                                'interface_type': 'loopback',
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': False,
+                                                        'autoconfig_area_id': '0.0.0.0',
+                                                        'igp_sync': False}},
+                                                'name': 'loopback0',
+                                                'state': 'loopback'}}}}}}}}}}}
 
     golden_output = {'execute.return_value': '''
         loopback0 - Process ID 1 VRF default, area 0.0.0.0
@@ -619,90 +550,78 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
             LDP Autoconfig not enabled
             LDP Sync not enabled, not required
             State P2P, Network type P2P
-    '''}
+        '''}
 
     golden_parsed_output_1 = {
-        "vrf": {
-              "default": {
-                   "address_family": {
-                        "ipv4": {
-                             "instance": {
-                                  "1": {
-                                       "interface": {
-                                            "Ethernet4/1": {
-                                                 "ldp": {
-                                                      "autoconfig": False,
-                                                      "igp_sync": False,
-                                                      "autoconfig_area_id": "0.0.0.0"
-                                                 },
-                                                 "interface": "Ethernet4/1",
-                                                 "network_type": "broadcast",
-                                                 "state": "down",
-                                                 "area": "0.0.0.0"
-                                            },
-                                            "loopback3": {
-                                                 "ldp": {
-                                                      "autoconfig": False,
-                                                      "igp_sync": False,
-                                                      "autoconfig_area_id": "0.0.0.0"
-                                                 },
-                                                 "interface": "loopback3",
-                                                 "network_type": "loopback",
-                                                 "state": "loopback",
-                                                 "area": "0.0.0.0"
-                                            },
-                                            "loopback4": {
-                                                 "ldp": {
-                                                      "autoconfig": False,
-                                                      "igp_sync": False,
-                                                      "autoconfig_area_id": "0.0.0.0"
-                                                 },
-                                                 "interface": "loopback4",
-                                                 "network_type": "loopback",
-                                                 "state": "loopback",
-                                                 "area": "0.0.0.0"
-                                            },
-                                            "loopback1": {
-                                                 "ldp": {
-                                                      "autoconfig": False,
-                                                      "igp_sync": False,
-                                                      "autoconfig_area_id": "0.0.0.0"
-                                                 },
-                                                 "interface": "loopback1",
-                                                 "network_type": "loopback",
-                                                 "state": "loopback",
-                                                 "area": "0.0.0.0"
-                                            },
-                                            "Ethernet4/10": {
-                                                 "ldp": {
-                                                      "autoconfig": False,
-                                                      "igp_sync": False,
-                                                      "autoconfig_area_id": "0.0.0.0"
-                                                 },
-                                                 "interface": "Ethernet4/10",
-                                                 "network_type": "broadcast",
-                                                 "state": "down",
-                                                 "area": "0.0.0.0"
-                                            },
-                                            "loopback2": {
-                                                 "ldp": {
-                                                      "autoconfig": False,
-                                                      "igp_sync": False,
-                                                      "autoconfig_area_id": "0.0.0.0"
-                                                 },
-                                                 "interface": "loopback2",
-                                                 "network_type": "loopback",
-                                                 "state": "loopback",
-                                                 "area": "0.0.0.0"
-                                            }
-                                       }
-                                  }
-                             }
-                        }
-                   }
-              }
-         }
-    }
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.0': 
+                                        {'interfaces': 
+                                            {'Ethernet4/1': 
+                                                {'area': '0.0.0.0',
+                                                'interface_type': 'broadcast',
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': False,
+                                                        'autoconfig_area_id': '0.0.0.0',
+                                                        'igp_sync': False}},
+                                                'name': 'Ethernet4/1',
+                                                'state': 'down'},
+                                            'Ethernet4/10': 
+                                                {'area': '0.0.0.0',
+                                                'interface_type': 'broadcast',
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': False,
+                                                        'autoconfig_area_id': '0.0.0.0',
+                                                        'igp_sync': False}},
+                                                'name': 'Ethernet4/10',
+                                                'state': 'down'},
+                                            'loopback1': 
+                                                {'area': '0.0.0.0',
+                                                'interface_type': 'loopback',
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': False,
+                                                        'autoconfig_area_id': '0.0.0.0',
+                                                        'igp_sync': False}},
+                                                'name': 'loopback1',
+                                                'state': 'loopback'},
+                                            'loopback2': 
+                                                {'area': '0.0.0.0',
+                                                'interface_type': 'loopback',
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': False,
+                                                        'autoconfig_area_id': '0.0.0.0',
+                                                        'igp_sync': False}},
+                                                'name': 'loopback2',
+                                                'state': 'loopback'},
+                                            'loopback3': 
+                                                {'area': '0.0.0.0',
+                                                'interface_type': 'loopback',
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': False,
+                                                        'autoconfig_area_id': '0.0.0.0',
+                                                        'igp_sync': False}},
+                                                'name': 'loopback3',
+                                                'state': 'loopback'},
+                                            'loopback4': 
+                                                {'area': '0.0.0.0',
+                                                'interface_type': 'loopback',
+                                                'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': False,
+                                                        'autoconfig_area_id': '0.0.0.0',
+                                                        'igp_sync': False}},
+                                                'name': 'loopback4',
+                                                'state': 'loopback'}}}}}}}}}}}
 
     golden_output_1 = {'execute.return_value': '''
         Ethernet4/1 - Process ID 1 VRF default, area 0.0.0.0
@@ -729,8 +648,13 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
             LDP Autoconfig not enabled
             LDP Sync not enabled, not required
             State LOOPBACK, Network type LOOPBACK
-        '''
-    }
+        '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpOspfMplsLdpInterface(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
     def test_vrf_all(self):
         self.maxDiff = None
@@ -738,12 +662,6 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
         obj = ShowIpOspfMplsLdpInterface(device=self.device)
         parsed_output = obj.parse(vrf='all')
         self.assertEqual(parsed_output, self.golden_parsed_output)
-
-    def test_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowIpOspfMplsLdpInterface(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
 
     def test_default_vrf(self):
         self.maxDiff = None
@@ -753,11 +671,10 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 
-# =============================================================
+# ===================================================
 #  Unit test for 'show ip ospf virtual-links'
 #  Unit test for 'show ip ospf virtual-links vrf all'
-# =============================================================
-
+# ===================================================
 class test_show_ip_ospf_virtual_links(unittest.TestCase):
 
     '''Unit test for show ip ospf virtual-links
@@ -767,67 +684,55 @@ class test_show_ip_ospf_virtual_links(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        "vrf": {
-              "default": {
-                   "address_family": {
-                        "ipv4": {
-                             "instance": {
-                                  "1": {
-                                       "area": {
-                                            "0.0.0.1": {
-                                                 "virtual_links": {
-                                                      "0.0.0.1 4.4.4.4": {
-                                                           "dead_interval": 40,
-                                                           "network_type": "P2P",
-                                                           "interface": "Ethernet1/5",
-                                                           "backbone_area_id": "0.0.0.0",
-                                                           "wait_interval": 40,
-                                                           "hello_timer": "00:00:05",
-                                                           "neighbors": {
-                                                                "4.4.4.4": {
-                                                                     "last_change": "00:07:51",
-                                                                     "address": "20.3.4.4",
-                                                                     "state": "full",
-                                                                     "neighbor_router_id": "4.4.4.4",
-                                                                     "dbd_option": "0x72",
-                                                                     "last_non_hello_received": "00:07:49",
-                                                                     "statistics": {
-                                                                          "nbr_event_count": 5
-                                                                     },
-                                                                     "dead_timer": "00:00:33",
-                                                                     "hello_option": "0x32"
-                                                                }
-                                                           },
-                                                           "transmit_delay": 1,
-                                                           "ip_address": "20.3.4.3",
-                                                           "statistics": {
-                                                                "link_scope_lsa_count": 0,
-                                                                "link_scope_lsa_cksum_sum": 0
-                                                           },
-                                                           "unnumbered_interface": "Ethernet1/5",
-                                                           "state": "P2P",
-                                                           "index": 7,
-                                                           "remote_addr": "20.3.4.4",
-                                                           "hello_interval": 10,
-                                                           "link": "VL1",
-                                                           "router_id": "4.4.4.4",
-                                                           "transit_area_id": "0.0.0.1",
-                                                           "retransmit_interval": 5,
-                                                           "link_state": "up",
-                                                           "cost": 40
-                                                      }
-                                                 }
-                                            }
-                                       }
-                                  }
-                             }
-                        }
-                   }
-              }
-         }
-    }
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.1': 
+                                        {'virtual_links': 
+                                            {'0.0.0.1 4.4.4.4': 
+                                                {'backbone_area_id': '0.0.0.0',
+                                                'cost': 40,
+                                                'dead_interval': 40,
+                                                'hello_interval': 10,
+                                                'hello_timer': '00:00:05',
+                                                'index': 7,
+                                                'interface': 'Ethernet1/5',
+                                                'interface_type': 'point-to-point',
+                                                'link_state': 'up',
+                                                'name': 'VL1',
+                                                'nbr_adjs': 1,
+                                                'nbr_flood': 1,
+                                                'nbr_total': 1,
+                                                'neighbors': 
+                                                    {'4.4.4.4': 
+                                                        {'address': '20.3.4.4',
+                                                        'dbd_option': '0x72',
+                                                        'dead_timer': '00:00:33',
+                                                        'hello_option': '0x32',
+                                                        'last_change': '00:07:51',
+                                                        'last_non_hello_received': '00:07:49',
+                                                        'neighbor_router_id': '4.4.4.4',
+                                                        'state': 'full',
+                                                        'statistics': 
+                                                            {'nbr_event_count': 5}}},
+                                                'remote_addr': '20.3.4.4',
+                                                'retransmit_interval': 5,
+                                                'router_id': '4.4.4.4',
+                                                'state': 'P2P',
+                                                'statistics': 
+                                                    {'link_scope_lsa_cksum_sum': 0,
+                                                    'link_scope_lsa_count': 0},
+                                                'transit_area_id': '0.0.0.1',
+                                                'transmit_delay': 1,
+                                                'unnumbered_interface': 'Ethernet1/5',
+                                                'unnumbered_ip_address': '20.3.4.3',
+                                                'wait_interval': 40}}}}}}}}}}}
 
-    golden_output = {'execute.return_value': '''        
+    golden_output = {'execute.return_value': '''
         Virtual link VL1 to router 4.4.4.4 is up
             Transit area 0.0.0.1, via interface Eth1/5, remote addr 20.3.4.4
             Unnumbered interface using IP address of Ethernet1/5 (20.3.4.3)
@@ -844,7 +749,7 @@ class test_show_ip_ospf_virtual_links(unittest.TestCase):
             Hello options 0x32, dbd options 0x72
             Last non-hello packet received 00:07:49
               Dead timer due in 00:00:33
-    '''}
+        '''}
 
     def test_vrf_all(self):
         self.maxDiff = None
@@ -860,11 +765,10 @@ class test_show_ip_ospf_virtual_links(unittest.TestCase):
             parsed_output = obj.parse()
 
 
-# =============================================================
+# ================================================
 #  Unit test for 'show ip ospf sham-links'
 #  Unit test for 'show ip ospf sham-links vrf all'
-# =============================================================
-
+# ================================================
 class test_show_ip_ospf_sham_links(unittest.TestCase):
 
     '''Unit test for show ip ospf sham-links
@@ -874,106 +778,91 @@ class test_show_ip_ospf_sham_links(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        "vrf": {
-              "VRF1": {
-                   "address_family": {
-                        "ipv4": {
-                             "instance": {
-                                  "1": {
-                                       "area": {
-                                            "0.0.0.1": {
-                                                 "sham_links": {
-                                                      "22.22.22.22 11.11.11.11": {
-                                                           "hello_interval": 10,
-                                                           "transmit_delay": 1,
-                                                           "unnumbered_interface": "loopback1",
-                                                           "link": "SL1",
-                                                           "neighbors": {
-                                                                "11.11.11.11": {
-                                                                     "neighbor_router_id": "11.11.11.11",
-                                                                     "address": "11.11.11.11",
-                                                                     "dbd_option": "0x72",
-                                                                     "last_non_hello_received": "never",
-                                                                     "remote": "11.11.11.11",
-                                                                     "backbone_area_id": "0.0.0.0",
-                                                                     "state": "full",
-                                                                     "area": "0.0.0.1",
-                                                                     "hello_option": "0x32",
-                                                                     "local": "22.22.22.22",
-                                                                     "statistics": {
-                                                                          "nbr_event_count": 8
-                                                                     },
-                                                                     "instance": "1",
-                                                                     "dead_timer": "00:00:38",
-                                                                     "last_change": "08:10:01"
-                                                                }
-                                                           },
-                                                           "index": 6,
-                                                           "local_id": "22.22.22.22",
-                                                           "retransmit_interval": 5,
-                                                           "hello_timer": "00:00:02",
-                                                           "cost": 1,
-                                                           "dead_interval": 40,
-                                                           "ip_address": "22.22.22.22",
-                                                           "backbone_area_id": "0.0.0.0",
-                                                           "state": "P2P",
-                                                           "wait_interval": 40,
-                                                           "transit_area_id": "0.0.0.1",
-                                                           "network_type": "P2P",
-                                                           "link_state": "up",
-                                                           "statistics": {
-                                                                "link_scope_lsa_count": 0,
-                                                                "link_scope_lsa_cksum_sum": 0
-                                                           },
-                                                           "destination": "11.11.11.11",
-                                                           "remote_id": "11.11.11.11"
-                                                      },
-                                                      "22.22.22.22 33.33.33.33": {
-                                                           "hello_interval": 3,
-                                                           "transmit_delay": 7,
-                                                           "unnumbered_interface": "loopback1",
-                                                           "link": "SL2",
-                                                           "index": 7,
-                                                           "local_id": "22.22.22.22",
-                                                           "retransmit_interval": 5,
-                                                           "hello_timer": "00:00:01",
-                                                           "cost": 111,
-                                                           "dead_interval": 13,
-                                                           "ip_address": "22.22.22.22",
-                                                           "backbone_area_id": "0.0.0.0",
-                                                           "state": "P2P",
-                                                           "wait_interval": 13,
-                                                           "transit_area_id": "0.0.0.1",
-                                                           "network_type": "P2P",
-                                                           "link_state": "up",
-                                                           "statistics": {
-                                                                "link_scope_lsa_count": 0,
-                                                                "link_scope_lsa_cksum_sum": 0
-                                                           },
-                                                           "authentication": {
-                                                                "auth_trailer_key": {
-                                                                     "crypto_algorithm": "simple"
-                                                                },
-                                                                "auth_trailer_key_chain": {
-                                                                     "key_chain": "test",
-                                                                     "status": "ready"
-                                                                }
-                                                           },
-                                                           "destination": "33.33.33.33",
-                                                           "remote_id": "33.33.33.33"
-                                                      }
-                                                 }
-                                            }
-                                       }
-                                  }
-                             }
-                        }
-                   }
-              }
-         }
-    }
+        'vrf': 
+            {'VRF1': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.1': 
+                                        {'sham_links': 
+                                            {'22.22.22.22 11.11.11.11': 
+                                                {'backbone_area_id': '0.0.0.0',
+                                                'cost': 1,
+                                                'dead_interval': 40,
+                                                'destination': '11.11.11.11',
+                                                'hello_interval': 10,
+                                                'hello_timer': '00:00:02',
+                                                'index': 6,
+                                                'interface_type': 'point-to-point',
+                                                'link_state': 'up',
+                                                'local_id': '22.22.22.22',
+                                                'name': 'SL1',
+                                                'nbr_adjs': 1,
+                                                'nbr_flood': 1,
+                                                'nbr_total': 1,
+                                                'neighbors': 
+                                                    {'11.11.11.11': 
+                                                        {'address': '11.11.11.11',
+                                                        'area': '0.0.0.1',
+                                                        'backbone_area_id': '0.0.0.0',
+                                                        'dbd_option': '0x72',
+                                                        'dead_timer': '00:00:38',
+                                                        'hello_option': '0x32',
+                                                        'instance': '1',
+                                                        'last_change': '08:10:01',
+                                                        'last_non_hello_received': 'never',
+                                                        'local': '22.22.22.22',
+                                                        'neighbor_router_id': '11.11.11.11',
+                                                        'remote': '11.11.11.11',
+                                                        'state': 'full',
+                                                        'statistics': {'nbr_event_count': 8}}},
+                                                'remote_id': '11.11.11.11',
+                                                'retransmit_interval': 5,
+                                                'state': 'P2P',
+                                                'statistics': 
+                                                    {'link_scope_lsa_cksum_sum': 0,
+                                                    'link_scope_lsa_count': 0},
+                                                'transit_area_id': '0.0.0.1',
+                                                'transmit_delay': 1,
+                                                'unnumbered_interface': 'loopback1',
+                                                'unnumbered_ip_address': '22.22.22.22',
+                                                'wait_interval': 40},
+                                            '22.22.22.22 33.33.33.33': 
+                                                {'authentication': 
+                                                    {'auth_trailer_key': 
+                                                        {'crypto_algorithm': 'simple'},
+                                                    'auth_trailer_key_chain': 
+                                                        {'key_chain': 'test',
+                                                        'status': 'ready'}},
+                                                'backbone_area_id': '0.0.0.0',
+                                                'cost': 111,
+                                                'dead_interval': 13,
+                                                'destination': '33.33.33.33',
+                                                'hello_interval': 3,
+                                                'hello_timer': '00:00:01',
+                                                'index': 7,
+                                                'nbr_adjs': 0,
+                                                'nbr_flood': 0,
+                                                'nbr_total': 0,
+                                                'interface_type': 'point-to-point',
+                                                'link_state': 'up',
+                                                'local_id': '22.22.22.22',
+                                                'name': 'SL2',
+                                                'remote_id': '33.33.33.33',
+                                                'retransmit_interval': 5,
+                                                'state': 'P2P',
+                                                'statistics': 
+                                                    {'link_scope_lsa_cksum_sum': 0,
+                                                    'link_scope_lsa_count': 0},
+                                                'transit_area_id': '0.0.0.1',
+                                                'transmit_delay': 7,
+                                                'unnumbered_interface': 'loopback1',
+                                                'unnumbered_ip_address': '22.22.22.22',
+                                                'wait_interval': 13}}}}}}}}}}}
 
-    golden_output = {'execute.return_value': '''        
+    golden_output = {'execute.return_value': '''
         SL1-0.0.0.0-22.22.22.22-11.11.11.11 line protocol is up
             Unnumbered interface using IP address of loopback1 (22.22.22.22)
             Process ID 1 VRF VRF1, area 0.0.0.1
@@ -1006,7 +895,7 @@ class test_show_ip_ospf_sham_links(unittest.TestCase):
             Number of opaque link LSAs: 0, checksum sum 0
             Adjacency Information :
             Destination IP address: 33.33.33.33
-    '''}
+        '''}
 
     def test_vrf_all(self):
         self.maxDiff = None
@@ -1023,9 +912,5 @@ class test_show_ip_ospf_sham_links(unittest.TestCase):
 
 
 
-
 if __name__ == '__main__':
     unittest.main()
-
-
-# vim: ft=python et sw=4
