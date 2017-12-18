@@ -65,7 +65,8 @@ class ShowIpOspfSchema(MetaParser):
                                         {'all': int},
                                     },
                                 Optional('bfd'): 
-                                    {'enable': bool},
+                                    {'enable': bool,
+                                    'strict_mode': bool,},
                                 'auto_cost': 
                                     {'enable': bool,
                                     'reference_bandwidth': int,
@@ -296,13 +297,13 @@ class ShowIpOspf(ShowIpOspfSchema):
                 continue
 
             # BFD is enabled
-            p10 = re.compile(r'^BFD +is +(?P<status>\w+)$')
+            p10 = re.compile(r'^BFD +is +enabled$')
             m = p10.match(line)
             if m:
                 if 'bfd' not in sub_dict:
                     sub_dict['bfd'] = {}
-                sub_dict['bfd']['enable'] = True \
-                    if 'enable' in m.groupdict()['status'].lower() else False
+                sub_dict['bfd']['enable'] = True
+                sub_dict['bfd']['strict_mode'] = True
                 continue
 
             # Reference Bandwidth is 40000 Mbps
@@ -593,6 +594,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                 continue
 
             # This area is a STUB area
+            # This area is a NSSA area
             p34 = re.compile(r'^This +area +is +a +(?P<type>\w+) +area$')
             m = p34.match(line)
             if m:
@@ -1007,7 +1009,7 @@ class ShowIpOspfLinksParser(MetaParser):
             m = p4.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
-                inst = m.groupdict()['inst']
+                inst = str(m.groupdict()['inst'])
                 area_id = m.groupdict()['area']
 
                 if 'vrf' not in ret_dict:
@@ -1775,7 +1777,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                              ' +(?P<vrf>(\S+)), +area +(?P<area>(\S+))$')
             m = p3.match(line)
             if m:
-                instance = int(m.groupdict()['pid'])
+                instance = str(m.groupdict()['pid'])
                 vrf = str(m.groupdict()['vrf'])
                 area = str(m.groupdict()['area'])
                 if 'vrf' not in ret_dict:

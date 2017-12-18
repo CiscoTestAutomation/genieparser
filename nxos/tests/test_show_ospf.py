@@ -95,7 +95,8 @@ class test_show_ip_ospf(unittest.TestCase):
                                         'total': 1}},
                                 'opaque_lsa_enable': True,
                                 'preference': 
-                                    {'single_value': {'all': 110}},
+                                    {'single_value': 
+                                        {'all': 110}},
                                 'router_id': '22.22.22.22',
                                 'single_tos_routes_enable': True,
                                 'spf_control': 
@@ -150,7 +151,8 @@ class test_show_ip_ospf(unittest.TestCase):
                                     'enable': False,
                                     'reference_bandwidth': 40000},
                                 'bfd': 
-                                    {'enable': True},
+                                    {'enable': True,
+                                    'strict_mode': True},
                                 'database_control': 
                                     {'max_lsa': 123},
                                 'enable': True,
@@ -930,7 +932,7 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
                 {'address_family': 
                     {'ipv4': 
                         {'instance': 
-                            {1: 
+                            {'1': 
                                 {'areas': 
                                     {'0.0.0.1': 
                                         {'interfaces': 
@@ -1050,7 +1052,7 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
                 {'address_family': 
                     {'ipv4': 
                         {'instance': 
-                            {1: 
+                            {'1': 
                                 {'areas': 
                                     {'0.0.0.0': 
                                         {'interfaces': 
