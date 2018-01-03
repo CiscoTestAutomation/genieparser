@@ -105,7 +105,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                     'max_pkt_sz': 1500,
                                                     'mtu': 0,
                                                     'multi_area_intf_count': 0,
-                                                    'name': '1 3.3.3.3',
+                                                    'name': 'SL0',
                                                     'nbr_count': 0,
                                                     'next': '0(0)/0(0)',
                                                     'num_nbrs_suppress_hello': 0,
@@ -478,7 +478,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'max_pkt_sz': 1500,
                                                 'mtu': 0,
                                                 'multi_area_intf_count': 0,
-                                                'name': '0.0.0.0 2.2.2.2',
+                                                'name': 'VL0',
                                                 'nbr_count': 1,
                                                 'next': '0(0)/0(0)',
                                                 'num_nbrs_suppress_hello': 1,
@@ -1090,6 +1090,8 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                             'nbrs_full': 1,
                                             'nbrs_staggered_mode': 0,
                                             'spf_runs_count': 79}}},
+                                'database_control': 
+                                    {'max_lsa': 123},
                                 'external_flood_list_length': 0,
                                 'flood_pacing_interval': 33,
                                 'lsd_revision': 1,
@@ -1300,6 +1302,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
          Adjacency stagger enabled; initial (per area): 2, maximum: 64
             Number of neighbors forming: 0, 1 full
          Maximum number of configured interfaces 1024
+         Maximum number of non self-generated LSA allowed 123
          Number of external LSA 0. Checksum Sum 00000000
          Number of opaque AS LSA 0. Checksum Sum 00000000
          Number of DCbitless external and opaque AS LSA 0

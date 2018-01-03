@@ -269,15 +269,21 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
 
                 # Determine if 'interface' or 'sham_link' or 'virtual_link'
                 if re.search('SL', interface):
+                    pattern = '(?P<ignore>\S+)_SL(?P<num>(\d+))'
+                    n = re.match(pattern, interface)
                     # Set values for dict
                     intf_type = 'sham_links'
+                    name = 'SL' + str(n.groupdict()['num'])
                 elif re.search('VL', interface):
+                    pattern = '(?P<ignore>\S+)_VL(?P<num>(\d+))'
+                    n = re.match(pattern, interface)
                     # Set values for dict
                     intf_type = 'virtual_links'
+                    name = 'VL' + str(n.groupdict()['num'])
                 else:
                     # Set values for dict
                     intf_type = 'interfaces'
-                    intf_name = interface
+                    name = interface
                     continue
 
             # Internet Address 10.2.3.3/24, Area 0
@@ -313,32 +319,32 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
 
                 # Get interface values
                 if intf_type == 'interfaces':
-                    interface = interface
+                    intf_name = interface
                 elif intf_type == 'virtual_links':
-                    interface = area + ' ' + router_id
+                    intf_name = area + ' ' + router_id
                 elif intf_type == 'sham_links':
-                    interface = pid + ' ' + router_id
+                    intf_name = pid + ' ' + router_id
 
                 # Build dictionary
                 if intf_type not in ret_dict['vrf'][vrf]['address_family']\
                         [af]['instance'][instance]['areas'][area]:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
                         [instance]['areas'][area][intf_type] = {}
-                if interface not in ret_dict['vrf'][vrf]['address_family'][af]\
+                if intf_name not in ret_dict['vrf'][vrf]['address_family'][af]\
                         ['instance'][instance]['areas'][area][intf_type]:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'][area][intf_type][interface] = {}
+                        [instance]['areas'][area][intf_type][intf_name] = {}
                 # Set sub_dict
                 sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
                             ['instance'][instance]['areas'][area]\
-                            [intf_type][interface]
+                            [intf_type][intf_name]
                 # Set keys
-                sub_dict['name'] = interface
                 sub_dict['demand_circuit'] = False
                 if 'bfd' not in sub_dict:
                     sub_dict['bfd'] = {}
                 sub_dict['bfd']['enable'] = False
                 try:
+                    sub_dict['name'] = name
                     sub_dict['ip_address'] = ip_address
                     sub_dict['enable'] = bool_dict[enable]
                     sub_dict['line_protocol'] = bool_dict[line_protocol]
@@ -914,6 +920,8 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                 'role': str,
                                 'nsr': 
                                     {'enable': bool},
+                                Optional('database_control'): 
+                                    {'max_lsa': int},
                                 'stub_router': 
                                     {Optional('always'): 
                                         {'always': bool,
@@ -1604,6 +1612,17 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                     int(m.groupdict()['full'])
                 continue
 
+            # Maximum number of non self-generated LSA allowed 123
+            p41 = re.compile(r'^Maximum +number +of +non +self-generated +LSA'
+                              ' +allowed +(?P<max_lsa>(\d+))$')
+            m = p41.match(line)
+            if m:
+                if 'database_control' not in sub_dict:
+                    sub_dict['database_control'] = {}
+                sub_dict['database_control']['max_lsa'] = \
+                    int(m.groupdict()['max_lsa'])
+                continue
+        
         return ret_dict
 
 
