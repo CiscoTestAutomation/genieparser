@@ -553,7 +553,71 @@ class ShowOspfVrfAllInclusiveNeighborDetailSchema(MetaParser):
                                 {'total_neighbor_count': int,
                                 'areas': 
                                     {Any(): 
-                                        {'interfaces': 
+                                        {Optional('interfaces'): 
+                                            {Any(): 
+                                                {'neighbors': 
+                                                    {Any(): 
+                                                        {'neighbor_router_id': str,
+                                                        'address': str,
+                                                        'priority': int,
+                                                        'state': str,
+                                                        'num_state_changes': int,
+                                                        'dr_ip_addr': str,
+                                                        'bdr_ip_addr': str,
+                                                        Optional('options'): str,
+                                                        Optional('lls_options'): str,
+                                                        Optional('dead_timer'): str,
+                                                        Optional('neighbor_uptime'): str,
+                                                        Optional('dbd_retrans'): int,
+                                                        Optional('index'): str,
+                                                        Optional('retransmission_queue_length'): int,
+                                                        Optional('num_retransmission'): int,
+                                                        Optional('first'): str,
+                                                        Optional('next'): str,
+                                                        Optional('last_retrans_scan_length'): int,
+                                                        Optional('last_retrans_max_scan_length'): int,
+                                                        Optional('last_retrans_scan_time_msec'): int,
+                                                        Optional('last_retrans_max_scan_time_msec'): int,
+                                                        Optional('ls_ack_list'): str,
+                                                        Optional('ls_ack_list_pending'): int,
+                                                        Optional('high_water_mark'): int,
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        Optional('sham_links'):
+                                            {Any(): 
+                                                {'neighbors': 
+                                                    {Any(): 
+                                                        {'neighbor_router_id': str,
+                                                        'address': str,
+                                                        'priority': int,
+                                                        'state': str,
+                                                        'num_state_changes': int,
+                                                        'dr_ip_addr': str,
+                                                        'bdr_ip_addr': str,
+                                                        Optional('options'): str,
+                                                        Optional('lls_options'): str,
+                                                        Optional('dead_timer'): str,
+                                                        Optional('neighbor_uptime'): str,
+                                                        Optional('dbd_retrans'): int,
+                                                        Optional('index'): str,
+                                                        Optional('retransmission_queue_length'): int,
+                                                        Optional('num_retransmission'): int,
+                                                        Optional('first'): str,
+                                                        Optional('next'): str,
+                                                        Optional('last_retrans_scan_length'): int,
+                                                        Optional('last_retrans_max_scan_length'): int,
+                                                        Optional('last_retrans_scan_time_msec'): int,
+                                                        Optional('last_retrans_max_scan_time_msec'): int,
+                                                        Optional('ls_ack_list'): str,
+                                                        Optional('ls_ack_list_pending'): int,
+                                                        Optional('high_water_mark'): int,
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        Optional('virtual_links'):
                                             {Any(): 
                                                 {'neighbors': 
                                                     {Any(): 
@@ -653,11 +717,26 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
 
             # In the area 0 via interface GigabitEthernet0/0/0/2 
             p3 = re.compile(r'^In +the +area +(?P<area>(\S+)) +via +interface'
-                             ' +(?P<intf>(\S+))$')
+                             ' +(?P<interface>(\S+))$')
             m = p3.match(line)
             if m:
-                area = str(m.groupdict()['area'])
-                interface = str(m.groupdict()['intf'])
+                area = str(IPAddress(str(m.groupdict()['area'])))
+                interface = str(m.groupdict()['interface'])
+
+                # Determine if 'interface' or 'sham_link' or 'virtual_link'
+                if re.search('SL', interface):
+                    # Set values for dict
+                    intf_type = 'sham_links'
+                    intf_name = area + ' ' + address
+                elif re.search('VL', interface):
+                    # Set values for dict
+                    intf_type = 'virtual_links'
+                    intf_name = area + ' ' + address
+                else:
+                    # Set values for dict
+                    intf_type = 'interfaces'
+                    intf_name = interface
+
                 if 'areas' not in ret_dict['vrf'][vrf]['address_family']\
                         [af]['instance'][instance]:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
@@ -666,30 +745,30 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                         ['instance'][instance]['areas']:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
                         [instance]['areas'][area] = {}
-                if 'interfaces' not in ret_dict['vrf'][vrf]['address_family']\
+                if intf_type not in ret_dict['vrf'][vrf]['address_family']\
                         [af]['instance'][instance]['areas'][area]:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'][area]['interfaces'] = {}
-                if interface not in ret_dict['vrf'][vrf]['address_family'][af]\
-                        ['instance'][instance]['areas'][area]['interfaces']:
+                        [instance]['areas'][area][intf_type] = {}
+                if intf_name not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area][intf_type]:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'][area]['interfaces'][interface] = {}
+                        [instance]['areas'][area][intf_type][intf_name] = {}
                 if 'neighbors' not in ret_dict['vrf'][vrf]['address_family']\
-                        [af]['instance'][instance]['areas'][area]['interfaces']\
-                        [interface]:
+                        [af]['instance'][instance]['areas'][area][intf_type]\
+                        [intf_name]:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'][area]['interfaces'][interface]\
+                        [instance]['areas'][area][intf_type][intf_name]\
                         ['neighbors'] = {}
                 if neighbor not in ret_dict['vrf'][vrf]['address_family']\
-                        [af]['instance'][instance]['areas'][area]['interfaces']\
-                        [interface]['neighbors']:
+                        [af]['instance'][instance]['areas'][area][intf_type]\
+                        [intf_name]['neighbors']:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'][area]['interfaces'][interface]\
+                        [instance]['areas'][area][intf_type][intf_name]\
                         ['neighbors'][neighbor] = {}
                 # Set sub_dict
                 sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
-                            ['instance'][instance]['areas'][area]['interfaces']\
-                            [interface]['neighbors'][neighbor]
+                            ['instance'][instance]['areas'][area][intf_type]\
+                            [intf_name]['neighbors'][neighbor]
                 sub_dict['neighbor_router_id'] = neighbor
                 sub_dict['address'] = address
                 continue

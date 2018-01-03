@@ -724,7 +724,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                         {'instance': 
                             {'1': 
                                 {'areas': 
-                                    {'1': 
+                                    {'0.0.0.1': 
                                         {'interfaces': 
                                             {'GigabitEthernet0/0/0/1': 
                                                 {'neighbors': 
@@ -760,7 +760,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                         {'instance': 
                             {'1': 
                                 {'areas': 
-                                    {'0': 
+                                    {'0.0.0.0': 
                                         {'interfaces': 
                                             {'GigabitEthernet0/0/0/0': 
                                                 {'neighbors': 
@@ -880,12 +880,167 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
         Total neighbor count: 1
         '''}
 
-    def test_full(self):
+    golden_parsed_output2 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.0': 
+                                        {'virtual_links': 
+                                            {'0.0.0.0 20.2.4.4': 
+                                                {'neighbors': 
+                                                    {'4.4.4.4': 
+                                                        {'address': '20.2.4.4',
+                                                        'bdr_ip_addr': '0.0.0.0',
+                                                        'dbd_retrans': 0,
+                                                        'dr_ip_addr': '0.0.0.0',
+                                                        'first': '0(0)/0(0)',
+                                                        'high_water_mark': 0,
+                                                        'index': '1/3,',
+                                                        'last_retrans_max_scan_length': 0,
+                                                        'last_retrans_max_scan_time_msec': 0,
+                                                        'last_retrans_scan_length': 0,
+                                                        'last_retrans_scan_time_msec': 0,
+                                                        'lls_options': '0x1 (LR)',
+                                                        'ls_ack_list': 'NSR-sync',
+                                                        'ls_ack_list_pending': 0,
+                                                        'neighbor_router_id': '4.4.4.4',
+                                                        'neighbor_uptime': '04:58:24',
+                                                        'next': '0(0)/0(0)',
+                                                        'num_retransmission': 0,
+                                                        'num_state_changes': 7,
+                                                        'options': '0x72',
+                                                        'priority': 1,
+                                                        'retransmission_queue_length': 0,
+                                                        'state': 'FULL'}}}}},
+                                    '0.0.0.1': 
+                                        {'interfaces': 
+                                            {'GigabitEthernet0/0/0/1': 
+                                                {'neighbors': 
+                                                    {'3.3.3.3': 
+                                                        {'address': '20.2.3.3',
+                                                        'bdr_ip_addr': '20.2.3.2',
+                                                        'dbd_retrans': 0,
+                                                        'dead_timer': '00:00:31',
+                                                        'dr_ip_addr': '20.2.3.3',
+                                                        'first': '0(0)/0(0)',
+                                                        'high_water_mark': 0,
+                                                        'index': '2/2,',
+                                                        'last_retrans_max_scan_length': 1,
+                                                        'last_retrans_max_scan_time_msec': 0,
+                                                        'last_retrans_scan_length': 1,
+                                                        'last_retrans_scan_time_msec': 0,
+                                                        'ls_ack_list': 'NSR-sync',
+                                                        'ls_ack_list_pending': 0,
+                                                        'neighbor_router_id': '3.3.3.3',
+                                                        'neighbor_uptime': '05:00:13',
+                                                        'next': '0(0)/0(0)',
+                                                        'num_retransmission': 2,
+                                                        'num_state_changes': 6,
+                                                        'options': '0x42',
+                                                        'priority': 1,
+                                                        'retransmission_queue_length': 0,
+                                                        'state': 'FULL'}}},
+                                            'GigabitEthernet0/0/0/3': 
+                                                {'neighbors': 
+                                                    {'4.4.4.4': 
+                                                        {'address': '20.2.4.4',
+                                                        'bdr_ip_addr': '20.2.4.2',
+                                                        'dbd_retrans': 0,
+                                                        'dead_timer': '00:00:32',
+                                                        'dr_ip_addr': '20.2.4.4',
+                                                        'first': '0(0)/0(0)',
+                                                        'high_water_mark': 0,
+                                                        'index': '1/1,',
+                                                        'last_retrans_max_scan_length': 0,
+                                                        'last_retrans_max_scan_time_msec': 0,
+                                                        'last_retrans_scan_length': 0,
+                                                        'last_retrans_scan_time_msec': 0,
+                                                        'lls_options': '0x1 (LR)',
+                                                        'ls_ack_list': 'NSR-sync',
+                                                        'ls_ack_list_pending': 0,
+                                                        'neighbor_router_id': '4.4.4.4',
+                                                        'neighbor_uptime': '05:00:21',
+                                                        'next': '0(0)/0(0)',
+                                                        'num_retransmission': 0,
+                                                        'num_state_changes': 6,
+                                                        'options': '0x52',
+                                                        'priority': 1,
+                                                        'retransmission_queue_length': 0,
+                                                        'state': 'FULL'}}}}}},
+                                'total_neighbor_count': 3}}}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        RP/0/0/CPU0:R2_ospf_xr#show ospf vrf all-inclusive neighbor detail (including virtual-link)
+        Tue Dec 12 20:21:16.846 UTC
+
+        * Indicates MADJ interface
+        # Indicates Neighbor awaiting BFD session up
+
+        Neighbors for OSPF 1
+
+         Neighbor 4.4.4.4, interface address 20.2.4.4
+            In the area 0 via interface OSPF_VL0 
+            Neighbor priority is 1, State is FULL, 7 state changes
+            DR is 0.0.0.0 BDR is 0.0.0.0
+            Options is 0x72  
+            LLS Options is 0x1 (LR)
+            Neighbor is up for 04:58:24
+            Number of DBD retrans during last exchange 0
+            Index 1/3, retransmission queue length 0, number of retransmission 0
+            First 0(0)/0(0) Next 0(0)/0(0)
+            Last retransmission scan length is 0, maximum is 0
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+            LS Ack list: NSR-sync pending 0, high water mark 0
+
+         Neighbor 3.3.3.3, interface address 20.2.3.3
+            In the area 1 via interface GigabitEthernet0/0/0/1 
+            Neighbor priority is 1, State is FULL, 6 state changes
+            DR is 20.2.3.3 BDR is 20.2.3.2
+            Options is 0x42  
+            Dead timer due in 00:00:31
+            Neighbor is up for 05:00:13
+            Number of DBD retrans during last exchange 0
+            Index 2/2, retransmission queue length 0, number of retransmission 2
+            First 0(0)/0(0) Next 0(0)/0(0)
+            Last retransmission scan length is 1, maximum is 1
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+            LS Ack list: NSR-sync pending 0, high water mark 0
+
+         Neighbor 4.4.4.4, interface address 20.2.4.4
+            In the area 1 via interface GigabitEthernet0/0/0/3 
+            Neighbor priority is 1, State is FULL, 6 state changes
+            DR is 20.2.4.4 BDR is 20.2.4.2
+            Options is 0x52  
+            LLS Options is 0x1 (LR)
+            Dead timer due in 00:00:32
+            Neighbor is up for 05:00:21
+            Number of DBD retrans during last exchange 0
+            Index 1/1, retransmission queue length 0, number of retransmission 0
+            First 0(0)/0(0) Next 0(0)/0(0)
+            Last retransmission scan length is 0, maximum is 0
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+            LS Ack list: NSR-sync pending 0, high water mark 0
+
+        Total neighbor count: 3
+        '''}
+
+    def test_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowOspfVrfAllInclusiveNeighborDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_full2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowOspfVrfAllInclusiveNeighborDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_empty(self):
         self.maxDiff = None
