@@ -22,6 +22,7 @@ IOSXR parsers for the following show commands:
 # Python
 import re
 import xmltodict
+from netaddr import IPAddress
 
 # Metaparser
 from metaparser import MetaParser
@@ -45,7 +46,107 @@ class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
                             {Any(): 
                                 {'areas': 
                                     {Any(): 
-                                        {'interfaces': 
+                                        {Optional('interfaces'): 
+                                            {Any(): 
+                                                {'name': str,
+                                                'enable': bool,
+                                                'line_protocol': bool,
+                                                'ip_address': str,
+                                                'demand_circuit': bool,
+                                                'process_id': str,
+                                                'router_id': str,
+                                                'interface_type': str,
+                                                'bfd': 
+                                                    {'enable': bool,
+                                                    Optional('interval'): int,
+                                                    Optional('min_interval'): int,
+                                                    Optional('multiplier'): int,
+                                                    Optional('mode'): str,
+                                                    },
+                                                Optional('cost'): int,
+                                                Optional('transmit_delay'): int,
+                                                Optional('state'): str,
+                                                Optional('priority'): int,
+                                                Optional('mtu'): int,
+                                                Optional('max_pkt_sz'): int,
+                                                Optional('dr_router_id'): str,
+                                                Optional('dr_ip_addr'): str,
+                                                Optional('bdr_router_id'): str,
+                                                Optional('bdr_ip_addr'): str,
+                                                Optional('hello_interval'): int,
+                                                Optional('dead_interval'): int,
+                                                Optional('wait_interval'): int,
+                                                Optional('retransmit_interval'): int,
+                                                Optional('passive'): bool,
+                                                Optional('hello_due_in'): str,
+                                                Optional('index'): str,
+                                                Optional('flood_queue_length'): int,
+                                                Optional('next'): str,
+                                                Optional('last_flood_scan_length'): int,
+                                                Optional('max_flood_scan_length'): int,
+                                                Optional('last_flood_scan_time_msec'): int,
+                                                Optional('max_flood_scan_time_msec'): int,
+                                                Optional('ls_ack_list'): str,
+                                                Optional('ls_ack_list_length'): int,
+                                                Optional('high_water_mark'): int,
+                                                Optional('nbr_count'): int,
+                                                Optional('adj_nbr_count'): int,
+                                                Optional('adj_nbr'): str,
+                                                Optional('num_nbrs_suppress_hello'): int,
+                                                Optional('multi_area_intf_count'): int,
+                                                },
+                                            },
+                                        Optional('virtual_links'):
+                                            {Any(): 
+                                                {'name': str,
+                                                'enable': bool,
+                                                'line_protocol': bool,
+                                                'ip_address': str,
+                                                'demand_circuit': bool,
+                                                'process_id': str,
+                                                'router_id': str,
+                                                'interface_type': str,
+                                                'bfd': 
+                                                    {'enable': bool,
+                                                    Optional('interval'): int,
+                                                    Optional('min_interval'): int,
+                                                    Optional('multiplier'): int,
+                                                    Optional('mode'): str,
+                                                    },
+                                                Optional('cost'): int,
+                                                Optional('transmit_delay'): int,
+                                                Optional('state'): str,
+                                                Optional('priority'): int,
+                                                Optional('mtu'): int,
+                                                Optional('max_pkt_sz'): int,
+                                                Optional('dr_router_id'): str,
+                                                Optional('dr_ip_addr'): str,
+                                                Optional('bdr_router_id'): str,
+                                                Optional('bdr_ip_addr'): str,
+                                                Optional('hello_interval'): int,
+                                                Optional('dead_interval'): int,
+                                                Optional('wait_interval'): int,
+                                                Optional('retransmit_interval'): int,
+                                                Optional('passive'): bool,
+                                                Optional('hello_due_in'): str,
+                                                Optional('index'): str,
+                                                Optional('flood_queue_length'): int,
+                                                Optional('next'): str,
+                                                Optional('last_flood_scan_length'): int,
+                                                Optional('max_flood_scan_length'): int,
+                                                Optional('last_flood_scan_time_msec'): int,
+                                                Optional('max_flood_scan_time_msec'): int,
+                                                Optional('ls_ack_list'): str,
+                                                Optional('ls_ack_list_length'): int,
+                                                Optional('high_water_mark'): int,
+                                                Optional('nbr_count'): int,
+                                                Optional('adj_nbr_count'): int,
+                                                Optional('adj_nbr'): str,
+                                                Optional('num_nbrs_suppress_hello'): int,
+                                                Optional('multi_area_intf_count'): int,
+                                                },
+                                            },
+                                        Optional('sham_links'):
                                             {Any(): 
                                                 {'name': str,
                                                 'enable': bool,
@@ -155,6 +256,8 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                     continue
 
             # GigabitEthernet0/0/0/2 is up, line protocol is up
+            # OSPF_SL0 is unknown, line protocol is up
+            # OSPF_VL0 is unknown, line protocol is up
             p2 = re.compile(r'^(?P<interface>(\S+)) +is'
                              ' +(?P<enable>(unknown|up|down)), +line +protocol'
                              ' +is +(?P<line_protocol>(up|down))$')
@@ -163,14 +266,27 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 interface = str(m.groupdict()['interface'])
                 enable = str(m.groupdict()['enable'])
                 line_protocol = str(m.groupdict()['line_protocol'])
-                continue
+
+                # Determine if 'interface' or 'sham_link' or 'virtual_link'
+                if re.search('SL', interface):
+                    # Set values for dict
+                    intf_type = 'sham_links'
+                elif re.search('VL', interface):
+                    # Set values for dict
+                    intf_type = 'virtual_links'
+                else:
+                    # Set values for dict
+                    intf_type = 'interfaces'
+                    intf_name = interface
+                    continue
 
             # Internet Address 10.2.3.3/24, Area 0
             p3 = re.compile(r'^Internet +Address +(?P<address>(\S+)),'
                              ' +Area +(?P<area>(\S+))$')
             m = p3.match(line)
             if m:
-                area = str(m.groupdict()['area'])
+                ip_address = str(m.groupdict()['address'])
+                area = str(IPAddress(str(m.groupdict()['area'])))
                 if 'areas' not in ret_dict['vrf'][vrf]['address_family']\
                         [af]['instance'][instance]:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
@@ -179,30 +295,7 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                         ['instance'][instance]['areas']:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
                         [instance]['areas'][area] = {}
-                if 'interfaces' not in ret_dict['vrf'][vrf]['address_family']\
-                        [af]['instance'][instance]['areas'][area]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'][area]['interfaces'] = {}
-                if interface not in ret_dict['vrf'][vrf]['address_family'][af]\
-                        ['instance'][instance]['areas'][area]['interfaces']:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'][area]['interfaces'][interface] = {}
-                # Set sub_dict
-                sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
-                            ['instance'][instance]['areas'][area]\
-                            ['interfaces'][interface]
-                # Set keys
-                sub_dict['ip_address'] = str(m.groupdict()['address'])
-                sub_dict['demand_circuit'] = False
-                if 'bfd' not in sub_dict:
-                    sub_dict['bfd'] = {}
-                sub_dict['bfd']['enable'] = False
-                try:
-                    sub_dict['name'] = interface
-                    sub_dict['enable'] = bool_dict[enable]
-                    sub_dict['line_protocol'] = bool_dict[line_protocol]
-                except:
-                    pass
+                    continue
 
             # Process ID 1, Router ID 3.3.3.3, Network Type POINT_TO_POINT
             # Process ID 1, Router ID 3.3.3.3, Network Type BROADCAST, Cost: 1
@@ -210,13 +303,51 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
             p4 = re.compile(r'^Process +ID +(?P<pid>(\S+))'
                              '(?:, +VRF +(?P<vrf>(\S+)))?'
                              ', +Router +ID +(?P<router_id>(\S+))'
-                             ', +Network +Type +(?P<intf_type>(\S+))'
+                             ', +Network +Type +(?P<interface_type>(\S+))'
                              '(?:, +Cost: +(?P<cost>(\d+)))?$')
             m = p4.match(line)
             if m:
-                sub_dict['process_id'] = str(m.groupdict()['pid'])
-                sub_dict['router_id'] = str(m.groupdict()['router_id'])
-                sub_dict['interface_type'] = str(m.groupdict()['intf_type'])
+                pid = str(m.groupdict()['pid'])
+                router_id = str(m.groupdict()['router_id'])
+                interface_type = str(m.groupdict()['interface_type'])
+
+                # Get interface values
+                if intf_type == 'interfaces':
+                    interface = interface
+                elif intf_type == 'virtual_links':
+                    interface = area + ' ' + router_id
+                elif intf_type == 'sham_links':
+                    interface = pid + ' ' + router_id
+
+                # Build dictionary
+                if intf_type not in ret_dict['vrf'][vrf]['address_family']\
+                        [af]['instance'][instance]['areas'][area]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area][intf_type] = {}
+                if interface not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area][intf_type]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area][intf_type][interface] = {}
+                # Set sub_dict
+                sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
+                            ['instance'][instance]['areas'][area]\
+                            [intf_type][interface]
+                # Set keys
+                sub_dict['name'] = interface
+                sub_dict['demand_circuit'] = False
+                if 'bfd' not in sub_dict:
+                    sub_dict['bfd'] = {}
+                sub_dict['bfd']['enable'] = False
+                try:
+                    sub_dict['ip_address'] = ip_address
+                    sub_dict['enable'] = bool_dict[enable]
+                    sub_dict['line_protocol'] = bool_dict[line_protocol]
+                except:
+                    pass
+
+                sub_dict['process_id'] = pid
+                sub_dict['router_id'] = router_id
+                sub_dict['interface_type'] = interface_type
                 if m.groupdict()['cost']:
                     sub_dict['cost'] = int(m.groupdict()['cost'])
                 continue
