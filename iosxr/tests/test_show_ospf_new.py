@@ -13,8 +13,9 @@ from metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyE
 # iosxr show_ospf
 from parser.iosxr.show_ospf_new import ShowOspfVrfAllInclusiveInterface,\
                                        ShowOspfVrfAllInclusiveNeighborDetail,\
-                                       ShowOspfVrfAllInclusive
-
+                                       ShowOspfVrfAllInclusive,\
+                                       ShowOspfVrfAllInclusiveShamLinks,\
+                                       ShowOspfVrfAllInclusiveVirtualLinks
 
 # ======================================================
 #  Unit test for 'show ospf vrf all-inclusive interface'
@@ -54,7 +55,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'hello_due_in': '00:00:03:040',
                                                 'hello_interval': 10,
                                                 'index': '1/1',
-                                                'interface_type': 'BROADCAST',
+                                                'interface_type': 'broadcast',
                                                 'ip_address': '20.3.7.3/24',
                                                 'last_flood_scan_length': 1,
                                                 'last_flood_scan_time_msec': 0,
@@ -76,46 +77,46 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
                                                 'router_id': '3.3.3.3',
-                                                'state': 'BDR',
+                                                'state': 'bdr',
                                                 'transmit_delay': 1,
                                                 'wait_interval': 40}},
-                                            'sham_links': 
-                                                {'1 3.3.3.3': 
-                                                    {'adj_nbr_count': 0,
-                                                    'bfd': 
-                                                        {'enable': False},
-                                                    'cost': 111,
-                                                    'dead_interval': 13,
-                                                    'demand_circuit': True,
-                                                    'enable': False,
-                                                    'flood_queue_length': 0,
-                                                    'hello_due_in': '00:00:00:864',
-                                                    'hello_interval': 3,
-                                                    'high_water_mark': 9,
-                                                    'index': '2/2',
-                                                    'interface_type': 'SHAM_LINK',
-                                                    'ip_address': '0.0.0.0/0',
-                                                    'last_flood_scan_length': 1,
-                                                    'last_flood_scan_time_msec': 0,
-                                                    'line_protocol': True,
-                                                    'ls_ack_list': 'current',
-                                                    'ls_ack_list_length': 0,
-                                                    'max_flood_scan_length': 7,
-                                                    'max_flood_scan_time_msec': 0,
-                                                    'max_pkt_sz': 1500,
-                                                    'mtu': 0,
-                                                    'multi_area_intf_count': 0,
-                                                    'name': 'SL0',
-                                                    'nbr_count': 0,
-                                                    'next': '0(0)/0(0)',
-                                                    'num_nbrs_suppress_hello': 0,
-                                                    'passive': False,
-                                                    'process_id': '1',
-                                                    'retransmit_interval': 5,
-                                                    'router_id': '3.3.3.3',
-                                                    'state': 'POINT_TO_POINT',
-                                                    'transmit_delay': 7,
-                                                    'wait_interval': 13}}}}}}}}},
+                                        'sham_links': 
+                                            {'1 3.3.3.3': 
+                                                {'adj_nbr_count': 0,
+                                                'bfd': 
+                                                    {'enable': False},
+                                                'cost': 111,
+                                                'dead_interval': 13,
+                                                'demand_circuit': True,
+                                                'enable': False,
+                                                'flood_queue_length': 0,
+                                                'hello_due_in': '00:00:00:864',
+                                                'hello_interval': 3,
+                                                'high_water_mark': 9,
+                                                'index': '2/2',
+                                                'interface_type': 'sham-link',
+                                                'ip_address': '0.0.0.0/0',
+                                                'last_flood_scan_length': 1,
+                                                'last_flood_scan_time_msec': 0,
+                                                'line_protocol': True,
+                                                'ls_ack_list': 'current',
+                                                'ls_ack_list_length': 0,
+                                                'max_flood_scan_length': 7,
+                                                'max_flood_scan_time_msec': 0,
+                                                'max_pkt_sz': 1500,
+                                                'mtu': 0,
+                                                'multi_area_intf_count': 0,
+                                                'name': 'SL0',
+                                                'nbr_count': 0,
+                                                'next': '0(0)/0(0)',
+                                                'num_nbrs_suppress_hello': 0,
+                                                'passive': False,
+                                                'process_id': '1',
+                                                'retransmit_interval': 5,
+                                                'router_id': '3.3.3.3',
+                                                'state': 'point-to-point',
+                                                'transmit_delay': 7,
+                                                'wait_interval': 13}}}}}}}}},
             'default': 
                 {'address_family': 
                     {'ipv4': 
@@ -139,7 +140,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'hello_due_in': '00:00:07:171',
                                                 'hello_interval': 10,
                                                 'index': '1/1',
-                                                'interface_type': 'BROADCAST',
+                                                'interface_type': 'broadcast',
                                                 'ip_address': '10.3.4.3/24',
                                                 'last_flood_scan_length': 1,
                                                 'last_flood_scan_time_msec': 0,
@@ -161,7 +162,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
                                                 'router_id': '3.3.3.3',
-                                                'state': 'BDR',
+                                                'state': 'bdr',
                                                 'transmit_delay': 1,
                                                 'wait_interval': 40},
                                             'GigabitEthernet0/0/0/2': 
@@ -179,7 +180,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'hello_due_in': '00:00:07:587',
                                                 'hello_interval': 10,
                                                 'index': '2/2',
-                                                'interface_type': 'BROADCAST',
+                                                'interface_type': 'broadcast',
                                                 'ip_address': '10.2.3.3/24',
                                                 'last_flood_scan_length': 1,
                                                 'last_flood_scan_time_msec': 0,
@@ -201,7 +202,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
                                                 'router_id': '3.3.3.3',
-                                                'state': 'DR',
+                                                'state': 'dr',
                                                 'transmit_delay': 1,
                                                 'wait_interval': 40},
                                             'Loopback0': 
@@ -210,7 +211,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'cost': 1,
                                                 'demand_circuit': False,
                                                 'enable': True,
-                                                'interface_type': 'LOOPBACK',
+                                                'interface_type': 'loopback',
                                                 'ip_address': '3.3.3.3/32',
                                                 'line_protocol': True,
                                                 'name': 'Loopback0',
@@ -226,7 +227,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'flood_queue_length': 0,
                                                 'hello_interval': 10,
                                                 'index': '0/0',
-                                                'interface_type': 'POINT_TO_POINT',
+                                                'interface_type': 'point-to-point',
                                                 'ip_address': '0.0.0.0/0',
                                                 'last_flood_scan_length': 0,
                                                 'last_flood_scan_time_msec': 0,
@@ -247,7 +248,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
                                                 'router_id': '3.3.3.3',
-                                                'state': 'POINT_TO_POINT',
+                                                'state': 'point-to-point',
                                                 'transmit_delay': 1,
                                                 'wait_interval': 0}}}}}}}}}}}
 
@@ -376,7 +377,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'hello_interval': 10,
                                                 'high_water_mark': 0,
                                                 'index': '2/3',
-                                                'interface_type': 'BROADCAST',
+                                                'interface_type': 'broadcast',
                                                 'ip_address': '10.2.3.2/24',
                                                 'last_flood_scan_length': 0,
                                                 'last_flood_scan_time_msec': 0,
@@ -397,7 +398,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
                                                 'router_id': '2.2.2.2',
-                                                'state': 'DR',
+                                                'state': 'dr',
                                                 'transmit_delay': 1,
                                                 'wait_interval': 40},
                                             'GigabitEthernet0/0/0/2': 
@@ -415,7 +416,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'hello_interval': 10,
                                                 'high_water_mark': 0,
                                                 'index': '3/4',
-                                                'interface_type': 'BROADCAST',
+                                                'interface_type': 'broadcast',
                                                 'ip_address': '10.1.2.2/24',
                                                 'last_flood_scan_length': 0,
                                                 'last_flood_scan_time_msec': 0,
@@ -436,7 +437,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
                                                 'router_id': '2.2.2.2',
-                                                'state': 'DR',
+                                                'state': 'dr',
                                                 'transmit_delay': 1,
                                                 'wait_interval': 40},
                                             'Loopback0': 
@@ -445,7 +446,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'cost': 1,
                                                 'demand_circuit': False,
                                                 'enable': True,
-                                                'interface_type': 'LOOPBACK',
+                                                'interface_type': 'loopback',
                                                 'ip_address': '2.2.2.2/32',
                                                 'line_protocol': True,
                                                 'name': 'Loopback0',
@@ -466,7 +467,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'hello_interval': 10,
                                                 'high_water_mark': 20,
                                                 'index': '4/7',
-                                                'interface_type': 'VIRTUAL_LINK',
+                                                'interface_type': 'virtual-link',
                                                 'ip_address': '0.0.0.0/0',
                                                 'last_flood_scan_length': 7,
                                                 'last_flood_scan_time_msec': 0,
@@ -486,7 +487,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
                                                 'router_id': '2.2.2.2',
-                                                'state': 'POINT_TO_POINT',
+                                                'state': 'point-to-point',
                                                 'transmit_delay': 1,
                                                 'wait_interval': 40}}},
                                     '0.0.0.1': 
@@ -507,7 +508,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'hello_interval': 10,
                                                 'high_water_mark': 3,
                                                 'index': '2/5',
-                                                'interface_type': 'BROADCAST',
+                                                'interface_type': 'broadcast',
                                                 'ip_address': '20.2.3.2/24',
                                                 'last_flood_scan_length': 9,
                                                 'last_flood_scan_time_msec': 0,
@@ -528,7 +529,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
                                                 'router_id': '2.2.2.2',
-                                                'state': 'BDR',
+                                                'state': 'bdr',
                                                 'transmit_delay': 1,
                                                 'wait_interval': 40},
                                             'GigabitEthernet0/0/0/3': 
@@ -547,7 +548,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'hello_interval': 10,
                                                 'high_water_mark': 21,
                                                 'index': '3/6',
-                                                'interface_type': 'BROADCAST',
+                                                'interface_type': 'broadcast',
                                                 'ip_address': '20.2.4.2/24',
                                                 'last_flood_scan_length': 9,
                                                 'last_flood_scan_time_msec': 0,
@@ -568,7 +569,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
                                                 'router_id': '2.2.2.2',
-                                                'state': 'BDR',
+                                                'state': 'bdr',
                                                 'transmit_delay': 1,
                                                 'wait_interval': 40},
                                             'Loopback1': 
@@ -577,7 +578,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                     'cost': 1,
                                                     'demand_circuit': False,
                                                     'enable': True,
-                                                    'interface_type': 'LOOPBACK',
+                                                    'interface_type': 'loopback',
                                                     'ip_address': '22.22.22.22/32',
                                                     'line_protocol': True,
                                                     'name': 'Loopback1',
@@ -684,21 +685,21 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
           Multi-area interface Count is 0
         '''}
 
-    def test_full1(self):
+    def test_show_ospf_vrf_all_inclusive_interface_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowOspfVrfAllInclusiveInterface(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-    def test_full2(self):
+    def test_show_ospf_vrf_all_inclusive_interface_full2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowOspfVrfAllInclusiveInterface(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
-    def test_empty(self):
+    def test_show_ospf_vrf_all_inclusive_interface_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowOspfVrfAllInclusiveInterface(device=self.device)
@@ -752,7 +753,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                                         'options': '0x52',
                                                         'priority': 1,
                                                         'retransmission_queue_length': 0,
-                                                        'state': 'FULL'}}}}}},
+                                                        'state': 'full'}}}}}},
                                 'total_neighbor_count': 1}}}}},
             'default': 
                 {'address_family': 
@@ -788,7 +789,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                                         'options': '0x52',
                                                         'priority': 1,
                                                         'retransmission_queue_length': 0,
-                                                        'state': 'FULL'}}},
+                                                        'state': 'full'}}},
                                             'GigabitEthernet0/0/0/2': 
                                                 {'neighbors': 
                                                     {'2.2.2.2': 
@@ -814,7 +815,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                                         'options': '0x42',
                                                         'priority': 1,
                                                         'retransmission_queue_length': 0,
-                                                        'state': 'FULL'}}}}}},
+                                                        'state': 'full'}}}}}},
                                 'total_neighbor_count': 2}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
@@ -915,7 +916,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                                         'options': '0x72',
                                                         'priority': 1,
                                                         'retransmission_queue_length': 0,
-                                                        'state': 'FULL'}}}}},
+                                                        'state': 'full'}}}}},
                                     '0.0.0.1': 
                                         {'interfaces': 
                                             {'GigabitEthernet0/0/0/1': 
@@ -943,7 +944,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                                         'options': '0x42',
                                                         'priority': 1,
                                                         'retransmission_queue_length': 0,
-                                                        'state': 'FULL'}}},
+                                                        'state': 'full'}}},
                                             'GigabitEthernet0/0/0/3': 
                                                 {'neighbors': 
                                                     {'4.4.4.4': 
@@ -970,7 +971,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                                         'options': '0x52',
                                                         'priority': 1,
                                                         'retransmission_queue_length': 0,
-                                                        'state': 'FULL'}}}}}},
+                                                        'state': 'full'}}}}}},
                                 'total_neighbor_count': 3}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
@@ -1028,21 +1029,21 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
         Total neighbor count: 3
         '''}
 
-    def test_full1(self):
+    def test_show_ospf_vrf_all_inclusive_neighbor_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowOspfVrfAllInclusiveNeighborDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-    def test_full2(self):
+    def test_show_ospf_vrf_all_inclusive_neighbor_full2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowOspfVrfAllInclusiveNeighborDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
-    def test_empty(self):
+    def test_show_ospf_vrf_all_inclusive_neighbor_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowOspfVrfAllInclusiveNeighborDetail(device=self.device)
@@ -1072,7 +1073,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                     'initial_number': 2,
                                     'maximum_number': 64},
                                 'areas': 
-                                    {'1': 
+                                    {'0.0.0.1': 
                                         {'area_type': 'normal',
                                         'statistics': 
                                             {'area_scope_lsa_cksum_sum': '0x04f437',
@@ -1143,7 +1144,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                     'initial_number': 2,
                                     'maximum_number': 64},
                                 'areas': 
-                                    {'BACKBONE(0)': 
+                                    {'0.0.0.0': 
                                         {'area_type': 'normal',
                                         'rrr_enabled': True,
                                         'statistics': 
@@ -1327,19 +1328,162 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                 Number of neighbors forming in staggered mode 0, 1 full
         '''}
 
-    def test_full(self):
+    def test_show_ospf_vrf_all_inclusive_full(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowOspfVrfAllInclusive(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-    def test_empty(self):
+    def test_show_ospf_vrf_all_inclusive_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowOspfVrfAllInclusive(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+
+# =======================================================
+#  Unit test for 'show ospf vrf all-inclusive sham-links'
+# =======================================================
+class test_show_ospf_vrf_all_inclusive_sham_links(unittest.TestCase):
+
+    '''Unit test for "show ospf vrf all-inclusive sham-links" '''
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'vrf': 
+            {'VRF1': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'OSPF 1': 
+                                {'areas': 
+                                    {'0.0.0.1': 
+                                        {'sham_links': 
+                                            {'33.33.33.33 22.22.22.22': 
+                                                {'cost': 111,
+                                                'dcbitless_lsa_count': 1,
+                                                'dead_interval': 13,
+                                                'demand_circuit': True,
+                                                'hello_interval': 3,
+                                                'hello_timer': '00:00:00:772',
+                                                'if_index': 2,
+                                                'local_id': '33.33.33.33',
+                                                'name': 'SL0',
+                                                'remote_id': '22.22.22.22',
+                                                'retransmit_interval': 5,
+                                                'state': 'point-to-point,',
+                                                'transit_area_id': '0.0.0.1',
+                                                'transmit_delay': 7,
+                                                'wait_interval': 13}}}}}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive sham-links 
+        Thu Nov  2 21:23:03.160 UTC
+
+
+        Sham Links for OSPF 1, VRF VRF1
+
+        Sham Link OSPF_SL0 to address 22.22.22.22 is up
+        Area 1, source address 33.33.33.33
+        IfIndex = 2
+          Run as demand circuit
+          DoNotAge LSA not allowed (Number of DCbitless LSA is 1)., Cost of using 111
+          Transmit Delay is 7 sec, State POINT_TO_POINT,
+          Timer intervals configured, Hello 3, Dead 13, Wait 13, Retransmit 5
+            Hello due in 00:00:00:772
+        '''}
+
+    def test_show_ospf_vrf_all_inclusive_sham_links_full(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowOspfVrfAllInclusiveShamLinks(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ospf_vrf_all_inclusive_sham_links_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfVrfAllInclusiveShamLinks(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
+# ==========================================================
+#  Unit test for 'show ospf vrf all-inclusive virtual-links'
+# ==========================================================
+class test_show_ospf_vrf_all_inclusive_virtual_links(unittest.TestCase):
+
+    '''Unit test for "show ospf vrf all-inclusive virtual-links" '''
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'vrf': 
+            {'default':
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'OSPF 1': 
+                                {'areas': 
+                                    {'0.0.0.1': 
+                                        {'virtual_links': 
+                                            {'0.0.0.1 4.4.4.4': 
+                                                {'authentication': 
+                                                    {'auth_trailer_key': 
+                                                        {'crypto_algorithm': 'clear text'}},
+                                                'cost': 65535,
+                                                'dcbitless_lsa_count': 1,
+                                                'dead_interval': 16,
+                                                'demand_circuit': True,
+                                                'hello_interval': 4,
+                                                'hello_timer': '00:00:03:179',
+                                                'name': 'VL0',
+                                                'nsf': 
+                                                    {'enable': True,
+                                                    'last_restart': '00:18:16'},
+                                                'retransmit_interval': 44,
+                                                'router_id': '4.4.4.4',
+                                                'state': 'point-to-point,',
+                                                'transit_area_id': '0.0.0.1',
+                                                'transmit_delay': 5,
+                                                'wait_interval': 16}}}}}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        RP/0/0/CPU0:R2_ospf_xr#show ospf vrf all-inclusive virtual-links 
+        Fri Nov  3 01:25:44.845 UTC
+
+        Virtual Links for OSPF 1
+
+        Virtual Link OSPF_VL0 to router 4.4.4.4 is up
+          
+          DoNotAge LSA not allowed Run as demand circuit (Number of DCbitless LSA is 1).
+          Transit area 1, via interface GigabitEthernet0/0/0/3, Cost of using 65535
+          Transmit Delay is 5 sec, State POINT_TO_POINT,
+          Non-Stop Forwarding (NSF) enabled, last NSF restart 00:18:16 ago
+          Timer intervals configured, Hello 4, Dead 16, Wait 16, Retransmit 44
+            Hello due in 00:00:03:179
+          Clear text authentication enabled
+        '''}
+
+    def test_show_ospf_vrf_all_inclusive_virtual_links_full(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowOspfVrfAllInclusiveVirtualLinks(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ospf_vrf_all_inclusive_virtual_links_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfVrfAllInclusiveVirtualLinks(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
 
 
 if __name__ == '__main__':

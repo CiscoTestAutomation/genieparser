@@ -5,18 +5,17 @@ IOSXR parsers for the following show commands:
     * show ospf vrf all-inclusive interface
     * show ospf vrf all-inclusive neighbor detail
     * show ospf vrf all-inclusive
-
-    * show ospf mpls traffic-eng link
     * show ospf vrf all-inclusive sham-links
     * show ospf vrf all-inclusive virtual-links
 
+    * show ospf mpls traffic-eng link
     * show ospf vrf all-inclusive database router
     * show ospf vrf all-inclusive database network
     * show ospf vrf all-inclusive database summary
     * show ospf vrf all-inclusive database external
     * show ospf vrf all-inclusive database opaque-area
     * show ospf vrf all-inclusive database opaque-as
-    * show ospf vrf all-inclusive database opaque-link
+    * show ospf vrf all-inclusive database opaque-linkl
 '''
 
 # Python
@@ -315,7 +314,8 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
             if m:
                 pid = str(m.groupdict()['pid'])
                 router_id = str(m.groupdict()['router_id'])
-                interface_type = str(m.groupdict()['interface_type'])
+                interface_type = str(m.groupdict()['interface_type']).lower()
+                interface_type = interface_type.replace("_", "-")
 
                 # Get interface values
                 if intf_type == 'interfaces':
@@ -367,7 +367,9 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
             m = p5.match(line)
             if m:
                 sub_dict['transmit_delay'] = int(m.groupdict()['delay'])
-                sub_dict['state'] = str(m.groupdict()['state'])
+                state = str(m.groupdict()['state']).lower()
+                state = state.replace("_", "-")
+                sub_dict['state'] = state
                 sub_dict['mtu'] = int(m.groupdict()['mtu'])
                 sub_dict['max_pkt_sz'] = int(m.groupdict()['max_pkt_sz'])
                 if m.groupdict()['priority']:
@@ -786,7 +788,9 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
             m = p4.match(line)
             if m:
                 sub_dict['priority'] = int(m.groupdict()['priority'])
-                sub_dict['state'] = str(m.groupdict()['state'])
+                state = str(m.groupdict()['state']).lower()
+                state = state.replace('_', '-')
+                sub_dict['state'] = state
                 sub_dict['num_state_changes'] = int(m.groupdict()['num'])
                 continue
 
@@ -1458,18 +1462,29 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Area BACKBONE(0)
+            # Area 1
             p28 = re.compile(r'^Area +(?P<area>(\S+))$')
             m = p28.match(line)
             if m:
-                area = str(m.groupdict()['area'])
+                parsed_area = str(m.groupdict()['area'])
+                n = re.match('BACKBONE\((?P<area_num>(\d+))\)', parsed_area)
+                if n:
+                    area = str(IPAddress(str(n.groupdict()['area_num'])))
+                else:
+                    area = str(IPAddress(str(m.groupdict()['area'])))
+
+                # Create dict
                 if 'areas' not in sub_dict:
                     sub_dict['areas'] = {}
                 if area not in sub_dict['areas']:
                     sub_dict['areas'][area] = {}
+                
+                # Set previously parsed values
                 try:
                     sub_dict['areas'][area]['area_type'] = area_type
                 except:
                     pass
+                continue
 
             # Number of interfaces in this area is 3
             p29 = re.compile(r'^Number +of +interfaces +in +this +area +is'
@@ -1626,44 +1641,264 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
         return ret_dict
 
 
-# ============================================
-# Schema for 'show ospf mpls traffic-eng link'
-# ============================================
-class ShowOspfMplsTrafficEngLinkSchema(MetaParser):
-
-    ''' Schema for 'show ospf mpls traffic-eng link' '''
-
-    schema = {}
-
-
-# ============================================
-# Parser for 'show ospf mpls traffic-eng link'
-# ============================================
-class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
-
-    ''' Parser for 'show ospf mpls traffic-eng link' '''
-
-    pass
-
-
-# ======================================================
-# Schema for 'show ospf vrf all-inclusive virtual-links'
-# ======================================================
-class ShowOspfVrfAllInclusiveVirtualLinksSchema(MetaParser):
-
-    ''' Schema for 'show ospf vrf all-inclusive virtual-links' '''
-
-    schema = {}
-
-
 # ======================================================
 # Parser for 'show ospf vrf all-inclusive virtual-links'
+# Parser for 'show ospf vrf all-inclusive sham-links'
 # ======================================================
-class ShowOspfVrfAllInclusiveVirtualLinks(ShowOspfVrfAllInclusiveVirtualLinksSchema):
+class ShowOspfLinksParser(MetaParser):
 
-    ''' Parser for 'show ospf vrf all-inclusive virtual-links' '''
+    ''' Parser for "show ip ospf vrf all-inclusive <WORD>-links" '''
 
-    pass
+    def cli(self, cmd, link_type):
+
+        assert link_type in ['virtual_links', 'sham_links']
+
+        # Execute command on device
+        out = self.device.execute(cmd)
+        
+        # Init vars
+        ret_dict = {}
+        af = 'ipv4'
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Virtual Links for OSPF 1
+            # Sham Links for OSPF 1, VRF VRF1
+            p1 = re.compile(r'^(Virtual|Sham) +Links +for'
+                             ' +(?P<instance>([a-zA-Z0-9\s]+))'
+                             '(?:, +VRF +(?P<vrf>(\S+)))?$')
+            m = p1.match(line)
+            if m:
+                instance = str(m.groupdict()['instance'])
+                if m.groupdict()['vrf']:
+                    vrf = str(m.groupdict()['vrf'])
+                else:
+                    vrf = 'default'
+
+                # Build dict
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+                if 'address_family' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['address_family'] = {}
+                if af not in ret_dict['vrf'][vrf]['address_family']:
+                    ret_dict['vrf'][vrf]['address_family'][af] = {}
+                if 'instance' not in ret_dict['vrf'][vrf]['address_family'][af]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance'] = {}
+                if instance not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance] = {}
+                    continue
+
+            # Sham Link OSPF_SL0 to address 22.22.22.22 is up
+            # Virtual Link OSPF_VL0 to router 4.4.4.4 is up
+            p2 = re.compile(r'^(Virtual|Sham) +Link +(?P<link>(\S+)) +to'
+                             ' +(address|router) +(?P<address>(\S+)) +is'
+                             ' +(up|down)$')
+            m = p2.match(line)
+            if m:
+                address = str(m.groupdict()['address'])
+                sl_remote_id = vl_router_id = address
+                link = str(m.groupdict()['link'])
+                n = re.match('(?P<ignore>\S+)_(?P<name>(S|V)L(\d+))', link)
+                if n:
+                    real_link_name = str(n.groupdict()['name'])
+                else:
+                    real_link_name = link
+                    continue
+
+            # Area 1, source address 33.33.33.33
+            p3_1 = re.compile(r'^Area +(?P<area>(\S+)), +source +address'
+                             ' +(?P<source_address>(\S+))$')
+            m = p3_1.match(line)
+            if m:
+                area = str(IPAddress(str(m.groupdict()['area'])))
+                source_address = str(m.groupdict()['source_address'])
+
+                # Set link_name for sham_link
+                link_name = source_address + ' ' + sl_remote_id
+
+                # Create dict
+                if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'] = {}
+                if area not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area] = {}
+                if link_type not in  ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area][link_type] = {}
+                if link_name not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area][link_type]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area][link_type][link_name] = {}
+
+                # Set sub_dict
+                sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
+                            ['instance'][instance]['areas'][area]\
+                            [link_type][link_name]
+
+                # Set values
+                sub_dict['transit_area_id'] = area
+                sub_dict['local_id'] = source_address
+                sub_dict['demand_circuit'] = False
+
+                # Set previously parsed values
+                try:
+                    sub_dict['name'] = real_link_name
+                    sub_dict['remote_id'] = sl_remote_id
+                except:
+                    pass
+                continue
+
+            # Transit area 1, via interface GigabitEthernet0/0/0/3, Cost of using 65535
+            p3_2 = re.compile(r'^Transit +area +(?P<area>(\S+)), +via +interface'
+                               ' +(?P<intf>(\S+)), +Cost +of +using'
+                               ' +(?P<cost>(\d+))$')
+            m = p3_2.match(line)
+            if m:
+                area = str(IPAddress(str(m.groupdict()['area'])))
+                interface = str(m.groupdict()['intf'])
+                cost = int(m.groupdict()['cost'])
+
+                # Set link_name for virtual_link
+                link_name = area + ' ' + vl_router_id
+
+                # Create dict
+                if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'] = {}
+                if area not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area] = {}
+                if link_type not in  ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area][link_type] = {}
+                if link_name not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area][link_type]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area][link_type][link_name] = {}
+
+                # Set sub_dict
+                sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
+                            ['instance'][instance]['areas'][area]\
+                            [link_type][link_name]
+
+                # Set values
+                sub_dict['transit_area_id'] = area
+                sub_dict['demand_circuit'] = False
+                sub_dict['cost'] = int(m.groupdict()['cost'])
+
+                # Set previously parsed values
+                try:
+                    sub_dict['name'] = real_link_name
+                    sub_dict['router_id'] = vl_router_id
+                    sub_dict['dcbitless_lsa_count'] = dcbitless_lsa_count
+                    sub_dict['demand_circuit'] = demand_circuit
+                except:
+                    pass
+                continue
+
+            # IfIndex = 2
+            p4 = re.compile(r'^IfIndex += +(?P<if_index>(\d+))$')
+            m = p4.match(line)
+            if m:
+                sub_dict['if_index'] = int(m.groupdict()['if_index'])
+                continue
+
+            # Run as demand circuit
+            p5 = re.compile(r'^Run +as +demand +circuit$')
+            m = p5.match(line)
+            if m:
+                sub_dict['demand_circuit'] = True
+                continue
+
+            # DoNotAge LSA not allowed (Number of DCbitless LSA is 1)., Cost of using 111
+            # DoNotAge LSA not allowed Run as demand circuit (Number of DCbitless LSA is 1).
+            p6 = re.compile(r'^DoNotAge +LSA +not +allowed'
+                             '(?: +(?P<demand>(Run +as +demand +circuit)))?'
+                             ' +\(Number +of +DCbitless +LSA +is +(?P<dcbitless>(\d+))\).,?'
+                             '(?: +Cost +of +using +(?P<cost>(\d+)))?$')
+            m = p6.match(line)
+            if m:
+                dcbitless_lsa_count = int(m.groupdict()['dcbitless'])
+                if m.groupdict()['demand']:
+                    demand_circuit = True
+                # Set values for sham_links
+                if link_type == 'sham_links':
+                    sub_dict['dcbitless_lsa_count'] = dcbitless_lsa_count
+                    if m.groupdict()['cost']:
+                        sub_dict['cost'] = int(m.groupdict()['cost'])
+                        continue
+
+            # Transmit Delay is 7 sec, State POINT_TO_POINT,
+            # Transmit Delay is 5 sec, State POINT_TO_POINT,
+            p7 = re.compile(r'^Transmit +Delay +is +(?P<transmit_delay>(\d+))'
+                             ' +sec, +State +(?P<state>(\S+)),?$')
+            m = p7.match(line)
+            if m:
+                sub_dict['transmit_delay'] = int(m.groupdict()['transmit_delay'])
+                state = str(m.groupdict()['state']).lower()
+                state = state.replace("_", "-")
+                sub_dict['state'] = state
+                continue
+
+            # Timer intervals configured, Hello 3, Dead 13, Wait 13, Retransmit 5
+            # Timer intervals configured, Hello 4, Dead 16, Wait 16, Retransmit 44
+            p8 = re.compile(r'^Timer +intervals +configured,'
+                             ' +Hello +(?P<hello>(\d+)),'
+                             ' +Dead +(?P<dead>(\d+)),'
+                             ' +Wait +(?P<wait>(\d+)),'
+                             ' +Retransmit +(?P<retransmit>(\d+))$')
+            m = p8.match(line)
+            if m:
+                sub_dict['hello_interval'] = int(m.groupdict()['hello'])
+                sub_dict['dead_interval'] = int(m.groupdict()['dead'])
+                sub_dict['wait_interval'] = int(m.groupdict()['wait'])
+                sub_dict['retransmit_interval'] = int(m.groupdict()['retransmit'])
+                continue
+
+            # Hello due in 00:00:00:772
+            # Hello due in 00:00:03:179
+            p9 = re.compile(r'^Hello +due +in +(?P<hello_timer>(\S+))$')
+            m = p9.match(line)
+            if m:
+                sub_dict['hello_timer'] = str(m.groupdict()['hello_timer'])
+                continue          
+          
+            # Non-Stop Forwarding (NSF) enabled, last NSF restart 00:18:16 ago
+            p10 = re.compile(r'^Non-Stop +Forwarding +\(NSF\) +enabled,'
+                              ' +last +NSF +restart +(?P<restart>(\S+)) +ago$')
+            m = p10.match(line)
+            if m:
+                if 'nsf' not in sub_dict:
+                    sub_dict['nsf'] = {}
+                sub_dict['nsf']['enable'] = True
+                sub_dict['nsf']['last_restart'] = str(m.groupdict()['restart'])
+                continue
+            
+            # Clear text authentication enabled
+            p11 = re.compile(r'^(?P<auth>([a-zA-Z\s]+)) +authentication +enabled$')
+            m = p11.match(line)
+            if m:
+                if 'authentication' not in sub_dict:
+                    sub_dict['authentication'] = {}
+                if 'auth_trailer_key' not in sub_dict['authentication']:
+                    sub_dict['authentication']['auth_trailer_key'] = {}
+                sub_dict['authentication']['auth_trailer_key']\
+                    ['crypto_algorithm'] = str(m.groupdict()['auth']).lower()
+                continue
+
+        return ret_dict
 
 
 # ===================================================
@@ -1673,153 +1908,117 @@ class ShowOspfVrfAllInclusiveShamLinksSchema(MetaParser):
 
     ''' Schema for 'show ospf vrf all-inclusive sham-links' '''
 
-    schema = {}
+    schema = {
+        'vrf': 
+            {Any(): 
+                {'address_family': 
+                    {Any(): 
+                        {'instance': 
+                            {Any(): 
+                                {'areas': 
+                                    {Any(): 
+                                        {'sham_links': 
+                                            {Any(): 
+                                                {'name': str,
+                                                'local_id': str,
+                                                'remote_id': str,
+                                                'transit_area_id': str,
+                                                'hello_interval': int,
+                                                'dead_interval': int,
+                                                'wait_interval': int,
+                                                'retransmit_interval': int,
+                                                'transmit_delay': int,
+                                                'cost': int,
+                                                'state': str,
+                                                'hello_timer': str,
+                                                'demand_circuit': bool,
+                                                'dcbitless_lsa_count': int,
+                                                'if_index': int,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
 
 
-# ======================================================
+# ===================================================
 # Parser for 'show ospf vrf all-inclusive sham-links'
-# ======================================================
-class ShowOspfVrfAllInclusiveShamLinks(ShowOspfVrfAllInclusiveShamLinksSchema):
+# ===================================================
+class ShowOspfVrfAllInclusiveShamLinks(ShowOspfVrfAllInclusiveShamLinksSchema, ShowOspfLinksParser):
 
     ''' Parser for 'show ospf vrf all-inclusive sham-links' '''
 
-    pass
+    def cli(self):
+        
+        cmd = 'show ospf vrf all-inclusive sham-links'
+        return super().cli(cmd=cmd, link_type='sham_links')
 
 
-# ========================================================
-# Schema for 'show ospf vrf all-inclusive database router'
-# ========================================================
-class ShowOspfVrfAllInclusiveDatabaseRouterSchema(MetaParser):
+# ======================================================
+# Schema for 'show ospf vrf all-inclusive virtual-links'
+# ======================================================
+class ShowOspfVrfAllInclusiveVirtualLinksSchema(MetaParser):
 
-    ''' Schema for 'show ospf vrf all-inclusive database router' '''
+    ''' Schema for 'show ospf vrf all-inclusive virtual-links' '''
 
-    schema = {}
-
-
-# ========================================================
-# Parser for 'show ospf vrf all-inclusive database router'
-# ========================================================
-class ShowOspfVrfAllInclusiveDatabaseRouter(ShowOspfVrfAllInclusiveDatabaseRouterSchema):
-
-    ''' Parser for 'show ospf vrf all-inclusive database router' '''
-
-    pass
-
-# =========================================================
-# Schema for 'show ospf vrf all-inclusive database network'
-# =========================================================
-class ShowOspfVrfAllInclusiveDatabaseNetworkSchema(MetaParser):
-
-    ''' Schema for 'show ospf vrf all-inclusive database network' '''
-
-    schema = {}
-
-
-# =========================================================
-# Parser for 'show ospf vrf all-inclusive database network'
-# =========================================================
-class ShowOspfVrfAllInclusiveDatabaseNetwork(ShowOspfVrfAllInclusiveDatabaseNetworkSchema):
-
-    ''' Parser for 'show ospf vrf all-inclusive database network' '''
-
-    pass
-
-
-# =========================================================
-# Schema for 'show ospf vrf all-inclusive database summary'
-# =========================================================
-class ShowOspfVrfAllInclusiveDatabaseSummarySchema(MetaParser):
-
-    ''' Schema for 'show ospf vrf all-inclusive database summary' '''
-
-    schema = {}
-
-
-# =========================================================
-# Parser for 'show ospf vrf all-inclusive database summary'
-# =========================================================
-class ShowOspfVrfAllInclusiveDatabaseSummary(ShowOspfVrfAllInclusiveDatabaseSummarySchema):
-
-    ''' Parser for 'show ospf vrf all-inclusive database summary' '''
-
-    pass
+    schema = {
+        'vrf': 
+            {Any(): 
+                {'address_family': 
+                    {Any(): 
+                        {'instance': 
+                            {Any(): 
+                                {'areas': 
+                                    {Any(): 
+                                        {'virtual_links': 
+                                            {Any(): 
+                                                {'name': str,
+                                                'router_id': str,
+                                                'transit_area_id': str,
+                                                'hello_interval': int,
+                                                'dead_interval': int,
+                                                'wait_interval': int,
+                                                'retransmit_interval': int,
+                                                'transmit_delay': int,
+                                                'cost': int,
+                                                'state': str,
+                                                'hello_timer': str,
+                                                'demand_circuit': bool,
+                                                'dcbitless_lsa_count': int,
+                                                Optional('nsf'): 
+                                                    {'enable': bool,
+                                                    'last_restart': str},
+                                                Optional('authentication'): 
+                                                    {'auth_trailer_key': 
+                                                        {'crypto_algorithm': str},
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
 
 
-# ==========================================================
-# Schema for 'show ospf vrf all-inclusive database external'
-# ==========================================================
-class ShowOspfVrfAllInclusiveDatabaseExternalSchema(MetaParser):
+# ======================================================
+# Parser for 'show ospf vrf all-inclusive virtual-links'
+# ======================================================
+class ShowOspfVrfAllInclusiveVirtualLinks(ShowOspfVrfAllInclusiveVirtualLinksSchema, ShowOspfLinksParser):
 
-    ''' Schema for 'show ospf vrf all-inclusive database external' '''
+    ''' Parser for 'show ospf vrf all-inclusive virtual-links' '''
 
-    schema = {}
-
-
-# ==========================================================
-# Parser for 'show ospf vrf all-inclusive database external'
-# ==========================================================
-class ShowOspfVrfAllInclusiveDatabaseExternal(ShowOspfVrfAllInclusiveDatabaseExternalSchema):
-
-    ''' Parser for 'show ospf vrf all-inclusive database external' '''
-
-    pass
-
-
-# =============================================================
-# Schema for 'show ospf vrf all-inclusive database opaque-area'
-# =============================================================
-class ShowOspfVrfAllInclusiveDatabaseOpaqueAreaSchema(MetaParser):
-
-    ''' Schema for 'show ospf vrf all-inclusive database opaque-area' '''
-
-    schema = {}
-
-
-# =============================================================
-# Parser for 'show ospf vrf all-inclusive database opaque-area'
-# =============================================================
-class ShowOspfVrfAllInclusiveDatabaseOpaqueArea(ShowOspfVrfAllInclusiveDatabaseOpaqueAreaSchema):
-
-    ''' Parser for 'show ospf vrf all-inclusive database opaque-area' '''
-
-    pass
-
-
-# ===========================================================
-# Schema for 'show ospf vrf all-inclusive database opaque-as'
-# ===========================================================
-class ShowOspfVrfAllInclusiveDatabaseOpaqueAsSchema(MetaParser):
-
-    ''' Schema for 'show ospf vrf all-inclusive database opaque-as' '''
-
-    schema = {}
-
-
-# ===========================================================
-# Parser for 'show ospf vrf all-inclusive database opaque-as'
-# ===========================================================
-class ShowOspfVrfAllInclusiveDatabaseOpaqueAs(ShowOspfVrfAllInclusiveDatabaseOpaqueAsSchema):
-
-    ''' Parser for 'show ospf vrf all-inclusive database opaque-as' '''
-
-    pass
-
-
-# =============================================================
-# Schema for 'show ospf vrf all-inclusive database opaque-link'
-# =============================================================
-class ShowOspfVrfAllInclusiveDatabaseOpaqueLinkSchema(MetaParser):
-
-    ''' Schema for 'show ospf vrf all-inclusive database opaque-link' '''
-
-    schema = {}
-
-
-# =============================================================
-# Parser for 'show ospf vrf all-inclusive database opaque-link'
-# =============================================================
-class ShowOspfVrfAllInclusiveDatabaseOpaqueLink(ShowOspfVrfAllInclusiveDatabaseOpaqueLinkSchema):
-
-    ''' Parser for 'show ospf vrf all-inclusive database opaque-link' '''
-
-    pass
+    def cli(self):
+        
+        cmd = 'show ospf vrf all-inclusive virtual-links'
+        return super().cli(cmd=cmd, link_type='virtual_links')
