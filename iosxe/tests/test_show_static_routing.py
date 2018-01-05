@@ -7,7 +7,8 @@ from ats.topology import Device
 from metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from parser.iosxe.show_static_routing import ShowIpStaticRoute
+from parser.iosxe.show_static_routing import ShowIpStaticRoute, \
+                                             ShowIpv6StaticDetail
 
 # ============================================
 # unit test for 'show ip static route'
@@ -43,8 +44,8 @@ M  20.1.1.0/24 [3/0] via GigabitEthernet1 192.168.1.1 [A]
                 'address_family': {
                     'ipv4': {
                         'routes': {
-                            '10.1.1.0/255.255.255.0': {
-                                'route': '10.1.1.0/255.255.255.0',
+                            '10.1.1.0/24': {
+                                'route': '10.1.1.0/24',
                                 'next_hop': {
                                     'next_hop_list': {
                                          1: {
@@ -64,8 +65,8 @@ M  20.1.1.0/24 [3/0] via GigabitEthernet1 192.168.1.1 [A]
                                     },
                                 },
                             },
-                            '20.1.1.0/255.255.255.0': {
-                                'route': '20.1.1.0/255.255.255.0',
+                            '20.1.1.0/24': {
+                                'route': '20.1.1.0/24',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -112,8 +113,8 @@ M  20.1.1.0/24 [3/0] via GigabitEthernet1 192.168.1.1 [A]
                 'address_family': {
                     'ipv4': {
                         'routes': {
-                            '2.2.2.2/255.255.255.255': {
-                                'route': '2.2.2.2/255.255.255.255',
+                            '2.2.2.2/32': {
+                                'route': '2.2.2.2/32',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -139,8 +140,8 @@ M  20.1.1.0/24 [3/0] via GigabitEthernet1 192.168.1.1 [A]
                                     },
                                 },
                             },
-                            '3.3.3.3/255.255.255.255': {
-                                'route': '3.3.3.3/255.255.255.255',
+                            '3.3.3.3/32': {
+                                'route': '3.3.3.3/32',
                                 'next_hop': {
                                     'outgoing_interface': {
                                         'GigabitEthernet0/2': {
@@ -183,6 +184,164 @@ M  20.1.1.0/24 [3/0] via GigabitEthernet1 192.168.1.1 [A]
         obj = ShowIpStaticRoute(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+# ============================================
+# unit test for 'show ipv6 static detail'
+# =============================================
+class test_show_ipv6_static_detail(unittest.TestCase):
+    '''
+       unit test for show ipv6 static detail
+    '''
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_output_detail_1 = {'execute.return_value': '''
+R1_iosv#show ipv6 static detail
+IPv6 Static routes Table - default
+Codes: * - installed in RIB, u/m - Unicast/Multicast only
+       U - Per-user Static route
+       N - ND Static route
+       M - MIP Static route
+       P - DHCP-PD Static route
+       R - RHI Static route
+    2001:2:2:2::2/128 via 2001:10:1:2::2, distance 3
+     Resolves to 1 paths (max depth 1)
+     via GigabitEthernet0/0
+*   2001:2:2:2::2/128 via 2001:20:1:2::2, GigabitEthernet0/1, distance 1
+    2001:2:2:2::2/128 via 2001:10:1:2::2, GigabitEthernet0/0, distance 11, tag 100
+     Rejected by routing table
+     Tracked object 1 is Up
+*   2001:3:3:3::3/128 via GigabitEthernet0/3, distance 1
+*   2001:3:3:3::3/128 via GigabitEthernet0/2, distance 1
+    '''
+}
+    golden_parsed_output_detail_1 = {
+        'vrfs':{
+            'default':{
+                'address_family': {
+                    'ipv6': {
+                        'routes': {
+                            '2001:2:2:2::2/128': {
+                                'route': '2001:2:2:2::2/128',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                         1: {
+                                             'index': 1,
+                                             'next_hop': '2001:10:1:2::2',
+                                             'resolved_outgoing_interface': 'GigabitEthernet0/0',
+                                             'resolved_paths_number': 1,
+                                             'max_depth': 1,
+                                             'preference': 3,
+                                         },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '2001:20:1:2::2',
+                                            'outgoing_interface': 'GigabitEthernet0/1',
+                                            'preference': 1,
+                                        },
+                                        3: {
+                                            'index': 3,
+                                            'next_hop': '2001:10:1:2::2',
+                                            'outgoing_interface': 'GigabitEthernet0/0',
+                                            'rejected_by':'routing table',
+                                            'preference': 11,
+                                            'tag': 100,
+                                            'track': 1,
+                                            'track_shutdown': False,
+                                        },
+                                    },
+                                },
+                            },
+                            '2001:3:3:3::3/128': {
+                                'route': '2001:3:3:3::3/128',
+                                'next_hop': {
+                                    'outgoing_interface': {
+                                        'GigabitEthernet0/3': {
+                                            'outgoing_interface': 'GigabitEthernet0/3',
+                                            'preference': 1,
+                                        },
+                                        'GigabitEthernet0/2': {
+                                            'outgoing_interface': 'GigabitEthernet0/2',
+                                            'preference': 1,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+    golden_output_detail_2 = {'execute.return_value':'''
+    R1_iosv#show ipv6 static vrf VRF1 detail
+    IPv6 Static routes Table - VRF1
+    Codes: * - installed in RIB, u/m - Unicast/Multicast only
+           U - Per-user Static route
+           N - ND Static route
+           M - MIP Static route
+           P - DHCP-PD Static route
+           R - RHI Static route
+    *   2001:2:2:2::2/128 via Null0, distance 2
+    *   2001:3:3:3::3/128 via Null0, distance 3
+    '''
+    }
+    golden_parsed_output_detail_2 = {
+        'vrfs': {
+            'VRF1': {
+                'address_family': {
+                    'ipv6': {
+                        'routes': {
+                            '2001:2:2:2::2/128': {
+                                'route': '2001:2:2:2::2/128',
+                                'next_hop': {
+                                    'outgoing_interface': {
+                                        'Null0': {
+                                            'outgoing_interface': 'Null0',
+                                            'preference': 2,
+                                        },
+                                    },
+                                },
+                            },
+                            '2001:3:3:3::3/128': {
+                                'route': '2001:3:3:3::3/128',
+                                'next_hop': {
+                                    'outgoing_interface': {
+                                        'Null0': {
+                                            'outgoing_interface': 'Null0',
+                                            'preference': 3,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    def test_empty_detail_1(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpv6StaticDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
+    def test_show_ip_static_detail_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_detail_1)
+        obj = ShowIpv6StaticDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_detail_1)
+
+    def test_show_ip_static_route_2(self):
+         self.maxDiff = None
+         self.device = Mock(**self.golden_output_detail_2)
+         obj = ShowIpv6StaticDetail(device=self.device)
+         parsed_output = obj.parse(vrf='VRF1')
+         self.assertEqual(parsed_output, self.golden_parsed_output_detail_2)
 
 if __name__ == '__main__':
     unittest.main()

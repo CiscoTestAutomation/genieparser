@@ -3,8 +3,6 @@
 # python
 import re
 import warnings
-import socket
-import struct
 
 class Common():
     '''Common functions to be used in parsers.'''
@@ -175,11 +173,3 @@ class Common():
         assert cli == expect_command, \
             'Cli created from XML tags does not match the actual cli:\n'\
             'XML Tags cli: {c}\nCli command: {e}'.format(c=cli, e=expect_command)
-
-
-    @classmethod
-    def cidr_to_netmask(self, cidr):
-        network, net_bits = cidr.split('/')
-        host_bits = 32 - int(net_bits)
-        netmask = socket.inet_ntoa(struct.pack('!I', (1 << 32) - (1 << host_bits)))
-        return network, netmask
