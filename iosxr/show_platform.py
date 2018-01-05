@@ -838,6 +838,7 @@ class ShowRedundancySchema(MetaParser):
                  'time_since_last_reload': str,
                  'node_uptime': str,
                  'node_uptime_timestamp': str,
+                 'node_uptime_in_seconds': int,
                  Optional('last_switchover_timepstamp'): str,
                  Optional('time_since_last_switchover'): str,
                  Optional('standby_node_timestamp'): str,
@@ -959,15 +960,30 @@ class ShowRedundancy(ShowRedundancySchema):
                 continue
 
             # Active node booted Thu Apr 27 03:22:37 2017: 8 minutes ago
+            # Active node booted Tue Jan  2 07:32:33 2018: 1 day, 1 hour, 6 minutes ago
             p7 = re.compile(r'\s*Active +node +booted'
                              ' +(?P<node_uptime_timestamp>[a-zA-Z0-9\:\s]+):'
-                             ' +(?P<node_uptime>[a-zA-Z0-9\,\s]+)$')
+                             ' +(?P<node_uptime>((?P<day>\d+) +(day|days), *)?'
+                             '((?P<hour>\d+) +(hour|hours), *)?'
+                             '((?P<minute>\d+) +(minute|minutes))|'
+                             '((?P<second>\d+) +(seconds|seconds))) +ago$')
             m = p7.match(line)
             if m:
                 redundancy_dict['node'][node]['node_uptime_timestamp'] = \
                     str(m.groupdict()['node_uptime_timestamp'])
                 redundancy_dict['node'][node]['node_uptime'] = \
                     str(m.groupdict()['node_uptime'])
+                time_in_seconds = 0
+                if m.groupdict()['day']:
+                    time_in_seconds += int(m.groupdict()['day']) * 86400
+                if m.groupdict()['hour']:
+                    time_in_seconds += int(m.groupdict()['hour']) * 3600
+                if m.groupdict()['minute']:
+                    time_in_seconds += int(m.groupdict()['minute']) * 60
+                if m.groupdict()['second']:
+                    time_in_seconds += int(m.groupdict()['second'])
+                redundancy_dict['node'][node]['node_uptime_in_seconds'] = \
+                    time_in_seconds
                 continue
 
             # Standby node boot Thu Aug 10 08:29:18 2017: 1 day, 32 minutes ago

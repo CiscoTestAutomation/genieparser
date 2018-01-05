@@ -918,7 +918,8 @@ class test_show_redundancy(unittest.TestCase):
                                      '2017',
             'last_switchover_timepstamp': 'Thu Apr 27 '
                                           '03:29:57 2017',
-            'node_uptime': '8 minutes ago',
+            'node_uptime': '8 minutes',
+            'node_uptime_in_seconds': 480,
             'node_uptime_timestamp': 'Thu Apr 27 03:22:37 '
                                      '2017',
             'primary_rmf_state': 'not ready',
