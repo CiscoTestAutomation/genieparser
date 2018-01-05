@@ -226,6 +226,7 @@ Codes: * - installed in RIB, u/m - Unicast/Multicast only
                                     'next_hop_list': {
                                          1: {
                                              'index': 1,
+                                             'active': False,
                                              'next_hop': '2001:10:1:2::2',
                                              'resolved_outgoing_interface': 'GigabitEthernet0/0',
                                              'resolved_paths_number': 1,
@@ -235,18 +236,20 @@ Codes: * - installed in RIB, u/m - Unicast/Multicast only
                                         2: {
                                             'index': 2,
                                             'next_hop': '2001:20:1:2::2',
+                                            'active': True,
                                             'outgoing_interface': 'GigabitEthernet0/1',
                                             'preference': 1,
                                         },
                                         3: {
                                             'index': 3,
+                                            'active': False,
                                             'next_hop': '2001:10:1:2::2',
                                             'outgoing_interface': 'GigabitEthernet0/0',
                                             'rejected_by':'routing table',
                                             'preference': 11,
                                             'tag': 100,
                                             'track': 1,
-                                            'track_shutdown': False,
+                                            'track_state': 'up',
                                         },
                                     },
                                 },
@@ -257,10 +260,12 @@ Codes: * - installed in RIB, u/m - Unicast/Multicast only
                                     'outgoing_interface': {
                                         'GigabitEthernet0/3': {
                                             'outgoing_interface': 'GigabitEthernet0/3',
+                                            'active': True,
                                             'preference': 1,
                                         },
                                         'GigabitEthernet0/2': {
                                             'outgoing_interface': 'GigabitEthernet0/2',
+                                            'active': True,
                                             'preference': 1,
                                         },
                                     },
@@ -299,6 +304,7 @@ Codes: * - installed in RIB, u/m - Unicast/Multicast only
                                     'outgoing_interface': {
                                         'Null0': {
                                             'outgoing_interface': 'Null0',
+                                            'active': True,
                                             'preference': 2,
                                         },
                                     },
@@ -310,6 +316,7 @@ Codes: * - installed in RIB, u/m - Unicast/Multicast only
                                     'outgoing_interface': {
                                         'Null0': {
                                             'outgoing_interface': 'Null0',
+                                            'active': True,
                                             'preference': 3,
                                         },
                                     },

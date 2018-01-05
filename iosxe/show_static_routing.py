@@ -187,6 +187,7 @@ class ShowIpv6StaticDetailSchema(MetaParser):
                                    Optional('outgoing_interface'): {
                                        Any(): {    # interface  if there is no next_hop
                                            Optional('outgoing_interface'): str,
+                                           Optional('active'): bool,
                                            Optional('preference'): int,
                                            Optional('tag'): int,
                                        },
@@ -195,6 +196,7 @@ class ShowIpv6StaticDetailSchema(MetaParser):
                                        Any(): {     # index
                                            Optional('index'): int,
                                            Optional('next_hop'): str,
+                                           Optional('active'): bool,
                                            Optional('outgoing_interface'): str,
                                            Optional('resolved_outgoing_interface'): str,
                                            Optional('resolved_paths_number'): int,
@@ -203,7 +205,7 @@ class ShowIpv6StaticDetailSchema(MetaParser):
                                            Optional('preference'): int,
                                            Optional('tag'): int,
                                            Optional('track'): int,
-                                           Optional('track_shutdown'): bool,
+                                           Optional('track_state'): str,
                                        },
                                    },
                                },
@@ -263,7 +265,7 @@ class ShowIpv6StaticDetail(ShowIpv6StaticDetailSchema):
             # *   2001:2:2:2::2/128 via 2001:20:1:2::2, GigabitEthernet0/1, distance 1
             # 2001:2:2:2::2/128 via 2001:10:1:2::2, GigabitEthernet0/0, distance 11, tag 100
             # *   2001:3:3:3::3/128 via GigabitEthernet0/3, distance 1
-            p2 = re.compile(r'^\s*([*]  +)?(?P<route>[\w\/\:]+)?'
+            p2 = re.compile(r'^\s*((?P<star>[*]+)  +)?(?P<route>[\w\/\:]+)?'
                             ' +via +((?P<nexthop>[\d\:]+), )?'
                             '((?P<interface>[a-zA-Z][\w\.\/]+), )?'
                             '(distance (?P<distance>[\d]+))?'
@@ -271,6 +273,10 @@ class ShowIpv6StaticDetail(ShowIpv6StaticDetailSchema):
             m = p2.match(line)
             if m:
                 next_hop = ""
+                if m.groupdict()['star']:
+                    active = True
+                else:
+                    active = False
                 if m.groupdict()['route']:
                     if route == m.groupdict()['route']:
                         index += 1
@@ -318,6 +324,9 @@ class ShowIpv6StaticDetail(ShowIpv6StaticDetailSchema):
                         result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
                             ['next_hop']['outgoing_interface'][interface]['tag'] = int(tag)
 
+                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]\
+                        ['next_hop']['outgoing_interface'][interface]['active'] = active
+
                 else:
                     if 'next_hop_list' not in result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop']:
                         result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop']['next_hop_list'] = {}
@@ -341,6 +350,9 @@ class ShowIpv6StaticDetail(ShowIpv6StaticDetailSchema):
                     if m.groupdict()['tag']:
                         result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
                             ['next_hop_list'][index]['tag'] = int(tag)
+
+                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                        ['next_hop']['next_hop_list'][index]['active'] = active
 
                 continue
 
@@ -384,11 +396,11 @@ class ShowIpv6StaticDetail(ShowIpv6StaticDetailSchema):
             m = p7.match(line)
             if m:
                 track = m.groupdict()['tracked_no']
-                track_shutdown = False if m.groupdict()['interface_status'].lower() == 'up' else True
+                track_state = m.groupdict()['interface_status'].lower()
                 result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
                     ['next_hop_list'][index]['track'] = int(track)
                 result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                    ['next_hop_list'][index]['track_shutdown'] = track_shutdown
+                    ['next_hop_list'][index]['track_state'] = track_state
                 continue
 
         return result_dict
