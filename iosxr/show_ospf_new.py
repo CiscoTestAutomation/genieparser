@@ -7,15 +7,12 @@ IOSXR parsers for the following show commands:
     * show ospf vrf all-inclusive
     * show ospf vrf all-inclusive sham-links
     * show ospf vrf all-inclusive virtual-links
-
     * show ospf mpls traffic-eng link
     * show ospf vrf all-inclusive database router
     * show ospf vrf all-inclusive database network
     * show ospf vrf all-inclusive database summary
     * show ospf vrf all-inclusive database external
     * show ospf vrf all-inclusive database opaque-area
-    * show ospf vrf all-inclusive database opaque-as
-    * show ospf vrf all-inclusive database opaque-linkl
 '''
 
 # Python
@@ -1641,11 +1638,10 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
         return ret_dict
 
 
-# ======================================================
-# Parser for 'show ospf vrf all-inclusive virtual-links'
-# Parser for 'show ospf vrf all-inclusive sham-links'
-# ======================================================
-class ShowOspfLinksParser(MetaParser):
+# ===========================================================
+# Super parser for 'show ospf vrf all-inclusive <WORD>-links'
+# ===========================================================
+class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
 
     ''' Parser for "show ip ospf vrf all-inclusive <WORD>-links" '''
 
@@ -1950,7 +1946,7 @@ class ShowOspfVrfAllInclusiveShamLinksSchema(MetaParser):
 # ===================================================
 # Parser for 'show ospf vrf all-inclusive sham-links'
 # ===================================================
-class ShowOspfVrfAllInclusiveShamLinks(ShowOspfVrfAllInclusiveShamLinksSchema, ShowOspfLinksParser):
+class ShowOspfVrfAllInclusiveShamLinks(ShowOspfVrfAllInclusiveShamLinksSchema, ShowOspfVrfAllInclusiveLinksParser):
 
     ''' Parser for 'show ospf vrf all-inclusive sham-links' '''
 
@@ -2014,7 +2010,7 @@ class ShowOspfVrfAllInclusiveVirtualLinksSchema(MetaParser):
 # ======================================================
 # Parser for 'show ospf vrf all-inclusive virtual-links'
 # ======================================================
-class ShowOspfVrfAllInclusiveVirtualLinks(ShowOspfVrfAllInclusiveVirtualLinksSchema, ShowOspfLinksParser):
+class ShowOspfVrfAllInclusiveVirtualLinks(ShowOspfVrfAllInclusiveVirtualLinksSchema, ShowOspfVrfAllInclusiveLinksParser):
 
     ''' Parser for 'show ospf vrf all-inclusive virtual-links' '''
 
@@ -2300,13 +2296,17 @@ class ShowOspfMplsTrafficEngLinks(ShowOspfMplsTrafficEngLinksSchema):
                 # Set keys for first parsed value
                 if value1 not in link_dict['unreserved_bandwidths']:
                     link_dict['unreserved_bandwidths'][value1] = {}
-                link_dict['unreserved_bandwidths'][value1]['priority'] = int(priority1)
-                link_dict['unreserved_bandwidths'][value1]['unreserved_bandwidth'] = int(band1)
+                link_dict['unreserved_bandwidths'][value1]['priority'] = \
+                    int(priority1)
+                link_dict['unreserved_bandwidths'][value1]\
+                    ['unreserved_bandwidth'] = int(band1)
                 # Set keys for second parsed value
                 if value2 not in link_dict['unreserved_bandwidths']:
                     link_dict['unreserved_bandwidths'][value2] = {}
-                link_dict['unreserved_bandwidths'][value2]['priority'] = int(priority2)
-                link_dict['unreserved_bandwidths'][value2]['unreserved_bandwidth'] = int(band2)
+                link_dict['unreserved_bandwidths'][value2]['priority'] = \
+                    int(priority2)
+                link_dict['unreserved_bandwidths'][value2]\
+                    ['unreserved_bandwidth'] = int(band2)
                 continue
 
             # Out Interface ID : 4
@@ -2327,12 +2327,14 @@ class ShowOspfMplsTrafficEngLinks(ShowOspfMplsTrafficEngLinksSchema):
             p13 = re.compile(r'^Extended +Admin +Group *: +(?P<eag>(\d+))$')
             m = p13.match(line)
             if m:
-                link_dict['total_extended_admin_group'] = int(m.groupdict()['eag'])
+                link_dict['total_extended_admin_group'] = \
+                    int(m.groupdict()['eag'])
                 continue
 
             # EAG[0]: 0
             # EAG[1]: 0
-            p14 = re.compile(r'^EAG\[(?P<group_num>(\d+))\]: +(?P<value>(\d+))$')
+            p14 = re.compile(r'^EAG\[(?P<group_num>(\d+))\]:'
+                              ' +(?P<value>(\d+))$')
             m = p14.match(line)
             if m:
                 group_num = int(m.groupdict()['group_num'])
@@ -2345,3 +2347,748 @@ class ShowOspfMplsTrafficEngLinks(ShowOspfMplsTrafficEngLinksSchema):
                 continue
 
         return ret_dict
+
+
+# ==============================================================
+# Super parser for 'show ospf vrf all-inclusive database <WORD>'
+# ==============================================================
+class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
+
+    ''' Parser for "show ospf vrf all-inclusive database <WORD>" '''
+
+    def cli(self, cmd, db_type):
+
+        assert db_type in ['external', 'network', 'summary', 'router',
+                           'opaque']
+
+        # Execute command on device
+        out = self.device.execute(cmd)
+        
+        # Init vars
+        ret_dict = {}
+        af = 'ipv4'
+        mt_id = 0
+
+        # Router
+        # Network Link
+        # Summary Network
+        # Opaque Area
+        # Type-5 AS External
+        lsa_type_mapping = {
+            'router': 1,
+            'net': 2,
+            'summary': 3,
+            'external': 5,
+            'opaque': 10,
+            }
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (3.3.3.3) (Process ID 1)
+            # OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+            p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
+                             ' +\(Process +ID +(?P<instance>(\d+))'
+                             '(?:, +VRF +(?P<vrf>(\S+)))?\)$')
+            m = p1.match(line)
+            if m:
+                router_id = str(m.groupdict()['router_id'])
+                instance = str(m.groupdict()['instance'])
+                if m.groupdict()['vrf']:
+                    vrf = str(m.groupdict()['vrf'])
+                else:
+                    vrf = 'default'
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+                if 'address_family' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['address_family'] = {}
+                if af not in ret_dict['vrf'][vrf]['address_family']:
+                    ret_dict['vrf'][vrf]['address_family'][af] = {}
+                if 'instance' not in ret_dict['vrf'][vrf]['address_family'][af]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance'] = {}
+                if instance not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance] = {}
+                    continue
+
+            # Router Link States (Area 0)
+            # Net Link States (Area 1)
+            # Summary Net Link States (Area 0.0.0.0)
+            # Type-5 AS External Link States
+            # Type-10 Opaque Link Area Link States (Area 0)
+            p2 = re.compile(r'^(?P<lsa_type_name>(.*)) +Link +States'
+                             '(?: +\(Area +(?P<area>(\S+))\))?$')
+            m = p2.match(line)
+            if m:
+                lsa_type = lsa_type_mapping[db_type]
+                
+                # Set area
+                if m.groupdict()['area']:
+                    try:
+                        int(m.groupdict()['area'])
+                        area = str(IPAddress(str(m.groupdict()['area'])))
+                    except:
+                        area = str(m.groupdict()['area'])
+                else:
+                    area = '0.0.0.0'
+
+                # Create dict structure
+                if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'] = {}
+                if area not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area] = {}
+                if 'database' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area]['database'] = {}
+                if 'lsa_types' not in ret_dict['vrf'][vrf]['address_family']\
+                        [af]['instance'][instance]['areas'][area]['database']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area]['database']['lsa_types'] = {}
+                if lsa_type not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area]['database']\
+                        ['lsa_types']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area]['database']['lsa_types']\
+                        [lsa_type] = {}
+
+                # Set sub_dict
+                sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
+                            ['instance'][instance]['areas'][area]['database']\
+                            ['lsa_types'][lsa_type]
+
+                # Set lsa_type
+                sub_dict['lsa_type'] = lsa_type
+                continue
+
+            # Routing Bit Set on this LSA
+            p3_1 = re.compile(r'^Routing +Bit +Set +on +this +LSA$')
+            m = p3_1.match(line)
+            if m:
+                routing_bit_enable = True
+                continue
+
+            # LS age: 1565
+            p3_2 = re.compile(r'^LS +age: +(?P<age>(\d+))$')
+            m = p3_2.match(line)
+            if m:
+                age = int(m.groupdict()['age'])
+                continue
+
+            # Options: 0x20 (No TOS-capability, DC)
+            # Options: (No TOS-capability, DC)
+            p4 = re.compile(r'^Options:(?: +(?P<option>([a-zA-Z0-9]+)))?'
+                            '(?: *\((?P<option_desc>(.*))\))?$')
+            m = p4.match(line)
+            if m:
+                option = str(m.groupdict()['option'])
+                option_desc = str(m.groupdict()['option_desc'])
+                continue
+
+            # LS Type: Type-5 AS-External
+            p5_1 = re.compile(r'^LS +Type: +(?P<lsa_type>(.*))$')
+            m = p5_1.match(line)
+            if m:
+                lsa_type = lsa_type_mapping[db_type]
+                continue
+
+            # Link State ID: 1.1.1.1
+            # Link State ID: 44.44.44.44 (Network address)
+            # Link State ID: 10.1.2.1 (Designated Router address)
+            p5_2 = re.compile(r'^Link +State +ID: +(?P<lsa_id>(\S+))'
+                             '(?: +\(.*\))?$')
+            m = p5_2.match(line)
+            if m:
+                lsa_id = str(m.groupdict()['lsa_id'])
+                continue
+
+            # Advertising Router: 4.4.4.4
+            p6 = re.compile(r'^Advertising +Router: +(?P<adv_router>(\S+))$')
+            m = p6.match(line)
+            if m:
+                adv_router = str(m.groupdict()['adv_router'])
+                lsa = lsa_id + ' ' + adv_router
+                
+                # Reset counters for this lsa
+                link_tlv_counter = 0
+                unknown_tlvs_counter = 0
+
+                # Create schema structure
+                if 'lsas' not in sub_dict:
+                    sub_dict['lsas'] = {}
+                if lsa not in sub_dict['lsas']:
+                    sub_dict['lsas'][lsa] = {}
+                
+                # Set keys under 'lsa'
+                sub_dict['lsas'][lsa]['adv_router'] = adv_router
+                try:
+                    sub_dict['lsas'][lsa]['lsa_id'] = lsa_id
+                except:
+                    pass
+
+                # Set db_dict
+                if 'ospfv2' not in sub_dict['lsas'][lsa]:
+                    sub_dict['lsas'][lsa]['ospfv2'] = {}
+                if 'body' not in sub_dict['lsas'][lsa]['ospfv2']:
+                    sub_dict['lsas'][lsa]['ospfv2']['body'] = {}
+                if db_type not in sub_dict['lsas'][lsa]['ospfv2']['body']:
+                    sub_dict['lsas'][lsa]['ospfv2']['body'][db_type] = {}
+                db_dict = sub_dict['lsas'][lsa]['ospfv2']['body'][db_type]
+
+                # Create 'topologies' sub_dict if 'summary' or 'database'
+                if db_type in ['summary', 'external']:
+                    if 'topologies' not in db_dict:
+                        db_dict['topologies'] = {}
+                    if mt_id not in db_dict['topologies']:
+                        db_dict['topologies'][mt_id] = {}
+                    db_topo_dict = db_dict['topologies'][mt_id]
+                    db_topo_dict['mt_id'] = mt_id
+
+                # Set header dict
+                if 'header' not in sub_dict['lsas'][lsa]['ospfv2']:
+                    sub_dict['lsas'][lsa]['ospfv2']['header'] = {}
+                header_dict = sub_dict['lsas'][lsa]['ospfv2']['header']
+
+                # Set previously parsed values
+                try:
+                    header_dict['routing_bit_enable'] = routing_bit_enable
+                except:
+                    pass
+                try:
+                    header_dict['age'] = age
+                except:
+                    pass
+                try:
+                    header_dict['option'] = option
+                except:
+                    pass
+                try:
+                    header_dict['option_desc'] = option_desc
+                except:
+                    pass
+                try:
+                    header_dict['type'] = lsa_type
+                except:
+                    pass
+                try:
+                    header_dict['lsa_id'] = lsa_id
+                except:
+                    pass
+                try:
+                    header_dict['adv_router'] = adv_router
+                except:
+                    pass
+                try:
+                    header_dict['opaque_type'] = opaque_type
+                except:
+                    pass
+                try:
+                    header_dict['opaque_id'] = opaque_id
+                except:
+                    pass
+
+            # LS Seq Number: 0x80000002
+            p7 = re.compile(r'^LS +Seq +Number: +(?P<ls_seq_num>(\S+))$')
+            m = p7.match(line)
+            if m:
+                header_dict['seq_num'] = str(m.groupdict()['ls_seq_num'])
+                continue
+
+            # Checksum: 0x7d61
+            p8 = re.compile(r'^Checksum: +(?P<checksum>(\S+))$')
+            m = p8.match(line)
+            if m:
+                header_dict['checksum'] = str(m.groupdict()['checksum'])
+                continue
+
+            # Length: 36
+            p9 = re.compile(r'^Length: +(?P<length>(\d+))$')
+            m = p9.match(line)
+            if m:
+                header_dict['length'] = int(m.groupdict()['length'])
+                continue
+
+            # Network Mask: /32
+            p10 = re.compile(r'^Network +Mask: +\/(?P<net_mask>(\S+))$')
+            m = p10.match(line)
+            if m:
+                db_dict['network_mask'] = '.'.join([str((0xffffffff << (32 - int(m.groupdict()['net_mask'])) >> i) & 0xff) for i in [24, 16, 8, 0]])
+                continue
+
+            # Metric Type: 2 (Larger than any link state path)
+            p11 = re.compile(r'^Metric +Type: +2 +\(.*\)$')
+            m = p11.match(line)
+            if m:
+                db_topo_dict['flags'] = "E"
+                continue
+
+            # TOS: 0
+            # TOS: 0 Metric: 1
+            p12 = re.compile(r'^TOS:? +(?P<tos>(\d+))'
+                              '(?: +Metric(?:s)?: +(?P<metric>(\d+)))?$')
+            m = p12.match(line)
+            if m:
+                if db_type == 'router':
+                    # import pdb ; pdb.set_trace()
+                    if m.groupdict()['tos']:
+                        db_dict['links'][link_id]['topologies'][mt_id]\
+                            ['tos'] = int(m.groupdict()['tos'])
+                    if m.groupdict()['metric']:
+                        db_dict['links'][link_id]['topologies'][mt_id]\
+                            ['metric'] = int(m.groupdict()['metric'])
+                        continue
+                else:
+                    db_topo_dict['tos'] = int(m.groupdict()['tos'])
+                    if m.groupdict()['metric']:
+                        db_topo_dict['metric'] = int(m.groupdict()['metric'])
+                        continue
+
+            # Metric: 20
+            p13 = re.compile(r'^Metric: +(?P<metric>(\d+))$')
+            m = p13.match(line)
+            if m:
+                db_topo_dict['metric'] = int(m.groupdict()['metric'])
+                continue
+
+            # Forward Address: 0.0.0.0
+            p14 = re.compile(r'^Forward +Address: +(?P<addr>(\S+))$')
+            m = p14.match(line)
+            if m:
+                db_topo_dict['forwarding_address'] = str(m.groupdict()['addr'])
+                continue
+
+            # External Route Tag: 0
+            p15 = re.compile(r'^External +Route +Tag: +(?P<tag>(\S+))$')
+            m = p15.match(line)
+            if m:
+                db_topo_dict['external_route_tag'] = str(m.groupdict()['tag'])            
+                continue
+
+            # Attached Router: 66.66.66.66
+            p16 = re.compile(r'^Attached +Router: +(?P<att_router>(\S+))$')
+            m = p16.match(line)
+            if m:
+                attached_router = str(m.groupdict()['att_router'])
+                if 'attached_routers' not in db_dict:
+                    db_dict['attached_routers'] = {}
+                if attached_router not in db_dict['attached_routers']:
+                    db_dict['attached_routers'][attached_router] = {}
+                    continue
+
+            # Number of links: 3
+            # Number of Links: 3
+            p17 = re.compile(r'^Number +of +(l|L)inks: +(?P<num>(\d+))$')
+            m = p17.match(line)
+            if m:
+                db_dict['num_of_links'] = int(m.groupdict()['num'])
+                continue
+
+            # Link connected to: a Stub Network
+            p18 = re.compile(r'^Link +connected +to: +a +(?P<type>(.*))$')
+            m = p18.match(line)
+            if m:
+                link_type = str(m.groupdict()['type']).lower()
+                continue
+
+            # (Link ID) Network/subnet number: 1.1.1.1
+            p19_1 = re.compile(r'^\(Link +ID\) +Network\/(s|S)ubnet +(n|N)umber:'
+                                ' +(?P<link_id>(\S+))$')
+            m = p19_1.match(line)
+            if m:
+                link_id = str(m.groupdict()['link_id'])
+
+                # Create dict structures
+                if 'links' not in db_dict:
+                    db_dict['links'] = {}
+                if link_id not in db_dict['links']:
+                    db_dict['links'][link_id] = {}
+                db_dict['links'][link_id]['link_id'] = link_id
+
+                # Set previously parsed values
+                try:
+                    db_dict['links'][link_id]['type'] = link_type
+                except:
+                    pass
+                
+                # Create topology dict under link_id
+                if 'topologies' not in db_dict['links'][link_id]:
+                    db_dict['links'][link_id]['topologies'] = {}
+                if mt_id not in db_dict['links'][link_id]['topologies']:
+                    db_dict['links'][link_id]['topologies'][mt_id] = {}
+                db_dict['links'][link_id]['topologies'][mt_id]['mt_id'] = mt_id
+                continue
+
+            # (Link ID) Designated Router address: 20.6.7.6
+            p19_2 = re.compile(r'^\(Link +ID\) +(D|d)esignated +(R|r)outer'
+                                ' +(a|A)ddress: +(?P<link_id>(\S+))$')
+            m = p19_2.match(line)
+            if m:
+                link_id = str(m.groupdict()['link_id'])
+
+                # Create dict structures
+                if 'links' not in db_dict:
+                    db_dict['links'] = {}
+                if link_id not in db_dict['links']:
+                    db_dict['links'][link_id] = {}
+                db_dict['links'][link_id]['link_id'] = link_id
+
+                # Set previously parsed values
+                try:
+                    db_dict['links'][link_id]['type'] = link_type
+                except:
+                    pass
+                
+                # Create topology dict under link_id
+                if 'topologies' not in db_dict['links'][link_id]:
+                    db_dict['links'][link_id]['topologies'] = {}
+                if mt_id not in db_dict['links'][link_id]['topologies']:
+                    db_dict['links'][link_id]['topologies'][mt_id] = {}
+                db_dict['links'][link_id]['topologies'][mt_id]['mt_id'] = mt_id
+                continue
+
+            # (Link ID) Neighboring Router ID: 22.22.22.22
+            p19_3 = re.compile(r'^\(Link +ID\) +(N|n)eighboring +(R|r)outer'
+                                ' +(I|d)D: +(?P<link_id>(\S+))$')
+            m = p19_3.match(line)
+            if m:
+                link_id = str(m.groupdict()['link_id'])
+
+                # Create dict structures
+                if 'links' not in db_dict:
+                    db_dict['links'] = {}
+                if link_id not in db_dict['links']:
+                    db_dict['links'][link_id] = {}
+                db_dict['links'][link_id]['link_id'] = link_id
+
+                # Set previously parsed values
+                try:
+                    db_dict['links'][link_id]['type'] = link_type
+                except:
+                    pass
+                
+                # Create topology dict under link_id
+                if 'topologies' not in db_dict['links'][link_id]:
+                    db_dict['links'][link_id]['topologies'] = {}
+                if mt_id not in db_dict['links'][link_id]['topologies']:
+                    db_dict['links'][link_id]['topologies'][mt_id] = {}
+                db_dict['links'][link_id]['topologies'][mt_id]['mt_id'] = mt_id
+                continue
+
+            # (Link Data) Network Mask: 255.255.255.255
+            p20_1 = re.compile(r'^\(Link +Data\) +Network +Mask:'
+                                ' +(?P<link_data>(\S+))$')
+            m = p20_1.match(line)
+            if m:
+                db_dict['links'][link_id]['link_data'] = \
+                    str(m.groupdict()['link_data'])
+                continue
+
+            # (Link Data) Router Interface address: 20.6.7.6
+            p20_2 = re.compile(r'^\(Link +Data\) +Router +Interface +address:'
+                                ' +(?P<link_data>(\S+))$')
+            m = p20_2.match(line)
+            if m:
+                db_dict['links'][link_id]['link_data'] = \
+                    str(m.groupdict()['link_data'])
+                continue
+
+            # Number of TOS metrics: 0
+            p21 = re.compile(r'^Number +of +TOS +metrics: +(?P<num>(\d+))$')
+            m = p21.match(line)
+            if m:
+                db_dict['links'][link_id]['num_tos_metrics'] = \
+                    int(m.groupdict()['num'])
+                continue
+
+            # Opaque Type: 1
+            p22 = re.compile(r'^Opaque +Type: +(?P<type>(\d+))$')
+            m = p22.match(line)
+            if m:
+                opaque_type = int(m.groupdict()['type'])
+                continue
+            
+            # Opaque ID: 38
+            p23 = re.compile(r'^Opaque +ID: +(?P<id>(\d+))$')
+            m = p23.match(line)
+            if m:
+                opaque_id = int(m.groupdict()['id'])
+                continue
+
+            # Fragment number: 0
+            p24 = re.compile(r'^Fragment +number: +(?P<num>(\d+))$')
+            m = p24.match(line)
+            if m:
+                header_dict['fragment_number'] = int(m.groupdict()['num'])
+                continue
+
+            # MPLS TE router ID : 1.1.1.1
+            p25 = re.compile(r'^MPLS +TE +router +ID *: +(?P<mpls>(\S+))$')
+            m = p25.match(line)
+            if m:
+                header_dict['mpls_te_router_id'] = str(m.groupdict()['mpls'])
+                continue
+
+            # AS Boundary Router
+            p26_1 = re.compile(r'^AS +Boundary +Router$')
+            m = p26_1.match(line)
+            if m:
+                header_dict['as_boundary_router'] = True
+                continue
+
+            # Area Border Router
+            p26_2 = re.compile(r'^Area +Border +Router$')
+            m = p26_2.match(line)
+            if m:
+                header_dict['area_border_router'] = True
+                continue
+
+            # Link connected to Broadcast network
+            p27 = re.compile(r'^Link +connected +to +(?P<link>(.*))$')
+            m = p27.match(line)
+            if m:
+                link_tlv_counter += 1
+                if 'link_tlvs' not in db_dict:
+                    db_dict['link_tlvs'] = {}
+                if link_tlv_counter not in db_dict['link_tlvs']:
+                    db_dict['link_tlvs'][link_tlv_counter] = {}
+
+                # Set link type
+                opaque_link = str(m.groupdict()['link'])
+                if opaque_link == 'Broadcast network':
+                    opaque_link_type = 2
+                else:
+                    opaque_link_type = 1
+                db_dict['link_tlvs'][link_tlv_counter]\
+                    ['link_type'] = opaque_link_type
+                db_dict['link_tlvs'][link_tlv_counter]\
+                    ['link_name'] = opaque_link
+                
+                # Set remote_if_ipv4_addrs (if needed)
+                if opaque_link_type == 2:
+                    if 'remote_if_ipv4_addrs' not in db_dict['link_tlvs']\
+                            [link_tlv_counter]:
+                        db_dict['link_tlvs'][link_tlv_counter]\
+                            ['remote_if_ipv4_addrs'] = {}
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['remote_if_ipv4_addrs']['0.0.0.0'] = {}
+                continue
+
+            # Link ID : 10.1.4.4
+            p28 = re.compile(r'^Link +ID *: +(?P<id>(\S+))$')
+            m = p28.match(line)
+            if m:
+                db_dict['link_tlvs'][link_tlv_counter]['link_id'] = \
+                    str(m.groupdict()['id'])
+                continue
+
+            # Interface Address : 10.1.4.1
+            p29 = re.compile(r'^Interface +Address *: +(?P<addr>(\S+))$')
+            m = p29.match(line)
+            if m:
+                addr = str(m.groupdict()['addr'])
+                if 'local_if_ipv4_addrs' not in db_dict['link_tlvs']\
+                        [link_tlv_counter]:
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['local_if_ipv4_addrs'] = {}
+                if addr not in db_dict['link_tlvs'][link_tlv_counter]\
+                        ['local_if_ipv4_addrs']:
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['local_if_ipv4_addrs'][addr] = {}
+                    continue
+
+            # Admin Metric : 1
+            p30 = re.compile(r'^Admin +Metric *: +(?P<te_metric>(\d+))$')
+            m = p30.match(line)
+            if m:
+                db_dict['link_tlvs'][link_tlv_counter]['te_metric'] = \
+                    int(m.groupdict()['te_metric'])
+                continue
+
+            # Maximum Bandwidth : 125000000
+            p31 = re.compile(r'^Maximum +(B|b)andwidth *:'
+                              ' +(?P<max_band>(\d+))$')
+            m = p31.match(line)
+            if m:
+                db_dict['link_tlvs'][link_tlv_counter]['max_bandwidth'] = \
+                    int(m.groupdict()['max_band'])
+                continue
+
+            # Maximum reservable bandwidth : 93750000
+            p32 = re.compile(r'^Maximum +(R|r)eservable +(B|b)andwidth *:'
+                              ' +(?P<max_res_band>(\d+))$')
+            m = p32.match(line)
+            if m:
+                db_dict['link_tlvs'][link_tlv_counter]\
+                    ['max_reservable_bandwidth'] = \
+                    int(m.groupdict()['max_res_band'])
+                continue
+
+            # Affinity Bit : 0x0
+            p33 = re.compile(r'^Affinity +Bit *: +(?P<admin_group>(\S+))$')
+            m = p33.match(line)
+            if m:
+                db_dict['link_tlvs'][link_tlv_counter]['admin_group'] = \
+                    str(m.groupdict()['admin_group'])
+                continue
+
+            # Number of Priority : 8
+            
+            # Priority 0 : 93750000    Priority 1 : 93750000
+            p34 = re.compile(r'^Priority +(?P<num1>(\d+)) *:'
+                              ' +(?P<band1>(\d+))(?: +Priority +(?P<num2>(\d+))'
+                              ' *: +(?P<band2>(\d+)))?$')
+            m = p34.match(line)
+            if m:
+                value1 = str(m.groupdict()['num1']) + ' ' + \
+                         str(m.groupdict()['band1'])
+                value2 = str(m.groupdict()['num2']) + ' ' + \
+                         str(m.groupdict()['band2'])
+                if 'unreserved_bandwidths' not in db_dict['link_tlvs']\
+                        [link_tlv_counter]:
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['unreserved_bandwidths'] = {}
+                if value1 not in db_dict['link_tlvs'][link_tlv_counter]\
+                        ['unreserved_bandwidths']:
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['unreserved_bandwidths'][value1] = {}
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['unreserved_bandwidths'][value1]['priority'] = \
+                        int(m.groupdict()['num1'])
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['unreserved_bandwidths'][value1]\
+                        ['unreserved_bandwidth'] = int(m.groupdict()['band1'])
+                if value2 not in db_dict['link_tlvs'][link_tlv_counter]\
+                        ['unreserved_bandwidths']:
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['unreserved_bandwidths'][value2] = {}
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['unreserved_bandwidths'][value2]['priority'] = \
+                            int(m.groupdict()['num2'])
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['unreserved_bandwidths'][value2]\
+                        ['unreserved_bandwidth'] = int(m.groupdict()['band2'])
+                    continue
+
+            # Unknown Sub-TLV   :  Type = 32770, Length = 4 Value = 00 00 00 01
+            p35 = re.compile(r'^Unknown +Sub-TLV *: +Type += +(?P<type>(\d+)),'
+                              ' +Length += +(?P<length>(\d+))'
+                              ' +Value += +(?P<value>(.*))$')
+            m = p35.match(line)
+            if m:
+                unknown_tlvs_counter += 1
+                if 'unknown_tlvs' not in db_dict['link_tlvs'][link_tlv_counter]:
+                    db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs'] = {}
+                if unknown_tlvs_counter not in db_dict['link_tlvs']\
+                        [link_tlv_counter]['unknown_tlvs']:
+                    db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs']\
+                        [unknown_tlvs_counter] = {}
+                db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs']\
+                    [unknown_tlvs_counter]['type'] = int(m.groupdict()['type'])
+                db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs']\
+                    [unknown_tlvs_counter]['length'] = int(m.groupdict()['length'])
+                db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs']\
+                    [unknown_tlvs_counter]['value'] = str(m.groupdict()['value'])
+                continue
+
+
+        return ret_dict
+
+
+# ========================================================
+# Schema for 'show ospf vrf all-inclusive database router'
+# ========================================================
+class ShowOspfVrfAllInclusiveDatabaseRouterSchema(MetaParser):
+
+    ''' Schema for "'show ospf vrf all-inclusive database router'" '''
+
+    schema = {
+        'vrf': 
+            {Any(): 
+                {'address_family': 
+                    {Any(): 
+                        {'instance': 
+                            {Any(): 
+                                {'areas': 
+                                    {Any(): 
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {Any(): 
+                                                    {'lsa_type': int,
+                                                    'lsas': 
+                                                        {Any(): 
+                                                            {'lsa_id': str,
+                                                            'adv_router': str,
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'option': str,
+                                                                    'option_desc': str,
+                                                                    'lsa_id': str,
+                                                                    'age': int,
+                                                                    'type': int,
+                                                                    'adv_router': str,
+                                                                    'seq_num': str,
+                                                                    'checksum': str,
+                                                                    'length': int,
+                                                                    Optional('routing_bit_enable'): bool,
+                                                                    Optional('as_boundary_router'): bool,
+                                                                    Optional('area_border_router'): bool,
+                                                                    },
+                                                                'body': 
+                                                                    {'router': 
+                                                                        {Optional('flags'): str,
+                                                                        'num_of_links': int,
+                                                                        'links':
+                                                                            {Any(): 
+                                                                                {'link_id': str,
+                                                                                'link_data': str,
+                                                                                'type': str,
+                                                                                'num_tos_metrics': int,
+                                                                                'topologies': 
+                                                                                    {Any(): 
+                                                                                        {'mt_id': int,
+                                                                                        Optional('metric'): int,
+                                                                                        Optional('tos'): int,
+                                                                                        },
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# ========================================================
+# Parser for 'show ospf vrf all-inclusive database router'
+# ========================================================
+class ShowOspfVrfAllInclusiveDatabaseRouter(ShowOspfVrfAllInclusiveDatabaseRouterSchema, ShowOspfVrfAllInclusiveDatabaseParser):
+
+    ''' Parser for "'show ospf vrf all-inclusive database router'" '''
+
+    def cli(self):
+
+        # Build command
+        cmd = 'show ospf vrf all-inclusive database router'
+
+        return super().cli(cmd=cmd, db_type='router')
+
