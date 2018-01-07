@@ -2896,6 +2896,7 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
             m = p35.match(line)
             if m:
                 unknown_tlvs_counter += 1
+                tlv_value = ''
                 if 'unknown_tlvs' not in db_dict['link_tlvs'][link_tlv_counter]:
                     db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs'] = {}
                 if unknown_tlvs_counter not in db_dict['link_tlvs']\
@@ -2906,9 +2907,21 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                     [unknown_tlvs_counter]['type'] = int(m.groupdict()['type'])
                 db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs']\
                     [unknown_tlvs_counter]['length'] = int(m.groupdict()['length'])
+                tlv_value += str(m.groupdict()['value'])
                 db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs']\
-                    [unknown_tlvs_counter]['value'] = str(m.groupdict()['value'])
+                    [unknown_tlvs_counter]['value'] = tlv_value
                 continue
+
+                # 0 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+                # 00 00 00 00 00 00 00 00 00 00 00 00 
+                p40 = re.compile(r'^(?P<something>([0\s]+))$')
+                m = p40.match(line)
+                if m:
+                    import pdb ; pdb.set_trace()
+                    tlv_value = tlv_value + ' ' + line
+                    db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs']\
+                        [unknown_tlvs_counter]['value'] = tlv_value
+                    continue
 
 
         return ret_dict

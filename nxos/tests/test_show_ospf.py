@@ -3744,6 +3744,7 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                                                                                     2: {'length': 32,
                                                                                         'type': 32771,
                                                                                         'value': '00 00 00 00 00 0'}},
+                                                                                        #'value': '00 00 00 00 00 0 0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00'}},
                                                                                 'unreserved_bandwidths': 
                                                                                     {'0 93750000': 
                                                                                         {'priority': 0,
@@ -3810,6 +3811,7 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                                                                                     2: {'length': 32,
                                                                                         'type': 32771,
                                                                                         'value': '00 00 00 00 00 0'}},
+                                                                                        #'value': '00 00 00 00 00 0 0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00'}},
                                                                                 'unreserved_bandwidths': 
                                                                                     {'0 93750000': 
                                                                                         {'priority': 0,
