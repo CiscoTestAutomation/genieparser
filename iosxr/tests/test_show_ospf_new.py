@@ -17,7 +17,11 @@ from parser.iosxr.show_ospf_new import ShowOspfVrfAllInclusiveInterface,\
                                        ShowOspfVrfAllInclusiveShamLinks,\
                                        ShowOspfVrfAllInclusiveVirtualLinks,\
                                        ShowOspfMplsTrafficEngLinks,\
-                                       ShowOspfVrfAllInclusiveDatabaseRouter
+                                       ShowOspfVrfAllInclusiveDatabaseRouter,\
+                                       ShowOspfVrfAllInclusiveDatabaseExternal,\
+                                       ShowOspfVrfAllInclusiveDatabaseNetwork,\
+                                       ShowOspfVrfAllInclusiveDatabaseSummary,\
+                                       ShowOspfVrfAllInclusiveDatabaseOpaqueArea
 
 
 # ======================================================
@@ -2510,6 +2514,1866 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
         obj = ShowOspfVrfAllInclusiveDatabaseRouter(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+
+# ==============================================================
+#  Unit test for 'show ospf vrf all-inclusive database external'
+# ==============================================================
+class test_show_ospf_vrf_all_inclusive_database_external(unittest.TestCase):
+
+    '''Unit test for "show ospf vrf all-inclusive database external" '''
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.0': 
+                                        {'database': 
+                                            {'lsa_types':
+                                                {5: 
+                                                    {'lsa_type': 5,
+                                                    'lsas': 
+                                                        {'44.44.44.44 4.4.4.4': 
+                                                            {'adv_router': '4.4.4.4',
+                                                            'lsa_id': '44.44.44.44',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'external': 
+                                                                        {'network_mask': '255.255.255.255',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'external_route_tag': '0',
+                                                                                'flags': 'E',
+                                                                                'forwarding_address': '0.0.0.0',
+                                                                                'metric': 20,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '4.4.4.4',
+                                                                    'age': 608,
+                                                                    'checksum': '0x7d61',
+                                                                    'length': 36,
+                                                                    'lsa_id': '44.44.44.44',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '80000002',
+                                                                    'type': 5}}}}}}}}}}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive database external 
+        Thu Nov  2 21:26:53.724 UTC
+
+
+                    OSPF Router with ID (3.3.3.3) (Process ID 1)
+
+                        Type-5 AS External Link States
+
+          Routing Bit Set on this LSA
+          LS age: 608
+          Options: (No TOS-capability, DC)
+          LS Type: AS External Link
+          Link State ID: 44.44.44.44 (External Network Number)
+          Advertising Router: 4.4.4.4
+          LS Seq Number: 80000002
+          Checksum: 0x7d61
+          Length: 36
+          Network Mask: /32
+                Metric Type: 2 (Larger than any link state path)
+                TOS: 0 
+                Metric: 20 
+                Forward Address: 0.0.0.0
+                External Route Tag: 0
+        '''}
+
+    def test_show_ospf_vrf_all_inclusive_database_external_full(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowOspfVrfAllInclusiveDatabaseExternal(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ospf_vrf_all_inclusive_database_external_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfVrfAllInclusiveDatabaseExternal(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
+# =============================================================
+#  Unit test for 'show ospf vrf all-inclusive database network'
+# =============================================================
+class test_show_ospf_vrf_all_inclusive_database_network(unittest.TestCase):
+
+    '''Unit test for "show ospf vrf all-inclusive database network" '''
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'vrf': 
+            {'VRF1': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.1': 
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {2: 
+                                                    {'lsa_type': 2,
+                                                    'lsas': 
+                                                        {'20.1.5.1 11.11.11.11':
+                                                            {'adv_router': '11.11.11.11',
+                                                            'lsa_id': '20.1.5.1',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'network': 
+                                                                        {'attached_routers': 
+                                                                            {'11.11.11.11': {},
+                                                                            '55.55.55.55': {}},
+                                                                        'network_mask': '255.255.255.0'}},
+                                                                'header': 
+                                                                    {'adv_router': '11.11.11.11',
+                                                                    'age': 522,
+                                                                    'checksum': '0xddd9',
+                                                                    'length': 32,
+                                                                    'lsa_id': '20.1.5.1',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '80000033',
+                                                                    'type': 2}}},
+                                                        '20.2.6.6 66.66.66.66': 
+                                                            {'adv_router': '66.66.66.66',
+                                                            'lsa_id': '20.2.6.6',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'network': 
+                                                                        {'attached_routers': {'22.22.22.22': {},
+                                                                        '66.66.66.66': {}},
+                                                                    'network_mask': '255.255.255.0'}},
+                                                                'header': 
+                                                                    {'adv_router': '66.66.66.66',
+                                                                    'age': 146,
+                                                                    'checksum': '0x3f5f',
+                                                                    'length': 32,
+                                                                    'lsa_id': '20.2.6.6',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '80000010',
+                                                                    'type': 2}}},
+                                                        '20.3.7.7 77.77.77.77': 
+                                                            {'adv_router': '77.77.77.77',
+                                                            'lsa_id': '20.3.7.7',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'network': 
+                                                                        {'attached_routers': 
+                                                                            {'3.3.3.3': {},
+                                                                            '77.77.77.77': {}},
+                                                                    'network_mask': '255.255.255.0'}},
+                                                                'header': 
+                                                                    {'adv_router': '77.77.77.77',
+                                                                    'age': 1903,
+                                                                    'checksum': '0x5c19',
+                                                                    'length': 32,
+                                                                    'lsa_id': '20.3.7.7',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '8000002a',
+                                                                    'type': 2}}},
+                                                        '20.5.6.6 66.66.66.66': 
+                                                            {'adv_router': '66.66.66.66',
+                                                            'lsa_id': '20.5.6.6',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'network': 
+                                                                        {'attached_routers': 
+                                                                            {'55.55.55.55': {},
+                                                                            '66.66.66.66': {}},
+                                                                        'network_mask': '255.255.255.0'}},
+                                                                'header': 
+                                                                    {'adv_router': '66.66.66.66',
+                                                                    'age': 1620,
+                                                                    'checksum': '0x619c',
+                                                                    'length': 32,
+                                                                    'lsa_id': '20.5.6.6',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '80000029',
+                                                                    'type': 2}}},
+                                                        '20.6.7.6 66.66.66.66': 
+                                                            {'adv_router': '66.66.66.66',
+                                                            'lsa_id': '20.6.7.6',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'network': 
+                                                                        {'attached_routers': 
+                                                                            {'66.66.66.66': {},
+                                                                            '77.77.77.77': {}},
+                                                                        'network_mask': '255.255.255.0'}},
+                                                                'header': 
+                                                                    {'adv_router': '66.66.66.66',
+                                                                    'age': 884,
+                                                                    'checksum': '0x960b',
+                                                                    'length': 32,
+                                                                    'lsa_id': '20.6.7.6',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '8000002b',
+                                                                    'type': 2}}}}}}}}}}}}}},
+            'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.0': 
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {2: 
+                                                    {'lsa_type': 2,
+                                                    'lsas': 
+                                                        {'10.1.2.1 1.1.1.1': 
+                                                            {'adv_router': '1.1.1.1',
+                                                            'lsa_id': '10.1.2.1',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'network': 
+                                                                        {'attached_routers': 
+                                                                            {'1.1.1.1': {},
+                                                                            '2.2.2.2': {}},
+                                                                        'network_mask': '255.255.255.0'}},
+                                                                'header': 
+                                                                    {'adv_router': '1.1.1.1',
+                                                                    'age': 1844,
+                                                                    'checksum': '0x3dd0',
+                                                                    'length': 32,
+                                                                    'lsa_id': '10.1.2.1',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '8000000f',
+                                                                    'type': 2}}},
+                                                        '10.1.4.4 4.4.4.4': 
+                                                            {'adv_router': '4.4.4.4',
+                                                            'lsa_id': '10.1.4.4',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'network': 
+                                                                        {'attached_routers': 
+                                                                            {'1.1.1.1': {},
+                                                                            '4.4.4.4': {}},
+                                                                    'network_mask': '255.255.255.0'}},
+                                                                'header': 
+                                                                    {'adv_router': '4.4.4.4',
+                                                                    'age': 546,
+                                                                    'checksum': '0xa232',
+                                                                    'length': 32,
+                                                                    'lsa_id': '10.1.4.4',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '8000002f',
+                                                                    'type': 2}}},
+                                                        '10.2.3.3 3.3.3.3': 
+                                                            {'adv_router': '3.3.3.3',
+                                                            'lsa_id': '10.2.3.3',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'network': 
+                                                                        {'attached_routers': 
+                                                                            {'2.2.2.2': {},
+                                                                            '3.3.3.3': {}},
+                                                                        'network_mask': '255.255.255.0'}},
+                                                                'header': 
+                                                                    {'adv_router': '3.3.3.3',
+                                                                    'age': 1828,
+                                                                    'checksum': '0x2acf',
+                                                                    'length': 32,
+                                                                    'lsa_id': '10.2.3.3',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '8000000f',
+                                                                    'type': 2}}},
+                                                        '10.2.4.4 4.4.4.4': 
+                                                            {'adv_router': '4.4.4.4',
+                                                            'lsa_id': '10.2.4.4',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'network': 
+                                                                        {'attached_routers': 
+                                                                            {'2.2.2.2': {},
+                                                                            '4.4.4.4': {}},
+                                                                    'network_mask': '255.255.255.0'}},
+                                                                'header': 
+                                                                    {'adv_router': '4.4.4.4',
+                                                                    'age': 1803,
+                                                                    'checksum': '0x9e6',
+                                                                    'length': 32,
+                                                                    'lsa_id': '10.2.4.4',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '8000000f',
+                                                                    'type': 2}}},
+                                                        '10.3.4.4 4.4.4.4': 
+                                                            {'adv_router': '4.4.4.4',
+                                                            'lsa_id': '10.3.4.4',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'network': 
+                                                                        {'attached_routers': 
+                                                                            {'3.3.3.3': {},
+                                                                            '4.4.4.4': {}},
+                                                                        'network_mask': '255.255.255.0'}},
+                                                                'header': 
+                                                                    {'adv_router': '4.4.4.4',
+                                                                    'age': 52,
+                                                                    'checksum': '0xeedb',
+                                                                    'length': 32,
+                                                                    'lsa_id': '10.3.4.4',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '8000002f',
+                                                                    'type': 2}}}}}}}}}}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        P/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive database network 
+        Thu Nov  2 21:25:51.748 UTC
+
+                    OSPF Router with ID (3.3.3.3) (Process ID 1)
+
+                        Net Link States (Area 0)
+
+          Routing Bit Set on this LSA
+          LS age: 1844
+          Options: (No TOS-capability, DC)
+          LS Type: Network Links
+          Link State ID: 10.1.2.1 (address of Designated Router)
+          Advertising Router: 1.1.1.1
+          LS Seq Number: 8000000f
+          Checksum: 0x3dd0
+          Length: 32
+          Network Mask: /24
+                Attached Router: 1.1.1.1
+                Attached Router: 2.2.2.2
+
+          Routing Bit Set on this LSA
+          LS age: 546
+          Options: (No TOS-capability, DC)
+          LS Type: Network Links
+          Link State ID: 10.1.4.4 (address of Designated Router)
+          Advertising Router: 4.4.4.4
+          LS Seq Number: 8000002f
+          Checksum: 0xa232
+          Length: 32
+          Network Mask: /24
+                Attached Router: 4.4.4.4
+                Attached Router: 1.1.1.1
+
+          Routing Bit Set on this LSA
+          LS age: 1828
+          Options: (No TOS-capability, DC)
+          LS Type: Network Links
+          Link State ID: 10.2.3.3 (address of Designated Router)
+          Advertising Router: 3.3.3.3
+          LS Seq Number: 8000000f
+          Checksum: 0x2acf
+          Length: 32
+          Network Mask: /24
+                Attached Router: 2.2.2.2
+                Attached Router: 3.3.3.3
+
+          Routing Bit Set on this LSA
+          LS age: 1803
+          Options: (No TOS-capability, DC)
+          LS Type: Network Links
+          Link State ID: 10.2.4.4 (address of Designated Router)
+          Advertising Router: 4.4.4.4
+          LS Seq Number: 8000000f
+          Checksum: 0x9e6
+          Length: 32
+          Network Mask: /24
+                Attached Router: 4.4.4.4
+                Attached Router: 2.2.2.2
+
+          Routing Bit Set on this LSA
+          LS age: 52
+          Options: (No TOS-capability, DC)
+          LS Type: Network Links
+          Link State ID: 10.3.4.4 (address of Designated Router)
+          Advertising Router: 4.4.4.4
+          LS Seq Number: 8000002f
+          Checksum: 0xeedb
+          Length: 32
+          Network Mask: /24
+                Attached Router: 4.4.4.4
+                Attached Router: 3.3.3.3
+
+
+                    OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+
+                        Net Link States (Area 1)
+
+          Routing Bit Set on this LSA
+          LS age: 522
+          Options: (No TOS-capability, DC)
+          LS Type: Network Links
+          Link State ID: 20.1.5.1 (address of Designated Router)
+          Advertising Router: 11.11.11.11
+          LS Seq Number: 80000033
+          Checksum: 0xddd9
+          Length: 32
+          Network Mask: /24
+                Attached Router: 11.11.11.11
+                Attached Router: 55.55.55.55
+
+          Routing Bit Set on this LSA
+          LS age: 146
+          Options: (No TOS-capability, DC)
+          LS Type: Network Links
+          Link State ID: 20.2.6.6 (address of Designated Router)
+          Advertising Router: 66.66.66.66
+          LS Seq Number: 80000010
+          Checksum: 0x3f5f
+          Length: 32
+          Network Mask: /24
+                Attached Router: 66.66.66.66
+                Attached Router: 22.22.22.22
+
+          Routing Bit Set on this LSA
+          LS age: 1903
+          Options: (No TOS-capability, DC)
+          LS Type: Network Links
+          Link State ID: 20.3.7.7 (address of Designated Router)
+          Advertising Router: 77.77.77.77
+          LS Seq Number: 8000002a
+          Checksum: 0x5c19
+          Length: 32
+          Network Mask: /24
+                Attached Router: 77.77.77.77
+                Attached Router: 3.3.3.3
+
+          Routing Bit Set on this LSA
+          LS age: 1620
+          Options: (No TOS-capability, DC)
+          LS Type: Network Links
+          Link State ID: 20.5.6.6 (address of Designated Router)
+          Advertising Router: 66.66.66.66
+          LS Seq Number: 80000029
+          Checksum: 0x619c
+          Length: 32
+          Network Mask: /24
+                Attached Router: 66.66.66.66
+                Attached Router: 55.55.55.55
+
+          Routing Bit Set on this LSA
+          LS age: 884
+          Options: (No TOS-capability, DC)
+          LS Type: Network Links
+          Link State ID: 20.6.7.6 (address of Designated Router)
+          Advertising Router: 66.66.66.66
+          LS Seq Number: 8000002b
+          Checksum: 0x960b
+          Length: 32
+          Network Mask: /24
+                Attached Router: 66.66.66.66
+                Attached Router: 77.77.77.77
+        '''}
+
+    def test_show_ospf_vrf_all_inclusive_database_network_full(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowOspfVrfAllInclusiveDatabaseNetwork(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ospf_vrf_all_inclusive_database_network_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfVrfAllInclusiveDatabaseNetwork(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
+# =============================================================
+#  Unit test for 'show ospf vrf all-inclusive database summary'
+# =============================================================
+class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
+
+    '''Unit test for "show ospf vrf all-inclusive database summary" '''
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.0': 
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {3: 
+                                                    {'lsa_type': 3,
+                                                    'lsas': 
+                                                        {'20.1.3.0 2.2.2.2': 
+                                                            {'adv_router': '2.2.2.2',
+                                                            'lsa_id': '20.1.3.0',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.0',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 65575,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '2.2.2.2',
+                                                                    'age': 520,
+                                                                    'checksum': '0xaa4a',
+                                                                    'length': 28,
+                                                                    'lsa_id': '20.1.3.0',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'seq_num': '80000001',
+                                                                    'type': 3}}},
+                                                        '20.2.3.0 2.2.2.2': 
+                                                            {'adv_router': '2.2.2.2',
+                                                            'lsa_id': '20.2.3.0',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.0',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 65535,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '2.2.2.2',
+                                                                    'age': 519,
+                                                                    'checksum': '0xd0e',
+                                                                    'length': 28,
+                                                                    'lsa_id': '20.2.3.0',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'seq_num': '80000002',
+                                                                    'type': 3}}},
+                                                        '20.2.4.0 2.2.2.2': 
+                                                            {'adv_router': '2.2.2.2',
+                                                            'lsa_id': '20.2.4.0',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.0',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 65535,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '2.2.2.2',
+                                                                    'age': 297,
+                                                                    'checksum': '0x218',
+                                                                    'length': 28,
+                                                                    'lsa_id': '20.2.4.0',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'seq_num': '80000002',
+                                                                    'type': 3}}},
+                                                        '20.3.4.0 2.2.2.2': 
+                                                            {'adv_router': '2.2.2.2',
+                                                            'lsa_id': '20.3.4.0',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.0',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 65536,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '2.2.2.2',
+                                                                    'age': 294,
+                                                                    'checksum': '0xfd1a',
+                                                                    'length': 28,
+                                                                    'lsa_id': '20.3.4.0',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'seq_num': '80000002',
+                                                                    'type': 3}}},
+                                                        '4.4.4.4 2.2.2.2': 
+                                                            {'adv_router': '2.2.2.2',
+                                                            'lsa_id': '4.4.4.4',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.255',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 65536,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '2.2.2.2',
+                                                                    'age': 295,
+                                                                    'checksum': '0x9c87',
+                                                                    'length': 28,
+                                                                    'lsa_id': '4.4.4.4',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'seq_num': '80000001',
+                                                                    'type': 3}}}}}}}},
+                                    '0.0.0.1': 
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {3: 
+                                                    {'lsa_type': 3,
+                                                    'lsas': 
+                                                        {'10.1.2.0 2.2.2.2': 
+                                                            {'adv_router': '2.2.2.2',
+                                                            'lsa_id': '10.1.2.0',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.0',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 4294,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '2.2.2.2',
+                                                                     'age': 675,
+                                                                     'checksum': '0xfc54',
+                                                                     'length': 28,
+                                                                     'lsa_id': '10.1.2.0',
+                                                                     'option': 'None',
+                                                                     'option_desc': 'No '
+                                                                                    'TOS-capability, '
+                                                                                    'DC',
+                                                                     'routing_bit_enable': True,
+                                                                     'seq_num': '80000001',
+                                                                     'type': 3}}},
+                                                        '10.1.2.0 3.3.3.3': 
+                                                            {'adv_router': '3.3.3.3',
+                                                            'lsa_id': '10.1.2.0',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.0',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 151,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '3.3.3.3',
+                                                                    'age': 521,
+                                                                    'checksum': '0x5655',
+                                                                    'length': 28,
+                                                                    'lsa_id': '10.1.2.0',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'No '
+                                                                    'DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '80000002',
+                                                                    'type': 3}}},
+                                                        '10.1.3.0 3.3.3.3': 
+                                                            {'adv_router': '3.3.3.3',
+                                                            'lsa_id': '10.1.3.0',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.0',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 40,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '3.3.3.3',
+                                                                    'age': 531,
+                                                                    'checksum': '0xf029',
+                                                                    'length': 28,
+                                                                    'lsa_id': '10.1.3.0',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'No '
+                                                                    'DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '80000002',
+                                                                    'type': 3}}},
+                                                        '10.2.3.0 2.2.2.2': 
+                                                            {'adv_router': '2.2.2.2',
+                                                            'lsa_id': '10.2.3.0',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.0',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 222,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '2.2.2.2',
+                                                                    'age': 675,
+                                                                    'checksum': '0x4601',
+                                                                    'length': 28,
+                                                                    'lsa_id': '10.2.3.0',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '80000001',
+                                                                    'type': 3}}},
+                                                        '10.2.3.0 3.3.3.3': 
+                                                            {'adv_router': '3.3.3.3',
+                                                            'lsa_id': '10.2.3.0',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.0',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 262,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '3.3.3.3',
+                                                                    'age': 287,
+                                                                    'checksum': '0x96a2',
+                                                                    'length': 28,
+                                                                    'lsa_id': '10.2.3.0',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'No '
+                                                                    'DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '80000003',
+                                                                    'type': 3}}},
+                                                        '2.2.2.2 2.2.2.2': 
+                                                            {'adv_router': '2.2.2.2',
+                                                            'lsa_id': '2.2.2.2',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.255',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 1,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '2.2.2.2',
+                                                                    'age': 676,
+                                                                    'checksum': '0xfa31',
+                                                                    'length': 28,
+                                                                    'lsa_id': '2.2.2.2',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'seq_num': '80000001',
+                                                                    'type': 3}}},
+                                                        '3.3.3.3 3.3.3.3': 
+                                                            {'adv_router': '3.3.3.3',
+                                                            'lsa_id': '3.3.3.3',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.255',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 1,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '3.3.3.3',
+                                                                    'age': 531,
+                                                                    'checksum': '0x8eb4',
+                                                                    'length': 28,
+                                                                    'lsa_id': '3.3.3.3',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'No '
+                                                                    'DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '80000002',
+                                                                    'type': 3}}},
+                                                        '44.44.44.44 4.4.4.4': 
+                                                            {'adv_router': '4.4.4.4',
+                                                            'lsa_id': '44.44.44.44',
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': '255.255.255.255',
+                                                                        'topologies': 
+                                                                            {0: 
+                                                                                {'metric': 1,
+                                                                                'mt_id': 0,
+                                                                                'tos': 0}}}},
+                                                                'header': 
+                                                                    {'adv_router': '4.4.4.4',
+                                                                    'age': 291,
+                                                                    'checksum': '0x2b50',
+                                                                    'length': 28,
+                                                                    'lsa_id': '44.44.44.44',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '80000001',
+                                                                    'type': 3}}}}}}}}}}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        RP/0/0/CPU0:R2_ospf_xr#show ospf vrf all-inclusive database summary 
+        Fri Nov  3 01:24:47.719 UTC
+
+
+                    OSPF Router with ID (2.2.2.2) (Process ID 1)
+
+                        Summary Net Link States (Area 0.0.0.0)
+
+          LS age: 295
+          Options: (No TOS-capability, DC)
+          LS Type: Summary Links (Network)
+          Link State ID: 4.4.4.4 (Summary Network Number)
+          Advertising Router: 2.2.2.2
+          LS Seq Number: 80000001
+          Checksum: 0x9c87
+          Length: 28
+          Network Mask: /32
+                TOS: 0  Metric: 65536 
+
+          LS age: 520
+          Options: (No TOS-capability, DC)
+          LS Type: Summary Links (Network)
+          Link State ID: 20.1.3.0 (Summary Network Number)
+          Advertising Router: 2.2.2.2
+          LS Seq Number: 80000001
+          Checksum: 0xaa4a
+          Length: 28
+          Network Mask: /24
+                TOS: 0  Metric: 65575 
+
+          LS age: 519
+          Options: (No TOS-capability, DC)
+          LS Type: Summary Links (Network)
+          Link State ID: 20.2.3.0 (Summary Network Number)
+          Advertising Router: 2.2.2.2
+          LS Seq Number: 80000002
+          Checksum: 0xd0e
+          Length: 28
+          Network Mask: /24
+                TOS: 0  Metric: 65535 
+
+          LS age: 297
+          Options: (No TOS-capability, DC)
+          LS Type: Summary Links (Network)
+          Link State ID: 20.2.4.0 (Summary Network Number)
+          Advertising Router: 2.2.2.2
+          LS Seq Number: 80000002
+          Checksum: 0x218
+          Length: 28
+          Network Mask: /24
+                TOS: 0  Metric: 65535 
+
+          LS age: 294
+          Options: (No TOS-capability, DC)
+          LS Type: Summary Links (Network)
+          Link State ID: 20.3.4.0 (Summary Network Number)
+          Advertising Router: 2.2.2.2
+          LS Seq Number: 80000002
+          Checksum: 0xfd1a
+          Length: 28
+          Network Mask: /24
+                TOS: 0  Metric: 65536 
+
+
+                        Summary Net Link States (Area 1)
+
+          LS age: 676
+          Options: (No TOS-capability, DC)
+          LS Type: Summary Links (Network)
+          Link State ID: 2.2.2.2 (Summary Network Number)
+          Advertising Router: 2.2.2.2
+          LS Seq Number: 80000001
+          Checksum: 0xfa31
+          Length: 28
+          Network Mask: /32
+                TOS: 0  Metric: 1 
+
+          Routing Bit Set on this LSA
+          LS age: 531
+          Options: (No TOS-capability, No DC)
+          LS Type: Summary Links (Network)
+          Link State ID: 3.3.3.3 (Summary Network Number)
+          Advertising Router: 3.3.3.3
+          LS Seq Number: 80000002
+          Checksum: 0x8eb4
+          Length: 28
+          Network Mask: /32
+                TOS: 0  Metric: 1 
+
+          LS age: 675
+          Options: (No TOS-capability, DC)
+          LS Type: Summary Links (Network)
+          Link State ID: 10.1.2.0 (Summary Network Number)
+          Advertising Router: 2.2.2.2
+          LS Seq Number: 80000001
+          Checksum: 0xfc54
+          Length: 28
+          Network Mask: /24
+                TOS: 0  Metric: 4294 
+
+          LS age: 521
+          Options: (No TOS-capability, No DC)
+          LS Type: Summary Links (Network)
+          Link State ID: 10.1.2.0 (Summary Network Number)
+          Advertising Router: 3.3.3.3
+          LS Seq Number: 80000002
+          Checksum: 0x5655
+          Length: 28
+          Network Mask: /24
+                TOS: 0  Metric: 151 
+
+          Routing Bit Set on this LSA
+          LS age: 531
+          Options: (No TOS-capability, No DC)
+          LS Type: Summary Links (Network)
+          Link State ID: 10.1.3.0 (Summary Network Number)
+          Advertising Router: 3.3.3.3
+          LS Seq Number: 80000002
+          Checksum: 0xf029
+          Length: 28
+          Network Mask: /24
+                TOS: 0  Metric: 40 
+
+          LS age: 675
+          Options: (No TOS-capability, DC)
+          LS Type: Summary Links (Network)
+          Link State ID: 10.2.3.0 (Summary Network Number)
+          Advertising Router: 2.2.2.2
+          LS Seq Number: 80000001
+          Checksum: 0x4601
+          Length: 28
+          Network Mask: /24
+                TOS: 0  Metric: 222 
+
+          LS age: 287
+          Options: (No TOS-capability, No DC)
+          LS Type: Summary Links (Network)
+          Link State ID: 10.2.3.0 (Summary Network Number)
+          Advertising Router: 3.3.3.3
+          LS Seq Number: 80000003
+          Checksum: 0x96a2
+          Length: 28
+          Network Mask: /24
+                TOS: 0  Metric: 262 
+
+          Routing Bit Set on this LSA
+          LS age: 291
+          Options: (No TOS-capability, DC)
+          LS Type: Summary Links (Network)
+          Link State ID: 44.44.44.44 (Summary Network Number)
+          Advertising Router: 4.4.4.4
+          LS Seq Number: 80000001
+          Checksum: 0x2b50
+          Length: 28
+          Network Mask: /32
+                TOS: 0  Metric: 1 
+        '''}
+
+    def test_show_ospf_vrf_all_inclusive_database_summary_full(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowOspfVrfAllInclusiveDatabaseSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ospf_vrf_all_inclusive_database_summary_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfVrfAllInclusiveDatabaseSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
+# =================================================================
+#  Unit test for 'show ospf vrf all-inclusive database opaque-area'
+# =================================================================
+class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
+
+    '''Unit test for "show ospf vrf all-inclusive database opaque-area" '''
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'vrf': 
+            {'VRF1': {'address_family': {'ipv4': {'instance': {'1': {}}}}},
+        'default': 
+            {'address_family': 
+                {'ipv4': 
+                    {'instance': 
+                        {'1': 
+                            {'areas': 
+                                {'0.0.0.0': 
+                                    {'database': 
+                                        {'lsa_types': 
+                                            {10: 
+                                                {'lsa_type': 10,
+                                                'lsas': 
+                                                    {'1.0.0.0 1.1.1.1': 
+                                                        {'adv_router': '1.1.1.1',
+                                                        'lsa_id': '1.0.0.0',
+                                                        'ospfv2': 
+                                                            {'body': 
+                                                                {'opaque': {}},
+                                                            'header': 
+                                                                {'adv_router': '1.1.1.1',
+                                                                'age': 1427,
+                                                                'checksum': '0x56d2',
+                                                                'length': 28,
+                                                                'lsa_id': '1.0.0.0',
+                                                                'mpls_te_router_id': '1.1.1.1',
+                                                                'opaque_id': 0,
+                                                                'opaque_type': 1,
+                                                                'option': 'None',
+                                                                'option_desc': 'No '
+                                                                'TOS-capability, '
+                                                                'DC',
+                                                                'seq_num': '80000002',
+                                                                'type': 10}}},
+                                                    '1.0.0.0 2.2.2.2': 
+                                                        {'adv_router': '2.2.2.2',
+                                                        'lsa_id': '1.0.0.0',
+                                                        'ospfv2': 
+                                                            {'body': 
+                                                                {'opaque': {}},
+                                                            'header': 
+                                                                {'adv_router': '2.2.2.2',
+                                                                'age': 653,
+                                                                'checksum': '0x1c22',
+                                                                'length': 28,
+                                                                'lsa_id': '1.0.0.0',
+                                                                'mpls_te_router_id': '2.2.2.2',
+                                                                'opaque_id': 0,
+                                                                'opaque_type': 1,
+                                                                'option': 'None',
+                                                                'option_desc': 'No '
+                                                                'TOS-capability, '
+                                                                'No '
+                                                                'DC',
+                                                                'seq_num': '80000003',
+                                                                'type': 10}}},
+                                                    '1.0.0.0 3.3.3.3': 
+                                                        {'adv_router': '3.3.3.3',
+                                                        'lsa_id': '1.0.0.0',
+                                                        'ospfv2': 
+                                                            {'body': 
+                                                                {'opaque': {}},
+                                                            'header': 
+                                                                {'adv_router': '3.3.3.3',
+                                                                'age': 1175,
+                                                                'checksum': '0x5eba',
+                                                                'length': 28,
+                                                                'lsa_id': '1.0.0.0',
+                                                                'mpls_te_router_id': '3.3.3.3',
+                                                                'opaque_id': 0,
+                                                                'opaque_type': 1,
+                                                                'option': 'None',
+                                                                'option_desc': 'No '
+                                                                'TOS-capability, '
+                                                                'DC',
+                                                                'seq_num': '80000002',
+                                                                'type': 10}}},
+                                                    '1.0.0.1 1.1.1.1': 
+                                                        {'adv_router': '1.1.1.1',
+                                                        'lsa_id': '1.0.0.1',
+                                                        'ospfv2': 
+                                                            {'body': 
+                                                                {'opaque': 
+                                                                    {'link_tlvs': 
+                                                                        {1: 
+                                                                            {'admin_group': '0',
+                                                                            'igp_metric': 1,
+                                                                            'link_id': '10.1.4.4',
+                                                                            'link_name': 'broadcast network',
+                                                                            'link_type': 2,
+                                                                            'local_if_ipv4_addrs': 
+                                                                                {'10.1.4.1': {}},
+                                                                            'max_bandwidth': 125000000,
+                                                                            'max_reservable_bandwidth': 93750000,
+                                                                            'remote_if_ipv4_addrs': 
+                                                                                {'0.0.0.0': {}},
+                                                                            'te_metric': 1,
+                                                                            'total_priority': 8,
+                                                                            'unreserved_bandwidths': 
+                                                                                {'0 93750000': 
+                                                                                    {'priority': 0,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '1 93750000': 
+                                                                                    {'priority': 1,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '2 93750000': 
+                                                                                    {'priority': 2,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '3 93750000': 
+                                                                                    {'priority': 3,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '4 93750000': 
+                                                                                    {'priority': 4,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '5 93750000': 
+                                                                                    {'priority': 5,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '6 93750000': 
+                                                                                    {'priority': 6,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '7 93750000': 
+                                                                                    {'priority': 7,
+                                                                                    'unreserved_bandwidth': 93750000}}}}}},
+                                                            'header': 
+                                                                {'adv_router': '1.1.1.1',
+                                                                'age': 1427,
+                                                                'checksum': '0x6586',
+                                                                'length': 124,
+                                                                'lsa_id': '1.0.0.1',
+                                                                'opaque_id': 1,
+                                                                'opaque_type': 1,
+                                                                'option': 'None',
+                                                                'option_desc': 'No '
+                                                                'TOS-capability, '
+                                                                'DC',
+                                                                'seq_num': '80000002',
+                                                                'type': 10}}},
+                                                    '1.0.0.2 1.1.1.1': 
+                                                        {'adv_router': '1.1.1.1',
+                                                        'lsa_id': '1.0.0.2',
+                                                        'ospfv2': 
+                                                            {'body': 
+                                                                {'opaque': 
+                                                                    {'link_tlvs': 
+                                                                        {1: 
+                                                                            {'admin_group': '0',
+                                                                            'igp_metric': 1,
+                                                                            'link_id': '10.1.2.1',
+                                                                            'link_name': 'broadcast network',
+                                                                            'link_type': 2,
+                                                                            'local_if_ipv4_addrs': 
+                                                                                {'10.1.2.1': {}},
+                                                                            'max_bandwidth': 125000000,
+                                                                            'max_reservable_bandwidth': 93750000,
+                                                                            'remote_if_ipv4_addrs': 
+                                                                                {'0.0.0.0': {}},
+                                                                            'te_metric': 1,
+                                                                            'total_priority': 8,
+                                                                            'unreserved_bandwidths': 
+                                                                                {'0 93750000': 
+                                                                                    {'priority': 0,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '1 93750000': 
+                                                                                    {'priority': 1,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '2 93750000': 
+                                                                                    {'priority': 2,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '3 93750000': 
+                                                                                    {'priority': 3,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '4 93750000': 
+                                                                                    {'priority': 4,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '5 93750000': 
+                                                                                    {'priority': 5,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '6 93750000': 
+                                                                                    {'priority': 6,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '7 93750000': 
+                                                                                    {'priority': 7,
+                                                                                    'unreserved_bandwidth': 93750000}}}}}},
+                                                            'header': 
+                                                                {'adv_router': '1.1.1.1',
+                                                                'age': 1427,
+                                                                'checksum': '0xb43d',
+                                                                'length': 124,
+                                                                'lsa_id': '1.0.0.2',
+                                                                'opaque_id': 2,
+                                                                'opaque_type': 1,
+                                                                'option': 'None',
+                                                                'option_desc': 'No '
+                                                                'TOS-capability, '
+                                                                'DC',
+                                                                'seq_num': '80000002',
+                                                                'type': 10}}},
+                                                    '1.0.0.37 2.2.2.2': 
+                                                        {'adv_router': '2.2.2.2',
+                                                        'lsa_id': '1.0.0.37',
+                                                        'ospfv2': 
+                                                            {'body': 
+                                                                {'opaque': 
+                                                                    {'link_tlvs': 
+                                                                        {1: 
+                                                                            {'admin_group': '0',
+                                                                            'link_id': '10.2.3.3',
+                                                                            'link_name': 'broadcast network',
+                                                                            'link_type': 2,
+                                                                            'local_if_ipv4_addrs': 
+                                                                                {'10.2.3.2': {}},
+                                                                            'max_bandwidth': 125000000,
+                                                                            'max_reservable_bandwidth': 93750000,
+                                                                            'remote_if_ipv4_addrs': 
+                                                                                {'0.0.0.0': {}},
+                                                                            'te_metric': 1,
+                                                                            'total_priority': 8,
+                                                                            'unreserved_bandwidths': 
+                                                                                {'0 93750000': 
+                                                                                    {'priority': 0,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '1 93750000': 
+                                                                                    {'priority': 1,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '2 93750000': 
+                                                                                    {'priority': 2,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '3 93750000': 
+                                                                                    {'priority': 3,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '4 93750000': 
+                                                                                    {'priority': 4,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '5 93750000': 
+                                                                                    {'priority': 5,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '6 93750000': 
+                                                                                    {'priority': 6,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '7 93750000': 
+                                                                                    {'priority': 7,
+                                                                                    'unreserved_bandwidth': 93750000}}}}}},
+                                                            'header': 
+                                                                {'adv_router': '2.2.2.2',
+                                                                'age': 242,
+                                                                'checksum': '0xe492',
+                                                                'length': 116,
+                                                                'lsa_id': '1.0.0.37',
+                                                                'opaque_id': 37,
+                                                                'opaque_type': 1,
+                                                                'option': 'None',
+                                                                'option_desc': 'No '
+                                                                'TOS-capability, '
+                                                                'No '
+                                                                'DC',
+                                                                'seq_num': '80000004',
+                                                                'type': 10}}},
+                                                    '1.0.0.38 2.2.2.2': 
+                                                        {'adv_router': '2.2.2.2',
+                                                        'lsa_id': '1.0.0.38',
+                                                        'ospfv2': 
+                                                            {'body': 
+                                                                {'opaque': 
+                                                                    {'link_tlvs': 
+                                                                        {1: 
+                                                                            {'admin_group': '0',
+                                                                            'link_id': '10.2.4.4',
+                                                                            'link_name': 'broadcast network',
+                                                                            'link_type': 2,
+                                                                            'local_if_ipv4_addrs': 
+                                                                                {'10.2.4.2': {}},
+                                                                            'max_bandwidth': 125000000,
+                                                                            'max_reservable_bandwidth': 93750000,
+                                                                            'remote_if_ipv4_addrs': 
+                                                                                {'0.0.0.0': {}},
+                                                                            'te_metric': 1,
+                                                                            'total_priority': 8,
+                                                                            'unreserved_bandwidths': 
+                                                                                {'0 93750000': 
+                                                                                    {'priority': 0,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '1 93750000': 
+                                                                                    {'priority': 1,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '2 93750000': 
+                                                                                    {'priority': 2,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '3 93750000': 
+                                                                                    {'priority': 3,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '4 93750000': 
+                                                                                    {'priority': 4,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '5 93750000': 
+                                                                                    {'priority': 5,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '6 93750000': 
+                                                                                    {'priority': 6,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '7 93750000': 
+                                                                                    {'priority': 7,
+                                                                                    'unreserved_bandwidth': 93750000}}}}}},
+                                                            'header': 
+                                                                {'adv_router': '2.2.2.2',
+                                                                'age': 233,
+                                                                'checksum': '0x2350',
+                                                                'length': 116,
+                                                                'lsa_id': '1.0.0.38',
+                                                                'opaque_id': 38,
+                                                                'opaque_type': 1,
+                                                                'option': 'None',
+                                                                'option_desc': 'No '
+                                                                'TOS-capability, '
+                                                                'No '
+                                                                'DC',
+                                                                'seq_num': '80000004',
+                                                                'type': 10}}},
+                                                    '1.0.0.39 2.2.2.2': 
+                                                        {'adv_router': '2.2.2.2',
+                                                        'lsa_id': '1.0.0.39',
+                                                        'ospfv2': 
+                                                            {'body': 
+                                                                {'opaque': 
+                                                                    {'link_tlvs': 
+                                                                        {1: 
+                                                                            {'admin_group': '0',
+                                                                            'link_id': '10.1.2.1',
+                                                                            'link_name': 'broadcast network',
+                                                                            'link_type': 2,
+                                                                            'local_if_ipv4_addrs': 
+                                                                                {'10.1.2.2': {}},
+                                                                            'max_bandwidth': 125000000,
+                                                                            'max_reservable_bandwidth': 93750000,
+                                                                            'remote_if_ipv4_addrs': 
+                                                                                {'0.0.0.0': {}},
+                                                                            'te_metric': 1,
+                                                                            'total_priority': 8,
+                                                                            'unreserved_bandwidths': 
+                                                                                {'0 93750000': 
+                                                                                    {'priority': 0,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '1 93750000': 
+                                                                                    {'priority': 1,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '2 93750000': 
+                                                                                    {'priority': 2,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '3 93750000': 
+                                                                                    {'priority': 3,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '4 93750000': 
+                                                                                    {'priority': 4,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '5 93750000': 
+                                                                                    {'priority': 5,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '6 93750000': 
+                                                                                    {'priority': 6,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '7 93750000': 
+                                                                                    {'priority': 7,
+                                                                                    'unreserved_bandwidth': 93750000}}}}}},
+                                                            'header': 
+                                                                {'adv_router': '2.2.2.2',
+                                                                'age': 232,
+                                                                'checksum': '0x4239',
+                                                                'length': 116,
+                                                                'lsa_id': '1.0.0.39',
+                                                                'opaque_id': 39,
+                                                                'opaque_type': 1,
+                                                                'option': 'None',
+                                                                'option_desc': 'No '
+                                                                'TOS-capability, '
+                                                                'No '
+                                                                'DC',
+                                                                'seq_num': '80000004',
+                                                                'type': 10}}},
+                                                    '1.0.0.4 3.3.3.3': 
+                                                        {'adv_router': '3.3.3.3',
+                                                        'lsa_id': '1.0.0.4',
+                                                        'ospfv2': 
+                                                            {'body': 
+                                                                {'opaque': 
+                                                                    {'link_tlvs': 
+                                                                        {1: 
+                                                                            {'admin_group': '0',
+                                                                            'extended_admin_group': 
+                                                                                {'groups': 
+                                                                                    {0: {'value': 0},
+                                                                                    1: {'value': 0},
+                                                                                    2: {'value': 0},
+                                                                                    3: {'value': 0},
+                                                                                    4: {'value': 0},
+                                                                                    5: {'value': 0},
+                                                                                    6: {'value': 0},
+                                                                                    7: {'value': 0}},
+                                                                                'length': 8},
+                                                                            'igp_metric': 1,
+                                                                            'link_id': '10.3.4.4',
+                                                                            'link_name': 'broadcast network',
+                                                                            'link_type': 2,
+                                                                            'local_if_ipv4_addrs': 
+                                                                                {'10.3.4.3': {}},
+                                                                            'max_bandwidth': 125000000,
+                                                                            'max_reservable_bandwidth': 93750000,
+                                                                            'remote_if_ipv4_addrs': 
+                                                                                {'0.0.0.0': {}},
+                                                                            'te_metric': 1,
+                                                                            'total_priority': 8,
+                                                                            'unreserved_bandwidths': 
+                                                                                {'0 93750000': 
+                                                                                    {'priority': 0,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '1 93750000': 
+                                                                                    {'priority': 1,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '2 93750000': 
+                                                                                    {'priority': 2,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '3 93750000': 
+                                                                                    {'priority': 3,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '4 93750000': 
+                                                                                    {'priority': 4,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '5 93750000': 
+                                                                                    {'priority': 5,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '6 93750000': 
+                                                                                    {'priority': 6,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '7 93750000': 
+                                                                                    {'priority': 7,
+                                                                                    'unreserved_bandwidth': 93750000}}}}}},
+                                                            'header': 
+                                                                {'adv_router': '3.3.3.3',
+                                                                'age': 1175,
+                                                                'checksum': '0x915d',
+                                                                'length': 160,
+                                                                'lsa_id': '1.0.0.4',
+                                                                'opaque_id': 4,
+                                                                'opaque_type': 1,
+                                                                'option': 'None',
+                                                                'option_desc': 'No '
+                                                                'TOS-capability, '
+                                                                'DC',
+                                                                'seq_num': '80000002',
+                                                                'type': 10}}},
+                                                    '1.0.0.6 3.3.3.3': 
+                                                        {'adv_router': '3.3.3.3',
+                                                        'lsa_id': '1.0.0.6',
+                                                        'ospfv2': 
+                                                            {'body': 
+                                                                {'opaque': 
+                                                                    {'link_tlvs': 
+                                                                        {1: 
+                                                                            {'admin_group': '0',
+                                                                            'extended_admin_group': 
+                                                                                {'groups': 
+                                                                                    {0: {'value': 0},
+                                                                                    1: {'value': 0},
+                                                                                    2: {'value': 0},
+                                                                                    3: {'value': 0},
+                                                                                    4: {'value': 0},
+                                                                                    5: {'value': 0},
+                                                                                    6: {'value': 0},
+                                                                                    7: {'value': 0}},
+                                                                                'length': 8},
+                                                                            'igp_metric': 1,
+                                                                            'link_id': '10.2.3.3',
+                                                                            'link_name': 'broadcast network',
+                                                                            'link_type': 2,
+                                                                            'local_if_ipv4_addrs': 
+                                                                                {'10.2.3.3': {}},
+                                                                            'max_bandwidth': 125000000,
+                                                                            'max_reservable_bandwidth': 93750000,
+                                                                            'remote_if_ipv4_addrs': 
+                                                                                {'0.0.0.0': {}},
+                                                                            'te_metric': 1,
+                                                                            'total_priority': 8,
+                                                                            'unreserved_bandwidths': 
+                                                                                {'0 93750000': 
+                                                                                    {'priority': 0,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '1 93750000': 
+                                                                                    {'priority': 1,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '2 93750000': 
+                                                                                    {'priority': 2,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '3 93750000': 
+                                                                                    {'priority': 3,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '4 93750000': 
+                                                                                    {'priority': 4,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '5 93750000': 
+                                                                                    {'priority': 5,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '6 93750000': 
+                                                                                    {'priority': 6,
+                                                                                    'unreserved_bandwidth': 93750000},
+                                                                                '7 93750000': 
+                                                                                    {'priority': 7,
+                                                                                    'unreserved_bandwidth': 93750000}}}}}},
+                                                            'header': 
+                                                                {'adv_router': '3.3.3.3',
+                                                                'age': 1175,
+                                                                'checksum': '0x5ec',
+                                                                'length': 160,
+                                                                'lsa_id': '1.0.0.6',
+                                                                'opaque_id': 6,
+                                                                'opaque_type': 1,
+                                                                'option': 'None',
+                                                                'option_desc': 'No '
+                                                                'TOS-capability, '
+                                                                'DC',
+                                                                'seq_num': '80000002',
+                                                                'type': 10}}}}}}}}}}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive database opaque-area 
+        Thu Nov  2 21:27:17.362 UTC
+
+                    OSPF Router with ID (3.3.3.3) (Process ID 1)
+
+                        Type-10 Opaque Link Area Link States (Area 0)
+
+          LS age: 1427
+          Options: (No TOS-capability, DC)
+          LS Type: Opaque Area Link
+          Link State ID: 1.0.0.0
+          Opaque Type: 1
+          Opaque ID: 0
+          Advertising Router: 1.1.1.1
+          LS Seq Number: 80000002
+          Checksum: 0x56d2
+          Length: 28
+
+            MPLS TE router ID : 1.1.1.1
+
+            Number of Links : 0
+
+          LS age: 653
+          Options: (No TOS-capability, No DC)
+          LS Type: Opaque Area Link
+          Link State ID: 1.0.0.0
+          Opaque Type: 1
+          Opaque ID: 0
+          Advertising Router: 2.2.2.2
+          LS Seq Number: 80000003
+          Checksum: 0x1c22
+          Length: 28
+
+            MPLS TE router ID : 2.2.2.2
+
+            Number of Links : 0
+
+          LS age: 1175
+          Options: (No TOS-capability, DC)
+          LS Type: Opaque Area Link
+          Link State ID: 1.0.0.0
+          Opaque Type: 1
+          Opaque ID: 0
+          Advertising Router: 3.3.3.3
+          LS Seq Number: 80000002
+          Checksum: 0x5eba
+          Length: 28
+
+            MPLS TE router ID : 3.3.3.3
+
+            Number of Links : 0
+
+          LS age: 1427
+          Options: (No TOS-capability, DC)
+          LS Type: Opaque Area Link
+          Link State ID: 1.0.0.1
+          Opaque Type: 1
+          Opaque ID: 1
+          Advertising Router: 1.1.1.1
+          LS Seq Number: 80000002
+          Checksum: 0x6586
+          Length: 124
+
+            Link connected to Broadcast network
+              Link ID : 10.1.4.4
+              (all bandwidths in bytes/sec)
+              Interface Address : 10.1.4.1
+              Admin Metric : 1
+              Maximum bandwidth : 125000000
+              Maximum reservable bandwidth global: 93750000
+              Number of Priority : 8
+              Priority 0 :             93750000  Priority 1 :             93750000
+              Priority 2 :             93750000  Priority 3 :             93750000
+              Priority 4 :             93750000  Priority 5 :             93750000
+              Priority 6 :             93750000  Priority 7 :             93750000
+              Affinity Bit : 0
+              IGP Metric : 1
+
+            Number of Links : 1
+
+          LS age: 1427
+          Options: (No TOS-capability, DC)
+          LS Type: Opaque Area Link
+          Link State ID: 1.0.0.2
+          Opaque Type: 1
+          Opaque ID: 2
+          Advertising Router: 1.1.1.1
+          LS Seq Number: 80000002
+          Checksum: 0xb43d
+          Length: 124
+
+            Link connected to Broadcast network
+              Link ID : 10.1.2.1
+              (all bandwidths in bytes/sec)
+              Interface Address : 10.1.2.1
+              Admin Metric : 1
+              Maximum bandwidth : 125000000
+              Maximum reservable bandwidth global: 93750000
+              Number of Priority : 8
+              Priority 0 :             93750000  Priority 1 :             93750000
+              Priority 2 :             93750000  Priority 3 :             93750000
+              Priority 4 :             93750000  Priority 5 :             93750000
+              Priority 6 :             93750000  Priority 7 :             93750000
+              Affinity Bit : 0
+              IGP Metric : 1
+
+            Number of Links : 1
+
+          LS age: 1175
+          Options: (No TOS-capability, DC)
+          LS Type: Opaque Area Link
+          Link State ID: 1.0.0.4
+          Opaque Type: 1
+          Opaque ID: 4
+          Advertising Router: 3.3.3.3
+          LS Seq Number: 80000002
+          Checksum: 0x915d
+          Length: 160
+
+            Link connected to Broadcast network
+              Link ID : 10.3.4.4
+              (all bandwidths in bytes/sec)
+              Interface Address : 10.3.4.3
+              Admin Metric : 1
+              Maximum bandwidth : 125000000
+              Maximum reservable bandwidth global: 93750000
+              Number of Priority : 8
+              Priority 0 :             93750000  Priority 1 :             93750000
+              Priority 2 :             93750000  Priority 3 :             93750000
+              Priority 4 :             93750000  Priority 5 :             93750000
+              Priority 6 :             93750000  Priority 7 :             93750000
+              Affinity Bit : 0
+              IGP Metric : 1
+              Extended Administrative Group : Length: 8
+               EAG[0]: 0
+               EAG[1]: 0
+               EAG[2]: 0
+               EAG[3]: 0
+               EAG[4]: 0
+               EAG[5]: 0
+               EAG[6]: 0
+               EAG[7]: 0
+
+            Number of Links : 1
+
+          LS age: 1175
+          Options: (No TOS-capability, DC)
+          LS Type: Opaque Area Link
+          Link State ID: 1.0.0.6
+          Opaque Type: 1
+          Opaque ID: 6
+          Advertising Router: 3.3.3.3
+          LS Seq Number: 80000002
+          Checksum: 0x5ec
+          Length: 160
+
+            Link connected to Broadcast network
+              Link ID : 10.2.3.3
+              (all bandwidths in bytes/sec)
+              Interface Address : 10.2.3.3
+              Admin Metric : 1
+              Maximum bandwidth : 125000000
+              Maximum reservable bandwidth global: 93750000
+              Number of Priority : 8
+              Priority 0 :             93750000  Priority 1 :             93750000
+              Priority 2 :             93750000  Priority 3 :             93750000
+              Priority 4 :             93750000  Priority 5 :             93750000
+              Priority 6 :             93750000  Priority 7 :             93750000
+              Affinity Bit : 0
+              IGP Metric : 1
+              Extended Administrative Group : Length: 8
+               EAG[0]: 0
+               EAG[1]: 0
+               EAG[2]: 0
+               EAG[3]: 0
+               EAG[4]: 0
+               EAG[5]: 0
+               EAG[6]: 0
+               EAG[7]: 0
+
+            Number of Links : 1
+
+          LS age: 242
+          Options: (No TOS-capability, No DC)
+          LS Type: Opaque Area Link
+          Link State ID: 1.0.0.37
+          Opaque Type: 1
+          Opaque ID: 37
+          Advertising Router: 2.2.2.2
+          LS Seq Number: 80000004
+          Checksum: 0xe492
+          Length: 116
+
+            Link connected to Broadcast network
+              Link ID : 10.2.3.3
+              (all bandwidths in bytes/sec)
+              Interface Address : 10.2.3.2
+              Admin Metric : 1
+              Maximum bandwidth : 125000000
+              Maximum reservable bandwidth global: 93750000
+              Number of Priority : 8
+              Priority 0 :             93750000  Priority 1 :             93750000
+              Priority 2 :             93750000  Priority 3 :             93750000
+              Priority 4 :             93750000  Priority 5 :             93750000
+              Priority 6 :             93750000  Priority 7 :             93750000
+              Affinity Bit : 0
+
+            Number of Links : 1
+
+          LS age: 233
+          Options: (No TOS-capability, No DC)
+          LS Type: Opaque Area Link
+          Link State ID: 1.0.0.38
+          Opaque Type: 1
+          Opaque ID: 38
+          Advertising Router: 2.2.2.2
+          LS Seq Number: 80000004
+          Checksum: 0x2350
+          Length: 116
+
+            Link connected to Broadcast network
+              Link ID : 10.2.4.4
+              (all bandwidths in bytes/sec)
+              Interface Address : 10.2.4.2
+              Admin Metric : 1
+              Maximum bandwidth : 125000000
+              Maximum reservable bandwidth global: 93750000
+              Number of Priority : 8
+              Priority 0 :             93750000  Priority 1 :             93750000
+              Priority 2 :             93750000  Priority 3 :             93750000
+              Priority 4 :             93750000  Priority 5 :             93750000
+              Priority 6 :             93750000  Priority 7 :             93750000
+              Affinity Bit : 0
+
+            Number of Links : 1
+
+          LS age: 232
+          Options: (No TOS-capability, No DC)
+          LS Type: Opaque Area Link
+          Link State ID: 1.0.0.39
+          Opaque Type: 1
+          Opaque ID: 39
+          Advertising Router: 2.2.2.2
+          LS Seq Number: 80000004
+          Checksum: 0x4239
+          Length: 116
+
+            Link connected to Broadcast network
+              Link ID : 10.1.2.1
+              (all bandwidths in bytes/sec)
+              Interface Address : 10.1.2.2
+              Admin Metric : 1
+              Maximum bandwidth : 125000000
+              Maximum reservable bandwidth global: 93750000
+              Number of Priority : 8
+              Priority 0 :             93750000  Priority 1 :             93750000
+              Priority 2 :             93750000  Priority 3 :             93750000
+              Priority 4 :             93750000  Priority 5 :             93750000
+              Priority 6 :             93750000  Priority 7 :             93750000
+              Affinity Bit : 0
+
+            Number of Links : 1
+
+                    OSPF Router with ID (3.3.3.3) (Process ID 1, VRF VRF1)
+        '''}
+
+    def test_show_ospf_vrf_all_inclusive_database_opaque_area_full(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowOspfVrfAllInclusiveDatabaseOpaqueArea(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ospf_vrf_all_inclusive_database_opaque_area_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfVrfAllInclusiveDatabaseOpaqueArea(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
 
 
 if __name__ == '__main__':

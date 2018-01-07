@@ -2376,7 +2376,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
         # Type-5 AS External
         lsa_type_mapping = {
             'router': 1,
-            'net': 2,
+            'network': 2,
             'summary': 3,
             'external': 5,
             'opaque': 10,
@@ -2502,6 +2502,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
             # Link State ID: 1.1.1.1
             # Link State ID: 44.44.44.44 (Network address)
             # Link State ID: 10.1.2.1 (Designated Router address)
+            # Link State ID: 10.1.2.1 (address of Designated Router)
             p5_2 = re.compile(r'^Link +State +ID: +(?P<lsa_id>(\S+))'
                              '(?: +\(.*\))?$')
             m = p5_2.match(line)
@@ -2860,8 +2861,8 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                     db_dict['link_tlvs'][link_tlv_counter] = {}
 
                 # Set link type
-                opaque_link = str(m.groupdict()['link'])
-                if opaque_link == 'Broadcast network':
+                opaque_link = str(m.groupdict()['link']).lower()
+                if opaque_link == 'broadcast network':
                     opaque_link_type = 2
                 else:
                     opaque_link_type = 1
@@ -2912,6 +2913,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
 
             # Maximum Bandwidth : 125000000
+            # Maximum bandwidth : 125000000
             p31 = re.compile(r'^Maximum +(B|b)andwidth *:'
                               ' +(?P<max_band>(\d+))$')
             m = p31.match(line)
@@ -2921,8 +2923,9 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
 
             # Maximum reservable bandwidth : 93750000
-            p32 = re.compile(r'^Maximum +(R|r)eservable +(B|b)andwidth *:'
-                              ' +(?P<max_res_band>(\d+))$')
+            # Maximum reservable bandwidth global: 93750000
+            p32 = re.compile(r'^Maximum +(R|r)eservable +(B|b)andwidth'
+                              '(?: +global)? *: +(?P<max_res_band>(\d+))$')
             m = p32.match(line)
             if m:
                 db_dict['link_tlvs'][link_tlv_counter]\
@@ -2938,7 +2941,21 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                     str(m.groupdict()['admin_group'])
                 continue
 
+            # IGP Metric : 1
+            p33_1 = re.compile(r'^IGP +Metric *: +(?P<igp_metric>(\d+))$')
+            m = p33_1.match(line)
+            if m:
+                db_dict['link_tlvs'][link_tlv_counter]['igp_metric'] = \
+                    int(m.groupdict()['igp_metric'])
+                continue
+
             # Number of Priority : 8
+            p33_2 = re.compile(r'^Number +of +Priority *: +(?P<num>(\d+))$')
+            m = p33_2.match(line)
+            if m:
+                db_dict['link_tlvs'][link_tlv_counter]['total_priority'] = \
+                    int(m.groupdict()['num'])
+                continue
             
             # Priority 0 : 93750000    Priority 1 : 93750000
             p34 = re.compile(r'^Priority +(?P<num1>(\d+)) *:'
@@ -2995,6 +3012,36 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                     [unknown_tlvs_counter]['length'] = int(m.groupdict()['length'])
                 db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs']\
                     [unknown_tlvs_counter]['value'] = str(m.groupdict()['value'])
+                continue
+
+            # Extended Administrative Group : Length: 8
+            p36 = re.compile(r'^Extended +Administrative +Group *: +Length *:'
+                              ' +(?P<eag_length>(\d+))$')
+            m = p36.match(line)
+            if m:
+                if 'extended_admin_group' not in db_dict['link_tlvs']\
+                        [link_tlv_counter]:
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['extended_admin_group'] = {}
+                db_dict['link_tlvs'][link_tlv_counter]['extended_admin_group']\
+                    ['length'] = int(m.groupdict()['eag_length'])
+                continue
+
+            # EAG[0]: 0
+            p37 = re.compile(r'^EAG\[(?P<group_num>(\d+))\]: +(?P<val>(\d+))$')
+            m = p37.match(line)
+            if m:
+                group_num = int(m.groupdict()['group_num'])
+                if 'groups' not in db_dict['link_tlvs'][link_tlv_counter]\
+                        ['extended_admin_group']:
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['extended_admin_group']['groups'] = {}
+                if group_num not in db_dict['link_tlvs'][link_tlv_counter]\
+                    ['extended_admin_group']['groups']:
+                    db_dict['link_tlvs'][link_tlv_counter]\
+                        ['extended_admin_group']['groups'][group_num] = {}
+                db_dict['link_tlvs'][link_tlv_counter]['extended_admin_group']\
+                    ['groups'][group_num]['value'] = int(m.groupdict()['val'])
                 continue
 
 
@@ -3092,3 +3139,353 @@ class ShowOspfVrfAllInclusiveDatabaseRouter(ShowOspfVrfAllInclusiveDatabaseRoute
 
         return super().cli(cmd=cmd, db_type='router')
 
+
+# ==========================================================
+# Schema for 'show ospf vrf all-inclusive database external'
+# ==========================================================
+class ShowOspfVrfAllInclusiveDatabaseExternalSchema(MetaParser):
+
+    ''' Schema for "show ospf vrf all-inclusive database external" '''
+
+    schema = {
+        'vrf': 
+            {Any(): 
+                {'address_family': 
+                    {Any(): 
+                        {'instance': 
+                            {Any(): 
+                                {'areas': 
+                                    {Any(): 
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {Any(): 
+                                                    {'lsa_type': int,
+                                                    'lsas': 
+                                                        {Any(): 
+                                                            {'lsa_id': str,
+                                                            'adv_router': str,
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'option': str,
+                                                                    'option_desc': str,
+                                                                    'lsa_id': str,
+                                                                    'age': int,
+                                                                    'type': int,
+                                                                    'adv_router': str,
+                                                                    'seq_num': str,
+                                                                    'checksum': str,
+                                                                    'length': int,
+                                                                    Optional('routing_bit_enable'): bool,
+                                                                    },
+                                                                'body': 
+                                                                    {'external': 
+                                                                        {'network_mask': str,
+                                                                        'topologies': 
+                                                                            {Any(): 
+                                                                                {'mt_id': int,
+                                                                                'tos': int,
+                                                                                'flags': str,
+                                                                                'metric': int,
+                                                                                'forwarding_address': str,
+                                                                                'external_route_tag': str},
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# ==========================================================
+# Parser for 'show ospf vrf all-inclusive database external'
+# ==========================================================
+class ShowOspfVrfAllInclusiveDatabaseExternal(ShowOspfVrfAllInclusiveDatabaseExternalSchema, ShowOspfVrfAllInclusiveDatabaseParser):
+
+    ''' Parser for "show ospf vrf all-inclusive database external" '''
+
+    def cli(self):
+
+        # Build command
+        cmd = 'show ospf vrf all-inclusive database external'
+
+        return super().cli(cmd=cmd, db_type='external')
+
+
+# =========================================================
+# Schema for 'show ospf vrf all-inclusive database network'
+# =========================================================
+class ShowOspfVrfAllInclusiveDatabaseNetworkSchema(MetaParser):
+
+    ''' Schema for "show ospf vrf all-inclusive database network" '''
+
+    schema = {
+        'vrf': 
+            {Any(): 
+                {'address_family': 
+                    {Any(): 
+                        {'instance': 
+                            {Any(): 
+                                {'areas': 
+                                    {Any(): 
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {Any(): 
+                                                    {'lsa_type': int,
+                                                    'lsas': 
+                                                        {Any(): 
+                                                            {'lsa_id': str,
+                                                            'adv_router': str,
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'option': str,
+                                                                    'option_desc': str,
+                                                                    'lsa_id': str,
+                                                                    'age': int,
+                                                                    'type': int,
+                                                                    'adv_router': str,
+                                                                    'seq_num': str,
+                                                                    'checksum': str,
+                                                                    'length': int,
+                                                                    Optional('routing_bit_enable'): bool,
+                                                                    },
+                                                                'body': 
+                                                                    {'network': 
+                                                                        {'network_mask': str,
+                                                                        'attached_routers': 
+                                                                            {Any(): {},
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# ==========================================================
+# Parser for 'show ospf vrf all-inclusive database network'
+# ==========================================================
+class ShowOspfVrfAllInclusiveDatabaseNetwork(ShowOspfVrfAllInclusiveDatabaseNetworkSchema, ShowOspfVrfAllInclusiveDatabaseParser):
+
+    ''' Parser for "show ospf vrf all-inclusive database network" '''
+
+    def cli(self):
+
+        # Build command
+        cmd = 'show ospf vrf all-inclusive database network'
+
+        return super().cli(cmd=cmd, db_type='network')
+
+
+# =========================================================
+# Schema for 'show ospf vrf all-inclusive database summary'
+# =========================================================
+class ShowOspfVrfAllInclusiveDatabaseSummarySchema(MetaParser):
+
+    ''' Schema for "show ospf vrf all-inclusive database summary" '''
+
+    schema = {
+        'vrf': 
+            {Any(): 
+                {'address_family': 
+                    {Any(): 
+                        {'instance': 
+                            {Any(): 
+                                {'areas': 
+                                    {Any(): 
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {Any(): 
+                                                    {'lsa_type': int,
+                                                    'lsas': 
+                                                        {Any(): 
+                                                            {'lsa_id': str,
+                                                            'adv_router': str,
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'option': str,
+                                                                    'option_desc': str,
+                                                                    'lsa_id': str,
+                                                                    'age': int,
+                                                                    'type': int,
+                                                                    'adv_router': str,
+                                                                    'seq_num': str,
+                                                                    'checksum': str,
+                                                                    'length': int,
+                                                                    Optional('routing_bit_enable'): bool,
+                                                                    },
+                                                                'body': 
+                                                                    {'summary': 
+                                                                        {'network_mask': str,
+                                                                        'topologies': 
+                                                                            {Any(): 
+                                                                                {'mt_id': int,
+                                                                                'tos': int,
+                                                                                'metric': int},
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# =========================================================
+# Parser for 'show ospf vrf all-inclusive database summary'
+# =========================================================
+class ShowOspfVrfAllInclusiveDatabaseSummary(ShowOspfVrfAllInclusiveDatabaseSummarySchema, ShowOspfVrfAllInclusiveDatabaseParser):
+
+    ''' Parser for "show ospf vrf all-inclusive database summary" '''
+
+    def cli(self):
+
+        # Build command
+        cmd = 'show ospf vrf all-inclusive database summary'
+
+        return super().cli(cmd=cmd, db_type='summary')
+
+
+# =============================================================
+# Schema for 'show ospf vrf all-inclusive database opaque-area'
+# =============================================================
+class ShowOspfVrfAllInclusiveDatabaseOpaqueAreaSchema(MetaParser):
+
+    ''' Schema for "show ospf vrf all-inclusive database opaque-area" '''
+
+    schema = {
+        'vrf': 
+            {Any(): 
+                {'address_family': 
+                    {Any(): 
+                        {'instance': 
+                            {Any(): 
+                                {Optional('areas'): 
+                                    {Any(): 
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {Any(): 
+                                                    {'lsa_type': int,
+                                                    'lsas': 
+                                                        {Any(): 
+                                                            {'lsa_id': str,
+                                                            'adv_router': str,
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'option': str,
+                                                                    'option_desc': str,
+                                                                    'lsa_id': str,
+                                                                    'age': int,
+                                                                    'type': int,
+                                                                    'adv_router': str,
+                                                                    'seq_num': str,
+                                                                    'checksum': str,
+                                                                    'length': int,
+                                                                    'opaque_type': int,
+                                                                    'opaque_id': int,
+                                                                    Optional('fragment_number'): int,
+                                                                    Optional('mpls_te_router_id'): str,
+                                                                    Optional('num_links'): int},
+                                                                'body': 
+                                                                    {'opaque': 
+                                                                        {Optional('link_tlvs'): 
+                                                                            {Any(): 
+                                                                                {'link_type': int,
+                                                                                'link_name': str,
+                                                                                'link_id': str,
+                                                                                'te_metric': int,
+                                                                                'max_bandwidth': int,
+                                                                                'max_reservable_bandwidth': int,
+                                                                                'admin_group': str,
+                                                                                Optional('igp_metric'): int,
+                                                                                Optional('total_priority'): int,
+                                                                                Optional('local_if_ipv4_addrs'): 
+                                                                                    {Any(): {}},
+                                                                                Optional('remote_if_ipv4_addrs'): 
+                                                                                    {Any(): {}},
+                                                                                Optional('unreserved_bandwidths'): 
+                                                                                    {Any(): 
+                                                                                        {'priority': int,
+                                                                                        'unreserved_bandwidth': int},
+                                                                                    },
+                                                                                Optional('unknown_tlvs'): 
+                                                                                    {Any(): 
+                                                                                        {'type': int,
+                                                                                        'length': int,
+                                                                                        'value': str},
+                                                                                    },
+                                                                                Optional('extended_admin_group'):
+                                                                                    {'length': int,
+                                                                                    Optional('groups'): 
+                                                                                        {Any(): 
+                                                                                            {'value': int,},
+                                                                                        },
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# =============================================================
+# Parser for 'show ospf vrf all-inclusive database opaque-area'
+# =============================================================
+class ShowOspfVrfAllInclusiveDatabaseOpaqueArea(ShowOspfVrfAllInclusiveDatabaseOpaqueAreaSchema, ShowOspfVrfAllInclusiveDatabaseParser):
+
+    ''' Parser for "show ospf vrf all-inclusive database opaque-area" '''
+
+    def cli(self):
+
+        # Build command
+        cmd = 'show ospf vrf all-inclusive database opaque-area'
+
+        return super().cli(cmd=cmd, db_type='opaque')
