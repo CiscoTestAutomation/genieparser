@@ -3428,8 +3428,7 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                                                                             {1: 
                                                                                 {'admin_group': '0x0',
                                                                                 'link_id': '10.1.4.4',
-                                                                                'link_name': 'Broadcast '
-                                                                                'network',
+                                                                                'link_name': 'broadcast network',
                                                                                 'link_type': 2,
                                                                                 'local_if_ipv4_addrs': 
                                                                                     {'10.1.4.1': {}},
@@ -3492,8 +3491,7 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                                                                             {1: 
                                                                                 {'admin_group': '0x0',
                                                                                 'link_id': '10.1.2.1',
-                                                                                'link_name': 'Broadcast '
-                                                                                'network',
+                                                                                'link_name': 'broadcast network',
                                                                                 'link_type': 2,
                                                                                 'local_if_ipv4_addrs': {'10.1.2.1': {}},
                                                                                 'max_bandwidth': 125000000,
@@ -3555,8 +3553,7 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                                                                             {1: 
                                                                                 {'admin_group': '0x0',
                                                                                 'link_id': '10.2.3.3',
-                                                                                'link_name': 'Broadcast '
-                                                                                'network',
+                                                                                'link_name': 'broadcast network',
                                                                                 'link_type': 2,
                                                                                 'local_if_ipv4_addrs': 
                                                                                     {'10.2.3.2': {}},
@@ -3614,8 +3611,7 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                                                                             {1: 
                                                                                 {'admin_group': '0x0',
                                                                                 'link_id': '10.2.4.4',
-                                                                                'link_name': 'Broadcast '
-                                                                                'network',
+                                                                                'link_name': 'broadcast network',
                                                                                 'link_type': 2,
                                                                                 'local_if_ipv4_addrs': 
                                                                                     {'10.2.4.2': {}},
@@ -3673,8 +3669,7 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                                                                             {1: 
                                                                                 {'admin_group': '0x0',
                                                                                 'link_id': '10.1.2.1',
-                                                                                'link_name': 'Broadcast '
-                                                                                'network',
+                                                                                'link_name': 'broadcast network',
                                                                                 'link_type': 2,
                                                                                 'local_if_ipv4_addrs': 
                                                                                     {'10.1.2.2': {}},
@@ -3732,8 +3727,7 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                                                                             {1: 
                                                                                 {'admin_group': '0x0',
                                                                                 'link_id': '10.3.4.4',
-                                                                                'link_name': 'Broadcast '
-                                                                                'network',
+                                                                                'link_name': 'broadcast network',
                                                                                 'link_type': 2,
                                                                                 'local_if_ipv4_addrs': 
                                                                                     {'10.3.4.3': {}},
@@ -3799,8 +3793,7 @@ class test_show_ip_ospf_database_opaque_area_detail_vrf_all(unittest.TestCase):
                                                                             {1: 
                                                                                 {'admin_group': '0x0',
                                                                                 'link_id': '10.2.3.3',
-                                                                                'link_name': 'Broadcast '
-                                                                                'network',
+                                                                                'link_name': 'broadcast network',
                                                                                 'link_type': 2,
                                                                                 'local_if_ipv4_addrs': 
                                                                                     {'10.2.3.3': {}},

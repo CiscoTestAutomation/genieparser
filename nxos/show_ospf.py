@@ -2773,8 +2773,8 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                     db_dict['link_tlvs'][link_tlv_counter] = {}
 
                 # Set link type
-                opaque_link = str(m.groupdict()['link'])
-                if opaque_link == 'Broadcast network':
+                opaque_link = str(m.groupdict()['link']).lower()
+                if opaque_link == 'broadcast network':
                     opaque_link_type = 2
                 else:
                     opaque_link_type = 1
