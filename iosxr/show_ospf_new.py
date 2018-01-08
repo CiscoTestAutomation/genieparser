@@ -1660,7 +1660,7 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
 
             # Virtual Links for OSPF 1
             # Sham Links for OSPF 1, VRF VRF1
-            p1 = re.compile(r'^(Virtual|Sham) +Links +for'
+            p1 = re.compile(r'^(Virtual|Sham) +Links +for +OSPF'
                              ' +(?P<instance>([a-zA-Z0-9\s]+))'
                              '(?:, +VRF +(?P<vrf>(\S+)))?$')
             m = p1.match(line)

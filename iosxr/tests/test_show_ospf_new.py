@@ -1366,7 +1366,7 @@ class test_show_ospf_vrf_all_inclusive_sham_links(unittest.TestCase):
                 {'address_family': 
                     {'ipv4': 
                         {'instance': 
-                            {'OSPF 1': 
+                            {'1': 
                                 {'areas': 
                                     {'0.0.0.1': 
                                         {'sham_links': 
@@ -1435,7 +1435,7 @@ class test_show_ospf_vrf_all_inclusive_virtual_links(unittest.TestCase):
                 {'address_family': 
                     {'ipv4': 
                         {'instance': 
-                            {'OSPF 1': 
+                            {'1': 
                                 {'areas': 
                                     {'0.0.0.1': 
                                         {'virtual_links': 
