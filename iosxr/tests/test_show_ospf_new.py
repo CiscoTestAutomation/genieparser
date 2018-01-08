@@ -45,12 +45,12 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                     {'0.0.0.1': 
                                         {'interfaces': 
                                             {'GigabitEthernet0/0/0/1': 
-                                                {'adj_nbr': '77.77.77.77',
-                                                'adj_nbr_count': 1,
+                                                {'bdr_ip_addr': '20.3.7.3',
+                                                'bdr_router_id': '3.3.3.3',
                                                 'bfd': 
                                                     {'enable': True,
                                                     'interval': 12345,
-                                                    'mode': 'Default',
+                                                    'mode': 'default',
                                                     'multiplier': 50},
                                                 'cost': 1,
                                                 'dead_interval': 40,
@@ -74,11 +74,8 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'max_flood_scan_time_msec': 0,
                                                 'max_pkt_sz': 1500,
                                                 'mtu': 1500,
-                                                'multi_area_intf_count': 0,
                                                 'name': 'GigabitEthernet0/0/0/1',
-                                                'nbr_count': 1,
                                                 'next': '0(0)/0(0)',
-                                                'num_nbrs_suppress_hello': 0,
                                                 'passive': False,
                                                 'priority': 1,
                                                 'process_id': '1',
@@ -86,15 +83,26 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'router_id': '3.3.3.3',
                                                 'state': 'bdr',
                                                 'transmit_delay': 1,
-                                                'wait_interval': 40}},
+                                                'wait_interval': 40,
+                                                'statistics': 
+                                                    {'adj_nbr_count': 1,
+                                                    'nbr_count': 1,
+                                                    'num_nbrs_suppress_hello': 0,
+                                                    'multi_area_intf_count': 0,
+                                                    },
+                                                'neighbors': 
+                                                    {'77.77.77.77': 
+                                                        {'dr_router_id': '77.77.77.77'},
+                                                    },
+                                                }},
                                         'sham_links': 
                                             {'1 3.3.3.3': 
-                                                {'adj_nbr_count': 0,
-                                                'bfd': 
+                                                {'bfd': 
                                                     {'enable': False},
                                                 'cost': 111,
                                                 'dead_interval': 13,
                                                 'demand_circuit': True,
+                                                'donotage_lsa': False,
                                                 'enable': False,
                                                 'flood_queue_length': 0,
                                                 'hello_due_in': '00:00:00:864',
@@ -112,18 +120,23 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'max_flood_scan_time_msec': 0,
                                                 'max_pkt_sz': 1500,
                                                 'mtu': 0,
-                                                'multi_area_intf_count': 0,
                                                 'name': 'SL0',
-                                                'nbr_count': 0,
                                                 'next': '0(0)/0(0)',
-                                                'num_nbrs_suppress_hello': 0,
                                                 'passive': False,
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
                                                 'router_id': '3.3.3.3',
                                                 'state': 'point-to-point',
                                                 'transmit_delay': 7,
-                                                'wait_interval': 13}}}}}}}}},
+                                                'wait_interval': 13,
+                                                'statistics': 
+                                                    {'adj_nbr_count': 0,
+                                                    'nbr_count': 0,
+                                                    'num_nbrs_suppress_hello': 0,
+                                                    'multi_area_intf_count': 0,
+                                                    },
+                                                'total_dcbitless_lsa': 1,
+                                                }}}}}}}}},
             'default': 
                 {'address_family': 
                     {'ipv4': 
@@ -133,8 +146,8 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                     {'0.0.0.0': 
                                         {'interfaces': 
                                             {'GigabitEthernet0/0/0/0': 
-                                                {'adj_nbr': '4.4.4.4',
-                                                'adj_nbr_count': 1,
+                                                {'bdr_ip_addr': '10.3.4.3',
+                                                'bdr_router_id': '3.3.3.3',
                                                 'bfd': 
                                                     {'enable': False},
                                                 'cost': 1,
@@ -159,11 +172,8 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'max_flood_scan_time_msec': 0,
                                                 'max_pkt_sz': 1500,
                                                 'mtu': 1500,
-                                                'multi_area_intf_count': 0,
                                                 'name': 'GigabitEthernet0/0/0/0',
-                                                'nbr_count': 1,
                                                 'next': '0(0)/0(0)',
-                                                'num_nbrs_suppress_hello': 0,
                                                 'passive': False,
                                                 'priority': 1,
                                                 'process_id': '1',
@@ -171,10 +181,21 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'router_id': '3.3.3.3',
                                                 'state': 'bdr',
                                                 'transmit_delay': 1,
-                                                'wait_interval': 40},
+                                                'wait_interval': 40,
+                                                'statistics': 
+                                                    {'adj_nbr_count': 1,
+                                                    'nbr_count': 1,
+                                                    'num_nbrs_suppress_hello': 0,
+                                                    'multi_area_intf_count': 0,
+                                                    },
+                                                'neighbors': 
+                                                    {'4.4.4.4': 
+                                                        {'dr_router_id': '4.4.4.4'},
+                                                    },
+                                                },
                                             'GigabitEthernet0/0/0/2': 
-                                                {'adj_nbr': '2.2.2.2',
-                                                'adj_nbr_count': 1,
+                                                {'bdr_router_id': '2.2.2.2',
+                                                'bdr_ip_addr': '10.2.3.2',
                                                 'bfd': 
                                                     {'enable': False},
                                                 'cost': 1,
@@ -199,11 +220,8 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'max_flood_scan_time_msec': 0,
                                                 'max_pkt_sz': 1500,
                                                 'mtu': 1500,
-                                                'multi_area_intf_count': 0,
                                                 'name': 'GigabitEthernet0/0/0/2',
-                                                'nbr_count': 1,
                                                 'next': '0(0)/0(0)',
-                                                'num_nbrs_suppress_hello': 0,
                                                 'passive': False,
                                                 'priority': 1,
                                                 'process_id': '1',
@@ -211,7 +229,18 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'router_id': '3.3.3.3',
                                                 'state': 'dr',
                                                 'transmit_delay': 1,
-                                                'wait_interval': 40},
+                                                'wait_interval': 40,
+                                                'statistics': 
+                                                    {'nbr_count': 1,
+                                                    'adj_nbr_count': 1,
+                                                    'multi_area_intf_count': 0,
+                                                    'num_nbrs_suppress_hello': 0,
+                                                    },
+                                                'neighbors': 
+                                                    {'2.2.2.2': 
+                                                        {'bdr_router_id': '2.2.2.2'},
+                                                    },
+                                                },
                                             'Loopback0': 
                                                 {'bfd': 
                                                     {'enable': False},
@@ -225,8 +254,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'process_id': '1',
                                                 'router_id': '3.3.3.3'},
                                             'tunnel-te31': 
-                                                {'adj_nbr_count': 0,
-                                                'bfd': 
+                                                {'bfd': 
                                                     {'enable': False},
                                                 'dead_interval': 40,
                                                 'demand_circuit': False,
@@ -246,18 +274,20 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'max_flood_scan_time_msec': 0,
                                                 'max_pkt_sz': 576,
                                                 'mtu': 0,
-                                                'multi_area_intf_count': 0,
                                                 'name': 'tunnel-te31',
-                                                'nbr_count': 0,
                                                 'next': '0(0)/0(0)',
-                                                'num_nbrs_suppress_hello': 0,
                                                 'passive': True,
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
                                                 'router_id': '3.3.3.3',
                                                 'state': 'point-to-point',
                                                 'transmit_delay': 1,
-                                                'wait_interval': 0}}}}}}}}}}}
+                                                'wait_interval': 0,
+                                                'statistics': 
+                                                    {'adj_nbr_count': 0,
+                                                    'multi_area_intf_count': 0,
+                                                    'nbr_count': 0,
+                                                    'num_nbrs_suppress_hello': 0}}}}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive interface 
@@ -370,8 +400,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                     {'0.0.0.0': 
                                         {'interfaces': 
                                             {'GigabitEthernet0/0/0/0': 
-                                                {'adj_nbr_count': 0,
-                                                'bfd': 
+                                                {'bfd': 
                                                     {'enable': False},
                                                 'cost': 1,
                                                 'dead_interval': 40,
@@ -395,11 +424,8 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'max_flood_scan_time_msec': 0,
                                                 'max_pkt_sz': 1500,
                                                 'mtu': 1500,
-                                                'multi_area_intf_count': 0,
                                                 'name': 'GigabitEthernet0/0/0/0',
-                                                'nbr_count': 0,
                                                 'next': '0(0)/0(0)',
-                                                'num_nbrs_suppress_hello': 0,
                                                 'passive': False,
                                                 'priority': 1,
                                                 'process_id': '1',
@@ -407,10 +433,16 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'router_id': '2.2.2.2',
                                                 'state': 'dr',
                                                 'transmit_delay': 1,
-                                                'wait_interval': 40},
+                                                'wait_interval': 40,
+                                                'statistics': 
+                                                    {'adj_nbr_count': 0,
+                                                    'nbr_count': 0,
+                                                    'num_nbrs_suppress_hello': 0,
+                                                    'multi_area_intf_count': 0,
+                                                    },
+                                                },
                                             'GigabitEthernet0/0/0/2': 
-                                                {'adj_nbr_count': 0,
-                                                'bfd': 
+                                                {'bfd': 
                                                     {'enable': False},
                                                 'cost': 1,
                                                 'dead_interval': 40,
@@ -434,11 +466,8 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'max_flood_scan_time_msec': 0,
                                                 'max_pkt_sz': 1500,
                                                 'mtu': 1500,
-                                                'multi_area_intf_count': 0,
                                                 'name': 'GigabitEthernet0/0/0/2',
-                                                'nbr_count': 0,
                                                 'next': '0(0)/0(0)',
-                                                'num_nbrs_suppress_hello': 0,
                                                 'passive': False,
                                                 'priority': 1,
                                                 'process_id': '1',
@@ -446,7 +475,14 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'router_id': '2.2.2.2',
                                                 'state': 'dr',
                                                 'transmit_delay': 1,
-                                                'wait_interval': 40},
+                                                'wait_interval': 40,
+                                                'statistics': 
+                                                    {'adj_nbr_count': 0,
+                                                    'nbr_count': 0,
+                                                    'num_nbrs_suppress_hello': 0,
+                                                    'multi_area_intf_count': 0,
+                                                    },
+                                                },
                                             'Loopback0': 
                                                 {'bfd': 
                                                     {'enable': False},
@@ -461,13 +497,12 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'router_id': '2.2.2.2'}},
                                         'virtual_links': 
                                             {'0.0.0.0 2.2.2.2': 
-                                                {'adj_nbr': '4.4.4.4',
-                                                'adj_nbr_count': 1,
-                                                'bfd': 
+                                                {'bfd': 
                                                     {'enable': False},
                                                 'cost': 1,
                                                 'dead_interval': 40,
                                                 'demand_circuit': True,
+                                                'donotage_lsa': False,
                                                 'enable': False,
                                                 'flood_queue_length': 0,
                                                 'hello_due_in': '00:00:01:281',
@@ -485,23 +520,30 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'max_flood_scan_time_msec': 0,
                                                 'max_pkt_sz': 1500,
                                                 'mtu': 0,
-                                                'multi_area_intf_count': 0,
                                                 'name': 'VL0',
-                                                'nbr_count': 1,
                                                 'next': '0(0)/0(0)',
-                                                'num_nbrs_suppress_hello': 1,
                                                 'passive': False,
                                                 'process_id': '1',
                                                 'retransmit_interval': 5,
                                                 'router_id': '2.2.2.2',
                                                 'state': 'point-to-point',
                                                 'transmit_delay': 1,
-                                                'wait_interval': 40}}},
+                                                'wait_interval': 40,
+                                                'total_dcbitless_lsa': 7,
+                                                'neighbors': 
+                                                    {'4.4.4.4': {},
+                                                    },
+                                                'statistics': 
+                                                    {'adj_nbr_count': 1,
+                                                    'nbr_count': 1,
+                                                    'num_nbrs_suppress_hello': 1,
+                                                    'multi_area_intf_count': 0,
+                                                    }}}},
                                     '0.0.0.1': 
                                         {'interfaces': 
                                             {'GigabitEthernet0/0/0/1': 
-                                                {'adj_nbr': '3.3.3.3',
-                                                'adj_nbr_count': 1,
+                                                {'bdr_ip_addr': '20.2.3.2',
+                                                'bdr_router_id': '2.2.2.2',
                                                 'bfd': 
                                                     {'enable': False},
                                                 'cost': 1,
@@ -526,11 +568,8 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'max_flood_scan_time_msec': 0,
                                                 'max_pkt_sz': 1500,
                                                 'mtu': 1500,
-                                                'multi_area_intf_count': 0,
                                                 'name': 'GigabitEthernet0/0/0/1',
-                                                'nbr_count': 1,
                                                 'next': '0(0)/0(0)',
-                                                'num_nbrs_suppress_hello': 0,
                                                 'passive': False,
                                                 'priority': 1,
                                                 'process_id': '1',
@@ -538,10 +577,21 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'router_id': '2.2.2.2',
                                                 'state': 'bdr',
                                                 'transmit_delay': 1,
-                                                'wait_interval': 40},
+                                                'wait_interval': 40,
+                                                'neighbors': 
+                                                    {'3.3.3.3': 
+                                                        {'dr_router_id': '3.3.3.3'},
+                                                    },
+                                                'statistics': 
+                                                    {'adj_nbr_count': 1,
+                                                    'nbr_count': 1,
+                                                    'num_nbrs_suppress_hello': 0,
+                                                    'multi_area_intf_count': 0,
+                                                    },
+                                                },
                                             'GigabitEthernet0/0/0/3': 
-                                                {'adj_nbr': '4.4.4.4',
-                                                'adj_nbr_count': 1,
+                                                {'bdr_ip_addr': '20.2.4.2',
+                                                'bdr_router_id': '2.2.2.2',
                                                 'bfd': 
                                                     {'enable': False},
                                                 'cost': 1,
@@ -566,11 +616,8 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'max_flood_scan_time_msec': 0,
                                                 'max_pkt_sz': 1500,
                                                 'mtu': 1500,
-                                                'multi_area_intf_count': 0,
                                                 'name': 'GigabitEthernet0/0/0/3',
-                                                'nbr_count': 1,
                                                 'next': '0(0)/0(0)',
-                                                'num_nbrs_suppress_hello': 0,
                                                 'passive': False,
                                                 'priority': 1,
                                                 'process_id': '1',
@@ -578,7 +625,18 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'router_id': '2.2.2.2',
                                                 'state': 'bdr',
                                                 'transmit_delay': 1,
-                                                'wait_interval': 40},
+                                                'wait_interval': 40,
+                                                'neighbors': 
+                                                    {'4.4.4.4': 
+                                                        {'dr_router_id': '4.4.4.4'},
+                                                    },
+                                                'statistics': 
+                                                    {'adj_nbr_count': 1,
+                                                    'nbr_count': 1,
+                                                    'num_nbrs_suppress_hello': 0,
+                                                    'multi_area_intf_count': 0,
+                                                    },
+                                                },
                                             'Loopback1': 
                                                 {'bfd': 
                                                     {'enable': False},

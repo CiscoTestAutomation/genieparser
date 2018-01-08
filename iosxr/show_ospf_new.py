@@ -84,14 +84,23 @@ class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
                                                 Optional('ls_ack_list'): str,
                                                 Optional('ls_ack_list_length'): int,
                                                 Optional('high_water_mark'): int,
-                                                Optional('nbr_count'): int,
-                                                Optional('adj_nbr_count'): int,
-                                                Optional('adj_nbr'): str,
-                                                Optional('num_nbrs_suppress_hello'): int,
-                                                Optional('multi_area_intf_count'): int,
+                                                Optional('total_dcbitless_lsa'): int,
+                                                Optional('donotage_lsa'): bool,
+                                                Optional('statistics'): 
+                                                    {Optional('adj_nbr_count'): int,
+                                                    Optional('nbr_count'): int,
+                                                    Optional('num_nbrs_suppress_hello'): int,
+                                                    Optional('multi_area_intf_count'): int,
+                                                    },
+                                                Optional('neighbors'): 
+                                                    {Any(): 
+                                                        {Optional('dr_router_id'): str,
+                                                        Optional('bdr_router_id'): str,
+                                                        },
+                                                    },
                                                 },
                                             },
-                                        Optional('virtual_links'):
+                                        Optional('virtual_links'): 
                                             {Any(): 
                                                 {'name': str,
                                                 'enable': bool,
@@ -134,14 +143,23 @@ class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
                                                 Optional('ls_ack_list'): str,
                                                 Optional('ls_ack_list_length'): int,
                                                 Optional('high_water_mark'): int,
-                                                Optional('nbr_count'): int,
-                                                Optional('adj_nbr_count'): int,
-                                                Optional('adj_nbr'): str,
-                                                Optional('num_nbrs_suppress_hello'): int,
-                                                Optional('multi_area_intf_count'): int,
+                                                Optional('total_dcbitless_lsa'): int,
+                                                Optional('donotage_lsa'): bool,
+                                                Optional('statistics'): 
+                                                    {Optional('adj_nbr_count'): int,
+                                                    Optional('nbr_count'): int,
+                                                    Optional('num_nbrs_suppress_hello'): int,
+                                                    Optional('multi_area_intf_count'): int,
+                                                    },
+                                                Optional('neighbors'): 
+                                                    {Any(): 
+                                                        {Optional('dr_router_id'): str,
+                                                        Optional('bdr_router_id'): str,
+                                                        },
+                                                    },
                                                 },
                                             },
-                                        Optional('sham_links'):
+                                        Optional('sham_links'): 
                                             {Any(): 
                                                 {'name': str,
                                                 'enable': bool,
@@ -184,11 +202,20 @@ class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
                                                 Optional('ls_ack_list'): str,
                                                 Optional('ls_ack_list_length'): int,
                                                 Optional('high_water_mark'): int,
-                                                Optional('nbr_count'): int,
-                                                Optional('adj_nbr_count'): int,
-                                                Optional('adj_nbr'): str,
-                                                Optional('num_nbrs_suppress_hello'): int,
-                                                Optional('multi_area_intf_count'): int,
+                                                Optional('total_dcbitless_lsa'): int,
+                                                Optional('donotage_lsa'): bool,
+                                                Optional('statistics'): 
+                                                    {Optional('adj_nbr_count'): int,
+                                                    Optional('nbr_count'): int,
+                                                    Optional('num_nbrs_suppress_hello'): int,
+                                                    Optional('multi_area_intf_count'): int,
+                                                    },
+                                                Optional('neighbors'): 
+                                                    {Any(): 
+                                                        {Optional('dr_router_id'): str,
+                                                        Optional('bdr_router_id'): str,
+                                                        },
+                                                    },
                                                 },
                                             },
                                         },
@@ -373,9 +400,9 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # Designated Router (ID) 3.3.3.3, Interface address 10.2.3.3
-            p6 = re.compile(r'^Designated +Router +\(ID\)'
-                             ' +(?P<dr_router_id>(\S+)), +Interface +address'
-                             ' +(?P<dr_ip_addr>(\S+))$')
+            p6 = re.compile(r'^Designated +(R|r)outer +\(ID\)'
+                             ' +(?P<dr_router_id>(\S+)), +(I|i)nterface'
+                             ' +(A|a)ddress +(?P<dr_ip_addr>(\S+))$')
             m = p6.match(line)
             if m:
                 sub_dict['dr_router_id'] = str(m.groupdict()['dr_router_id'])
@@ -383,9 +410,9 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # Backup Designated router (ID) 2.2.2.2, Interface address 10.2.3.2
-            p7 = re.compile(r'^Backup +Designated +Router +\(ID\)'
-                             ' +(?P<bdr_router_id>(\S+)), +Interface +address'
-                             ' +(?P<bdr_ip_addr>(\S+))$')
+            p7 = re.compile(r'^Backup +(D|d)esignated +(R|r)outer +\(ID\)'
+                             ' +(?P<bdr_router_id>(\S+)), +(I|i)nterface'
+                             ' +(A|a)ddress +(?P<bdr_ip_addr>(\S+))$')
             m = p7.match(line)
             if m:
                 sub_dict['bdr_router_id'] = str(m.groupdict()['bdr_router_id'])
@@ -474,16 +501,50 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                               ' +(?P<adj_nbr_count>(\d+))$')
             m = p14.match(line)
             if m:
-                sub_dict['nbr_count'] = int(m.groupdict()['nbr_count'])
-                sub_dict['adj_nbr_count'] = int(m.groupdict()['adj_nbr_count'])
+                if 'statistics' not in sub_dict:
+                    sub_dict['statistics'] = {}
+                sub_dict['statistics']['nbr_count'] = \
+                    int(m.groupdict()['nbr_count'])
+                sub_dict['statistics']['adj_nbr_count'] = \
+                    int(m.groupdict()['adj_nbr_count'])
                 continue
 
             # Adjacent with neighbor 2.2.2.2  (Backup Designated Router)
-            p15 = re.compile(r'^Adjacent +with +neighbor +(?P<adj_nbr>(\S+))'
-                              ' +\(.*\)$')
-            m = p15.match(line)
+            p15_1 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
+                              ' +\((B|b)ackup +(D|d)esignated +(R|r)outer\)$')
+            m = p15_1.match(line)
             if m:
-                sub_dict['adj_nbr'] = str(m.groupdict()['adj_nbr'])
+                neighbor = str(m.groupdict()['nbr'])
+                if 'neighbors' not in sub_dict:
+                    sub_dict['neighbors'] = {}
+                if neighbor not in sub_dict['neighbors']:
+                    sub_dict['neighbors'][neighbor] = {}
+                sub_dict['neighbors'][neighbor]['bdr_router_id'] = neighbor
+                continue
+
+            # Adjacent with neighbor 3.3.3.3  (Designated Router)
+            p15_2 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
+                              ' +\((D|d)esignated +(R|r)outer\)$')
+            m = p15_2.match(line)
+            if m:
+                neighbor = str(m.groupdict()['nbr'])
+                if 'neighbors' not in sub_dict:
+                    sub_dict['neighbors'] = {}
+                if neighbor not in sub_dict['neighbors']:
+                    sub_dict['neighbors'][neighbor] = {}
+                sub_dict['neighbors'][neighbor]['dr_router_id'] = neighbor
+                continue
+
+            # Adjacent with neighbor 4.4.4.4  (Hello suppressed)
+            p15_3 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
+                              ' +\(Hello suppressed\)$')
+            m = p15_3.match(line)
+            if m:
+                neighbor = str(m.groupdict()['nbr'])
+                if 'neighbors' not in sub_dict:
+                    sub_dict['neighbors'] = {}
+                if neighbor not in sub_dict['neighbors']:
+                    sub_dict['neighbors'][neighbor] = {}
                 continue
 
             # Suppress hello for 0 neighbor(s)
@@ -491,7 +552,10 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                               ' +neighbor\(s\)$')
             m = p16.match(line)
             if m:
-                sub_dict['num_nbrs_suppress_hello'] = int(m.groupdict()['sup'])
+                if 'statistics' not in sub_dict:
+                    sub_dict['statistics'] = {}
+                sub_dict['statistics']['num_nbrs_suppress_hello'] = \
+                    int(m.groupdict()['sup'])
                 continue
 
             # Multi-area interface Count is 0
@@ -499,7 +563,10 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                               ' +(?P<count>(\d+))$')
             m = p17.match(line)
             if m:
-                sub_dict['multi_area_intf_count'] = int(m.groupdict()['count'])
+                if 'statistics' not in sub_dict:
+                    sub_dict['statistics'] = {}
+                sub_dict['statistics']['multi_area_intf_count'] = \
+                    int(m.groupdict()['count'])
                 continue
 
             # Configured as demand circuit.
@@ -514,12 +581,16 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
             m = p19.match(line)
             if m:
                 sub_dict['demand_circuit'] = True
+                continue
 
             # DoNotAge LSA not allowed (Number of DCbitless LSA is 1).
-            p20 = re.compile(r'^DoNotAge LSA not allowed \(.*\)\.$')
+            p20 = re.compile(r'^DoNotAge +LSA +not +allowed +\(Number +of'
+                              ' +DCbitless +LSA +is +(?P<num>(\d+))\)\.$')
             m = p20.match(line)
             if m:
-                sub_dict['demand_circuit'] = True
+                sub_dict['donotage_lsa'] = False
+                sub_dict['total_dcbitless_lsa'] = int(m.groupdict()['num'])
+                continue
 
             # BFD enabled, BFD interval 12345 msec, BFD multiplier 50, Mode: Default
             p21 = re.compile(r'^BFD enabled'
@@ -534,7 +605,7 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 if m.groupdict()['multi']:
                     sub_dict['bfd']['multiplier'] = int(m.groupdict()['multi'])
                 if m.groupdict()['mode']:
-                    sub_dict['bfd']['mode'] = str(m.groupdict()['mode'])
+                    sub_dict['bfd']['mode'] = str(m.groupdict()['mode']).lower()
                     continue
 
         return ret_dict
