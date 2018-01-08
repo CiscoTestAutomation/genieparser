@@ -2912,17 +2912,15 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                     [unknown_tlvs_counter]['value'] = tlv_value
                 continue
 
-                # 0 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-                # 00 00 00 00 00 00 00 00 00 00 00 00 
-                p40 = re.compile(r'^(?P<something>([0\s]+))$')
-                m = p40.match(line)
-                if m:
-                    import pdb ; pdb.set_trace()
-                    tlv_value = tlv_value + ' ' + line
-                    db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs']\
-                        [unknown_tlvs_counter]['value'] = tlv_value
-                    continue
-
+            # 0 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+            # 00 00 00 00 00 00 00 00 00 00 00 00 
+            p40 = re.compile(r'^(?P<something>([0\s]+))$')
+            m = p40.match(line)
+            if m:
+                tlv_value = tlv_value + ' ' + line
+                db_dict['link_tlvs'][link_tlv_counter]['unknown_tlvs']\
+                    [unknown_tlvs_counter]['value'] = tlv_value
+                continue
 
         return ret_dict
 
