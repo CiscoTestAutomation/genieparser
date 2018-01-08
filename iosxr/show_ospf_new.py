@@ -963,14 +963,20 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                     },
                                 Optional('flood_pacing_interval'): int,
                                 Optional('retransmission_interval'): int,
+                                Optional('maximum_interfaces'): int,
                                 Optional('adjacency_stagger'): 
                                     {'disable': bool,
                                     'initial_number': int,
                                     'maximum_number': int},
+                                Optional('mpls'): 
+                                    {'ldp': 
+                                        {'ldp_igp_sync': bool,
+                                        'ldp_sync_status': str,
+                                        },
+                                    },
                                 Optional('numbers'): 
                                     {Optional('nbrs_forming'): int,
                                     Optional('nbrs_full'): int,
-                                    Optional('configured_interfaces'): int,
                                     Optional('external_lsa'): int,
                                     Optional('external_lsa_checksum'): str,
                                     Optional('opaque_as_lsa'): int,
@@ -1340,13 +1346,10 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
 
             # Maximum number of configured interfaces 1024
             p17 = re.compile(r'^Maximum +number +of +configured +interfaces'
-                              ' +(?P<cfgd>(\d+))$')
+                              ' +(?P<max>(\d+))$')
             m = p17.match(line)
             if m:
-                if 'numbers' not in sub_dict:
-                    sub_dict['numbers'] = {}
-                sub_dict['numbers']['configured_interfaces'] = \
-                    int(m.groupdict()['cfgd'])
+                sub_dict['maximum_interfaces'] = int(m.groupdict()['max'])
                 continue
 
             # Number of external LSA 1. Checksum Sum 0x00607f
@@ -1427,6 +1430,23 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                     sub_dict['snmp_trap'] = True
                 else:
                     sub_dict['snmp_trap'] = False
+                continue
+
+            # LDP Sync Enabled, Sync Status: Not Achieved
+            p25 = re.compile(r'^LDP +Sync +(?P<sync>(Enabled|Disabled)),'
+                              ' +Sync +Status: +(?P<status>(.*))$')
+            m = p25.match(line)
+            if m:
+                if 'mpls' not in sub_dict:
+                    sub_dict['mpls'] = {}
+                if 'ldp' not in sub_dict['mpls']:
+                    sub_dict['mpls']['ldp'] = {}
+                if 'Enabled' in m.groupdict()['sync']:
+                    sub_dict['mpls']['ldp']['ldp_igp_sync'] = True
+                else:
+                    sub_dict['mpls']['ldp']['ldp_igp_sync'] = False
+                sub_dict['mpls']['ldp']['ldp_sync_status'] = \
+                    str(m.groupdict()['status']).lower()
                 continue
 
             # LSD connected, registered, bound, revision 1

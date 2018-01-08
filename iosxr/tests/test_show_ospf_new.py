@@ -1074,7 +1074,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                 {'address_family': 
                     {'ipv4': 
                         {'instance': 
-                            {'ospf 1': 
+                            {'1': 
                                 {'adjacency_stagger': 
                                     {'disable': False,
                                     'initial_number': 2,
@@ -1104,11 +1104,11 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                 'flood_pacing_interval': 33,
                                 'lsd_revision': 1,
                                 'lsd_state': 'connected, registered, bound',
+                                'maximum_interfaces': 1024,
                                 'nsr': 
                                     {'enable': True},
                                 'numbers': 
-                                    {'configured_interfaces': 1024,
-                                    'dc_bitless': 0,
+                                    {'dc_bitless': 0,
                                     'do_not_age': 0,
                                     'external_lsa': 0,
                                     'external_lsa_checksum': '00000000',
@@ -1145,7 +1145,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                 {'address_family': 
                     {'ipv4': 
                         {'instance': 
-                            {'ospf 1': 
+                            {'1': 
                                 {'adjacency_stagger': 
                                     {'disable': False,
                                     'initial_number': 2,
@@ -1175,11 +1175,15 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                 'flood_pacing_interval': 33,
                                 'lsd_revision': 1,
                                 'lsd_state': 'connected, registered, bound',
+                                'maximum_interfaces': 1024,
+                                'mpls': 
+                                    {'ldp': 
+                                        {'ldp_igp_sync': True,
+                                        'ldp_sync_status': 'not achieved'}},
                                 'nsr': 
                                     {'enable': True},
                                 'numbers': 
-                                    {'configured_interfaces': 1024,
-                                    'dc_bitless': 0,
+                                    {'dc_bitless': 0,
                                     'do_not_age': 0,
                                     'external_lsa': 1,
                                     'external_lsa_checksum': '0x00607f',
@@ -1232,7 +1236,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
         RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive 
         Thu Nov  2 21:14:35.895 UTC
 
-         Routing Process "ospf 1" with ID 3.3.3.3
+         Routing Process "1" with ID 3.3.3.3
          Role: Primary Active
          NSR (Non-stop routing) is Enabled
          Supports only single TOS(TOS0) routes
@@ -1269,6 +1273,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
          Number of areas in this router is 1. 1 normal 0 stub 0 nssa
          External flood list length 0
          SNMP trap is enabled
+         LDP Sync Enabled, Sync Status: Not Achieved
          LSD connected, registered, bound, revision 1
          Segment Routing Global Block default (16000-23999), not allocated
          Strict-SPF capability is enabled
@@ -1287,7 +1292,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                 Number of neighbors forming in staggered mode 0, 2 full
 
 
-         VRF VRF1 in Routing Process "ospf 1" with ID 3.3.3.3
+         VRF VRF1 in Routing Process "1" with ID 3.3.3.3
          Role: Primary Active
          NSR (Non-stop routing) is Enabled
          Supports only single TOS(TOS0) routes
