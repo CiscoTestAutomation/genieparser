@@ -1,7 +1,6 @@
 ''' show_ospf.py
 
 IOSXR parsers for the following show commands:
-
     * show ospf vrf all-inclusive interface
     * show ospf vrf all-inclusive neighbor detail
     * show ospf vrf all-inclusive
