@@ -2698,6 +2698,13 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 link_type = str(m.groupdict()['type']).lower()
                 continue
 
+            # Link connected to: another Router (point-to-point)
+            p18_1 = re.compile(r'^Link +connected +to: +(?P<type>(.*))$')
+            m = p18_1.match(line)
+            if m:
+                link_type = str(m.groupdict()['type']).lower()
+                continue
+
             # (Link ID) Network/subnet number: 1.1.1.1
             p19_1 = re.compile(r'^\(Link +ID\) +Network\/(s|S)ubnet +(n|N)umber:'
                                 ' +(?P<link_id>(\S+))$')

@@ -1744,7 +1744,7 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                         {'metric': 111,
                                                                                         'mt_id': 0,
                                                                                         'tos': 0}},
-                                                                                'type': 'transit network'}},
+                                                                                'type': 'another router (point-to-point)'}},
                                                                         'num_of_links': 2}},
                                                                 'header': 
                                                                     {'adv_router': '11.11.11.11',
@@ -1777,7 +1777,7 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                                         {'metric': 1,
                                                                                         'mt_id': 0,
                                                                                         'tos': 0}},
-                                                                                'type': 'transit network'},
+                                                                                'type': 'another router (point-to-point)'},
                                                                             '20.2.6.6': 
                                                                                 {'link_data': '20.2.6.2',
                                                                                 'link_id': '20.2.6.6',
@@ -2014,181 +2014,229 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                         {'1.1.1.1 1.1.1.1': 
                                                             {'adv_router': '1.1.1.1',
                                                             'lsa_id': '1.1.1.1',
-                                                            'ospfv2': {'body': {'router': {'links': {'1.1.1.1': {'link_data': '255.255.255.255',
-                                                            'link_id': '1.1.1.1',
-                                                            'num_tos_metrics': 0,
-                                                            'topologies': {0: {'metric': 1,
-                                                            'mt_id': 0,
-                                                            'tos': 0}},
-                                                            'type': 'stub '
-                                                            'network'},
-                                                            '10.1.2.1': {'link_data': '10.1.2.1',
-                                                            'link_id': '10.1.2.1',
-                                                            'num_tos_metrics': 0,
-                                                            'topologies': {0: {'metric': 1,
-                                                            'mt_id': 0,
-                                                            'tos': 0}},
-                                                            'type': 'transit '
-                                                            'network'},
-                                                            '10.1.4.4': {'link_data': '10.1.4.1',
-                                                            'link_id': '10.1.4.4',
-                                                            'num_tos_metrics': 0,
-                                                            'topologies': {0: {'metric': 1,
-                                                            'mt_id': 0,
-                                                            'tos': 0}},
-                                                            'type': 'transit '
-                                                            'network'}},
-                                                            'num_of_links': 3}},
-                                                            'header': {'adv_router': '1.1.1.1',
-                                                            'age': 1802,
-                                                            'checksum': '0x6228',
-                                                            'length': 60,
-                                                            'lsa_id': '1.1.1.1',
-                                                            'option': 'None',
-                                                            'option_desc': 'No '
-                                                            'TOS-capability, '
-                                                            'DC',
-                                                            'routing_bit_enable': True,
-                                                            'seq_num': '8000003d',
-                                                            'type': 1}}},
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'router': 
+                                                                        {'links': 
+                                                                            {'1.1.1.1': 
+                                                                                {'link_data': '255.255.255.255',
+                                                                                'link_id': '1.1.1.1',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'stub network'},
+                                                                            '10.1.2.1': 
+                                                                                {'link_data': '10.1.2.1',
+                                                                                'link_id': '10.1.2.1',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'transit network'},
+                                                                            '10.1.4.4': 
+                                                                                {'link_data': '10.1.4.1',
+                                                                                'link_id': '10.1.4.4',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'transit network'}},
+                                                                        'num_of_links': 3}},
+                                                                'header': 
+                                                                    {'adv_router': '1.1.1.1',
+                                                                    'age': 1802,
+                                                                    'checksum': '0x6228',
+                                                                    'length': 60,
+                                                                    'lsa_id': '1.1.1.1',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '8000003d',
+                                                                    'type': 1}}},
                                                         '2.2.2.2 2.2.2.2': 
                                                             {'adv_router': '2.2.2.2',
                                                             'lsa_id': '2.2.2.2',
-                                                            'ospfv2': {'body': {'router': {'links': {'10.1.2.1': {'link_data': '10.1.2.2',
-                                                            'link_id': '10.1.2.1',
-                                                            'num_tos_metrics': 0,
-                                                            'topologies': {0: {'metric': 1,
-                                                            'mt_id': 0,
-                                                            'tos': 0}},
-                                                            'type': 'transit '
-                                                            'network'},
-                                                            '10.2.3.3': {'link_data': '10.2.3.2',
-                                                            'link_id': '10.2.3.3',
-                                                            'num_tos_metrics': 0,
-                                                            'topologies': {0: {'metric': 1,
-                                                            'mt_id': 0,
-                                                            'tos': 0}},
-                                                            'type': 'transit '
-                                                            'network'},
-                                                            '10.2.4.4': {'link_data': '10.2.4.2',
-                                                            'link_id': '10.2.4.4',
-                                                            'num_tos_metrics': 0,
-                                                            'topologies': {0: {'metric': 1,
-                                                            'mt_id': 0,
-                                                            'tos': 0}},
-                                                            'type': 'transit '
-                                                            'network'},
-                                                            '2.2.2.2': {'link_data': '255.255.255.255',
-                                                            'link_id': '2.2.2.2',
-                                                            'num_tos_metrics': 0,
-                                                            'topologies': {0: {'metric': 1,
-                                                            'mt_id': 0,
-                                                            'tos': 0}},
-                                                            'type': 'stub '
-                                                            'network'}},
-                                                            'num_of_links': 4}},
-                                                            'header': {'adv_router': '2.2.2.2',
-                                                            'age': 756,
-                                                            'checksum': '0x652b',
-                                                            'length': 72,
-                                                            'lsa_id': '2.2.2.2',
-                                                            'option': 'None',
-                                                            'option_desc': 'No '
-                                                            'TOS-capability, '
-                                                            'No '
-                                                            'DC',
-                                                            'routing_bit_enable': True,
-                                                            'seq_num': '80000014',
-                                                            'type': 1}}},
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'router': 
+                                                                        {'links': 
+                                                                            {'10.1.2.1': 
+                                                                                {'link_data': '10.1.2.2',
+                                                                                'link_id': '10.1.2.1',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'transit network'},
+                                                                            '10.2.3.3': 
+                                                                                {'link_data': '10.2.3.2',
+                                                                                'link_id': '10.2.3.3',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'transit network'},
+                                                                            '10.2.4.4': 
+                                                                                {'link_data': '10.2.4.2',
+                                                                                'link_id': '10.2.4.4',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'transit network'},
+                                                                            '2.2.2.2': 
+                                                                                {'link_data': '255.255.255.255',
+                                                                                'link_id': '2.2.2.2',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'stub network'}},
+                                                                        'num_of_links': 4}},
+                                                                'header': 
+                                                                    {'adv_router': '2.2.2.2',
+                                                                    'age': 756,
+                                                                    'checksum': '0x652b',
+                                                                    'length': 72,
+                                                                    'lsa_id': '2.2.2.2',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'No '
+                                                                    'DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '80000014',
+                                                                    'type': 1}}},
                                                         '3.3.3.3 3.3.3.3': 
                                                             {'adv_router': '3.3.3.3',
                                                             'lsa_id': '3.3.3.3',
-                                                            'ospfv2': {'body': {'router': {'links': {'10.2.3.3': {'link_data': '10.2.3.3',
-                                                            'link_id': '10.2.3.3',
-                                                            'num_tos_metrics': 0,
-                                                            'topologies': {0: {'metric': 1,
-                                                            'mt_id': 0,
-                                                            'tos': 0}},
-                                                            'type': 'transit '
-                                                            'network'},
-                                                            '10.3.4.4': {'link_data': '10.3.4.3',
-                                                            'link_id': '10.3.4.4',
-                                                            'num_tos_metrics': 0,
-                                                            'topologies': {0: {'metric': 1,
-                                                            'mt_id': 0,
-                                                            'tos': 0}},
-                                                            'type': 'transit '
-                                                            'network'},
-                                                            '3.3.3.3': {'link_data': '255.255.255.255',
-                                                            'link_id': '3.3.3.3',
-                                                            'num_tos_metrics': 0,
-                                                            'topologies': {0: {'metric': 1,
-                                                            'mt_id': 0,
-                                                            'tos': 0}},
-                                                            'type': 'stub '
-                                                            'network'}},
-                                                            'num_of_links': 3}},
-                                                            'header': {'adv_router': '3.3.3.3',
-                                                            'age': 1291,
-                                                            'checksum': '0x75f8',
-                                                            'length': 60,
-                                                            'lsa_id': '3.3.3.3',
-                                                            'option': 'None',
-                                                            'option_desc': 'No '
-                                                            'TOS-capability, '
-                                                            'DC',
-                                                            'routing_bit_enable': True,
-                                                            'seq_num': '80000033',
-                                                            'type': 1}}},
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'router': 
+                                                                        {'links': 
+                                                                            {'10.2.3.3': 
+                                                                                {'link_data': '10.2.3.3',
+                                                                                'link_id': '10.2.3.3',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'transit network'},
+                                                                            '10.3.4.4': 
+                                                                                {'link_data': '10.3.4.3',
+                                                                                'link_id': '10.3.4.4',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'transit network'},
+                                                                            '3.3.3.3': 
+                                                                                {'link_data': '255.255.255.255',
+                                                                                'link_id': '3.3.3.3',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'stub network'}},
+                                                                        'num_of_links': 3}},
+                                                                'header': 
+                                                                    {'adv_router': '3.3.3.3',
+                                                                    'age': 1291,
+                                                                    'checksum': '0x75f8',
+                                                                    'length': 60,
+                                                                    'lsa_id': '3.3.3.3',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '80000033',
+                                                                    'type': 1}}},
                                                         '4.4.4.4 4.4.4.4': 
                                                             {'adv_router': '4.4.4.4',
                                                             'lsa_id': '4.4.4.4',
-                                                            'ospfv2': {'body': {'router': {'links': {'10.1.4.4': {'link_data': '10.1.4.4',
-                                                            'link_id': '10.1.4.4',
-                                                            'num_tos_metrics': 0,
-                                                            'topologies': {0: {'metric': 1,
-                                                            'mt_id': 0,
-                                                            'tos': 0}},
-                                                            'type': 'transit '
-                                                            'network'},
-                                                            '10.2.4.4': {'link_data': '10.2.4.4',
-                                                            'link_id': '10.2.4.4',
-                                                            'num_tos_metrics': 0,
-                                                            'topologies': {0: {'metric': 1,
-                                                            'mt_id': 0,
-                                                            'tos': 0}},
-                                                            'type': 'transit '
-                                                            'network'},
-                                                            '10.3.4.4': {'link_data': '10.3.4.4',
-                                                            'link_id': '10.3.4.4',
-                                                            'num_tos_metrics': 0,
-                                                            'topologies': {0: {'metric': 1,
-                                                            'mt_id': 0,
-                                                            'tos': 0}},
-                                                            'type': 'transit '
-                                                            'network'},
-                                                            '4.4.4.4': {'link_data': '255.255.255.255',
-                                                            'link_id': '4.4.4.4',
-                                                            'num_tos_metrics': 0,
-                                                            'topologies': {0: {'metric': 1,
-                                                            'mt_id': 0,
-                                                            'tos': 0}},
-                                                            'type': 'stub '
-                                                            'network'}},
-                                                            'num_of_links': 4}},
-                                                            'header': {'adv_router': '4.4.4.4',
-                                                            'age': 505,
-                                                            'as_boundary_router': True,
-                                                            'checksum': '0xa37d',
-                                                            'length': 72,
-                                                            'lsa_id': '4.4.4.4',
-                                                            'option': 'None',
-                                                            'option_desc': 'No '
-                                                            'TOS-capability, '
-                                                            'DC',
-                                                            'routing_bit_enable': True,
-                                                            'seq_num': '80000037',
-                                                            'type': 1}}}}}}}}}}}}}}}}
+                                                            'ospfv2': 
+                                                                {'body': 
+                                                                    {'router': 
+                                                                        {'links': 
+                                                                            {'10.1.4.4': 
+                                                                                {'link_data': '10.1.4.4',
+                                                                                'link_id': '10.1.4.4',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'transit network'},
+                                                                            '10.2.4.4': 
+                                                                                {'link_data': '10.2.4.4',
+                                                                                'link_id': '10.2.4.4',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'transit network'},
+                                                                            '10.3.4.4': 
+                                                                                {'link_data': '10.3.4.4',
+                                                                                'link_id': '10.3.4.4',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'transit network'},
+                                                                            '4.4.4.4': 
+                                                                                {'link_data': '255.255.255.255',
+                                                                                'link_id': '4.4.4.4',
+                                                                                'num_tos_metrics': 0,
+                                                                                'topologies': 
+                                                                                    {0: 
+                                                                                        {'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}},
+                                                                                'type': 'stub network'}},
+                                                                        'num_of_links': 4}},
+                                                                'header': 
+                                                                    {'adv_router': '4.4.4.4',
+                                                                    'age': 505,
+                                                                    'as_boundary_router': True,
+                                                                    'checksum': '0xa37d',
+                                                                    'length': 72,
+                                                                    'lsa_id': '4.4.4.4',
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'routing_bit_enable': True,
+                                                                    'seq_num': '80000037',
+                                                                    'type': 1}}}}}}}}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive database router 
