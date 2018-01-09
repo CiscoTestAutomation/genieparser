@@ -96,7 +96,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                     },
                                                 }},
                                         'sham_links': 
-                                            {'1 3.3.3.3': 
+                                            {'33.33.33.33 22.22.22.22': 
                                                 {'bfd': 
                                                     {'enable': False},
                                                 'cost': 111,
@@ -290,8 +290,19 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                     'num_nbrs_suppress_hello': 0}}}}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
+        
+        RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive sham-links | i OSPF_SL0
+          Sham Link OSPF_SL0 to address 22.22.22.22 is up
+
+        RP/0/0/CPU0:R3_ospf_xr#show run formal router ospf | i sham | i 22.22.22.22
+          router ospf 1 vrf VRF1 area 1 sham-link 33.33.33.33 22.22.22.22
+          router ospf 1 vrf VRF1 area 1 sham-link 33.33.33.33 22.22.22.22 cost 111
+          router ospf 1 vrf VRF1 area 1 sham-link 33.33.33.33 22.22.22.22 dead-interval 13
+          router ospf 1 vrf VRF1 area 1 sham-link 33.33.33.33 22.22.22.22 retransmit-interval 5
+          router ospf 1 vrf VRF1 area 1 sham-link 33.33.33.33 22.22.22.22 hello-interval 3
+          router ospf 1 vrf VRF1 area 1 sham-link 33.33.33.33 22.22.22.22 transmit-delay 7
+
         RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive interface 
-        Thu Nov  2 21:23:40.587 UTC
 
         Interfaces for OSPF 1
 
@@ -797,28 +808,29 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                                     {'77.77.77.77': 
                                                         {'address': '20.3.7.7',
                                                         'bdr_ip_addr': '20.3.7.3',
-                                                        'dbd_retrans': 0,
                                                         'dead_timer': '00:00:32',
                                                         'dr_ip_addr': '20.3.7.7',
                                                         'first': '0(0)/0(0)',
                                                         'high_water_mark': 0,
                                                         'index': '1/1,',
-                                                        'last_retrans_max_scan_length': 3,
-                                                        'last_retrans_max_scan_time_msec': 0,
-                                                        'last_retrans_scan_length': 3,
-                                                        'last_retrans_scan_time_msec': 0,
                                                         'lls_options': '0x1 (LR)',
                                                         'ls_ack_list': 'NSR-sync',
                                                         'ls_ack_list_pending': 0,
                                                         'neighbor_router_id': '77.77.77.77',
                                                         'neighbor_uptime': '23:24:56',
                                                         'next': '0(0)/0(0)',
-                                                        'num_retransmission': 15,
-                                                        'num_state_changes': 6,
                                                         'options': '0x52',
                                                         'priority': 1,
-                                                        'retransmission_queue_length': 0,
-                                                        'state': 'full'}}}}}},
+                                                        'state': 'full',
+                                                        'statistics': 
+                                                            {'nbr_event_count': 6,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 15,
+                                                            'total_dbd_retrans': 0,
+                                                            'last_retrans_max_scan_length': 3,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            'last_retrans_scan_length': 3,
+                                                            'last_retrans_scan_time_msec': 0}}}}}}},
                                 'total_neighbor_count': 1}}}}},
             'default': 
                 {'address_family': 
@@ -833,54 +845,56 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                                     {'4.4.4.4': 
                                                         {'address': '10.3.4.4',
                                                         'bdr_ip_addr': '10.3.4.3',
-                                                        'dbd_retrans': 0,
                                                         'dead_timer': '00:00:30',
                                                         'dr_ip_addr': '10.3.4.4',
                                                         'first': '0(0)/0(0)',
                                                         'high_water_mark': 0,
                                                         'index': '2/2,',
-                                                        'last_retrans_max_scan_length': 0,
-                                                        'last_retrans_max_scan_time_msec': 0,
-                                                        'last_retrans_scan_length': 0,
-                                                        'last_retrans_scan_time_msec': 0,
                                                         'lls_options': '0x1 (LR)',
                                                         'ls_ack_list': 'NSR-sync',
                                                         'ls_ack_list_pending': 0,
                                                         'neighbor_router_id': '4.4.4.4',
                                                         'neighbor_uptime': '1d01h',
                                                         'next': '0(0)/0(0)',
-                                                        'num_retransmission': 0,
-                                                        'num_state_changes': 6,
                                                         'options': '0x52',
                                                         'priority': 1,
-                                                        'retransmission_queue_length': 0,
-                                                        'state': 'full'}}},
+                                                        'state': 'full',
+                                                        'statistics': 
+                                                            {'nbr_event_count': 6,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 0,
+                                                            'total_dbd_retrans': 0,
+                                                            'last_retrans_max_scan_length': 0,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            'last_retrans_scan_length': 0,
+                                                            'last_retrans_scan_time_msec': 0}}}},
                                             'GigabitEthernet0/0/0/2': 
                                                 {'neighbors': 
                                                     {'2.2.2.2': 
                                                         {'address': '10.2.3.2',
                                                         'bdr_ip_addr': '10.2.3.2',
-                                                        'dbd_retrans': 0,
                                                         'dead_timer': '00:00:38',
                                                         'dr_ip_addr': '10.2.3.3',
                                                         'first': '0(0)/0(0)',
                                                         'high_water_mark': 0,
                                                         'index': '1/1,',
-                                                        'last_retrans_max_scan_length': 0,
-                                                        'last_retrans_max_scan_time_msec': 0,
-                                                        'last_retrans_scan_length': 0,
-                                                        'last_retrans_scan_time_msec': 0,
                                                         'ls_ack_list': 'NSR-sync',
                                                         'ls_ack_list_pending': 0,
                                                         'neighbor_router_id': '2.2.2.2',
                                                         'neighbor_uptime': '08:22:07',
                                                         'next': '0(0)/0(0)',
-                                                        'num_retransmission': 0,
-                                                        'num_state_changes': 6,
                                                         'options': '0x42',
                                                         'priority': 1,
-                                                        'retransmission_queue_length': 0,
-                                                        'state': 'full'}}}}}},
+                                                        'state': 'full',
+                                                        'statistics': 
+                                                            {'nbr_event_count': 6,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 0,
+                                                            'total_dbd_retrans': 0,
+                                                            'last_retrans_max_scan_length': 0,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            'last_retrans_scan_length': 0,
+                                                            'last_retrans_scan_time_msec': 0}}}}}}},
                                 'total_neighbor_count': 2}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
@@ -956,32 +970,33 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                 {'areas': 
                                     {'0.0.0.0': 
                                         {'virtual_links': 
-                                            {'0.0.0.0 20.2.4.4': 
+                                            {'0.0.0.0 4.4.4.4': 
                                                 {'neighbors': 
                                                     {'4.4.4.4': 
                                                         {'address': '20.2.4.4',
                                                         'bdr_ip_addr': '0.0.0.0',
-                                                        'dbd_retrans': 0,
                                                         'dr_ip_addr': '0.0.0.0',
                                                         'first': '0(0)/0(0)',
                                                         'high_water_mark': 0,
                                                         'index': '1/3,',
-                                                        'last_retrans_max_scan_length': 0,
-                                                        'last_retrans_max_scan_time_msec': 0,
-                                                        'last_retrans_scan_length': 0,
-                                                        'last_retrans_scan_time_msec': 0,
                                                         'lls_options': '0x1 (LR)',
                                                         'ls_ack_list': 'NSR-sync',
                                                         'ls_ack_list_pending': 0,
                                                         'neighbor_router_id': '4.4.4.4',
                                                         'neighbor_uptime': '04:58:24',
                                                         'next': '0(0)/0(0)',
-                                                        'num_retransmission': 0,
-                                                        'num_state_changes': 7,
                                                         'options': '0x72',
                                                         'priority': 1,
-                                                        'retransmission_queue_length': 0,
-                                                        'state': 'full'}}}}},
+                                                        'state': 'full',
+                                                        'statistics': 
+                                                            {'nbr_event_count': 7,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 0,
+                                                            'total_dbd_retrans': 0,
+                                                            'last_retrans_max_scan_length': 0,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            'last_retrans_scan_length': 0,
+                                                            'last_retrans_scan_time_msec': 0}}}}}},
                                     '0.0.0.1': 
                                         {'interfaces': 
                                             {'GigabitEthernet0/0/0/1': 
@@ -989,54 +1004,56 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                                     {'3.3.3.3': 
                                                         {'address': '20.2.3.3',
                                                         'bdr_ip_addr': '20.2.3.2',
-                                                        'dbd_retrans': 0,
                                                         'dead_timer': '00:00:31',
                                                         'dr_ip_addr': '20.2.3.3',
                                                         'first': '0(0)/0(0)',
                                                         'high_water_mark': 0,
                                                         'index': '2/2,',
-                                                        'last_retrans_max_scan_length': 1,
-                                                        'last_retrans_max_scan_time_msec': 0,
-                                                        'last_retrans_scan_length': 1,
-                                                        'last_retrans_scan_time_msec': 0,
                                                         'ls_ack_list': 'NSR-sync',
                                                         'ls_ack_list_pending': 0,
                                                         'neighbor_router_id': '3.3.3.3',
                                                         'neighbor_uptime': '05:00:13',
                                                         'next': '0(0)/0(0)',
-                                                        'num_retransmission': 2,
-                                                        'num_state_changes': 6,
                                                         'options': '0x42',
                                                         'priority': 1,
-                                                        'retransmission_queue_length': 0,
-                                                        'state': 'full'}}},
+                                                        'state': 'full',
+                                                        'statistics': 
+                                                            {'nbr_event_count': 6,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 2,
+                                                            'total_dbd_retrans': 0,
+                                                            'last_retrans_max_scan_length': 1,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            'last_retrans_scan_length': 1,
+                                                            'last_retrans_scan_time_msec': 0}}}},
                                             'GigabitEthernet0/0/0/3': 
                                                 {'neighbors': 
                                                     {'4.4.4.4': 
                                                         {'address': '20.2.4.4',
                                                         'bdr_ip_addr': '20.2.4.2',
-                                                        'dbd_retrans': 0,
                                                         'dead_timer': '00:00:32',
                                                         'dr_ip_addr': '20.2.4.4',
                                                         'first': '0(0)/0(0)',
                                                         'high_water_mark': 0,
                                                         'index': '1/1,',
-                                                        'last_retrans_max_scan_length': 0,
-                                                        'last_retrans_max_scan_time_msec': 0,
-                                                        'last_retrans_scan_length': 0,
-                                                        'last_retrans_scan_time_msec': 0,
                                                         'lls_options': '0x1 (LR)',
                                                         'ls_ack_list': 'NSR-sync',
                                                         'ls_ack_list_pending': 0,
                                                         'neighbor_router_id': '4.4.4.4',
                                                         'neighbor_uptime': '05:00:21',
                                                         'next': '0(0)/0(0)',
-                                                        'num_retransmission': 0,
-                                                        'num_state_changes': 6,
                                                         'options': '0x52',
                                                         'priority': 1,
-                                                        'retransmission_queue_length': 0,
-                                                        'state': 'full'}}}}}},
+                                                        'state': 'full',
+                                                        'statistics': 
+                                                            {'nbr_event_count': 6,
+                                                            'nbr_retrans_qlen': 0,    
+                                                            'total_retransmission': 0,
+                                                            'total_dbd_retrans': 0,
+                                                            'last_retrans_max_scan_length': 0,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            'last_retrans_scan_length': 0,
+                                                            'last_retrans_scan_time_msec': 0}}}}}}},
                                 'total_neighbor_count': 3}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
