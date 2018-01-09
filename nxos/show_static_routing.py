@@ -193,9 +193,9 @@ class ShowIpStaticRoute(ShowIpStaticRouteSchema):
 
 
 # ====================================================
-#  schema for show ipv6 static detail
+#  schema for show ipv6 static-static
 # ====================================================
-class ShowIpv6StaticDetailSchema(MetaParser):
+class ShowIpv6StaticRouteSchema(MetaParser):
     schema = {
         'vrfs': {
             Any(): {
@@ -209,7 +209,10 @@ class ShowIpv6StaticDetailSchema(MetaParser):
                                        Any(): {    # interface  if there is no next_hop
                                            Optional('outgoing_interface'): str,
                                            Optional('preference'): int,
-                                           Optional('tag'): int,
+                                           Optional('resolved_tid'): int,
+                                           Optional('bfd_enabled'): bool,
+                                           Optional('rnh_active'): bool,
+                                           Optional('next_hop_vrf'): str,
                                        },
                                    },
                                    Optional('next_hop_list'): {
@@ -217,14 +220,11 @@ class ShowIpv6StaticDetailSchema(MetaParser):
                                            Optional('index'): int,
                                            Optional('next_hop'): str,
                                            Optional('outgoing_interface'): str,
-                                           Optional('resolved_outgoing_interface'): str,
-                                           Optional('resolved_paths_number'): int,
-                                           Optional('rejected_by'): str,
-                                           Optional('max_depth'): int,
+                                           Optional('resolved_tid'): int,
                                            Optional('preference'): int,
-                                           Optional('tag'): int,
-                                           Optional('track'): int,
-                                           Optional('track_shutdown'): bool,
+                                           Optional('bfd_enabled'): bool,
+                                           Optional('next_hop_vrf'): str,
+                                           Optional('rnh_active'): bool,
                                        },
                                    },
                                },
@@ -236,33 +236,33 @@ class ShowIpv6StaticDetailSchema(MetaParser):
         },
     }
 # ====================================================
-#  parser for show ipv6 static detail
+#  parser for show ipv6 static-route
 # ====================================================
-class ShowIpv6StaticDetail(ShowIpv6StaticDetailSchema):
+class ShowIpv6StaticRoute(ShowIpv6StaticRouteSchema):
     '''
-       show ipv6 static detail
-       show ipv6 static vrf <vrf> detail
+       show ipv6 static-route
+       show ipv6 static-route vrf <vrf>
+       show ipv6 static-route vrf all
     '''
     def cli(self, vrf=""):
         if vrf:
-            cmd = 'show ipv6 static vrf {} detail'.format(vrf)
+            cmd = 'show ipv6 static-route vrf {}'.format(vrf)
         else:
-            cmd = 'show ipv6 static detail'
+            cmd = 'show ipv6 static-route'
         out = self.device.execute(cmd)
 
         af = 'ipv6'
-        resolved_interface = False
         vrf = route = interface = next_hop = ""
 
         result_dict = {}
         for line in out.splitlines():
             if line:
-                line = line.rstrip()
+                line = line.strip()
             else:
                 continue
 
-            # IPv6 Static routes Table - default
-            p1 = re.compile(r'^\s*IPv6 +Static +routes +Table -+ (?P<vrf>[\w]+)$')
+            # IPv6 Configured Static Routes for VRF "default"(1)
+            p1 = re.compile(r'^\s*IPv6 +Configured +Static +Routes +for +VRF +\"(?P<vrf>[\w]+)\"\((?P<index>\d)\)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -280,15 +280,11 @@ class ShowIpv6StaticDetail(ShowIpv6StaticDetailSchema):
                         result_dict['vrfs'][vrf]['address_family'][af] = {}
                 continue
 
-            # 2001:2:2:2::2/128 via 2001:10:1:2::2, distance 3
-            # *   2001:2:2:2::2/128 via 2001:20:1:2::2, GigabitEthernet0/1, distance 1
-            # 2001:2:2:2::2/128 via 2001:10:1:2::2, GigabitEthernet0/0, distance 11, tag 100
-            # *   2001:3:3:3::3/128 via GigabitEthernet0/3, distance 1
-            p2 = re.compile(r'^\s*([*]  +)?(?P<route>[\w\/\:]+)?'
-                            ' +via +((?P<nexthop>[\d\:]+), )?'
-                            '((?P<interface>[a-zA-Z][\w\.\/]+), )?'
-                            '(distance (?P<distance>[\d]+))?'
-                            '(, +tag +(?P<tag>[\d]+))?$')
+            # 2001:1:1:1::1/128 -> 2001:10:1:3::1/128, preference: 1
+            # 2001:1:1:1::1/128 -> Null0, preference: 1
+            p2 = re.compile(r'^\s*(?P<route>[\d\/\:]+)( +\-\> +(?P<nexthop>[\d\:\/]+), )?'
+                            '( \-\> +(?P<interface>[\w\.\/]+), )?'
+                            '(preference: +(?P<preference>[\d]+))?$')
             m = p2.match(line)
             if m:
                 next_hop = ""
@@ -299,15 +295,13 @@ class ShowIpv6StaticDetail(ShowIpv6StaticDetailSchema):
                         route = m.groupdict()['route']
                         index = 1
 
-                if_preference = m.groupdict()['distance']
+                if m.groupdict()['preference']:
+                    if_preference = m.groupdict()['preference']
                 if m.groupdict()['nexthop']:
                     next_hop = m.groupdict()['nexthop']
+
                 if m.groupdict()['interface']:
                     interface = m.groupdict()['interface']
-                if m.groupdict()['distance']:
-                    if_preference = m.groupdict()['distance']
-                if m.groupdict()['tag']:
-                    tag = m.groupdict()['tag']
 
                 if 'routes' not in result_dict['vrfs'][vrf]['address_family'][af]:
                     result_dict['vrfs'][vrf]['address_family'][af]['routes'] = {}
@@ -329,24 +323,25 @@ class ShowIpv6StaticDetail(ShowIpv6StaticDetailSchema):
                             ['next_hop']['outgoing_interface']:
                         result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]\
                             ['next_hop']['outgoing_interface'][interface] = {}
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
-                        ['next_hop']['outgoing_interface'][interface]['outgoing_interface'] = interface
 
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
-                        ['next_hop']['outgoing_interface'][interface]['preference'] = int(if_preference)
-
-                    if m.groupdict()['tag']:
+                    if m.groupdict()['interface']:
                         result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
-                            ['next_hop']['outgoing_interface'][interface]['tag'] = int(tag)
+                            ['next_hop']['outgoing_interface'][interface]['outgoing_interface'] = interface
+
+                    if m.groupdict()['interface']:
+                        result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                            ['next_hop']['outgoing_interface'][interface]['preference'] = int(if_preference)
+
 
                 else:
                     if 'next_hop_list' not in result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop']:
                         result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop']['next_hop_list'] = {}
 
-                    if int(if_preference):
-                        if_preference_int = int(if_preference)
-                        result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop']\
-                            ['next_hop_list'][index] = {}
+                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop']['next_hop_list'][index] = {}
+
+                    if m.groupdict('preference'):
+                        result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                            ['next_hop_list'][index]['preference'] = int(if_preference)
 
                     result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop']\
                         ['next_hop_list'][index]['index'] = index
@@ -354,62 +349,88 @@ class ShowIpv6StaticDetail(ShowIpv6StaticDetailSchema):
                     result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop']\
                         ['next_hop_list'][index]['next_hop'] = next_hop.strip()
 
-                    if interface:
+                    if m.groupdict()['interface']:
                         result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop']\
                             ['next_hop_list'][index]['outgoing_interface'] = interface
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop']\
-                        ['next_hop_list'][index]['preference'] = if_preference_int
-                    if m.groupdict()['tag']:
-                        result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                            ['next_hop_list'][index]['tag'] = int(tag)
+
+
 
                 continue
 
-            # Resolves to 1 paths (max depth 1)
-            p3 = re.compile(r'^\s*Resolves +to +(?P<no_paths>[\d]+)? +paths'
-                            ' +\(max +depth +(?P<max_depth>[\d]+)\)$')
+            #  nh_vrf(default) reslv_tid 0
+            p3 = re.compile(r'^\s*nh_vrf\((?P<next_vrf>[\w]+)\) +reslv_tid +(?P<resolved_tid>[\d]+)$')
             m = p3.match(line)
             if m:
-                resolved_interface = True
-                max_depth = m.groupdict()['max_depth']
-                number_of_paths = m.groupdict()['no_paths']
-                result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                    ['next_hop_list'][index]['resolved_paths_number'] = int(number_of_paths)
+                next_vrf = m.groupdict()['next_vrf']
+                resolved_tid = m.groupdict()['resolved_tid']
+                if next_hop:
+                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                        ['next_hop_list'][index]['next_hop_vrf'] = next_vrf
 
-                result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                    ['next_hop_list'][index]['max_depth'] = int(max_depth)
+                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                        ['next_hop_list'][index]['resolved_tid'] = int(resolved_tid)
+                else:
+                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                        ['outgoing_interface'][interface]['next_hop_vrf'] = next_vrf
+                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                        ['outgoing_interface'][interface]['resolved_tid'] = int(resolved_tid)
+
                 continue
 
-            # via GigabitEthernet0/0
-            p4 = re.compile(r'^\s*via +(?P<resolved_interface>[\w\/\.]+)$')
+            # real-next-hop: 2001:10:2:3::2, interface: Ethernet1/4
+            p4 = re.compile(r'^\s*real-next-hop: +(?P<real_next_hop>[\d\:]+)'
+                            '(, +interface: +(?P<interface2>[\w\/\.]+))?$')
             m = p4.match(line)
             if m:
-                if resolved_interface:
-                    resolved_outgoing_interface = m.groupdict()['resolved_interface']
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                        ['next_hop_list'][index]['resolved_outgoing_interface'] = resolved_outgoing_interface
-                    resolved_interface = False
+                if m.groupdict()['interface2']:
+                    interface2 = m.groupdict()['interface2']
+                if m.groupdict()['real_next_hop'] and '0' not in m.groupdict()['real_next_hop']:
+                    real_next_hop = m.groupdict()['real_next_hop']
+
+                if not interface and m.groupdict()['interface2']:
+                    if not next_hop:
+                        result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                            ['next_hop']['outgoing_interface'][interface2]['outgoing_interface'] = interface2
+                    else:
+                        result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop']\
+                            ['next_hop_list'][index]['outgoing_interface'] = interface2
                 continue
 
-            # Rejected by routing table
-            p6 = re.compile(r'^\s*Rejected +by +(?P<rejected_by>[\w\s]+)$')
+            # rnh(installed in u6rib)
+            # rnh(not installed in u6rib)
+            p5 = re.compile(r'^\s*rnh\((?P<not>[not]+)? ?installed +in +(?P<urib>[\w]+)\)$')
+            m = p5.match(line)
+            if m:
+                if m.groupdict()['not']:
+                    rnh_active = False
+                else:
+                    rnh_active = True
+                if not next_hop:
+                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                        ['next_hop']['outgoing_interface'][interface]['rnh_active'] = rnh_active
+                else:
+                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                        ['next_hop']['next_hop_list'][index]['rnh_active'] = rnh_active
+                continue
+
+            #  bfd_enabled no
+            p6 = re.compile(r'^\s*bfd_enabled +(?P<bfd>[\w]+)$')
             m = p6.match(line)
             if m:
-                rejected_by = m.groupdict()['rejected_by']
-                result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                    ['next_hop_list'][index]['rejected_by'] = rejected_by
+                bfd_enabled = False if m.groupdict()['bfd'].lower() == 'no' else True
+                if not next_hop:
+                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                        ['next_hop']['outgoing_interface'][interface]['bfd_enabled'] = bfd_enabled
+                else:
+                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                        ['next_hop']['next_hop_list'][index]['bfd_enabled'] = bfd_enabled
                 continue
 
-            # Tracked object 1 is Up
-            p7 = re.compile(r'^\s*Tracked +object +(?P<tracked_no>\d+) +is +(?P<interface_status>[\w]+)$')
-            m = p7.match(line)
-            if m:
-                track = m.groupdict()['tracked_no']
-                track_shutdown = False if m.groupdict()['interface_status'].lower() == 'up' else True
-                result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                    ['next_hop_list'][index]['track'] = int(track)
-                result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                    ['next_hop_list'][index]['track_shutdown'] = track_shutdown
-                continue
+
+        if result_dict:
+            for i in list(result_dict['vrfs']):
+                if not len(result_dict['vrfs'][i]['address_family'][af]):
+                    del result_dict['vrfs'][i]
+
 
         return result_dict
