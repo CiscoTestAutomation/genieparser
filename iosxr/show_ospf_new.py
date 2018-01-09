@@ -1113,7 +1113,7 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                     {Any(): 
                                         {'area_id': str,
                                         'area_type': str,
-                                        'summary': bool,
+                                        Optional('summary'): bool,
                                         Optional('default_cost'): int,
                                         Optional('lsa_translation'): str,
                                         Optional('ranges'): 
@@ -1702,7 +1702,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 # Set default values
                 sub_dict['areas'][area]['area_id'] = area
                 sub_dict['areas'][area]['area_type'] = 'normal'
-                sub_dict['areas'][area]['summary'] = True
                 continue
 
             # It is a stub area
@@ -1713,11 +1712,14 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                                 ' +area)))?$')
             m = p28_2.match(line)
             if m:
-                sub_dict['areas'][area]['area_type'] = \
-                    str(m.groupdict()['area_type'])
-                if m.groupdict()['summary']:
-                    sub_dict['areas'][area]['summary'] = False
-                    continue
+                area_type = str(m.groupdict()['area_type'])
+                sub_dict['areas'][area]['area_type'] = area_type
+                if area_type == 'stub':
+                    if m.groupdict()['summary']:
+                        sub_dict['areas'][area]['summary'] = False
+                    else:
+                        sub_dict['areas'][area]['summary'] = True
+                        continue
 
             # generates stub default route with cost 111
             # generates stub default route with cost 222
@@ -1968,6 +1970,9 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
         ret_dict = {}
         af = 'ipv4'
 
+        # crypo_algorithm dict
+        crypto_dict = {'message digest': 'md5', 'clear text': 'simple'}
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -2195,15 +2200,24 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
                 continue
             
             # Clear text authentication enabled
+            # Message digest authentication enabled
             p11 = re.compile(r'^(?P<auth>([a-zA-Z\s]+)) +authentication +enabled$')
             m = p11.match(line)
             if m:
+                auth = str(m.groupdict()['auth']).lower()
                 if 'authentication' not in sub_dict:
                     sub_dict['authentication'] = {}
                 if 'auth_trailer_key' not in sub_dict['authentication']:
                     sub_dict['authentication']['auth_trailer_key'] = {}
                 sub_dict['authentication']['auth_trailer_key']\
-                    ['crypto_algorithm'] = str(m.groupdict()['auth']).lower()
+                    ['crypto_algorithm'] = crypto_dict[auth]
+                continue
+
+            # Youngest key id is 1
+            p12 = re.compile(r'^Youngest +key +id +is +(?P<young>(\d+))$')
+            m = p12.match(line)
+            if m:
+                sub_dict['youngest_key_id'] = int(m.groupdict()['young'])
                 continue
 
         return ret_dict
@@ -2242,7 +2256,14 @@ class ShowOspfVrfAllInclusiveShamLinksSchema(MetaParser):
                                                 'demand_circuit': bool,
                                                 'dcbitless_lsa_count': int,
                                                 'if_index': int,
-                                                },
+                                                Optional('nsf'): 
+                                                    {'enable': bool,
+                                                    'last_restart': str},
+                                                Optional('authentication'): 
+                                                    {'auth_trailer_key': 
+                                                        {'crypto_algorithm': str},
+                                                    },
+                                                Optional('youngest_key_id'): int},
                                             },
                                         },
                                     },
@@ -2306,7 +2327,7 @@ class ShowOspfVrfAllInclusiveVirtualLinksSchema(MetaParser):
                                                     {'auth_trailer_key': 
                                                         {'crypto_algorithm': str},
                                                     },
-                                                },
+                                                Optional('youngest_key_id'): int},
                                             },
                                         },
                                     },

@@ -1158,7 +1158,6 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                     {'0.0.0.1': 
                                         {'area_type': 'normal',
                                         'area_id': '0.0.0.1',
-                                        'summary': True,
                                         'statistics': 
                                             {'area_scope_lsa_cksum_sum': '0x04f437',
                                             'area_scope_lsa_count': 11,
@@ -1245,7 +1244,6 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                     {'0.0.0.0': 
                                         {'area_type': 'normal',
                                         'area_id': '0.0.0.0',
-                                        'summary': True,
                                         'rrr_enabled': True,
                                         'statistics': 
                                             {'area_scope_lsa_cksum_sum': '0x0a2fb5',
@@ -1452,7 +1450,6 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                     {'0.0.0.1': 
                                         {'area_id': '0.0.0.1',
                                         'area_type': 'normal',
-                                        'summary': True,
                                         'statistics': 
                                             {'area_scope_lsa_cksum_sum': '0x04b760',
                                             'area_scope_lsa_count': 9,
@@ -1567,11 +1564,11 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                             'nbrs_full': 1,
                                             'nbrs_staggered_mode': 0,
                                             'spf_runs_count': 12},
-                                        'summary': True,
                                         'topology_version': 7},
                                     '0.0.0.1': 
                                         {'area_id': '0.0.0.1',
                                         'area_type': 'stub',
+                                        'summary': True,
                                         'default_cost': 111,
                                         'ranges': 
                                             {'1.1.0.0/16': 
@@ -1592,11 +1589,11 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                             'lfa_revision': 0,
                                             'nbrs_full': 0,
                                             'nbrs_staggered_mode': 0,
-                                            'spf_runs_count': 8},
-                                        'summary': True},
+                                            'spf_runs_count': 8}},
                                     '0.0.0.2': 
                                         {'area_id': '0.0.0.2',
                                         'area_type': 'stub',
+                                        'summary': False,
                                         'default_cost': 222,
                                         'ranges': 
                                             {'1.1.1.0/24': 
@@ -1617,8 +1614,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                             'lfa_revision': 0,
                                             'nbrs_full': 0,
                                             'nbrs_staggered_mode': 0,
-                                            'spf_runs_count': 4},
-                                        'summary': False},
+                                            'spf_runs_count': 4}},
                                     '0.0.0.3': 
                                         {'area_id': '0.0.0.3',
                                         'area_type': 'NSSA',
@@ -1642,8 +1638,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                             'lfa_revision': 0,
                                             'nbrs_full': 0,
                                             'nbrs_staggered_mode': 0,
-                                            'spf_runs_count': 4},
-                                        'summary': True},
+                                            'spf_runs_count': 4}},
                                     '0.0.0.4': 
                                         {'area_id': '0.0.0.4',
                                         'area_type': 'NSSA',
@@ -1663,8 +1658,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                             'lfa_revision': 0,
                                             'nbrs_full': 0,
                                             'nbrs_staggered_mode': 0,
-                                            'spf_runs_count': 4},
-                                        'summary': True}},
+                                            'spf_runs_count': 4}}},
                                 'external_flood_list_length': 0,
                                 'flags': 
                                     {'abr': True,
@@ -1969,8 +1963,6 @@ class test_show_ospf_vrf_all_inclusive_sham_links(unittest.TestCase):
 
     golden_output1 = {'execute.return_value': '''
         RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive sham-links 
-        Thu Nov  2 21:23:03.160 UTC
-
 
         Sham Links for OSPF 1, VRF VRF1
 
@@ -2011,7 +2003,7 @@ class test_show_ospf_vrf_all_inclusive_virtual_links(unittest.TestCase):
 
     golden_parsed_output1 = {
         'vrf': 
-            {'default':
+            {'default': 
                 {'address_family': 
                     {'ipv4': 
                         {'instance': 
@@ -2022,7 +2014,7 @@ class test_show_ospf_vrf_all_inclusive_virtual_links(unittest.TestCase):
                                             {'0.0.0.1 4.4.4.4': 
                                                 {'authentication': 
                                                     {'auth_trailer_key': 
-                                                        {'crypto_algorithm': 'clear text'}},
+                                                        {'crypto_algorithm': 'simple'}},
                                                 'cost': 65535,
                                                 'dcbitless_lsa_count': 1,
                                                 'dead_interval': 16,
@@ -2038,7 +2030,27 @@ class test_show_ospf_vrf_all_inclusive_virtual_links(unittest.TestCase):
                                                 'state': 'point-to-point,',
                                                 'transit_area_id': '0.0.0.1',
                                                 'transmit_delay': 5,
-                                                'wait_interval': 16}}}}}}}}}}}
+                                                'wait_interval': 16},
+                                            '0.0.0.1 5.5.5.5': 
+                                                {'authentication': 
+                                                    {'auth_trailer_key': 
+                                                        {'crypto_algorithm': 'md5'}},
+                                                'cost': 65535,
+                                                'dcbitless_lsa_count': 1,
+                                                'dead_interval': 16,
+                                                'demand_circuit': True,
+                                                'hello_interval': 4,
+                                                'hello_timer': '00:00:03:179',
+                                                'name': 'VL1',
+                                                'nsf': {'enable': True,
+                                                        'last_restart': '00:18:16'},
+                                                'retransmit_interval': 44,
+                                                'router_id': '5.5.5.5',
+                                                'state': 'point-to-point,',
+                                                'transit_area_id': '0.0.0.1',
+                                                'transmit_delay': 5,
+                                                'wait_interval': 16,
+                                                'youngest_key_id': 1}}}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         RP/0/0/CPU0:R2_ospf_xr#show ospf vrf all-inclusive virtual-links 
@@ -2055,6 +2067,17 @@ class test_show_ospf_vrf_all_inclusive_virtual_links(unittest.TestCase):
           Timer intervals configured, Hello 4, Dead 16, Wait 16, Retransmit 44
             Hello due in 00:00:03:179
           Clear text authentication enabled
+
+        Virtual Link OSPF_VL1 to router 5.5.5.5 is up
+          
+          DoNotAge LSA not allowed Run as demand circuit (Number of DCbitless LSA is 1).
+          Transit area 1, via interface GigabitEthernet0/0/0/4, Cost of using 65535
+          Transmit Delay is 5 sec, State POINT_TO_POINT,
+          Non-Stop Forwarding (NSF) enabled, last NSF restart 00:18:16 ago
+          Timer intervals configured, Hello 4, Dead 16, Wait 16, Retransmit 44
+            Hello due in 00:00:03:179
+          Message digest authentication enabled
+          Youngest key id is 1
         '''}
 
     def test_show_ospf_vrf_all_inclusive_virtual_links_full(self):
