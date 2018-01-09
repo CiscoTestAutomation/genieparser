@@ -1082,6 +1082,9 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                 Optional('lsd_revision'): int,
                                 Optional('segment_routing_global_block_default'): str,
                                 Optional('strict_spf'): bool,
+                                Optional('flags'): 
+                                    {Optional('abr'): bool,
+                                    Optional('asbr'): bool},
                                 Optional('areas'): 
                                     {Any(): 
                                         {'area_id': str,
@@ -1284,12 +1287,22 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                     int(m.groupdict()['thld'])
                 continue
 
+            # It is an area border router
+            # It is an autonomous system boundary router
             # It is an area border and autonomous system boundary router
-            p5_0 = re.compile(r'^It +is +an +area +border +and +autonomous'
-                               ' +system +boundary +router$')
+            p5_0 = re.compile(r'^It +is +an'
+                               '(?: +(?P<abr>(area border)))?'
+                               '(?: +and)?'
+                               '(?: +(?P<asbr>(autonomous system boundary)))?'
+                               ' +router$')
             m = p5_0.match(line)
             if m:
-                # Not sure what the key is
+                if 'flags' not in sub_dict:
+                    sub_dict['flags'] = {}
+                if m.groupdict()['abr']:
+                    sub_dict['flags']['abr'] = True
+                if m.groupdict()['asbr']:
+                    sub_dict['flags']['asbr'] = True
                 continue
 
             # Router is not originating router-LSAs with maximum metric

@@ -1161,6 +1161,9 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                 'database_control': 
                                     {'max_lsa': 123},
                                 'external_flood_list_length': 0,
+                                'flags': 
+                                    {'abr': True,
+                                    'asbr': True},
                                 'flood_pacing_interval': 33,
                                 'lsd_revision': 1,
                                 'lsd_state': 'connected, registered, bound',
@@ -1450,6 +1453,9 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                             'nbrs_staggered_mode': 0,
                                             'spf_runs_count': 3}}},
                                 'external_flood_list_length': 0,
+                                'flags': 
+                                    {'abr': True,
+                                    'asbr': True},
                                 'flood_pacing_interval': 33,
                                 'graceful_restart': 
                                     {'ietf': 
@@ -1643,6 +1649,9 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                             'spf_runs_count': 4},
                                         'summary': True}},
                                 'external_flood_list_length': 0,
+                                'flags': 
+                                    {'abr': True,
+                                    'asbr': True},
                                 'flood_pacing_interval': 33,
                                 'graceful_restart': 
                                     {'cisco': 
