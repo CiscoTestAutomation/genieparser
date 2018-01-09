@@ -73,7 +73,7 @@ class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
                                                 Optional('wait_interval'): int,
                                                 Optional('retransmit_interval'): int,
                                                 Optional('passive'): bool,
-                                                Optional('hello_due_in'): str,
+                                                Optional('hello_timer'): str,
                                                 Optional('index'): str,
                                                 Optional('flood_queue_length'): int,
                                                 Optional('next'): str,
@@ -132,7 +132,7 @@ class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
                                                 Optional('wait_interval'): int,
                                                 Optional('retransmit_interval'): int,
                                                 Optional('passive'): bool,
-                                                Optional('hello_due_in'): str,
+                                                Optional('hello_timer'): str,
                                                 Optional('index'): str,
                                                 Optional('flood_queue_length'): int,
                                                 Optional('next'): str,
@@ -191,7 +191,7 @@ class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
                                                 Optional('wait_interval'): int,
                                                 Optional('retransmit_interval'): int,
                                                 Optional('passive'): bool,
-                                                Optional('hello_due_in'): str,
+                                                Optional('hello_timer'): str,
                                                 Optional('index'): str,
                                                 Optional('flood_queue_length'): int,
                                                 Optional('next'): str,
@@ -497,11 +497,11 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # Hello due in 00:00:07:587
-            p9_1 = re.compile(r'^Hello +due +in +(?P<hello_due>(\S+))$')
+            p9_1 = re.compile(r'^Hello +due +in +(?P<hello_timer>(\S+))$')
             m = p9_1.match(line)
             if m:
                 sub_dict['passive'] = False
-                sub_dict['hello_due_in'] = str(m.groupdict()['hello_due'])
+                sub_dict['hello_timer'] = str(m.groupdict()['hello_timer'])
                 continue
 
             # No Hellos (Passive interface)
