@@ -1140,6 +1140,8 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                 'areas': 
                                     {'0.0.0.1': 
                                         {'area_type': 'normal',
+                                        'area_id': '0.0.0.1',
+                                        'summary': True,
                                         'statistics': 
                                             {'area_scope_lsa_cksum_sum': '0x04f437',
                                             'area_scope_lsa_count': 11,
@@ -1174,6 +1176,13 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                     'nbrs_full': 1,
                                     'opaque_as_lsa': 0,
                                     'opaque_as_lsa_checksum': '00000000'},
+                                'redistribution': 
+                                    {'bgp': 
+                                        {'bgp_id': 100},
+                                    'max_prefix': 
+                                        {'num_of_prefix': 10240,
+                                        'prefix_thld': 75,
+                                        'warn_only': False}},
                                 'retransmission_interval': 66,
                                 'role': 'primary active',
                                 'router_id': '3.3.3.3',
@@ -1192,7 +1201,11 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                             {'hold': 200,
                                             'maximum': 5000,
                                             'start': 50}}},
-                                'strict_spf_capability': True,
+                                'strict_spf': True,
+                                'total_areas': 1,
+                                'total_normal_areas': 1,
+                                'total_nssa_areas': 0,
+                                'total_stub_areas': 0,
                                 'stub_router': 
                                     {'always': 
                                         {'always': False,
@@ -1211,6 +1224,8 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                 'areas': 
                                     {'0.0.0.0': 
                                         {'area_type': 'normal',
+                                        'area_id': '0.0.0.0',
+                                        'summary': True,
                                         'rrr_enabled': True,
                                         'statistics': 
                                             {'area_scope_lsa_cksum_sum': '0x0a2fb5',
@@ -1267,7 +1282,11 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                             {'hold': 200,
                                             'maximum': 5000,
                                             'start': 50}}},
-                                'strict_spf_capability': True,
+                                'strict_spf': True,
+                                'total_areas': 1,
+                                'total_normal_areas': 1,
+                                'total_nssa_areas': 0,
+                                'total_stub_areas': 0,
                                 'stub_router': 
                                     {'always': 
                                         {'always': True,
@@ -1294,7 +1313,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
         RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive 
         Thu Nov  2 21:14:35.895 UTC
 
-         Routing Process "1" with ID 3.3.3.3
+         Routing Process "ospf 1" with ID 3.3.3.3
          Role: Primary Active
          NSR (Non-stop routing) is Enabled
          Supports only single TOS(TOS0) routes
@@ -1350,7 +1369,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                 Number of neighbors forming in staggered mode 0, 2 full
 
 
-         VRF VRF1 in Routing Process "1" with ID 3.3.3.3
+         VRF VRF1 in Routing Process "ospf 1" with ID 3.3.3.3
          Role: Primary Active
          NSR (Non-stop routing) is Enabled
          Supports only single TOS(TOS0) routes
@@ -1398,12 +1417,484 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                 Number of neighbors forming in staggered mode 0, 1 full
         '''}
 
-    def test_show_ospf_vrf_all_inclusive_full(self):
+    golden_parsed_output2 = {
+        'vrf': 
+            {'VRF1': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'adjacency_stagger': 
+                                    {'disable': False,
+                                   'initial_number': 2,
+                                   'maximum_number': 64},
+                                'areas': 
+                                    {'0.0.0.1': 
+                                        {'area_id': '0.0.0.1',
+                                        'area_type': 'normal',
+                                        'summary': True,
+                                        'statistics': 
+                                            {'area_scope_lsa_cksum_sum': '0x04b760',
+                                            'area_scope_lsa_count': 9,
+                                            'area_scope_opaque_lsa_cksum_sum': '00000000',
+                                            'area_scope_opaque_lsa_count': 0,
+                                            'dcbitless_lsa_count': 0,
+                                            'donotage_lsa_count': 0,
+                                            'flood_list_length': 0,
+                                            'indication_lsa_count': 0,
+                                            'interfaces_count': 2,
+                                            'lfa_interface_count': 0,
+                                            'lfa_per_prefix_interface_count': 0,
+                                            'lfa_revision': 0,
+                                            'nbrs_full': 1,
+                                            'nbrs_staggered_mode': 0,
+                                            'spf_runs_count': 3}}},
+                                'external_flood_list_length': 0,
+                                'flood_pacing_interval': 33,
+                                'graceful_restart': 
+                                    {'ietf': 
+                                        {'enable': True,
+                                        'type': 'ietf'}},
+                                'lsd_revision': 1,
+                                'lsd_state': 'connected, registered, bound',
+                                'maximum_interfaces': 1024,
+                                'nsr': 
+                                    {'enable': True},
+                                'numbers': 
+                                    {'dc_bitless': 0,
+                                    'do_not_age': 0,
+                                    'external_lsa': 3,
+                                    'external_lsa_checksum': '0x01df46',
+                                    'nbrs_forming': 0,
+                                    'nbrs_full': 1,
+                                    'opaque_as_lsa': 0,
+                                    'opaque_as_lsa_checksum': '00000000'},
+                                'redistribution': 
+                                    {'bgp': 
+                                        {'bgp_id': 100,
+                                        'metric': 111},
+                                    'connected': 
+                                        {'enabled': True,
+                                        'metric': 10},
+                                    'isis': 
+                                        {'isis_pid': '10',
+                                        'metric': 3333},
+                                    'max_prefix': 
+                                        {'num_of_prefix': 4000,
+                                        'prefix_thld': 70,
+                                        'warn_only': False},
+                                    'static': 
+                                        {'enabled': True}},
+                                'retransmission_interval': 66,
+                                'role': 'primary active',
+                                'router_id': '3.3.3.3',
+                                'segment_routing_global_block_default': '16000-23999',
+                                'snmp_trap': False,
+                                'spf_control': 
+                                    {'throttle': 
+                                        {'lsa': 
+                                            {'arrival': 100,
+                                            'hold': 200,
+                                            'interval': 200,
+                                            'maximum': 5000,
+                                            'refresh_interval': 1800,
+                                            'start': 50},
+                                        'spf': 
+                                            {'hold': 200,
+                                            'maximum': 5000,
+                                            'start': 50}}},
+                                'strict_spf': True,
+                                'stub_router': 
+                                    {'always': 
+                                        {'always': False,
+                                        'external_lsa': False,
+                                        'include_stub': False,
+                                        'summary_lsa': False}},
+                                'total_areas': 1,
+                                'total_normal_areas': 1,
+                                'total_nssa_areas': 0,
+                                'total_stub_areas': 0}}}}},
+            'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'adjacency_stagger': 
+                                    {'disable': False,
+                                    'initial_number': 2,
+                                    'maximum_number': 64},
+                                'areas': 
+                                    {'0.0.0.0': 
+                                        {'area_id': '0.0.0.0',
+                                        'area_type': 'normal',
+                                        'rrr_enabled': True,
+                                        'statistics': 
+                                            {'area_scope_lsa_cksum_sum': '0x07a597',
+                                            'area_scope_lsa_count': 14,
+                                            'area_scope_opaque_lsa_cksum_sum': '00000000',
+                                            'area_scope_opaque_lsa_count': 0,
+                                            'dcbitless_lsa_count': 0,
+                                            'donotage_lsa_count': 0,
+                                            'flood_list_length': 0,
+                                            'indication_lsa_count': 0,
+                                            'interfaces_count': 5,
+                                            'lfa_interface_count': 0,
+                                            'lfa_per_prefix_interface_count': 0,
+                                            'lfa_revision': 0,
+                                            'nbrs_full': 1,
+                                            'nbrs_staggered_mode': 0,
+                                            'spf_runs_count': 12},
+                                        'summary': True,
+                                        'topology_version': 7},
+                                    '0.0.0.1': 
+                                        {'area_id': '0.0.0.1',
+                                        'area_type': 'stub',
+                                        'default_cost': 111,
+                                        'ranges': 
+                                            {'1.1.0.0/16': 
+                                                {'advertise': True,
+                                                'prefix': '1.1.0.0/16'}},
+                                        'statistics': 
+                                            {'area_scope_lsa_cksum_sum': '0x05adf0',
+                                            'area_scope_lsa_count': 13,
+                                            'area_scope_opaque_lsa_cksum_sum': '00000000',
+                                            'area_scope_opaque_lsa_count': 0,
+                                            'dcbitless_lsa_count': 0,
+                                            'donotage_lsa_count': 0,
+                                            'flood_list_length': 0,
+                                            'indication_lsa_count': 0,
+                                            'interfaces_count': 1,
+                                            'lfa_interface_count': 0,
+                                            'lfa_per_prefix_interface_count': 0,
+                                            'lfa_revision': 0,
+                                            'nbrs_full': 0,
+                                            'nbrs_staggered_mode': 0,
+                                            'spf_runs_count': 8},
+                                        'summary': True},
+                                    '0.0.0.2': 
+                                        {'area_id': '0.0.0.2',
+                                        'area_type': 'stub',
+                                        'default_cost': 222,
+                                        'ranges': 
+                                            {'1.1.1.0/24': 
+                                                {'advertise': True,
+                                                'prefix': '1.1.1.0/24'}},
+                                        'statistics': 
+                                            {'area_scope_lsa_cksum_sum': '0x0076bf',
+                                            'area_scope_lsa_count': 2,
+                                            'area_scope_opaque_lsa_cksum_sum': '00000000',
+                                            'area_scope_opaque_lsa_count': 0,
+                                            'dcbitless_lsa_count': 0,
+                                            'donotage_lsa_count': 0,
+                                            'flood_list_length': 0,
+                                            'indication_lsa_count': 0,
+                                            'interfaces_count': 1,
+                                            'lfa_interface_count': 0,
+                                            'lfa_per_prefix_interface_count': 0,
+                                            'lfa_revision': 0,
+                                            'nbrs_full': 0,
+                                            'nbrs_staggered_mode': 0,
+                                            'spf_runs_count': 4},
+                                        'summary': False},
+                                    '0.0.0.3': 
+                                        {'area_id': '0.0.0.3',
+                                        'area_type': 'NSSA',
+                                        'lsa_translation': 'type-7/type-5',
+                                        'ranges': 
+                                            {'2.2.2.0/24': 
+                                                {'advertise': True,
+                                                'prefix': '2.2.2.0/24'}},
+                                        'statistics': 
+                                            {'area_scope_lsa_cksum_sum': '0x09166c',
+                                            'area_scope_lsa_count': 14,
+                                            'area_scope_opaque_lsa_cksum_sum': '00000000',
+                                            'area_scope_opaque_lsa_count': 0,
+                                            'dcbitless_lsa_count': 0,
+                                            'donotage_lsa_count': 0,
+                                            'flood_list_length': 0,
+                                            'indication_lsa_count': 0,
+                                            'interfaces_count': 1,
+                                            'lfa_interface_count': 0,
+                                            'lfa_per_prefix_interface_count': 0,
+                                            'lfa_revision': 0,
+                                            'nbrs_full': 0,
+                                            'nbrs_staggered_mode': 0,
+                                            'spf_runs_count': 4},
+                                        'summary': True},
+                                    '0.0.0.4': 
+                                        {'area_id': '0.0.0.4',
+                                        'area_type': 'NSSA',
+                                        'lsa_translation': 'type-7/type-5',
+                                        'statistics': 
+                                            {'area_scope_lsa_cksum_sum': '0x022418',
+                                            'area_scope_lsa_count': 4,
+                                            'area_scope_opaque_lsa_cksum_sum': '00000000',
+                                            'area_scope_opaque_lsa_count': 0,
+                                            'dcbitless_lsa_count': 0,
+                                            'donotage_lsa_count': 0,
+                                            'flood_list_length': 0,
+                                            'indication_lsa_count': 0,
+                                            'interfaces_count': 1,
+                                            'lfa_interface_count': 0,
+                                            'lfa_per_prefix_interface_count': 0,
+                                            'lfa_revision': 0,
+                                            'nbrs_full': 0,
+                                            'nbrs_staggered_mode': 0,
+                                            'spf_runs_count': 4},
+                                        'summary': True}},
+                                'external_flood_list_length': 0,
+                                'flood_pacing_interval': 33,
+                                'graceful_restart': 
+                                    {'cisco': 
+                                        {'enable': True,
+                                        'type': 'cisco'}},
+                                'lsd_revision': 1,
+                                'lsd_state': 'connected, registered, bound',
+                                'maximum_interfaces': 1024,
+                                'nsr': 
+                                    {'enable': True},
+                                'numbers': 
+                                    {'dc_bitless': 0,
+                                    'do_not_age': 0,
+                                    'external_lsa': 3,
+                                    'external_lsa_checksum': '0x01b657',
+                                    'nbrs_forming': 0,
+                                    'nbrs_full': 1,
+                                    'opaque_as_lsa': 0,
+                                    'opaque_as_lsa_checksum': '00000000'},
+                                'redistribution': 
+                                    {'bgp': 
+                                        {'bgp_id': 100,
+                                        'metric': 111},
+                                    'connected': 
+                                        {'enabled': True},
+                                    'isis': 
+                                        {'isis_pid': '10',
+                                        'metric': 3333},
+                                    'max_prefix': 
+                                        {'num_of_prefix': 3000,
+                                        'prefix_thld': 90,
+                                        'warn_only': True},
+                                    'static': 
+                                        {'enabled': True,
+                                        'metric': 10}},
+                                'retransmission_interval': 66,
+                                'role': 'primary active',
+                                'router_id': '3.3.3.3',
+                                'segment_routing_global_block_default': '16000-23999',
+                                'snmp_trap': True,
+                                'spf_control': 
+                                    {'throttle': 
+                                        {'lsa': 
+                                            {'arrival': 100,
+                                            'hold': 200,
+                                            'interval': 200,
+                                            'maximum': 5000,
+                                            'refresh_interval': 1800,
+                                            'start': 50},
+                                        'spf': 
+                                            {'hold': 200,
+                                            'maximum': 5000,
+                                            'start': 50}}},
+                                'strict_spf': True,
+                                'stub_router': 
+                                    {'always': 
+                                        {'always': False,
+                                        'external_lsa': False,
+                                        'include_stub': False,
+                                        'summary_lsa': False}},
+                                'total_areas': 5,
+                                'total_normal_areas': 1,
+                                'total_nssa_areas': 2,
+                                'total_stub_areas': 2}}}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+
+        RP/0/0/CPU0:R3_ospf_xr#show run formal router ospf | i nsf
+            router ospf 1 nsf cisco
+            router ospf 1 vrf VRF1 nsf ietf
+
+        RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive 
+        Mon Jan  8 22:09:54.605 UTC
+
+         Routing Process "ospf 1" with ID 3.3.3.3
+         Role: Primary Active
+         NSR (Non-stop routing) is Enabled
+         Supports only single TOS(TOS0) routes
+         Supports opaque LSA
+         It is an area border and autonomous system boundary router
+         Redistributing External Routes from,
+            connected 
+            static with metric mapped to 10
+            bgp 100 with metric mapped to 111
+            isis 10 with metric mapped to 3333
+            Maximum number of redistributed prefixes 3000 (warning-only)
+            Threshold for warning message 90%
+         Router is not originating router-LSAs with maximum metric
+         Initial SPF schedule delay 50 msecs
+         Minimum hold time between two consecutive SPFs 200 msecs
+         Maximum wait time between two consecutive SPFs 5000 msecs
+         Initial LSA throttle delay 50 msecs
+         Minimum hold time for LSA throttle 200 msecs
+         Maximum wait time for LSA throttle 5000 msecs
+         Minimum LSA interval 200 msecs. Minimum LSA arrival 100 msecs
+         LSA refresh interval 1800 seconds
+         Flood pacing interval 33 msecs. Retransmission pacing interval 66 msecs
+         Adjacency stagger enabled; initial (per area): 2, maximum: 64
+            Number of neighbors forming: 0, 1 full
+         Maximum number of configured interfaces 1024
+         Number of external LSA 3. Checksum Sum 0x01b657
+         Number of opaque AS LSA 0. Checksum Sum 00000000
+         Number of DCbitless external and opaque AS LSA 0
+         Number of DoNotAge external and opaque AS LSA 0
+         Number of areas in this router is 5. 1 normal 2 stub 2 nssa
+         External flood list length 0
+         Non-Stop Forwarding enabled
+         SNMP trap is enabled
+         LSD connected, registered, bound, revision 1
+         Segment Routing Global Block default (16000-23999), not allocated
+         Strict-SPF capability is enabled
+            Area BACKBONE(0)
+                Number of interfaces in this area is 5
+                Area has RRR enabled, topology version 7
+                SPF algorithm executed 12 times
+                Number of LSA 14.  Checksum Sum 0x07a597
+                Number of opaque link LSA 0.  Checksum Sum 00000000
+                Number of DCbitless LSA 0
+                Number of indication LSA 0
+                Number of DoNotAge LSA 0
+                Flood list length 0
+                Number of LFA enabled interfaces 0, LFA revision 0
+                Number of Per Prefix LFA enabled interfaces 0
+                Number of neighbors forming in staggered mode 0, 1 full
+            Area 1
+                Number of interfaces in this area is 1
+                It is a stub area
+                  generates stub default route with cost 111
+                SPF algorithm executed 8 times
+                Area ranges are
+                   1.1.0.0/16 Passive DoNotAdvertise 
+                Number of LSA 13.  Checksum Sum 0x05adf0
+                Number of opaque link LSA 0.  Checksum Sum 00000000
+                Number of DCbitless LSA 0
+                Number of indication LSA 0
+                Number of DoNotAge LSA 0
+                Flood list length 0
+                Number of LFA enabled interfaces 0, LFA revision 0
+                Number of Per Prefix LFA enabled interfaces 0
+                Number of neighbors forming in staggered mode 0, 0 full
+            Area 2
+                Number of interfaces in this area is 1
+                It is a stub area, no summary LSA in this area
+                  generates stub default route with cost 222
+                SPF algorithm executed 4 times
+                Area ranges are
+                   1.1.1.0/24 Passive Advertise 
+                Number of LSA 2.  Checksum Sum 0x0076bf
+                Number of opaque link LSA 0.  Checksum Sum 00000000
+                Number of DCbitless LSA 0
+                Number of indication LSA 0
+                Number of DoNotAge LSA 0
+                Flood list length 0
+                Number of LFA enabled interfaces 0, LFA revision 0
+                Number of Per Prefix LFA enabled interfaces 0
+                Number of neighbors forming in staggered mode 0, 0 full
+            Area 3
+                Number of interfaces in this area is 1
+                It is a NSSA area
+                Perform type-7/type-5 LSA translation
+                SPF algorithm executed 4 times
+                Area ranges are
+                   2.2.2.0/24 Passive Advertise 
+                Number of LSA 14.  Checksum Sum 0x09166c
+                Number of opaque link LSA 0.  Checksum Sum 00000000
+                Number of DCbitless LSA 0
+                Number of indication LSA 0
+                Number of DoNotAge LSA 0
+                Flood list length 0
+                Number of LFA enabled interfaces 0, LFA revision 0
+                Number of Per Prefix LFA enabled interfaces 0
+                Number of neighbors forming in staggered mode 0, 0 full
+            Area 4
+                Number of interfaces in this area is 1
+                It is a NSSA area
+                Perform type-7/type-5 LSA translation
+                SPF algorithm executed 4 times
+                Number of LSA 4.  Checksum Sum 0x022418
+                Number of opaque link LSA 0.  Checksum Sum 00000000
+                Number of DCbitless LSA 0
+                Number of indication LSA 0
+                Number of DoNotAge LSA 0
+                Flood list length 0
+                Number of LFA enabled interfaces 0, LFA revision 0
+                Number of Per Prefix LFA enabled interfaces 0
+                Number of neighbors forming in staggered mode 0, 0 full
+
+
+         VRF VRF1 in Routing Process "ospf 1" with ID 3.3.3.3
+         Role: Primary Active
+         NSR (Non-stop routing) is Enabled
+         Supports only single TOS(TOS0) routes
+         Supports opaque LSA
+         It is an area border and autonomous system boundary router
+         Redistributing External Routes from,
+            connected with metric mapped to 10
+            bgp 100 with metric mapped to 111
+            static
+            isis 10 with metric mapped to 3333
+            Maximum number of redistributed prefixes 4000
+            Threshold for warning message 70%
+         Router is not originating router-LSAs with maximum metric
+         Initial SPF schedule delay 50 msecs
+         Minimum hold time between two consecutive SPFs 200 msecs
+         Maximum wait time between two consecutive SPFs 5000 msecs
+         Initial LSA throttle delay 50 msecs
+         Minimum hold time for LSA throttle 200 msecs
+         Maximum wait time for LSA throttle 5000 msecs
+         Minimum LSA interval 200 msecs. Minimum LSA arrival 100 msecs
+         LSA refresh interval 1800 seconds
+         Flood pacing interval 33 msecs. Retransmission pacing interval 66 msecs
+         Adjacency stagger enabled; initial (per area): 2, maximum: 64
+            Number of neighbors forming: 0, 1 full
+         Maximum number of configured interfaces 1024
+         Number of external LSA 3. Checksum Sum 0x01df46
+         Number of opaque AS LSA 0. Checksum Sum 00000000
+         Number of DCbitless external and opaque AS LSA 0
+         Number of DoNotAge external and opaque AS LSA 0
+         Number of areas in this router is 1. 1 normal 0 stub 0 nssa
+         External flood list length 0
+         Non-Stop Forwarding enabled
+         SNMP trap is disabled
+         LSD connected, registered, bound, revision 1
+         Segment Routing Global Block default (16000-23999), not allocated
+         Strict-SPF capability is enabled
+            Area 1
+                Number of interfaces in this area is 2
+                SPF algorithm executed 3 times
+                Number of LSA 9.  Checksum Sum 0x04b760
+                Number of opaque link LSA 0.  Checksum Sum 00000000
+                Number of DCbitless LSA 0
+                Number of indication LSA 0
+                Number of DoNotAge LSA 0
+                Flood list length 0
+                Number of LFA enabled interfaces 0, LFA revision 0
+                Number of Per Prefix LFA enabled interfaces 0
+                Number of neighbors forming in staggered mode 0, 1 full
+        '''}
+
+    def test_show_ospf_vrf_all_inclusive_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowOspfVrfAllInclusive(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ospf_vrf_all_inclusive_full2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowOspfVrfAllInclusive(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_show_ospf_vrf_all_inclusive_empty(self):
         self.maxDiff = None

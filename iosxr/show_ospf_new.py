@@ -991,9 +991,27 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                 'role': str,
                                 'nsr': 
                                     {'enable': bool},
+                                Optional('maximum_interfaces'): int,
+                                Optional('redistribution'): 
+                                    {Optional('max_prefix'): 
+                                        {Optional('num_of_prefix'): int,
+                                        Optional('prefix_thld'): int,
+                                        Optional('warn_only'): bool},
+                                    Optional('connected'): 
+                                        {'enabled': bool,
+                                        Optional('metric'): int},
+                                    Optional('static'): 
+                                        {'enabled': bool,
+                                        Optional('metric'): int},
+                                    Optional('bgp'): 
+                                        {'bgp_id': int,
+                                        Optional('metric'): int},
+                                    Optional('isis'): 
+                                        {'isis_pid': str,
+                                        Optional('metric'): int}},
                                 Optional('database_control'): 
                                     {'max_lsa': int},
-                                'stub_router': 
+                                Optional('stub_router'): 
                                     {Optional('always'): 
                                         {'always': bool,
                                         'include_stub': bool,
@@ -1014,9 +1032,8 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                         'summary_lsa': bool,
                                         'external_lsa': bool,
                                         Optional('duration'): int,
-                                        Optional('state'): str},
-                                    },
-                                'spf_control': 
+                                        Optional('state'): str}},
+                                Optional('spf_control'): 
                                     {Optional('paths'): str,
                                     'throttle': 
                                         {'spf': 
@@ -1032,19 +1049,18 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                             'refresh_interval': int},
                                         },
                                     },
-                                Optional('flood_pacing_interval'): int,
-                                Optional('retransmission_interval'): int,
-                                Optional('maximum_interfaces'): int,
+                                Optional('mpls'): 
+                                    {'ldp': 
+                                        {'ldp_igp_sync': bool,
+                                        'ldp_sync_status': str}},
                                 Optional('adjacency_stagger'): 
                                     {'disable': bool,
                                     'initial_number': int,
                                     'maximum_number': int},
-                                Optional('mpls'): 
-                                    {'ldp': 
-                                        {'ldp_igp_sync': bool,
-                                        'ldp_sync_status': str,
-                                        },
-                                    },
+                                Optional('graceful_restart'): 
+                                    {Any(): 
+                                        {'enable': bool,
+                                        'type': str}},
                                 Optional('numbers'): 
                                     {Optional('nbrs_forming'): int,
                                     Optional('nbrs_full'): int,
@@ -1054,20 +1070,34 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                     Optional('opaque_as_lsa_checksum'): str,
                                     Optional('dc_bitless'): int,
                                     Optional('do_not_age'): int},
+                                Optional('total_areas'): int,
+                                Optional('total_normal_areas'): int,
+                                Optional('total_stub_areas'): int,
+                                Optional('total_nssa_areas'): int,
+                                Optional('flood_pacing_interval'): int,
+                                Optional('retransmission_interval'): int,
                                 Optional('external_flood_list_length'): int,
                                 Optional('snmp_trap'): bool,
                                 Optional('lsd_state'): str,
                                 Optional('lsd_revision'): int,
                                 Optional('segment_routing_global_block_default'): str,
-                                Optional('strict_spf_capability'): bool,
+                                Optional('strict_spf'): bool,
                                 Optional('areas'): 
                                     {Any(): 
-                                        {Optional('area_type'): str,
+                                        {'area_id': str,
+                                        'area_type': str,
+                                        'summary': bool,
+                                        Optional('default_cost'): int,
+                                        Optional('lsa_translation'): str,
+                                        Optional('ranges'): 
+                                            {Any(): 
+                                                {'prefix': str,
+                                                'advertise': bool}},
                                         Optional('rrr_enabled'): bool,
                                         Optional('topology_version'): int,
                                         Optional('statistics'): 
-                                            {Optional('interfaces_count'): int,
-                                            Optional('spf_runs_count'): int,
+                                            {Optional('spf_runs_count'): int,
+                                            Optional('interfaces_count'): int,
                                             Optional('area_scope_lsa_count'): int,
                                             Optional('area_scope_lsa_cksum_sum'): str,
                                             Optional('area_scope_opaque_lsa_count'): int,
@@ -1114,8 +1144,8 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             # Routing Process "ospf 1" with ID 3.3.3.3
             # VRF VRF1 in Routing Process "ospf 1" with ID 3.3.3.3
             p1 = re.compile(r'(?:^VRF +(?P<vrf>(\S+)) +in +)?Routing +Process'
-                             ' +\"(?P<instance>([a-zA-Z0-9\s]+))\" +with +ID'
-                             ' +(?P<router_id>(\S+))$')
+                             ' +\"(?:ospf)? +(?P<instance>([a-zA-Z0-9\s]+))\"'
+                             ' +with +ID +(?P<router_id>(\S+))$')
             m = p1.match(line)
             if m:
                 instance = str(m.groupdict()['instance'])
@@ -1168,17 +1198,90 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                     continue
 
             # Supports only single TOS(TOS0) routes
-            p3 = re.compile(r'^Supports +only +single +TOS(TOS0) routes$')
-            m = p3.match(line)
+            p3_1 = re.compile(r'^Supports +only +single +TOS(TOS0) routes$')
+            m = p3_1.match(line)
             if m:
                 # Not sure what the key is
                 continue
 
             # Supports opaque LSA
-            p4 = re.compile(r'^Supports +opaque +LSA$')
-            m = p4.match(line)
+            p3_2 = re.compile(r'^Supports +opaque +LSA$')
+            m = p3_2.match(line)
             if m:
                 # Not sure what the key is
+                continue
+
+            # Redistributing External Routes from,
+            p4 = re.compile(r'^Redistributing +External +Routes +from,$')
+            m = p4.match(line)
+            if m:
+                if 'redistribution' not in sub_dict:
+                    sub_dict['redistribution'] = {}
+                    continue
+
+            # connected 
+            # connected with metric mapped to 10
+            # static
+            # static with metric mapped to 10
+            p4_1 = re.compile(r'^(?P<type>(connected|static))(?: +with +metric'
+                               ' +mapped +to +(?P<metric>(\d+)))?$')
+            m = p4_1.match(line)
+            if m:
+                the_type = str(m.groupdict()['type'])
+                if the_type not in sub_dict['redistribution']:
+                    sub_dict['redistribution'][the_type] = {}
+                sub_dict['redistribution'][the_type]['enabled'] = True
+                if m.groupdict()['metric']:
+                    sub_dict['redistribution'][the_type]['metric'] = \
+                        int(m.groupdict()['metric'])
+                    continue
+
+            # bgp 100 with metric mapped to 111
+            # isis 10 with metric mapped to 3333
+            p4_2 = re.compile(r'^(?P<prot>(bgp|isis)) +(?P<pid>(\d+))(?: +with'
+                               ' +metric +mapped +to +(?P<metric>(\d+)))?$')
+            m = p4_2.match(line)
+            if m:
+                prot = str(m.groupdict()['prot'])
+                if prot not in sub_dict['redistribution']:
+                    sub_dict['redistribution'][prot] = {}
+                if prot == 'bgp':
+                    sub_dict['redistribution'][prot]['bgp_id'] = \
+                        int(m.groupdict()['pid'])
+                else:
+                    sub_dict['redistribution'][prot]['isis_pid'] = \
+                        str(m.groupdict()['pid'])
+                if m.groupdict()['metric']:
+                    sub_dict['redistribution'][prot]['metric'] = \
+                        int(m.groupdict()['metric'])
+                continue
+
+            # Maximum number of redistributed prefixes 4000
+            # Maximum number of redistributed prefixes 3000 (warning-only)
+            p4_3 = re.compile(r'^Maximum +number +of +redistributed +prefixes'
+                               ' +(?P<num_prefix>(\d+))'
+                               '(?: +\((?P<warn>(warning-only))\))?')
+            m = p4_3.match(line)
+            if m:
+                if 'max_prefix' not in sub_dict['redistribution']:
+                    sub_dict['redistribution']['max_prefix'] = {}
+                sub_dict['redistribution']['max_prefix']['num_of_prefix'] = \
+                    int(m.groupdict()['num_prefix'])
+                if m.groupdict()['warn']:
+                    sub_dict['redistribution']['max_prefix']['warn_only'] = True
+                else:
+                    sub_dict['redistribution']['max_prefix']['warn_only'] = False
+                    continue
+
+            # Threshold for warning message 70%
+            p4_4 = re.compile(r'^Threshold +for +warning +message'
+                               ' +(?P<thld>(\d+))\%$')
+            m = p4_4.match(line)
+            if m:
+                if 'max_prefix' not in sub_dict['redistribution']:
+                    sub_dict['redistribution']['max_prefix'] = {}
+                sub_dict['redistribution']['max_prefix']['prefix_thld'] = \
+                    int(m.groupdict()['thld'])
                 continue
 
             # It is an area border and autonomous system boundary router
@@ -1186,7 +1289,7 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                                ' +system +boundary +router$')
             m = p5_0.match(line)
             if m:
-                # Not sure whast the key is
+                # Not sure what the key is
                 continue
 
             # Router is not originating router-LSAs with maximum metric
@@ -1353,7 +1456,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Minimum LSA interval 200 msecs. Minimum LSA arrival 100 msecs
-            # Minimum LSA interval 200 msecs. Minimum LSA arrival 100 msecs
             p12 = re.compile(r'^Minimum +LSA +interval +(?P<interval>(\S+))'
                               ' +msecs. +Minimum +LSA +arrival'
                               ' +(?P<arrival>(\S+)) +msecs$')
@@ -1469,21 +1571,15 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
 
             # Number of areas in this router is 1. 1 normal 0 stub 0 nssa
             p22 = re.compile(r'^Number +of +areas +in +this +router +is'
-                              ' +(?P<num_areas>(\d+))\. +(?P<normal>(\d+))'
+                              ' +(?P<total_areas>(\d+))\. +(?P<normal>(\d+))'
                               ' +normal +(?P<stub>(\d+)) +stub +(?P<nssa>(\d+))'
                               ' +nssa$')
             m = p22.match(line)
             if m:
-                num_areas = int(m.groupdict()['num_areas'])
-                normal = int(m.groupdict()['normal'])
-                stub = int(m.groupdict()['stub'])
-                nssa = int(m.groupdict()['nssa'])
-                if normal == 1:
-                    area_type = 'normal'
-                elif stub == 1:
-                    area_type = 'stub'
-                elif nssa == 1:
-                    area_type = 'nssa'
+                sub_dict['total_areas'] = int(m.groupdict()['total_areas'])
+                sub_dict['total_normal_areas'] = int(m.groupdict()['normal'])
+                sub_dict['total_stub_areas'] = int(m.groupdict()['stub'])
+                sub_dict['total_nssa_areas'] = int(m.groupdict()['nssa'])
                 continue
 
             # External flood list length 0
@@ -1543,15 +1639,15 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             m = p27.match(line)
             if m:
                 if 'enabled' in m.groupdict()['state']:
-                    sub_dict['strict_spf_capability'] = True
+                    sub_dict['strict_spf'] = True
                 else:
-                    sub_dict['strict_spf_capability'] = False
+                    sub_dict['strict_spf'] = False
                 continue
 
             # Area BACKBONE(0)
             # Area 1
-            p28 = re.compile(r'^Area +(?P<area>(\S+))$')
-            m = p28.match(line)
+            p28_1 = re.compile(r'^Area +(?P<area>(\S+))$')
+            m = p28_1.match(line)
             if m:
                 parsed_area = str(m.groupdict()['area'])
                 n = re.match('BACKBONE\((?P<area_num>(\d+))\)', parsed_area)
@@ -1566,12 +1662,69 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 if area not in sub_dict['areas']:
                     sub_dict['areas'][area] = {}
                 
-                # Set previously parsed values
-                try:
-                    sub_dict['areas'][area]['area_type'] = area_type
-                except:
-                    pass
+                # Set default values
+                sub_dict['areas'][area]['area_id'] = area
+                sub_dict['areas'][area]['area_type'] = 'normal'
+                sub_dict['areas'][area]['summary'] = True
                 continue
+
+            # It is a stub area
+            # It is a stub area, no summary LSA in this area
+            # It is a NSSA area
+            p28_2 = re.compile(r'^It +is +a +(?P<area_type>(\S+)) +area'
+                                '(?:, +(?P<summary>(no +summary +LSA +in +this'
+                                ' +area)))?$')
+            m = p28_2.match(line)
+            if m:
+                sub_dict['areas'][area]['area_type'] = \
+                    str(m.groupdict()['area_type'])
+                if m.groupdict()['summary']:
+                    sub_dict['areas'][area]['summary'] = False
+                    continue
+
+            # generates stub default route with cost 111
+            # generates stub default route with cost 222
+            p28_3 = re.compile(r'^generates +stub +default +route +with +cost'
+                                ' +(?P<default_cost>(\d+))$')
+            m = p28_3.match(line)
+            if m:
+                sub_dict['areas'][area]['default_cost'] = \
+                    int(m.groupdict()['default_cost'])
+                continue
+
+            # Perform type-7/type-5 LSA translation
+            p28_4 = re.compile(r'^Perform +(?P<trans>(\S+)) +LSA +translation$')
+            m = p28_4.match(line)
+            if m:
+                sub_dict['areas'][area]['lsa_translation'] = \
+                    str(m.groupdict()['trans'])
+                continue
+
+            # Area ranges are
+            p28_5 = re.compile(r'^Area ranges are$')
+            m = p28_5.match(line)
+            if m:
+                if 'ranges' not in sub_dict['areas'][area]:
+                    sub_dict['areas'][area]['ranges'] = {}
+                    continue
+
+            # 2.2.2.0/24 Passive Advertise
+            # 1.1.0.0/16 Passive DoNotAdvertise 
+            p28_6 = re.compile(r'^(?P<prefix>([0-9\.\/]+)) +Passive'
+                                ' +(?P<advertise>(Advertise|DoNotAdvertise))$')
+            m = p28_6.match(line)
+            if m:
+                prefix = str(m.groupdict()['prefix'])
+                if 'ranges' not in sub_dict['areas'][area]:
+                    sub_dict['areas'][area]['ranges'] = {}
+                if prefix not in sub_dict['areas'][area]['ranges']:
+                    sub_dict['areas'][area]['ranges'][prefix] = {}
+                sub_dict['areas'][area]['ranges'][prefix]['prefix'] = prefix
+                if 'Advertise' in m.groupdict()['advertise']:
+                    sub_dict['areas'][area]['ranges'][prefix]['advertise'] = True
+                else:
+                    sub_dict['areas'][area]['ranges'][prefix]['advertise'] = False
+                    continue
 
             # Number of interfaces in this area is 3
             p29 = re.compile(r'^Number +of +interfaces +in +this +area +is'
@@ -1725,6 +1878,38 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                     int(m.groupdict()['max_lsa'])
                 continue
         
+            # Non-Stop Forwarding enabled
+            p42 = re.compile(r'^Non-Stop +Forwarding +enabled$')
+            m = p42.match(line)
+            if m:
+                # Execute command on device
+                out = self.device.execute('show run formal router ospf | i nsf')
+
+                # router ospf 1 vrf VRF1 nsf ietf
+                for line in out.splitlines():
+                    line = line.rstrip()
+                    # router ospf 1 vrf VRF1 nsf ietf
+                    # router ospf 1 nsf ietf
+                    p = re.search('router +ospf +(?P<new_inst>(\d+))(?: +vrf'
+                                  ' +(?P<new_vrf>(\S+)))? +nsf'
+                                  ' +(?P<gr_type>(\S+))', line)
+                    if p:
+                        new_inst = str(p.groupdict()['new_inst'])
+                        if p.groupdict()['new_vrf']:
+                            new_vrf = str(p.groupdict()['new_vrf'])
+                        else:
+                            new_vrf = 'default'
+                        gr_type = str(p.groupdict()['gr_type'])
+                        if new_vrf == vrf and new_inst == instance:
+                            if 'graceful_restart' not in sub_dict:
+                                sub_dict['graceful_restart'] = {}
+                            if gr_type not in sub_dict['graceful_restart']:
+                                sub_dict['graceful_restart'][gr_type] = {}
+                            # Set keys
+                            sub_dict['graceful_restart'][gr_type]['enable'] = True
+                            sub_dict['graceful_restart'][gr_type]['type'] = gr_type
+                            continue
+
         return ret_dict
 
 
