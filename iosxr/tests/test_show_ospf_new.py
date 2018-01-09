@@ -32,6 +32,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
     '''Unit test for "show ospf vrf all-inclusive interface" '''
 
     device = Device(name='aDevice')
+    
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
@@ -289,117 +290,6 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                     'nbr_count': 0,
                                                     'num_nbrs_suppress_hello': 0}}}}}}}}}}}}
 
-    golden_output1 = {'execute.return_value': '''
-        
-        RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive sham-links | i OSPF_SL0
-          Sham Link OSPF_SL0 to address 22.22.22.22 is up
-
-        RP/0/0/CPU0:R3_ospf_xr#show run formal router ospf | i sham | i 22.22.22.22
-          router ospf 1 vrf VRF1 area 1 sham-link 33.33.33.33 22.22.22.22
-          router ospf 1 vrf VRF1 area 1 sham-link 33.33.33.33 22.22.22.22 cost 111
-          router ospf 1 vrf VRF1 area 1 sham-link 33.33.33.33 22.22.22.22 dead-interval 13
-          router ospf 1 vrf VRF1 area 1 sham-link 33.33.33.33 22.22.22.22 retransmit-interval 5
-          router ospf 1 vrf VRF1 area 1 sham-link 33.33.33.33 22.22.22.22 hello-interval 3
-          router ospf 1 vrf VRF1 area 1 sham-link 33.33.33.33 22.22.22.22 transmit-delay 7
-
-        RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive interface 
-
-        Interfaces for OSPF 1
-
-        Loopback0 is up, line protocol is up 
-          Internet Address 3.3.3.3/32, Area 0
-          Process ID 1, Router ID 3.3.3.3, Network Type LOOPBACK, Cost: 1
-          Loopback interface is treated as a stub Host
-        GigabitEthernet0/0/0/0 is up, line protocol is up 
-          Internet Address 10.3.4.3/24, Area 0
-          Process ID 1, Router ID 3.3.3.3, Network Type BROADCAST, Cost: 1
-          Transmit Delay is 1 sec, State BDR, Priority 1, MTU 1500, MaxPktSz 1500
-          Designated Router (ID) 4.4.4.4, Interface address 10.3.4.4
-          Backup Designated router (ID) 3.3.3.3, Interface address 10.3.4.3
-          Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
-            Hello due in 00:00:07:171
-          Index 1/1, flood queue length 0
-          Next 0(0)/0(0)
-          Last flood scan length is 1, maximum is 3
-          Last flood scan time is 0 msec, maximum is 0 msec
-          LS Ack List: current length 0, high water mark 5
-          Neighbor Count is 1, Adjacent neighbor count is 1
-            Adjacent with neighbor 4.4.4.4  (Designated Router)
-          Suppress hello for 0 neighbor(s)
-          Multi-area interface Count is 0
-        GigabitEthernet0/0/0/2 is up, line protocol is up 
-          Internet Address 10.2.3.3/24, Area 0
-          Process ID 1, Router ID 3.3.3.3, Network Type BROADCAST, Cost: 1
-          Transmit Delay is 1 sec, State DR, Priority 1, MTU 1500, MaxPktSz 1500
-          Designated Router (ID) 3.3.3.3, Interface address 10.2.3.3
-          Backup Designated router (ID) 2.2.2.2, Interface address 10.2.3.2
-          Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
-            Hello due in 00:00:07:587
-          Index 2/2, flood queue length 0
-          Next 0(0)/0(0)
-          Last flood scan length is 1, maximum is 3
-          Last flood scan time is 0 msec, maximum is 0 msec
-          LS Ack List: current length 0, high water mark 7
-          Neighbor Count is 1, Adjacent neighbor count is 1
-            Adjacent with neighbor 2.2.2.2  (Backup Designated Router)
-          Suppress hello for 0 neighbor(s)
-          Multi-area interface Count is 0
-        tunnel-te31 is up, line protocol is up 
-          Internet Address 0.0.0.0/0, Area 0
-          Process ID 1, Router ID 3.3.3.3, Network Type POINT_TO_POINT
-          Interface is a tunnel igp-shortcut
-          Transmit Delay is 1 sec, State POINT_TO_POINT, MTU 0, MaxPktSz 576
-          Timer intervals configured, Hello 10, Dead 40, Wait 0, Retransmit 5
-            No Hellos (Passive interface) 
-          Index 0/0, flood queue length 0
-          Next 0(0)/0(0)
-          Last flood scan length is 0, maximum is 0
-          Last flood scan time is 0 msec, maximum is 0 msec
-          LS Ack List: current length 0, high water mark 0
-          Neighbor Count is 0, Adjacent neighbor count is 0
-          Suppress hello for 0 neighbor(s)
-          Multi-area interface Count is 0
-
-
-        Interfaces for OSPF 1, VRF VRF1
-
-        OSPF_SL0 is unknown, line protocol is up 
-          Internet Address 0.0.0.0/0, Area 1
-          Process ID 1, VRF VRF1, Router ID 3.3.3.3, Network Type SHAM_LINK, Cost: 111
-          Configured as demand circuit.
-          Run as demand circuit.
-          DoNotAge LSA not allowed (Number of DCbitless LSA is 1).
-          Transmit Delay is 7 sec, State POINT_TO_POINT, MTU 0, MaxPktSz 1500
-          Timer intervals configured, Hello 3, Dead 13, Wait 13, Retransmit 5
-            Hello due in 00:00:00:864
-          Index 2/2, flood queue length 0
-          Next 0(0)/0(0)
-          Last flood scan length is 1, maximum is 7
-          Last flood scan time is 0 msec, maximum is 0 msec
-          LS Ack List: current length 0, high water mark 9
-          Neighbor Count is 0, Adjacent neighbor count is 0
-          Suppress hello for 0 neighbor(s)
-          Multi-area interface Count is 0
-        GigabitEthernet0/0/0/1 is up, line protocol is up 
-          Internet Address 20.3.7.3/24, Area 1
-          Process ID 1, VRF VRF1, Router ID 3.3.3.3, Network Type BROADCAST, Cost: 1
-          BFD enabled, BFD interval 12345 msec, BFD multiplier 50, Mode: Default
-          Transmit Delay is 1 sec, State BDR, Priority 1, MTU 1500, MaxPktSz 1500
-          Designated Router (ID) 77.77.77.77, Interface address 20.3.7.7
-          Backup Designated router (ID) 3.3.3.3, Interface address 20.3.7.3
-          Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
-            Hello due in 00:00:03:040
-          Index 1/1, flood queue length 0
-          Next 0(0)/0(0)
-          Last flood scan length is 1, maximum is 5
-          Last flood scan time is 0 msec, maximum is 0 msec
-          LS Ack List: current length 0, high water mark 11
-          Neighbor Count is 1, Adjacent neighbor count is 1
-            Adjacent with neighbor 77.77.77.77  (Designated Router)
-          Suppress hello for 0 neighbor(s)
-          Multi-area interface Count is 0
-        '''}
-
     golden_parsed_output2 = {
         'vrf': 
             {'default': 
@@ -507,7 +397,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'process_id': '1',
                                                 'router_id': '2.2.2.2'}},
                                         'virtual_links': 
-                                            {'0.0.0.0 2.2.2.2': 
+                                            {'0.0.0.1 2.2.2.2': 
                                                 {'bfd': 
                                                     {'enable': False},
                                                 'cost': 1,
@@ -661,116 +551,264 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                     'process_id': '1',
                                                     'router_id': '2.2.2.2'}}}}}}}}}}}
 
-    golden_output2 = {'execute.return_value': '''
-        RP/0/0/CPU0:R2_ospf_xr#show ospf vrf all-inclusive interface
-        Tue Dec 12 20:23:16.958 UTC
-
-        Interfaces for OSPF 1
-
-        Loopback0 is up, line protocol is up 
-          Internet Address 2.2.2.2/32, Area 0
-          Process ID 1, Router ID 2.2.2.2, Network Type LOOPBACK, Cost: 1
-          Loopback interface is treated as a stub Host
-        OSPF_VL0 is unknown, line protocol is up 
-          Internet Address 0.0.0.0/0, Area 0
-          Process ID 1, Router ID 2.2.2.2, Network Type VIRTUAL_LINK, Cost: 1
-          Configured as demand circuit.
-          Run as demand circuit.
-          DoNotAge LSA not allowed (Number of DCbitless LSA is 7).
-          Transmit Delay is 1 sec, State POINT_TO_POINT, MTU 0, MaxPktSz 1500
-          Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
-            Hello due in 00:00:01:281
-          Index 4/7, flood queue length 0
-          Next 0(0)/0(0)
-          Last flood scan length is 7, maximum is 7
-          Last flood scan time is 0 msec, maximum is 0 msec
-          LS Ack List: current length 0, high water mark 20
-          Neighbor Count is 1, Adjacent neighbor count is 1
-            Adjacent with neighbor 4.4.4.4  (Hello suppressed)
-          Suppress hello for 1 neighbor(s)
-          Multi-area interface Count is 0
-        GigabitEthernet0/0/0/0 is up, line protocol is up 
-          Internet Address 10.2.3.2/24, Area 0
-          Process ID 1, Router ID 2.2.2.2, Network Type BROADCAST, Cost: 1
-          Transmit Delay is 1 sec, State DR, Priority 1, MTU 1500, MaxPktSz 1500
-          Designated Router (ID) 2.2.2.2, Interface address 10.2.3.2
-          No backup designated router on this network
-          Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
-            Hello due in 00:00:09:266
-          Index 2/3, flood queue length 0
-          Next 0(0)/0(0)
-          Last flood scan length is 0, maximum is 0
-          Last flood scan time is 0 msec, maximum is 0 msec
-          LS Ack List: current length 0, high water mark 0
-          Neighbor Count is 0, Adjacent neighbor count is 0
-          Suppress hello for 0 neighbor(s)
-          Multi-area interface Count is 0
-        GigabitEthernet0/0/0/2 is up, line protocol is up 
-          Internet Address 10.1.2.2/24, Area 0
-          Process ID 1, Router ID 2.2.2.2, Network Type BROADCAST, Cost: 1
-          Transmit Delay is 1 sec, State DR, Priority 1, MTU 1500, MaxPktSz 1500
-          Designated Router (ID) 2.2.2.2, Interface address 10.1.2.2
-          No backup designated router on this network
-          Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
-            Hello due in 00:00:08:733
-          Index 3/4, flood queue length 0
-          Next 0(0)/0(0)
-          Last flood scan length is 0, maximum is 0
-          Last flood scan time is 0 msec, maximum is 0 msec
-          LS Ack List: current length 0, high water mark 0
-          Neighbor Count is 0, Adjacent neighbor count is 0
-          Suppress hello for 0 neighbor(s)
-          Multi-area interface Count is 0
-        Loopback1 is up, line protocol is up 
-          Internet Address 22.22.22.22/32, Area 1
-          Process ID 1, Router ID 2.2.2.2, Network Type LOOPBACK, Cost: 1
-          Loopback interface is treated as a stub Host
-        GigabitEthernet0/0/0/1 is up, line protocol is up 
-          Internet Address 20.2.3.2/24, Area 1
-          Process ID 1, Router ID 2.2.2.2, Network Type BROADCAST, Cost: 1
-          Transmit Delay is 1 sec, State BDR, Priority 1, MTU 1500, MaxPktSz 1500
-          Designated Router (ID) 3.3.3.3, Interface address 20.2.3.3
-          Backup Designated router (ID) 2.2.2.2, Interface address 20.2.3.2
-          Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
-            Hello due in 00:00:00:698
-          Index 2/5, flood queue length 0
-          Next 0(0)/0(0)
-          Last flood scan length is 9, maximum is 9
-          Last flood scan time is 0 msec, maximum is 0 msec
-          LS Ack List: current length 0, high water mark 3
-          Neighbor Count is 1, Adjacent neighbor count is 1
-            Adjacent with neighbor 3.3.3.3  (Designated Router)
-          Suppress hello for 0 neighbor(s)
-          Multi-area interface Count is 0
-        GigabitEthernet0/0/0/3 is up, line protocol is up 
-          Internet Address 20.2.4.2/24, Area 1
-          Process ID 1, Router ID 2.2.2.2, Network Type BROADCAST, Cost: 1
-          Transmit Delay is 1 sec, State BDR, Priority 1, MTU 1500, MaxPktSz 1500
-          Designated Router (ID) 4.4.4.4, Interface address 20.2.4.4
-          Backup Designated router (ID) 2.2.2.2, Interface address 20.2.4.2
-          Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
-            Hello due in 00:00:00:840
-          Index 3/6, flood queue length 0
-          Next 0(0)/0(0)
-          Last flood scan length is 9, maximum is 9
-          Last flood scan time is 0 msec, maximum is 0 msec
-          LS Ack List: current length 0, high water mark 21
-          Neighbor Count is 1, Adjacent neighbor count is 1
-            Adjacent with neighbor 4.4.4.4  (Designated Router)
-          Suppress hello for 0 neighbor(s)
-          Multi-area interface Count is 0
-        '''}
-
     def test_show_ospf_vrf_all_inclusive_interface_full1(self):
+        
         self.maxDiff = None
-        self.device = Mock(**self.golden_output1)
+
+        def mapper(key):
+            return self.outputs[key]
+
+        raw1 = '''\
+            RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive interface 
+            Interfaces for OSPF 1
+
+            Loopback0 is up, line protocol is up 
+              Internet Address 3.3.3.3/32, Area 0
+              Process ID 1, Router ID 3.3.3.3, Network Type LOOPBACK, Cost: 1
+              Loopback interface is treated as a stub Host
+            GigabitEthernet0/0/0/0 is up, line protocol is up 
+              Internet Address 10.3.4.3/24, Area 0
+              Process ID 1, Router ID 3.3.3.3, Network Type BROADCAST, Cost: 1
+              Transmit Delay is 1 sec, State BDR, Priority 1, MTU 1500, MaxPktSz 1500
+              Designated Router (ID) 4.4.4.4, Interface address 10.3.4.4
+              Backup Designated router (ID) 3.3.3.3, Interface address 10.3.4.3
+              Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                Hello due in 00:00:07:171
+              Index 1/1, flood queue length 0
+              Next 0(0)/0(0)
+              Last flood scan length is 1, maximum is 3
+              Last flood scan time is 0 msec, maximum is 0 msec
+              LS Ack List: current length 0, high water mark 5
+              Neighbor Count is 1, Adjacent neighbor count is 1
+                Adjacent with neighbor 4.4.4.4  (Designated Router)
+              Suppress hello for 0 neighbor(s)
+              Multi-area interface Count is 0
+            GigabitEthernet0/0/0/2 is up, line protocol is up 
+              Internet Address 10.2.3.3/24, Area 0
+              Process ID 1, Router ID 3.3.3.3, Network Type BROADCAST, Cost: 1
+              Transmit Delay is 1 sec, State DR, Priority 1, MTU 1500, MaxPktSz 1500
+              Designated Router (ID) 3.3.3.3, Interface address 10.2.3.3
+              Backup Designated router (ID) 2.2.2.2, Interface address 10.2.3.2
+              Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                Hello due in 00:00:07:587
+              Index 2/2, flood queue length 0
+              Next 0(0)/0(0)
+              Last flood scan length is 1, maximum is 3
+              Last flood scan time is 0 msec, maximum is 0 msec
+              LS Ack List: current length 0, high water mark 7
+              Neighbor Count is 1, Adjacent neighbor count is 1
+                Adjacent with neighbor 2.2.2.2  (Backup Designated Router)
+              Suppress hello for 0 neighbor(s)
+              Multi-area interface Count is 0
+            tunnel-te31 is up, line protocol is up 
+              Internet Address 0.0.0.0/0, Area 0
+              Process ID 1, Router ID 3.3.3.3, Network Type POINT_TO_POINT
+              Interface is a tunnel igp-shortcut
+              Transmit Delay is 1 sec, State POINT_TO_POINT, MTU 0, MaxPktSz 576
+              Timer intervals configured, Hello 10, Dead 40, Wait 0, Retransmit 5
+                No Hellos (Passive interface) 
+              Index 0/0, flood queue length 0
+              Next 0(0)/0(0)
+              Last flood scan length is 0, maximum is 0
+              Last flood scan time is 0 msec, maximum is 0 msec
+              LS Ack List: current length 0, high water mark 0
+              Neighbor Count is 0, Adjacent neighbor count is 0
+              Suppress hello for 0 neighbor(s)
+              Multi-area interface Count is 0
+
+
+            Interfaces for OSPF 1, VRF VRF1
+
+            OSPF_SL0 is unknown, line protocol is up 
+              Internet Address 0.0.0.0/0, Area 1
+              Process ID 1, VRF VRF1, Router ID 3.3.3.3, Network Type SHAM_LINK, Cost: 111
+              Configured as demand circuit.
+              Run as demand circuit.
+              DoNotAge LSA not allowed (Number of DCbitless LSA is 1).
+              Transmit Delay is 7 sec, State POINT_TO_POINT, MTU 0, MaxPktSz 1500
+              Timer intervals configured, Hello 3, Dead 13, Wait 13, Retransmit 5
+                Hello due in 00:00:00:864
+              Index 2/2, flood queue length 0
+              Next 0(0)/0(0)
+              Last flood scan length is 1, maximum is 7
+              Last flood scan time is 0 msec, maximum is 0 msec
+              LS Ack List: current length 0, high water mark 9
+              Neighbor Count is 0, Adjacent neighbor count is 0
+              Suppress hello for 0 neighbor(s)
+              Multi-area interface Count is 0
+            GigabitEthernet0/0/0/1 is up, line protocol is up 
+              Internet Address 20.3.7.3/24, Area 1
+              Process ID 1, VRF VRF1, Router ID 3.3.3.3, Network Type BROADCAST, Cost: 1
+              BFD enabled, BFD interval 12345 msec, BFD multiplier 50, Mode: Default
+              Transmit Delay is 1 sec, State BDR, Priority 1, MTU 1500, MaxPktSz 1500
+              Designated Router (ID) 77.77.77.77, Interface address 20.3.7.7
+              Backup Designated router (ID) 3.3.3.3, Interface address 20.3.7.3
+              Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                Hello due in 00:00:03:040
+              Index 1/1, flood queue length 0
+              Next 0(0)/0(0)
+              Last flood scan length is 1, maximum is 5
+              Last flood scan time is 0 msec, maximum is 0 msec
+              LS Ack List: current length 0, high water mark 11
+              Neighbor Count is 1, Adjacent neighbor count is 1
+                Adjacent with neighbor 77.77.77.77  (Designated Router)
+              Suppress hello for 0 neighbor(s)
+              Multi-area interface Count is 0
+            '''
+
+        raw2 = '''\
+            RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive sham-links | i OSPF_SL0
+            Sham Link OSPF_SL0 to address 22.22.22.22 is up
+            '''
+
+        raw3 = '''\
+            RP/0/0/CPU0:R3_ospf_xr#show run formal router ospf | i sham | i 22.22.22.22
+            router ospf 1 vrf VRF1 area 1 sham-link 33.33.33.33 22.22.22.22
+            '''
+
+        self.outputs = {}
+        self.outputs['show ospf vrf all-inclusive interface'] = raw1
+        self.outputs['show ospf vrf all-inclusive sham-links | i OSPF_SL0'] = raw2
+        self.outputs['show run formal router ospf | i sham | i 22.22.22.22'] = raw3
+
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+        
         obj = ShowOspfVrfAllInclusiveInterface(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_ospf_vrf_all_inclusive_interface_full2(self):
+        
         self.maxDiff = None
-        self.device = Mock(**self.golden_output2)
+
+        def mapper(key):
+            return self.outputs[key]
+
+        raw1 = '''\
+            RP/0/0/CPU0:R2_ospf_xr#show ospf vrf all-inclusive interface
+            Tue Dec 12 20:23:16.958 UTC
+
+            Interfaces for OSPF 1
+
+            Loopback0 is up, line protocol is up 
+              Internet Address 2.2.2.2/32, Area 0
+              Process ID 1, Router ID 2.2.2.2, Network Type LOOPBACK, Cost: 1
+              Loopback interface is treated as a stub Host
+            OSPF_VL0 is unknown, line protocol is up 
+              Internet Address 0.0.0.0/0, Area 0
+              Process ID 1, Router ID 2.2.2.2, Network Type VIRTUAL_LINK, Cost: 1
+              Configured as demand circuit.
+              Run as demand circuit.
+              DoNotAge LSA not allowed (Number of DCbitless LSA is 7).
+              Transmit Delay is 1 sec, State POINT_TO_POINT, MTU 0, MaxPktSz 1500
+              Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                Hello due in 00:00:01:281
+              Index 4/7, flood queue length 0
+              Next 0(0)/0(0)
+              Last flood scan length is 7, maximum is 7
+              Last flood scan time is 0 msec, maximum is 0 msec
+              LS Ack List: current length 0, high water mark 20
+              Neighbor Count is 1, Adjacent neighbor count is 1
+                Adjacent with neighbor 4.4.4.4  (Hello suppressed)
+              Suppress hello for 1 neighbor(s)
+              Multi-area interface Count is 0
+            GigabitEthernet0/0/0/0 is up, line protocol is up 
+              Internet Address 10.2.3.2/24, Area 0
+              Process ID 1, Router ID 2.2.2.2, Network Type BROADCAST, Cost: 1
+              Transmit Delay is 1 sec, State DR, Priority 1, MTU 1500, MaxPktSz 1500
+              Designated Router (ID) 2.2.2.2, Interface address 10.2.3.2
+              No backup designated router on this network
+              Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                Hello due in 00:00:09:266
+              Index 2/3, flood queue length 0
+              Next 0(0)/0(0)
+              Last flood scan length is 0, maximum is 0
+              Last flood scan time is 0 msec, maximum is 0 msec
+              LS Ack List: current length 0, high water mark 0
+              Neighbor Count is 0, Adjacent neighbor count is 0
+              Suppress hello for 0 neighbor(s)
+              Multi-area interface Count is 0
+            GigabitEthernet0/0/0/2 is up, line protocol is up 
+              Internet Address 10.1.2.2/24, Area 0
+              Process ID 1, Router ID 2.2.2.2, Network Type BROADCAST, Cost: 1
+              Transmit Delay is 1 sec, State DR, Priority 1, MTU 1500, MaxPktSz 1500
+              Designated Router (ID) 2.2.2.2, Interface address 10.1.2.2
+              No backup designated router on this network
+              Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                Hello due in 00:00:08:733
+              Index 3/4, flood queue length 0
+              Next 0(0)/0(0)
+              Last flood scan length is 0, maximum is 0
+              Last flood scan time is 0 msec, maximum is 0 msec
+              LS Ack List: current length 0, high water mark 0
+              Neighbor Count is 0, Adjacent neighbor count is 0
+              Suppress hello for 0 neighbor(s)
+              Multi-area interface Count is 0
+            Loopback1 is up, line protocol is up 
+              Internet Address 22.22.22.22/32, Area 1
+              Process ID 1, Router ID 2.2.2.2, Network Type LOOPBACK, Cost: 1
+              Loopback interface is treated as a stub Host
+            GigabitEthernet0/0/0/1 is up, line protocol is up 
+              Internet Address 20.2.3.2/24, Area 1
+              Process ID 1, Router ID 2.2.2.2, Network Type BROADCAST, Cost: 1
+              Transmit Delay is 1 sec, State BDR, Priority 1, MTU 1500, MaxPktSz 1500
+              Designated Router (ID) 3.3.3.3, Interface address 20.2.3.3
+              Backup Designated router (ID) 2.2.2.2, Interface address 20.2.3.2
+              Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                Hello due in 00:00:00:698
+              Index 2/5, flood queue length 0
+              Next 0(0)/0(0)
+              Last flood scan length is 9, maximum is 9
+              Last flood scan time is 0 msec, maximum is 0 msec
+              LS Ack List: current length 0, high water mark 3
+              Neighbor Count is 1, Adjacent neighbor count is 1
+                Adjacent with neighbor 3.3.3.3  (Designated Router)
+              Suppress hello for 0 neighbor(s)
+              Multi-area interface Count is 0
+            GigabitEthernet0/0/0/3 is up, line protocol is up 
+              Internet Address 20.2.4.2/24, Area 1
+              Process ID 1, Router ID 2.2.2.2, Network Type BROADCAST, Cost: 1
+              Transmit Delay is 1 sec, State BDR, Priority 1, MTU 1500, MaxPktSz 1500
+              Designated Router (ID) 4.4.4.4, Interface address 20.2.4.4
+              Backup Designated router (ID) 2.2.2.2, Interface address 20.2.4.2
+              Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                Hello due in 00:00:00:840
+              Index 3/6, flood queue length 0
+              Next 0(0)/0(0)
+              Last flood scan length is 9, maximum is 9
+              Last flood scan time is 0 msec, maximum is 0 msec
+              LS Ack List: current length 0, high water mark 21
+              Neighbor Count is 1, Adjacent neighbor count is 1
+                Adjacent with neighbor 4.4.4.4  (Designated Router)
+              Suppress hello for 0 neighbor(s)
+              Multi-area interface Count is 0
+            '''
+
+        raw2 = '''\
+            RP/0/0/CPU0:R2_ospf_xr#show ospf vrf all-inclusive virtual-links 
+            Fri Nov  3 01:25:44.845 UTC
+
+            Virtual Links for OSPF 1
+
+            Virtual Link OSPF_VL0 to router 4.4.4.4 is up
+              
+              DoNotAge LSA not allowed Run as demand circuit (Number of DCbitless LSA is 1).
+              Transit area 1, via interface GigabitEthernet0/0/0/3, Cost of using 65535
+              Transmit Delay is 5 sec, State POINT_TO_POINT,
+              Non-Stop Forwarding (NSF) enabled, last NSF restart 00:18:16 ago
+              Timer intervals configured, Hello 4, Dead 16, Wait 16, Retransmit 44
+                Hello due in 00:00:03:179
+              Clear text authentication enabled
+            '''
+
+        self.outputs = {}
+        self.outputs['show ospf vrf all-inclusive interface'] = raw1
+        self.outputs['show ospf vrf all-inclusive virtual-links'] = raw2
+
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+        
         obj = ShowOspfVrfAllInclusiveInterface(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)

@@ -341,9 +341,27 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 if intf_type == 'interfaces':
                     intf_name = interface
                 elif intf_type == 'virtual_links':
-                    intf_name = area + ' ' + router_id
-                elif intf_type == 'sham_links':
+                    # Init
+                    vl_transit_area_id = None
 
+                    # Execute 'show ospf vrf all-inclusive virtual-links' to get the vl_transit_area_id
+                    obj = ShowOspfVrfAllInclusiveVirtualLinks(device=self.device)
+                    vl_out = obj.parse()
+
+                    for vl_vrf in vl_out['vrf']:
+                        for vl_af in vl_out['vrf'][vl_vrf]['address_family']:
+                            for vl_inst in vl_out['vrf'][vl_vrf]['address_family'][vl_af]['instance']:
+                                for vl_area in vl_out['vrf'][vl_vrf]['address_family'][vl_af]['instance'][vl_inst]['areas']:
+                                    for vl in vl_out['vrf'][vl_vrf]['address_family'][vl_af]['instance'][vl_inst]['areas'][vl_area]['virtual_links']:
+                                        vl_name = vl_out['vrf'][vl_vrf]['address_family'][vl_af]['instance'][vl_inst]['areas'][vl_area]['virtual_links'][vl]['name']
+                                        if vl_name == name:
+                                            vl_transit_area_id = vl_out['vrf'][vl_vrf]['address_family'][vl_af]['instance'][vl_inst]['areas'][vl_area]['virtual_links'][vl]['transit_area_id']
+                                            break
+
+                    if vl_transit_area_id is not None:
+                        intf_name = vl_transit_area_id + ' ' + router_id
+
+                elif intf_type == 'sham_links':
                     # Init
                     sl_local_id = None
                     sl_remote_id = None
