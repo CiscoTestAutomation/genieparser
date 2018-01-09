@@ -22,35 +22,60 @@ class ShowProtocolsAfiAllAllSchema(MetaParser):
 
     schema = {
         'protocols': 
-            {Any(): 
+            {Optional('ospf'): 
                 {'vrf': 
                     {Any(): 
                         {'address_family': 
                             {Any(): 
                                 {'instance': 
                                     {Any():
-                                        {'preference': 
-                                            {'single_value': 
-                                                {'all': int,
+                                        {Optional('preference'): 
+                                            {Optional('single_value'): 
+                                                {'all': int},
+                                            Optional('multi_values'): 
+                                                {'granularity': 
+                                                    {'detail': 
+                                                        {'intra_area': int,
+                                                        'inter_area': int,
+                                                        },
+                                                    },
+                                                'external': int,
                                                 },
                                             },
                                         'router_id': str,
                                         'nsf': bool,
-                                        Optional('redistribution'): 
-                                            {'bgp': 
-                                                {'bgp_id': int,
-                                                'metric': int,
-                                                'metric_type': str,
-                                                'nssa_only': bool,
-                                                'route_map': str,
-                                                'subnets': bool,
-                                                'tag': int,
-                                                'lsa_type_summary': bool,
-                                                'preserve_med': bool,
-                                                },
+                                        'areas': 
+                                            {Any(): 
+                                                {'interfaces': list,
+                                                'mpls': 
+                                                    {'te': 
+                                                        {'enable': bool}}}},
                                             },
                                         },
                                     },
+                                },
+                            },
+                        },
+                    },
+            Optional('bgp'): 
+                {'bgp_pid': int,
+                'nsr': 
+                    {'enable': bool,
+                    'current_state': str},
+                'graceful_restart': 
+                    {'enable': bool},
+                'address_family': 
+                    {Any(): 
+                        {'distance': 
+                            {'external': int,
+                            'internal': int,
+                            'local': int,
+                            },
+                        'neighbors': 
+                            {Any(): 
+                                {'last_update': str,
+                                'gr_enable': str,
+                                'nsr_state': str,
                                 },
                             },
                         },
@@ -119,8 +144,8 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
                 continue
 
             # Distance: 110
-            p3 = re.compile(r'^Distance: +(?P<distance>(\d+))$')
-            m = p3.match(line)
+            p3_1 = re.compile(r'^Distance: +(?P<distance>(\d+))$')
+            m = p3_1.match(line)
             if m:
                 if 'preference' not in ospf_dict:
                     ospf_dict['preference'] = {}
@@ -130,8 +155,33 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
                     int(m.groupdict()['distance'])
                 continue
 
+            # Distance: IntraArea 112 InterArea 113 External/NSSA 114
+            p3_2 = re.compile(r'^Distance: +IntraArea +(?P<intra>(\d+))'
+                               ' +InterArea +(?P<inter>(\d+)) +External\/NSSA'
+                               ' +(?P<external>(\d+))$')
+            m = p3_2.match(line)
+            if m:
+                if 'preference' not in ospf_dict:
+                    ospf_dict['preference'] = {}
+                if 'multi_values' not in ospf_dict['preference']:
+                    ospf_dict['preference']['multi_values'] = {}
+                if 'granularity' not in ospf_dict['preference']['multi_values']:
+                    ospf_dict['preference']['multi_values']['granularity'] = {}
+                if 'detail' not in ospf_dict['preference']['multi_values']\
+                        ['granularity']:
+                    ospf_dict['preference']['multi_values']['granularity']\
+                        ['detail'] = {}
+                ospf_dict['preference']['multi_values']['granularity']\
+                        ['detail']['intra_area'] = int(m.groupdict()['intra'])
+                ospf_dict['preference']['multi_values']['granularity']\
+                        ['detail']['inter_area'] = int(m.groupdict()['inter'])
+                ospf_dict['preference']['multi_values']['external'] = \
+                    int(m.groupdict()['external'])
+                continue
+
             # Non-Stop Forwarding: Disabled
-            p4 = re.compile(r'^Non-Stop +Forwarding: +(?P<nsf>(Disabled|Enabled))$')
+            p4 = re.compile(r'^Non-Stop +Forwarding:'
+                             ' +(?P<nsf>(Disabled|Enabled))$')
             m = p4.match(line)
             if m:
                 if 'Disabled' in m.groupdict()['nsf']:
@@ -142,29 +192,136 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
 
             # Redistribution:
             # None
+            
             # Area 0
+            p5 = re.compile(r'^Area +(?P<area>(\d+))$')
+            m = p5.match(line)
+            if m:
+                area = str(IPAddress(str(m.groupdict()['area'])))
+                area_interfaces = []
+                if 'areas' not in ospf_dict:
+                    ospf_dict['areas'] = {}
+                if area not in ospf_dict['areas']:
+                    ospf_dict['areas'][area] = {}
+                ospf_dict['areas'][area]['interfaces'] = area_interfaces
+                continue
+
             # MPLS/TE enabled
+            p6 = re.compile(r'^MPLS\/TE +(?P<te>(enabled|disabled))$')
+            m = p6.match(line)
+            if m:
+                if 'mpls' not in ospf_dict['areas'][area]:
+                    ospf_dict['areas'][area]['mpls'] = {}
+                if 'te' not in ospf_dict['areas'][area]['mpls']:
+                    ospf_dict['areas'][area]['mpls']['te'] = {}
+                if 'enabled' in m.groupdict()['te']:
+                    ospf_dict['areas'][area]['mpls']['te']['enable'] = True
+                else:
+                    ospf_dict['areas'][area]['mpls']['te']['enable'] = False
+                    continue
+
             # Loopback0
             # GigabitEthernet0/0/0/0
             # GigabitEthernet0/0/0/2
-
+            p6 = re.compile(r'^(?P<intf>(Lo.*|Gi.*))$')
+            m = p6.match(line)
+            if m:
+                area_interfaces.append(str(m.groupdict()['intf']))
+                ospf_dict['areas'][area]['interfaces'] = area_interfaces
+                continue
 
             # Routing Protocol "BGP 100"
+            p8 = re.compile(r'^Routing +Protocol +\"BGP +(?P<bgp_pid>(\d+))\"$')
+            m = p8.match(line)
+            if m:
+                if 'protocols' not in ret_dict:
+                    ret_dict['protocols'] = {}
+                if 'bgp' not in ret_dict['protocols']:
+                    ret_dict['protocols']['bgp'] = {}
+
+                # Set sub_dict
+                bgp_dict = ret_dict['protocols']['bgp']
+                bgp_dict['bgp_pid'] = int(m.groupdict()['bgp_pid'])
+                continue
+
             # Non-stop routing is enabled
+            p8 = re.compile(r'^Non-stop +routing +is'
+                             ' +(?P<nsr>(enabled|disabled))$')
+            m = p8.match(line)
+            if m:
+                if 'nsr' not in bgp_dict:
+                    bgp_dict['nsr'] = {}
+                if 'enabled' in m.groupdict()['nsr']:
+                    bgp_dict['nsr']['enable'] = True
+                else:
+                    bgp_dict['nsr']['enable'] = False
+                    continue
+
             # Graceful restart is not enabled
+            p9 = re.compile(r'^Graceful restart is not +enabled$')
+            m = p9.match(line)
+            if m:
+                if 'graceful_restart' not in bgp_dict:
+                    bgp_dict['graceful_restart'] = {}
+                bgp_dict['graceful_restart']['enable'] = False
+                continue
+
             # Current BGP NSR state - Active Ready
-            # BGP NSR state not ready: Wait for standby ready msg
+            p10 = re.compile(r'^Current +BGP +NSR +state +\-'
+                              ' +(?P<state>([a-zA-Z\s]+))$')
+            m = p10.match(line)
+            if m:
+                if 'nsr' not in bgp_dict:
+                    bgp_dict['nsr'] = {}
+                bgp_dict['nsr']['current_state'] = \
+                    str(m.groupdict()['state']).lower()
+                continue
 
             # Address Family VPNv4 Unicast:
-            # Distance: external 20 internal 200 local 200
-            # Routing Information Sources:
-            # Neighbor      State/Last update received  NSR-State  GR-Enabled
-            # 4.4.4.4       08:05:59                    None       No
-
             # Address Family VPNv6 Unicast:
+            p11 = re.compile(r'^Address +Family +(?P<af>([a-zA-Z0-9\s]+)):$')
+            m = p11.match(line)
+            if m:
+                af = str(m.groupdict()['af']).lower()
+                if 'address_family' not in bgp_dict:
+                    bgp_dict['address_family'] = {}
+                if af not in bgp_dict['address_family']:
+                    bgp_dict['address_family'][af] = {}
+                    continue
+
             # Distance: external 20 internal 200 local 200
-            # Routing Information Sources:
+            p12 = re.compile(r'^Distance: +external +(?P<ext>(\d+)) +internal'
+                              ' +(?P<int>(\d+)) +local +(?P<local>(\d+))$')
+            m = p12.match(line)
+            if m:
+                if 'distance' not in bgp_dict['address_family'][af]:
+                    bgp_dict['address_family'][af]['distance'] = {}
+                bgp_dict['address_family'][af]['distance']['external'] = \
+                    int(m.groupdict()['ext'])
+                bgp_dict['address_family'][af]['distance']['internal'] = \
+                    int(m.groupdict()['int'])
+                bgp_dict['address_family'][af]['distance']['local'] = \
+                    int(m.groupdict()['local'])
+                continue
+
             # Neighbor      State/Last update received  NSR-State  GR-Enabled
             # 4.4.4.4       08:05:59                    None       No
+            # 4.4.4.4       08:05:59                    None       No
+            p13 = re.compile(r'^(?P<nbr>([0-9\.]+)) +(?P<last_update>([0-9\:]+))'
+                              ' +(?P<nsr_state>(\S+)) +(?P<gr_en>(No|Yes))$')
+            m = p13.match(line)
+            if m:
+                nbr = str(m.groupdict()['nbr'])
+                if 'neighbors' not in bgp_dict['address_family'][af]:
+                    bgp_dict['address_family'][af]['neighbors'] = {}
+                if nbr not in bgp_dict['address_family'][af]['neighbors']:
+                    bgp_dict['address_family'][af]['neighbors'][nbr] = {}
+                bgp_dict['address_family'][af]['neighbors'][nbr]['last_update'] = \
+                    str(m.groupdict()['last_update'])
+                bgp_dict['address_family'][af]['neighbors'][nbr]['nsr_state'] = \
+                    str(m.groupdict()['nsr_state'])
+                bgp_dict['address_family'][af]['neighbors'][nbr]['gr_enable'] = \
+                    str(m.groupdict()['gr_en'])
+                continue
 
         return ret_dict

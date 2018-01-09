@@ -26,22 +26,62 @@ class test_show_protocols_afi_all_all(unittest.TestCase):
 
     golden_parsed_output1 = {
         'protocols': 
-            {'ospf': 
+            {'bgp': 
+                {'address_family': 
+                    {'vpnv4 unicast': 
+                        {'distance': 
+                            {'external': 20,
+                            'internal': 200,
+                            'local': 200},
+                        'neighbors': 
+                            {'4.4.4.4': 
+                                {'gr_enable': 'No',
+                                'last_update': '00:01:28',
+                                'nsr_state': 'None'}}},
+                    'vpnv6 unicast': 
+                        {'distance': 
+                            {'external': 20,
+                            'internal': 200,
+                            'local': 200},
+                        'neighbors': 
+                            {'4.4.4.4': 
+                                {'gr_enable': 'No',
+                                'last_update': '00:01:28',
+                                'nsr_state': 'None'}}}},
+                'bgp_pid': 100,
+                'graceful_restart': 
+                    {'enable': False},
+                'nsr': 
+                    {'current_state': 'active ready',
+                    'enable': True}},
+            'ospf': 
                 {'vrf': 
                     {'default': 
                         {'address_family': 
                             {'ipv4': 
                                 {'instance': 
                                     {'1': 
-                                        {'nsf': False,
+                                        {'areas': 
+                                            {'0.0.0.0': 
+                                                {'interfaces': ['Loopback0', 'GigabitEthernet0/0/0/0', 'GigabitEthernet0/0/0/2'],
+                                                'mpls': 
+                                                    {'te': 
+                                                        {'enable': True}}}},
+                                                'nsf': False,
                                         'preference': 
-                                            {'single_value': 
+                                            {'multi_values': 
+                                                {'external': 114,
+                                                'granularity': 
+                                                    {'detail': 
+                                                        {'inter_area': 113,
+                                                        'intra_area': 112}}},
+                                            'single_value': 
                                                 {'all': 110}},
                                         'router_id': '3.3.3.3'}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         RP/0/0/CPU0:R3_ospf_xr#show protocols afi-all all
-        Thu Nov  2 21:12:50.082 UTC
+        Mon Jan  8 17:45:17.553 UTC
 
         Routing Protocol "BGP 100"
         Non-stop routing is enabled
@@ -53,17 +93,18 @@ class test_show_protocols_afi_all_all(unittest.TestCase):
           Distance: external 20 internal 200 local 200
           Routing Information Sources:
             Neighbor          State/Last update received  NSR-State  GR-Enabled
-            4.4.4.4           08:05:59                    None         No
+            4.4.4.4           00:01:28                    None         No
 
         Address Family VPNv6 Unicast:
           Distance: external 20 internal 200 local 200
           Routing Information Sources:
-            Neighbor                                        State/Last update received  NSR-State  GR-Enabled
-            4.4.4.4                                         08:05:59                    None         No
+            Neighbor          State/Last update received  NSR-State  GR-Enabled
+            4.4.4.4           00:01:28                    None         No
 
         Routing Protocol OSPF 1
           Router Id: 3.3.3.3
           Distance: 110
+          Distance: IntraArea 112 InterArea 113 External/NSSA 114
           Non-Stop Forwarding: Disabled
           Redistribution:
             None
