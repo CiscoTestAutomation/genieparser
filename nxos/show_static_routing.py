@@ -33,6 +33,7 @@ class ShowIpStaticRouteSchema(MetaParser):
                                            Optional('index'): int,
                                            Optional('active'): bool,
                                            Optional('next_hop'): str,
+                                           Optional('next_hop_netmask'): str,
                                            Optional('outgoing_interface'): str,
                                            Optional('rnh_active'): bool,
                                        },
@@ -106,7 +107,13 @@ class ShowIpStaticRoute(ShowIpStaticRouteSchema):
                 if m.groupdict()['interface']:
                     interface = m.groupdict()['interface']
                 if m.groupdict()['nexthop']:
-                    next_hop = m.groupdict()['nexthop']
+                    next_hop_origin = m.groupdict()['nexthop']
+                    if '/' in next_hop_origin:
+                        next_hop_split = next_hop_origin.split('/')
+
+                        next_hop = next_hop_split[0]
+                        next_hop_netmask = next_hop_split[1]
+
 
                 if 'routes' not in result_dict['vrfs'][vrf]['address_family'][af]:
                     result_dict['vrfs'][vrf]['address_family'][af]['routes'] = {}
@@ -143,6 +150,8 @@ class ShowIpStaticRoute(ShowIpStaticRouteSchema):
 
                     result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
                         ['next_hop_list'][index]['next_hop'] = next_hop.strip()
+                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                        ['next_hop_list'][index]['next_hop_netmask'] = next_hop_netmask
 
                     if m.groupdict()['interface']:
                         result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
@@ -219,6 +228,7 @@ class ShowIpv6StaticRouteSchema(MetaParser):
                                        Any(): {     # index
                                            Optional('index'): int,
                                            Optional('next_hop'): str,
+                                           Optional('next_hop_netmask'): str,
                                            Optional('outgoing_interface'): str,
                                            Optional('resolved_tid'): int,
                                            Optional('preference'): int,
@@ -298,7 +308,12 @@ class ShowIpv6StaticRoute(ShowIpv6StaticRouteSchema):
                 if m.groupdict()['preference']:
                     if_preference = m.groupdict()['preference']
                 if m.groupdict()['nexthop']:
-                    next_hop = m.groupdict()['nexthop']
+                    next_hop_origin = m.groupdict()['nexthop']
+                    if '/' in next_hop_origin:
+                        next_hop_split = next_hop_origin.split('/')
+
+                        next_hop = next_hop_split[0]
+                        next_hop_netmask = next_hop_split[1]
 
                 if m.groupdict()['interface']:
                     interface = m.groupdict()['interface']
@@ -348,6 +363,8 @@ class ShowIpv6StaticRoute(ShowIpv6StaticRouteSchema):
 
                     result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop']\
                         ['next_hop_list'][index]['next_hop'] = next_hop.strip()
+                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                        ['next_hop_list'][index]['next_hop_netmask'] = next_hop_netmask
 
                     if m.groupdict()['interface']:
                         result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop']\
