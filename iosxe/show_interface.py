@@ -2414,7 +2414,7 @@ class ShowEtherchannelSummarySchema(MetaParser):
     schema = {
                 'num_channel_groups_in_use': int,
                 'aggregators_number': int,
-                'interfaces': {
+                Optional('interfaces'): {
                     Any(): {
                         'group': str,
                         'flags': str,
