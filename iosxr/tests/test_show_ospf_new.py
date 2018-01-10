@@ -1191,7 +1191,9 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                 {'adjacency_stagger': 
                                     {'disable': False,
                                     'initial_number': 2,
-                                    'maximum_number': 64},
+                                    'maximum_number': 64,
+                                    'nbrs_forming': 0,
+                                    'nbrs_full': 1},
                                 'areas': 
                                     {'0.0.0.1': 
                                         {'area_type': 'normal',
@@ -1218,7 +1220,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                 'flags': 
                                     {'abr': True,
                                     'asbr': True},
-                                'flood_pacing_interval': 33,
+                                'flood_pacing_interval_msec': 33,
                                 'lsd_revision': 1,
                                 'lsd_state': 'connected, registered, bound',
                                 'maximum_interfaces': 1024,
@@ -1229,8 +1231,6 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                     'do_not_age': 0,
                                     'external_lsa': 0,
                                     'external_lsa_checksum': '00000000',
-                                    'nbrs_forming': 0,
-                                    'nbrs_full': 1,
                                     'opaque_as_lsa': 0,
                                     'opaque_as_lsa_checksum': '00000000'},
                                 'redistribution': 
@@ -1240,10 +1240,11 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                         {'num_of_prefix': 10240,
                                         'prefix_thld': 75,
                                         'warn_only': False}},
-                                'retransmission_interval': 66,
+                                'retransmission_pacing_interval': 66,
                                 'role': 'primary active',
                                 'router_id': '3.3.3.3',
                                 'segment_routing_global_block_default': '16000-23999',
+                                'segment_routing_global_block_status': 'not allocated',
                                 'snmp_trap': False,
                                 'spf_control': 
                                     {'throttle': 
@@ -1277,7 +1278,9 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                 {'adjacency_stagger': 
                                     {'disable': False,
                                     'initial_number': 2,
-                                    'maximum_number': 64},
+                                    'maximum_number': 64,
+                                    'nbrs_forming': 0,
+                                    'nbrs_full': 2},
                                 'areas': 
                                     {'0.0.0.0': 
                                         {'area_type': 'normal',
@@ -1301,7 +1304,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                             'spf_runs_count': 26},
                                         'topology_version': 15}},
                                 'external_flood_list_length': 0,
-                                'flood_pacing_interval': 33,
+                                'flood_pacing_interval_msec': 33,
                                 'lsd_revision': 1,
                                 'lsd_state': 'connected, registered, bound',
                                 'maximum_interfaces': 1024,
@@ -1316,14 +1319,13 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                     'do_not_age': 0,
                                     'external_lsa': 1,
                                     'external_lsa_checksum': '0x00607f',
-                                    'nbrs_forming': 0,
-                                    'nbrs_full': 2,
                                     'opaque_as_lsa': 0,
                                     'opaque_as_lsa_checksum': '00000000'},
-                                'retransmission_interval': 66,
+                                'retransmission_pacing_interval': 66,
                                 'role': 'primary active',
                                 'router_id': '3.3.3.3',
                                 'segment_routing_global_block_default': '16000-23999',
+                                'segment_routing_global_block_status': 'not allocated',
                                 'snmp_trap': True,
                                 'spf_control': 
                                     {'throttle': 
@@ -1347,23 +1349,27 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                     {'always': 
                                         {'always': True,
                                         'external_lsa': True,
+                                        'external_lsa_metric': 16711680,
                                         'include_stub': True,
                                         'state': 'active',
-                                        'summary_lsa': True},
+                                        'summary_lsa': True,
+                                        'summary_lsa_metric': 16711680},
                                     'on_startup': 
-                                        {'duration': 5,
+                                        {'on_startup': 5,
                                         'external_lsa': True,
+                                        'external_lsa_metric': 16711680,
                                         'include_stub': True,
-                                        'on_startup': True,
                                         'state': 'inactive',
-                                        'summary_lsa': True},
+                                        'summary_lsa': True,
+                                        'summary_lsa_metric': 16711680},
                                     'on_switchover': 
-                                        {'duration': 10,
+                                        {'on_switchover': 10,
                                         'external_lsa': True,
+                                        'external_lsa_metric': 16711680,
                                         'include_stub': True,
-                                        'on_switchover': True,
                                         'state': 'inactive',
-                                        'summary_lsa': True}}}}}}}}}
+                                        'summary_lsa': True,
+                                        'summary_lsa_metric': 16711680}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         RP/0/0/CPU0:R3_ospf_xr#show ospf vrf all-inclusive 
@@ -1482,8 +1488,10 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                             {'1': 
                                 {'adjacency_stagger': 
                                     {'disable': False,
-                                   'initial_number': 2,
-                                   'maximum_number': 64},
+                                    'initial_number': 2,
+                                    'maximum_number': 64,
+                                    'nbrs_forming': 0,
+                                    'nbrs_full': 1},
                                 'areas': 
                                     {'0.0.0.1': 
                                         {'area_id': '0.0.0.1',
@@ -1508,7 +1516,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                 'flags': 
                                     {'abr': True,
                                     'asbr': True},
-                                'flood_pacing_interval': 33,
+                                'flood_pacing_interval_msec': 33,
                                 'graceful_restart': 
                                     {'ietf': 
                                         {'enable': True,
@@ -1523,8 +1531,6 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                     'do_not_age': 0,
                                     'external_lsa': 3,
                                     'external_lsa_checksum': '0x01df46',
-                                    'nbrs_forming': 0,
-                                    'nbrs_full': 1,
                                     'opaque_as_lsa': 0,
                                     'opaque_as_lsa_checksum': '00000000'},
                                 'redistribution': 
@@ -1543,10 +1549,11 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                         'warn_only': False},
                                     'static': 
                                         {'enabled': True}},
-                                'retransmission_interval': 66,
+                                'retransmission_pacing_interval': 66,
                                 'role': 'primary active',
                                 'router_id': '3.3.3.3',
                                 'segment_routing_global_block_default': '16000-23999',
+                                'segment_routing_global_block_status': 'not allocated',
                                 'snmp_trap': False,
                                 'spf_control': 
                                     {'throttle': 
@@ -1580,7 +1587,9 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                 {'adjacency_stagger': 
                                     {'disable': False,
                                     'initial_number': 2,
-                                    'maximum_number': 64},
+                                    'maximum_number': 64,
+                                    'nbrs_forming': 0,
+                                    'nbrs_full': 1},
                                 'areas': 
                                     {'0.0.0.0': 
                                         {'area_id': '0.0.0.0',
@@ -1655,7 +1664,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                             'spf_runs_count': 4}},
                                     '0.0.0.3': 
                                         {'area_id': '0.0.0.3',
-                                        'area_type': 'NSSA',
+                                        'area_type': 'nssa',
                                         'lsa_translation': 'type-7/type-5',
                                         'ranges': 
                                             {'2.2.2.0/24': 
@@ -1679,7 +1688,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                             'spf_runs_count': 4}},
                                     '0.0.0.4': 
                                         {'area_id': '0.0.0.4',
-                                        'area_type': 'NSSA',
+                                        'area_type': 'nssa',
                                         'lsa_translation': 'type-7/type-5',
                                         'statistics': 
                                             {'area_scope_lsa_cksum_sum': '0x022418',
@@ -1701,7 +1710,7 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                 'flags': 
                                     {'abr': True,
                                     'asbr': True},
-                                'flood_pacing_interval': 33,
+                                'flood_pacing_interval_msec': 33,
                                 'graceful_restart': 
                                     {'cisco': 
                                         {'enable': True,
@@ -1716,8 +1725,6 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                     'do_not_age': 0,
                                     'external_lsa': 3,
                                     'external_lsa_checksum': '0x01b657',
-                                    'nbrs_forming': 0,
-                                    'nbrs_full': 1,
                                     'opaque_as_lsa': 0,
                                     'opaque_as_lsa_checksum': '00000000'},
                                 'redistribution': 
@@ -1736,10 +1743,11 @@ class test_show_ospf_vrf_all_inclusive(unittest.TestCase):
                                     'static': 
                                         {'enabled': True,
                                         'metric': 10}},
-                                'retransmission_interval': 66,
+                                'retransmission_pacing_interval': 66,
                                 'role': 'primary active',
                                 'router_id': '3.3.3.3',
                                 'segment_routing_global_block_default': '16000-23999',
+                                'segment_routing_global_block_status': 'not allocated',
                                 'snmp_trap': True,
                                 'spf_control': 
                                     {'throttle': 
@@ -1993,6 +2001,7 @@ class test_show_ospf_vrf_all_inclusive_sham_links(unittest.TestCase):
                                                 'if_index': 2,
                                                 'local_id': '33.33.33.33',
                                                 'name': 'SL0',
+                                                'link_state': 'up',
                                                 'remote_id': '22.22.22.22',
                                                 'retransmit_interval': 5,
                                                 'state': 'point-to-point,',
@@ -2063,6 +2072,7 @@ class test_show_ospf_vrf_all_inclusive_virtual_links(unittest.TestCase):
                                                 'hello_timer': '00:00:03:179',
                                                 'interface': 'GigabitEthernet0/0/0/3',
                                                 'name': 'VL0',
+                                                'link_state': 'up',
                                                 'nsf': 
                                                     {'enable': True,
                                                     'last_restart': '00:18:16'},
@@ -2086,6 +2096,7 @@ class test_show_ospf_vrf_all_inclusive_virtual_links(unittest.TestCase):
                                                 'hello_timer': '00:00:03:179',
                                                 'interface': 'GigabitEthernet0/0/0/4',
                                                 'name': 'VL1',
+                                                'link_state': 'up',
                                                 'nsf': {'enable': True,
                                                         'last_restart': '00:18:16'},
                                                 'retransmit_interval': 44,
@@ -2479,7 +2490,6 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                     'lsa_id': '3.3.3.3',
                                                                     'option': 'None',
                                                                     'option_desc': 'No TOS-capability, DC',
-                                                                    'routing_bit_enable': True,
                                                                     'seq_num': '80000036',
                                                                     'type': 1}}},
                                                         '55.55.55.55 55.55.55.55': 
@@ -2818,7 +2828,6 @@ class test_show_ospf_vrf_all_inclusive_database_router(unittest.TestCase):
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
                                                                     'DC',
-                                                                    'routing_bit_enable': True,
                                                                     'seq_num': '80000033',
                                                                     'type': 1}}},
                                                         '4.4.4.4 4.4.4.4': 
@@ -3899,7 +3908,6 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                      'option_desc': 'No '
                                                                                     'TOS-capability, '
                                                                                     'DC',
-                                                                     'routing_bit_enable': True,
                                                                      'seq_num': '80000001',
                                                                      'type': 3}}},
                                                         '10.1.2.0 3.3.3.3': 
@@ -3925,7 +3933,6 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                     'TOS-capability, '
                                                                     'No '
                                                                     'DC',
-                                                                    'routing_bit_enable': True,
                                                                     'seq_num': '80000002',
                                                                     'type': 3}}},
                                                         '10.1.3.0 3.3.3.3': 
@@ -3976,7 +3983,6 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                     'option_desc': 'No '
                                                                     'TOS-capability, '
                                                                     'DC',
-                                                                    'routing_bit_enable': True,
                                                                     'seq_num': '80000001',
                                                                     'type': 3}}},
                                                         '10.2.3.0 3.3.3.3': 
@@ -4002,7 +4008,6 @@ class test_show_ospf_vrf_all_inclusive_database_summary(unittest.TestCase):
                                                                     'TOS-capability, '
                                                                     'No '
                                                                     'DC',
-                                                                    'routing_bit_enable': True,
                                                                     'seq_num': '80000003',
                                                                     'type': 3}}},
                                                         '2.2.2.2 2.2.2.2': 

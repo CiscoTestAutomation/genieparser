@@ -1059,22 +1059,26 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                         'include_stub': bool,
                                         'summary_lsa': bool,
                                         'external_lsa': bool,
-                                        Optional('duration'): int,
+                                        Optional('summary_lsa_metric'): int,
+                                        Optional('external_lsa_metric'): int,
                                         Optional('state'): str},
                                     Optional('on_startup'): 
-                                        {'on_startup': bool,
+                                        {'on_startup': int,
                                         'include_stub': bool,
                                         'summary_lsa': bool,
-                                        'external_lsa':bool,
-                                        Optional('duration'): int,
-                                        Optional('state'): str},
-                                    Optional('on_switchover'): 
-                                        {'on_switchover': bool,
-                                        'include_stub': bool,
-                                        'summary_lsa': bool,
+                                        'summary_lsa_metric': int,
                                         'external_lsa': bool,
-                                        Optional('duration'): int,
-                                        Optional('state'): str}},
+                                        'external_lsa_metric': int,
+                                        'state': str},
+                                    Optional('on_switchover'): 
+                                        {'on_switchover': int,
+                                        'include_stub': bool,
+                                        'summary_lsa': bool,
+                                        'summary_lsa_metric': int,
+                                        'external_lsa': bool,
+                                        'external_lsa_metric': int,
+                                        'state': str},
+                                    },
                                 Optional('spf_control'): 
                                     {Optional('paths'): str,
                                     'throttle': 
@@ -1098,15 +1102,16 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                 Optional('adjacency_stagger'): 
                                     {'disable': bool,
                                     'initial_number': int,
-                                    'maximum_number': int},
+                                    'maximum_number': int,
+                                    'nbrs_forming': int,
+                                    'nbrs_full': int,
+                                    },
                                 Optional('graceful_restart'): 
                                     {Any(): 
                                         {'enable': bool,
                                         'type': str}},
                                 Optional('numbers'): 
-                                    {Optional('nbrs_forming'): int,
-                                    Optional('nbrs_full'): int,
-                                    Optional('external_lsa'): int,
+                                    {Optional('external_lsa'): int,
                                     Optional('external_lsa_checksum'): str,
                                     Optional('opaque_as_lsa'): int,
                                     Optional('opaque_as_lsa_checksum'): str,
@@ -1116,13 +1121,14 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                 Optional('total_normal_areas'): int,
                                 Optional('total_stub_areas'): int,
                                 Optional('total_nssa_areas'): int,
-                                Optional('flood_pacing_interval'): int,
-                                Optional('retransmission_interval'): int,
+                                Optional('flood_pacing_interval_msec'): int,
+                                Optional('retransmission_pacing_interval'): int,
                                 Optional('external_flood_list_length'): int,
                                 Optional('snmp_trap'): bool,
                                 Optional('lsd_state'): str,
                                 Optional('lsd_revision'): int,
                                 Optional('segment_routing_global_block_default'): str,
+                                Optional('segment_routing_global_block_status'): str,
                                 Optional('strict_spf'): bool,
                                 Optional('flags'): 
                                     {Optional('abr'): bool,
@@ -1375,25 +1381,26 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             # Condition: always State: active
             # Condition: on switch-over for 10 seconds, State: inactive
             # Condition: on start-up for 5 seconds, State: inactive
-            p5_3 = re.compile(r'^Condition:(?: +on)?'
-                               ' +(?P<condition>([a-zA-Z\-]+))'
+            p5_3 = re.compile(r'^Condition:'
+                               ' +(?P<condition>(always|on switch-over|on start-up))'
                                '(?: +for +(?P<seconds>(\d+)) +seconds,)?'
                                ' +State: +(?P<state>(\S+))$')
             m = p5_3.match(line)
             if m:
-                condition = str(m.groupdict()['condition']).lower()
-                if condition != 'always':
-                    condition = "on_" + condition.replace("-", "")
-                # Set keys
+                condition = str(m.groupdict()['condition']).lower().replace("-", "")
+                condition = condition.replace(" ", "_")
+                if 'stub_router' not in sub_dict:
+                    sub_dict['stub_router'] = {}
                 if condition not in sub_dict['stub_router']:
                     sub_dict['stub_router'][condition] = {}
-                sub_dict['stub_router'][condition][condition] = True
-                if m.groupdict()['seconds']:
-                    sub_dict['stub_router'][condition]['duration'] = \
+                sub_dict['stub_router'][condition]['state'] = \
+                    str(m.groupdict()['state']).lower()
+                # Set 'condition' key
+                if condition == 'always':
+                    sub_dict['stub_router'][condition][condition] = True
+                else:
+                    sub_dict['stub_router'][condition][condition] = \
                         int(m.groupdict()['seconds'])
-                if m.groupdict()['state']:
-                    sub_dict['stub_router'][condition]['state'] = \
-                        str(m.groupdict()['state']).lower()
                 continue
 
             # Advertise stub links with maximum metric in router-LSAs
@@ -1410,6 +1417,8 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             m = p5_5.match(line)
             if m:
                 sub_dict['stub_router'][condition]['summary_lsa'] = True
+                sub_dict['stub_router'][condition]['summary_lsa_metric'] = \
+                    int(m.groupdict()['metric'])
                 continue
 
             # Advertise external-LSAs with metric 16711680
@@ -1418,6 +1427,8 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             m = p5_6.match(line)
             if m:
                 sub_dict['stub_router'][condition]['external_lsa'] = True
+                sub_dict['stub_router'][condition]['external_lsa_metric'] = \
+                    int(m.groupdict()['metric'])
                 continue
 
             # Initial SPF schedule delay 50 msecs
@@ -1537,9 +1548,9 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                               ' +(?P<retransmission>(\d+)) +msecs$')
             m = p14.match(line)
             if m:
-                sub_dict['flood_pacing_interval'] = \
+                sub_dict['flood_pacing_interval_msec'] = \
                     int(float(m.groupdict()['flood']))
-                sub_dict['retransmission_interval'] = \
+                sub_dict['retransmission_pacing_interval'] = \
                     int(float(m.groupdict()['retransmission']))
                 continue
 
@@ -1566,10 +1577,12 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                               ' +(?P<form>(\d+)), +(?P<full>(\d+)) +full$')
             m = p16.match(line)
             if m:
-                if 'numbers' not in sub_dict:
-                    sub_dict['numbers'] = {}
-                sub_dict['numbers']['nbrs_forming'] = int(m.groupdict()['form'])
-                sub_dict['numbers']['nbrs_full'] = int(m.groupdict()['full'])
+                if 'adjacency_stagger' not in sub_dict:
+                    sub_dict['adjacency_stagger'] = {}
+                sub_dict['adjacency_stagger']['nbrs_forming'] = \
+                    int(m.groupdict()['form'])
+                sub_dict['adjacency_stagger']['nbrs_full'] = \
+                    int(m.groupdict()['full'])
                 continue
 
             # Maximum number of configured interfaces 1024
@@ -1682,11 +1695,14 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
 
             # Segment Routing Global Block default (16000-23999), not allocated
             p26 = re.compile(r'^Segment +Routing +Global +Block +default'
-                              ' +\((?P<sr_block>([0-9\-]+))\), +not +allocated$')
+                              ' +\((?P<sr_block>([0-9\-]+))\),'
+                              ' +(?P<status>(.*))$')
             m = p26.match(line)
             if m:
                 sub_dict['segment_routing_global_block_default'] = \
                     str(m.groupdict()['sr_block'])
+                sub_dict['segment_routing_global_block_status'] = \
+                    str(m.groupdict()['status'])
                 continue
 
             # Strict-SPF capability is enabled
@@ -1730,7 +1746,7 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                                 ' +area)))?$')
             m = p28_2.match(line)
             if m:
-                area_type = str(m.groupdict()['area_type'])
+                area_type = str(m.groupdict()['area_type']).lower()
                 sub_dict['areas'][area]['area_type'] = area_type
                 if area_type == 'stub':
                     if m.groupdict()['summary']:
@@ -2028,12 +2044,13 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
             # Virtual Link OSPF_VL0 to router 4.4.4.4 is up
             p2 = re.compile(r'^(Virtual|Sham) +Link +(?P<link>(\S+)) +to'
                              ' +(address|router) +(?P<address>(\S+)) +is'
-                             ' +(up|down)$')
+                             ' +(?P<link_state>(up|down))$')
             m = p2.match(line)
             if m:
                 address = str(m.groupdict()['address'])
                 sl_remote_id = vl_router_id = address
                 link = str(m.groupdict()['link'])
+                link_state = str(m.groupdict()['link_state'])
                 n = re.match('(?P<ignore>\S+)_(?P<name>(S|V)L(\d+))', link)
                 if n:
                     real_link_name = str(n.groupdict()['name'])
@@ -2084,6 +2101,7 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
                 try:
                     sub_dict['name'] = real_link_name
                     sub_dict['remote_id'] = sl_remote_id
+                    sub_dict['link_state'] = link_state
                 except:
                     pass
                 continue
@@ -2135,6 +2153,7 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
                     sub_dict['dcbitless_lsa_count'] = dcbitless_lsa_count
                     sub_dict['donotage_lsa'] = donotage_lsa
                     sub_dict['demand_circuit'] = demand_circuit
+                    sub_dict['link_state'] = link_state
                 except:
                     pass
                 continue
@@ -2267,6 +2286,7 @@ class ShowOspfVrfAllInclusiveShamLinksSchema(MetaParser):
                                         {'sham_links': 
                                             {Any(): 
                                                 {'name': str,
+                                                'link_state': str,
                                                 'local_id': str,
                                                 'remote_id': str,
                                                 'transit_area_id': str,
@@ -2336,6 +2356,7 @@ class ShowOspfVrfAllInclusiveVirtualLinksSchema(MetaParser):
                                         {'virtual_links': 
                                             {Any(): 
                                                 {'name': str,
+                                                'link_state': str,
                                                 'router_id': str,
                                                 'transit_area_id': str,
                                                 'hello_interval': int,
@@ -2845,7 +2866,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
             m = p3_2.match(line)
             if m:
                 age = int(m.groupdict()['age'])
-                # Reset all previous flags
                 continue
 
             # Options: 0x20 (No TOS-capability, DC)
@@ -2926,38 +2946,47 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 # Set previously parsed values
                 try:
                     header_dict['routing_bit_enable'] = routing_bit_enable
+                    del routing_bit_enable
                 except:
                     pass
                 try:
                     header_dict['age'] = age
+                    del age
                 except:
                     pass
                 try:
                     header_dict['option'] = option
+                    del option
                 except:
                     pass
                 try:
                     header_dict['option_desc'] = option_desc
+                    del option_desc
                 except:
                     pass
                 try:
                     header_dict['type'] = lsa_type
+                    del lsa_type
                 except:
                     pass
                 try:
                     header_dict['lsa_id'] = lsa_id
+                    del lsa_id
                 except:
                     pass
                 try:
                     header_dict['adv_router'] = adv_router
+                    del adv_router
                 except:
                     pass
                 try:
                     header_dict['opaque_type'] = opaque_type
+                    del opaque_type
                 except:
                     pass
                 try:
                     header_dict['opaque_id'] = opaque_id
+                    del opaque_id
                 except:
                     pass
 
