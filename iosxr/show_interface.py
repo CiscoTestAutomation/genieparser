@@ -1710,13 +1710,16 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
                 ['ipv6_status'] = ipv6_status
                 ipv6_vrf_all_interface_dict[interface]['ipv6'][address]\
                 ['ipv6_subnet'] = ipv6_subnet
-                ipv6_vrf_all_interface_dict[interface]['ipv6']\
-                ['ipv6_link_local_state'] = ipv6_link_local_state
-                ipv6_vrf_all_interface_dict[interface]['ipv6']\
-                ['ipv6_link_local'] = ipv6_link_local
                 ipv6_vrf_all_interface_dict[interface]['ipv6'][address]\
                 ['ipv6_eui64'] = True
-                continue
+                try:
+                    ipv6_vrf_all_interface_dict[interface]['ipv6']\
+                        ['ipv6_link_local_state'] = ipv6_link_local_state
+                    ipv6_vrf_all_interface_dict[interface]['ipv6']\
+                        ['ipv6_link_local'] = ipv6_link_local
+                    continue
+                except:
+                    pass
 
             # Global unicast address(es):
             # 2001:db8:4:4::4, subnet is 2001:db8:4:4::/64 [TENTATIVE] with route-tag 10
@@ -1750,11 +1753,14 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
                 ['ipv6_route_tag'] = ipv6_route_tag
                 ipv6_vrf_all_interface_dict[interface]['ipv6'][address]\
                 ['ipv6_subnet'] = ipv6_subnet
-                ipv6_vrf_all_interface_dict[interface]['ipv6']\
-                ['ipv6_link_local_state'] = ipv6_link_local_state
-                ipv6_vrf_all_interface_dict[interface]['ipv6']\
-                ['ipv6_link_local'] = ipv6_link_local
-                continue
+                try:
+                    ipv6_vrf_all_interface_dict[interface]['ipv6']\
+                        ['ipv6_link_local_state'] = ipv6_link_local_state
+                    ipv6_vrf_all_interface_dict[interface]['ipv6']\
+                        ['ipv6_link_local'] = ipv6_link_local
+                    continue
+                except:
+                    pass
 
             # Global unicast address(es):
             # 2001:db8:1:1::1, subnet is 2001:db8:1:1::/64 [TENTATIVE]
@@ -1784,11 +1790,14 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
                 ['ipv6_status'] = ipv6_status
                 ipv6_vrf_all_interface_dict[interface]['ipv6'][address]\
                 ['ipv6_subnet'] = ipv6_subnet
-                ipv6_vrf_all_interface_dict[interface]['ipv6']\
-                ['ipv6_link_local_state'] = ipv6_link_local_state
-                ipv6_vrf_all_interface_dict[interface]['ipv6']\
-                ['ipv6_link_local'] = ipv6_link_local
-                continue
+                try:
+                    ipv6_vrf_all_interface_dict[interface]['ipv6']\
+                        ['ipv6_link_local_state'] = ipv6_link_local_state
+                    ipv6_vrf_all_interface_dict[interface]['ipv6']\
+                        ['ipv6_link_local'] = ipv6_link_local
+                    continue
+                except:
+                    pass
 
             # Global unicast address(es):
             # 2001:db8:1:1::1, subnet is 2001:db8:1:1::/64
@@ -1814,9 +1823,12 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
                 ['ipv6_prefix_length'] = ipv6_prefix_length
                 ipv6_vrf_all_interface_dict[interface]['ipv6'][address]\
                 ['ipv6_subnet'] = ipv6_subnet
-                ipv6_vrf_all_interface_dict[interface]['ipv6']\
-                ['ipv6_link_local'] = ipv6_link_local
-                continue
+                try:
+                    ipv6_vrf_all_interface_dict[interface]['ipv6']\
+                        ['ipv6_link_local'] = ipv6_link_local
+                    continue
+                except:
+                    pass
 
             # Joined group address(es): ff02::1:ff00:1 ff02::1:ffa6:78c5 ff02::2
             #ff02::1
