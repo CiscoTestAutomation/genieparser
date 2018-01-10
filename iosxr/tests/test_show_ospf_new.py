@@ -1985,6 +1985,7 @@ class test_show_ospf_vrf_all_inclusive_sham_links(unittest.TestCase):
                                             {'33.33.33.33 22.22.22.22': 
                                                 {'cost': 111,
                                                 'dcbitless_lsa_count': 1,
+                                                'donotage_lsa': 'not allowed',
                                                 'dead_interval': 13,
                                                 'demand_circuit': True,
                                                 'hello_interval': 3,
@@ -2055,10 +2056,12 @@ class test_show_ospf_vrf_all_inclusive_virtual_links(unittest.TestCase):
                                                         {'crypto_algorithm': 'simple'}},
                                                 'cost': 65535,
                                                 'dcbitless_lsa_count': 1,
+                                                'donotage_lsa': 'not allowed',
                                                 'dead_interval': 16,
                                                 'demand_circuit': True,
                                                 'hello_interval': 4,
                                                 'hello_timer': '00:00:03:179',
+                                                'interface': 'GigabitEthernet0/0/0/3',
                                                 'name': 'VL0',
                                                 'nsf': 
                                                     {'enable': True,
@@ -2072,13 +2075,16 @@ class test_show_ospf_vrf_all_inclusive_virtual_links(unittest.TestCase):
                                             '0.0.0.1 5.5.5.5': 
                                                 {'authentication': 
                                                     {'auth_trailer_key': 
-                                                        {'crypto_algorithm': 'md5'}},
+                                                        {'crypto_algorithm': 'md5',
+                                                        'youngest_key_id': 1}},
                                                 'cost': 65535,
                                                 'dcbitless_lsa_count': 1,
+                                                'donotage_lsa': 'not allowed',
                                                 'dead_interval': 16,
                                                 'demand_circuit': True,
                                                 'hello_interval': 4,
                                                 'hello_timer': '00:00:03:179',
+                                                'interface': 'GigabitEthernet0/0/0/4',
                                                 'name': 'VL1',
                                                 'nsf': {'enable': True,
                                                         'last_restart': '00:18:16'},
@@ -2087,8 +2093,7 @@ class test_show_ospf_vrf_all_inclusive_virtual_links(unittest.TestCase):
                                                 'state': 'point-to-point,',
                                                 'transit_area_id': '0.0.0.1',
                                                 'transmit_delay': 5,
-                                                'wait_interval': 16,
-                                                'youngest_key_id': 1}}}}}}}}}}}
+                                                'wait_interval': 16}}}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         RP/0/0/CPU0:R2_ospf_xr#show ospf vrf all-inclusive virtual-links 
@@ -3238,7 +3243,7 @@ class test_show_ospf_vrf_all_inclusive_database_external(unittest.TestCase):
                                                                         {'network_mask': '255.255.255.255',
                                                                         'topologies': 
                                                                             {0: 
-                                                                                {'external_route_tag': '0',
+                                                                                {'external_route_tag': 0,
                                                                                 'flags': 'E',
                                                                                 'forwarding_address': '0.0.0.0',
                                                                                 'metric': 20,

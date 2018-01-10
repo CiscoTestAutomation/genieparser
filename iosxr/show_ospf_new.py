@@ -2095,8 +2095,6 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
             m = p3_2.match(line)
             if m:
                 area = str(IPAddress(str(m.groupdict()['area'])))
-                interface = str(m.groupdict()['intf'])
-                cost = int(m.groupdict()['cost'])
 
                 # Set link_name for virtual_link
                 link_name = area + ' ' + vl_router_id
@@ -2128,12 +2126,14 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
                 sub_dict['transit_area_id'] = area
                 sub_dict['demand_circuit'] = False
                 sub_dict['cost'] = int(m.groupdict()['cost'])
+                sub_dict['interface'] = str(m.groupdict()['intf'])
 
                 # Set previously parsed values
                 try:
                     sub_dict['name'] = real_link_name
                     sub_dict['router_id'] = vl_router_id
                     sub_dict['dcbitless_lsa_count'] = dcbitless_lsa_count
+                    sub_dict['donotage_lsa'] = donotage_lsa
                     sub_dict['demand_circuit'] = demand_circuit
                 except:
                     pass
@@ -2162,11 +2162,13 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
             m = p6.match(line)
             if m:
                 dcbitless_lsa_count = int(m.groupdict()['dcbitless'])
+                donotage_lsa = 'not allowed'
                 if m.groupdict()['demand']:
                     demand_circuit = True
                 # Set values for sham_links
                 if link_type == 'sham_links':
                     sub_dict['dcbitless_lsa_count'] = dcbitless_lsa_count
+                    sub_dict['donotage_lsa'] = donotage_lsa
                     if m.groupdict()['cost']:
                         sub_dict['cost'] = int(m.groupdict()['cost'])
                         continue
@@ -2235,7 +2237,12 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
             p12 = re.compile(r'^Youngest +key +id +is +(?P<young>(\d+))$')
             m = p12.match(line)
             if m:
-                sub_dict['youngest_key_id'] = int(m.groupdict()['young'])
+                if 'authentication' not in sub_dict:
+                    sub_dict['authentication'] = {}
+                if 'auth_trailer_key' not in sub_dict['authentication']:
+                    sub_dict['authentication']['auth_trailer_key'] = {}
+                sub_dict['authentication']['auth_trailer_key']\
+                    ['youngest_key_id'] = int(m.groupdict()['young'])
                 continue
 
         return ret_dict
@@ -2273,15 +2280,18 @@ class ShowOspfVrfAllInclusiveShamLinksSchema(MetaParser):
                                                 'hello_timer': str,
                                                 'demand_circuit': bool,
                                                 'dcbitless_lsa_count': int,
+                                                'donotage_lsa': str,
                                                 'if_index': int,
                                                 Optional('nsf'): 
                                                     {'enable': bool,
                                                     'last_restart': str},
                                                 Optional('authentication'): 
                                                     {'auth_trailer_key': 
-                                                        {'crypto_algorithm': str},
+                                                        {'crypto_algorithm': str,
+                                                        Optional('youngest_key_id'): int,
+                                                        },
                                                     },
-                                                Optional('youngest_key_id'): int},
+                                                },
                                             },
                                         },
                                     },
@@ -2334,18 +2344,22 @@ class ShowOspfVrfAllInclusiveVirtualLinksSchema(MetaParser):
                                                 'retransmit_interval': int,
                                                 'transmit_delay': int,
                                                 'cost': int,
+                                                'interface': str,
                                                 'state': str,
                                                 'hello_timer': str,
                                                 'demand_circuit': bool,
                                                 'dcbitless_lsa_count': int,
+                                                'donotage_lsa': str,
                                                 Optional('nsf'): 
                                                     {'enable': bool,
                                                     'last_restart': str},
                                                 Optional('authentication'): 
-                                                    {'auth_trailer_key': 
-                                                        {'crypto_algorithm': str},
+                                                   {'auth_trailer_key': 
+                                                        {'crypto_algorithm': str,
+                                                        Optional('youngest_key_id'): int,
+                                                        },
                                                     },
-                                                Optional('youngest_key_id'): int},
+                                                },
                                             },
                                         },
                                     },
@@ -2831,6 +2845,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
             m = p3_2.match(line)
             if m:
                 age = int(m.groupdict()['age'])
+                # Reset all previous flags
                 continue
 
             # Options: 0x20 (No TOS-capability, DC)
@@ -3017,10 +3032,10 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
 
             # External Route Tag: 0
-            p15 = re.compile(r'^External +Route +Tag: +(?P<tag>(\S+))$')
+            p15 = re.compile(r'^External +Route +Tag: +(?P<tag>(\d+))$')
             m = p15.match(line)
             if m:
-                db_topo_dict['external_route_tag'] = str(m.groupdict()['tag'])            
+                db_topo_dict['external_route_tag'] = int(m.groupdict()['tag'])
                 continue
 
             # Attached Router: 66.66.66.66
@@ -3545,7 +3560,7 @@ class ShowOspfVrfAllInclusiveDatabaseExternalSchema(MetaParser):
                                                                                 'flags': str,
                                                                                 'metric': int,
                                                                                 'forwarding_address': str,
-                                                                                'external_route_tag': str},
+                                                                                'external_route_tag': int},
                                                                             },
                                                                         },
                                                                     },
