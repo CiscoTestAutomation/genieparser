@@ -17,7 +17,7 @@ try:
     def OrKeyedList(default):
         return Or(default, KeyedList({}))
 
-except ImportError:
+except (ImportError, OSError):
     def OrKeyedList(default):
         return default
 

@@ -8,7 +8,7 @@ import re
 
 try:
     from ats import tcl
-except ImportError:
+except (ImportError, OSError):
     pass
 
 from metaparser import MetaParser

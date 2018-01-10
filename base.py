@@ -11,7 +11,7 @@ import os
 try:
     from ats import tcl
     from ats.tcl import tclstr, TclCommand
-except ImportError:
+except (ImportError, OSError):
     pass
 
 from metaparser import MetaParser
