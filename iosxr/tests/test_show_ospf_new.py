@@ -1006,7 +1006,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                         {'instance': 
                             {'1': 
                                 {'areas': 
-                                    {'0.0.0.0': 
+                                    {'0.0.0.1': 
                                         {'virtual_links': 
                                             {'0.0.0.0 4.4.4.4': 
                                                 {'neighbors': 
@@ -1034,9 +1034,8 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                                             'last_retrans_max_scan_length': 0,
                                                             'last_retrans_max_scan_time_msec': 0,
                                                             'last_retrans_scan_length': 0,
-                                                            'last_retrans_scan_time_msec': 0}}}}}},
-                                    '0.0.0.1': 
-                                        {'interfaces': 
+                                                            'last_retrans_scan_time_msec': 0}}}}},
+                                        'interfaces': 
                                             {'GigabitEthernet0/0/0/1': 
                                                 {'neighbors': 
                                                     {'3.3.3.3': 
@@ -1094,61 +1093,6 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                                             'last_retrans_scan_time_msec': 0}}}}}}},
                                 'total_neighbor_count': 3}}}}}}}
 
-    golden_output2 = {'execute.return_value': '''
-        RP/0/0/CPU0:R2_ospf_xr#show ospf vrf all-inclusive neighbor detail (including virtual-link)
-        Tue Dec 12 20:21:16.846 UTC
-
-        * Indicates MADJ interface
-        # Indicates Neighbor awaiting BFD session up
-
-        Neighbors for OSPF 1
-
-         Neighbor 4.4.4.4, interface address 20.2.4.4
-            In the area 0 via interface OSPF_VL0 
-            Neighbor priority is 1, State is FULL, 7 state changes
-            DR is 0.0.0.0 BDR is 0.0.0.0
-            Options is 0x72  
-            LLS Options is 0x1 (LR)
-            Neighbor is up for 04:58:24
-            Number of DBD retrans during last exchange 0
-            Index 1/3, retransmission queue length 0, number of retransmission 0
-            First 0(0)/0(0) Next 0(0)/0(0)
-            Last retransmission scan length is 0, maximum is 0
-            Last retransmission scan time is 0 msec, maximum is 0 msec
-            LS Ack list: NSR-sync pending 0, high water mark 0
-
-         Neighbor 3.3.3.3, interface address 20.2.3.3
-            In the area 1 via interface GigabitEthernet0/0/0/1 
-            Neighbor priority is 1, State is FULL, 6 state changes
-            DR is 20.2.3.3 BDR is 20.2.3.2
-            Options is 0x42  
-            Dead timer due in 00:00:31
-            Neighbor is up for 05:00:13
-            Number of DBD retrans during last exchange 0
-            Index 2/2, retransmission queue length 0, number of retransmission 2
-            First 0(0)/0(0) Next 0(0)/0(0)
-            Last retransmission scan length is 1, maximum is 1
-            Last retransmission scan time is 0 msec, maximum is 0 msec
-            LS Ack list: NSR-sync pending 0, high water mark 0
-
-         Neighbor 4.4.4.4, interface address 20.2.4.4
-            In the area 1 via interface GigabitEthernet0/0/0/3 
-            Neighbor priority is 1, State is FULL, 6 state changes
-            DR is 20.2.4.4 BDR is 20.2.4.2
-            Options is 0x52  
-            LLS Options is 0x1 (LR)
-            Dead timer due in 00:00:32
-            Neighbor is up for 05:00:21
-            Number of DBD retrans during last exchange 0
-            Index 1/1, retransmission queue length 0, number of retransmission 0
-            First 0(0)/0(0) Next 0(0)/0(0)
-            Last retransmission scan length is 0, maximum is 0
-            Last retransmission scan time is 0 msec, maximum is 0 msec
-            LS Ack list: NSR-sync pending 0, high water mark 0
-
-        Total neighbor count: 3
-        '''}
-
     def test_show_ospf_vrf_all_inclusive_neighbor_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
@@ -1158,7 +1102,89 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
 
     def test_show_ospf_vrf_all_inclusive_neighbor_full2(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output2)
+
+        def mapper(key):
+            return self.outputs[key]
+
+        raw1 = '''\
+            RP/0/0/CPU0:R2_ospf_xr#show ospf vrf all-inclusive neighbor detail
+            Tue Dec 12 20:21:16.846 UTC
+
+            * Indicates MADJ interface
+            # Indicates Neighbor awaiting BFD session up
+
+            Neighbors for OSPF 1
+
+             Neighbor 4.4.4.4, interface address 20.2.4.4
+                In the area 0 via interface OSPF_VL0 
+                Neighbor priority is 1, State is FULL, 7 state changes
+                DR is 0.0.0.0 BDR is 0.0.0.0
+                Options is 0x72  
+                LLS Options is 0x1 (LR)
+                Neighbor is up for 04:58:24
+                Number of DBD retrans during last exchange 0
+                Index 1/3, retransmission queue length 0, number of retransmission 0
+                First 0(0)/0(0) Next 0(0)/0(0)
+                Last retransmission scan length is 0, maximum is 0
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+                LS Ack list: NSR-sync pending 0, high water mark 0
+
+             Neighbor 3.3.3.3, interface address 20.2.3.3
+                In the area 1 via interface GigabitEthernet0/0/0/1 
+                Neighbor priority is 1, State is FULL, 6 state changes
+                DR is 20.2.3.3 BDR is 20.2.3.2
+                Options is 0x42  
+                Dead timer due in 00:00:31
+                Neighbor is up for 05:00:13
+                Number of DBD retrans during last exchange 0
+                Index 2/2, retransmission queue length 0, number of retransmission 2
+                First 0(0)/0(0) Next 0(0)/0(0)
+                Last retransmission scan length is 1, maximum is 1
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+                LS Ack list: NSR-sync pending 0, high water mark 0
+
+             Neighbor 4.4.4.4, interface address 20.2.4.4
+                In the area 1 via interface GigabitEthernet0/0/0/3 
+                Neighbor priority is 1, State is FULL, 6 state changes
+                DR is 20.2.4.4 BDR is 20.2.4.2
+                Options is 0x52  
+                LLS Options is 0x1 (LR)
+                Dead timer due in 00:00:32
+                Neighbor is up for 05:00:21
+                Number of DBD retrans during last exchange 0
+                Index 1/1, retransmission queue length 0, number of retransmission 0
+                First 0(0)/0(0) Next 0(0)/0(0)
+                Last retransmission scan length is 0, maximum is 0
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+                LS Ack list: NSR-sync pending 0, high water mark 0
+
+            Total neighbor count: 3
+        '''
+
+        raw2 = '''\
+            RP/0/0/CPU0:R2_ospf_xr#show ospf vrf all-inclusive virtual-links 
+            Fri Nov  3 01:25:44.845 UTC
+
+            Virtual Links for OSPF 1
+
+            Virtual Link OSPF_VL0 to router 4.4.4.4 is up
+              
+              DoNotAge LSA not allowed Run as demand circuit (Number of DCbitless LSA is 1).
+              Transit area 1, via interface GigabitEthernet0/0/0/3, Cost of using 65535
+              Transmit Delay is 5 sec, State POINT_TO_POINT,
+              Non-Stop Forwarding (NSF) enabled, last NSF restart 00:18:16 ago
+              Timer intervals configured, Hello 4, Dead 16, Wait 16, Retransmit 44
+                Hello due in 00:00:03:179
+              Clear text authentication enabled
+            '''
+
+        self.outputs = {}
+        self.outputs['show ospf vrf all-inclusive neighbor detail'] = raw1
+        self.outputs['show ospf vrf all-inclusive virtual-links'] = raw2
+
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+        
         obj = ShowOspfVrfAllInclusiveNeighborDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)

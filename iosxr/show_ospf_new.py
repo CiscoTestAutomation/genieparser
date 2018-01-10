@@ -833,10 +833,36 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
 
                 # Determine if 'interface' or 'virtual_link'
                 # Note: This show command does not have output for 'sham-links'
-                if re.search('(?P<ignore>(\S+))\_VL(?P<num>(\d+))', interface):
+                if re.search('VL', interface):
                     # Set values for dict
                     intf_type = 'virtual_links'
                     intf_name = area + ' ' + neighbor
+                    vl_transit_area_id = None
+                    
+                    # Get interface name
+                    n = re.match('(?P<ignore>\S+)_VL(?P<num>(\d+))', interface)
+                    if n:
+                        intf_type = 'virtual_links'
+                        name = 'VL' + str(n.groupdict()['num'])
+
+                    # Execute 'show ospf vrf all-inclusive virtual-links' to get the vl_transit_area_id
+                    obj = ShowOspfVrfAllInclusiveVirtualLinks(device=self.device)
+                    vl_out = obj.parse()
+
+                    for vl_vrf in vl_out['vrf']:
+                        for vl_af in vl_out['vrf'][vl_vrf]['address_family']:
+                            for vl_inst in vl_out['vrf'][vl_vrf]['address_family'][vl_af]['instance']:
+                                for vl_area in vl_out['vrf'][vl_vrf]['address_family'][vl_af]['instance'][vl_inst]['areas']:
+                                    for vl in vl_out['vrf'][vl_vrf]['address_family'][vl_af]['instance'][vl_inst]['areas'][vl_area]['virtual_links']:
+                                        vl_name = vl_out['vrf'][vl_vrf]['address_family'][vl_af]['instance'][vl_inst]['areas'][vl_area]['virtual_links'][vl]['name']
+                                        if vl_name == name:
+                                            vl_transit_area_id = vl_out['vrf'][vl_vrf]['address_family'][vl_af]['instance'][vl_inst]['areas'][vl_area]['virtual_links'][vl]['transit_area_id']
+                                            break
+
+                    # Change the area to transit_area_id
+                    if vl_transit_area_id is not None:
+                        area = vl_transit_area_id
+
                 else:
                     # Set values for dict
                     intf_type = 'interfaces'
