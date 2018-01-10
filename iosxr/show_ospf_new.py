@@ -312,15 +312,7 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
             if m:
                 ip_address = str(m.groupdict()['address'])
                 area = str(IPAddress(str(m.groupdict()['area'])))
-                if 'areas' not in ret_dict['vrf'][vrf]['address_family']\
-                        [af]['instance'][instance]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'] = {}
-                if area not in ret_dict['vrf'][vrf]['address_family'][af]\
-                        ['instance'][instance]['areas']:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'][area] = {}
-                    continue
+                continue
 
             # Process ID 1, Router ID 3.3.3.3, Network Type POINT_TO_POINT
             # Process ID 1, Router ID 3.3.3.3, Network Type BROADCAST, Cost: 1
@@ -360,7 +352,7 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
 
                     if vl_transit_area_id is not None:
                         intf_name = vl_transit_area_id + ' ' + router_id
-
+                        area = vl_transit_area_id
                 elif intf_type == 'sham_links':
                     # Init
                     sl_local_id = None
@@ -412,6 +404,14 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                         intf_name = sl_local_id + ' ' + sl_remote_id
 
                 # Build dictionary
+                if 'areas' not in ret_dict['vrf'][vrf]['address_family']\
+                        [af]['instance'][instance]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'] = {}
+                if area not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area] = {}
                 if intf_type not in ret_dict['vrf'][vrf]['address_family']\
                         [af]['instance'][instance]['areas'][area]:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\

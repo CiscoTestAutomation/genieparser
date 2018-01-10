@@ -395,51 +395,7 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                 'line_protocol': True,
                                                 'name': 'Loopback0',
                                                 'process_id': '1',
-                                                'router_id': '2.2.2.2'}},
-                                        'virtual_links': 
-                                            {'0.0.0.1 2.2.2.2': 
-                                                {'bfd': 
-                                                    {'enable': False},
-                                                'cost': 1,
-                                                'dead_interval': 40,
-                                                'demand_circuit': True,
-                                                'donotage_lsa': False,
-                                                'enable': False,
-                                                'flood_queue_length': 0,
-                                                'hello_timer': '00:00:01:281',
-                                                'hello_interval': 10,
-                                                'high_water_mark': 20,
-                                                'index': '4/7',
-                                                'interface_type': 'virtual-link',
-                                                'ip_address': '0.0.0.0/0',
-                                                'last_flood_scan_length': 7,
-                                                'last_flood_scan_time_msec': 0,
-                                                'line_protocol': True,
-                                                'ls_ack_list': 'current',
-                                                'ls_ack_list_length': 0,
-                                                'max_flood_scan_length': 7,
-                                                'max_flood_scan_time_msec': 0,
-                                                'max_pkt_sz': 1500,
-                                                'mtu': 0,
-                                                'name': 'VL0',
-                                                'next': '0(0)/0(0)',
-                                                'passive': False,
-                                                'process_id': '1',
-                                                'retransmit_interval': 5,
-                                                'router_id': '2.2.2.2',
-                                                'state': 'point-to-point',
-                                                'transmit_delay': 1,
-                                                'wait_interval': 40,
-                                                'total_dcbitless_lsa': 7,
-                                                'neighbors': 
-                                                    {'4.4.4.4': {},
-                                                    },
-                                                'statistics': 
-                                                    {'adj_nbr_count': 1,
-                                                    'nbr_count': 1,
-                                                    'num_nbrs_suppress_hello': 1,
-                                                    'multi_area_intf_count': 0,
-                                                    }}}},
+                                                'router_id': '2.2.2.2'}}},
                                     '0.0.0.1': 
                                         {'interfaces': 
                                             {'GigabitEthernet0/0/0/1': 
@@ -549,7 +505,51 @@ class test_show_ospf_vrf_all_inclusive_interface(unittest.TestCase):
                                                     'line_protocol': True,
                                                     'name': 'Loopback1',
                                                     'process_id': '1',
-                                                    'router_id': '2.2.2.2'}}}}}}}}}}}
+                                                    'router_id': '2.2.2.2'}},
+                                        'virtual_links': 
+                                            {'0.0.0.1 2.2.2.2': 
+                                                {'bfd': 
+                                                    {'enable': False},
+                                                'cost': 1,
+                                                'dead_interval': 40,
+                                                'demand_circuit': True,
+                                                'donotage_lsa': False,
+                                                'enable': False,
+                                                'flood_queue_length': 0,
+                                                'hello_timer': '00:00:01:281',
+                                                'hello_interval': 10,
+                                                'high_water_mark': 20,
+                                                'index': '4/7',
+                                                'interface_type': 'virtual-link',
+                                                'ip_address': '0.0.0.0/0',
+                                                'last_flood_scan_length': 7,
+                                                'last_flood_scan_time_msec': 0,
+                                                'line_protocol': True,
+                                                'ls_ack_list': 'current',
+                                                'ls_ack_list_length': 0,
+                                                'max_flood_scan_length': 7,
+                                                'max_flood_scan_time_msec': 0,
+                                                'max_pkt_sz': 1500,
+                                                'mtu': 0,
+                                                'name': 'VL0',
+                                                'next': '0(0)/0(0)',
+                                                'passive': False,
+                                                'process_id': '1',
+                                                'retransmit_interval': 5,
+                                                'router_id': '2.2.2.2',
+                                                'state': 'point-to-point',
+                                                'transmit_delay': 1,
+                                                'wait_interval': 40,
+                                                'total_dcbitless_lsa': 7,
+                                                'neighbors': 
+                                                    {'4.4.4.4': {},
+                                                    },
+                                                'statistics': 
+                                                    {'adj_nbr_count': 1,
+                                                    'nbr_count': 1,
+                                                    'num_nbrs_suppress_hello': 1,
+                                                    'multi_area_intf_count': 0,
+                                                    }}}}}}}}}}}}
 
     def test_show_ospf_vrf_all_inclusive_interface_full1(self):
         
@@ -2085,7 +2085,7 @@ class test_show_ospf_vrf_all_inclusive_virtual_links(unittest.TestCase):
                                 {'areas': 
                                     {'0.0.0.1': 
                                         {'virtual_links': 
-                                            {'0.0.0.1 4.4.4.4': 
+                                            {'0.0.0.1 2.2.2.2': 
                                                 {'authentication': 
                                                     {'auth_trailer_key': 
                                                         {'crypto_algorithm': 'simple'}},
@@ -2103,7 +2103,7 @@ class test_show_ospf_vrf_all_inclusive_virtual_links(unittest.TestCase):
                                                     {'enable': True,
                                                     'last_restart': '00:18:16'},
                                                 'retransmit_interval': 44,
-                                                'router_id': '4.4.4.4',
+                                                'router_id': '2.2.2.2',
                                                 'state': 'point-to-point,',
                                                 'transit_area_id': '0.0.0.1',
                                                 'transmit_delay': 5,
@@ -2138,7 +2138,7 @@ class test_show_ospf_vrf_all_inclusive_virtual_links(unittest.TestCase):
 
         Virtual Links for OSPF 1
 
-        Virtual Link OSPF_VL0 to router 4.4.4.4 is up
+        Virtual Link OSPF_VL0 to router 2.2.2.2 is up
           
           DoNotAge LSA not allowed Run as demand circuit (Number of DCbitless LSA is 1).
           Transit area 1, via interface GigabitEthernet0/0/0/3, Cost of using 65535
