@@ -32,9 +32,10 @@ class ShowStaticTopologyDetailSchema(MetaParser):
                                            Optional('tag'): int,
                                            Optional('path_version'): int,
                                            Optional('path_status'): str,
-                                           Optional('metrics'): str,
-                                           Optional('object'): str,
+                                           Optional('metrics'): int,
+                                           Optional('track'): int,
                                            Optional('explicit_path'): str,
+                                           Optional('preference'): int,
                                        },
                                    },
                                    Optional('next_hop_list'): {
@@ -48,9 +49,10 @@ class ShowStaticTopologyDetailSchema(MetaParser):
                                            Optional('tag'): int,
                                            Optional('path_version'): int,
                                            Optional('path_status'): str,
-                                           Optional('metrics'): str,
-                                           Optional('object'): str,
+                                           Optional('metrics'): int,
+                                           Optional('track'): int,
                                            Optional('explicit_path'): str,
+                                           Optional('preference'): int,
                                        },
                                    },
                                },
@@ -143,12 +145,15 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                     index += 1
 
                 if m.groupdict()['interface'] and 'none' not in m.groupdict()['interface'].lower() :
-                    interface = m.groupdict()['interface']
+                    interface = m.groupdict()['interface'].replace('_','/')
                 if m.groupdict()['nexthop'] and 'none' not in m.groupdict()['nexthop'].lower():
                     next_hop = m.groupdict()['nexthop']
 
                 if m.groupdict()['metrics']:
-                    metrics = m.groupdict()['metrics']
+                    metrics_value = m.groupdict()['metrics'].strip('[').strip(']').split('/')
+                    metrics = int(metrics_value[4])
+                    prefernce = int(metrics_value[2])
+
                 if m.groupdict()['object'] and 'none' not in m.groupdict()['object'].lower() :
                     object = m.groupdict()['object']
 
@@ -177,15 +182,18 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                             ['next_hop']['outgoing_interface'][interface] = {}
                     result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
                         ['next_hop']['outgoing_interface'][interface]['outgoing_interface'] = interface
+
                     result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
                         ['next_hop']['outgoing_interface'][interface]['metrics'] = metrics
+                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                        ['next_hop']['outgoing_interface'][interface]['preference'] = prefernce
 
                     if m.groupdict()['explicit_path']and 'none' not in m.groupdict()['explicit_path'].lower():
                         result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
                             ['next_hop']['outgoing_interface'][interface]['explicit_path'] = explicit_path
                     if m.groupdict()['object'] and 'none' not in m.groupdict()['object'].lower():
                         result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
-                            ['next_hop']['outgoing_interface'][interface]['object'] = object
+                            ['next_hop']['outgoing_interface'][interface]['track'] = int(object)
 
 
                 else:
@@ -207,13 +215,15 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
 
                     result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
                         ['next_hop_list'][index]['metrics'] = metrics
+                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                        ['next_hop_list'][index]['preference'] = prefernce
 
                     if m.groupdict()['explicit_path'] and 'none' not in m.groupdict()['explicit_path'].lower():
                         result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
                             ['next_hop_list'][index]['explicit_path'] = explicit_path
                     if m.groupdict()['object'] and 'none' not in m.groupdict()['object'].lower():
                         result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                            ['next_hop_list'][index]['object'] = object
+                            ['next_hop_list'][index]['track'] = int(object)
                 continue
 
             # Path is installed into RIB at Dec  7 21:52:00.853
