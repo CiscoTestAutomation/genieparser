@@ -836,7 +836,6 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                 if re.search('VL', interface):
                     # Set values for dict
                     intf_type = 'virtual_links'
-                    intf_name = area + ' ' + neighbor
                     vl_transit_area_id = None
                     
                     # Get interface name
@@ -862,6 +861,7 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                     # Change the area to transit_area_id
                     if vl_transit_area_id is not None:
                         area = vl_transit_area_id
+                        intf_name = area + ' ' + neighbor
 
                 else:
                     # Set values for dict

@@ -1008,7 +1008,7 @@ class test_show_ospf_vrf_all_inclusive_neighbor_detail(unittest.TestCase):
                                 {'areas': 
                                     {'0.0.0.1': 
                                         {'virtual_links': 
-                                            {'0.0.0.0 4.4.4.4': 
+                                            {'0.0.0.1 4.4.4.4': 
                                                 {'neighbors': 
                                                     {'4.4.4.4': 
                                                         {'address': '20.2.4.4',

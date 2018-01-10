@@ -77,6 +77,18 @@ class test_show_protocols_afi_all_all(unittest.TestCase):
                                                         'intra_area': 112}}},
                                             'single_value': 
                                                 {'all': 110}},
+                                        'redistribution': 
+                                            {'bgp': 
+                                                {'bgp_id': 100,
+                                                'metric': 111},
+                                            'connected': 
+                                                {'enabled': True},
+                                            'isis': 
+                                                {'isis_pid': '10',
+                                                'metric': 3333},
+                                            'static': 
+                                                {'enabled': True,
+                                                'metric': 10}},
                                         'router_id': '3.3.3.3'}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
@@ -107,7 +119,10 @@ class test_show_protocols_afi_all_all(unittest.TestCase):
           Distance: IntraArea 112 InterArea 113 External/NSSA 114
           Non-Stop Forwarding: Disabled
           Redistribution:
-            None
+            connected
+            static with metric 10
+            bgp 100 with metric 111
+            isis 10 with metric 3333
           Area 0
             MPLS/TE enabled
             Loopback0

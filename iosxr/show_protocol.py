@@ -44,6 +44,19 @@ class ShowProtocolsAfiAllAllSchema(MetaParser):
                                             },
                                         'router_id': str,
                                         'nsf': bool,
+                                        Optional('redistribution'): 
+                                            {Optional('connected'): 
+                                                {'enabled': bool,
+                                                Optional('metric'): int},
+                                            Optional('static'): 
+                                                {'enabled': bool,
+                                                Optional('metric'): int},
+                                            Optional('bgp'): 
+                                                {'bgp_id': int,
+                                                Optional('metric'): int},
+                                            Optional('isis'): 
+                                                {'isis_pid': str,
+                                                Optional('metric'): int}},
                                         'areas': 
                                             {Any(): 
                                                 {'interfaces': list,
@@ -191,8 +204,46 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
                     continue
 
             # Redistribution:
-            # None
-            
+            #   connected 
+            #   connected with metric 10
+            #   static
+            #   static with metric 10
+            p14 = re.compile(r'^(?P<type>(connected|static))(?: +with +metric'
+                               ' +(?P<metric>(\d+)))?$')
+            m = p14.match(line)
+            if m:
+                the_type = str(m.groupdict()['type'])
+                if 'redistribution' not in ospf_dict:
+                    ospf_dict['redistribution'] = {}
+                if the_type not in ospf_dict['redistribution']:
+                    ospf_dict['redistribution'][the_type] = {}
+                ospf_dict['redistribution'][the_type]['enabled'] = True
+                if m.groupdict()['metric']:
+                    ospf_dict['redistribution'][the_type]['metric'] = \
+                        int(m.groupdict()['metric'])
+                    continue
+
+            # Redistribution:
+            #   bgp 100 with metric 111
+            #   isis 10 with metric 3333
+            p15 = re.compile(r'^(?P<prot>(bgp|isis)) +(?P<pid>(\d+))(?: +with'
+                               ' +metric +(?P<metric>(\d+)))?$')
+            m = p15.match(line)
+            if m:
+                prot = str(m.groupdict()['prot'])
+                if prot not in ospf_dict['redistribution']:
+                    ospf_dict['redistribution'][prot] = {}
+                if prot == 'bgp':
+                    ospf_dict['redistribution'][prot]['bgp_id'] = \
+                        int(m.groupdict()['pid'])
+                else:
+                    ospf_dict['redistribution'][prot]['isis_pid'] = \
+                        str(m.groupdict()['pid'])
+                if m.groupdict()['metric']:
+                    ospf_dict['redistribution'][prot]['metric'] = \
+                        int(m.groupdict()['metric'])
+                continue
+
             # Area 0
             p5 = re.compile(r'^Area +(?P<area>(\d+))$')
             m = p5.match(line)
