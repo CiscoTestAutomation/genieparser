@@ -34,7 +34,7 @@ class ShowVersionSchema(MetaParser):
                     'hostname': str,
                     'uptime': str,
                     Optional('uptime_this_cp'): str,
-                    'system_restarted_at': str,
+                    Optional('system_restarted_at'): str,
                     'system_image': str,
                     'last_reload_reason': str,
                     Optional('license_type'): str,
@@ -262,6 +262,8 @@ class ShowVersion(ShowVersionSchema):
                     version_dict['version']['rtr_type'] = rtr_type = 'Edison'
                 elif 'ASR1' in version_dict['version']['chassis']:
                     version_dict['version']['rtr_type'] = rtr_type = 'ASR1K'
+                elif 'CSR1000V' in version_dict['version']['chassis']:
+                    version_dict['version']['rtr_type'] = rtr_type = 'CSR1000V'
                 continue
 
             # chassis_sn
@@ -596,7 +598,7 @@ class ShowRedundancySchema(MetaParser):
                         'curr_sw_state': str,
                         'uptime_in_curr_state': str,
                         'image_ver': str,
-                        'boot': str,
+                        Optional('boot'): str,
                         Optional('config_file'): str,
                         Optional('bootldr'): str,
                         'config_register': str,
@@ -1244,6 +1246,11 @@ class ShowPlatform(ShowPlatformSchema):
                             lc_type = 'lc'
                         elif 'ASR1000-RP' in name:
                             lc_type = 'rp'
+                        elif 'CSR1000V' in name:
+                            if 'R' in slot:
+                                lc_type = 'rp'
+                            else:
+                                lc_type = 'other'
                         else:
                             lc_type = 'other'
 

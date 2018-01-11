@@ -839,6 +839,8 @@ class ShowRedundancySchema(MetaParser):
                  'node_uptime': str,
                  'node_uptime_timestamp': str,
                  'node_uptime_in_seconds': int,
+                 Optional('standby_node'): str,
+                 Optional('backup_process'): str,
                  Optional('last_switchover_timepstamp'): str,
                  Optional('time_since_last_switchover'): str,
                  Optional('standby_node_timestamp'): str,
@@ -885,14 +887,24 @@ class ShowRedundancy(ShowRedundancySchema):
                     str(m.groupdict()['role'])
                 continue
 
-            #Node Redundancy Partner (0/RSP1/CPU0) is in STANDBY role
-            p3_1 =  re.compile(r'\s*(Node|Process) *Redundancy *Partner'
-                                ' *\(([a-zA-Z0-9\/]+)\) *is *in'
+            # Node Redundancy Partner (0/RSP1/CPU0) is in STANDBY role
+            p3_1 =  re.compile(r'\s*Node *Redundancy *Partner'
+                                ' *\((?P<node>[a-zA-Z0-9\/]+)\) *is *in'
                                 ' *(?P<role>[a-zA-Z]+) *role$')
             m = p3_1.match(line)
             if m:
-                redundancy_dict['node'][node]['role'] = \
-                    str(m.groupdict()['role'])
+                if 'standby' in str(m.groupdict()['role']).lower():
+                    redundancy_dict['node'][node]['standby_node'] = str(m.groupdict()['node'])
+                continue
+
+            # Process Redundancy Partner (0/RSP0/CPU0) is in BACKUP role
+            p3_3 =  re.compile(r'\s*Process *Redundancy *Partner'
+                                ' *\((?P<node>[a-zA-Z0-9\/]+)\) *is *in'
+                                ' *(?P<role>[a-zA-Z]+) *role$')
+            m = p3_3.match(line)
+            if m:
+                if 'backup' in str(m.groupdict()['role']).lower():
+                    redundancy_dict['node'][node]['backup_process'] = str(m.groupdict()['node'])
                 continue
 
             # Standby node in 0/RSP1/CPU0 is ready

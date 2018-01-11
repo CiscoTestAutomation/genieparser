@@ -437,7 +437,7 @@ class ShowInventory(ShowInventorySchema):
         inventory_dict = {}
         for line in out.splitlines():
             line = line.rstrip()
-            p1 = re.compile(r'^\s*NAME: +\"(?P<name>[a-zA-Z\s]+)(?P<slot>[0-9]+)?\"\, +DESCR: +\"(?P<description>[a-zA-Z0-9\-\/\s()]+)\"$')
+            p1 = re.compile(r'^\s*NAME: +\"(?P<name>[a-zA-Z\s]+)(?P<slot>[0-9]+)?\"\, +DESCR: +\"(?P<description>[\w\+\-\/\s\(\)]+)\"$')
             m = p1.match(line)
             if m:
                 name = m.groupdict()['name']
