@@ -194,10 +194,10 @@ class ShowInterfaces(ShowInterfacesSchema):
                     interface_dict[interface]['port_channel']\
                         ['port_channel_member'] = False
 
-                if enabled and ('down' in enabled or 'delete' in enabled):
-                    interface_dict[interface]['enabled'] = False
-                elif enabled and 'up' in enabled:
+                if enabled and 'up' in enabled:
                     interface_dict[interface]['enabled'] = True
+                else:
+                    interface_dict[interface]['enabled'] = False
 
                 if line_protocol:
                     interface_dict[interface]\
