@@ -2133,9 +2133,9 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
                 continue
 
             # Transit area 1, via interface GigabitEthernet0/0/0/3, Cost of using 65535
-            p3_2 = re.compile(r'^Transit +area +(?P<area>(\S+)), +via +interface'
-                               ' +(?P<intf>(\S+)), +Cost +of +using'
-                               ' +(?P<cost>(\d+))$')
+            p3_2 = re.compile(r'^Transit +area +(?P<area>(\S+)),'
+                                '(?: +via +interface +(?P<intf>(\S+)),)?'
+                                ' +Cost +of +using +(?P<cost>(\d+))$')
             m = p3_2.match(line)
             if m:
                 area = str(IPAddress(str(m.groupdict()['area'])))
@@ -2170,7 +2170,8 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
                 sub_dict['transit_area_id'] = area
                 sub_dict['demand_circuit'] = False
                 sub_dict['cost'] = int(m.groupdict()['cost'])
-                sub_dict['interface'] = str(m.groupdict()['intf'])
+                if m.groupdict()['intf']:
+                    sub_dict['interface'] = str(m.groupdict()['intf'])
 
                 # Set previously parsed values
                 try:
@@ -2195,7 +2196,10 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
             p5 = re.compile(r'^Run +as +demand +circuit$')
             m = p5.match(line)
             if m:
-                sub_dict['demand_circuit'] = True
+                if link_type == 'sham_links':
+                    sub_dict['demand_circuit'] = True
+                else:
+                    demand_circuit = True
                 continue
 
             # DoNotAge LSA not allowed (Number of DCbitless LSA is 1)., Cost of using 111
@@ -2254,13 +2258,17 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
                 continue          
           
             # Non-Stop Forwarding (NSF) enabled, last NSF restart 00:18:16 ago
-            p10 = re.compile(r'^Non-Stop +Forwarding +\(NSF\) +enabled,'
-                              ' +last +NSF +restart +(?P<restart>(\S+)) +ago$')
+            p10 = re.compile(r'^Non-Stop +Forwarding +\(NSF\)'
+                              ' +(?P<state>(enabled|disabled)), +last +NSF'
+                              ' +restart +(?P<restart>(\S+)) +ago$')
             m = p10.match(line)
             if m:
                 if 'nsf' not in sub_dict:
                     sub_dict['nsf'] = {}
-                sub_dict['nsf']['enable'] = True
+                if 'enabled' in m.groupdict()['state']:
+                    sub_dict['nsf']['enable'] = True
+                else:
+                    sub_dict['nsf']['enable'] = False
                 sub_dict['nsf']['last_restart'] = str(m.groupdict()['restart'])
                 continue
             
@@ -2325,9 +2333,9 @@ class ShowOspfVrfAllInclusiveShamLinksSchema(MetaParser):
                                                 'state': str,
                                                 'hello_timer': str,
                                                 'demand_circuit': bool,
-                                                'dcbitless_lsa_count': int,
-                                                'donotage_lsa': str,
                                                 'if_index': int,
+                                                Optional('dcbitless_lsa_count'): int,
+                                                Optional('donotage_lsa'): str,
                                                 Optional('nsf'): 
                                                     {'enable': bool,
                                                     'last_restart': str},
@@ -2391,12 +2399,12 @@ class ShowOspfVrfAllInclusiveVirtualLinksSchema(MetaParser):
                                                 'retransmit_interval': int,
                                                 'transmit_delay': int,
                                                 'cost': int,
-                                                'interface': str,
                                                 'state': str,
-                                                'hello_timer': str,
                                                 'demand_circuit': bool,
-                                                'dcbitless_lsa_count': int,
-                                                'donotage_lsa': str,
+                                                Optional('hello_timer'): str,
+                                                Optional('interface'): str,
+                                                Optional('dcbitless_lsa_count'): int,
+                                                Optional('donotage_lsa'): str,
                                                 Optional('nsf'): 
                                                     {'enable': bool,
                                                     'last_restart': str},
@@ -2432,12 +2440,12 @@ class ShowOspfVrfAllInclusiveVirtualLinks(ShowOspfVrfAllInclusiveVirtualLinksSch
         return super().cli(cmd=cmd, link_type='virtual_links')
 
 
-# =============================================
-# Schema for 'show ospf mpls traffic-eng links'
-# =============================================
-class ShowOspfMplsTrafficEngLinksSchema(MetaParser):
+# ============================================
+# Schema for 'show ospf mpls traffic-eng link'
+# ============================================
+class ShowOspfMplsTrafficEngLinkSchema(MetaParser):
 
-    ''' Schema for 'show ospf mpls traffic-eng links' '''
+    ''' Schema for 'show ospf mpls traffic-eng link' '''
 
     schema = {
         'vrf': 
@@ -2496,17 +2504,17 @@ class ShowOspfMplsTrafficEngLinksSchema(MetaParser):
         }
 
 
-# =============================================
-# Parser for 'show ospf mpls traffic-eng links'
-# =============================================
-class ShowOspfMplsTrafficEngLinks(ShowOspfMplsTrafficEngLinksSchema):
+# ============================================
+# Parser for 'show ospf mpls traffic-eng link'
+# ============================================
+class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
 
-    ''' Parser for "show ospf mpls traffic-eng links" '''
+    ''' Parser for "show ospf mpls traffic-eng link" '''
 
     def cli(self):
 
         # Execute command on device
-        out = self.device.execute('show ospf mpls traffic-eng links')
+        out = self.device.execute('show ospf mpls traffic-eng link')
         
         # Init vars
         ret_dict = {}
@@ -3045,16 +3053,24 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
 
             # Metric Type: 2 (Larger than any link state path)
-            p11 = re.compile(r'^Metric +Type: +2 +\(.*\)$')
-            m = p11.match(line)
+            # Metric Type: 2 (Larger than any link state path)
+            p11_1 = re.compile(r'^Metric +Type: +2 +\(.*\)$')
+            m = p11_1.match(line)
             if m:
                 db_topo_dict['flags'] = "E"
                 continue
 
+            # Metric Type: 1 (Comparable directly to link state metric)
+            p11_2 = re.compile(r'^Metric +Type: +1 +\(.*\)$')
+            m = p11_2.match(line)
+            if m:
+                # Do nothing
+                continue
+
             # TOS: 0
             # TOS: 0 Metric: 1
-            p12 = re.compile(r'^TOS:? +(?P<tos>(\d+))'
-                              '(?: +Metric(?:s)?: +(?P<metric>(\d+)))?$')
+            p12 = re.compile(r'^TOS:? +(?P<tos>(\d+))(?:(\s+|\t+)Metric(?:s)?:'
+                              ' +(?P<metric>(\d+)))?$')
             m = p12.match(line)
             if m:
                 if db_type == 'router':
@@ -3490,7 +3506,7 @@ class ShowOspfVrfAllInclusiveDatabaseRouterSchema(MetaParser):
                     {Any(): 
                         {'instance': 
                             {Any(): 
-                                {'areas': 
+                                {Optional('areas'): 
                                     {Any(): 
                                         {'database': 
                                             {'lsa_types': 
@@ -3582,7 +3598,7 @@ class ShowOspfVrfAllInclusiveDatabaseExternalSchema(MetaParser):
                     {Any(): 
                         {'instance': 
                             {Any(): 
-                                {'areas': 
+                                {Optional('areas'): 
                                     {Any(): 
                                         {'database': 
                                             {'lsa_types': 
@@ -3612,7 +3628,7 @@ class ShowOspfVrfAllInclusiveDatabaseExternalSchema(MetaParser):
                                                                             {Any(): 
                                                                                 {'mt_id': int,
                                                                                 'tos': int,
-                                                                                'flags': str,
+                                                                                Optional('flags'): str,
                                                                                 'metric': int,
                                                                                 'forwarding_address': str,
                                                                                 'external_route_tag': int},
@@ -3665,7 +3681,7 @@ class ShowOspfVrfAllInclusiveDatabaseNetworkSchema(MetaParser):
                     {Any(): 
                         {'instance': 
                             {Any(): 
-                                {'areas': 
+                                {Optional('areas'): 
                                     {Any(): 
                                         {'database': 
                                             {'lsa_types': 
@@ -3742,7 +3758,7 @@ class ShowOspfVrfAllInclusiveDatabaseSummarySchema(MetaParser):
                     {Any(): 
                         {'instance': 
                             {Any(): 
-                                {'areas': 
+                                {Optional('areas'): 
                                     {Any(): 
                                         {'database': 
                                             {'lsa_types': 

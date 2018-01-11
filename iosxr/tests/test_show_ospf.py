@@ -12,16 +12,16 @@ from metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyE
 
 # iosxr show_ospf
 from parser.iosxr.show_ospf import ShowOspfVrfAllInclusiveInterface,\
-                                       ShowOspfVrfAllInclusiveNeighborDetail,\
-                                       ShowOspfVrfAllInclusive,\
-                                       ShowOspfVrfAllInclusiveShamLinks,\
-                                       ShowOspfVrfAllInclusiveVirtualLinks,\
-                                       ShowOspfMplsTrafficEngLinks,\
-                                       ShowOspfVrfAllInclusiveDatabaseRouter,\
-                                       ShowOspfVrfAllInclusiveDatabaseExternal,\
-                                       ShowOspfVrfAllInclusiveDatabaseNetwork,\
-                                       ShowOspfVrfAllInclusiveDatabaseSummary,\
-                                       ShowOspfVrfAllInclusiveDatabaseOpaqueArea
+                                   ShowOspfVrfAllInclusiveNeighborDetail,\
+                                   ShowOspfVrfAllInclusive,\
+                                   ShowOspfVrfAllInclusiveShamLinks,\
+                                   ShowOspfVrfAllInclusiveVirtualLinks,\
+                                   ShowOspfMplsTrafficEngLink,\
+                                   ShowOspfVrfAllInclusiveDatabaseRouter,\
+                                   ShowOspfVrfAllInclusiveDatabaseExternal,\
+                                   ShowOspfVrfAllInclusiveDatabaseNetwork,\
+                                   ShowOspfVrfAllInclusiveDatabaseSummary,\
+                                   ShowOspfVrfAllInclusiveDatabaseOpaqueArea
 
 
 # ======================================================
@@ -2175,12 +2175,12 @@ class test_show_ospf_vrf_all_inclusive_virtual_links(unittest.TestCase):
             parsed_output = obj.parse()
 
 
-# =================================================
-#  Unit test for 'show ospf mpls traffic-eng links'
-# =================================================
-class test_show_ospf_mpls_traffic_eng_links(unittest.TestCase):
+# ================================================
+#  Unit test for 'show ospf mpls traffic-eng link'
+# ================================================
+class test_show_ospf_mpls_traffic_eng_link(unittest.TestCase):
 
-    '''Unit test for "show ospf vrf all-inclusive virtual-links" '''
+    '''Unit test for "show ospf vrf all-inclusive traffic-eng link" '''
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -2362,17 +2362,17 @@ class test_show_ospf_mpls_traffic_eng_links(unittest.TestCase):
       Area 1 MPLS TE not initialized
         '''}
 
-    def test_show_ospf_mpls_traffic_eng_links_full(self):
+    def test_show_ospf_mpls_traffic_eng_link_full(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
-        obj = ShowOspfMplsTrafficEngLinks(device=self.device)
+        obj = ShowOspfMplsTrafficEngLink(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-    def test_show_ospf_mpls_traffic_eng_links_empty(self):
+    def test_show_ospf_mpls_traffic_eng_link_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
-        obj = ShowOspfMplsTrafficEngLinks(device=self.device)
+        obj = ShowOspfMplsTrafficEngLink(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
