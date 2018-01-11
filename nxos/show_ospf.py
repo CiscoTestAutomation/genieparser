@@ -1485,7 +1485,7 @@ class ShowIpOspfShamLinksSchema(MetaParser):
                                               'cost': int,
                                               'state': str,
                                               'interface_type': str,
-                                              'hello_timer': str,
+                                              Optional('hello_timer'): str,
                                               Optional('wait_timer'): int,
                                               'statistics': {
                                                   'link_scope_lsa_count': int,
@@ -2939,7 +2939,7 @@ class ShowIpOspfDatabaseExternalDetailSchema(MetaParser):
                     {Any(): 
                         {'instance': 
                             {Any(): 
-                                {'areas': 
+                                {Optional('areas'): 
                                     {Any(): 
                                         {'database': 
                                             {'lsa_types': 
@@ -2967,7 +2967,7 @@ class ShowIpOspfDatabaseExternalDetailSchema(MetaParser):
                                                                             {Any(): 
                                                                                 {'mt_id': int,
                                                                                 'tos': int,
-                                                                                'flags': str,
+                                                                                Optional('flags'): str,
                                                                                 'metric': int,
                                                                                 'forwarding_address': str,
                                                                                 'external_route_tag': str},
@@ -3022,7 +3022,7 @@ class ShowIpOspfDatabaseNetworkDetailSchema(MetaParser):
                     {Any(): 
                         {'instance': 
                             {Any(): 
-                                {'areas': 
+                                {Optional('areas'): 
                                     {Any(): 
                                         {'database': 
                                             {'lsa_types': 
@@ -3099,7 +3099,7 @@ class ShowIpOspfDatabaseSummaryDetailSchema(MetaParser):
                     {Any(): 
                         {'instance': 
                             {Any(): 
-                                {'areas': 
+                                {Optional('areas'): 
                                     {Any(): 
                                         {'database': 
                                             {'lsa_types': 
@@ -3179,7 +3179,7 @@ class ShowIpOspfDatabaseRouterDetailSchema(MetaParser):
                     {Any(): 
                         {'instance': 
                             {Any(): 
-                                {'areas': 
+                                {Optional('areas'): 
                                     {Any(): 
                                         {'database': 
                                             {'lsa_types': 
@@ -3268,7 +3268,7 @@ class ShowIpOspfDatabaseOpaqueAreaDetailSchema(MetaParser):
                     {Any(): 
                         {'instance': 
                             {Any(): 
-                                {'areas': 
+                                {Optional('areas'): 
                                     {Any(): 
                                         {'database': 
                                             {'lsa_types': 
