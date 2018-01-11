@@ -65,8 +65,7 @@ class ShowIpOspfSchema(MetaParser):
                                         {'all': int},
                                     },
                                 Optional('bfd'): 
-                                    {'enable': bool,
-                                    'strict_mode': bool,},
+                                    {'enable': bool},
                                 'auto_cost': 
                                     {'enable': bool,
                                     'reference_bandwidth': int,
@@ -112,7 +111,15 @@ class ShowIpOspfSchema(MetaParser):
                                     {'max_lsa': int},
                                 Optional('stub_router'): 
                                     {'always': 
-                                        {'always': bool},
+                                        {'always': bool,
+                                        Optional('include_stub'): bool,
+                                        Optional('summary_lsa'): bool,
+                                        Optional('external_lsa'): bool},
+                                    Optional('on_startup'): 
+                                        {'on_startup': int,
+                                        Optional('include_stub'): bool,
+                                        Optional('summary_lsa'): bool,
+                                        Optional('external_lsa'): bool},
                                     },
                                 'enable': bool,
                                 Optional('discard_route_external'): bool,
@@ -263,11 +270,8 @@ class ShowIpOspf(ShowIpOspfSchema):
                              ' +(?P<status>\w+)$')
             m = p6.match(line)
             if m:
-                try:
-                    sub_dict['graceful_restart']['ietf']['exist_status'] = \
-                        m.groupdict()['status'].lower()
-                except:
-                    pass
+                sub_dict['graceful_restart']['ietf']['exist_status'] = \
+                    m.groupdict()['status'].lower()
                 continue
 
             # Supports only single TOS(TOS0) routes
@@ -303,7 +307,6 @@ class ShowIpOspf(ShowIpOspfSchema):
                 if 'bfd' not in sub_dict:
                     sub_dict['bfd'] = {}
                 sub_dict['bfd']['enable'] = True
-                sub_dict['bfd']['strict_mode'] = True
                 continue
 
             # Reference Bandwidth is 40000 Mbps
@@ -1298,6 +1301,7 @@ class ShowIpOspfLinksParser(MetaParser):
                 #    address    
                 try:
                     sub_dict['neighbors'][nbr_router_id]['address'] = remote_addr
+                    del remote_addr
                 except:
                     pass
                 continue
@@ -1643,6 +1647,7 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                 {'name': str,
                                                 'bfd': 
                                                     {'enable': bool},
+                                                'backbone_area_id': str,
                                                 'enable': bool,
                                                 'line_protocol': str,
                                                 'ip_address': str,
@@ -1744,11 +1749,10 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     pattern = '(?P<link>\w+)-(?P<area_id>[\w\.\:]+)-(?P<router_id>[\w\.\:]+)'
                     n = re.match(pattern, interface)
                     link = str(n.groupdict()['link'])
-                    area_id = str(n.groupdict()['area_id'])
+                    backbone_area_id = str(n.groupdict()['area_id'])
                     router_id = str(n.groupdict()['router_id'])
                     # Set values for dict
                     intf_type = 'virtual_links'
-                    intf_name = area_id + ' ' + router_id
                 else:
                     # Set values for dict
                     intf_type = 'interfaces'
@@ -1780,6 +1784,10 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 instance = str(m.groupdict()['pid'])
                 vrf = str(m.groupdict()['vrf'])
                 area = str(m.groupdict()['area'])
+
+                if re.search('VL', interface):
+                    intf_name = area + ' ' + router_id
+
                 if 'vrf' not in ret_dict:
                     ret_dict['vrf'] = {}
                 if vrf not in ret_dict['vrf']:
@@ -1816,17 +1824,34 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                             [intf_type][intf_name]
                 sub_dict['bfd'] = {}
                 sub_dict['bfd']['enable'] = False
+                sub_dict['if_cfg'] = False
 
                 # Set all other values
                 try:
                     sub_dict['name'] = interface
-                    sub_dict['enable'] = bool_dict[enable]
-                    sub_dict['line_protocol'] = line_protocol
-                    sub_dict['ip_address'] = ip_address
-                    sub_dict['if_cfg'] = False
+                    del interface
                 except:
                     pass
-                    continue
+                try:
+                    sub_dict['enable'] = bool_dict[enable]
+                except:
+                    pass
+                try:
+                    sub_dict['line_protocol'] = line_protocol
+                    del line_protocol
+                except:
+                    pass
+                try:
+                    sub_dict['ip_address'] = ip_address
+                    del ip_address
+                except:
+                    pass
+                try:
+                    sub_dict['backbone_area_id'] = backbone_area_id
+                    del backbone_area_id
+                except:
+                    pass
+                continue
 
             # Enabled by interface configuration
             p4 = re.compile(r'^Enabled +by +interface +configuration$')
@@ -2466,18 +2491,22 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 try:
                     # Set previously parsed values
                     header_dict['age'] = age
+                    del age
                 except:
                     pass
                 try:
                     header_dict['option'] = option
+                    del option
                 except:
                     pass
                 try:
                     header_dict['option_desc'] = option_desc
+                    del option_desc
                 except:
                     pass
                 try:
                     header_dict['type'] = lsa_type
+                    del lsa_type
                 except:
                     pass
                 try:
@@ -2486,14 +2515,17 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                     pass
                 try:
                     header_dict['adv_router'] = adv_router
+                    del adv_router
                 except:
                     pass
                 try:
                     header_dict['opaque_type'] = opaque_type
+                    del opaque_type
                 except:
                     pass
                 try:
                     header_dict['opaque_id'] = opaque_id
+                    del opaque_id
                 except:
                     pass
 
@@ -2616,6 +2648,7 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 # Set previously parsed values
                 try:
                     db_dict['links'][link_id]['type'] = link_type
+                    del link_type
                 except:
                     pass
                 
@@ -2624,15 +2657,24 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                     db_dict['links'][link_id]['topologies'] = {}
                 if mt_id not in db_dict['links'][link_id]['topologies']:
                     db_dict['links'][link_id]['topologies'][mt_id] = {}
+                
+                # Set previously parsed values
                 try:
-                    # Set previously parsed values
                     db_dict['links'][link_id]['topologies'][mt_id]['mt_id'] = mt_id
-                    db_dict['links'][link_id]['topologies'][mt_id]['metric'] = metric
-                    db_dict['links'][link_id]['topologies'][mt_id]['tos'] = tos
-                    continue
                 except:
                     pass
-
+                try:
+                    db_dict['links'][link_id]['topologies'][mt_id]['metric'] = metric
+                    del metric
+                except:
+                    pass
+                try:
+                    db_dict['links'][link_id]['topologies'][mt_id]['tos'] = tos
+                    del tos
+                except:
+                    pass
+                continue
+                
             # (Link ID) Designated Router address: 20.6.7.6
             p19_2 = re.compile(r'^\(Link +ID\) +Designated +Router +address:'
                                 ' +(?P<link_id>(\S+))$')
@@ -2650,6 +2692,7 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 # Set previously parsed values
                 try:
                     db_dict['links'][link_id]['type'] = link_type
+                    del link_type
                 except:
                     pass
                 
@@ -2658,14 +2701,22 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                     db_dict['links'][link_id]['topologies'] = {}
                 if mt_id not in db_dict['links'][link_id]['topologies']:
                     db_dict['links'][link_id]['topologies'][mt_id] = {}
+                # Set previously parsed values
                 try:
-                    # Set previously parsed values
                     db_dict['links'][link_id]['topologies'][mt_id]['mt_id'] = mt_id
-                    db_dict['links'][link_id]['topologies'][mt_id]['metric'] = metric
-                    db_dict['links'][link_id]['topologies'][mt_id]['tos'] = tos
-                    continue
                 except:
                     pass
+                try:
+                    db_dict['links'][link_id]['topologies'][mt_id]['metric'] = metric
+                    del metric
+                except:
+                    pass
+                try:
+                    db_dict['links'][link_id]['topologies'][mt_id]['tos'] = tos
+                    del tos
+                except:
+                    pass
+                continue
 
             # (Link ID) Neighboring Router ID: 22.22.22.22
             p19_3 = re.compile(r'^\(Link +ID\) +Neighboring +Router +ID:'
@@ -2684,6 +2735,7 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 # Set previously parsed values
                 try:
                     db_dict['links'][link_id]['type'] = link_type
+                    del link_type
                 except:
                     pass
                 
@@ -2692,14 +2744,22 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                     db_dict['links'][link_id]['topologies'] = {}
                 if mt_id not in db_dict['links'][link_id]['topologies']:
                     db_dict['links'][link_id]['topologies'][mt_id] = {}
+                # Set previously parsed values
                 try:
-                    # Set previously parsed values
                     db_dict['links'][link_id]['topologies'][mt_id]['mt_id'] = mt_id
-                    db_dict['links'][link_id]['topologies'][mt_id]['metric'] = metric
-                    db_dict['links'][link_id]['topologies'][mt_id]['tos'] = tos
-                    continue
                 except:
                     pass
+                try:
+                    db_dict['links'][link_id]['topologies'][mt_id]['metric'] = metric
+                    del metric
+                except:
+                    pass
+                try:
+                    db_dict['links'][link_id]['topologies'][mt_id]['tos'] = tos
+                    del tos
+                except:
+                    pass
+                continue
 
             # (Link Data) Network Mask: 255.255.255.255
             p20_1 = re.compile(r'^\(Link +Data\) +Network +Mask:'

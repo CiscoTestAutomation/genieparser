@@ -151,8 +151,7 @@ class test_show_ip_ospf(unittest.TestCase):
                                     'enable': False,
                                     'reference_bandwidth': 40000},
                                 'bfd': 
-                                    {'enable': True,
-                                    'strict_mode': True},
+                                    {'enable': True},
                                 'database_control': 
                                     {'max_lsa': 123},
                                 'enable': True,
@@ -1023,8 +1022,9 @@ class test_show_ip_ospf_interface_vrf_all(unittest.TestCase):
                                                     'transmit_delay': 7,
                                                     'wait_interval': 13}},
                                         'virtual_links': 
-                                            {'0.0.0.0 8.8.8.8': 
-                                                {'bfd': 
+                                            {'0.0.0.1 8.8.8.8': 
+                                                {'backbone_area_id': '0.0.0.0',
+                                                'bfd': 
                                                     {'enable': False},
                                                 'cost': 1,
                                                 'dead_interval': 40,
