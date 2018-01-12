@@ -730,7 +730,13 @@ class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
                             {Any(): 
                                 {'areas' :
                                     {Any(): 
-                                        {'interfaces': 
+                                        {'mpls': 
+                                            {'ldp': 
+                                                {'autoconfig': bool,
+                                                'autoconfig_area_id': str,
+                                                'igp_sync': bool},
+                                            },
+                                        'interfaces': 
                                             {Any(): 
                                                 {'area': str,
                                                 'name': str,
@@ -870,6 +876,8 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                         ['instance'][instance]['areas']:
                     ret_dict['vrf'][vrf]['address_family']['ipv4']['instance']\
                         [instance]['areas'][area] = {}
+                area_dict = ret_dict['vrf'][vrf]['address_family']['ipv4']\
+                                ['instance'][instance]['areas'][area]
                 if intf_type not in ret_dict['vrf'][vrf]['address_family']\
                         ['ipv4']['instance'][instance]['areas'][area]:
                     ret_dict['vrf'][vrf]['address_family']['ipv4']['instance']\
@@ -882,7 +890,14 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                             ['instance'][instance]['areas'][area]\
                             [intf_type][intf_name]
 
-                # Set keys
+                # Set keys at area level
+                if 'mpls' not in area_dict:
+                    area_dict['mpls'] = {}
+                if 'ldp' not in area_dict['mpls']:
+                    area_dict['mpls']['ldp'] = {}
+                area_dict['mpls']['ldp']['autoconfig_area_id'] = area
+
+                # Set keys at interface level
                 sub_dict['area'] = area
                 sub_dict['name'] = intf_name
                 if 'mpls' not in sub_dict:
@@ -896,6 +911,11 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
             p2 = re.compile(r'^LDP +Autoconfig +not +enabled$')
             m = p2.match(line)
             if m:
+                # Set at area level
+                area_dict['mpls']['ldp']['autoconfig_area_id'] = area
+                area_dict['mpls']['ldp']['autoconfig'] = False
+                # Set at interface level
+                sub_dict['mpls']['ldp']['autoconfig_area_id'] = area
                 sub_dict['mpls']['ldp']['autoconfig'] = False
                 continue
 
@@ -903,6 +923,9 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
             p2_1 = re.compile(r'^LDP +Autoconfig +is +enabled$')
             m = p2_1.match(line)
             if m:
+                # Set at area level
+                area_dict['mpls']['ldp']['autoconfig'] = True
+                # Set at interface level
                 sub_dict['mpls']['ldp']['autoconfig'] = True
                 continue
 
@@ -910,6 +933,9 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
             p3_1 = re.compile(r'^LDP +Sync +is +enabled, +not +required$')
             m = p3_1.match(line)
             if m:
+                # Set at area level
+                area_dict['mpls']['ldp']['igp_sync'] = True
+                # Set at interface level
                 sub_dict['mpls']['ldp']['igp_sync'] = True
                 continue
 
@@ -917,6 +943,9 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
             p3_2 = re.compile(r'^LDP +Sync +not +enabled, +not +required$')
             m = p3_2.match(line)
             if m:
+                # Set at area level
+                area_dict['mpls']['ldp']['igp_sync'] = False
+                # Set at interface level
                 sub_dict['mpls']['ldp']['igp_sync'] = False
                 continue
 
@@ -2603,7 +2632,7 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
             p15 = re.compile(r'^External +Route +Tag: +(?P<tag>(\S+))$')
             m = p15.match(line)
             if m:
-                db_topo_dict['external_route_tag'] = str(m.groupdict()['tag'])            
+                db_topo_dict['external_route_tag'] = int(m.groupdict()['tag'])            
                 continue
 
             # Attached Router: 66.66.66.66
@@ -3030,7 +3059,7 @@ class ShowIpOspfDatabaseExternalDetailSchema(MetaParser):
                                                                                 Optional('flags'): str,
                                                                                 'metric': int,
                                                                                 'forwarding_address': str,
-                                                                                'external_route_tag': str},
+                                                                                'external_route_tag': int},
                                                                             },
                                                                         },
                                                                     },

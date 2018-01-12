@@ -438,7 +438,7 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {
+    golden_parsed_output1 = {
         'vrf': 
             {'VRF1': 
                 {'address_family': 
@@ -447,7 +447,12 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                             {'1': 
                                 {'areas': 
                                     {'0.0.0.1': 
-                                        {'interfaces': 
+                                        {'mpls': 
+                                            {'ldp': 
+                                                {'autoconfig': False,
+                                                'autoconfig_area_id': '0.0.0.1',
+                                                'igp_sync': False}},
+                                        'interfaces': 
                                             {'Ethernet2/1': 
                                                 {'area': '0.0.0.1',
                                                 'interface_type': 'broadcast',
@@ -487,7 +492,12 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                             {'1': 
                                 {'areas': 
                                     {'0.0.0.0': 
-                                        {'interfaces': 
+                                        {'mpls': 
+                                            {'ldp': 
+                                                {'autoconfig': False,
+                                                'autoconfig_area_id': '0.0.0.0',
+                                                'igp_sync': False}},
+                                        'interfaces': 
                                             {'Ethernet2/2': 
                                                 {'area': '0.0.0.0',
                                                 'interface_type': 'broadcast',
@@ -529,7 +539,7 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                 'name': 'loopback0',
                                                 'state': 'loopback'}}}}}}}}}}}
 
-    golden_output = {'execute.return_value': '''
+    golden_output1 = {'execute.return_value': '''
         loopback0 - Process ID 1 VRF default, area 0.0.0.0
             LDP Autoconfig not enabled
             LDP Sync not enabled, not required
@@ -560,7 +570,7 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
             State P2P, Network type P2P
         '''}
 
-    golden_parsed_output_1 = {
+    golden_parsed_output2 = {
         'vrf': 
             {'default': 
                 {'address_family': 
@@ -569,7 +579,12 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                             {'1': 
                                 {'areas': 
                                     {'0.0.0.0': 
-                                        {'interfaces': 
+                                        {'mpls':
+                                            {'ldp': 
+                                                {'autoconfig': False,
+                                                'autoconfig_area_id': '0.0.0.0',
+                                                'igp_sync': False}},
+                                        'interfaces': 
                                             {'Ethernet4/1': 
                                                 {'area': '0.0.0.0',
                                                 'interface_type': 'broadcast',
@@ -631,7 +646,7 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                 'name': 'loopback4',
                                                 'state': 'loopback'}}}}}}}}}}}
 
-    golden_output_1 = {'execute.return_value': '''
+    golden_output2 = {'execute.return_value': '''
         Ethernet4/1 - Process ID 1 VRF default, area 0.0.0.0
             LDP Autoconfig not enabled
             LDP Sync not enabled, not required
@@ -666,17 +681,17 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
 
     def test_vrf_all(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output)
+        self.device = Mock(**self.golden_output1)
         obj = ShowIpOspfMplsLdpInterface(device=self.device)
         parsed_output = obj.parse(vrf='all')
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_default_vrf(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output_1)
+        self.device = Mock(**self.golden_output2)
         obj = ShowIpOspfMplsLdpInterface(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 # ===================================================
@@ -1559,7 +1574,7 @@ class test_show_ip_ospf_database_external_detail_vrf_all(unittest.TestCase):
                                                                         {'network_mask': '255.255.255.255',
                                                                         'topologies': 
                                                                             {0: 
-                                                                                {'external_route_tag': '0',
+                                                                                {'external_route_tag': 0,
                                                                                 'flags': 'E',
                                                                                 'forwarding_address': '0.0.0.0',
                                                                                 'metric': 20,
