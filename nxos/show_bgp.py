@@ -211,8 +211,9 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                 continue
 
             # BGP Memory State               : OK
+            # BGP Memory State               : Severe Alert
             p5 = re.compile(r'^\s*BGP +Memory +State *:'
-                             ' +(?P<memory_state>[a-zA-Z]+)$')
+                             ' +(?P<memory_state>[\w\s]+)$')
             m = p5.match(line)
             if m:
                 parsed_dict['bgp_memory_state'] = \
