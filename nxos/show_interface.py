@@ -681,7 +681,10 @@ class ShowInterface(ShowInterfaceSchema):
                     interface_dict[interface]['counters']['in_unicast_pkts'] = in_unicast_pkts
                     interface_dict[interface]['counters']['in_multicast_pkts'] = in_multicast_pkts
                     interface_dict[interface]['counters']['in_broadcast_pkts'] = in_broadcast_pkts
-                    interface_dict[interface]['counters']['last_clear'] = last_clear
+                    try:
+                        interface_dict[interface]['counters']['last_clear'] = last_clear
+                    except:
+                        pass
                     continue
                     
 
