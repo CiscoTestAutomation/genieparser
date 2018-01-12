@@ -51,7 +51,7 @@ class test_show_ip_static_route(unittest.TestCase):
     '''
 }
     golden_parsed_output_1 = {
-        'vrfs':{
+        'vrf':{
             'default':{
                 'address_family': {
                     'ipv4': {
@@ -177,7 +177,7 @@ class test_show_ip_static_route(unittest.TestCase):
             '''}
 
     golden_parsed_output_2 = {
-        'vrfs': {
+        'vrf': {
             'default': {
                 'address_family': {
                     'ipv4': {
@@ -283,7 +283,7 @@ class test_show_ipv6_static_route(unittest.TestCase):
     '''
 }
     golden_parsed_output_ipv6_1 = {
-        'vrfs':{
+        'vrf':{
             'default':{
                 'address_family': {
                     'ipv6': {
@@ -428,7 +428,7 @@ class test_show_ipv6_static_route(unittest.TestCase):
   }
 
     golden_parsed_output_ipv6_2 = {
-        'vrfs': {
+        'vrf': {
             'default': {
                 'address_family': {
                     'ipv6': {
@@ -441,7 +441,8 @@ class test_show_ipv6_static_route(unittest.TestCase):
                                             'index': 1,
                                             'next_hop_vrf': 'default',
                                             'rnh_active': False,
-                                            'next_hop': '2001:10:1:3::1/128',
+                                            'next_hop': '2001:10:1:3::1',
+                                            'next_hop_netmask': '128',
                                             'outgoing_interface': 'Ethernet1/2',
                                             'bfd_enabled': False,
                                             'resolved_tid': 0,
@@ -451,7 +452,8 @@ class test_show_ipv6_static_route(unittest.TestCase):
                                             'index': 2,
                                             'next_hop_vrf': 'default',
                                             'rnh_active': False,
-                                            'next_hop': '2001:20:1:3::1/128',
+                                            'next_hop': '2001:20:1:3::1',
+                                            'next_hop_netmask': '128',
                                             'outgoing_interface': 'Ethernet1/3',
                                             'bfd_enabled': False,
                                             'resolved_tid': 0,
@@ -468,7 +470,8 @@ class test_show_ipv6_static_route(unittest.TestCase):
                                             'index': 1,
                                             'next_hop_vrf': 'default',
                                             'rnh_active': False,
-                                            'next_hop': '2001:10:2:3::2/128',
+                                            'next_hop': '2001:10:2:3::2',
+                                            'next_hop_netmask': '128',
                                             'outgoing_interface': 'Ethernet1/4',
                                             'bfd_enabled': False,
                                             'resolved_tid': 0,
@@ -478,7 +481,8 @@ class test_show_ipv6_static_route(unittest.TestCase):
                                             'index': 2,
                                             'next_hop_vrf': 'default',
                                             'rnh_active': False,
-                                            'next_hop': '2001:20:2:3::2/128',
+                                            'next_hop': '2001:20:2:3::2',
+                                            'next_hop_netmask': '128',
                                             'outgoing_interface': 'Ethernet1/1',
                                             'bfd_enabled': False,
                                             'resolved_tid': 0,
@@ -513,8 +517,8 @@ class test_show_ipv6_static_route(unittest.TestCase):
                                             'index': 1,
                                             'next_hop_vrf': 'VRF1',
                                             'rnh_active': False,
-                                            'next_hop': '2001:10:1:3::1/128',
-                                            'next_hop_netmask': '2001:10:1:3::1/128',
+                                            'next_hop': '2001:10:1:3::1',
+                                            'next_hop_netmask': '128',
                                             'bfd_enabled': False,
                                             'resolved_tid': 0,
                                             'preference': 1,
@@ -550,7 +554,8 @@ class test_show_ipv6_static_route(unittest.TestCase):
                                             'index': 1,
                                             'next_hop_vrf': 'VRF1',
                                             'rnh_active': False,
-                                            'next_hop': '2001:10:2:3::2/128',
+                                            'next_hop': '2001:10:2:3::2',
+                                            'next_hop_netmask': '128',
                                             'bfd_enabled': False,
                                             'resolved_tid': 0,
                                             'preference': 1,
@@ -608,13 +613,13 @@ class test_show_ipv6_static_route(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_ipv6_1)
 
-    '''
+
     def test_show_ip_static_route_2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_ipv6_2)
         obj = ShowIpv6StaticRoute(device=self.device)
         parsed_output = obj.parse(vrf='all')
         self.assertEqual(parsed_output,self.golden_parsed_output_ipv6_2)
-    '''
+
 if __name__ == '__main__':
     unittest.main()

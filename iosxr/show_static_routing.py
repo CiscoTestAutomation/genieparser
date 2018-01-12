@@ -13,7 +13,7 @@ from metaparser.util.schemaengine import Schema, \
 # ====================================================
 class ShowStaticTopologyDetailSchema(MetaParser):
     schema = {
-        'vrfs': {
+        'vrf': {
             Any(): {
                 Optional('address_family'): {
                    Any(): {
@@ -109,20 +109,20 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                 table_id = m.groupdict()['table_id']
                 safi = m.groupdict()['safi'].lower()
 
-                if 'vrfs' not in result_dict:
-                    result_dict['vrfs'] = {}
+                if 'vrf' not in result_dict:
+                    result_dict['vrf'] = {}
 
-                if vrf not in result_dict['vrfs']:
-                    result_dict['vrfs'][vrf] = {}
+                if vrf not in result_dict['vrf']:
+                    result_dict['vrf'][vrf] = {}
 
-                if 'address_family' not in result_dict['vrfs'][vrf]:
-                    result_dict['vrfs'][vrf]['address_family'] = {}
+                if 'address_family' not in result_dict['vrf'][vrf]:
+                    result_dict['vrf'][vrf]['address_family'] = {}
 
-                if af and af not in result_dict['vrfs'][vrf]['address_family']:
-                    result_dict['vrfs'][vrf]['address_family'][af] = {}
+                if af and af not in result_dict['vrf'][vrf]['address_family']:
+                    result_dict['vrf'][vrf]['address_family'][af] = {}
 
-                result_dict['vrfs'][vrf]['address_family'][af]['safi'] = safi.lower()
-                result_dict['vrfs'][vrf]['address_family'][af]['table_id'] = table_id
+                result_dict['vrf'][vrf]['address_family'][af]['safi'] = safi.lower()
+                result_dict['vrf'][vrf]['address_family'][af]['table_id'] = table_id
                 continue
 
             # Prefix/Len          Interface                Nexthop             Object              Explicit-path       Metrics
@@ -160,69 +160,69 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                 if m.groupdict()['explicit_path'] and 'none' not in m.groupdict()['explicit_path'].lower() :
                     explicit_path = m.groupdict()['explicit_path']
 
-                if 'routes' not in result_dict['vrfs'][vrf]['address_family'][af]:
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'] = {}
-                if route not in result_dict['vrfs'][vrf]['address_family'][af]['routes']:
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] = {}
-                result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['route'] = route
+                if 'routes' not in result_dict['vrf'][vrf]['address_family'][af]:
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'] = {}
+                if route not in result_dict['vrf'][vrf]['address_family'][af]['routes']:
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] = {}
+                result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['route'] = route
 
-                if 'next_hop' not in result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]:
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] = {}
+                if 'next_hop' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route]:
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] = {}
 
                 if not next_hop:
-                    if 'outgoing_interface' not in result_dict['vrfs'][vrf]['address_family'][af] \
+                    if 'outgoing_interface' not in result_dict['vrf'][vrf]['address_family'][af] \
                             ['routes'][route]['next_hop']:
-                        result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                             ['next_hop']['outgoing_interface'] = {}
 
                     if m.groupdict()['interface'] and interface not in \
-                            result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                             ['next_hop']['outgoing_interface']:
-                        result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                             ['next_hop']['outgoing_interface'][interface] = {}
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                         ['next_hop']['outgoing_interface'][interface]['outgoing_interface'] = interface
 
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                         ['next_hop']['outgoing_interface'][interface]['metrics'] = metrics
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                         ['next_hop']['outgoing_interface'][interface]['preference'] = prefernce
 
                     if m.groupdict()['explicit_path']and 'none' not in m.groupdict()['explicit_path'].lower():
-                        result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                             ['next_hop']['outgoing_interface'][interface]['explicit_path'] = explicit_path
                     if m.groupdict()['object'] and 'none' not in m.groupdict()['object'].lower():
-                        result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                             ['next_hop']['outgoing_interface'][interface]['track'] = int(object)
 
 
                 else:
-                    if 'next_hop_list' not in result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop']:
-                        result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop']['next_hop_list'] = {}
+                    if 'next_hop_list' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop']:
+                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop']['next_hop_list'] = {}
 
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
                         ['next_hop_list'][index] = {}
 
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
                         ['next_hop_list'][index]['index'] = index
 
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
                         ['next_hop_list'][index]['next_hop'] = next_hop.strip()
 
                     if m.groupdict()['interface'] and 'none' not in m.groupdict()['interface'].lower():
-                        result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
                             ['next_hop_list'][index]['outgoing_interface'] = interface
 
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
                         ['next_hop_list'][index]['metrics'] = metrics
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
                         ['next_hop_list'][index]['preference'] = prefernce
 
                     if m.groupdict()['explicit_path'] and 'none' not in m.groupdict()['explicit_path'].lower():
-                        result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
                             ['next_hop_list'][index]['explicit_path'] = explicit_path
                     if m.groupdict()['object'] and 'none' not in m.groupdict()['object'].lower():
-                        result_dict['vrfs'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
                             ['next_hop_list'][index]['track'] = int(object)
                 continue
 
@@ -233,14 +233,14 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                 active = True
                 install_date = m.groupdict()['install_date']
                 if not next_hop:
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                         ['next_hop']['outgoing_interface'][interface]['active'] = active
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                         ['next_hop']['outgoing_interface'][interface]['install_date'] = install_date
                 else:
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                         ['next_hop']['next_hop_list'][index]['active'] = active
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                         ['next_hop']['next_hop_list'][index]['install_date'] = install_date
                 continue
 
@@ -251,14 +251,14 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                 active = False
                 configure_date = m.groupdict()['configure_date']
                 if not next_hop:
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                         ['next_hop']['outgoing_interface'][interface]['active'] = active
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                         ['next_hop']['outgoing_interface'][interface]['configure_date'] = configure_date
                 else:
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                         ['next_hop']['next_hop_list'][index]['active'] = active
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                         ['next_hop']['next_hop_list'][index]['configure_date'] = configure_date
                 continue
 
@@ -269,14 +269,14 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                 path_version = int(m.groupdict()['path_version'])
                 path_status = m.groupdict()['path_status']
                 if not next_hop:
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                         ['next_hop']['outgoing_interface'][interface]['path_version'] = path_version
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                         ['next_hop']['outgoing_interface'][interface]['path_status'] = path_status
                 else:
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                         ['next_hop']['next_hop_list'][index]['path_version'] = path_version
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                         ['next_hop']['next_hop_list'][index]['path_status'] = path_status
                 continue
 
@@ -286,10 +286,10 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
             if m:
                 tag = m.groupdict()['tag']
                 if not next_hop:
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                         ['next_hop']['outgoing_interface'][interface]['tag'] = int(tag)
                 else:
-                    result_dict['vrfs'][vrf]['address_family'][af]['routes'][route] \
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                         ['next_hop']['next_hop_list'][index]['tag'] = int(tag)
                 continue
 
