@@ -39,7 +39,7 @@ M  20.1.1.0/24 [3/0] via GigabitEthernet1 192.168.1.1 [A]
     '''
 }
     golden_parsed_output_1 = {
-        'vrfs':{
+        'vrf':{
             'default':{
                 'address_family': {
                     'ipv4': {
@@ -108,7 +108,7 @@ M  20.1.1.0/24 [3/0] via GigabitEthernet1 192.168.1.1 [A]
     '''
     }
     golden_parsed_output_2 = {
-        'vrfs': {
+        'vrf': {
             'VRF1': {
                 'address_family': {
                     'ipv4': {
@@ -215,7 +215,7 @@ Codes: * - installed in RIB, u/m - Unicast/Multicast only
     '''
 }
     golden_parsed_output_detail_1 = {
-        'vrfs':{
+        'vrf':{
             'default':{
                 'address_family': {
                     'ipv6': {
@@ -293,7 +293,7 @@ Codes: * - installed in RIB, u/m - Unicast/Multicast only
     '''
     }
     golden_parsed_output_detail_2 = {
-        'vrfs': {
+        'vrf': {
             'VRF1': {
                 'address_family': {
                     'ipv6': {

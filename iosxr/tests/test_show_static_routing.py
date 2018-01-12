@@ -50,7 +50,7 @@ class test_show_static_topology_detail(unittest.TestCase):
     '''
 }
     golden_parsed_output_1 = {
-        'vrfs':{
+        'vrf':{
             'default':{
                 'address_family': {
                     'ipv4': {
@@ -187,7 +187,7 @@ class test_show_static_topology_detail(unittest.TestCase):
     '''
     }
     golden_parsed_output_vrf_af = {
-        'vrfs': {
+        'vrf': {
             'VRF1': {
                 'address_family': {
                     'ipv6': {
