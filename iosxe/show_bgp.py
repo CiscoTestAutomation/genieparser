@@ -4694,12 +4694,9 @@ class ShowBgpAll(ShowBgpAllSchema):
                 # Get keys
                 if m.groupdict()['status_codes']:
                     status_codes = m.groupdict()['status_codes']
+                path_type = ''
                 if m.groupdict()['path_type']:
                     path_type = str(m.groupdict()['path_type'])
-                try:
-                    path_type
-                except NameError:
-                    path_type = ''
                 if path_type:
                     status_codes = status_codes + path_type
                 else:
