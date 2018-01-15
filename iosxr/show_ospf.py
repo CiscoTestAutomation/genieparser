@@ -1743,7 +1743,7 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
 
             # Area BACKBONE(0)
             # Area 1
-            p28_1 = re.compile(r'^Area +(?P<area>(\S+))$')
+            p28_1 = re.compile(r'^Area +(?P<area>(\S+))(?: +inactive)?$')
             m = p28_1.match(line)
             if m:
                 parsed_area = str(m.groupdict()['area'])

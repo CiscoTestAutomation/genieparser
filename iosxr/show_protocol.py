@@ -43,7 +43,7 @@ class ShowProtocolsAfiAllAllSchema(MetaParser):
                                                 },
                                             },
                                         'router_id': str,
-                                        'nsf': bool,
+                                        Optional('nsf'): bool,
                                         Optional('redistribution'): 
                                             {Optional('connected'): 
                                                 {'enabled': bool,
@@ -60,9 +60,9 @@ class ShowProtocolsAfiAllAllSchema(MetaParser):
                                         'areas': 
                                             {Any(): 
                                                 {'interfaces': list,
-                                                'mpls': 
-                                                    {'te': 
-                                                        {'enable': bool}}}},
+                                                Optional('mpls'): 
+                                                    {Optional('te'): 
+                                                        {Optional('enable'): bool}}}},
                                             },
                                         },
                                     },
@@ -72,19 +72,19 @@ class ShowProtocolsAfiAllAllSchema(MetaParser):
                     },
             Optional('bgp'): 
                 {'bgp_pid': int,
-                'nsr': 
+                Optional('nsr'): 
                     {'enable': bool,
                     'current_state': str},
-                'graceful_restart': 
+                Optional('graceful_restart'): 
                     {'enable': bool},
-                'address_family': 
+                Optional('address_family'): 
                     {Any(): 
-                        {'distance': 
-                            {'external': int,
-                            'internal': int,
-                            'local': int,
+                        {Optional('distance'): 
+                            {Optional('external'): int,
+                            Optional('internal'): int,
+                            Optional('local'): int,
                             },
-                        'neighbors': 
+                        Optional('neighbors'): 
                             {Any(): 
                                 {'last_update': str,
                                 'gr_enable': str,
@@ -116,7 +116,7 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
             line = line.strip()
 
             # Routing Protocol OSPF 1
-            p1 = re.compile(r'^Routing +Protocol +OSPF +(?P<pid>(\d+))$')
+            p1 = re.compile(r'^Routing +Protocol +OSPF +(?P<pid>(\S+))$')
             m = p1.match(line)
             if m:
                 instance = str(m.groupdict()['pid'])
