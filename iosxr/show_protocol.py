@@ -57,7 +57,55 @@ class ShowProtocolsAfiAllAllSchema(MetaParser):
                                             Optional('isis'): 
                                                 {'isis_pid': str,
                                                 Optional('metric'): int}},
-                                        'areas': 
+                                        Optional('areas'): 
+                                            {Any(): 
+                                                {'interfaces': list,
+                                                Optional('mpls'): 
+                                                    {Optional('te'): 
+                                                        {Optional('enable'): bool}}}},
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+            Optional('ospfv3'): 
+                {'vrf': 
+                    {Any(): 
+                        {'address_family': 
+                            {Any(): 
+                                {'instance': 
+                                    {Any():
+                                        {Optional('preference'): 
+                                            {Optional('single_value'): 
+                                                {'all': int},
+                                            Optional('multi_values'): 
+                                                {'granularity': 
+                                                    {'detail': 
+                                                        {'intra_area': int,
+                                                        'inter_area': int,
+                                                        },
+                                                    },
+                                                'external': int,
+                                                },
+                                            },
+                                        'router_id': str,
+                                        Optional('nsf'): bool,
+                                        Optional('redistribution'): 
+                                            {Optional('connected'): 
+                                                {'enabled': bool,
+                                                Optional('metric'): int},
+                                            Optional('static'): 
+                                                {'enabled': bool,
+                                                Optional('metric'): int},
+                                            Optional('bgp'): 
+                                                {'bgp_id': int,
+                                                Optional('metric'): int},
+                                            Optional('isis'): 
+                                                {'isis_pid': str,
+                                                Optional('metric'): int}},
+                                        Optional('areas'): 
                                             {Any(): 
                                                 {'interfaces': list,
                                                 Optional('mpls'): 
@@ -116,36 +164,37 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
             line = line.strip()
 
             # Routing Protocol OSPF 1
-            p1 = re.compile(r'^Routing +Protocol +OSPF +(?P<pid>(\S+))$')
+            p1 = re.compile(r'^Routing +Protocol +(?P<pro>OSPF|OSPFv3) +(?P<pid>(\S+))$')
             m = p1.match(line)
             if m:
                 instance = str(m.groupdict()['pid'])
                 if 'protocols' not in ret_dict:
                     ret_dict['protocols'] = {}
-                if 'ospf' not in ret_dict['protocols']:
-                    ret_dict['protocols']['ospf'] = {}
-                if 'vrf' not in ret_dict['protocols']['ospf']:
-                    ret_dict['protocols']['ospf']['vrf'] = {}
-                if 'default' not in ret_dict['protocols']['ospf']['vrf']:
-                    ret_dict['protocols']['ospf']['vrf']['default'] = {}
-                if 'address_family' not in ret_dict['protocols']['ospf']['vrf']\
+                pro = m.groupdict()['pro'].lower()
+                if pro not in ret_dict['protocols']:
+                    ret_dict['protocols'][pro] = {}
+                if 'vrf' not in ret_dict['protocols'][pro]:
+                    ret_dict['protocols'][pro]['vrf'] = {}
+                if 'default' not in ret_dict['protocols'][pro]['vrf']:
+                    ret_dict['protocols'][pro]['vrf']['default'] = {}
+                if 'address_family' not in ret_dict['protocols'][pro]['vrf']\
                         ['default']:
-                    ret_dict['protocols']['ospf']['vrf']['default']\
+                    ret_dict['protocols'][pro]['vrf']['default']\
                         ['address_family'] = {}
-                if 'ipv4' not in ret_dict['protocols']['ospf']['vrf']['default']\
+                if 'ipv4' not in ret_dict['protocols'][pro]['vrf']['default']\
                         ['address_family']:
-                    ret_dict['protocols']['ospf']['vrf']['default']\
+                    ret_dict['protocols'][pro]['vrf']['default']\
                         ['address_family']['ipv4'] = {}
-                if 'instance' not in ret_dict['protocols']['ospf']['vrf']\
+                if 'instance' not in ret_dict['protocols'][pro]['vrf']\
                         ['default']['address_family']['ipv4']:
-                    ret_dict['protocols']['ospf']['vrf']['default']\
+                    ret_dict['protocols'][pro]['vrf']['default']\
                         ['address_family']['ipv4']['instance'] = {}
-                if instance not in ret_dict['protocols']['ospf']['vrf']\
+                if instance not in ret_dict['protocols'][pro]['vrf']\
                         ['default']['address_family']['ipv4']['instance']:
-                    ret_dict['protocols']['ospf']['vrf']['default']\
+                    ret_dict['protocols'][pro]['vrf']['default']\
                         ['address_family']['ipv4']['instance'][instance] = {}
                 # Set ospf_dict
-                ospf_dict = ret_dict['protocols']['ospf']['vrf']['default']\
+                ospf_dict = ret_dict['protocols'][pro]['vrf']['default']\
                         ['address_family']['ipv4']['instance'][instance]
                 continue
 
@@ -160,6 +209,10 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
             p3_1 = re.compile(r'^Distance: +(?P<distance>(\d+))$')
             m = p3_1.match(line)
             if m:
+                try:
+                    ospf_dict
+                except:
+                    continue
                 if 'preference' not in ospf_dict:
                     ospf_dict['preference'] = {}
                 if 'single_value' not in ospf_dict['preference']:
@@ -274,7 +327,7 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
             # Loopback0
             # GigabitEthernet0/0/0/0
             # GigabitEthernet0/0/0/2
-            p6 = re.compile(r'^(?P<intf>(Lo.*|Gi.*))$')
+            p6 = re.compile(r'^(?P<intf>(Lo|Gi)[\w\/\.\-]+)$')
             m = p6.match(line)
             if m:
                 area_interfaces.append(str(m.groupdict()['intf']))

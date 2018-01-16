@@ -177,11 +177,18 @@ class ShowInterfaces(ShowInterfacesSchema):
 
             # GigabitEthernet1 is up, line protocol is up 
             # Port-channel12 is up, line protocol is up (connected)
+            # Vlan1 is administratively down, line protocol is down , Autostate Enabled
             p1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
                               ' +(?P<enabled>[\w\s]+),'
                               ' +line +protocol +is +(?P<line_protocol>\w+)'
                               '( *\((?P<attribute>\S+)\))?$')
+            p1_1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
+                              ' +(?P<enabled>[\w\s]+),'
+                              ' +line +protocol +is +(?P<line_protocol>\w+)'
+                              '( *, *(?P<attribute>[\w\s]+))?$')
             m = p1.match(line)
+            m1 = p1_1.match(line)
+            m = m if m else m1
             if m:
                 interface = m.groupdict()['interface']
                 enabled = m.groupdict()['enabled']

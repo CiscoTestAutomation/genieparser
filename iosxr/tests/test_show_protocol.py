@@ -130,12 +130,171 @@ class test_show_protocols_afi_all_all(unittest.TestCase):
             GigabitEthernet0/0/0/2
         '''}
 
+    golden_parsed_output2 = {
+        "protocols": {
+              "ospf": {
+                   "vrf": {
+                        "default": {
+                             "address_family": {
+                                  "ipv4": {
+                                       "instance": {
+                                            "1": {
+                                                 "preference": {
+                                                      "single_value": {
+                                                           "all": 110
+                                                      }
+                                                 },
+                                                 "router_id": "200.5.0.1",
+                                                 "nsf": True,
+                                                 "areas": {
+                                                      "0.0.0.1": {
+                                                           "mpls": {
+                                                                "te": {
+                                                                     "enable": True
+                                                                }
+                                                           },
+                                                           "interfaces": [
+                                                                "Loopback5"
+                                                           ]
+                                                      },
+                                                      "0.0.0.0": {
+                                                           "interfaces": [
+                                                                "Loopback0"
+                                                           ]
+                                                      }
+                                                 }
+                                            }
+                                       }
+                                  }
+                             }
+                        }
+                   }
+              },
+              "ospfv3": {
+                   "vrf": {
+                        "default": {
+                             "address_family": {
+                                  "ipv4": {
+                                       "instance": {
+                                            "1": {
+                                                 "preference": {
+                                                      "single_value": {
+                                                           "all": 110
+                                                      }
+                                                 },
+                                                 "router_id": "0.0.0.0"
+                                            }
+                                       }
+                                  }
+                             }
+                        }
+                   }
+              },
+              "bgp": {
+                   "bgp_pid": 100,
+                   "nsr": {
+                        "enable": True,
+                        "current_state": "tcp initial sync"
+                   },
+                   "address_family": {
+                        "vpnv6 unicast": {
+                             "distance": {
+                                  "internal": 200,
+                                  "local": 200,
+                                  "external": 20
+                             }
+                        },
+                        "vpnv4 unicast": {
+                             "distance": {
+                                  "internal": 200,
+                                  "local": 200,
+                                  "external": 20
+                             }
+                        }
+                   }
+              }
+         }
+    }
+    golden_output2 = {'execute.return_value': '''
+        Routing Protocol "BGP 100"
+        Non-stop routing is enabled
+        Graceful restart is enabled
+        Current BGP NSR state - TCP Initial Sync
+        BGP NSR state not ready: TCP Initsync in progress
+
+        Address Family VPNv4 Unicast:
+          Distance: external 20 internal 200 local 200
+
+        Address Family VPNv6 Unicast:
+          Distance: external 20 internal 200 local 200
+
+
+        IS-IS Router: 1
+          System Id: 1c53.0001.0001 
+          Instance Id: 0
+          IS Levels: level-2-only
+          Manual area address(es):
+            49.0001
+          Routing for area address(es):
+            49.0001
+          Non-stop forwarding: Disabled
+          Most recent startup mode: Cold Restart
+          TE connection status: Up
+          Topologies supported by IS-IS:
+            IPv4 Unicast
+              Level-2
+                Metric style (generate/accept): Narrow/Narrow
+                Metric: 10
+                ISPF status: Disabled
+              No protocols redistributed
+              Distance: 115
+              Advertise Passive Interface Prefixes Only: No
+            IPv6 Unicast
+              Level-2
+                Metric: 10
+                ISPF status: Disabled
+              No protocols redistributed
+              Distance: 115
+              Advertise Passive Interface Prefixes Only: No
+          SRLB allocated: 0 - 0
+          SRGB not allocated
+          Interfaces supported by IS-IS:
+            GigabitEthernet0/0/0/0.104 is disabled (active in configuration)
+            GigabitEthernet0/0/0/1.104 is disabled (active in configuration)
+
+        Routing Protocol OSPF 1
+          Router Id: 200.5.0.1
+          Distance: 110
+          Non-Stop Forwarding: Enabled
+          Redistribution:
+            None
+          Area 0
+            Loopback0
+          Area 1
+            MPLS/TE enabled
+            Loopback5
+
+        Routing Protocol OSPFv3 1
+          Router Id: 0.0.0.0
+          Distance: 110
+          Graceful Restart: Disabled
+          Redistribution:
+            None
+    '''}
+
     def test_show_protocols_afi_all_all_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowProtocolsAfiAllAll(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_protocols_afi_all_all_full2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowProtocolsAfiAllAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_show_protocols_afi_all_all_empty(self):
         self.maxDiff = None

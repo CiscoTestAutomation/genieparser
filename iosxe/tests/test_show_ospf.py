@@ -2,6 +2,9 @@ import re
 import unittest
 from unittest.mock import Mock
 
+# Metaparset
+from metaparser.util.exceptions import SchemaEmptyParserError
+
 from ats.topology import Device
 from parser.iosxe.show_ospf import ShowIpOspfNeighborDetail,\
                                               ShowIpOspf, \
@@ -200,7 +203,7 @@ class test_show_ip_ospf(unittest.TestCase):
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         ip_ospf = ShowIpOspf(device=self.device1)
-        with self.assertRaises(Exception):
+        with self.assertRaises(SchemaEmptyParserError):
             parsed_output = ip_ospf.parse()
 
 class test_show_ip_ospf_interface(unittest.TestCase):
@@ -324,7 +327,7 @@ GigabitEthernet4 is up, line protocol is up
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         ip_ospf = ShowIpOspfInterface(device=self.device1)
-        with self.assertRaises(Exception):
+        with self.assertRaises(SchemaEmptyParserError):
             parsed_output = ip_ospf.parse()
 
 class test_show_ip_ospf_neighbor(unittest.TestCase):

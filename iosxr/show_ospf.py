@@ -1104,6 +1104,14 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
                                         'external_lsa': bool,
                                         'external_lsa_metric': int,
                                         'state': str},
+                                    Optional('on_procrestart'): 
+                                        {'on_procrestart': int,
+                                        'include_stub': bool,
+                                        Optional('summary_lsa'): bool,
+                                        Optional('summary_lsa_metric'): int,
+                                        Optional('external_lsa'): bool,
+                                        Optional('external_lsa_metric'): int,
+                                        'state': str},
                                     },
                                 Optional('spf_control'): 
                                     {Optional('paths'): str,
@@ -1407,8 +1415,9 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             # Condition: always State: active
             # Condition: on switch-over for 10 seconds, State: inactive
             # Condition: on start-up for 5 seconds, State: inactive
+            # Condition: on proc-restart for 900 seconds, State: inactive
             p5_3 = re.compile(r'^Condition:'
-                               ' +(?P<condition>(always|on switch-over|on start-up))'
+                               ' +(?P<condition>(always|on switch-over|on start-up|on proc-restart))'
                                '(?: +for +(?P<seconds>(\d+)) +seconds,)?'
                                ' +State: +(?P<state>(\S+))$')
             m = p5_3.match(line)
@@ -1743,7 +1752,8 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
 
             # Area BACKBONE(0)
             # Area 1
-            p28_1 = re.compile(r'^Area +(?P<area>(\S+))(?: +inactive)?$')
+            # Area BACKBONE(0) (Inactive)
+            p28_1 = re.compile(r'^Area +(?P<area>(\S+))(?: +(inactive|\(Inactive\)))?$')
             m = p28_1.match(line)
             if m:
                 parsed_area = str(m.groupdict()['area'])
