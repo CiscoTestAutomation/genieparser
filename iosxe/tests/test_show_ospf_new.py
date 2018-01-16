@@ -20,7 +20,9 @@ from parser.iosxe.show_ospf_new import ShowIpOspf,\
                                        ShowIpOspfDatabaseExternal,\
                                        ShowIpOspfDatabaseNetwork,\
                                        ShowIpOspfDatabaseSummary,\
-                                       ShowIpOspfDatabaseOpaqueArea
+                                       ShowIpOspfDatabaseOpaqueArea,\
+                                       ShowIpOspfMplsLdpInterface,\
+                                       ShowIpOspfMplsTrafficEngLink
 
 
 # ============================
@@ -3559,6 +3561,287 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+
+# ===============================================
+# Unit test for 'show ip ospf mpls ldp interface'
+# ===============================================
+class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
+
+    '''Unit test for "show ip ospf mpls ldp interface" '''
+
+    device = Device(name='aDevice')
+    
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'vrf': 
+            {'VRF1': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'2': 
+                                {'interfaces': 
+                                    {'GigabitEthernet3': 
+                                        {'holddown_timer': True,
+                                        'ldp_auto_config': True,
+                                        'ldp_autoconfig_area_id': '0.0.0.1',
+                                        'ldp_igp_sync': False,
+                                        'state': 'up'},
+                                    'OSPF_SL1': 
+                                        {'holddown_timer': True,
+                                        'ldp_auto_config': True,
+                                        'ldp_autoconfig_area_id': '0.0.0.1',
+                                        'ldp_igp_sync': False,
+                                        'state': 'up'}},
+                                'mpls': 
+                                    {'ldp': 
+                                        {'auto_config': True,
+                                        'autoconfig_area_id': '0.0.0.1',
+                                        'igp_sync': False}}}}}}},
+            'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'interfaces': 
+                                    {'GigabitEthernet1': 
+                                        {'holddown_timer': True,
+                                        'ldp_auto_config': True,
+                                        'ldp_autoconfig_area_id': '0.0.0.0',
+                                        'ldp_igp_sync': False,
+                                        'state': 'up'},
+                                    'GigabitEthernet2': 
+                                        {'holddown_timer': True,
+                                        'ldp_auto_config': True,
+                                        'ldp_autoconfig_area_id': '0.0.0.0',
+                                        'ldp_igp_sync': False,
+                                        'state': 'up'},
+                                    'Loopback1': 
+                                        {'holddown_timer': True,
+                                        'ldp_auto_config': True,
+                                        'ldp_autoconfig_area_id': '0.0.0.0',
+                                        'ldp_igp_sync': False,
+                                        'state': 'up'}},
+                                'mpls': 
+                                    {'ldp': 
+                                        {'auto_config': True,
+                                        'autoconfig_area_id': '0.0.0.0',
+                                        'igp_sync': False}}}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        R1_ospf_xe#show ip ospf mpls ldp interface 
+        Loopback1
+          Process ID 1, Area 0
+          LDP is not configured through LDP autoconfig
+          LDP-IGP Synchronization : Not required
+          Holddown timer is disabled
+          Interface is up 
+        GigabitEthernet2
+          Process ID 1, Area 0
+          LDP is not configured through LDP autoconfig
+          LDP-IGP Synchronization : Not required
+          Holddown timer is disabled
+          Interface is up 
+        GigabitEthernet1
+          Process ID 1, Area 0
+          LDP is not configured through LDP autoconfig
+          LDP-IGP Synchronization : Not required
+          Holddown timer is disabled
+          Interface is up 
+        OSPF_SL1
+          Process ID 2, VRF VRF1, Area 1
+          LDP is not configured through LDP autoconfig
+          LDP-IGP Synchronization : Not required
+          Holddown timer is disabled
+          Interface is up 
+        GigabitEthernet3
+          Process ID 2, VRF VRF1, Area 1
+          LDP is not configured through LDP autoconfig
+          LDP-IGP Synchronization : Not required
+          Holddown timer is disabled
+          Interface is up 
+        '''}
+
+    def test_show_ip_ospf_mpls_ldp_interface_full1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIpOspfMplsLdpInterface(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ip_ospf_mpls_ldp_interface_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpOspfMplsLdpInterface(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
+# ==================================================
+# Unit test for 'show ip ospf mpls traffic-eng link'
+# ==================================================
+class test_show_ip_ospf_mpls_traffic_eng_link(unittest.TestCase):
+
+    '''Unit test for "show ip ospf mpls traffic-eng link" '''
+
+    device = Device(name='aDevice')
+    
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'vrf': 
+            {'VRF1': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.0': 
+                                        {'area_instance': 2,
+                                        'link_hash_bucket': 
+                                            {8: 
+                                                {'affinity_bit': '0x0',
+                                                'fragment_association': 2,
+                                                'igp_admin_metric': 1,
+                                                'interface_address': '10.1.2.1',
+                                                'link_id': '10.1.2.1',
+                                                'link_instance': 2,
+                                                'link_type': 'broadcast network',
+                                                'max_bandwidth': 125000000,
+                                                'max_reservable_bandwidth': 93750000,
+                                                'te_admin_metric': 1,
+                                                'total_priority': 8,
+                                                'unreserved_bandwidths': 
+                                                    {'0 93750000': 
+                                                        {'priority': 0,
+                                                        'unreserved_bandwidth': 93750000},
+                                                    '1 93750000': 
+                                                        {'priority': 1,
+                                                        'unreserved_bandwidth': 93750000},
+                                                    '2 93750000': 
+                                                        {'priority': 2,
+                                                        'unreserved_bandwidth': 93750000},
+                                                    '3 93750000': 
+                                                        {'priority': 3,
+                                                        'unreserved_bandwidth': 93750000},
+                                                    '4 93750000': 
+                                                        {'priority': 4,
+                                                        'unreserved_bandwidth': 93750000},
+                                                    '5 93750000': 
+                                                        {'priority': 5,
+                                                        'unreserved_bandwidth': 93750000},
+                                                    '6 93750000': 
+                                                        {'priority': 6,
+                                                        'unreserved_bandwidth': 93750000},
+                                                    '7 93750000': 
+                                                        {'priority': 7,
+                                                        'unreserved_bandwidth': 93750000}}},
+                                            9: 
+                                                {'affinity_bit': '0x0',
+                                                'fragment_association': 1,
+                                                'igp_admin_metric': 1,
+                                                'interface_address': '10.1.4.1',
+                                                'link_id': '10.1.4.4',
+                                                'link_instance': 2,
+                                                'link_type': 'broadcast network',
+                                                'max_bandwidth': 125000000,
+                                                'max_reservable_bandwidth': 93750000,
+                                                'te_admin_metric': 1,
+                                                'total_priority': 8,
+                                                'unreserved_bandwidths': 
+                                                    {'0 93750000': 
+                                                        {'priority': 0,
+                                                        'unreserved_bandwidth': 93750000},
+                                                    '1 93750000': 
+                                                        {'priority': 1,
+                                                        'unreserved_bandwidth': 93750000},
+                                                    '2 93750000': 
+                                                        {'priority': 2,
+                                                        'unreserved_bandwidth': 93750000},
+                                                    '3 93750000': 
+                                                        {'priority': 3,
+                                                        'unreserved_bandwidth': 93750000},
+                                                    '4 93750000': 
+                                                        {'priority': 4,
+                                                        'unreserved_bandwidth': 93750000},
+                                                    '5 93750000': 
+                                                        {'priority': 5,
+                                                        'unreserved_bandwidth': 93750000},
+                                                    '6 93750000': 
+                                                        {'priority': 6,
+                                                        'unreserved_bandwidth': 93750000},
+                                                    '7 93750000': 
+                                                        {'priority': 7,
+                                                        'unreserved_bandwidth': 93750000}}}},
+                                        'mpls': 
+                                            {'te': 
+                                                {'enable': True}},
+                                        'total_mpls_te_links': 2}}},
+                            '2': 
+                                {'areas': 
+                                    {'0.0.0.1': 
+                                        {'mpls': 
+                                            {'te': 
+                                                {'enable': False}}}}}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        R1_ospf_xe#show ip ospf 1 | i Connected to MPLS
+          Connected to MPLS VPN Superbackbone, VRF VRF1
+
+        R1_ospf_xe#show ip ospf mpls traffic-eng link 
+
+            OSPF Router with ID (1.1.1.1) (Process ID 1)
+
+          Area 0 has 2 MPLS TE links. Area instance is 2.
+
+          Links in hash bucket 8.
+            Link is associated with fragment 2. Link instance is 2
+              Link connected to Broadcast network
+              Link ID : 10.1.2.1
+              Interface Address : 10.1.2.1
+              Admin Metric te: 1 igp: 1
+              Maximum bandwidth : 125000000
+              Maximum reservable bandwidth : 93750000
+              Number of Priority : 8
+              Priority 0 : 93750000     Priority 1 : 93750000   
+              Priority 2 : 93750000     Priority 3 : 93750000   
+              Priority 4 : 93750000     Priority 5 : 93750000   
+              Priority 6 : 93750000     Priority 7 : 93750000   
+              Affinity Bit : 0x0
+
+          Links in hash bucket 9.
+            Link is associated with fragment 1. Link instance is 2
+              Link connected to Broadcast network
+              Link ID : 10.1.4.4
+              Interface Address : 10.1.4.1
+              Admin Metric te: 1 igp: 1
+              Maximum bandwidth : 125000000
+              Maximum reservable bandwidth : 93750000
+              Number of Priority : 8
+              Priority 0 : 93750000     Priority 1 : 93750000   
+              Priority 2 : 93750000     Priority 3 : 93750000   
+              Priority 4 : 93750000     Priority 5 : 93750000   
+              Priority 6 : 93750000     Priority 7 : 93750000   
+              Affinity Bit : 0x0
+
+                    OSPF Router with ID (11.11.11.11) (Process ID 2)
+
+            Area 1 MPLS TE not initialized
+        '''}
+
+    def test_show_ip_ospf_mpls_traffic_eng_link_full1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIpOspfMplsTrafficEngLink(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ip_ospf_mpls_traffic_eng_link_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpOspfMplsTrafficEngLink(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
 
 if __name__ == '__main__':

@@ -3,9 +3,9 @@
 IOSXE parsers for the following show commands:
     * show ip ospf
     * show ip ospf interface
-    * show ip ospf neighbor detail
     * show ip ospf sham-links
     * show ip ospf virtual-links
+    * show ip ospf neighbor detail
     * show ip ospf database router
     * show ip ospf database network
     * show ip ospf database summary
@@ -3673,7 +3673,6 @@ class ShowIpOspfDatabaseOpaqueAreaSchema(MetaParser):
                                                                                 'max_bandwidth': int,
                                                                                 'max_reservable_bandwidth': int,
                                                                                 'admin_group': str,
-                                                                                
                                                                                 Optional('igp_metric'): int,
                                                                                 Optional('total_priority'): int,
                                                                                 Optional('local_if_ipv4_addrs'): 
@@ -3732,3 +3731,473 @@ class ShowIpOspfDatabaseOpaqueArea(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOsp
         cmd = 'show ip ospf database opaque-area'
 
         return super().cli(cmd=cmd, db_type='opaque')
+
+
+# ============================================
+# Schema for 'show ip ospf mpls ldp interface'
+# ============================================
+class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
+
+    ''' Schema for "show ip ospf mpls ldp interface" '''
+
+    schema = {
+        'vrf': 
+            {Any(): 
+                {'address_family': 
+                    {Any(): 
+                        {'instance': 
+                            {Any(): 
+                                {'mpls': 
+                                    {'ldp': 
+                                        {'auto_config': bool,
+                                        'autoconfig_area_id': str,
+                                        'igp_sync': bool}},
+                                'interfaces': 
+                                    {Any(): 
+                                        {'ldp_auto_config': bool,
+                                        'ldp_autoconfig_area_id': str,
+                                        'ldp_igp_sync': bool,
+                                        'holddown_timer': bool,
+                                        'state': str},
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# ============================================
+# Parser for 'show ip ospf mpls ldp interface'
+# ============================================
+class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
+
+    ''' Parser for "show ip ospf mpls ldp interface" '''
+
+    def cli(self):
+
+        # Execute command on device
+        out = self.device.execute('show ip ospf mpls ldp interface')
+
+        # Init vars
+        ret_dict = {}
+        af = 'ipv4' # this is ospf - always ipv4
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Loopback0
+            # GigabitEthernet2
+            # OSPF_SL1
+            p1 = re.compile(r'^(?P<interface>(Lo.*|Gi.*|.*(SL|VL).*))$')
+            m = p1.match(line)
+            if m:
+                interface = str(m.groupdict()['interface'])
+                continue
+
+            # Process ID 1, Area 0
+            # Process ID 2, VRF VRF1, Area 1
+            p2 = re.compile(r'^Process +ID +(?P<instance>(\S+)),'
+                             '(?: +VRF +(?P<vrf>(\S+)),)?'
+                             ' +Area +(?P<area>(\d+))$')
+            m = p2.match(line)
+            if m:
+                instance = str(m.groupdict()['instance'])
+                area = str(IPAddress(str(m.groupdict()['area'])))
+                if m.groupdict()['vrf']:
+                    vrf = str(m.groupdict()['vrf'])
+                else:
+                    vrf = 'default'
+
+                # Create dict
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+                if 'address_family' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['address_family'] = {}
+                if af not in ret_dict['vrf'][vrf]['address_family']:
+                    ret_dict['vrf'][vrf]['address_family'][af] = {}
+                if 'instance' not in ret_dict['vrf'][vrf]['address_family'][af]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance'] = {}
+                if instance not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance] = {}
+
+                # Create intf dict
+                if 'interfaces' not in ret_dict['vrf'][vrf]['address_family']\
+                        [af]['instance'][instance]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['interfaces'] = {}
+                if interface not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['interfaces']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['interfaces'][interface] = {}
+                # Set intf_dict
+                intf_dict = ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['interfaces'][interface]
+                del interface
+
+                # Create ldp dict
+                if 'mpls' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['mpls'] = {}
+                if 'ldp' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['mpls']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['mpls']['ldp'] = {}
+                # Set mpls_dict
+                ldp_dict = ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                            [instance]['mpls']['ldp']
+
+                # Set values
+                intf_dict['ldp_autoconfig_area_id'] = area
+                ldp_dict['autoconfig_area_id'] = area
+                continue
+
+            # LDP is not configured through LDP autoconfig
+            # LDP is configured through LDP autoconfig
+            p3 = re.compile(r'^LDP +is'
+                             ' +(?P<auto_config>(not configured|configured))'
+                             ' +through +LDP +autoconfig$')
+            m = p3.match(line)
+            if m:
+                if 'configured' in m.groupdict()['auto_config']:
+                    intf_dict['ldp_auto_config'] = True
+                    ldp_dict['auto_config'] = True
+                else:
+                    intf_dict['ldp_auto_config'] = False
+                    ldp_dict['auto_config'] = False
+                    continue
+            
+            # LDP-IGP Synchronization : Not required
+            # LDP-IGP Synchronization : Required
+            p4 = re.compile(r'^LDP-IGP +Synchronization *:'
+                              ' +(?P<igp_sync>(Not required|Required))$')
+            m = p4.match(line)
+            if m:
+                if 'Required' in m.groupdict()['igp_sync']:
+                    intf_dict['ldp_igp_sync'] = True
+                    ldp_dict['igp_sync'] = True
+                else:
+                    intf_dict['ldp_igp_sync'] = False
+                    ldp_dict['igp_sync'] = False
+                    continue
+
+            # Holddown timer is disabled
+            p5 = re.compile(r'^Holddown +timer +is (?P<val>(disabled|enabled))$')
+            m = p5.match(line)
+            if m:
+                if 'enabled' in m.groupdict()['val']:
+                    intf_dict['holddown_timer'] = False
+                else:
+                    intf_dict['holddown_timer'] = True
+                    continue
+
+            # Interface is up 
+            p5 = re.compile(r'^Interface +is (?P<state>(up|down))$')
+            m = p5.match(line)
+            if m:
+                intf_dict['state'] = str(m.groupdict()['state'])
+                continue
+
+        return ret_dict
+
+
+# ===============================================
+# Schema for 'show ip ospf mpls traffic-eng link'
+# ===============================================
+class ShowIpOspfMplsTrafficEngLinkSchema(MetaParser):
+
+    ''' Schema for "show ip ospf mpls traffic-eng link" '''
+
+    schema = {
+        'vrf': 
+            {Any(): 
+                {'address_family': 
+                    {Any(): 
+                        {'instance': 
+                            {Any(): 
+                                {'areas': 
+                                    {Any(): 
+                                        {'mpls': 
+                                            {'te': 
+                                                {'enable': bool}},
+                                        Optional('total_mpls_te_links'): int,
+                                        Optional('area_instance'): int,
+                                        Optional('link_hash_bucket'): 
+                                            {Any(): 
+                                                {'fragment_association': int,
+                                                'link_instance': int,
+                                                'link_type': str,
+                                                'link_id': str,
+                                                'interface_address': str,
+                                                'te_admin_metric': int,
+                                                'igp_admin_metric': int,
+                                                'max_bandwidth': int,
+                                                'max_reservable_bandwidth': int,
+                                                'affinity_bit': str,
+                                                'total_priority': int,
+                                                Optional('unreserved_bandwidths'): 
+                                                    {Any(): 
+                                                        {'priority': int,
+                                                        'unreserved_bandwidth': int},
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# ===============================================
+# Parser for 'show ip ospf mpls traffic-eng link'
+# ===============================================
+class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
+
+    ''' Parser for "show ip ospf mpls traffic-eng link" '''
+
+    def cli(self):
+
+        # Execute command on device
+        out = self.device.execute('show ip ospf mpls traffic-eng link')
+
+        # Init vars
+        ret_dict = {}
+        af = 'ipv4' # this is ospf - always ipv4
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (1.1.1.1) (Process ID 1)
+            p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
+                             ' +\(Process +ID +(?P<instance>(\S+))\)$')
+            m = p1.match(line)
+            if m:
+                router_id = str(m.groupdict()['router_id'])
+                instance = str(m.groupdict()['instance'])
+
+                # Get VRF information using the ospf instance
+                cmd = 'show ip ospf {} | i Connected to MPLS'.format(instance)
+                out = self.device.execute(cmd)
+                if out is None:
+                    vrf = 'default'
+                else:
+                    for line in out.splitlines():
+                        line = line.rstrip()
+                        # Connected to MPLS VPN Superbackbone, VRF VRF1
+                        p = re.search('Connected +to +MPLS +VPN +Superbackbone,'
+                                      ' +VRF +(?P<vrf>(\S+))', line)
+                        if p:
+                            vrf = str(p.groupdict()['vrf'])
+                            break
+
+                # Create dict
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+                if 'address_family' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['address_family'] = {}
+                if af not in ret_dict['vrf'][vrf]['address_family']:
+                    ret_dict['vrf'][vrf]['address_family'][af] = {}
+                if 'instance' not in ret_dict['vrf'][vrf]['address_family'][af]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance'] = {}
+                if instance not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance] = {}
+                    continue
+
+            # Area 0 has 2 MPLS TE links. Area instance is 2.
+            p2 = re.compile(r'^Area +(?P<area>(\d+)) +has +(?P<links>(\d+))'
+                             ' +MPLS +TE +links. +Area +instance +is'
+                             ' +(?P<area_instance>(\d+))\.$')
+            m = p2.match(line)
+            if m:
+                area = str(IPAddress(str(m.groupdict()['area'])))
+                # Create dict
+                if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'] = {}
+                if area not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area] = {}
+                sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area]
+
+                # Set values
+                sub_dict['total_mpls_te_links'] = int(m.groupdict()['links'])
+                sub_dict['area_instance'] = int(m.groupdict()['area_instance'])
+                if 'mpls' not in sub_dict:
+                    sub_dict['mpls'] = {}
+                if 'te' not in sub_dict['mpls']:
+                    sub_dict['mpls']['te'] = {}
+                sub_dict['mpls']['te']['enable'] = True
+                continue
+
+            # Area 1 MPLS TE not initialized
+            p3 = re.compile(r'^Area +(?P<area>(\d+)) +MPLS +TE +not +initialized$')
+            m = p3.match(line)
+            if m:
+                area = str(IPAddress(str(m.groupdict()['area'])))
+                # Create dict
+                if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'] = {}
+                if area not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area] = {}
+                sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area]
+
+                # Set values
+                if 'mpls' not in sub_dict:
+                    sub_dict['mpls'] = {}
+                if 'te' not in sub_dict['mpls']:
+                    sub_dict['mpls']['te'] = {}
+                sub_dict['mpls']['te']['enable'] = False
+                continue
+
+            # Links in hash bucket 8.
+            p4 = re.compile(r'^Links +in +hash +bucket +(?P<hash>(\d+))\.$')
+            m = p4.match(line)
+            if m:
+                hashval = int(m.groupdict()['hash'])
+                if 'link_hash_bucket' not in sub_dict:
+                    sub_dict['link_hash_bucket'] = {}
+                if hashval not in sub_dict['link_hash_bucket']:
+                    sub_dict['link_hash_bucket'][hashval] = {}
+                    continue
+
+            # Link is associated with fragment 2. Link instance is 2
+            p5 = re.compile(r'^Link +is +associated +with +fragment'
+                             ' +(?P<fragment>(\d+))\. +Link +instance +is'
+                             ' +(?P<link_instance>(\d+))$')
+            m = p5.match(line)
+            if m:
+                sub_dict['link_hash_bucket'][hashval]['fragment_association'] = \
+                    int(m.groupdict()['fragment'])
+                sub_dict['link_hash_bucket'][hashval]['link_instance'] = \
+                    int(m.groupdict()['link_instance'])
+                continue
+
+            # Link connected to Broadcast network
+            p6 = re.compile(r'^Link +connected +to +(?P<type>([a-zA-Z\s]+))$')
+            m = p6.match(line)
+            if m:
+                sub_dict['link_hash_bucket'][hashval]['link_type'] = \
+                    str(m.groupdict()['type']).lower()
+                continue
+
+            # Link ID : 10.1.2.1
+            p7 = re.compile(r'^Link +ID *: +(?P<link_id>(\S+))$')
+            m = p7.match(line)
+            if m:
+                sub_dict['link_hash_bucket'][hashval]['link_id'] = \
+                    str(m.groupdict()['link_id'])
+                continue
+
+            # Interface Address : 10.1.2.1
+            p8 = re.compile(r'^Interface +Address *: +(?P<addr>(\S+))$')
+            m = p8.match(line)
+            if m:
+                sub_dict['link_hash_bucket'][hashval]['interface_address'] = \
+                    str(m.groupdict()['addr'])
+                continue
+
+            # Admin Metric te: 1 igp: 1
+            p9 = re.compile(r'^Admin +Metric +te: +(?P<te>(\d+)) +igp:'
+                             ' +(?P<igp>(\d+))$')
+            m = p9.match(line)
+            if m:
+                sub_dict['link_hash_bucket'][hashval]['te_admin_metric'] = \
+                    int(m.groupdict()['te'])
+                sub_dict['link_hash_bucket'][hashval]['igp_admin_metric'] = \
+                    int(m.groupdict()['igp'])
+                continue
+
+            # Maximum bandwidth : 125000000
+            p9 = re.compile(r'^Maximum +(B|b)andwidth *: +(?P<mband>(\d+))$')
+            m = p9.match(line)
+            if m:
+                sub_dict['link_hash_bucket'][hashval]['max_bandwidth'] = \
+                    int(m.groupdict()['mband'])
+                continue
+
+            # Maximum reservable bandwidth : 93750000
+            p10 = re.compile(r'^Maximum +(R|r)eservable +(B|b)andwidth *:'
+                              ' +(?P<res_band>(\d+))$')
+            m = p10.match(line)
+            if m:
+                sub_dict['link_hash_bucket'][hashval]\
+                    ['max_reservable_bandwidth'] = int(m.groupdict()['res_band'])
+                continue
+
+            # Affinity Bit : 0x0
+            p11 = re.compile(r'^Affinity +Bit *: +(?P<admin_group>(\S+))$')
+            m = p11.match(line)
+            if m:
+                sub_dict['link_hash_bucket'][hashval]['affinity_bit'] = \
+                    str(m.groupdict()['admin_group'])
+                continue
+
+            # Number of Priority : 8
+            p12 = re.compile(r'^Number +of +Priority +: +(?P<priority>(\d+))$')
+            m = p12.match(line)
+            if m:
+                sub_dict['link_hash_bucket'][hashval]['total_priority'] = \
+                    int(m.groupdict()['priority'])
+                continue
+
+            # Priority 0 : 93750000     Priority 1 : 93750000
+            p34 = re.compile(r'^Priority +(?P<num1>(\d+)) *:'
+                              ' +(?P<band1>(\d+))(?: +Priority +(?P<num2>(\d+))'
+                              ' *: +(?P<band2>(\d+)))?$')
+            m = p34.match(line)
+            if m:
+                value1 = str(m.groupdict()['num1']) + ' ' + \
+                         str(m.groupdict()['band1'])
+                value2 = str(m.groupdict()['num2']) + ' ' + \
+                         str(m.groupdict()['band2'])
+                if 'unreserved_bandwidths' not in sub_dict['link_hash_bucket']\
+                        [hashval]:
+                    sub_dict['link_hash_bucket'][hashval]\
+                        ['unreserved_bandwidths'] = {}
+                if value1 not in sub_dict['link_hash_bucket'][hashval]\
+                        ['unreserved_bandwidths']:
+                    sub_dict['link_hash_bucket'][hashval]\
+                        ['unreserved_bandwidths'][value1] = {}
+                    sub_dict['link_hash_bucket'][hashval]\
+                        ['unreserved_bandwidths'][value1]['priority'] =  \
+                            int(m.groupdict()['num1'])
+                    sub_dict['link_hash_bucket'][hashval]\
+                        ['unreserved_bandwidths'][value1]\
+                            ['unreserved_bandwidth'] = int(m.groupdict()['band1'])
+                if value2 not in sub_dict['link_hash_bucket'][hashval]\
+                        ['unreserved_bandwidths']:
+                    sub_dict['link_hash_bucket'][hashval]\
+                        ['unreserved_bandwidths'][value2] = {}
+                    sub_dict['link_hash_bucket'][hashval]\
+                        ['unreserved_bandwidths'][value2]['priority'] = \
+                            int(m.groupdict()['num2'])
+                    sub_dict['link_hash_bucket'][hashval]\
+                        ['unreserved_bandwidths'][value2]\
+                            ['unreserved_bandwidth'] = int(m.groupdict()['band2'])
+                    continue
+
+        return ret_dict
