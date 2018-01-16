@@ -13,6 +13,7 @@ from metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyE
 # iosxr show_ospf
 from parser.iosxe.show_ospf_new import ShowIpOspf,\
                                        ShowIpOspfInterface,\
+                                       ShowIpOspfNeighborDetail,\
                                        ShowIpOspfShamLinks,\
                                        ShowIpOspfVirtualLinks,\
                                        ShowIpOspfDatabaseRouter,\
@@ -713,6 +714,210 @@ class test_show_ip_ospf_interface(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowIpOspfInterface(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
+# ============================================
+# Unit test for 'show ip ospf neighbor detail'
+# ============================================
+class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
+
+    '''Unit test for "show ip ospf neighbor detail" '''
+
+    device = Device(name='aDevice')
+    
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'areas': 
+            {'0.0.0.0': 
+                {'interfaces': 
+                    {'GigabitEthernet1': 
+                        {'neighbors': 
+                            {'4.4.4.4': 
+                                {'address': '10.1.4.4',
+                                'bdr_ip_addr': '10.1.4.1',
+                                'dead_timer': '00:00:35',
+                                'dr_ip_addr': '10.1.4.4',
+                                'first': '0x0(0)/0x0(0)/0x0(0)',
+                                'index': '1/1/1,',
+                                'interface': 'GigabitEthernet1',
+                                'neighbor_router_id': '4.4.4.4',
+                                'neighbor_uptime': '1d01h',
+                                'next': '0x0(0)/0x0(0)/0x0(0)',
+                                'priority': 1,
+                                'state': 'full',
+                                'statistics': 
+                                    {'last_retrans_max_scan_length': 1,
+                                    'last_retrans_max_scan_time_msec': 0,
+                                    'last_retrans_scan_length': 0,
+                                    'last_retrans_scan_time_msec': 0,
+                                    'nbr_event_count': 6,
+                                    'nbr_retrans_qlen': 0,
+                                    'total_retransmission': 1}}}},
+                    'GigabitEthernet2': 
+                        {'neighbors': 
+                            {'2.2.2.2': 
+                                {'address': '10.1.2.2',
+                                'bdr_ip_addr': '10.1.2.2',
+                                'dead_timer': '00:00:33',
+                                'dr_ip_addr': '10.1.2.1',
+                                'first': '0x0(0)/0x0(0)/0x0(0)',
+                                'hello_options': '0x2',
+                                'index': '1/2/2,',
+                                'interface': 'GigabitEthernet2',
+                                'neighbor_router_id': '2.2.2.2',
+                                'neighbor_uptime': '08:04:20',
+                                'next': '0x0(0)/0x0(0)/0x0(0)',
+                                'priority': 1,
+                                'state': 'full',
+                                'statistics': 
+                                    {'last_retrans_max_scan_length': 0,
+                                    'last_retrans_max_scan_time_msec': 0,
+                                    'last_retrans_scan_length': 0,
+                                    'last_retrans_scan_time_msec': 0,
+                                    'nbr_event_count': 6,
+                                    'nbr_retrans_qlen': 0,
+                                    'total_retransmission': 0}}}}}},
+            '0.0.0.1': 
+                {'interfaces': 
+                    {'GigabitEthernet3': 
+                        {'neighbors': 
+                            {'55.55.55.55': 
+                                {'address': '20.1.5.5',
+                                'bdr_ip_addr': '20.1.5.5',
+                                'dead_timer': '00:00:34',
+                                'dr_ip_addr': '20.1.5.1',
+                                'first': '0x0(0)/0x0(0)/0x0(0)',
+                                'index': '1/1/1,',
+                                'interface': 'GigabitEthernet3',
+                                'neighbor_router_id': '55.55.55.55',
+                                'neighbor_uptime': '15:47:14',
+                                'next': '0x0(0)/0x0(0)/0x0(0)',
+                                'priority': 1,
+                                'state': 'full',
+                                'statistics': 
+                                    {'last_retrans_max_scan_length': 6,
+                                    'last_retrans_max_scan_time_msec': 0,
+                                    'last_retrans_scan_length': 1,
+                                    'last_retrans_scan_time_msec': 0,
+                                    'nbr_event_count': 6,
+                                    'nbr_retrans_qlen': 0,
+                                    'total_retransmission': 6}}}}},
+                'sham_links': 
+                    {'33.33.33.33 22.22.22.22': 
+                        {'neighbors': 
+                            {'22.22.22.22': 
+                                {'address': '22.22.22.22',
+                                'bdr_ip_addr': '0.0.0.0',
+                                'dead_timer': '00:00:35',
+                                'dr_ip_addr': '0.0.0.0',
+                                'first': '0x0(0)/0x0(0)/0x0(0)',
+                                'hello_options': '0x2',
+                                'index': '1/2/2,',
+                                'interface': 'OSPF_SL1',
+                                'neighbor_router_id': '22.22.22.22',
+                                'neighbor_uptime': '07:41:59',
+                                'next': '0x0(0)/0x0(0)/0x0(0)',
+                                'priority': 0,
+                                'state': 'full',
+                                'statistics': 
+                                    {'last_retrans_max_scan_length': 1,
+                                    'last_retrans_max_scan_time_msec': 0,
+                                    'last_retrans_scan_length': 1,
+                                    'last_retrans_scan_time_msec': 0,
+                                    'nbr_event_count': 6,
+                                    'nbr_retrans_qlen': 0,
+                                    'total_retransmission': 2}}}}}}}}
+
+    def test_show_ip_ospf_neighbor_detail_full1(self):
+        
+        self.maxDiff = None
+
+        def mapper(key):
+            return self.outputs[key]
+
+        raw1 = '''\
+            R1_ospf_xe#show ip ospf neighbor detail 
+             Neighbor 2.2.2.2, interface address 10.1.2.2
+                In the area 0 via interface GigabitEthernet2
+                Neighbor priority is 1, State is FULL, 6 state changes
+                DR is 10.1.2.1 BDR is 10.1.2.2
+                Options is 0x2 in Hello (E-bit)
+                Options is 0x42 in DBD (E-bit, O-bit)
+                Dead timer due in 00:00:33
+                Neighbor is up for 08:04:20
+                Index 1/2/2, retransmission queue length 0, number of retransmission 0
+                First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+                Last retransmission scan length is 0, maximum is 0
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+             Neighbor 4.4.4.4, interface address 10.1.4.4
+                In the area 0 via interface GigabitEthernet1
+                Neighbor priority is 1, State is FULL, 6 state changes
+                DR is 10.1.4.4 BDR is 10.1.4.1
+                Options is 0x12 in Hello (E-bit, L-bit)
+                Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+                LLS Options is 0x1 (LR)
+                Dead timer due in 00:00:35
+                Neighbor is up for 1d01h   
+                Index 1/1/1, retransmission queue length 0, number of retransmission 1
+                First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+                Last retransmission scan length is 0, maximum is 1
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+             Neighbor 22.22.22.22, interface address 22.22.22.22
+                In the area 1 via interface OSPF_SL1
+                Neighbor priority is 0, State is FULL, 6 state changes
+                DR is 0.0.0.0 BDR is 0.0.0.0
+                Options is 0x2 in Hello (E-bit)
+                Options is 0x42 in DBD (E-bit, O-bit)
+                Dead timer due in 00:00:35
+                Neighbor is up for 07:41:59
+                Index 1/2/2, retransmission queue length 0, number of retransmission 2
+                First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+                Last retransmission scan length is 1, maximum is 1
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+             Neighbor 55.55.55.55, interface address 20.1.5.5
+                In the area 1 via interface GigabitEthernet3
+                Neighbor priority is 1, State is FULL, 6 state changes
+                DR is 20.1.5.1 BDR is 20.1.5.5
+                Options is 0x12 in Hello (E-bit, L-bit)
+                Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+                LLS Options is 0x1 (LR)
+                Dead timer due in 00:00:34
+                Neighbor is up for 15:47:14
+                Index 1/1/1, retransmission queue length 0, number of retransmission 6
+                First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+                Last retransmission scan length is 1, maximum is 6
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+            '''
+
+        raw2 = '''\
+            R1_ospf_xe#show ip ospf sham-links | i OSPF_SL1
+              Sham Link OSPF_SL1 to address 22.22.22.22 is up
+            '''
+
+        raw3 = '''\
+            R1_ospf_xe#show run formal router ospf | i sham | i 22.22.22.22
+              router ospf 2 area 1 sham-link 33.33.33.33 22.22.22.22
+            '''
+
+        self.outputs = {}
+        self.outputs['show ip ospf neighbor detail'] = raw1
+        self.outputs['show ip ospf sham-links | i OSPF_SL1'] = raw2
+        self.outputs['show run formal router ospf | i sham | i 22.22.22.22'] = raw3
+
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+        
+        obj = ShowIpOspfNeighborDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ip_ospf_neighbor_detail_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpOspfNeighborDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
