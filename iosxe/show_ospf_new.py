@@ -1071,7 +1071,8 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                 'enable': bool,
                                                 'line_protocol': bool,
                                                 'ip_address': str,
-                                                'interface_id': int,
+                                                Optional('interface_id'): int,
+                                                Optional('attached'): str,
                                                 'demand_circuit': bool,
                                                 'router_id': str,
                                                 'interface_type': str,
@@ -1091,16 +1092,22 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                 Optional('wait_interval'): int,
                                                 Optional('retransmit_interval'): int,
                                                 Optional('passive'): bool,
+                                                Optional('oob_resync_timeout'): int,
                                                 Optional('hello_timer'): str,
                                                 Optional('index'): str,
                                                 Optional('flood_queue_length'): int,
                                                 Optional('next'): str,
+                                                Optional('lls'): bool,
                                                 Optional('last_flood_scan_length'): int,
                                                 Optional('max_flood_scan_length'): int,
                                                 Optional('last_flood_scan_time_msec'): int,
                                                 Optional('max_flood_scan_time_msec'): int,
                                                 Optional('total_dcbitless_lsa'): int,
                                                 Optional('donotage_lsa'): bool,
+                                                Optional('graceful_restart'): 
+                                                    {Any(): 
+                                                        {'type': str,
+                                                        'helper': bool}},
                                                 Optional('topology'): 
                                                     {Any(): 
                                                         {'cost': int,
@@ -1126,7 +1133,8 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                 'enable': bool,
                                                 'line_protocol': bool,
                                                 'ip_address': str,
-                                                'interface_id': int,
+                                                Optional('interface_id'): int,
+                                                Optional('attached'): str,
                                                 'demand_circuit': bool,
                                                 'router_id': str,
                                                 'interface_type': str,
@@ -1146,16 +1154,22 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                 Optional('wait_interval'): int,
                                                 Optional('retransmit_interval'): int,
                                                 Optional('passive'): bool,
+                                                Optional('oob_resync_timeout'): int,
                                                 Optional('hello_timer'): str,
                                                 Optional('index'): str,
                                                 Optional('flood_queue_length'): int,
                                                 Optional('next'): str,
+                                                Optional('lls'): bool,
                                                 Optional('last_flood_scan_length'): int,
                                                 Optional('max_flood_scan_length'): int,
                                                 Optional('last_flood_scan_time_msec'): int,
                                                 Optional('max_flood_scan_time_msec'): int,
                                                 Optional('total_dcbitless_lsa'): int,
                                                 Optional('donotage_lsa'): bool,
+                                                Optional('graceful_restart'): 
+                                                    {Any(): 
+                                                        {'type': str,
+                                                        'helper': bool}},
                                                 Optional('topology'): 
                                                     {Any(): 
                                                         {'cost': int,
@@ -1181,7 +1195,8 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                 'enable': bool,
                                                 'line_protocol': bool,
                                                 'ip_address': str,
-                                                'interface_id': int,
+                                                Optional('interface_id'): int,
+                                                Optional('attached'): str,
                                                 'demand_circuit': bool,
                                                 'router_id': str,
                                                 'interface_type': str,
@@ -1201,16 +1216,22 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                 Optional('wait_interval'): int,
                                                 Optional('retransmit_interval'): int,
                                                 Optional('passive'): bool,
+                                                Optional('oob_resync_timeout'): int,
                                                 Optional('hello_timer'): str,
                                                 Optional('index'): str,
                                                 Optional('flood_queue_length'): int,
                                                 Optional('next'): str,
+                                                Optional('lls'): bool,
                                                 Optional('last_flood_scan_length'): int,
                                                 Optional('max_flood_scan_length'): int,
                                                 Optional('last_flood_scan_time_msec'): int,
                                                 Optional('max_flood_scan_time_msec'): int,
                                                 Optional('total_dcbitless_lsa'): int,
                                                 Optional('donotage_lsa'): bool,
+                                                Optional('graceful_restart'): 
+                                                    {Any(): 
+                                                        {'type': str,
+                                                        'helper': bool}},
                                                 Optional('topology'): 
                                                     {Any(): 
                                                         {'cost': int,
@@ -1282,26 +1303,34 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     if x:
                         intf_type = 'sham_links'
                         name = 'SL' + str(x.groupdict()['num'])
+                        continue
                 elif re.search('VL', interface):
                     x = re.match('(?P<ignore>\S+)_VL(?P<num>(\d+))', interface)
                     if x:
                         intf_type = 'virtual_links'
                         name = 'VL' + str(x.groupdict()['num'])
+                        continue
                 else:
                     intf_type = 'interfaces'
                     name = interface
                     continue
 
             # Internet Address 1.1.1.1/32, Interface ID 11, Area 0
+            # Internet Address 0.0.0.0/0, Area 0, Attached via Not Attached
+            # Internet Address 20.2.4.4/24, Area 1, Attached via Interface Enable
             p2 = re.compile(r'^Internet +Address +(?P<address>(\S+)),'
-                             ' +Interface +ID +(?P<intf_id>(\d+)),'
-                             ' +Area +(?P<area>(\S+))$')
+                             '(?: +Interface +ID +(?P<intf_id>(\d+)),)?'
+                             ' +Area +(?P<area>(\S+))(?:, +Attached +via'
+                             ' +(?P<attach>(.*)))?$')
             m = p2.match(line)
             if m:
                 ip_address = str(m.groupdict()['address'])
-                intf_id = int(m.groupdict()['intf_id'])
                 area = str(IPAddress(str(m.groupdict()['area'])))
-                continue
+                if m.groupdict()['intf_id']:
+                    intf_id = int(m.groupdict()['intf_id'])
+                if m.groupdict()['attach']:
+                    attached = str(m.groupdict()['attach']).lower()
+                    continue
 
             # Process ID 1, Router ID 4.4.4.4, Network Type VIRTUAL_LINK, Cost: 1
             # Process ID 2, Router ID 11.11.11.11, Network Type SHAM_LINK, Cost: 111
@@ -1323,21 +1352,41 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     intf_name = interface
                 elif intf_type == 'virtual_links':
                     # Init
+                    vl_addr = None
                     vl_transit_area_id = None
 
-                    # Execute 'show ip ospf virtual-links' to get the vl_transit_area_id
-                    obj = ShowIpOspfVirtualLinks(device=self.device)
-                    vl_out = obj.parse()
+                    # Execute command to get virtual-link address
+                    cmd = 'show ip ospf virtual-links | i {intf}'.format(intf=interface)
+                    out = self.device.execute(cmd)
 
-                    for vl_vrf in vl_out['vrf']:
-                        for vl_af in vl_out['vrf'][vl_vrf]['address_family']:
-                            for vl_inst in vl_out['vrf'][vl_vrf]['address_family'][vl_af]['instance']:
-                                for vl_area in vl_out['vrf'][vl_vrf]['address_family'][vl_af]['instance'][vl_inst]['areas']:
-                                    for vl in vl_out['vrf'][vl_vrf]['address_family'][vl_af]['instance'][vl_inst]['areas'][vl_area]['virtual_links']:
-                                        vl_name = vl_out['vrf'][vl_vrf]['address_family'][vl_af]['instance'][vl_inst]['areas'][vl_area]['virtual_links'][vl]['name']
-                                        if vl_name == name:
-                                            vl_transit_area_id = vl_out['vrf'][vl_vrf]['address_family'][vl_af]['instance'][vl_inst]['areas'][vl_area]['virtual_links'][vl]['transit_area_id']
-                                            break
+                    for line in out.splitlines():
+                        line = line.rstrip()
+                        # Virtual Link OSPF_VL0 to router 5.5.5.5 is down
+                        p = re.search('Virtual +Link +(?P<intf>(\S+)) +to +router'
+                                     ' +(?P<address>(\S+)) +is +(up|down)'
+                                     '(?:.*)?', line)
+                        if p:
+                            if interface == str(p.groupdict()['intf']):
+                                vl_addr = str(p.groupdict()['address'])
+                                break
+
+                    # Execute command to get virtual-link transit_area_id
+                    if vl_addr is not None:
+                        cmd = 'show running-config | i virtual-link | i {addr}'.format(addr=vl_addr)
+                        out = self.device.execute(cmd)
+
+                        for line in out.splitlines():
+                            line = line.rstrip()
+                            #  area 1 virtual-link 5.5.5.5
+                            q = re.search('area +(?P<q_area>(\d+)) +virtual-link'
+                                          ' +(?P<addr>(\S+))(?: +(.*))?', line)
+                            if q:
+                                q_addr = str(q.groupdict()['addr'])
+
+                                # Check parameters match
+                                if q_addr == vl_addr:
+                                    vl_transit_area_id = str(IPAddress(str(q.groupdict()['q_area'])))
+                                    break
 
                     if vl_transit_area_id is not None:
                         intf_name = vl_transit_area_id + ' ' + router_id
@@ -1355,7 +1404,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                         line = line.rstrip()
                         # Sham Link OSPF_SL1 to address 22.22.22.22 is up
                         p = re.search('Sham +Link +(?P<intf>(\S+)) +to +address'
-                                     ' +(?P<remote>(\S+)) +is +up', line)
+                                     ' +(?P<remote>(\S+)) +is +(up|down)', line)
                         if p:
                             if interface == str(p.groupdict()['intf']):
                                 sl_remote_id = str(p.groupdict()['remote'])
@@ -1363,41 +1412,54 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
                     # Execute command to get sham-link local_id
                     if sl_remote_id is not None:
-                        cmd = 'show run formal router ospf | i sham | i {remote}'.format(remote=sl_remote_id)
+                        cmd = 'show running-config | i sham-link | i {remote}'.format(remote=sl_remote_id)
                         out = self.device.execute(cmd)
 
                         for line in out.splitlines():
                             line = line.rstrip()
-                            # router ospf 1 area 1 sham-link 33.33.33.33 22.22.22.22
-                            q = re.search('router +ospf +(?P<q_inst>(\d+))'
-                                          '(?: +vrf +(?P<q_vrf>(\S+)))?'
-                                          ' +area +(?P<q_area>(\d+))'
-                                          ' +sham-link +(?P<local_id>(\S+))'
-                                          ' +(?P<remote_id>(\S+))', line)
+                            # area 1 sham-link 11.11.11.11 22.22.22.22 cost 111 ttl-security hops 3
+                            q = re.search('area +(?P<q_area>(\d+)) +sham-link'
+                                          ' +(?P<local_id>(\S+))'
+                                          ' +(?P<remote_id>(\S+)) +(.*)', line)
                             if q:
-                                if q.groupdict()['q_vrf']:
-                                    q_vrf = str(q.groupdict()['q_vrf'])
-                                else:
-                                    q_vrf = 'default'
-                                q_inst = str(q.groupdict()['q_inst'])
                                 q_area = str(IPAddress(str(q.groupdict()['q_area'])))
-                                remote_id = str(q.groupdict()['remote_id'])
+                                q_remote_id = str(q.groupdict()['remote_id'])
 
                                 # Check parameters match
-                                if q_inst == instance and q_vrf == vrf and \
-                                   q_area == area and remote_id == sl_remote_id:
-                                   sl_local_id = str(q.groupdict()['local_id'])
-                                   break
+                                if q_area == area and q_remote_id == sl_remote_id:
+                                    sl_local_id = str(q.groupdict()['local_id'])
+                                    break
 
                     # Set intf_name based on parsed values
                     if sl_local_id is not None:
                         intf_name = sl_local_id + ' ' + sl_remote_id
 
+                # Get VRF information
+                cmd = 'show running-config | section router ospf {}'.format(instance)
+                out = self.device.execute(cmd)
+
+                for line in out.splitlines():
+                    line = line.rstrip()
+
+                    # Skip the show command line so as to not match
+                    if re.search('show', line):
+                        continue
+
+                    # router ospf 1
+                    # router ospf 2 vrf VRF1
+                    p = re.search('router +ospf +(?P<instance>(\S+))'
+                                  '(?: +vrf +(?P<vrf>(\S+)))?', line)
+                    if p:
+                        p_instance = str(p.groupdict()['instance'])
+                        if p_instance == instance:
+                            if p.groupdict()['vrf']:
+                                vrf = str(p.groupdict()['vrf'])
+                                break
+                            else:
+                                vrf = 'default'
+                                break
+
                 # Build dictionary
-                if m.groupdict()['vrf']:
-                    vrf = str(m.groupdict()['vrf'])
-                else:
-                    vrf = 'default'
                 if 'vrf' not in ret_dict:
                     ret_dict['vrf'] = {}
                 if vrf not in ret_dict['vrf']:
@@ -1433,7 +1495,8 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
                             ['instance'][instance]['areas'][area]\
                             [intf_type][intf_name]
-                # Delete intf_name to avoid overwrite issues for next intf
+                # Delete variables to avoid overwrite issues for next intf
+                del area
                 del intf_name
                 
                 # Set values found in this regex
@@ -1462,6 +1525,11 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 try:
                     sub_dict['interface_id'] = intf_id
                     del intf_id
+                except:
+                    pass
+                try:
+                    sub_dict['attached'] = attached
+                    del attached
                 except:
                     pass
                 try:
@@ -1588,7 +1656,11 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 continue
 
             #  oob-resync timeout 40
-            p12_1 = {}
+            p12_1 = re.compile(r'^oob-resync +timeout +(?P<oob>(\d+))$')
+            m = p12_1.match(line)
+            if m:
+                sub_dict['oob_resync_timeout'] = int(m.groupdict()['oob'])
+                continue
             
             # Hello due in 00:00:00
             p12_2 = re.compile(r'^Hello +due +in +(?P<hello_timer>(\S+))$')
@@ -1599,12 +1671,30 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 continue
 
             # Supports Link-local Signaling (LLS)
-            p13 = {}
+            p13 = re.compile(r'^Supports +Link-local +Signaling +\(LLS\)$')
+            m = p13.match(line)
+            if m:
+                sub_dict['lls'] = True
+                continue
             
             # Cisco NSF helper support enabled
             # IETF NSF helper support enabled
-            p14 = {}
-           
+            p14 = re.compile(r'^(?P<gr_type>(Cisco|IETF)) +NSF +helper +support'
+                              ' +(?P<helper>(enabled|disabled))$')
+            m = p14.match(line)
+            if m:
+                gr_type = str(m.groupdict()['gr_type']).lower()
+                if 'graceful_restart' not in sub_dict:
+                    sub_dict['graceful_restart'] = {}
+                if gr_type not in sub_dict['graceful_restart']:
+                    sub_dict['graceful_restart'][gr_type] = {}
+                sub_dict['graceful_restart'][gr_type]['type'] = gr_type
+                if 'enabled' in m.groupdict()['helper']:
+                    sub_dict['graceful_restart'][gr_type]['helper'] = True
+                else:
+                    sub_dict['graceful_restart'][gr_type]['helper'] = False
+                    continue
+
             # Index 2/2, flood queue length 0
             p15 = re.compile(r'^Index +(?P<index>(\S+)),'
                                ' +flood +queue +length +(?P<length>(\d+))$')
@@ -4165,10 +4255,10 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
                 continue
 
             # Priority 0 : 93750000     Priority 1 : 93750000
-            p34 = re.compile(r'^Priority +(?P<num1>(\d+)) *:'
+            p13 = re.compile(r'^Priority +(?P<num1>(\d+)) *:'
                               ' +(?P<band1>(\d+))(?: +Priority +(?P<num2>(\d+))'
                               ' *: +(?P<band2>(\d+)))?$')
-            m = p34.match(line)
+            m = p13.match(line)
             if m:
                 value1 = str(m.groupdict()['num1']) + ' ' + \
                          str(m.groupdict()['band1'])

@@ -358,7 +358,117 @@ class test_show_ip_ospf_interface(unittest.TestCase):
 
     golden_parsed_output1 = {
         'vrf': 
-            {'default': 
+            {'VRF1': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'2': 
+                                {'areas': 
+                                    {'0.0.0.1': 
+                                        {'interfaces': 
+                                            {'GigabitEthernet3': 
+                                                {'bdr_ip_addr': '20.1.5.5',
+                                                'bdr_router_id': '55.55.55.55',
+                                                'bfd': 
+                                                    {'enable': False},
+                                                'cost': 1,
+                                                'dead_interval': 40,
+                                                'demand_circuit': False,
+                                                'dr_ip_addr': '20.1.5.1',
+                                                'dr_router_id': '11.11.11.11',
+                                                'enable': True,
+                                                'flood_queue_length': 0,
+                                                'graceful_restart': 
+                                                    {'cisco': 
+                                                        {'helper': True,
+                                                        'type': 'cisco'},
+                                                    'ietf': 
+                                                        {'helper': True,
+                                                        'type': 'ietf'}},
+                                                'lls': True,
+                                                'oob_resync_timeout': 40,
+                                                'hello_interval': 10,
+                                                'hello_timer': '00:00:08',
+                                                'if_cfg': True,
+                                                'index': '1/1/1',
+                                                'interface_id': 9,
+                                                'interface_type': 'broadcast',
+                                                'ip_address': '20.1.5.1/24',
+                                                'last_flood_scan_length': 0,
+                                                'last_flood_scan_time_msec': 0,
+                                                'line_protocol': True,
+                                                'max_flood_scan_length': 7,
+                                                'max_flood_scan_time_msec': 1,
+                                                'name': 'GigabitEthernet3',
+                                                'neighbors': 
+                                                    {'55.55.55.55': 
+                                                        {'bdr_router_id': '55.55.55.55'}},
+                                                'next': '0x0(0)/0x0(0)/0x0(0)',
+                                                'passive': False,
+                                                'priority': 1,
+                                                'retransmit_interval': 5,
+                                                'router_id': '11.11.11.11',
+                                                'state': 'dr',
+                                                'statistics': 
+                                                    {'adj_nbr_count': 1,
+                                                    'nbr_count': 1,
+                                                    'num_nbrs_suppress_hello': 0},
+                                                'topology': 
+                                                    {0: 
+                                                        {'cost': 1,
+                                                        'disabled': False,
+                                                        'name': 'Base',
+                                                        'shutdown': False}},
+                                                'transmit_delay': 1,
+                                                'wait_interval': 40}},
+                                        'sham_links': 
+                                            {'11.11.11.11 22.22.22.22': 
+                                                {'bfd': 
+                                                    {'enable': False},
+                                                'cost': 111,
+                                                'dead_interval': 40,
+                                                'demand_circuit': True,
+                                                'enable': True,
+                                                'flood_queue_length': 0,
+                                                'graceful_restart': 
+                                                    {'cisco': 
+                                                        {'helper': True,
+                                                        'type': 'cisco'},
+                                                    'ietf': 
+                                                        {'helper': True,
+                                                        'type': 'ietf'}},
+                                                'lls': True,
+                                                'oob_resync_timeout': 40,
+                                                'hello_interval': 10,
+                                                'hello_timer': '00:00:00',
+                                                'index': '1/2/2',
+                                                'interface_id': 14,
+                                                'interface_type': 'sham-link',
+                                                'ip_address': '0.0.0.0/0',
+                                                'last_flood_scan_length': 1,
+                                                'last_flood_scan_time_msec': 0,
+                                                'line_protocol': True,
+                                                'max_flood_scan_length': 5,
+                                                'max_flood_scan_time_msec': 1,
+                                                'name': 'SL1',
+                                                'next': '0x0(0)/0x0(0)/0x0(0)',
+                                                'passive': False,
+                                                'retransmit_interval': 5,
+                                                'router_id': '11.11.11.11',
+                                                'state': 'point-to-point',
+                                                'statistics': 
+                                                    {'adj_nbr_count': 1,
+                                                    'nbr_count': 1,
+                                                    'num_nbrs_suppress_hello': 0},
+                                                'topology': 
+                                                    {0: 
+                                                        {'cost': 111,
+                                                        'disabled': False,
+                                                        'name': 'Base',
+                                                        'shutdown': False}},
+                                                'transmit_delay': 1,
+                                                'wait_interval': 40}}}}}}}}},
+            'default': 
                 {'address_family': 
                     {'ipv4': 
                         {'instance': 
@@ -378,6 +488,15 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                 'dr_router_id': '4.4.4.4',
                                                 'enable': True,
                                                 'flood_queue_length': 0,
+                                                'graceful_restart': 
+                                                    {'cisco': 
+                                                        {'helper': True,
+                                                        'type': 'cisco'},
+                                                    'ietf': 
+                                                        {'helper': True,
+                                                        'type': 'ietf'}},
+                                                'lls': True,
+                                                'oob_resync_timeout': 40,
                                                 'hello_interval': 10,
                                                 'hello_timer': '00:00:08',
                                                 'if_cfg': True,
@@ -424,6 +543,15 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                 'dr_router_id': '1.1.1.1',
                                                 'enable': True,
                                                 'flood_queue_length': 0,
+                                                'graceful_restart': 
+                                                    {'cisco': 
+                                                        {'helper': True,
+                                                        'type': 'cisco'},
+                                                    'ietf': 
+                                                        {'helper': True,
+                                                        'type': 'ietf'}},
+                                                'lls': True,
+                                                'oob_resync_timeout': 40,
                                                 'hello_interval': 10,
                                                 'hello_timer': '00:00:05',
                                                 'if_cfg': True,
@@ -476,44 +604,134 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                             {'cost': 1,
                                                             'disabled': False,
                                                             'name': 'Base',
-                                                            'shutdown': False}}}}}}},
-                            '2': 
+                                                            'shutdown': False}}}}}}}}}}}}}
+
+    golden_parsed_output2 = {
+        'vrf': 
+            {'VRF1': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'2': 
                                 {'areas': 
                                     {'0.0.0.1': 
                                         {'interfaces': 
-                                            {'GigabitEthernet3': 
-                                                {'bdr_ip_addr': '20.1.5.5',
-                                                'bdr_router_id': '55.55.55.55',
+                                            {'Loopback1': 
+                                                {'attached': 'interface enable',
+                                                'bfd': 
+                                                    {'enable': False},
+                                                'cost': 1,
+                                                'demand_circuit': False,
+                                                'enable': True,
+                                                'if_cfg': True,
+                                                'interface_type': 'loopback',
+                                                'ip_address': '44.44.44.44/32',
+                                                'line_protocol': True,
+                                                'name': 'Loopback1',
+                                                'router_id': '4.4.4.4',
+                                                'topology': 
+                                                    {0: 
+                                                        {'cost': 1,
+                                                        'disabled': False,
+                                                        'name': 'Base',
+                                                        'shutdown': False}}}},
+                                        'virtual_links': 
+                                            {'0.0.0.1 4.4.4.4': 
+                                                {'attached': 'not attached',
+                                                'bfd': 
+                                                    {'enable': False},
+                                                'cost': 1,
+                                                'dead_interval': 44,
+                                                'demand_circuit': True,
+                                                'enable': True,
+                                                'flood_queue_length': 0,
+                                                'graceful_restart': 
+                                                    {'cisco': 
+                                                        {'helper': True,
+                                                        'type': 'cisco'},
+                                                    'ietf': 
+                                                        {'helper': True,
+                                                        'type': 'ietf'}},
+                                                'hello_interval': 4,
+                                                'hello_timer': '00:00:02',
+                                                'index': '2/6',
+                                                'interface_type': 'virtual-link',
+                                                'ip_address': '20.3.4.4/24',
+                                                'last_flood_scan_length': 2,
+                                                'last_flood_scan_time_msec': 0,
+                                                'line_protocol': True,
+                                                'lls': True,
+                                                'max_flood_scan_length': 8,
+                                                'max_flood_scan_time_msec': 0,
+                                                'name': 'VL1',
+                                                'next': '0x0(0)/0x0(0)',
+                                                'oob_resync_timeout': 44,
+                                                'passive': False,
+                                                'retransmit_interval': 5,
+                                                'router_id': '4.4.4.4',
+                                                'state': 'point-to-point',
+                                                'statistics': 
+                                                    {'adj_nbr_count': 1,
+                                                    'nbr_count': 1,
+                                                    'num_nbrs_suppress_hello': 0},
+                                                'topology': 
+                                                    {0: 
+                                                        {'cost': 1,
+                                                        'disabled': False,
+                                                        'name': 'Base',
+                                                        'shutdown': False}},
+                                                'transmit_delay': 1,
+                                                'wait_interval': 40}}}}}}}}},
+            'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.1': 
+                                        {'interfaces': 
+                                            {'GigabitEthernet0/0': 
+                                                {'attached': 'interface enable',
+                                                'bdr_ip_addr': '20.2.4.2',
+                                                'bdr_router_id': '2.2.2.2',
                                                 'bfd': 
                                                     {'enable': False},
                                                 'cost': 1,
                                                 'dead_interval': 40,
                                                 'demand_circuit': False,
-                                                'dr_ip_addr': '20.1.5.1',
-                                                'dr_router_id': '11.11.11.11',
+                                                'dr_ip_addr': '20.2.4.4',
+                                                'dr_router_id': '4.4.4.4',
                                                 'enable': True,
                                                 'flood_queue_length': 0,
+                                                'graceful_restart': 
+                                                    {'cisco': 
+                                                        {'helper': True,
+                                                        'type': 'cisco'},
+                                                    'ietf': 
+                                                        {'helper': True,
+                                                        'type': 'ietf'}},
                                                 'hello_interval': 10,
-                                                'hello_timer': '00:00:08',
+                                                'hello_timer': '00:00:02',
                                                 'if_cfg': True,
-                                                'index': '1/1/1',
-                                                'interface_id': 9,
+                                                'index': '2/3',
                                                 'interface_type': 'broadcast',
-                                                'ip_address': '20.1.5.1/24',
-                                                'last_flood_scan_length': 0,
+                                                'ip_address': '20.2.4.4/24',
+                                                'last_flood_scan_length': 1,
                                                 'last_flood_scan_time_msec': 0,
                                                 'line_protocol': True,
-                                                'max_flood_scan_length': 7,
-                                                'max_flood_scan_time_msec': 1,
-                                                'name': 'GigabitEthernet3',
+                                                'lls': True,
+                                                'max_flood_scan_length': 10,
+                                                'max_flood_scan_time_msec': 10,
+                                                'name': 'GigabitEthernet0/0',
                                                 'neighbors': 
-                                                    {'55.55.55.55': 
-                                                        {'bdr_router_id': '55.55.55.55'}},
-                                                'next': '0x0(0)/0x0(0)/0x0(0)',
+                                                    {'2.2.2.2': 
+                                                        {'bdr_router_id': '2.2.2.2'}},
+                                                'next': '0x0(0)/0x0(0)',
+                                                'oob_resync_timeout': 40,
                                                 'passive': False,
                                                 'priority': 1,
                                                 'retransmit_interval': 5,
-                                                'router_id': '11.11.11.11',
+                                                'router_id': '4.4.4.4',
                                                 'state': 'dr',
                                                 'statistics': 
                                                     {'adj_nbr_count': 1,
@@ -526,45 +744,81 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                         'name': 'Base',
                                                         'shutdown': False}},
                                                 'transmit_delay': 1,
-                                                'wait_interval': 40}},
-                                        'sham_links': 
-                                            {'33.33.33.33 22.22.22.22': 
-                                                {'bfd': 
+                                                'wait_interval': 40},
+                                            'GigabitEthernet0/1': 
+                                                {'attached': 'interface enable',
+                                                'bdr_ip_addr': '20.3.4.3',
+                                                'bdr_router_id': '3.3.3.3',
+                                                'bfd': 
                                                     {'enable': False},
-                                                'cost': 111,
+                                                'cost': 1,
                                                 'dead_interval': 40,
-                                                'demand_circuit': True,
+                                                'demand_circuit': False,
+                                                'dr_ip_addr': '20.3.4.4',
+                                                'dr_router_id': '4.4.4.4',
                                                 'enable': True,
                                                 'flood_queue_length': 0,
+                                                'graceful_restart': 
+                                                    {'cisco': 
+                                                        {'helper': True,
+                                                        'type': 'cisco'},
+                                                    'ietf': 
+                                                        {'helper': True,
+                                                        'type': 'ietf'}},
                                                 'hello_interval': 10,
-                                                'hello_timer': '00:00:00',
-                                                'index': '1/2/2',
-                                                'interface_id': 14,
-                                                'interface_type': 'sham-link',
-                                                'ip_address': '0.0.0.0/0',
-                                                'last_flood_scan_length': 1,
+                                                'hello_timer': '00:00:02',
+                                                'if_cfg': True,
+                                                'index': '3/4',
+                                                'interface_type': 'broadcast',
+                                                'ip_address': '20.3.4.4/24',
+                                                'last_flood_scan_length': 0,
                                                 'last_flood_scan_time_msec': 0,
                                                 'line_protocol': True,
-                                                'max_flood_scan_length': 5,
+                                                'lls': True,
+                                                'max_flood_scan_length': 11,
                                                 'max_flood_scan_time_msec': 1,
-                                                'name': 'SL1',
-                                                'next': '0x0(0)/0x0(0)/0x0(0)',
+                                                'name': 'GigabitEthernet0/1',
+                                                'neighbors': 
+                                                    {'3.3.3.3': 
+                                                        {'bdr_router_id': '3.3.3.3'}},
+                                                'next': '0x0(0)/0x0(0)',
+                                                'oob_resync_timeout': 40,
                                                 'passive': False,
+                                                'priority': 1,
                                                 'retransmit_interval': 5,
-                                                'router_id': '11.11.11.11',
-                                                'state': 'point-to-point',
+                                                'router_id': '4.4.4.4',
+                                                'state': 'dr',
                                                 'statistics': 
                                                     {'adj_nbr_count': 1,
                                                     'nbr_count': 1,
                                                     'num_nbrs_suppress_hello': 0},
                                                 'topology': 
                                                     {0: 
-                                                        {'cost': 111,
+                                                        {'cost': 1,
                                                         'disabled': False,
                                                         'name': 'Base',
                                                         'shutdown': False}},
                                                 'transmit_delay': 1,
-                                                'wait_interval': 40}}}}}}}}}}}
+                                                'wait_interval': 40},
+                                            'Loopback0': 
+                                                {'attached': 'interface enable',
+                                                'bfd': 
+                                                    {'enable': False},
+                                                    'cost': 1,
+                                                    'demand_circuit': False,
+                                                    'enable': True,
+                                                    'if_cfg': True,
+                                                    'interface_type': 'loopback',
+                                                    'ip_address': '4.4.4.4/32',
+                                                    'line_protocol': True,
+                                                    'name': 'Loopback0',
+                                                    'router_id': '4.4.4.4',
+                                                    'topology': 
+                                                        {0: 
+                                                            {'cost': 1,
+                                                            'disabled': False,
+                                                            'name': 'Base',
+                                                            'shutdown': False}}}}}}}}}}}}}
 
     def test_show_ip_ospf_interface_full1(self):
         
@@ -696,14 +950,31 @@ class test_show_ip_ospf_interface(unittest.TestCase):
             '''
 
         raw3 = '''\
-            R1_ospf_xe#show run formal router ospf | i sham | i 22.22.22.22
-              router ospf 2 area 1 sham-link 33.33.33.33 22.22.22.22
+            R1_ospf_xe#show running-config | i sham-link | i 22.22.22.22
+              area 1 sham-link 11.11.11.11 22.22.22.22 cost 111 ttl-security hops 3
+            '''
+
+        raw4 = '''\
+            R1_ospf_xe#show running-config | section router ospf 1
+              router ospf 1
+                mpls traffic-eng router-id Loopback0
+                mpls traffic-eng area 0
+            '''
+
+        raw5 = '''\
+            R1_ospf_xe#show running-config | section router ospf 2
+              router ospf 2 vrf VRF1
+                area 1 virtual-link 5.5.5.5
+                area 1 sham-link 11.11.11.11 22.22.22.22 cost 111 ttl-security hops 3
+                redistribute bgp
             '''
 
         self.outputs = {}
         self.outputs['show ip ospf interface'] = raw1
         self.outputs['show ip ospf sham-links | i OSPF_SL1'] = raw2
-        self.outputs['show run formal router ospf | i sham | i 22.22.22.22'] = raw3
+        self.outputs['show running-config | i sham-link | i 22.22.22.22'] = raw3
+        self.outputs['show running-config | section router ospf 1'] = raw4
+        self.outputs['show running-config | section router ospf 2'] = raw5
 
         self.device.execute = Mock()
         self.device.execute.side_effect = mapper
@@ -711,6 +982,136 @@ class test_show_ip_ospf_interface(unittest.TestCase):
         obj = ShowIpOspfInterface(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ip_ospf_interface_full2(self):
+        
+        self.maxDiff = None
+
+        def mapper(key):
+            return self.outputs[key]
+
+        raw1 = '''\
+            R4_ospf_iosv#show ip ospf interface (including virtual-link)
+            OSPF_VL1 is up, line protocol is up 
+              Internet Address 20.3.4.4/24, Area 1, Attached via Not Attached
+              Process ID 2, Router ID 4.4.4.4, Network Type VIRTUAL_LINK, Cost: 1
+              Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+              Configured as demand circuit
+              Run as demand circuit
+              DoNotAge LSA not allowed (Number of DCbitless LSA is 7)
+              Transmit Delay is 1 sec, State POINT_TO_POINT
+              Timer intervals configured, Hello 4, Dead 44, Wait 40, Retransmit 5
+                oob-resync timeout 44
+                Hello due in 00:00:02
+              Supports Link-local Signaling (LLS)
+              Cisco NSF helper support enabled
+              IETF NSF helper support enabled
+              Index 2/6, flood queue length 0
+              Next 0x0(0)/0x0(0)
+              Last flood scan length is 2, maximum is 8
+              Last flood scan time is 0 msec, maximum is 0 msec
+              Neighbor Count is 1, Adjacent neighbor count is 1 
+                Adjacent with neighbor 3.3.3.3
+              Suppress hello for 0 neighbor(s)
+            Loopback0 is up, line protocol is up 
+              Internet Address 4.4.4.4/32, Area 1, Attached via Interface Enable
+              Process ID 1, Router ID 4.4.4.4, Network Type LOOPBACK, Cost: 1
+              Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+              Enabled by interface config, including secondary ip addresses
+              Loopback interface is treated as a stub Host
+            GigabitEthernet0/1 is up, line protocol is up 
+              Internet Address 20.3.4.4/24, Area 1, Attached via Interface Enable
+              Process ID 1, Router ID 4.4.4.4, Network Type BROADCAST, Cost: 1
+              Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+              Enabled by interface config, including secondary ip addresses
+              Transmit Delay is 1 sec, State DR, Priority 1
+              Designated Router (ID) 4.4.4.4, Interface address 20.3.4.4
+              Backup Designated router (ID) 3.3.3.3, Interface address 20.3.4.3
+              Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:02
+              Supports Link-local Signaling (LLS)
+              Cisco NSF helper support enabled
+              IETF NSF helper support enabled
+              Index 3/4, flood queue length 0
+              Next 0x0(0)/0x0(0)
+              Last flood scan length is 0, maximum is 11
+              Last flood scan time is 0 msec, maximum is 1 msec
+              Neighbor Count is 1, Adjacent neighbor count is 1 
+                Adjacent with neighbor 3.3.3.3  (Backup Designated Router)
+              Suppress hello for 0 neighbor(s)
+            GigabitEthernet0/0 is up, line protocol is up 
+              Internet Address 20.2.4.4/24, Area 1, Attached via Interface Enable
+              Process ID 1, Router ID 4.4.4.4, Network Type BROADCAST, Cost: 1
+              Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+              Enabled by interface config, including secondary ip addresses
+              Transmit Delay is 1 sec, State DR, Priority 1
+              Designated Router (ID) 4.4.4.4, Interface address 20.2.4.4
+              Backup Designated router (ID) 2.2.2.2, Interface address 20.2.4.2
+              Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:02
+              Supports Link-local Signaling (LLS)
+              Cisco NSF helper support enabled
+              IETF NSF helper support enabled
+              Index 2/3, flood queue length 0
+              Next 0x0(0)/0x0(0)
+              Last flood scan length is 1, maximum is 10
+              Last flood scan time is 0 msec, maximum is 10 msec
+              Neighbor Count is 1, Adjacent neighbor count is 1 
+                Adjacent with neighbor 2.2.2.2  (Backup Designated Router)
+              Suppress hello for 0 neighbor(s)
+            Loopback1 is up, line protocol is up 
+              Internet Address 44.44.44.44/32, Area 1, Attached via Interface Enable
+              Process ID 2, Router ID 4.4.4.4, Network Type LOOPBACK, Cost: 1
+              Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+              Enabled by interface config, including secondary ip addresses
+              Loopback interface is treated as a stub Host
+            '''
+
+        raw2 = '''\
+            R1_ospf_xe#show ip ospf virtual-links | i OSPF_VL1
+              Virtual Link OSPF_VL1 to router 5.5.5.5 is down
+            '''
+
+        raw3 = '''\
+            R1_ospf_xe#show running-config | i virtual-link | i 5.5.5.5
+              area 1 virtual-link 5.5.5.5
+            '''
+
+        raw4 = '''\
+            R1_ospf_xe#show running-config | section router ospf 1
+              router ospf 1
+                mpls traffic-eng router-id Loopback0
+                mpls traffic-eng area 0
+            '''
+
+        raw5 = '''\
+            R1_ospf_xe#show running-config | section router ospf 2
+              router ospf 2 vrf VRF1
+                area 1 virtual-link 5.5.5.5
+                area 1 sham-link 11.11.11.11 22.22.22.22 cost 111 ttl-security hops 3
+                redistribute bgp
+            '''
+
+        self.outputs = {}
+        self.outputs['show ip ospf interface'] = raw1
+        self.outputs['show ip ospf virtual-links | i OSPF_VL1'] = raw2
+        self.outputs['show running-config | i virtual-link | i 5.5.5.5'] = raw3
+        self.outputs['show running-config | section router ospf 1'] = raw4
+        self.outputs['show running-config | section router ospf 2'] = raw5
+
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+        
+        obj = ShowIpOspfInterface(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_show_ip_ospf_interface_empty(self):
         self.maxDiff = None
