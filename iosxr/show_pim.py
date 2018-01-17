@@ -329,15 +329,15 @@ class ShowPimVrfRpfSummarySchema(MetaParser):
             {Any():
                 {'address_family': 
                     {Any(): 
-                        {'isis_mcast_topology': bool,
-                        'mo_frr_flow_based': bool,
-                        'mo_frr_rib': bool,
-                        'rump_mu_rib': bool,
-                        'pim_rpfs_registered': str,
-                        'default_rpf_table': str,
-                        'rib_convergence_timeout': str,
-                        'rib_convergence_time_left': str,
-                        'multipath': bool,
+                        {Optional('isis_mcast_topology'): bool,
+                        Optional('mo_frr_flow_based'): bool,
+                        Optional('mo_frr_rib'): bool,
+                        Optional('rump_mu_rib'): bool,
+                        Optional('pim_rpfs_registered'): str,
+                        Optional('default_rpf_table'): str,
+                        Optional('rib_convergence_timeout'): str,
+                        Optional('rib_convergence_time_left'): str,
+                        Optional('multipath'): bool,
                         Optional('table'): 
                             {Any(): 
                                 {'pim_rpf_registrations': int,

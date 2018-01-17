@@ -400,7 +400,7 @@ class ShowIpOspfInterfaceSchema(MetaParser):
     schema = {Optional('intfs_all'): OrKeyedList(list),
               Optional('intfs_up'): OrKeyedList(list),
               Optional('intfs_down'): OrKeyedList(list),
-              'intf':
+              Optional('intf'):
                 {Any():
                      {'intf_state': str,
                       Optional('prot_state'): OrKeyedList(str),
@@ -546,9 +546,10 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema,MetaParser):
                 retransmit_timer = m.groupdict()['retransmit_timer']
                 ospf_intf_dict['intf'][intf]['retransmit_timer'] = retransmit_timer
                 continue
-        ospf_intf_dict['intfs_all'] = sorted(intfs_all)
-        ospf_intf_dict['intfs_up'] = sorted(intfs_up)
-        ospf_intf_dict['intfs_down'] = sorted(intfs_down)
+        if ospf_intf_dict:
+            ospf_intf_dict['intfs_all'] = sorted(intfs_all)
+            ospf_intf_dict['intfs_up'] = sorted(intfs_up)
+            ospf_intf_dict['intfs_down'] = sorted(intfs_down)
         return ospf_intf_dict
 
 
