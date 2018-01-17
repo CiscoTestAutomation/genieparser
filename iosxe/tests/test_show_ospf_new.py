@@ -77,6 +77,8 @@ class test_show_ip_ospf(unittest.TestCase):
                                 'bfd': 
                                     {'enable': True,
                                     'strict_mode': True},
+                                'database_control': 
+                                    {'max_lsa': 123},
                                 'db_exchange_summary_list_optimization': True,
                                 'elapsed_time': '1d01h',
                                 'event_log': 
@@ -249,6 +251,7 @@ class test_show_ip_ospf(unittest.TestCase):
          LSA group pacing timer 240 secs
          Interface flood pacing timer 33 msecs
          Retransmission pacing timer 66 msecs
+         Maximum number of non self-generated LSA allowed 123
          EXCHANGE/LOADING adjacency limit: initial 300, process maximum 300
          Number of external LSA 1. Checksum Sum 0x007F60
          Number of opaque AS LSA 0. Checksum Sum 0x000000
@@ -4648,19 +4651,19 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                 {'interfaces': 
                                     {'GigabitEthernet3': 
                                         {'holddown_timer': True,
-                                        'ldp_auto_config': True,
+                                        'ldp_autoconfig': True,
                                         'ldp_autoconfig_area_id': '0.0.0.1',
                                         'ldp_igp_sync': False,
                                         'state': 'up'},
                                     'OSPF_SL1': 
                                         {'holddown_timer': True,
-                                        'ldp_auto_config': True,
+                                        'ldp_autoconfig': True,
                                         'ldp_autoconfig_area_id': '0.0.0.1',
                                         'ldp_igp_sync': False,
                                         'state': 'up'}},
                                 'mpls': 
                                     {'ldp': 
-                                        {'auto_config': True,
+                                        {'autoconfig': True,
                                         'autoconfig_area_id': '0.0.0.1',
                                         'igp_sync': False}}}}}}},
             'default': 
@@ -4671,25 +4674,25 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                 {'interfaces': 
                                     {'GigabitEthernet1': 
                                         {'holddown_timer': True,
-                                        'ldp_auto_config': True,
+                                        'ldp_autoconfig': True,
                                         'ldp_autoconfig_area_id': '0.0.0.0',
                                         'ldp_igp_sync': False,
                                         'state': 'up'},
                                     'GigabitEthernet2': 
                                         {'holddown_timer': True,
-                                        'ldp_auto_config': True,
+                                        'ldp_autoconfig': True,
                                         'ldp_autoconfig_area_id': '0.0.0.0',
                                         'ldp_igp_sync': False,
                                         'state': 'up'},
                                     'Loopback1': 
                                         {'holddown_timer': True,
-                                        'ldp_auto_config': True,
+                                        'ldp_autoconfig': True,
                                         'ldp_autoconfig_area_id': '0.0.0.0',
                                         'ldp_igp_sync': False,
                                         'state': 'up'}},
                                 'mpls': 
                                     {'ldp': 
-                                        {'auto_config': True,
+                                        {'autoconfig': True,
                                         'autoconfig_area_id': '0.0.0.0',
                                         'igp_sync': False}}}}}}}}}
 

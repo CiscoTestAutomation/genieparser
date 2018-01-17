@@ -4041,12 +4041,12 @@ class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
                             {Any(): 
                                 {'mpls': 
                                     {'ldp': 
-                                        {'auto_config': bool,
+                                        {'autoconfig': bool,
                                         'autoconfig_area_id': str,
                                         'igp_sync': bool}},
                                 'interfaces': 
                                     {Any(): 
-                                        {'ldp_auto_config': bool,
+                                        {'ldp_autoconfig': bool,
                                         'ldp_autoconfig_area_id': str,
                                         'ldp_igp_sync': bool,
                                         'holddown_timer': bool,
@@ -4159,11 +4159,11 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
             m = p3.match(line)
             if m:
                 if 'configured' in m.groupdict()['auto_config']:
-                    intf_dict['ldp_auto_config'] = True
-                    ldp_dict['auto_config'] = True
+                    intf_dict['ldp_autoconfig'] = True
+                    ldp_dict['autoconfig'] = True
                 else:
-                    intf_dict['ldp_auto_config'] = False
-                    ldp_dict['auto_config'] = False
+                    intf_dict['ldp_autoconfig'] = False
+                    ldp_dict['autoconfig'] = False
                     continue
             
             # LDP-IGP Synchronization : Not required
