@@ -367,7 +367,8 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                     {'0.0.0.1': 
                                         {'interfaces': 
                                             {'GigabitEthernet3': 
-                                                {'bdr_ip_addr': '20.1.5.5',
+                                                {'attached': 'interface enable',
+                                                'bdr_ip_addr': '20.1.5.5',
                                                 'bdr_router_id': '55.55.55.55',
                                                 'bfd': 
                                                     {'enable': False},
@@ -378,6 +379,8 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                 'dr_router_id': '11.11.11.11',
                                                 'enable': True,
                                                 'flood_queue_length': 0,
+                                                'frr_enabled': True,
+                                                'frr_protected': True,
                                                 'graceful_restart': 
                                                     {'cisco': 
                                                         {'helper': True,
@@ -413,6 +416,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                     {'adj_nbr_count': 1,
                                                     'nbr_count': 1,
                                                     'num_nbrs_suppress_hello': 0},
+                                                'ti_lfa_protected': False,
                                                 'topology': 
                                                     {0: 
                                                         {'cost': 1,
@@ -423,7 +427,8 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                 'wait_interval': 40}},
                                         'sham_links': 
                                             {'11.11.11.11 22.22.22.22': 
-                                                {'bfd': 
+                                                {'attached': 'not attached',
+                                                'bfd': 
                                                     {'enable': False},
                                                 'cost': 111,
                                                 'dead_interval': 40,
@@ -460,6 +465,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                     {'adj_nbr_count': 1,
                                                     'nbr_count': 1,
                                                     'num_nbrs_suppress_hello': 0},
+                                                'ti_lfa_protected': False,
                                                 'topology': 
                                                     {0: 
                                                         {'cost': 111,
@@ -477,7 +483,8 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                     {'0.0.0.0': 
                                         {'interfaces': 
                                             {'GigabitEthernet1': 
-                                                {'bdr_ip_addr': '10.1.4.1',
+                                                {'attached': 'interface enable',
+                                                'bdr_ip_addr': '10.1.4.1',
                                                 'bdr_router_id': '1.1.1.1',
                                                 'bfd': 
                                                     {'enable': False},
@@ -488,6 +495,8 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                 'dr_router_id': '4.4.4.4',
                                                 'enable': True,
                                                 'flood_queue_length': 0,
+                                                'frr_enabled': True,
+                                                'frr_protected': True,
                                                 'graceful_restart': 
                                                     {'cisco': 
                                                         {'helper': True,
@@ -523,6 +532,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                     {'adj_nbr_count': 1,
                                                     'nbr_count': 1,
                                                     'num_nbrs_suppress_hello': 0},
+                                                'ti_lfa_protected': False,
                                                 'topology': 
                                                     {0: 
                                                         {'cost': 1,
@@ -532,7 +542,8 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                 'transmit_delay': 1,
                                                 'wait_interval': 40},
                                             'GigabitEthernet2': 
-                                                {'bdr_ip_addr': '10.1.2.2',
+                                                {'attached': 'interface enable',
+                                                'bdr_ip_addr': '10.1.2.2',
                                                 'bdr_router_id': '2.2.2.2',
                                                 'bfd': 
                                                     {'enable': False},
@@ -543,6 +554,8 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                 'dr_router_id': '1.1.1.1',
                                                 'enable': True,
                                                 'flood_queue_length': 0,
+                                                'frr_enabled': True,
+                                                'frr_protected': True,
                                                 'graceful_restart': 
                                                     {'cisco': 
                                                         {'helper': True,
@@ -578,6 +591,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                     {'adj_nbr_count': 1,
                                                     'nbr_count': 1,
                                                     'num_nbrs_suppress_hello': 0},
+                                                'ti_lfa_protected': False,
                                                 'topology': 
                                                     {0: 
                                                         {'cost': 1,
@@ -587,24 +601,26 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                 'transmit_delay': 1,
                                                 'wait_interval': 40},
                                             'Loopback0': 
-                                                {'bfd': 
+                                                {'attached': 'interface enable',
+                                                'bfd': 
                                                     {'enable': False},
-                                                    'cost': 1,
-                                                    'demand_circuit': False,
-                                                    'enable': True,
-                                                    'if_cfg': True,
-                                                    'interface_id': 11,
-                                                    'interface_type': 'loopback',
-                                                    'ip_address': '1.1.1.1/32',
-                                                    'line_protocol': True,
-                                                    'name': 'Loopback0',
-                                                    'router_id': '1.1.1.1',
-                                                    'topology': 
-                                                        {0: 
-                                                            {'cost': 1,
-                                                            'disabled': False,
-                                                            'name': 'Base',
-                                                            'shutdown': False}}}}}}}}}}}}}
+                                                'cost': 1,
+                                                'demand_circuit': False,
+                                                'enable': True,
+                                                'if_cfg': True,
+                                                'interface_id': 11,
+                                                'interface_type': 'loopback',
+                                                'ip_address': '1.1.1.1/32',
+                                                'line_protocol': True,
+                                                'name': 'Loopback0',
+                                                'router_id': '1.1.1.1',
+                                                'stub_host': True,
+                                                'topology': 
+                                                    {0: 
+                                                        {'cost': 1,
+                                                        'disabled': False,
+                                                        'name': 'Base',
+                                                        'shutdown': False}}}}}}}}}}}}}
 
     golden_parsed_output2 = {
         'vrf': 
@@ -629,6 +645,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                 'line_protocol': True,
                                                 'name': 'Loopback1',
                                                 'router_id': '4.4.4.4',
+                                                'stub_host': True,
                                                 'topology': 
                                                     {0: 
                                                         {'cost': 1,
@@ -813,6 +830,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                     'line_protocol': True,
                                                     'name': 'Loopback0',
                                                     'router_id': '4.4.4.4',
+                                                    'stub_host': True,
                                                     'topology': 
                                                         {0: 
                                                             {'cost': 1,
@@ -1133,106 +1151,201 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
-        'areas': 
-            {'0.0.0.0': 
-                {'interfaces': 
-                    {'GigabitEthernet1': 
-                        {'neighbors': 
-                            {'4.4.4.4': 
-                                {'address': '10.1.4.4',
-                                'bdr_ip_addr': '10.1.4.1',
-                                'dead_timer': '00:00:35',
-                                'dr_ip_addr': '10.1.4.4',
-                                'first': '0x0(0)/0x0(0)/0x0(0)',
-                                'index': '1/1/1,',
-                                'interface': 'GigabitEthernet1',
-                                'neighbor_router_id': '4.4.4.4',
-                                'neighbor_uptime': '1d01h',
-                                'next': '0x0(0)/0x0(0)/0x0(0)',
-                                'priority': 1,
-                                'state': 'full',
-                                'statistics': 
-                                    {'last_retrans_max_scan_length': 1,
-                                    'last_retrans_max_scan_time_msec': 0,
-                                    'last_retrans_scan_length': 0,
-                                    'last_retrans_scan_time_msec': 0,
-                                    'nbr_event_count': 6,
-                                    'nbr_retrans_qlen': 0,
-                                    'total_retransmission': 1}}}},
-                    'GigabitEthernet2': 
-                        {'neighbors': 
-                            {'2.2.2.2': 
-                                {'address': '10.1.2.2',
-                                'bdr_ip_addr': '10.1.2.2',
-                                'dead_timer': '00:00:33',
-                                'dr_ip_addr': '10.1.2.1',
-                                'first': '0x0(0)/0x0(0)/0x0(0)',
-                                'hello_options': '0x2',
-                                'index': '1/2/2,',
-                                'interface': 'GigabitEthernet2',
-                                'neighbor_router_id': '2.2.2.2',
-                                'neighbor_uptime': '08:04:20',
-                                'next': '0x0(0)/0x0(0)/0x0(0)',
-                                'priority': 1,
-                                'state': 'full',
-                                'statistics': 
-                                    {'last_retrans_max_scan_length': 0,
-                                    'last_retrans_max_scan_time_msec': 0,
-                                    'last_retrans_scan_length': 0,
-                                    'last_retrans_scan_time_msec': 0,
-                                    'nbr_event_count': 6,
-                                    'nbr_retrans_qlen': 0,
-                                    'total_retransmission': 0}}}}}},
-            '0.0.0.1': 
-                {'interfaces': 
-                    {'GigabitEthernet3': 
-                        {'neighbors': 
-                            {'55.55.55.55': 
-                                {'address': '20.1.5.5',
-                                'bdr_ip_addr': '20.1.5.5',
-                                'dead_timer': '00:00:34',
-                                'dr_ip_addr': '20.1.5.1',
-                                'first': '0x0(0)/0x0(0)/0x0(0)',
-                                'index': '1/1/1,',
-                                'interface': 'GigabitEthernet3',
-                                'neighbor_router_id': '55.55.55.55',
-                                'neighbor_uptime': '15:47:14',
-                                'next': '0x0(0)/0x0(0)/0x0(0)',
-                                'priority': 1,
-                                'state': 'full',
-                                'statistics': 
-                                    {'last_retrans_max_scan_length': 6,
-                                    'last_retrans_max_scan_time_msec': 0,
-                                    'last_retrans_scan_length': 1,
-                                    'last_retrans_scan_time_msec': 0,
-                                    'nbr_event_count': 6,
-                                    'nbr_retrans_qlen': 0,
-                                    'total_retransmission': 6}}}}},
-                'sham_links': 
-                    {'33.33.33.33 22.22.22.22': 
-                        {'neighbors': 
-                            {'22.22.22.22': 
-                                {'address': '22.22.22.22',
-                                'bdr_ip_addr': '0.0.0.0',
-                                'dead_timer': '00:00:35',
-                                'dr_ip_addr': '0.0.0.0',
-                                'first': '0x0(0)/0x0(0)/0x0(0)',
-                                'hello_options': '0x2',
-                                'index': '1/2/2,',
-                                'interface': 'OSPF_SL1',
-                                'neighbor_router_id': '22.22.22.22',
-                                'neighbor_uptime': '07:41:59',
-                                'next': '0x0(0)/0x0(0)/0x0(0)',
-                                'priority': 0,
-                                'state': 'full',
-                                'statistics': 
-                                    {'last_retrans_max_scan_length': 1,
-                                    'last_retrans_max_scan_time_msec': 0,
-                                    'last_retrans_scan_length': 1,
-                                    'last_retrans_scan_time_msec': 0,
-                                    'nbr_event_count': 6,
-                                    'nbr_retrans_qlen': 0,
-                                    'total_retransmission': 2}}}}}}}}
+        'vrf': 
+            {'VRF1': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'2': 
+                                {'areas': 
+                                    {'0.0.0.1': 
+                                        {'interfaces': 
+                                            {'GigabitEthernet3': 
+                                                {'neighbors': 
+                                                    {'55.55.55.55': 
+                                                        {'address': '20.1.5.5',
+                                                        'bdr_ip_addr': '20.1.5.5',
+                                                        'dead_timer': '00:00:34',
+                                                        'dr_ip_addr': '20.1.5.1',
+                                                        'first': '0x0(0)/0x0(0)/0x0(0)',
+                                                        'index': '1/1/1,',
+                                                        'interface': 'GigabitEthernet3',
+                                                        'neighbor_router_id': '55.55.55.55',
+                                                        'neighbor_uptime': '15:47:14',
+                                                        'next': '0x0(0)/0x0(0)/0x0(0)',
+                                                        'priority': 1,
+                                                        'state': 'full',
+                                                        'statistics': 
+                                                            {'last_retrans_max_scan_length': 6,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            'last_retrans_scan_length': 1,
+                                                            'last_retrans_scan_time_msec': 0,
+                                                            'nbr_event_count': 6,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 6}}}}},
+                                        'sham_links': 
+                                            {'11.11.11.11 22.22.22.22': 
+                                                {'neighbors': 
+                                                    {'22.22.22.22': 
+                                                        {'address': '22.22.22.22',
+                                                        'bdr_ip_addr': '0.0.0.0',
+                                                        'dead_timer': '00:00:35',
+                                                        'dr_ip_addr': '0.0.0.0',
+                                                        'first': '0x0(0)/0x0(0)/0x0(0)',
+                                                        'hello_options': '0x2',
+                                                        'index': '1/2/2,',
+                                                        'interface': 'OSPF_SL1',
+                                                        'neighbor_router_id': '22.22.22.22',
+                                                        'neighbor_uptime': '07:41:59',
+                                                        'next': '0x0(0)/0x0(0)/0x0(0)',
+                                                        'priority': 0,
+                                                        'state': 'full',
+                                                        'statistics': 
+                                                            {'last_retrans_max_scan_length': 1,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            'last_retrans_scan_length': 1,
+                                                            'last_retrans_scan_time_msec': 0,
+                                                            'nbr_event_count': 6,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 2}}}}}}}}}}}},
+            'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.0': 
+                                        {'interfaces': 
+                                            {'GigabitEthernet1': 
+                                                {'neighbors': 
+                                                    {'4.4.4.4': 
+                                                        {'address': '10.1.4.4',
+                                                        'bdr_ip_addr': '10.1.4.1',
+                                                        'dead_timer': '00:00:35',
+                                                        'dr_ip_addr': '10.1.4.4',
+                                                        'first': '0x0(0)/0x0(0)/0x0(0)',
+                                                        'index': '1/1/1,',
+                                                        'interface': 'GigabitEthernet1',
+                                                        'neighbor_router_id': '4.4.4.4',
+                                                        'neighbor_uptime': '1d01h',
+                                                        'next': '0x0(0)/0x0(0)/0x0(0)',
+                                                        'priority': 1,
+                                                        'state': 'full',
+                                                        'statistics': 
+                                                            {'last_retrans_max_scan_length': 1,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            'last_retrans_scan_length': 0,
+                                                            'last_retrans_scan_time_msec': 0,
+                                                            'nbr_event_count': 6,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 1}}}},
+                                            'GigabitEthernet2': 
+                                                {'neighbors': 
+                                                    {'2.2.2.2': 
+                                                        {'address': '10.1.2.2',
+                                                        'bdr_ip_addr': '10.1.2.2',
+                                                        'dead_timer': '00:00:33',
+                                                        'dr_ip_addr': '10.1.2.1',
+                                                        'first': '0x0(0)/0x0(0)/0x0(0)',
+                                                        'hello_options': '0x2',
+                                                        'index': '1/2/2,',
+                                                        'interface': 'GigabitEthernet2',
+                                                        'neighbor_router_id': '2.2.2.2',
+                                                        'neighbor_uptime': '08:04:20',
+                                                        'next': '0x0(0)/0x0(0)/0x0(0)',
+                                                        'priority': 1,
+                                                        'state': 'full',
+                                                        'statistics': 
+                                                            {'last_retrans_max_scan_length': 0,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            'last_retrans_scan_length': 0,
+                                                            'last_retrans_scan_time_msec': 0,
+                                                            'nbr_event_count': 6,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 0}}}}}}}}}}}}}}
+
+    golden_parsed_output2 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'1': 
+                                {'areas': 
+                                    {'0.0.0.1': 
+                                        {'interfaces': 
+                                            {'GigabitEthernet0/0': 
+                                                {'neighbors': 
+                                                    {'2.2.2.2': 
+                                                        {'address': '20.2.4.2',
+                                                        'bdr_ip_addr': '20.2.4.2',
+                                                        'dead_timer': '00:00:34',
+                                                        'dr_ip_addr': '20.2.4.4',
+                                                        'first': '0x0(0)/0x0(0)',
+                                                        'index': '1/1,',
+                                                        'interface': 'GigabitEthernet0/0',
+                                                        'neighbor_router_id': '2.2.2.2',
+                                                        'neighbor_uptime': '05:07:40',
+                                                        'next': '0x0(0)/0x0(0)',
+                                                        'priority': 1,
+                                                        'state': 'full',
+                                                        'statistics': 
+                                                            {'last_retrans_max_scan_length': 1,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            'last_retrans_scan_length': 1,
+                                                            'last_retrans_scan_time_msec': 0,
+                                                            'nbr_event_count': 6,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 1}}}},
+                                            'GigabitEthernet0/1': 
+                                                {'neighbors': 
+                                                    {'3.3.3.3': 
+                                                        {'address': '20.3.4.3',
+                                                        'bdr_ip_addr': '20.3.4.3',
+                                                        'dead_timer': '00:00:33',
+                                                        'dr_ip_addr': '20.3.4.4',
+                                                        'first': '0x0(0)/0x0(0)',
+                                                        'hello_options': '0x2',
+                                                        'index': '2/2,',
+                                                        'interface': 'GigabitEthernet0/1',
+                                                        'neighbor_router_id': '3.3.3.3',
+                                                        'neighbor_uptime': '16:31:06',
+                                                        'next': '0x0(0)/0x0(0)',
+                                                        'priority': 1,
+                                                        'state': 'full',
+                                                        'statistics': 
+                                                            {'last_retrans_max_scan_length': 1,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            'last_retrans_scan_length': 1,
+                                                            'last_retrans_scan_time_msec': 0,
+                                                            'nbr_event_count': 6,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 2}}}}},
+                                        'virtual_links': 
+                                            {'0.0.0.1 4.4.4.4,': 
+                                                {'neighbors': 
+                                                    {'3.3.3.3': 
+                                                        {'address': '20.2.3.3',
+                                                        'bdr_ip_addr': '0.0.0.0',
+                                                        'dead_timer': '00:00:41',
+                                                        'dr_ip_addr': '0.0.0.0',
+                                                        'first': '0x0(0)/0x0(0)',
+                                                        'hello_options': '0x2',
+                                                        'index': '1/3,',
+                                                        'interface': 'OSPF_VL1',
+                                                        'neighbor_router_id': '3.3.3.3',
+                                                        'neighbor_uptime': '05:07:21',
+                                                        'next': '0x0(0)/0x0(0)',
+                                                        'priority': 0,
+                                                        'state': 'full',
+                                                        'statistics': 
+                                                            {'last_retrans_max_scan_length': 1,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            'last_retrans_scan_length': 1,
+                                                            'last_retrans_scan_time_msec': 0,
+                                                            'nbr_event_count': 12,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 3}}}}}}}}}}}}}}
 
     def test_show_ip_ospf_neighbor_detail_full1(self):
         
@@ -1295,20 +1408,162 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
                 Last retransmission scan time is 0 msec, maximum is 0 msec
             '''
 
-        raw2 = '''\
+        raw2_1 = '''\
+            R1_ospf_xe#show ip ospf interface | i GigabitEthernet2
+            GigabitEthernet2 is up, line protocol is up 
+              Internet Address 10.1.2.1/24, Interface ID 8, Area 0
+              Attached via Interface Enable
+              Process ID 1, Router ID 1.1.1.1, Network Type BROADCAST, Cost: 1
+              Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+              Enabled by interface config, including secondary ip addresses
+              Transmit Delay is 1 sec, State DR, Priority 1
+              Designated Router (ID) 1.1.1.1, Interface address 10.1.2.1
+              Backup Designated router (ID) 2.2.2.2, Interface address 10.1.2.2
+              Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:05
+              Supports Link-local Signaling (LLS)
+              Cisco NSF helper support enabled
+              IETF NSF helper support enabled
+              Can be protected by per-prefix Loop-Free FastReroute
+              Can be used for per-prefix Loop-Free FastReroute repair paths
+              Not Protected by per-prefix TI-LFA
+              Index 1/3/3, flood queue length 0
+              Next 0x0(0)/0x0(0)/0x0(0)
+              Last flood scan length is 1, maximum is 3
+              Last flood scan time is 0 msec, maximum is 1 msec
+              Neighbor Count is 1, Adjacent neighbor count is 1 
+                Adjacent with neighbor 2.2.2.2  (Backup Designated Router)
+              Suppress hello for 0 neighbor(s)
+            '''
+
+        raw2_2 = '''\
+            R1_ospf_xe#show ip ospf interface | i GigabitEthernet1
+            GigabitEthernet1 is up, line protocol is up 
+              Internet Address 10.1.4.1/24, Interface ID 7, Area 0
+              Attached via Interface Enable
+              Process ID 1, Router ID 1.1.1.1, Network Type BROADCAST, Cost: 1
+              Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+              Enabled by interface config, including secondary ip addresses
+              Transmit Delay is 1 sec, State BDR, Priority 1
+              Designated Router (ID) 4.4.4.4, Interface address 10.1.4.4
+              Backup Designated router (ID) 1.1.1.1, Interface address 10.1.4.1
+              Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:08
+              Supports Link-local Signaling (LLS)
+              Cisco NSF helper support enabled
+              IETF NSF helper support enabled
+              Can be protected by per-prefix Loop-Free FastReroute
+              Can be used for per-prefix Loop-Free FastReroute repair paths
+              Not Protected by per-prefix TI-LFA
+              Index 1/2/2, flood queue length 0
+              Next 0x0(0)/0x0(0)/0x0(0)
+              Last flood scan length is 3, maximum is 3
+              Last flood scan time is 0 msec, maximum is 1 msec
+              Neighbor Count is 1, Adjacent neighbor count is 1 
+                Adjacent with neighbor 4.4.4.4  (Designated Router)
+              Suppress hello for 0 neighbor(s)
+            '''
+
+        raw2_3 = '''
+            R1_ospf_xe#show ip ospf interface | i OSPF_SL1
+            OSPF_SL1 is up, line protocol is up 
+              Internet Address 0.0.0.0/0, Interface ID 14, Area 1
+              Attached via Not Attached
+              Process ID 2, Router ID 11.11.11.11, Network Type SHAM_LINK, Cost: 111
+              Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           111       no          no            Base
+              Configured as demand circuit
+              Run as demand circuit
+              DoNotAge LSA not allowed (Number of DCbitless LSA is 1)
+              Transmit Delay is 1 sec, State POINT_TO_POINT
+              Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:00
+              Supports Link-local Signaling (LLS)
+              Cisco NSF helper support enabled
+              IETF NSF helper support enabled
+              Strict TTL checking enabled, up to 3 hops allowed
+              Can not be protected by per-prefix Loop-Free FastReroute
+              Can not be used for per-prefix Loop-Free FastReroute repair paths
+              Not Protected by per-prefix TI-LFA
+              Index 1/2/2, flood queue length 0
+              Next 0x0(0)/0x0(0)/0x0(0)
+              Last flood scan length is 1, maximum is 5
+              Last flood scan time is 0 msec, maximum is 1 msec
+              Neighbor Count is 1, Adjacent neighbor count is 1 
+                Adjacent with neighbor 22.22.22.22
+              Suppress hello for 0 neighbor(s)
+            '''
+
+        raw2_4 = '''
+            R1_ospf_xe#show ip ospf interface | i GigabitEthernet3
+            GigabitEthernet3 is up, line protocol is up 
+              Internet Address 20.1.5.1/24, Interface ID 9, Area 1
+              Attached via Interface Enable
+              Process ID 2, Router ID 11.11.11.11, Network Type BROADCAST, Cost: 1
+              Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+              Enabled by interface config, including secondary ip addresses
+              Transmit Delay is 1 sec, State DR, Priority 1
+              Designated Router (ID) 11.11.11.11, Interface address 20.1.5.1
+              Backup Designated router (ID) 55.55.55.55, Interface address 20.1.5.5
+              Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:08
+              Supports Link-local Signaling (LLS)
+              Cisco NSF helper support enabled
+              IETF NSF helper support enabled
+              Can be protected by per-prefix Loop-Free FastReroute
+              Can be used for per-prefix Loop-Free FastReroute repair paths
+              Not Protected by per-prefix TI-LFA
+              Index 1/1/1, flood queue length 0
+              Next 0x0(0)/0x0(0)/0x0(0)
+              Last flood scan length is 0, maximum is 7
+              Last flood scan time is 0 msec, maximum is 1 msec
+              Neighbor Count is 1, Adjacent neighbor count is 1 
+                Adjacent with neighbor 55.55.55.55  (Backup Designated Router)
+              Suppress hello for 0 neighbor(s)
+            '''
+
+        raw3_1 = '''\
             R1_ospf_xe#show ip ospf sham-links | i OSPF_SL1
               Sham Link OSPF_SL1 to address 22.22.22.22 is up
             '''
 
-        raw3 = '''\
-            R1_ospf_xe#show run formal router ospf | i sham | i 22.22.22.22
-              router ospf 2 area 1 sham-link 33.33.33.33 22.22.22.22
+        raw3_2 = '''\
+            R1_ospf_xe#show running-config | i sham-link | i 22.22.22.22
+              area 1 sham-link 11.11.11.11 22.22.22.22 cost 111 ttl-security hops 3
+            '''
+
+        raw4_1 = '''\
+            R1_ospf_xe#show running-config | section router ospf 1
+              router ospf 1
+                mpls traffic-eng router-id Loopback0
+                mpls traffic-eng area 0
+            '''
+
+        raw4_2 = '''\
+            R1_ospf_xe#show running-config | section router ospf 2
+              router ospf 2 vrf VRF1
+                area 1 virtual-link 5.5.5.5
+                area 1 sham-link 11.11.11.11 22.22.22.22 cost 111 ttl-security hops 3
+                redistribute bgp
             '''
 
         self.outputs = {}
         self.outputs['show ip ospf neighbor detail'] = raw1
-        self.outputs['show ip ospf sham-links | i OSPF_SL1'] = raw2
-        self.outputs['show run formal router ospf | i sham | i 22.22.22.22'] = raw3
+        self.outputs['show ip ospf interface | section GigabitEthernet2'] = raw2_1
+        self.outputs['show ip ospf interface | section GigabitEthernet1'] = raw2_2
+        self.outputs['show ip ospf interface | section OSPF_SL1'] = raw2_3
+        self.outputs['show ip ospf interface | section GigabitEthernet3'] = raw2_4
+        self.outputs['show ip ospf sham-links | i OSPF_SL1'] = raw3_1
+        self.outputs['show running-config | i sham-link | i 22.22.22.22'] = raw3_2
+        self.outputs['show running-config | section router ospf 1'] = raw4_1
+        self.outputs['show running-config | section router ospf 2'] = raw4_2
 
         self.device.execute = Mock()
         self.device.execute.side_effect = mapper
@@ -1316,6 +1571,176 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
         obj = ShowIpOspfNeighborDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ip_ospf_neighbor_detail_full1(self):
+        
+        self.maxDiff = None
+
+        def mapper(key):
+            return self.outputs[key]
+
+        raw1 = '''\
+            R4_ospf_iosv#show ip ospf neighbor detail (including virtual-link)
+            Neighbor 3.3.3.3, interface address 20.2.3.3
+                In the area 0 via interface OSPF_VL1
+                Neighbor priority is 0, State is FULL, 12 state changes
+                DR is 0.0.0.0 BDR is 0.0.0.0
+                Options is 0x2 in Hello (E-bit)
+                Options is 0x42 in DBD (E-bit, O-bit)
+                Dead timer due in 00:00:41
+                Neighbor is up for 05:07:21
+                Index 1/3, retransmission queue length 0, number of retransmission 3
+                First 0x0(0)/0x0(0) Next 0x0(0)/0x0(0)
+                Last retransmission scan length is 1, maximum is 1
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+            Neighbor 3.3.3.3, interface address 20.3.4.3
+                In the area 1 via interface GigabitEthernet0/1
+                Neighbor priority is 1, State is FULL, 6 state changes
+                DR is 20.3.4.4 BDR is 20.3.4.3
+                Options is 0x2 in Hello (E-bit)
+                Options is 0x42 in DBD (E-bit, O-bit)
+                Dead timer due in 00:00:33
+                Neighbor is up for 16:31:06
+                Index 2/2, retransmission queue length 0, number of retransmission 2
+                First 0x0(0)/0x0(0) Next 0x0(0)/0x0(0)
+                Last retransmission scan length is 1, maximum is 1
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+            Neighbor 2.2.2.2, interface address 20.2.4.2
+                In the area 1 via interface GigabitEthernet0/0
+                Neighbor priority is 1, State is FULL, 6 state changes
+                DR is 20.2.4.4 BDR is 20.2.4.2
+                Options is 0x12 in Hello (E-bit, L-bit)
+                Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+                LLS Options is 0x1 (LR)
+                Dead timer due in 00:00:34
+                Neighbor is up for 05:07:40
+                Index 1/1, retransmission queue length 0, number of retransmission 1
+                First 0x0(0)/0x0(0) Next 0x0(0)/0x0(0)
+                Last retransmission scan length is 1, maximum is 1
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+            '''
+
+        raw2_1 = '''\
+            R4_ospf_iosv#show ip ospf interface | section OSPF_VL1
+            OSPF_VL1 is up, line protocol is up 
+                Internet Address 20.3.4.4/24, Area 0, Attached via Not Attached
+                Process ID 1, Router ID 4.4.4.4, Network Type VIRTUAL_LINK, Cost: 1
+                Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+                Configured as demand circuit
+                Run as demand circuit
+                DoNotAge LSA not allowed (Number of DCbitless LSA is 7)
+                Transmit Delay is 1 sec, State POINT_TO_POINT
+                Timer intervals configured, Hello 4, Dead 44, Wait 40, Retransmit 5
+                oob-resync timeout 44
+                Hello due in 00:00:02
+                Supports Link-local Signaling (LLS)
+                Cisco NSF helper support enabled
+                IETF NSF helper support enabled
+                Index 2/6, flood queue length 0
+                Next 0x0(0)/0x0(0)
+                Last flood scan length is 2, maximum is 8
+                Last flood scan time is 0 msec, maximum is 0 msec
+                Neighbor Count is 1, Adjacent neighbor count is 1 
+                Adjacent with neighbor 3.3.3.3
+                Suppress hello for 0 neighbor(s)
+            '''
+
+        raw2_2 = '''\
+            R4_ospf_iosv#show ip ospf interface | section GigabitEthernet0/1
+            GigabitEthernet0/1 is up, line protocol is up 
+                Internet Address 20.3.4.4/24, Area 1, Attached via Interface Enable
+                Process ID 1, Router ID 4.4.4.4, Network Type BROADCAST, Cost: 1
+                Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+                Enabled by interface config, including secondary ip addresses
+                Transmit Delay is 1 sec, State DR, Priority 1
+                Designated Router (ID) 4.4.4.4, Interface address 20.3.4.4
+                Backup Designated router (ID) 3.3.3.3, Interface address 20.3.4.3
+                Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:02
+                Supports Link-local Signaling (LLS)
+                Cisco NSF helper support enabled
+                IETF NSF helper support enabled
+                Index 3/4, flood queue length 0
+                Next 0x0(0)/0x0(0)
+                Last flood scan length is 0, maximum is 11
+                Last flood scan time is 0 msec, maximum is 1 msec
+                Neighbor Count is 1, Adjacent neighbor count is 1 
+                Adjacent with neighbor 3.3.3.3  (Backup Designated Router)
+                Suppress hello for 0 neighbor(s)
+            '''
+
+        raw2_3 = '''\
+            R4_ospf_iosv#show ip ospf interface | section GigabitEthernet0/0
+            GigabitEthernet0/0 is up, line protocol is up 
+                Internet Address 20.2.4.4/24, Area 1, Attached via Interface Enable
+                Process ID 1, Router ID 4.4.4.4, Network Type BROADCAST, Cost: 1
+                Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+                Enabled by interface config, including secondary ip addresses
+                Transmit Delay is 1 sec, State DR, Priority 1
+                Designated Router (ID) 4.4.4.4, Interface address 20.2.4.4
+                Backup Designated router (ID) 2.2.2.2, Interface address 20.2.4.2
+                Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:02
+                Supports Link-local Signaling (LLS)
+                Cisco NSF helper support enabled
+                IETF NSF helper support enabled
+                Index 2/3, flood queue length 0
+                Next 0x0(0)/0x0(0)
+                Last flood scan length is 1, maximum is 10
+                Last flood scan time is 0 msec, maximum is 10 msec
+                Neighbor Count is 1, Adjacent neighbor count is 1 
+                Adjacent with neighbor 2.2.2.2  (Backup Designated Router)
+                Suppress hello for 0 neighbor(s)
+            '''
+
+        raw3_1 = '''\
+            R1_ospf_xe#show ip ospf virtual-links | i OSPF_VL1
+              Virtual Link OSPF_VL1 to router 5.5.5.5 is down
+            '''
+
+        raw3_2 = '''\
+            R1_ospf_xe#show running-config | i virtual-link | i 5.5.5.5
+              area 1 virtual-link 5.5.5.5
+            '''
+
+        raw4_1 = '''\
+            R1_ospf_xe#show running-config | section router ospf 1
+              router ospf 1
+                mpls traffic-eng router-id Loopback0
+                mpls traffic-eng area 0
+            '''
+
+        raw4_2 = '''\
+            R1_ospf_xe#show running-config | section router ospf 2
+              router ospf 2 vrf VRF1
+                area 1 virtual-link 5.5.5.5
+                area 1 sham-link 11.11.11.11 22.22.22.22 cost 111 ttl-security hops 3
+                redistribute bgp
+            '''
+
+        self.outputs = {}
+        self.outputs['show ip ospf neighbor detail'] = raw1
+        self.outputs['show ip ospf interface | section OSPF_VL1'] = raw2_1
+        self.outputs['show ip ospf interface | section GigabitEthernet0/1'] = raw2_2
+        self.outputs['show ip ospf interface | section GigabitEthernet0/0'] = raw2_3
+
+        self.outputs['show ip ospf virtual-links | i OSPF_VL1'] = raw3_1
+        self.outputs['show running-config | i virtual-link | i 5.5.5.5'] = raw3_2
+        
+        self.outputs['show running-config | section router ospf 1'] = raw4_1
+        self.outputs['show running-config | section router ospf 2'] = raw4_2
+
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+        
+        obj = ShowIpOspfNeighborDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_show_ip_ospf_neighbor_detail_empty(self):
         self.maxDiff = None
@@ -1336,30 +1761,101 @@ class test_show_ip_ospf_sham_links(unittest.TestCase):
     
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output1 = {}
+    golden_parsed_output1 = {
+        'vrf': 
+            {'VRF1': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'2': 
+                                {'areas': 
+                                    {'0.0.0.1': 
+                                        {'sham_links': 
+                                            {'11.11.11.11 22.22.22.22': 
+                                                {'adjacency_state': 'full',
+                                                'cost': 111,
+                                                'dcbitless_lsa_count': 1,
+                                                'dead_interval': 40,
+                                                'demand_circuit': True,
+                                                'donotage_lsa': 'not allowed',
+                                                'first': '0x0(0)/0x0(0)/0x0(0)',
+                                                'hello_interval': 10,
+                                                'hello_timer': '00:00:00',
+                                                'index': '1/2/2',
+                                                'last_retransmission_max_length': 1,
+                                                'last_retransmission_max_scan': 0,
+                                                'last_retransmission_scan_length': 1,
+                                                'last_retransmission_scan_time': 0,
+                                                'link_state': 'up',
+                                                'local_id': '11.11.11.11',
+                                                'name': 'SL0',
+                                                'remote_id': '22.22.22.22',
+                                                'retrans_qlen': 0,
+                                                'state': 'point_to_point,',
+                                                'strict_ttl_check': True,
+                                                'strict_ttl_max_hops': 3,
+                                                'total_retransmission': 2,
+                                                'transit_area_id': '0.0.0.1',
+                                                'wait_interval': 40}}}}}}}}}}}
 
-    golden_output1 = {'execute.return_value': '''
-        R1_ospf_xe#show ip ospf sham-links 
-        Sham Link OSPF_SL1 to address 22.22.22.22 is up
-        Area 1 source address 11.11.11.11
-          Run as demand circuit
-          DoNotAge LSA not allowed (Number of DCbitless LSA is 1). Cost of using 111 State POINT_TO_POINT,
-          Timer intervals configured, Hello 10, Dead 40, Wait 40,
-          Strict TTL checking enabled, up to 3 hops allowed
-            Hello due in 00:00:00
-            Adjacency State FULL
-            Index 1/2/2, retransmission queue length 0, number of retransmission 2
-            First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
-            Last retransmission scan length is 1, maximum is 1
-            Last retransmission scan time is 0 msec, maximum is 0 msec
-        '''}
+    def test_show_ip_ospf_sham_links_full1(self):
+        
+        self.maxDiff = None
 
-    # def test_show_ip_ospf_sham_links_full1(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.golden_output1)
-    #     obj = ShowIpOspfShamLinks(device=self.device)
-    #     parsed_output = obj.parse()
-    #     self.assertEqual(parsed_output, self.golden_parsed_output1)
+        def mapper(key):
+            return self.outputs[key]
+
+        raw1 = '''\
+            R1_ospf_xe#show ip ospf sham-links 
+            Sham Link OSPF_SL0 to address 22.22.22.22 is up
+            Area 1 source address 11.11.11.11
+              Run as demand circuit
+              DoNotAge LSA not allowed (Number of DCbitless LSA is 1). Cost of using 111 State POINT_TO_POINT,
+              Timer intervals configured, Hello 10, Dead 40, Wait 40,
+              Strict TTL checking enabled, up to 3 hops allowed
+                Hello due in 00:00:00
+                Adjacency State FULL
+                Index 1/2/2, retransmission queue length 0, number of retransmission 2
+                First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+                Last retransmission scan length is 1, maximum is 1
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+            '''
+
+        raw2 = '''\
+            R1_ospf_xe#show ip ospf interface | section OSPF_SL0
+            OSPF_SL0 is down, line protocol is down
+              Internet Address 0.0.0.0/0, Interface ID 15, Area 1
+              Attached via Not Attached
+              Process ID 2, Router ID 11.11.11.11, Network Type SHAM_LINK, Cost: 111
+              Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           111       no          no            Base
+              Configured as demand circuit
+              Run as demand circuit
+              DoNotAge LSA not allowed (Number of DCbitless LSA is 1)
+              Transmit Delay is 1 sec, State DOWN
+              Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                oob-resync timeout 40
+            '''
+
+        raw3 = '''\
+            R1_ospf_xe#show running-config | section router ospf 2
+              router ospf 2 vrf VRF1
+                area 1 virtual-link 5.5.5.5
+                area 1 sham-link 11.11.11.11 22.22.22.22 cost 111 ttl-security hops 3
+                redistribute bgp
+            '''
+
+        self.outputs = {}
+        self.outputs['show ip ospf sham-links'] = raw1
+        self.outputs['show ip ospf interface | section OSPF_SL0'] = raw2
+        self.outputs['show running-config | section router ospf 2'] = raw3
+
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+        
+        obj = ShowIpOspfShamLinks(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_ip_ospf_sham_links_empty(self):
         self.maxDiff = None
@@ -1380,40 +1876,108 @@ class test_show_ip_ospf_virtual_links(unittest.TestCase):
     
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output1 = {}
+    golden_parsed_output1 = {
+        'vrf': 
+            {'VRF1': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
+                            {'2': 
+                                {'areas': 
+                                    {'0.0.0.1': 
+                                        {'virtual_links': 
+                                            {'0.0.0.1 3.3.3.3': 
+                                                {'adjacency_state': 'full',
+                                                'dcbitless_lsa_count': 7,
+                                                'dead_interval': 40,
+                                                'demand_circuit': True,
+                                                'donotage_lsa': 'not allowed',
+                                                'first': '0x0(0)/0x0(0)',
+                                                'hello_interval': 10,
+                                                'hello_timer': '00:00:08',
+                                                'index': '1/3',
+                                                'interface': 'GigabitEthernet0/1',
+                                                'last_retransmission_max_length': 0,
+                                                'last_retransmission_max_scan': 0,
+                                                'last_retransmission_scan_length': 0,
+                                                'last_retransmission_scan_time': 0,
+                                                'link_state': 'up',
+                                                'name': 'VL0',
+                                                'retrans_qlen': 0,
+                                                'retransmit_interval': 5,
+                                                'router_id': '3.3.3.3',
+                                                'state': 'point-to-point,',
+                                                'topology': 
+                                                    {0: 
+                                                        {'cost': 1,
+                                                        'disabled': False,
+                                                        'name': 'Base',
+                                                        'shutdown': False}},
+                                                'total_retransmission': 0,
+                                                'transit_area_id': '0.0.0.1',
+                                                'transmit_delay': 1,
+                                                'wait_interval': 40}}}}}}}}}}}
 
-    golden_output1 = {'execute.return_value': '''
-        R4_ospf_iosv#show ip ospf virtual-links 
-        Virtual Link OSPF_VL1 to router 3.3.3.3 is up
-          Run as demand circuit
-          DoNotAge LSA not allowed (Number of DCbitless LSA is 7).
-          Transit area 1, via interface GigabitEthernet0/1
-         Topology-MTID    Cost    Disabled     Shutdown      Topology Name
-                0           1         no          no            Base
-          Transmit Delay is 1 sec, State POINT_TO_POINT,
-          Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
-            Hello due in 00:00:08
-            Adjacency State FULL
-            Index 1/3, retransmission queue length 0, number of retransmission 0
-            First 0x0(0)/0x0(0) Next 0x0(0)/0x0(0)
-            Last retransmission scan length is 0, maximum is 0
-            Last retransmission scan time is 0 msec, maximum is 0 msec
-        Virtual Link OSPF_VL0 to router 2.2.2.2 is down
-          Run as demand circuit
-          DoNotAge LSA not allowed (Number of DCbitless LSA is 7).
-          Transit area 1
-         Topology-MTID    Cost    Disabled     Shutdown      Topology Name
-                0           65535     no          no            Base
-          Transmit Delay is 1 sec, State DOWN,
-          Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
-        '''}
+    def test_show_ip_ospf_virtual_links_full1(self):
+        
+        self.maxDiff = None
 
-    # def test_show_ip_ospf_sham_links_full1(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.golden_output1)
-    #     obj = ShowIpOspfVirtualLinks(device=self.device)
-    #     parsed_output = obj.parse()
-    #     self.assertEqual(parsed_output, self.golden_parsed_output1)
+        def mapper(key):
+            return self.outputs[key]
+
+        raw1 = '''\
+            R4_ospf_iosv#show ip ospf virtual-links 
+            Virtual Link OSPF_VL0 to router 3.3.3.3 is up
+              Run as demand circuit
+              DoNotAge LSA not allowed (Number of DCbitless LSA is 7).
+              Transit area 1, via interface GigabitEthernet0/1
+             Topology-MTID    Cost    Disabled     Shutdown      Topology Name
+                    0           1         no          no            Base
+              Transmit Delay is 1 sec, State POINT_TO_POINT,
+              Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                Hello due in 00:00:08
+                Adjacency State FULL
+                Index 1/3, retransmission queue length 0, number of retransmission 0
+                First 0x0(0)/0x0(0) Next 0x0(0)/0x0(0)
+                Last retransmission scan length is 0, maximum is 0
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+            '''
+
+        raw2 = '''\
+            R1_ospf_xe#show ip ospf interface | section OSPF_VL0
+            OSPF_VL0 is down, line protocol is down
+              Internet Address 0.0.0.0/0, Interface ID 16, Area 0
+              Attached via Not Attached
+              Process ID 2, Router ID 11.11.11.11, Network Type VIRTUAL_LINK, Cost: 65535
+              Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           65535     no          no            Base
+              Configured as demand circuit
+              Run as demand circuit
+              DoNotAge LSA not allowed (Number of DCbitless LSA is 1)
+              Transmit Delay is 1 sec, State DOWN
+              Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                oob-resync timeout 40
+            '''
+
+        raw3 = '''\
+            R1_ospf_xe#show running-config | section router ospf 2
+              router ospf 2 vrf VRF1
+                area 1 virtual-link 5.5.5.5
+                area 1 sham-link 11.11.11.11 22.22.22.22 cost 111 ttl-security hops 3
+                redistribute bgp
+            '''
+
+        self.outputs = {}
+        self.outputs['show ip ospf virtual-links'] = raw1
+        self.outputs['show ip ospf interface | section OSPF_VL0'] = raw2
+        self.outputs['show running-config | section router ospf 2'] = raw3
+
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+        
+        obj = ShowIpOspfVirtualLinks(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_ip_ospf_sham_links_empty(self):
         self.maxDiff = None

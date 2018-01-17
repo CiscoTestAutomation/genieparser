@@ -1104,6 +1104,10 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                 Optional('max_flood_scan_time_msec'): int,
                                                 Optional('total_dcbitless_lsa'): int,
                                                 Optional('donotage_lsa'): bool,
+                                                Optional('ti_lfa_protected'): bool,
+                                                Optional('frr_enabled'): bool,
+                                                Optional('frr_protected'): bool,
+                                                Optional('stub_host'): bool,
                                                 Optional('graceful_restart'): 
                                                     {Any(): 
                                                         {'type': str,
@@ -1166,6 +1170,10 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                 Optional('max_flood_scan_time_msec'): int,
                                                 Optional('total_dcbitless_lsa'): int,
                                                 Optional('donotage_lsa'): bool,
+                                                Optional('ti_lfa_protected'): bool,
+                                                Optional('frr_enabled'): bool,
+                                                Optional('frr_protected'): bool,
+                                                Optional('stub_host'): bool,
                                                 Optional('graceful_restart'): 
                                                     {Any(): 
                                                         {'type': str,
@@ -1228,6 +1236,10 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                 Optional('max_flood_scan_time_msec'): int,
                                                 Optional('total_dcbitless_lsa'): int,
                                                 Optional('donotage_lsa'): bool,
+                                                Optional('ti_lfa_protected'): bool,
+                                                Optional('frr_enabled'): bool,
+                                                Optional('frr_protected'): bool,
+                                                Optional('stub_host'): bool,
                                                 Optional('graceful_restart'): 
                                                     {Any(): 
                                                         {'type': str,
@@ -1331,6 +1343,13 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 if m.groupdict()['attach']:
                     attached = str(m.groupdict()['attach']).lower()
                     continue
+
+            # Attached via Interface Enable
+            p2_1 = re.compile(r'^Attached +via +(?P<attached>([a-zA-Z0-9\s]+))$')
+            m = p2_1.match(line)
+            if m:
+                attached = str(m.groupdict()['attached']).lower()
+                continue
 
             # Process ID 1, Router ID 4.4.4.4, Network Type VIRTUAL_LINK, Cost: 1
             # Process ID 2, Router ID 11.11.11.11, Network Type SHAM_LINK, Cost: 111
@@ -1794,6 +1813,37 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     int(m.groupdict()['sup'])
                 continue
 
+            # Loopback interface is treated as a stub Host
+            p22 = re.compile(r'^Loopback +interface +is +treated +as +a +stub'
+                              ' +Host$')
+            m = p22.match(line)
+            if m:
+                sub_dict['stub_host'] = True
+                continue
+
+            # Can be protected by per-prefix Loop-Free FastReroute
+            p23 = re.compile(r'^Can +be +protected +by per-+prefix +Loop-Free'
+                              ' +FastReroute$')
+            m = p23.match(line)
+            if m:
+                sub_dict['frr_protected'] = True
+                continue
+
+            # Can be used for per-prefix Loop-Free FastReroute repair paths
+            p24 = re.compile(r'^Can +be +used +for +per-prefix +Loop-Free'
+                              ' +FastReroute +repair +paths$')
+            m = p24.match(line)
+            if m:
+                sub_dict['frr_enabled'] = True
+                continue
+
+            # Not Protected by per-prefix TI-LFA
+            p25 = re.compile(r'^Not +Protected +by +per-prefix +TI-LFA$')
+            m = p25.match(line)
+            if m:
+                sub_dict['ti_lfa_protected'] = False
+                continue
+
         return ret_dict
 
 
@@ -1823,37 +1873,63 @@ class ShowIpOspfLinksParser(MetaParser):
 
             # Sham Link OSPF_SL0 to address 22.22.22.22 is up
             # Virtual Link OSPF_VL0 to router 4.4.4.4 is up
-            p1 = re.compile(r'^(Virtual|Sham) +Link +(?P<link>(\S+)) +to'
+            p1 = re.compile(r'^(Virtual|Sham) +Link +(?P<interface>(\S+)) +to'
                              ' +(address|router) +(?P<address>(\S+)) +is'
                              ' +(?P<link_state>(up|down))$')
             m = p1.match(line)
             if m:
                 address = str(m.groupdict()['address'])
                 sl_remote_id = vl_router_id = address
-                link = str(m.groupdict()['link'])
+                interface = str(m.groupdict()['interface'])
                 link_state = str(m.groupdict()['link_state'])
-                n = re.match('(?P<ignore>\S+)_(?P<name>(S|V)L(\d+))', link)
+                instance = None
+                
+                # Get link name
+                n = re.match('(?P<ignore>\S+)_(?P<name>(S|V)L(\d+))', interface)
                 if n:
                     real_link_name = str(n.groupdict()['name'])
                 else:
-                    real_link_name = link
-                    continue
+                    real_link_name = interface
+                
+                # Get OSPF process ID from 'show ip ospf interface'
+                cmd = 'show ip ospf interface | section {}'.format(interface)
+                out = self.device.execute(cmd)
 
-            # Area 1, source address 33.33.33.33
-            p2 = re.compile(r'^Area +(?P<area>(\S+)), +source +address'
-                             ' +(?P<source_address>(\S+))$')
-            m = p2.match(line)
-            if m:
-                area = str(IPAddress(str(m.groupdict()['area'])))
-                source_address = str(m.groupdict()['source_address'])
+                for line in out.splitlines():
+                    line = line.rstrip()
 
-                # Set link_name for sham_link
-                link_name = source_address + ' ' + sl_remote_id
+                    # Process ID 2, Router ID 11.11.11.11, Network Type SHAM_LINK, Cost: 111
+                    p = re.search('Process +ID +(?P<instance>(\S+)), +Router'
+                                  ' +(.*)', line)
+                    if p:
+                        instance = str(p.groupdict()['instance'])
+                        break
 
-                if m.groupdict()['vrf']:
-                    vrf = str(m.groupdict()['vrf'])
-                else:
-                    vrf = 'default'
+                # Get VRF information using the ospf instance
+                if instance is not None:
+                    cmd = 'show running-config | section router ospf {}'.format(instance)
+                    out = self.device.execute(cmd)
+
+                    for line in out.splitlines():
+                        line = line.rstrip()
+
+                        # Skip the show command line so as to not match
+                        if re.search('show', line):
+                            continue
+
+                        # router ospf 1
+                        # router ospf 2 vrf VRF1
+                        p = re.search('router +ospf +(?P<instance>(\S+))'
+                                      '(?: +vrf +(?P<vrf>(\S+)))?', line)
+                        if p:
+                            p_instance = str(p.groupdict()['instance'])
+                            if p_instance == instance:
+                                if p.groupdict()['vrf']:
+                                    vrf = str(p.groupdict()['vrf'])
+                                    break
+                                else:
+                                    vrf = 'default'
+                                    break
 
                 # Build dict
                 if 'vrf' not in ret_dict:
@@ -1870,6 +1946,22 @@ class ShowIpOspfLinksParser(MetaParser):
                         ['instance']:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
                         [instance] = {}
+                    continue
+
+
+            # Area 1, source address 33.33.33.33
+            # Area 1 source address 11.11.11.11
+            p2 = re.compile(r'^Area +(?P<area>(\S+)),? +source +address'
+                             ' +(?P<source_address>(\S+))$')
+            m = p2.match(line)
+            if m:
+                area = str(IPAddress(str(m.groupdict()['area'])))
+                source_address = str(m.groupdict()['source_address'])
+
+                # Set link_name for sham_link
+                link_name = source_address + ' ' + sl_remote_id
+
+                # Build dict
                 if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]\
                         ['instance'][instance]:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
@@ -1944,7 +2036,7 @@ class ShowIpOspfLinksParser(MetaParser):
             # Transit area 1
             # Transit area 1, via interface GigabitEthernet0/1
             p5 = re.compile(r'^Transit +area +(?P<area>(\S+)),'
-                             '(?: +via +interface +(?P<intf>(\S+)),)?$')
+                             '(?: +via +interface +(?P<intf>(\S+)))?$')
             m = p5.match(line)
             if m:
                 area = str(IPAddress(str(m.groupdict()['area'])))
@@ -2045,17 +2137,22 @@ class ShowIpOspfLinksParser(MetaParser):
 
             # Timer intervals configured, Hello 3, Dead 13, Wait 13, Retransmit 5
             # Timer intervals configured, Hello 4, Dead 16, Wait 16, Retransmit 44
+            # Timer intervals configured, Hello 10, Dead 40, Wait 40,
             p8 = re.compile(r'^Timer +intervals +configured,'
                              ' +Hello +(?P<hello>(\d+)),'
                              ' +Dead +(?P<dead>(\d+)),'
                              ' +Wait +(?P<wait>(\d+)),'
-                             ' +Retransmit +(?P<retransmit>(\d+))$')
+                             '(?: +Retransmit +(?P<retransmit>(\d+)))?$')
             m = p8.match(line)
             if m:
-                sub_dict['hello_interval'] = int(m.groupdict()['hello'])
-                sub_dict['dead_interval'] = int(m.groupdict()['dead'])
-                sub_dict['wait_interval'] = int(m.groupdict()['wait'])
-                sub_dict['retransmit_interval'] = int(m.groupdict()['retransmit'])
+                if m.groupdict()['hello']:
+                    sub_dict['hello_interval'] = int(m.groupdict()['hello'])
+                if m.groupdict()['dead']:
+                    sub_dict['dead_interval'] = int(m.groupdict()['dead'])
+                if m.groupdict()['wait']:
+                    sub_dict['wait_interval'] = int(m.groupdict()['wait'])
+                if m.groupdict()['retransmit']:
+                    sub_dict['retransmit_interval'] = int(m.groupdict()['retransmit'])
                 continue
 
             # Strict TTL checking enabled, up to 3 hops allowed
@@ -2152,17 +2249,28 @@ class ShowIpOspfShamLinksSchema(MetaParser):
                                                 'local_id': str,
                                                 'remote_id': str,
                                                 'transit_area_id': str,
-                                                'hello_interval': int,
-                                                'dead_interval': int,
-                                                'wait_interval': int,
-                                                'retransmit_interval': int,
-                                                'transmit_delay': int,
+                                                Optional('hello_interval'): int,
+                                                Optional('dead_interval'): int,
+                                                Optional('wait_interval'): int,
+                                                Optional('retransmit_interval'): int,
+                                                Optional('transmit_delay'): int,
                                                 'cost': int,
                                                 'state': str,
                                                 'hello_timer': str,
                                                 'demand_circuit': bool,
                                                 Optional('dcbitless_lsa_count'): int,
                                                 Optional('donotage_lsa'): str,
+                                                Optional('adjacency_state'): str,
+                                                Optional('strict_ttl_check'): bool,
+                                                Optional('strict_ttl_max_hops'): int,
+                                                Optional('index'): str,
+                                                Optional('first'): str,
+                                                Optional('last_retransmission_max_length'): int,
+                                                Optional('last_retransmission_max_scan'): int,
+                                                Optional('last_retransmission_scan_length'): int,
+                                                Optional('last_retransmission_scan_time'): int,
+                                                Optional('total_retransmission'): int,
+                                                Optional('retrans_qlen'): int,
                                                 Optional('topology'): 
                                                     {Any(): 
                                                         {'cost': int,
@@ -2217,18 +2325,29 @@ class ShowIpOspfVirtualLinksSchema(MetaParser):
                                                 'link_state': str,
                                                 'router_id': str,
                                                 'transit_area_id': str,
-                                                'hello_interval': int,
-                                                'dead_interval': int,
-                                                'wait_interval': int,
-                                                'retransmit_interval': int,
+                                                Optional('hello_interval'): int,
+                                                Optional('dead_interval'): int,
+                                                Optional('wait_interval'): int,
+                                                Optional('retransmit_interval'): int,
                                                 'transmit_delay': int,
-                                                'cost': int,
                                                 'state': str,
                                                 'demand_circuit': bool,
+                                                Optional('cost'): int,
                                                 Optional('hello_timer'): str,
                                                 Optional('interface'): str,
                                                 Optional('dcbitless_lsa_count'): int,
                                                 Optional('donotage_lsa'): str,
+                                                Optional('adjacency_state'): str,
+                                                Optional('strict_ttl_check'): bool,
+                                                Optional('strict_ttl_max_hops'): int,
+                                                Optional('index'): str,
+                                                Optional('first'): str,
+                                                Optional('last_retransmission_max_length'): int,
+                                                Optional('last_retransmission_max_scan'): int,
+                                                Optional('last_retransmission_scan_length'): int,
+                                                Optional('last_retransmission_scan_time'): int,
+                                                Optional('total_retransmission'): int,
+                                                Optional('retrans_qlen'): int,
                                                 Optional('topology'): 
                                                     {Any(): 
                                                         {'cost': int,
@@ -2269,97 +2388,109 @@ class ShowIpOspfNeighborDetailSchema(MetaParser):
     ''' Schema for "show ip ospf neighbor detail" '''
 
     schema = {
-        'areas': 
-            {Any(): 
-                {Optional('interfaces'): 
-                    {Any(): 
-                        {'neighbors': 
-                            {Any(): 
-                                {'neighbor_router_id': str,
-                                'address': str,
-                                'interface': str,
-                                'priority': int,
-                                'state': str,
-                                'dr_ip_addr': str,
-                                'bdr_ip_addr': str,
-                                Optional('hello_options'): str,
-                                Optional('dbd_options'): str,
-                                Optional('dead_timer'): str,
-                                Optional('neighbor_uptime'): str,
-                                Optional('index'): str,
-                                Optional('first'): str,
-                                Optional('next'): str,
-                                Optional('ls_ack_list'): str,
-                                Optional('statistics'): 
-                                    {Optional('nbr_event_count'): int,
-                                    Optional('nbr_retrans_qlen'): int,
-                                    Optional('total_retransmission'): int,
-                                    Optional('last_retrans_scan_length'): int,
-                                    Optional('last_retrans_max_scan_length'): int,
-                                    Optional('last_retrans_scan_time_msec'): int,
-                                    Optional('last_retrans_max_scan_time_msec'): int},
-                                },
-                            },
-                        },
-                    },
-                Optional('sham_links'): 
-                    {Any(): 
-                        {'neighbors': 
-                            {Any(): 
-                                {'neighbor_router_id': str,
-                                'address': str,
-                                'interface': str,
-                                'priority': int,
-                                'state': str,
-                                'dr_ip_addr': str,
-                                'bdr_ip_addr': str,
-                                Optional('hello_options'): str,
-                                Optional('dbd_options'): str,
-                                Optional('dead_timer'): str,
-                                Optional('neighbor_uptime'): str,
-                                Optional('index'): str,
-                                Optional('first'): str,
-                                Optional('next'): str,
-                                Optional('ls_ack_list'): str,
-                                Optional('statistics'): 
-                                    {Optional('nbr_event_count'): int,
-                                    Optional('nbr_retrans_qlen'): int,
-                                    Optional('total_retransmission'): int,
-                                    Optional('last_retrans_scan_length'): int,
-                                    Optional('last_retrans_max_scan_length'): int,
-                                    Optional('last_retrans_scan_time_msec'): int,
-                                    Optional('last_retrans_max_scan_time_msec'): int},
-                                },
-                            },
-                        },
-                    },
-                Optional('virtual_links'): 
-                    {Any(): 
-                        {'neighbors': 
-                            {Any(): 
-                                {'neighbor_router_id': str,
-                                'address': str,
-                                'interface': str,
-                                'priority': int,
-                                'state': str,
-                                'dr_ip_addr': str,
-                                'bdr_ip_addr': str,
-                                Optional('hello_options'): str,
-                                Optional('dbd_options'): str,
-                                Optional('dead_timer'): str,
-                                Optional('neighbor_uptime'): str,
-                                Optional('index'): str,
-                                Optional('first'): str,
-                                Optional('next'): str,
-                                Optional('ls_ack_list'): str,
-                                Optional('statistics'): 
-                                    {Optional('nbr_event_count'): int,
-                                    Optional('nbr_retrans_qlen'): int,
-                                    Optional('total_retransmission'): int,
-                                    Optional('last_retrans_scan_length'): int,
-                                    Optional('last_retrans_max_scan_length'): int,
-                                    Optional('last_retrans_scan_time_msec'): int,
-                                    Optional('last_retrans_max_scan_time_msec'): int},
+        'vrf': 
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'instance':
+                            {Any():
+                                {'areas': 
+                                    {Any(): 
+                                        {Optional('interfaces'): 
+                                            {Any(): 
+                                                {'neighbors': 
+                                                    {Any(): 
+                                                        {'neighbor_router_id': str,
+                                                        'address': str,
+                                                        'interface': str,
+                                                        'priority': int,
+                                                        'state': str,
+                                                        'dr_ip_addr': str,
+                                                        'bdr_ip_addr': str,
+                                                        Optional('hello_options'): str,
+                                                        Optional('dbd_options'): str,
+                                                        Optional('dead_timer'): str,
+                                                        Optional('neighbor_uptime'): str,
+                                                        Optional('index'): str,
+                                                        Optional('first'): str,
+                                                        Optional('next'): str,
+                                                        Optional('ls_ack_list'): str,
+                                                        Optional('statistics'): 
+                                                            {Optional('nbr_event_count'): int,
+                                                            Optional('nbr_retrans_qlen'): int,
+                                                            Optional('total_retransmission'): int,
+                                                            Optional('last_retrans_scan_length'): int,
+                                                            Optional('last_retrans_max_scan_length'): int,
+                                                            Optional('last_retrans_scan_time_msec'): int,
+                                                            Optional('last_retrans_max_scan_time_msec'): int},
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        Optional('sham_links'): 
+                                            {Any(): 
+                                                {'neighbors': 
+                                                    {Any(): 
+                                                        {'neighbor_router_id': str,
+                                                        'address': str,
+                                                        'interface': str,
+                                                        'priority': int,
+                                                        'state': str,
+                                                        'dr_ip_addr': str,
+                                                        'bdr_ip_addr': str,
+                                                        Optional('hello_options'): str,
+                                                        Optional('dbd_options'): str,
+                                                        Optional('dead_timer'): str,
+                                                        Optional('neighbor_uptime'): str,
+                                                        Optional('index'): str,
+                                                        Optional('first'): str,
+                                                        Optional('next'): str,
+                                                        Optional('ls_ack_list'): str,
+                                                        Optional('statistics'): 
+                                                            {Optional('nbr_event_count'): int,
+                                                            Optional('nbr_retrans_qlen'): int,
+                                                            Optional('total_retransmission'): int,
+                                                            Optional('last_retrans_scan_length'): int,
+                                                            Optional('last_retrans_max_scan_length'): int,
+                                                            Optional('last_retrans_scan_time_msec'): int,
+                                                            Optional('last_retrans_max_scan_time_msec'): int},
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        Optional('virtual_links'): 
+                                            {Any(): 
+                                                {'neighbors': 
+                                                    {Any(): 
+                                                        {'neighbor_router_id': str,
+                                                        'address': str,
+                                                        'interface': str,
+                                                        'priority': int,
+                                                        'state': str,
+                                                        'dr_ip_addr': str,
+                                                        'bdr_ip_addr': str,
+                                                        Optional('hello_options'): str,
+                                                        Optional('dbd_options'): str,
+                                                        Optional('dead_timer'): str,
+                                                        Optional('neighbor_uptime'): str,
+                                                        Optional('index'): str,
+                                                        Optional('first'): str,
+                                                        Optional('next'): str,
+                                                        Optional('ls_ack_list'): str,
+                                                        Optional('statistics'): 
+                                                            {Optional('nbr_event_count'): int,
+                                                            Optional('nbr_retrans_qlen'): int,
+                                                            Optional('total_retransmission'): int,
+                                                            Optional('last_retrans_scan_length'): int,
+                                                            Optional('last_retrans_max_scan_length'): int,
+                                                            Optional('last_retrans_scan_time_msec'): int,
+                                                            Optional('last_retrans_max_scan_time_msec'): int},
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
                                 },
                             },
                         },
@@ -2389,69 +2520,132 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
             line = line.strip()
 
             # Neighbor 2.2.2.2, interface address 10.1.2.2
+            # Neighbor 200.0.1.1, interface address 201.0.14.1, interface-id 192
             p1 = re.compile(r'^Neighbor +(?P<neighbor>(\S+)), +interface'
-                             ' +address +(?P<address>(\S+))$')
+                             ' +address +(?P<address>(\S+))'
+                             '(?:, +interface-id +(?P<intf_id>(\d+)))?$')
             m = p1.match(line)
             if m:
                 neighbor = str(m.groupdict()['neighbor'])
                 address = str(m.groupdict()['address'])
+                if m.groupdict()['intf_id']:
+                    interface_id = int(m.groupdict()['intf_id'])
                 continue
 
-            # In the area 0 via interface GigabitEthernet0/0/0/2 
+            # In the area 0 via interface GigabitEthernet2
             p2 = re.compile(r'^In +the +area +(?P<area>(\S+)) +via +interface'
                              ' +(?P<interface>(\S+))$')
             m = p2.match(line)
             if m:
                 area = str(IPAddress(str(m.groupdict()['area'])))
                 interface = str(m.groupdict()['interface'])
+                instance = None
+                router_id = None
+
+                # Get OSPF process ID from 'show ip ospf interface'
+                cmd = 'show ip ospf interface | section {}'.format(interface)
+                out = self.device.execute(cmd)
+
+                for line in out.splitlines():
+                    line = line.rstrip()
+
+                    # Process ID 2, Router ID 11.11.11.11, Network Type SHAM_LINK, Cost: 111
+                    p = re.search('Process +ID +(?P<instance>(\S+)), +Router +ID'
+                                  ' +(?P<router_id>(\S+)) +(.*)', line)
+                    if p:
+                        instance = str(p.groupdict()['instance'])
+                        router_id = str(p.groupdict()['router_id'])
+                        break
+
+                # Get VRF information using the ospf instance
+                if instance is not None:
+                    cmd = 'show running-config | section router ospf {}'.format(instance)
+                    out = self.device.execute(cmd)
+
+                    for line in out.splitlines():
+                        line = line.rstrip()
+
+                        # Skip the show command line so as to not match
+                        if re.search('show', line):
+                            continue
+
+                        # router ospf 1
+                        # router ospf 2 vrf VRF1
+                        p = re.search('router +ospf +(?P<instance>(\S+))'
+                                      '(?: +vrf +(?P<vrf>(\S+)))?', line)
+                        if p:
+                            p_instance = str(p.groupdict()['instance'])
+                            if p_instance == instance:
+                                if p.groupdict()['vrf']:
+                                    vrf = str(p.groupdict()['vrf'])
+                                    break
+                                else:
+                                    vrf = 'default'
+                                    break
+
+                # Build dict
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+                if 'address_family' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['address_family'] = {}
+                if af not in ret_dict['vrf'][vrf]['address_family']:
+                    ret_dict['vrf'][vrf]['address_family'][af] = {}
+                if 'instance' not in ret_dict['vrf'][vrf]['address_family'][af]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance'] = {}
+                if instance not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance] = {}
 
                 # Determine if 'interface' or 'virtual_links' or 'sham_links'
                 if re.search('VL', interface):
-
                     # Init
-                    intf_type = None
+                    intf_type = 'virtual_links'
+                    vl_addr = None
                     vl_transit_area_id = None
-                    intf_name = None
 
-                    x = re.match('(?P<ignore>\S+)_VL(?P<num>(\d+))', interface)
-                    if x:
-                        # Set intf_type
-                        intf_type = 'virtual_links'
-                        name = 'VL' + str(x.groupdict()['num'])
+                    # Execute command to get virtual-link address
+                    cmd = 'show ip ospf virtual-links | i {intf}'.format(intf=interface)
+                    out = self.device.execute(cmd)
 
-                    # Execute 'show ip ospf virtual-links' to get the vl_transit_area_id
-                    obj = ShowIpOspfVirtualLinks(device=self.device)
-                    vl_out = obj.parse()
+                    for line in out.splitlines():
+                        line = line.rstrip()
+                        # Virtual Link OSPF_VL0 to router 5.5.5.5 is down
+                        p = re.search('Virtual +Link +(?P<intf>(\S+)) +to +router'
+                                     ' +(?P<address>(\S+)) +is +(up|down)'
+                                     '(?:.*)?', line)
+                        if p:
+                            if interface == str(p.groupdict()['intf']):
+                                vl_addr = str(p.groupdict()['address'])
+                                break
 
-                    for vl_vrf in vl_out['vrf']:
-                        for vl_af in vl_out['vrf'][vl_vrf]['address_family']:
-                            for vl_inst in vl_out['vrf'][vl_vrf]['address_family'][vl_af]['instance']:
-                                for vl_area in vl_out['vrf'][vl_vrf]['address_family'][vl_af]['instance'][vl_inst]['areas']:
-                                    for vl in vl_out['vrf'][vl_vrf]['address_family'][vl_af]['instance'][vl_inst]['areas'][vl_area]['virtual_links']:
-                                        vl_name = vl_out['vrf'][vl_vrf]['address_family'][vl_af]['instance'][vl_inst]['areas'][vl_area]['virtual_links'][vl]['name']
-                                        if vl_name == name:
-                                            # Set vl_transit_area_id
-                                            vl_transit_area_id = vl_out['vrf'][vl_vrf]['address_family'][vl_af]['instance'][vl_inst]['areas'][vl_area]['virtual_links'][vl]['transit_area_id']
-                                            break
+                    # Execute command to get virtual-link transit_area_id
+                    if vl_addr is not None and router_id is not None:
+                        cmd = 'show running-config | i virtual-link | i {addr}'.format(addr=vl_addr)
+                        out = self.device.execute(cmd)
+
+                        for line in out.splitlines():
+                            line = line.rstrip()
+                            #  area 1 virtual-link 5.5.5.5
+                            q = re.search('area +(?P<q_area>(\d+)) +virtual-link'
+                                          ' +(?P<addr>(\S+))(?: +(.*))?', line)
+                            if q:
+                                q_addr = str(q.groupdict()['addr'])
+                                # Check parameters match
+                                if q_addr == vl_addr:
+                                    vl_transit_area_id = str(IPAddress(str(q.groupdict()['q_area'])))
+                                    break
 
                     if vl_transit_area_id is not None:
+                        intf_name = vl_transit_area_id + ' ' + router_id
                         area = vl_transit_area_id
-                        # Set intf_name
-                        intf_name = area + ' ' + neighbor
-
                 elif re.search('SL', interface):
-
                     # Init
-                    intf_type = None
-                    sl_remote_id = None
+                    intf_type = 'sham_links'
                     sl_local_id = None
-                    intf_name = None
-
-                    x = re.match('(?P<ignore>\S+)_SL(?P<num>(\d+))', interface)
-                    if x:
-                        # Set intf_type
-                        intf_type = 'sham_links'
-                        name = 'SL' + str(x.groupdict()['num'])
+                    sl_remote_id = None
 
                     # Execute command to get sham-link remote_id
                     cmd = 'show ip ospf sham-links | i {intf}'.format(intf=interface)
@@ -2461,74 +2655,82 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                         line = line.rstrip()
                         # Sham Link OSPF_SL1 to address 22.22.22.22 is up
                         p = re.search('Sham +Link +(?P<intf>(\S+)) +to +address'
-                                     ' +(?P<remote>(\S+)) +is +up', line)
+                                     ' +(?P<remote>(\S+)) +is +(up|down)', line)
                         if p:
                             if interface == str(p.groupdict()['intf']):
-                                # Set sl_remote_id
                                 sl_remote_id = str(p.groupdict()['remote'])
                                 break
 
                     # Execute command to get sham-link local_id
                     if sl_remote_id is not None:
-                        cmd = 'show run formal router ospf | i sham | i {remote}'.format(remote=sl_remote_id)
+                        cmd = 'show running-config | i sham-link | i {remote}'.format(remote=sl_remote_id)
                         out = self.device.execute(cmd)
 
                         for line in out.splitlines():
                             line = line.rstrip()
-                            # router ospf 1 area 1 sham-link 33.33.33.33 22.22.22.22
-                            q = re.search('router +ospf +(?P<q_inst>(\d+))'
-                                          '(?: +vrf +(?P<q_vrf>(\S+)))?'
-                                          ' +area +(?P<q_area>(\d+))'
-                                          ' +sham-link +(?P<local_id>(\S+))'
-                                          ' +(?P<remote_id>(\S+))', line)
+                            # area 1 sham-link 11.11.11.11 22.22.22.22 cost 111 ttl-security hops 3
+                            q = re.search('area +(?P<q_area>(\d+)) +sham-link'
+                                          ' +(?P<local_id>(\S+))'
+                                          ' +(?P<remote_id>(\S+)) +(.*)', line)
                             if q:
-                                if q.groupdict()['q_vrf']:
-                                    q_vrf = str(q.groupdict()['q_vrf'])
-                                else:
-                                    q_vrf = 'default'
                                 q_area = str(IPAddress(str(q.groupdict()['q_area'])))
-                                remote_id = str(q.groupdict()['remote_id'])
+                                q_remote_id = str(q.groupdict()['remote_id'])
 
                                 # Check parameters match
-                                if q_area == area and remote_id == sl_remote_id:
-                                   # Set sl_local_id
-                                   sl_local_id = str(q.groupdict()['local_id'])
-                                   break
+                                if q_area == area and q_remote_id == sl_remote_id:
+                                    sl_local_id = str(q.groupdict()['local_id'])
+                                    break
 
+                    # Set intf_name based on parsed values
                     if sl_local_id is not None:
-                        # Set intf_name
                         intf_name = sl_local_id + ' ' + sl_remote_id
-
                 else:
                     # Set values for dict
                     intf_type = 'interfaces'
                     intf_name = interface
 
-                if 'areas' not in ret_dict:
-                    ret_dict['areas'] = {}
-                if area not in ret_dict['areas']:
-                    ret_dict['areas'][area] = {}
-                if intf_type not in ret_dict['areas'][area]:
-                    ret_dict['areas'][area][intf_type] = {}
-                if intf_name not in ret_dict['areas'][area][intf_type]:
-                    ret_dict['areas'][area][intf_type][intf_name] = {}
-                if 'neighbors' not in ret_dict['areas'][area][intf_type]\
+                if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'] = {}
+                if area not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area] = {}
+                if intf_type not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area][intf_type] = {}
+                if intf_name not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area][intf_type]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area][intf_type][intf_name] = {}
+                if 'neighbors' not in ret_dict['vrf'][vrf]['address_family']\
+                        [af]['instance'][instance]['areas'][area][intf_type]\
                         [intf_name]:
-                    ret_dict['areas'][area][intf_type][intf_name]\
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area][intf_type][intf_name]\
                         ['neighbors'] = {}
-                if neighbor not in ret_dict['areas'][area][intf_type]\
+                if neighbor not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area][intf_type]\
                         [intf_name]['neighbors']:
-                    ret_dict['areas'][area][intf_type][intf_name]\
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area][intf_type][intf_name]\
                         ['neighbors'][neighbor] = {}
                 
                 # Set sub_dict
-                sub_dict = ret_dict['areas'][area][intf_type][intf_name]\
-                        ['neighbors'][neighbor]
+                sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
+                            ['instance'][instance]['areas'][area][intf_type]\
+                            [intf_name]['neighbors'][neighbor]
 
                 # Set values
                 sub_dict['neighbor_router_id'] = neighbor
                 sub_dict['address'] = address
                 sub_dict['interface'] = interface
+                try:
+                    sub_dict['interface_id'] = interface_id
+                except:
+                    pass
                 continue
 
             # Neighbor priority is 1, State is FULL, 6 state changes
@@ -4077,7 +4279,7 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
                 router_id = str(m.groupdict()['router_id'])
                 instance = str(m.groupdict()['instance'])
 
-                # Get VRF information using the ospf instance
+                # Get VRF information based on ospf instance
                 cmd = 'show ip ospf {} | i Connected to MPLS'.format(instance)
                 out = self.device.execute(cmd)
                 if out is None:
