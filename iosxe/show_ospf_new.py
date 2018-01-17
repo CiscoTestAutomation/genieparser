@@ -1434,7 +1434,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     if sl_local_id is not None:
                         intf_name = sl_local_id + ' ' + sl_remote_id
 
-                # Get VRF information
+                # Get VRF information based on OSPF instance
                 cmd = 'show running-config | section router ospf {}'.format(instance)
                 out = self.device.execute(cmd)
 
