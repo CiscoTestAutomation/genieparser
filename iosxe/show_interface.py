@@ -845,31 +845,32 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         parsed_dict = {}
         output = self.device.execute(self.cmd)
 
-        res = parsergen.oper_fill_tabular(device_output=output,
-                                          device_os='iosxe',
-                                          table_terminal_pattern=r"^\n",
-                                          header_fields=
-                                           [ "Interface",
-                                             "IP-Address",
-                                             "OK\?",
-                                             "Method",
-                                             "Status",
-                                             "Protocol" ],
-                                          label_fields=
-                                           [ "Interface",
-                                             "ip_address",
-                                             "interface_is_ok",
-                                             "method",
-                                             "status",
-                                             "protocol" ],
-                                          index=[0])
+        if output:
+            res = parsergen.oper_fill_tabular(device_output=output,
+                                              device_os='iosxe',
+                                              table_terminal_pattern=r"^\n",
+                                              header_fields=
+                                               [ "Interface",
+                                                 "IP-Address",
+                                                 "OK\?",
+                                                 "Method",
+                                                 "Status",
+                                                 "Protocol" ],
+                                              label_fields=
+                                               [ "Interface",
+                                                 "ip_address",
+                                                 "interface_is_ok",
+                                                 "method",
+                                                 "status",
+                                                 "protocol" ],
+                                              index=[0])
 
-        # Building the schema out o fthe parsergen output
-        if res.entries:
-            for intf in res.entries:
-                del res.entries[intf]['Interface']
+            # Building the schema out o fthe parsergen output
+            if res.entries:
+                for intf in res.entries:
+                    del res.entries[intf]['Interface']
 
-            parsed_dict['interface'] = res.entries
+                parsed_dict['interface'] = res.entries
         return (parsed_dict)
 
     def yang(self):

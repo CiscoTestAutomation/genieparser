@@ -99,6 +99,12 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
             else:
                 continue
 
+            # No routes in this topology
+            p = re.compile(r'^\s*No routes in this topology$')
+            m = p.match(line)
+            if m:
+                continue
+
             # VRF: default Table Id: 0xe0000000 AFI: IPv4 SAFI: Unicast
             p1 = re.compile(r'^\s*VRF: +(?P<vrf>[\w]+) +Table +Id: +(?P<table_id>[\w]+) +AFI: +(?P<af>[\w]+)'
                             ' +SAFI: +(?P<safi>[\w]+)$')
