@@ -18,7 +18,7 @@ IOSXE parsers for the following show commands:
 # Python
 import re
 import xmltodict
-from netaddr import IPAddress
+from netaddr import IPAddress, IPNetwork
 
 # Metaparser
 from metaparser import MetaParser
@@ -1419,7 +1419,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                                     break
 
                     if vl_transit_area_id is not None:
-                        intf_name = vl_transit_area_id + ' ' + router_id
+                        intf_name = '{} {}'.format(vl_transit_area_id, router_id)
                         area = vl_transit_area_id
                 elif intf_type == 'sham_links':
                     # Init
@@ -1462,7 +1462,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
                     # Set intf_name based on parsed values
                     if sl_local_id is not None:
-                        intf_name = sl_local_id + ' ' + sl_remote_id
+                        intf_name = '{} {}'.format(sl_local_id, sl_remote_id)
 
                 # Get VRF information based on OSPF instance
                 cmd = 'show running-config | section router ospf {}'.format(instance)
@@ -1651,7 +1651,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                         sub_dict['bfd']['enable'] = False
                         continue
 
-             # Designated Router (ID) 3.3.3.3, Interface address 10.2.3.3
+            # Designated Router (ID) 3.3.3.3, Interface address 10.2.3.3
             p10 = re.compile(r'^Designated +(R|r)outer +\(ID\)'
                              ' +(?P<dr_router_id>(\S+)), +(I|i)nterface'
                              ' +(A|a)ddress +(?P<dr_ip_addr>(\S+))$')
@@ -1995,7 +1995,7 @@ class ShowIpOspfLinksParser(MetaParser):
                 source_address = str(m.groupdict()['source_address'])
 
                 # Set link_name for sham_link
-                link_name = source_address + ' ' + sl_remote_id
+                link_name = '{} {}'.format(source_address, sl_remote_id)
 
                 # Build dict
                 if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]\
@@ -2078,7 +2078,7 @@ class ShowIpOspfLinksParser(MetaParser):
                 area = str(IPAddress(str(m.groupdict()['area'])))
 
                 # Set link_name for virtual_link
-                link_name = area + ' ' + vl_router_id
+                link_name = '{} {}'.format(area, vl_router_id)
 
                 # Create dict
                 if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]\
@@ -2680,7 +2680,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                                     break
 
                     if vl_transit_area_id is not None:
-                        intf_name = vl_transit_area_id + ' ' + router_id
+                        intf_name = '{} {}'.format(vl_transit_area_id, router_id)
                         area = vl_transit_area_id
                 elif re.search('SL', interface):
                     # Init
@@ -2724,7 +2724,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
 
                     # Set intf_name based on parsed values
                     if sl_local_id is not None:
-                        intf_name = sl_local_id + ' ' + sl_remote_id
+                        intf_name = '{} {}'.format(sl_local_id, sl_remote_id)
                 else:
                     # Set values for dict
                     intf_type = 'interfaces'
@@ -3049,7 +3049,7 @@ class ShowIpOspfDatabaseParser(MetaParser):
             m = p6.match(line)
             if m:
                 adv_router = str(m.groupdict()['adv_router'])
-                lsa = lsa_id + ' ' + adv_router
+                lsa = '{} {}'.format(lsa_id, adv_router)
                 
                 # Reset counters for this lsa
                 link_tlv_counter = 0
@@ -3164,6 +3164,7 @@ class ShowIpOspfDatabaseParser(MetaParser):
             m = p10.match(line)
             if m:
                 db_dict['network_mask'] = '.'.join([str((0xffffffff << (32 - int(m.groupdict()['net_mask'])) >> i) & 0xff) for i in [24, 16, 8, 0]])
+                #db_dict['network_mask'] = str(IPNetwork(m.groupdict()['net_mask']).netmask)
                 continue
 
             # Metric Type: 2 (Larger than any link state path)
@@ -3541,10 +3542,8 @@ class ShowIpOspfDatabaseParser(MetaParser):
                               ' *: +(?P<band2>(\d+)))?$')
             m = p34.match(line)
             if m:
-                value1 = str(m.groupdict()['num1']) + ' ' + \
-                         str(m.groupdict()['band1'])
-                value2 = str(m.groupdict()['num2']) + ' ' + \
-                         str(m.groupdict()['band2'])
+                value1 = '{} {}'.format(str(m.groupdict()['num1']), str(m.groupdict()['band1']))
+                value2 = '{} {}'.format(str(m.groupdict()['num2']), str(m.groupdict()['band2']))
                 if 'unreserved_bandwidths' not in db_dict['link_tlvs']\
                         [link_tlv_counter]:
                     db_dict['link_tlvs'][link_tlv_counter]\
@@ -4503,10 +4502,8 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
                               ' *: +(?P<band2>(\d+)))?$')
             m = p13.match(line)
             if m:
-                value1 = str(m.groupdict()['num1']) + ' ' + \
-                         str(m.groupdict()['band1'])
-                value2 = str(m.groupdict()['num2']) + ' ' + \
-                         str(m.groupdict()['band2'])
+                value1 = '{} {}'.format(str(m.groupdict()['num1']), str(m.groupdict()['band1']))
+                value2 = '{} {}'.format(str(m.groupdict()['num2']), str(m.groupdict()['band2']))
                 if 'unreserved_bandwidths' not in sub_dict['link_hash_bucket']\
                         [hashval]:
                     sub_dict['link_hash_bucket'][hashval]\
