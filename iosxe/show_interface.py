@@ -177,11 +177,18 @@ class ShowInterfaces(ShowInterfacesSchema):
 
             # GigabitEthernet1 is up, line protocol is up 
             # Port-channel12 is up, line protocol is up (connected)
+            # Vlan1 is administratively down, line protocol is down , Autostate Enabled
             p1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
                               ' +(?P<enabled>[\w\s]+),'
                               ' +line +protocol +is +(?P<line_protocol>\w+)'
                               '( *\((?P<attribute>\S+)\))?$')
+            p1_1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
+                              ' +(?P<enabled>[\w\s]+),'
+                              ' +line +protocol +is +(?P<line_protocol>\w+)'
+                              '( *, *(?P<attribute>[\w\s]+))?$')
             m = p1.match(line)
+            m1 = p1_1.match(line)
+            m = m if m else m1
             if m:
                 interface = m.groupdict()['interface']
                 enabled = m.groupdict()['enabled']
@@ -838,31 +845,32 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         parsed_dict = {}
         output = self.device.execute(self.cmd)
 
-        res = parsergen.oper_fill_tabular(device_output=output,
-                                          device_os='iosxe',
-                                          table_terminal_pattern=r"^\n",
-                                          header_fields=
-                                           [ "Interface",
-                                             "IP-Address",
-                                             "OK\?",
-                                             "Method",
-                                             "Status",
-                                             "Protocol" ],
-                                          label_fields=
-                                           [ "Interface",
-                                             "ip_address",
-                                             "interface_is_ok",
-                                             "method",
-                                             "status",
-                                             "protocol" ],
-                                          index=[0])
+        if output:
+            res = parsergen.oper_fill_tabular(device_output=output,
+                                              device_os='iosxe',
+                                              table_terminal_pattern=r"^\n",
+                                              header_fields=
+                                               [ "Interface",
+                                                 "IP-Address",
+                                                 "OK\?",
+                                                 "Method",
+                                                 "Status",
+                                                 "Protocol" ],
+                                              label_fields=
+                                               [ "Interface",
+                                                 "ip_address",
+                                                 "interface_is_ok",
+                                                 "method",
+                                                 "status",
+                                                 "protocol" ],
+                                              index=[0])
 
-        # Building the schema out o fthe parsergen output
-        if res.entries:
-            for intf in res.entries:
-                del res.entries[intf]['Interface']
+            # Building the schema out o fthe parsergen output
+            if res.entries:
+                for intf in res.entries:
+                    del res.entries[intf]['Interface']
 
-            parsed_dict['interface'] = res.entries
+                parsed_dict['interface'] = res.entries
         return (parsed_dict)
 
     def yang(self):
