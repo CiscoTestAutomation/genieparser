@@ -1108,6 +1108,10 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                 Optional('frr_enabled'): bool,
                                                 Optional('frr_protected'): bool,
                                                 Optional('stub_host'): bool,
+                                                Optional('prefix_suppression'): bool,
+                                                Optional('ttl_security'): 
+                                                    {'enable': bool,
+                                                    Optional('hops'): int},
                                                 Optional('graceful_restart'): 
                                                     {Any(): 
                                                         {'type': str,
@@ -1174,6 +1178,10 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                 Optional('frr_enabled'): bool,
                                                 Optional('frr_protected'): bool,
                                                 Optional('stub_host'): bool,
+                                                Optional('prefix_suppression'): bool,
+                                                Optional('ttl_security'): 
+                                                    {'enable': bool,
+                                                    Optional('hops'): int},
                                                 Optional('graceful_restart'): 
                                                     {Any(): 
                                                         {'type': str,
@@ -1240,6 +1248,10 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                 Optional('frr_enabled'): bool,
                                                 Optional('frr_protected'): bool,
                                                 Optional('stub_host'): bool,
+                                                Optional('prefix_suppression'): bool,
+                                                Optional('ttl_security'): 
+                                                    {'enable': bool,
+                                                    Optional('hops'): int},
                                                 Optional('graceful_restart'): 
                                                     {Any(): 
                                                         {'type': str,
@@ -1253,8 +1265,7 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                 Optional('statistics'): 
                                                     {Optional('adj_nbr_count'): int,
                                                     Optional('nbr_count'): int,
-                                                    Optional('num_nbrs_suppress_hello'): int,
-                                                    },
+                                                    Optional('num_nbrs_suppress_hello'): int},
                                                 Optional('neighbors'): 
                                                     {Any(): 
                                                         {Optional('dr_router_id'): str,
@@ -1844,6 +1855,31 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 sub_dict['ti_lfa_protected'] = False
                 continue
 
+            # Prefix-suppression is enabled
+            p26 = re.compile(r'^Prefix-suppression +is +(?P<ps>(enabled|disabled))$')
+            m = p26.match(line)
+            if m:
+                if 'enabled' in m.groupdict()['ps']:
+                    sub_dict['prefix_suppression'] = True
+                else:
+                    sub_dict['prefix_suppression'] = False
+
+            # Strict TTL checking enabled, up to 3 hops allowed
+            p27 = re.compile(r'^Strict +TTL +checking'
+                             ' +(?P<strict_ttl>(enabled|disabled))'
+                             '(?:, +up +to +(?P<hops>(\d+)) +hops +allowed)?$')
+            m = p27.match(line)
+            if m:
+                if 'ttl_security' not in sub_dict:
+                    sub_dict['ttl_security'] = {}
+                if 'enabled' in m.groupdict()['strict_ttl']:
+                    sub_dict['ttl_security']['enable'] = True
+                else:
+                    sub_dict['ttl_security']['enable'] = False
+                if m.groupdict()['hops']:
+                    sub_dict['ttl_security']['hops'] = int(m.groupdict()['hops'])
+                    continue
+
         return ret_dict
 
 
@@ -2157,16 +2193,19 @@ class ShowIpOspfLinksParser(MetaParser):
 
             # Strict TTL checking enabled, up to 3 hops allowed
             p9 = re.compile(r'^Strict +TTL +checking'
-                             ' +(?P<strict_ttl>(enabled|disabled)), +up +to'
-                             ' +(?P<hops>(\d+)) +hops +allowed$')
+                             ' +(?P<strict_ttl>(enabled|disabled))'
+                             '(?:, +up +to +(?P<hops>(\d+)) +hops +allowed)?$')
             m = p9.match(line)
             if m:
+                if 'ttl_security' not in sub_dict:
+                    sub_dict['ttl_security'] = {}
                 if 'enabled' in m.groupdict()['strict_ttl']:
-                    sub_dict['strict_ttl_check'] = True
+                    sub_dict['ttl_security']['enable'] = True
                 else:
-                    sub_dict['strict_ttl_check'] = False
-                sub_dict['strict_ttl_max_hops'] = int(m.groupdict()['hops'])
-                continue
+                    sub_dict['ttl_security']['enable'] = False
+                if m.groupdict()['hops']:
+                    sub_dict['ttl_security']['hops'] = int(m.groupdict()['hops'])
+                    continue
 
             # Hello due in 00:00:03:179
             p10 = re.compile(r'^Hello +due +in +(?P<hello_timer>(\S+))$')
@@ -2261,8 +2300,9 @@ class ShowIpOspfShamLinksSchema(MetaParser):
                                                 Optional('dcbitless_lsa_count'): int,
                                                 Optional('donotage_lsa'): str,
                                                 Optional('adjacency_state'): str,
-                                                Optional('strict_ttl_check'): bool,
-                                                Optional('strict_ttl_max_hops'): int,
+                                                Optional('ttl_security'): 
+                                                    {'enable': bool,
+                                                    Optional('hops'): int},
                                                 Optional('index'): str,
                                                 Optional('first'): str,
                                                 Optional('last_retransmission_max_length'): int,
@@ -2338,8 +2378,9 @@ class ShowIpOspfVirtualLinksSchema(MetaParser):
                                                 Optional('dcbitless_lsa_count'): int,
                                                 Optional('donotage_lsa'): str,
                                                 Optional('adjacency_state'): str,
-                                                Optional('strict_ttl_check'): bool,
-                                                Optional('strict_ttl_max_hops'): int,
+                                                Optional('ttl_security'): 
+                                                    {'enable': bool,
+                                                    Optional('hops'): int},
                                                 Optional('index'): str,
                                                 Optional('first'): str,
                                                 Optional('last_retransmission_max_length'): int,

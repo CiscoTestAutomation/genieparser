@@ -469,6 +469,9 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                     'nbr_count': 1,
                                                     'num_nbrs_suppress_hello': 0},
                                                 'ti_lfa_protected': False,
+                                                'ttl_security': 
+                                                    {'enable': True,
+                                                    'hops': 3},
                                                 'topology': 
                                                     {0: 
                                                         {'cost': 111,
@@ -586,6 +589,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                         {'bdr_router_id': '2.2.2.2'}},
                                                 'next': '0x0(0)/0x0(0)/0x0(0)',
                                                 'passive': False,
+                                                'prefix_suppression': True,
                                                 'priority': 1,
                                                 'retransmit_interval': 5,
                                                 'router_id': '1.1.1.1',
@@ -874,6 +878,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
               Supports Link-local Signaling (LLS)
               Cisco NSF helper support enabled
               IETF NSF helper support enabled
+              Prefix-suppression is enabled
               Can be protected by per-prefix Loop-Free FastReroute
               Can be used for per-prefix Loop-Free FastReroute repair paths
               Not Protected by per-prefix TI-LFA
@@ -881,6 +886,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
               Next 0x0(0)/0x0(0)/0x0(0)
               Last flood scan length is 1, maximum is 3
               Last flood scan time is 0 msec, maximum is 1 msec
+              Simple password authentication enabled
               Neighbor Count is 1, Adjacent neighbor count is 1 
                 Adjacent with neighbor 2.2.2.2  (Backup Designated Router)
               Suppress hello for 0 neighbor(s)
@@ -907,6 +913,8 @@ class test_show_ip_ospf_interface(unittest.TestCase):
               Next 0x0(0)/0x0(0)/0x0(0)
               Last flood scan length is 3, maximum is 3
               Last flood scan time is 0 msec, maximum is 1 msec
+              Cryptographic authentication enabled
+                No key configured, using default key id 0
               Neighbor Count is 1, Adjacent neighbor count is 1 
                 Adjacent with neighbor 4.4.4.4  (Designated Router)
               Suppress hello for 0 neighbor(s)
@@ -1795,8 +1803,9 @@ class test_show_ip_ospf_sham_links(unittest.TestCase):
                                                 'remote_id': '22.22.22.22',
                                                 'retrans_qlen': 0,
                                                 'state': 'point_to_point,',
-                                                'strict_ttl_check': True,
-                                                'strict_ttl_max_hops': 3,
+                                                'ttl_security': 
+                                                    {'enable': True,
+                                                    'hops': 3},
                                                 'total_retransmission': 2,
                                                 'transit_area_id': '0.0.0.1',
                                                 'wait_interval': 40}}}}}}}}}}}
