@@ -4743,9 +4743,9 @@ class ShowBgpAll(ShowBgpAllSchema):
                     termination = m.groupdict()['termination']
                     m3 = re.compile(r'(?: *(?P<path>[0-9\{\}\s]+))?'
                                     ' +(?P<origin_codes>(i|e|\?|\|))$').match(termination)
-                    if m3.groupdict()['path']:
+                    if m3 and m3.groupdict()['path']:
                         path_info = m3.groupdict()['path']
-                    if m3.groupdict()['origin_codes']:
+                    if m3 and m3.groupdict()['origin_codes']:
                         origin_codes_info = m3.groupdict()['origin_codes']
 
                 if m.groupdict()['metric']:
