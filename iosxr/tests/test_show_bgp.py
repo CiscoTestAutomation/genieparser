@@ -6143,6 +6143,77 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
 
         '''}
 
+    
+    golden_parsed_output_1 = {
+        "instance": {
+            "default": {
+                 "vrf": {
+                      "default": {
+                           "address_family": {
+                                "ipv4 unicast": {
+                                     "non_stop_routing": True,
+                                     "generic_scan_interval": 60,
+                                     "routing_table_version": 376,
+                                     "processed_prefixes": 1,
+                                     "nsr_initial_initsync_version": "2",
+                                     "table_state": "active",
+                                     "nsr_initial_init_ver_status": "reached",
+                                     "routes": {
+                                          "192.168.0.4/32": {
+                                               "index": {
+                                                    1: {
+                                                         "origin_codes": "i",
+                                                         "status_codes": "*>i",
+                                                         "next_hop": "192.168.0.4"
+                                                    }
+                                               }
+                                          }
+                                     },
+                                     "local_as": 1,
+                                     "processed_paths": 1,
+                                     "scan_interval": 60,
+                                     "router_identifier": "192.168.0.1",
+                                     "nsr_issu_sync_group_versions": "0/0",
+                                     "table_id": "0xe0000000",
+                                     "rd_version": 376
+                                }
+                           }
+                      }
+                 }
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+        show bgp instance all all all  neighbors 192.168.0.4 routes
+    
+        Mon Jan 22 14:32:03.615 UTC
+
+        BGP instance 0: 'default'
+        =========================
+
+        Address Family: IPv4 Unicast
+        ----------------------------
+
+        BGP router identifier 192.168.0.1, local AS number 1
+        BGP generic scan interval 60 secs
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0000000   RD version: 376
+        BGP main routing table version 376
+        BGP NSR Initial initsync version 2 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+        BGP scan interval 60 secs
+
+        Status codes: s suppressed, d damped, h history, * valid, > best
+                      i - internal, r RIB-failure, S stale, N Nexthop-discard
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+           Network            Next Hop            Metric LocPrf Weight Path
+        *>i192.168.0.4/32     192.168.0.4                   100      0 i
+
+        Processed 1 prefixes, 1 paths
+        '''}
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         obj = ShowBgpInstanceNeighborsRoutes(device=self.device1)
@@ -6156,6 +6227,12 @@ class test_show_bgp_instance_all_all_all_neighbors_routes(unittest.TestCase):
         parsed_output = obj.parse(vrf_type='all', neighbor='3.3.3.3')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_1)
+        obj = ShowBgpInstanceNeighborsRoutes(device=self.dev)
+        parsed_output = obj.parse(vrf_type='all', neighbor='192.168.0.4')
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
 # =====================================================
 # Unit test for 'show bgp instance all all all summary'
