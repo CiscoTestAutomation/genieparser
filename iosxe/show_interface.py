@@ -25,7 +25,7 @@ try:
     import iptools
     from ats import tcl
     from cnetconf import testmodel
-except ImportError:
+except (ImportError, OSError):
     pass
 
 from metaparser import MetaParser

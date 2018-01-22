@@ -3870,8 +3870,9 @@ class ShowBgpAllNeighborsRoutes(ShowBgpAllNeighborsRoutesSchema):
 
             # *>i[2]:[77][7,0][9.9.9.9,1,151587081][29.1.1.1,22][19.0.101.1,29.0.1.30]/616
             # *>iaaaa:1::/113       ::ffff:19.0.101.1
+            # *>i  20::/64          ::FFFF:200.0.4.1
             p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
-                             '(?P<path_type>(i|e|c|l|a|r|I))?'
+                             '(?P<path_type>(i|e|c|l|a|r|I))? *'
                              '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
                              '(?: *(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
             m = p3_1.match(line)
@@ -3911,14 +3912,15 @@ class ShowBgpAllNeighborsRoutes(ShowBgpAllNeighborsRoutesSchema):
             # *>i 15.1.2.0/24      1.1.1.1               2219    100      0 200 33299 51178 47751 {27016} e
             # *>l1.1.1.0/24         0.0.0.0                           100      32768 i
             # *>r1.3.1.0/24         0.0.0.0               4444        100      32768 ?
-            # *>r1.3.2.0/24         0.0.0.0               4444        100      32768 ?
+            # *>r1.3.2.0/24         0.0.0.0               4444        100      32768 ?            
+            # *>i  20.0.0.0/24      200.0.4.1                1    100      0 ?
             # *>i1.6.0.0/16         19.0.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
             # *>i1.1.2.0/24         19.0.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
             # Condition placed to handle the situation of a long line that is
             # divided nto two lines while actually it is not another index.
             if not data_on_nextline:
                 p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
-                                   '(?P<path_type>(i|e|c|l|a|r|I))?(\s)?'
+                                   '(?P<path_type>(i|e|c|l|a|r|I))? *'
                                    '(?P<prefix>(([0-9]+[\.][0-9]+[\.][0-9]+'
                                    '[\.][0-9]+[\/][0-9]+)|([a-zA-Z0-9]+[\:]'
                                    '[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
@@ -4743,9 +4745,9 @@ class ShowBgpAll(ShowBgpAllSchema):
                     termination = m.groupdict()['termination']
                     m3 = re.compile(r'(?: *(?P<path>[0-9\{\}\s]+))?'
                                     ' +(?P<origin_codes>(i|e|\?|\|))$').match(termination)
-                    if m3.groupdict()['path']:
+                    if m3 and m3.groupdict()['path']:
                         path_info = m3.groupdict()['path']
-                    if m3.groupdict()['origin_codes']:
+                    if m3 and m3.groupdict()['origin_codes']:
                         origin_codes_info = m3.groupdict()['origin_codes']
 
                 if m.groupdict()['metric']:

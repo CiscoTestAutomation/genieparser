@@ -2901,7 +2901,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
 
             # Description: PEER
-            p56 = re.compile(r'^Description: +(?P<desr>[\w\s\,\.\:\-]+)$')
+            p56 = re.compile(r'^Description: +(?P<description>[\w\s\,\.\:\-]+)$')
             m = p56.match(line)
             if m:
                 sub_dict['description'] = m.groupdict()['description']
@@ -3134,6 +3134,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
 
         if vrf_type == 'all':
             vrf = 'default'
+            af = ''
         elif vrf_type == 'vrf':
             vrf = None
             if af_type == 'ipv6 unicast':
@@ -3280,111 +3281,80 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                     ret_dict['instance'][instance]['vrf'][vrf]['address_family'] = {}
                 if address_family not in ret_dict['instance'][instance]['vrf'][vrf]['address_family']:
                     sub_dict = ret_dict['instance'][instance]['vrf'][vrf]['address_family'][addr] = {}
-                
                 try:
-                    state
-                except:
-                    pass
-                else:
                     sub_dict['state'] = state
+                except:
+                    pass                    
 
                 try:
-                    vrf_id
-                except:
-                    pass
-                else:
                     sub_dict['vrf_id'] = vrf_id
+                except:
+                    pass                    
 
                 try:
-                    router_identifier
-                except:
-                    pass
-                else:
                     sub_dict['router_identifier'] = router_identifier
+                except:
+                    pass                    
 
                 try:
-                    route_distinguisher
-                except:
-                    pass
-                else:
                     sub_dict['route_distinguisher'] = route_distinguisher
+                except:
+                    pass                    
 
                 try:
-                    local_as
-                except:
-                    pass
-                else:
                     sub_dict['local_as'] = local_as
-
-                try:
-                    generic_scan_interval
                 except:
                     pass
-                else:
+
+                try:
                     sub_dict['generic_scan_interval'] = generic_scan_interval
+                except:
+                    pass                    
 
                 try:
-                    non_stop_routing
-                except:
-                    pass
-                else:
                     sub_dict['non_stop_routing'] = non_stop_routing
-
-                try:
-                    table_state
                 except:
                     pass
-                else:
+
+                try:
                     sub_dict['table_state'] = table_state
-
-                try:
-                    table_id
                 except:
                     pass
-                else:
+
+                try:
                     sub_dict['table_id'] = table_id
-
-                try:
-                    rd_version
                 except:
                     pass
-                else:
+
+                try:
                     sub_dict['rd_version'] = rd_version
+                except:
+                    pass                    
 
                 try:
-                    bgp_table_version
-                except:
-                    pass
-                else:
                     sub_dict['routing_table_version'] = bgp_table_version
-
-                try:
-                    nsr_initial_initsync_version
                 except:
                     pass
-                else:
+
+                try:
                     sub_dict['nsr_initial_initsync_version'] = nsr_initial_initsync_version
-
-                try:
-                    nsr_initial_init_ver_status
                 except:
                     pass
-                else:
+
+                try:
                     sub_dict['nsr_initial_init_ver_status'] = nsr_initial_init_ver_status
-
-                try:
-                    nsr_issu_sync_group_versions
                 except:
                     pass
-                else:
+
+                try:
                     sub_dict['nsr_issu_sync_group_versions'] = nsr_issu_sync_group_versions
-
-                try:
-                    scan_interval
                 except:
                     pass
-                else:
+
+                try:
                     sub_dict['scan_interval'] = scan_interval
+                except:
+                    pass
 
                 continue
                     
@@ -3396,6 +3366,89 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                               '(?: *(?P<origin_codes>(i|e|\?)))?$')
             m = p13.match(line)
             if m:
+                try:
+                    sub_dict
+                except:
+                    addr = address_family or af
+                    if 'address_family' not in ret_dict['instance'][instance]['vrf'][vrf]:
+                        ret_dict['instance'][instance]['vrf'][vrf]['address_family'] = {}
+                    if address_family not in ret_dict['instance'][instance]['vrf'][vrf]['address_family']:
+                        sub_dict = ret_dict['instance'][instance]['vrf'][vrf]['address_family'][addr] = {}
+                    try:
+                        sub_dict['state'] = state
+                    except:
+                        pass                    
+
+                    try:
+                        sub_dict['vrf_id'] = vrf_id
+                    except:
+                        pass                    
+
+                    try:
+                        sub_dict['router_identifier'] = router_identifier
+                    except:
+                        pass                    
+
+                    try:
+                        sub_dict['route_distinguisher'] = route_distinguisher
+                    except:
+                        pass                    
+
+                    try:
+                        sub_dict['local_as'] = local_as
+                    except:
+                        pass
+
+                    try:
+                        sub_dict['generic_scan_interval'] = generic_scan_interval
+                    except:
+                        pass                    
+
+                    try:
+                        sub_dict['non_stop_routing'] = non_stop_routing
+                    except:
+                        pass
+
+                    try:
+                        sub_dict['table_state'] = table_state
+                    except:
+                        pass
+
+                    try:
+                        sub_dict['table_id'] = table_id
+                    except:
+                        pass
+
+                    try:
+                        sub_dict['rd_version'] = rd_version
+                    except:
+                        pass                    
+
+                    try:
+                        sub_dict['routing_table_version'] = bgp_table_version
+                    except:
+                        pass
+
+                    try:
+                        sub_dict['nsr_initial_initsync_version'] = nsr_initial_initsync_version
+                    except:
+                        pass
+
+                    try:
+                        sub_dict['nsr_initial_init_ver_status'] = nsr_initial_init_ver_status
+                    except:
+                        pass
+
+                    try:
+                        sub_dict['nsr_issu_sync_group_versions'] = nsr_issu_sync_group_versions
+                    except:
+                        pass
+
+                    try:
+                        sub_dict['scan_interval'] = scan_interval
+                    except:
+                        pass
+                    
                 status_codes = str(m.groupdict()['status_codes'])
                 status_codes = status_codes.replace(" ", "")
                 next_hop = m.groupdict()['next_hop']
@@ -3502,7 +3555,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                 processed_prefixes = int(m.groupdict()['processed_prefixes'])
                 processed_paths = int(m.groupdict()['processed_paths'])
                 sub_dict['processed_prefixes'] = processed_prefixes
-                sub_dict['processed_paths'] = processed_paths
+                sub_dict['processed_paths'] = processed_paths                    
                 continue
     
         return ret_dict 
@@ -3583,6 +3636,7 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
 
         if vrf_type == 'all':
             vrf = 'default'
+            af = ''
         elif vrf_type == 'vrf':
             vrf = None
             if af_type == 'ipv6 unicast':
@@ -3652,6 +3706,14 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
                              '(?P<path>[\d\{\}\s]+)?(?P<origin_code>e|i)?$')
             m = p4.match(line)
             if m:
+                try:
+                    sub_dict
+                except:
+                    addr = address_family or af
+                    if 'address_family' not in ret_dict['instance'][instance]['vrf'][vrf]:
+                        ret_dict['instance'][instance]['vrf'][vrf]['address_family'] = {}
+                    if address_family not in ret_dict['instance'][instance]['vrf'][vrf]['address_family']:
+                        sub_dict = ret_dict['instance'][instance]['vrf'][vrf]['address_family'][addr] = {}
                 if m:
                     prefix = m.groupdict()['prefix']
                     next_hop = m.groupdict()['next_hop']

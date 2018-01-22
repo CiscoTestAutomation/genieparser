@@ -4,7 +4,7 @@ __all__ = (
 
 try:
     from ats import tcl
-except ImportError:
+except (ImportError, OSError):
     pass
 
 from parser import CaasMetaParser
