@@ -3396,6 +3396,15 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                               '(?: *(?P<origin_codes>(i|e|\?)))?$')
             m = p13.match(line)
             if m:
+                try:
+                    sub_dict
+                except:
+                    addr = (address_family or af)
+                    if 'address_family' not in ret_dict['instance'][instance]['vrf'][vrf]:
+                        ret_dict['instance'][instance]['vrf'][vrf]['address_family'] = {}
+                    if address_family not in ret_dict['instance'][instance]['vrf'][vrf]['address_family']:
+                        sub_dict = ret_dict['instance'][instance]['vrf'][vrf]['address_family'][addr] = {}
+                    
                 status_codes = str(m.groupdict()['status_codes'])
                 status_codes = status_codes.replace(" ", "")
                 next_hop = m.groupdict()['next_hop']
