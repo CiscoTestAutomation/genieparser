@@ -2901,7 +2901,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 continue
 
             # Description: PEER
-            p56 = re.compile(r'^Description: +(?P<desr>[\w\s\,\.\:\-]+)$')
+            p56 = re.compile(r'^Description: +(?P<description>[\w\s\,\.\:\-]+)$')
             m = p56.match(line)
             if m:
                 sub_dict['description'] = m.groupdict()['description']
