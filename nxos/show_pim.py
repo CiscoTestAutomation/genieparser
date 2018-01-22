@@ -8,8 +8,7 @@ from parser.utils.common import Common
 # schema Parser for 'show ipv6 pim interface'
 # ====================================================
 class ShowIpv6PimInterfaceSchema(MetaParser):
-
-    '''Schema for show ipv6 pim interface'''
+    """Schema for show ipv6 pim interface"""
 
     schema = {
         'vrf':{
@@ -94,7 +93,11 @@ class ShowIpv6PimInterfaceSchema(MetaParser):
 #
 # ==========================================================
 class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
-    '''Parser for show ipv6 pim interface'''
+    """Parser for:
+        show ipv6 pim interface vrf <vrf>
+        show ipv6 pim interface
+        show ipv6 pim interface <interface>
+        show ipv6 pim interface <interface> vrf <vrf>"""
 
     def cli(self , interface ="", vrf=""):
 
@@ -639,8 +642,11 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
 # schema for 'show ip/ipv6 pim rp [vrf <WORD>]'
 # =====================================================
 class ShowPimRpSchema(MetaParser):
-
-    '''Schema for show ip/ipv6 pim rp [vrf <WORD>]'''
+    """Schema for:
+        show ip pim rp
+        show ip pim rp vrf <vrf>
+        show ipv6 pim rp
+        show ipv6 pim rp vrf <vrf>"""
 
     schema = {
         'vrf':{
@@ -743,10 +749,12 @@ class ShowPimRpSchema(MetaParser):
     }
 
 # ==========================================================
-#  parser for 'show ip/ipv6 pim rp [vrf <WORD>]'
+#  parser for 'show ip/ipv6 pim rp [vrf <vrf>]'
 # ==========================================================
 class ShowPimRp(ShowPimRpSchema):
-    '''Parser for show ip/ipv6 pim rp [vrf <WORD>]'''
+    """Parser for:
+        show <address_family> pim rp
+        show <address_family> pim rp vrf <vrf>"""
 
     def cli(self, af='ip', vrf=''):
 
@@ -1297,19 +1305,23 @@ class ShowPimRp(ShowPimRpSchema):
 
 
 # ==========================================================
-#  parser for 'show ipv6 pim rp [vrf <WORD>]'
+#  parser for 'show ipv6 pim rp [vrf <vrf>]'
 # ==========================================================
 class ShowIpv6PimRp(ShowPimRp):
-    '''Parser for show ipv6 pim rp [vrf <WORD>]'''
+    """Parser for:
+        show ipv6 pim rp
+        show ipv6 pim rp vrf <vrf>"""
 
     def cli(self, vrf=''):
         return super().cli(af='ipv6', vrf=vrf)
 
 # ==========================================================
-#  parser for 'show ip pim rp [vrf <WORD>]'
+#  parser for 'show ip pim rp [vrf <vrf>]'
 # ==========================================================
 class ShowIpPimRp(ShowPimRp):
-    '''Parser for show ip pim rp [vrf <WORD>]'''
+    """Parser for:
+        show ip pim rp
+        show ip pim rp vrf <vrf>"""
 
     def cli(self, vrf=''):
         return super().cli(af='ip', vrf=vrf)
@@ -1319,7 +1331,9 @@ class ShowIpPimRp(ShowPimRp):
 # schema Parser for 'show ipv6 pim df vrf all'
 # ==============================================
 class ShowIpv6PimDfSchema(MetaParser):
-    '''Schema for show ipv6 pim df vrf all'''
+    """Schema for:
+        show ipv6 pim df
+        show ipv6 pim df vrf <vrf>"""
 
     schema = {
         'vrf': {
@@ -1357,7 +1371,9 @@ class ShowIpv6PimDfSchema(MetaParser):
 #
 # ==========================================================
 class ShowIpv6PimDf(ShowIpv6PimDfSchema):
-    '''Parser for show ipv6 pim df vrf all'''
+    """Parser for:
+        show ipv6 pim df
+        show ipv6 pim df vrf <vrf>"""
 
     def cli(self, vrf=""):
 
@@ -1497,10 +1513,12 @@ class ShowIpv6PimDf(ShowIpv6PimDfSchema):
 
 
 # ==============================================
-# schema Parser for 'show ip pim df vrf all'
+# schema Parser for 'show ip pim df [vrf <vrf>]'
 # ==============================================
 class ShowIpPimDfSchema(MetaParser):
-    '''Schema for show ip pim df vrf all'''
+    """Schema for:
+        show ip pim df
+        show ip pim df vrf <vrf>"""
 
     schema = {
         'vrf': {
@@ -1536,11 +1554,13 @@ class ShowIpPimDfSchema(MetaParser):
 
 
 # ==========================================================
-#  parser for show ip pim df vrf all
+#  parser for show ip pim df [vrf <vrf>]
 #
 # ==========================================================
 class ShowIpPimDf(ShowIpPimDfSchema):
-    '''Parser for show ip pim df vrf all'''
+    """Parser for:
+        show ip pim df
+        show ip pim df vrf <vrf>"""
 
     def cli(self, vrf=""):
 
@@ -1690,11 +1710,9 @@ class ShowIpPimDf(ShowIpPimDfSchema):
 # schema Parser for 'show ipv6 pim route vrf <vrf>'
 # ============================================
 class ShowIpv6PimRouteSchema(MetaParser):
-
-    '''
-    Schema for show ipv6 pim route
-    Schema for show ipv6 pim route vrf <vrf>
-    '''
+    """Schema for:
+        show ipv6 pim route
+        show ipv6 pim route vrf <vrf>"""
     schema = {
         'vrf':{
             Any():{
@@ -1737,10 +1755,9 @@ class ShowIpv6PimRouteSchema(MetaParser):
 #  Parser for show ipv6 pim route vrf <vrf>
 # ==========================================================
 class ShowIpv6PimRoute(ShowIpv6PimRouteSchema):
-    '''
-    Parser for show ipv6 pim route
-    Parser for show ipv6 pim route vrf <vrf>
-    '''
+    """Parser for:
+        show ipv6 pim route
+        show ipv6 pim route vrf <vrf>"""
 
     def cli(self, vrf=""):
 
@@ -1958,8 +1975,7 @@ class ShowIpv6PimRoute(ShowIpv6PimRouteSchema):
 # schema Parser for 'show ipv6 pim neighbor'
 # ===========================================
 class ShowIpv6PimNeighborSchema(MetaParser):
-
-    '''Schema for show ipv6 pim neighbor'''
+    """Schema for show ipv6 pim neighbor"""
     schema = {
         'vrf':{
             Any():{
@@ -1992,8 +2008,9 @@ class ShowIpv6PimNeighborSchema(MetaParser):
 #  parser for show ipv6 pim neighbor vrf <word>
 # ==========================================================
 class ShowIpv6PimNeighbor(ShowIpv6PimNeighborSchema):
-    '''Parser for show ipv6 pim neighbor'''
-    '''Parser for show ipv6 pim neighbor vrf <word>'''
+    """Parser for:
+        show ipv6 pim neighbor
+        show ipv6 pim neighbor vrf <vrf>"""
 
     def cli(self, vrf=""):
 
@@ -2137,8 +2154,9 @@ class ShowIpv6PimNeighbor(ShowIpv6PimNeighborSchema):
 # schema Parser for 'show ip pim route'
 # ============================================
 class ShowIpPimRouteSchema(MetaParser):
-    '''Schema for show ip pim route'''
-    '''Schema for show ip pim route vrf <word>'''
+    """Schema for:
+        show ip pim route
+        show ip pim route vrf <vrf>"""
 
     schema = {
         'vrf':{
@@ -2181,8 +2199,9 @@ class ShowIpPimRouteSchema(MetaParser):
 #  parser for show ip pim route vrf <word>
 # ==========================================================
 class ShowIpPimRoute(ShowIpPimRouteSchema):
-    '''Parser for show ip pim route'''
-    '''Parser for show ip pim route vrf <word>'''
+    """Parser for:
+        show ip pim route
+        show ip pim route vrf <vrf>"""
 
     def cli(self, vrf=""):
 
@@ -2389,7 +2408,7 @@ class ShowIpPimRoute(ShowIpPimRouteSchema):
 # schema Parser for 'show ipv6 pim group-range'
 # ==================================================
 class ShowIpv6PimGroupRangeSchema(MetaParser):
-    '''Schema for show ipv6 pim group-range'''
+    """Schema for show ipv6 pim group-range"""
 
     schema = {
         'vrf':{
@@ -2416,11 +2435,12 @@ class ShowIpv6PimGroupRangeSchema(MetaParser):
 
 # ==========================================================
 #  parser for show ipv6 pim group-range
-#  parser for show ipv6 pim group-range vrf <word>
+#  parser for show ipv6 pim group-range vrf <vrf>
 # ==========================================================
 class ShowIpv6PimGroupRange(ShowIpv6PimGroupRangeSchema):
-    '''Parser for show ipv6 pim group-range'''
-    '''Parser for show ipv6 pim group-range vrf <word>'''
+    """Parser for:
+        show ipv6 pim group-range
+        show ipv6 pim group-range vrf <vrf>"""
 
     def cli(self, vrf=""):
 
@@ -2509,7 +2529,7 @@ class ShowIpv6PimGroupRange(ShowIpv6PimGroupRangeSchema):
 # schema Parser for 'show ip pim neighbor'
 # ==================================================
 class ShowIpPimNeighborSchema(MetaParser):
-    '''Schema for show ip pim neighbor '''
+    """Schema for show ip pim neighbor"""
     schema = {
         'vrf':{
             Any():{
@@ -2537,11 +2557,12 @@ class ShowIpPimNeighborSchema(MetaParser):
 
 # ==========================================================
 #  parser for show ip pim neighbor vrf all
-#  parser for show ip pim neighbor vrf  <vrfname>
+#  parser for show ip pim neighbor vrf <vrf>
 # ==========================================================
 class ShowIpPimNeighbor(ShowIpPimNeighborSchema):
-    '''Parser for show ip pim neighbor'''
-    '''Parser for show ip pim neighbor vrf <word>'''
+    """Parser for:
+        show ip pim neighbor
+        show ip pim neighbor vrf <vrf>"""
 
     def cli(self, vrf=""):
 
@@ -2641,8 +2662,7 @@ class ShowIpPimNeighbor(ShowIpPimNeighborSchema):
 # schema Parser for 'show ip pim vrf all detail'
 # ==============================================
 class ShowIpPimVrfDetailSchema(MetaParser):
-
-    '''Schema for show ip pim vrf all detail'''
+    """Schema for show ip pim vrf all detail"""
     schema = {
             'vrf':{
                 Any():{
@@ -2690,7 +2710,9 @@ class ShowIpPimVrfDetailSchema(MetaParser):
 #
 # ==========================================================
 class ShowIpPimVrfDetail(ShowIpPimVrfDetailSchema):
-    '''Parser for show ip pim vrf all detail'''
+    """Parser for:
+        show ip pim vrf detail
+        show ip pim vrf <vrf> detail"""
 
     def cli(self, vrf=""):
 
@@ -2994,13 +3016,12 @@ class ShowIpPimGroupRangeSchema(MetaParser):
 
 # ==========================================================
 #  parser for show ip pim group-range
-#  parser for show ip pim group-range vrf <worf>
+#  parser for show ip pim group-range vrf <vrf>
 # ==========================================================
 class ShowIpPimGroupRange(ShowIpPimGroupRangeSchema):
-    '''
-    parser for show ip pim group-range
-    Parser for show ip pim group-range vrf <word>
-    '''
+    """parser for:
+        show ip pim group-range
+        show ip pim group-range vrf <vrf>"""
 
     def cli(self,vrf = ""):
 
@@ -3086,8 +3107,7 @@ class ShowIpPimGroupRange(ShowIpPimGroupRangeSchema):
 # schema for 'show ip pim policy statictics register_policy'
 # =========================================================================
 class ShowIpPimPolicyStaticticsRegisterPolicySchema(MetaParser):
-
-    '''Schema show ip pim policy statictics register_policy'''
+    """Schema show ip pim policy statictics register_policy"""
 
     schema = {
         'vrf':{
@@ -3116,13 +3136,14 @@ class ShowIpPimPolicyStaticticsRegisterPolicySchema(MetaParser):
     }
 
 # =======================================================================
-#  parser for show ip pim policy statistics register-policy vrf all
-#  parser for show ip pim policy statistics register-policy vrf <word>
+#  parser for show ip pim policy statistics register-policy
+#  parser for show ip pim policy statistics register-policy vrf <vrf>
 #
 # =======================================================================
 class ShowIpPimPolicyStaticticsRegisterPolicy(ShowIpPimPolicyStaticticsRegisterPolicySchema):
-    '''Parser for show ip pim policy statictics register_policy'''
-    '''Parser for show ip pim policy statictics register_policy vrf <word>'''
+    """Parser for:
+        show ip pim policy statictics register_policy
+        show ip pim policy statictics register_policy vrf <vrf>"""
 
     def cli(self, vrf=""):
 
@@ -3286,8 +3307,7 @@ class ShowIpPimPolicyStaticticsRegisterPolicy(ShowIpPimPolicyStaticticsRegisterP
 # schema Parser for 'show ip pim interface'
 # ====================================================
 class ShowIpPimInterfaceSchema(MetaParser):
-
-    '''Schema for show ip pim interface'''
+    """Schema for show ip pim interface"""
 
     schema = {
         'vrf':{
@@ -3372,7 +3392,11 @@ class ShowIpPimInterfaceSchema(MetaParser):
 #
 # ==========================================================
 class ShowIpPimInterface(ShowIpPimInterfaceSchema):
-    '''Parser for show ip pim interface'''
+    """Parser for:
+        show ip pim interface
+        show ip pim interface vrf <vrf>
+        show ip pim interface <interface>
+        show ip pim interface <interface> vrf <vrf>"""
 
     def cli(self , interface ="", vrf=""):
 
@@ -3911,8 +3935,7 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
 # schema Parser for 'show ipv6 pim vrf all detail'
 # ================================
 class ShowIpv6PimVrfAllDetailSchema(MetaParser):
-
-    '''Schema for show ipv6 pim vrf all detail'''
+    """Schema for show ipv6 pim vrf all detail"""
 
     schema = {
         'vrf':{
@@ -3941,7 +3964,7 @@ class ShowIpv6PimVrfAllDetailSchema(MetaParser):
 #
 # ==========================================================
 class ShowIpv6PimVrfAllDetail(ShowIpv6PimVrfAllDetailSchema):
-    '''Parser for show ipv6 pim vrf all detail'''
+    """Parser for show ipv6 pim vrf all detail"""
 
     def cli(self):
 

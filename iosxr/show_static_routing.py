@@ -1,7 +1,7 @@
-'''
+"""
 show_static_route.py
 
-'''
+"""
 import re
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Schema, \
@@ -12,6 +12,14 @@ from metaparser.util.schemaengine import Schema, \
 #  schema for show static ipv4 topology detail
 # ====================================================
 class ShowStaticTopologyDetailSchema(MetaParser):
+    """Schema for:
+        show static topology detail
+        show static vrf all topology detail
+        show static vrf <vrf> topology detail
+        show static vrf <vrf> ipv4 topology detail
+        show static vrf <vrf> ipv6 topology detail
+        show static ipv4 topology detail
+        show static ipv6 topology detail"""
     schema = {
         'vrf': {
             Any(): {
@@ -67,14 +75,14 @@ class ShowStaticTopologyDetailSchema(MetaParser):
 #  parser for show static topology detail
 # ====================================================
 class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
-    '''
+    """Schema for:
        show static topology detail
        show static vrf all topology detail
        show static vrf <vrf> topology detail
        show static vrf <vrf> ipv4 topology detail
        show static ipv4 topology detail
        show static ipv6 topology detail
-    '''
+    """
     def cli(self, vrf="", af=""):
         if vrf:
             if af:

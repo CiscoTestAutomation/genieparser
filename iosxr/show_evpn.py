@@ -1,8 +1,8 @@
-''' show_evpn.py
+""" show_evpn.py
 
 show evpn parser class
 
-'''
+"""
 
 from netaddr import EUI
 from ipaddress import ip_address
@@ -40,13 +40,12 @@ re_label_str = r'(?:' + r'|'.join([
 
 
 class ShowEvpnEvi(MetaParser):
-    '''Parser class for 'show evpn evi' CLI.'''
+    """Parser class for 'show evpn evi' CLI."""
 
     # TODO schema
 
     def cli(self):
-        '''parsing mechanism: cli
-        '''
+        """parsing mechanism: cli"""
 
         cmd = 'show evpn evi'
 
@@ -58,13 +57,13 @@ class ShowEvpnEvi(MetaParser):
 
 
 class ShowEvpnEviDetail(MetaParser):
-    '''Parser class for 'show evpn evi detail' CLI.'''
+    """Parser class for 'show evpn evi detail' CLI."""
 
     # TODO schema
 
     def cli(self):
-        '''parsing mechanism: cli
-        '''
+        """parsing mechanism: cli
+        """
 
         cmd = 'show evpn evi detail'
 
@@ -76,7 +75,7 @@ class ShowEvpnEviDetail(MetaParser):
 
 
 class ShowEvpnEviMac(MetaParser):
-    '''Parser class for 'show evpn evi mac' CLI.'''
+    """Parser class for 'show evpn evi mac' CLI."""
 
     # TODO schema
 
@@ -306,7 +305,7 @@ class ShowEvpnEviMac(MetaParser):
 
 
 class ShowEvpnEthernetSegment(MetaParser):
-    '''Parser class for 'show evpn ethernet-segment' CLI.'''
+    """Parser class for 'show evpn ethernet-segment' CLI."""
 
     # TODO schema
 
@@ -317,8 +316,8 @@ class ShowEvpnEthernetSegment(MetaParser):
         super().__init__(**kwargs)
 
     def cli(self):
-        '''parsing mechanism: cli
-        '''
+        """parsing mechanism: cli
+        """
 
         cmd = 'show evpn ethernet-segment'
         if self.carving:
@@ -343,8 +342,8 @@ class ShowEvpnInternalLabelDetail(MetaParser):
         super().__init__(**kwargs)
 
     def cli(self):
-        '''parsing mechanism: cli
-        '''
+        """parsing mechanism: cli
+        """
         cmd = 'show evpn internal-label detail'
 
         out = self.device.execute(cmd)

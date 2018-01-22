@@ -13,6 +13,7 @@ from metaparser.util.schemaengine import Schema, \
 #  schema for show ip static route
 # ====================================================
 class ShowIpStaticRouteSchema(MetaParser):
+    """Schema for show ip static route"""
     schema = {
         'vrf': {
             Any(): {
@@ -52,10 +53,10 @@ class ShowIpStaticRouteSchema(MetaParser):
 #  parser for show ip static route
 # ====================================================
 class ShowIpStaticRoute(ShowIpStaticRouteSchema):
-    '''
+    """Parser for :
        show ip static route
        show ip static route vrf <vrf>
-    '''
+    """
 
     def cli(self, vrf=""):
         if vrf:
@@ -182,6 +183,7 @@ class ShowIpStaticRoute(ShowIpStaticRouteSchema):
 #  schema for show ipv6 static detail
 # ====================================================
 class ShowIpv6StaticDetailSchema(MetaParser):
+    """Schema for show ipv6 static detail"""
     schema = {
         'vrf': {
             Any(): {
@@ -229,10 +231,10 @@ class ShowIpv6StaticDetailSchema(MetaParser):
 #  parser for show ipv6 static detail
 # ====================================================
 class ShowIpv6StaticDetail(ShowIpv6StaticDetailSchema):
-    '''
+    """Parser for:
        show ipv6 static detail
        show ipv6 static vrf <vrf> detail
-    '''
+    """
 
     def cli(self, vrf=""):
         if vrf:

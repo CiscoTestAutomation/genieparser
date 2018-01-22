@@ -8,9 +8,7 @@ from metaparser.util.schemaengine import Schema, Any, Optional
 
 
 class ShowRplRoutePolicySchema(MetaParser):
-
-     # Schema for:
-     # 'show rpl route-policy'
+    """Schema for show rpl route-policy"""
     schema = {
             Any():
                {Optional('description'): str,
@@ -72,7 +70,7 @@ class ShowRplRoutePolicySchema(MetaParser):
 
 
 class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
-
+    """Parser for show rpl route-policy"""
     def cli(self):
         out = self.device.execute('show rpl route-policy')
 

@@ -1,11 +1,10 @@
-''' show_prefix_list.py
+"""show_prefix_list.py
 
 IOSXE parsers for the following show commands:
 
     * show ip prefix-list detail
     * show ipv6 prefix-list detail
-
-'''
+"""
 
 # Python
 import re
@@ -21,8 +20,9 @@ from metaparser.util.schemaengine import Schema, Any, Optional
 # ==============================================
 
 class ShowIpPrefixListDetailSchema(MetaParser):
-    # Schema for 'show ip prefix-list detail'
-    # Schema for 'show ipv6 prefix-list detail'
+    """Schema for
+        show ip prefix-list detail
+        show ipv6 prefix-list detail"""
 
     schema = {'prefix_set_name':         
                 {Any(): {
@@ -47,8 +47,9 @@ class ShowIpPrefixListDetailSchema(MetaParser):
             }
 
 class ShowIpPrefixListDetail(ShowIpPrefixListDetailSchema):
-    # Parser for 'show ip prefix-list detail'
-    # Parser for 'show ipv6 prefix-list detail'
+    """Parser for:
+        show ip prefix-list detail
+        show ipv6 prefix-list detail"""
 
     def cli(self, af='ip'):
 
@@ -160,7 +161,7 @@ class ShowIpPrefixListDetail(ShowIpPrefixListDetailSchema):
 # Parser for 'show ipv6 prefix-list detail'
 # ===========================================
 class ShowIpv6PrefixListDetail(ShowIpPrefixListDetail):
-    # Parser for 'show ipv6 prefix-list detail'
+    """Parser for show ipv6 prefix-list detail"""
     def cli(self):
         return super().cli(af='ipv6')
 

@@ -1,4 +1,4 @@
-''' show_ospf.py
+"""show_ospf.py
 
 IOSXR parsers for the following show commands:
     * show ospf vrf all-inclusive interface
@@ -12,7 +12,7 @@ IOSXR parsers for the following show commands:
     * show ospf vrf all-inclusive database summary
     * show ospf vrf all-inclusive database external
     * show ospf vrf all-inclusive database opaque-area
-'''
+"""
 
 # Python
 import re
@@ -29,8 +29,7 @@ from parser.utils.common import Common
 # Schema for 'show ospf vrf all-inclusive interface'
 # ==================================================
 class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
-
-    ''' Schema for "show ospf vrf all-inclusive interface" '''
+    """Schema for show ospf vrf all-inclusive interface"""
 
     schema = {
         'vrf': 
@@ -233,8 +232,7 @@ class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
 # Parser for 'show ospf vrf all-inclusive interface'
 # ==================================================
 class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
-
-    ''' Parser for "show ospf vrf all-inclusive interface" '''
+    """Parser for show ospf vrf all-inclusive interface"""
 
     def cli(self):
 
@@ -678,8 +676,7 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
 # Schema for 'show ospf vrf all-inclusive neighbor detail'
 # ========================================================
 class ShowOspfVrfAllInclusiveNeighborDetailSchema(MetaParser):
-
-    ''' Schema for "show ospf vrf all-inclusive neighbor detail" '''
+    """Schema for show ospf vrf all-inclusive neighbor detail"""
 
     schema = {
         'vrf': 
@@ -772,8 +769,7 @@ class ShowOspfVrfAllInclusiveNeighborDetailSchema(MetaParser):
 # Parser for 'show ospf vrf all-inclusive neighbor detail'
 # ========================================================
 class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetailSchema):
-
-    ''' Parser for "show ospf vrf all-inclusive neighbor detail" '''
+    """Parser for show ospf vrf all-inclusive neighbor detail"""
 
     def cli(self):
 
@@ -1045,8 +1041,7 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
 # Schema for 'show ospf vrf all-inclusive'
 # ========================================
 class ShowOspfVrfAllInclusiveSchema(MetaParser):
-
-    ''' Schema for "show ospf vrf all-inclusive" '''
+    """Schema for show ospf vrf all-inclusive"""
 
     schema = {
         'vrf': 
@@ -1211,8 +1206,7 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
 # Parser for 'show ospf vrf all-inclusive'
 # ========================================
 class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
-
-    ''' Parser for "show ospf vrf all-inclusive" '''
+    """Parser for show ospf vrf all-inclusive"""
 
     def cli(self):
 
@@ -2023,11 +2017,11 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
 
 
 # ===========================================================
-# Super parser for 'show ospf vrf all-inclusive <WORD>-links'
+# Super parser for 'show ospf vrf all-inclusive <link_type>-links'
 # ===========================================================
 class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
 
-    ''' Parser for "show ip ospf vrf all-inclusive <WORD>-links" '''
+    """Parser for "show ip ospf vrf all-inclusive <link_type>-links"""
 
     def cli(self, cmd, link_type):
 
@@ -2315,8 +2309,7 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
 # Schema for 'show ospf vrf all-inclusive sham-links'
 # ===================================================
 class ShowOspfVrfAllInclusiveShamLinksSchema(MetaParser):
-
-    ''' Schema for 'show ospf vrf all-inclusive sham-links' '''
+    """Schema for show ospf vrf all-inclusive sham-links"""
 
     schema = {
         'vrf': 
@@ -2373,7 +2366,7 @@ class ShowOspfVrfAllInclusiveShamLinksSchema(MetaParser):
 # ===================================================
 class ShowOspfVrfAllInclusiveShamLinks(ShowOspfVrfAllInclusiveShamLinksSchema, ShowOspfVrfAllInclusiveLinksParser):
 
-    ''' Parser for 'show ospf vrf all-inclusive sham-links' '''
+    """Parser for show ospf vrf all-inclusive sham-links"""
 
     def cli(self):
         
@@ -2385,8 +2378,7 @@ class ShowOspfVrfAllInclusiveShamLinks(ShowOspfVrfAllInclusiveShamLinksSchema, S
 # Schema for 'show ospf vrf all-inclusive virtual-links'
 # ======================================================
 class ShowOspfVrfAllInclusiveVirtualLinksSchema(MetaParser):
-
-    ''' Schema for 'show ospf vrf all-inclusive virtual-links' '''
+    """Schema for show ospf vrf all-inclusive virtual-links"""
 
     schema = {
         'vrf': 
@@ -2442,7 +2434,7 @@ class ShowOspfVrfAllInclusiveVirtualLinksSchema(MetaParser):
 # ======================================================
 class ShowOspfVrfAllInclusiveVirtualLinks(ShowOspfVrfAllInclusiveVirtualLinksSchema, ShowOspfVrfAllInclusiveLinksParser):
 
-    ''' Parser for 'show ospf vrf all-inclusive virtual-links' '''
+    """Parser for show ospf vrf all-inclusive virtual-links"""
 
     def cli(self):
         
@@ -2454,8 +2446,7 @@ class ShowOspfVrfAllInclusiveVirtualLinks(ShowOspfVrfAllInclusiveVirtualLinksSch
 # Schema for 'show ospf mpls traffic-eng link'
 # ============================================
 class ShowOspfMplsTrafficEngLinkSchema(MetaParser):
-
-    ''' Schema for 'show ospf mpls traffic-eng link' '''
+    """Schema for show ospf mpls traffic-eng link"""
 
     schema = {
         'vrf': 
@@ -2518,8 +2509,7 @@ class ShowOspfMplsTrafficEngLinkSchema(MetaParser):
 # Parser for 'show ospf mpls traffic-eng link'
 # ============================================
 class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
-
-    ''' Parser for "show ospf mpls traffic-eng link" '''
+    """Parser for show ospf mpls traffic-eng link"""
 
     def cli(self):
 
@@ -2780,11 +2770,10 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
 
 
 # ==============================================================
-# Super parser for 'show ospf vrf all-inclusive database <WORD>'
+# Super parser for 'show ospf vrf all-inclusive database <db_type>'
 # ==============================================================
 class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
-
-    ''' Parser for "show ospf vrf all-inclusive database <WORD>" '''
+    """Parser for show ospf vrf all-inclusive database <db_type>"""
 
     def cli(self, cmd, db_type):
 
@@ -3506,8 +3495,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
 # Schema for 'show ospf vrf all-inclusive database router'
 # ========================================================
 class ShowOspfVrfAllInclusiveDatabaseRouterSchema(MetaParser):
-
-    ''' Schema for "'show ospf vrf all-inclusive database router'" '''
+    """Schema for show ospf vrf all-inclusive database router"""
 
     schema = {
         'vrf': 
@@ -3583,8 +3571,7 @@ class ShowOspfVrfAllInclusiveDatabaseRouterSchema(MetaParser):
 # Parser for 'show ospf vrf all-inclusive database router'
 # ========================================================
 class ShowOspfVrfAllInclusiveDatabaseRouter(ShowOspfVrfAllInclusiveDatabaseRouterSchema, ShowOspfVrfAllInclusiveDatabaseParser):
-
-    ''' Parser for "'show ospf vrf all-inclusive database router'" '''
+    """Parser for show ospf vrf all-inclusive database router"""
 
     def cli(self):
 
@@ -3598,8 +3585,7 @@ class ShowOspfVrfAllInclusiveDatabaseRouter(ShowOspfVrfAllInclusiveDatabaseRoute
 # Schema for 'show ospf vrf all-inclusive database external'
 # ==========================================================
 class ShowOspfVrfAllInclusiveDatabaseExternalSchema(MetaParser):
-
-    ''' Schema for "show ospf vrf all-inclusive database external" '''
+    """Schema for show ospf vrf all-inclusive database external"""
 
     schema = {
         'vrf': 
@@ -3666,8 +3652,7 @@ class ShowOspfVrfAllInclusiveDatabaseExternalSchema(MetaParser):
 # Parser for 'show ospf vrf all-inclusive database external'
 # ==========================================================
 class ShowOspfVrfAllInclusiveDatabaseExternal(ShowOspfVrfAllInclusiveDatabaseExternalSchema, ShowOspfVrfAllInclusiveDatabaseParser):
-
-    ''' Parser for "show ospf vrf all-inclusive database external" '''
+    """Parser for show ospf vrf all-inclusive database external"""
 
     def cli(self):
 
@@ -3681,8 +3666,7 @@ class ShowOspfVrfAllInclusiveDatabaseExternal(ShowOspfVrfAllInclusiveDatabaseExt
 # Schema for 'show ospf vrf all-inclusive database network'
 # =========================================================
 class ShowOspfVrfAllInclusiveDatabaseNetworkSchema(MetaParser):
-
-    ''' Schema for "show ospf vrf all-inclusive database network" '''
+    """Schema for show ospf vrf all-inclusive database network"""
 
     schema = {
         'vrf': 
@@ -3743,8 +3727,7 @@ class ShowOspfVrfAllInclusiveDatabaseNetworkSchema(MetaParser):
 # Parser for 'show ospf vrf all-inclusive database network'
 # ==========================================================
 class ShowOspfVrfAllInclusiveDatabaseNetwork(ShowOspfVrfAllInclusiveDatabaseNetworkSchema, ShowOspfVrfAllInclusiveDatabaseParser):
-
-    ''' Parser for "show ospf vrf all-inclusive database network" '''
+    """Parser for show ospf vrf all-inclusive database network"""
 
     def cli(self):
 
@@ -3758,8 +3741,7 @@ class ShowOspfVrfAllInclusiveDatabaseNetwork(ShowOspfVrfAllInclusiveDatabaseNetw
 # Schema for 'show ospf vrf all-inclusive database summary'
 # =========================================================
 class ShowOspfVrfAllInclusiveDatabaseSummarySchema(MetaParser):
-
-    ''' Schema for "show ospf vrf all-inclusive database summary" '''
+    """Schema for show ospf vrf all-inclusive database summary"""
 
     schema = {
         'vrf': 
@@ -3823,8 +3805,7 @@ class ShowOspfVrfAllInclusiveDatabaseSummarySchema(MetaParser):
 # Parser for 'show ospf vrf all-inclusive database summary'
 # =========================================================
 class ShowOspfVrfAllInclusiveDatabaseSummary(ShowOspfVrfAllInclusiveDatabaseSummarySchema, ShowOspfVrfAllInclusiveDatabaseParser):
-
-    ''' Parser for "show ospf vrf all-inclusive database summary" '''
+    """Parser for show ospf vrf all-inclusive database summary"""
 
     def cli(self):
 
@@ -3838,8 +3819,7 @@ class ShowOspfVrfAllInclusiveDatabaseSummary(ShowOspfVrfAllInclusiveDatabaseSumm
 # Schema for 'show ospf vrf all-inclusive database opaque-area'
 # =============================================================
 class ShowOspfVrfAllInclusiveDatabaseOpaqueAreaSchema(MetaParser):
-
-    ''' Schema for "show ospf vrf all-inclusive database opaque-area" '''
+    """Schema for show ospf vrf all-inclusive database opaque-area"""
 
     schema = {
         'vrf': 
@@ -3934,8 +3914,7 @@ class ShowOspfVrfAllInclusiveDatabaseOpaqueAreaSchema(MetaParser):
 # Parser for 'show ospf vrf all-inclusive database opaque-area'
 # =============================================================
 class ShowOspfVrfAllInclusiveDatabaseOpaqueArea(ShowOspfVrfAllInclusiveDatabaseOpaqueAreaSchema, ShowOspfVrfAllInclusiveDatabaseParser):
-
-    ''' Parser for "show ospf vrf all-inclusive database opaque-area" '''
+    """Parser for show ospf vrf all-inclusive database opaque-area"""
 
     def cli(self):
 

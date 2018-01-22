@@ -1,13 +1,13 @@
-''' show_interface.py
+"""show_interface.py
 
 NXOS parsers for the following show commands:
-# show interface
-# show vrf all interface
-# show ip interface vrf all
-# show ipv6 interface detail vrf all
-# show interface switchport
+        # show interface
+        # show vrf all interface
+        # show ip interface vrf all
+        # show ipv6 interface detail vrf all
+        # show interface switchport
 
-'''
+"""
 
 # python
 import re
@@ -27,11 +27,10 @@ from parser.utils.common import Common
 
 
 #############################################################################
-# Parser For Show Interface
+# Schema For Show Interface
 #############################################################################
 class ShowInterfaceSchema(MetaParser):
-
-    #schema for show interface
+    """Schema for show interface"""
 
     schema = {
         Any(): 
@@ -145,8 +144,7 @@ class ShowInterfaceSchema(MetaParser):
 
 
 class ShowInterface(ShowInterfaceSchema):
-
-    #parser for show interface
+    """Parser for show interface"""
 
     def cli(self):
         out = self.device.execute('show interface')
@@ -863,13 +861,10 @@ class ShowInterface(ShowInterfaceSchema):
 
 
 #############################################################################
-# Parser For Show Ip Interface Vrf All
+# Schema for Show Ip Interface Vrf All
 #############################################################################
-
-
 class ShowIpInterfaceVrfAllSchema(MetaParser):
-
-    #schema for Show Ip Interface Vrf All
+    """Schema for show ip interface vrf all"""
 
     schema = {
     Any():
@@ -953,8 +948,7 @@ class ShowIpInterfaceVrfAllSchema(MetaParser):
     }   
 
 class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
-
-    #parser for Show Ip Interface Vrf All
+    """Parser for show ip interface vrf all"""
 
     def cli(self):
         out = self.device.execute('show ip interface vrf all')
@@ -1534,12 +1528,11 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
 
 # #############################################################################
-# # Parser For Show Vrf All Interface
+# # Schema For Show Vrf All Interface
 # #############################################################################
 
 class ShowVrfAllInterfaceSchema(MetaParser):
-
-#schema for Show Vrf All Interface
+    """Schema for show vrf all interface"""
     schema = { 
                 Any():
                     {'vrf': str,
@@ -1550,7 +1543,8 @@ class ShowVrfAllInterfaceSchema(MetaParser):
             
 
 class ShowVrfAllInterface(ShowVrfAllInterfaceSchema):
-#parser for Show Vrf All Interface
+    """Parser for show vrf all interface"""
+
     def cli(self):
         out = self.device.execute('show vrf all interface')
 
@@ -1591,13 +1585,10 @@ class ShowVrfAllInterface(ShowVrfAllInterfaceSchema):
         return vrf_all_interface_dict
 
 # #############################################################################
-# # Parser For Show Interface Switchport
+# # Schema For Show Interface Switchport
 # #############################################################################
-
-
 class ShowInterfaceSwitchportSchema(MetaParser):
-
-    #schema for Show Interface Switchport
+    """Schema for show interface switchport"""
 
     schema = {
         Any():
@@ -1624,8 +1615,8 @@ class ShowInterfaceSwitchportSchema(MetaParser):
                     
 
 class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
+    """Parser for show interface switchport"""
 
-    #parser for Show Interface Switchport
     def cli(self):
         out = self.device.execute('show interface switchport')
 
@@ -1858,11 +1849,11 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
 
 
 # #############################################################################
-# # Parser For Show Ipv6 Interface Vrf All
+# # Schema For Show Ipv6 Interface Vrf All
 # #############################################################################
 
 class ShowIpv6InterfaceVrfAllSchema(MetaParser):
-    #schema for Show Ipv6 Interface Vrf All
+    """Schema for show ipv6 interface vrf all"""
 
     schema = {
         Any():
@@ -1914,8 +1905,8 @@ class ShowIpv6InterfaceVrfAllSchema(MetaParser):
 
 
 class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
+    """Parser for ipv6 interface vrf all"""
 
-    #parser Ipv6 Interface Vrf All
     def cli(self):
         out = self.device.execute('show ipv6 interface vrf all')
 
@@ -2256,6 +2247,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
 
 class ShowIpInterfaceBriefSchema(MetaParser):
+    """Schema for show ip interface brief"""
     schema = {'interface':
                 {Any():
                     {Optional('vlan_id'):
@@ -2272,9 +2264,8 @@ class ShowIpInterfaceBriefSchema(MetaParser):
 
 
 class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show ip interface brief"""
+
     #*************************
     # schema - class variable
     #
@@ -2347,9 +2338,8 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
 
 
 class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show ip interface brief | include Vlan"""
+
     #*************************
     # schema - class variable
     #
@@ -2363,6 +2353,8 @@ class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
 
 
 class ShowInterfaceBriefSchema(MetaParser):
+    """Schema for show interface brief"""
+
     schema = {'interface':
                 {'ethernet':
                     {Any():
@@ -2402,9 +2394,7 @@ class ShowInterfaceBriefSchema(MetaParser):
 
 
 class ShowInterfaceBrief(ShowInterfaceBriefSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show interface brief"""
     #*************************
     # schema - class variable
     #

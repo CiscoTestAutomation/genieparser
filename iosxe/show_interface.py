@@ -1,4 +1,5 @@
-''' show_interface.py
+"""
+    show_interface.py
     IOSXE parsers for the following show commands:
 
     * show interfaces
@@ -8,8 +9,7 @@
     * show ip interface
     * show ipv6 interface
     * show etherchannel summary
-
-'''
+"""
 
 import os
 import logging
@@ -44,8 +44,7 @@ logger = logging.getLogger(__name__)
 
 
 class ShowInterfacesSchema(MetaParser):
-
-    #schema for show interfaces
+    """schema for show interfaces"""
 
     schema = {
             Any(): {
@@ -165,8 +164,7 @@ class ShowInterfacesSchema(MetaParser):
 
 
 class ShowInterfaces(ShowInterfacesSchema):
-
-    #parser for show interfaces
+    """parser for show interfaces"""
 
     def cli(self):
         out = self.device.execute('show interfaces')
@@ -836,12 +834,12 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         self.cmd = 'show ip interface brief'.format()
 
     def cli(self):
-        ''' parsing mechanism: cli
+        """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
-        '''
+        """
         parsed_dict = {}
         output = self.device.execute(self.cmd)
 
@@ -874,11 +872,11 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         return (parsed_dict)
 
     def yang(self):
-        ''' parsing mechanism: yang
+        """ parsing mechanism: yang
 
         Function yang() defines the yang type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
-        '''
+        """
         pass
 
     def yang_cli(self):
@@ -906,11 +904,11 @@ class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
         super(ShowIpInterfaceBriefPipeVlan, self).cli()
 
     def yang(self):
-        ''' parsing mechanism: yang
+        """parsing mechanism: yang
 
         Function yang() defines the yang type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
-        '''
+        """
 
         ret = {}
         cmd = '''<native><interface><Vlan/></interface></native>'''
@@ -976,6 +974,7 @@ class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
 
 
 class ShowInterfacesSwitchportSchema(MetaParser):
+    """Schema for show interfaces switchport"""
     schema = {
                 Any(): {
                     'switchport_enable': bool,
@@ -1017,8 +1016,7 @@ class ShowInterfacesSwitchportSchema(MetaParser):
             }
 
 class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
-
-    #parser for show interfaces switchport
+    """parser for show interfaces switchport"""
 
     def cli(self):
         out = self.device.execute('show interfaces switchport')
@@ -1368,6 +1366,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
 
 
 class ShowIpInterfaceSchema(MetaParser):
+    """Schema for show ip interface"""
     schema = {
                 Any(): {
                     'enabled': bool,
@@ -1432,8 +1431,7 @@ class ShowIpInterfaceSchema(MetaParser):
             }
 
 class ShowIpInterface(ShowIpInterfaceSchema):
-
-    #parser for show ip interface
+    """Parser for show ip interface"""
 
     def cli(self):
         out = self.device.execute('show ip interface')
@@ -1966,6 +1964,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
 
 class ShowIpv6InterfaceSchema(MetaParser):
+    """Schema for show ipv6 interface"""
     schema = {
                 Any(): {
                     'oper_status': str,
@@ -2017,8 +2016,7 @@ class ShowIpv6InterfaceSchema(MetaParser):
             }
 
 class ShowIpv6Interface(ShowIpv6InterfaceSchema):
-
-    #parser for show ipv6 interface
+    """Parser for show ipv6 interface"""
 
     def cli(self):
         out = self.device.execute('show ipv6 interface')
@@ -2417,8 +2415,7 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
 
 
 class ShowEtherchannelSummarySchema(MetaParser):
-
-    # Schema for show etherchannel summary
+    """Schema for show etherchannel summary"""
     schema = {
                 'num_channel_groups_in_use': int,
                 'aggregators_number': int,
@@ -2437,8 +2434,7 @@ class ShowEtherchannelSummarySchema(MetaParser):
             }
 
 class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
-
-    #parser for show etherchannel summary
+    """parser for show etherchannel summary"""
 
     def cli(self):
         out = self.device.execute('show etherchannel summary')

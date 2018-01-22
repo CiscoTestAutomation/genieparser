@@ -1,8 +1,8 @@
-''' show_l2vpn.py
+"""show_l2vpn.py
 
 show l2vpn parser class
 
-'''
+"""
 
 import re
 from netaddr import EUI
@@ -15,7 +15,7 @@ from parser.base import *
 
 
 class ShowL2vpnMacLearning(MetaParser):
-    '''Parser class for 'show l2vpn mac-learning mac|mac-ipv4|mac-ipv6 mac' CLI.'''
+    """Parser for show l2vpn mac-learning <mac_type> all location <location>"""
 
     # TODO schema
 
@@ -65,7 +65,10 @@ class ShowL2vpnMacLearning(MetaParser):
 
 
 class ShowL2vpnForwardingBridgeDomainMacAddress(MetaParser):
-
+    """Parser for:
+        show l2vpn forwarding bridge-domain mac-address location <location>
+        show l2vpn forwarding bridge-domain <bridge_domain> mac-address location <location>
+    """
     # TODO schema
 
     def __init__(self,location=None,bridge_domain=None,**kwargs) :
@@ -161,7 +164,7 @@ class ShowL2vpnForwardingBridgeDomainMacAddress(MetaParser):
 
 
 class ShowL2vpnForwardingProtectionMainInterface(MetaParser):
-
+    """Parser for show l2vpn forwarding protection main-interface location <location>"""
     # TODO schema
 
     def __init__(self,location=None,**kwargs):

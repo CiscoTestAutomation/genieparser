@@ -1,8 +1,8 @@
-''' show_interface.py
+"""show_interface.py
 
 Example parser class
 
-'''
+"""
 
 # python
 import re
@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 
 
 class ShowIpInterfaceBriefSchema(MetaParser):
+    """Schema for show ip interface brief"""
     schema = {'interface':
                 {Any():
                     {Optional('vlan_id'):
@@ -40,7 +41,7 @@ class ShowIpInterfaceBriefSchema(MetaParser):
 
 
 class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
-    
+    """Parser for show ip interface brief"""
     #*************************
     # schema - class variable
     #
@@ -53,12 +54,12 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         self.cmd = 'show ip interface brief'.format()
 
     def cli(self):
-        ''' parsing mechanism: cli
+        """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
-        '''
+        """
 
         out = self.device.execute(self.cmd)
         interface_dict = {}
@@ -113,9 +114,9 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
 
 
 class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show ip interface brief | include Vlan"""
+    #parser class - implements detail parsing mechanisms for cli output.
+
     #*************************
     # schema - class variable
     #
@@ -128,8 +129,10 @@ class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
         self.cmd = 'show ip interface brief | include Vlan'.format()
 
 
-# switchport administrative mode is what's configured on the switch port while operational mode is what is actually functioning at the moment.
+# switchport administrative mode is what's configured on the switch port
+# while operational mode is what is actually functioning at the moment.
 class ShowInterfaceSwitchportSchema(MetaParser):
+    """Schema for show interface switchport"""
     schema = {'interface':
                 {Any():
                     {Optional('switchport_mode'): 
@@ -146,9 +149,9 @@ class ShowInterfaceSwitchportSchema(MetaParser):
 
 
 class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show interface switchport"""
+    # parser class - implements detail parsing mechanisms for cli output.
+
     #*************************
     # schema - class variable
     #
@@ -242,6 +245,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
         return intf_dict
 
 class ShowInterfaceBriefSchema(MetaParser):
+    """Schema for show interface brief"""
     schema = {'interface':
                 {'ethernet':
                     {Any():
@@ -281,9 +285,9 @@ class ShowInterfaceBriefSchema(MetaParser):
 
 
 class ShowInterfaceBrief(ShowInterfaceBriefSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show interface brief"""
+    # parser class - implements detail parsing mechanisms for cli output.
+
     #*************************
     # schema - class variable
     #
@@ -296,12 +300,12 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
         self.cmd = 'show interface brief'.format()
 
     def cli(self):
-        ''' parsing mechanism: cli
+        """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
-        '''
+        """
 
         out = self.device.execute(self.cmd)
         interface_dict = {}
@@ -455,8 +459,7 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
 
 
 class ShowInterfacesDetailSchema(MetaParser):
-
-    #schema for show interfaces detail
+    """Schema for show interfaces detail"""
 
     schema = {
         Any():
@@ -543,8 +546,7 @@ class ShowInterfacesDetailSchema(MetaParser):
 
 
 class ShowInterfacesDetail(ShowInterfacesDetailSchema):
-
-    #parser for show interface detail
+    """Parser for show interface detail"""
 
     def cli(self):
         out = self.device.execute('show interface detail')
@@ -1140,8 +1142,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
 #############################################################################
 
 class ShowVlanInterfaceSchema(MetaParser):
-
-    #schema for show vlan interface
+    """Schema for show vlan interface"""
 
     schema = {
         Any():
@@ -1155,8 +1156,7 @@ class ShowVlanInterfaceSchema(MetaParser):
         }
 
 class ShowVlanInterface(ShowVlanInterfaceSchema):
-
-    #parser for show vlan interface
+    """Parser for show vlan interface"""
 
     def cli(self):
 
@@ -1226,8 +1226,7 @@ class ShowVlanInterface(ShowVlanInterfaceSchema):
 #############################################################################
 
 class ShowIpv4VrfAllInterfaceSchema(MetaParser):
-
-    #schema for show ipv4 vrf all interface
+    """Schema for show ipv4 vrf all interface"""
 
     schema = {
         Any():
@@ -1264,7 +1263,7 @@ class ShowIpv4VrfAllInterfaceSchema(MetaParser):
         }
 
 class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
-
+     """Parser for show ipv4 vrf all interface"""
      def cli(self):
 
         out = self.device.execute('show ipv4 vrf all interface')
@@ -1553,8 +1552,7 @@ class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
 #############################################################################
 
 class ShowIpv6VrfAllInterfaceSchema(MetaParser):
-
-    #schema for show ipv6 vrf all interface
+    """Schema for show ipv6 vrf all interface"""
 
     schema = {
         Any():
@@ -1604,8 +1602,7 @@ class ShowIpv6VrfAllInterfaceSchema(MetaParser):
         }
 
 class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
-
-    #show ipv6 vrf all interface
+    """Parser for show ipv6 vrf all interface"""
 
     def cli(self):
         out = self.device.execute('show ipv6 vrf all interface')
@@ -2102,8 +2099,7 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
 #############################################################################
 
 class ShowEthernetTagsSchema(MetaParser):
-
-    #schema for show ethernet tags
+    """Schema for show ethernet tags"""
 
     schema = {
         Any():
@@ -2119,8 +2115,7 @@ class ShowEthernetTagsSchema(MetaParser):
         }
 
 class ShowEthernetTags(ShowEthernetTagsSchema):
-
-    #parser for show ethernet tags
+    """Parser for show ethernet tags"""
 
     def cli(self):
 

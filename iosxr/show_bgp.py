@@ -1,7 +1,7 @@
-''' show_bgp.py
+"""show_bgp.py
 
 IOSXR parsers for the following show commands:
-    * 'show placement program all'
+    show placement program all'
     * 'show bgp instance <WORD> af-group <WORD> configuration'
     * 'show bgp instance <WORD> session-group <WORD> configuration'
     * 'show bgp instance all all all process detail'
@@ -39,7 +39,7 @@ IOSXR parsers for the following show commands:
     * 'show bgp l2vpn evpn'
     * 'show bgp l2vpn evpn advertised'
 
-'''
+"""
 
 # Python
 import re
@@ -67,7 +67,7 @@ logger.setLevel(logging.INFO)
 
 class ShowBgpInstancesSchema(MetaParser):
 
-    ''' Schema for show bgp instances'''
+    """Schema for show bgp instances"""
 
     schema = {
         'instance':
@@ -83,7 +83,7 @@ class ShowBgpInstancesSchema(MetaParser):
 
 class ShowBgpInstances(ShowBgpInstancesSchema):
 
-    ''' Parser for show bgp instances'''
+    """Parser for show bgp instances"""
 
     def cli(self):
 
@@ -156,7 +156,7 @@ class ShowBgpInstances(ShowBgpInstancesSchema):
 
 class ShowPlacementProgramAllSchema(MetaParser):
 
-    ''' Schema for show placement program all'''
+    """Schema for show placement program all"""
 
     schema = {
         'program':
@@ -177,7 +177,7 @@ class ShowPlacementProgramAllSchema(MetaParser):
 
 class ShowPlacementProgramAll(ShowPlacementProgramAllSchema):
 
-    ''' Parser for show placement program all'''
+    """Parser for show placement program all"""
 
     def cli(self):
 
@@ -237,7 +237,7 @@ class ShowPlacementProgramAll(ShowPlacementProgramAllSchema):
 
 class ShowBgpInstanceAfGroupConfigurationSchema(MetaParser):
     
-    ''' Schema for show bgp instance af-group configuration'''
+    """Schema for show bgp instance af-group configuration"""
 
     schema = {
         'instance':
@@ -281,8 +281,7 @@ class ShowBgpInstanceAfGroupConfigurationSchema(MetaParser):
         }
 
 class ShowBgpInstanceAfGroupConfiguration(ShowBgpInstanceAfGroupConfigurationSchema):
-
-    ''' Parser for show bgp instance af-group configuration'''
+    """Parser for show bgp instance af-group configuration"""
 
     def cli(self):
 
@@ -536,8 +535,7 @@ class ShowBgpInstanceAfGroupConfiguration(ShowBgpInstanceAfGroupConfigurationSch
 # ========================================================================
 
 class ShowBgpInstanceSessionGroupConfigurationSchema(MetaParser):
-
-    ''' Schema for show bgp instance session-group configuration'''
+    """ Schema for show bgp instance session-group configuration"""
 
     schema = {
         'instance':
@@ -582,7 +580,7 @@ class ShowBgpInstanceSessionGroupConfigurationSchema(MetaParser):
 
 class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfigurationSchema):
 
-    ''' Parser for show bgp instance session-group configuration'''
+    """Parser for show bgp instance session-group configuration"""
 
     def cli(self):
 
@@ -818,12 +816,12 @@ class ShowBgpInstanceSessionGroupConfiguration(ShowBgpInstanceSessionGroupConfig
 
 class ShowBgpInstanceProcessDetailSchema(MetaParser):
 
-    ''' Schema for:
-        * 'show bgp instance all all all process detail'
-        * 'show bgp instance all vrf all process detail'
-        * 'show bgp instance all vrf all ipv4 unicast process detail'
-        * 'show bgp instance all vrf all ipv6 unicast process detail'
-    '''
+    """Schema for:
+        show bgp instance all all all process detail
+        show bgp instance all vrf all process detail
+        show bgp instance all vrf all ipv4 unicast process detail
+        show bgp instance all vrf all ipv6 unicast process detail
+    """
 
     schema = {
         'instance':
@@ -966,12 +964,13 @@ class ShowBgpInstanceProcessDetailSchema(MetaParser):
 
 class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
 
-    ''' Parser for:
-        * 'show bgp instance all all all process detail'
-        * 'show bgp instance all vrf all process detail'
-        * 'show bgp instance all vrf all ipv4 unicast process detail'
-        * 'show bgp instance all vrf all ipv6 unicast process detail'
-    '''
+    """Parser for:
+        show bgp instance all all all process detail
+        show bgp instance all vrf all process detail
+        show bgp instance all vrf all ipv4 unicast process detail
+        show bgp instance all vrf all ipv6 unicast process detail
+        parser class - implements detail parsing mechanisms for cli, yang output.
+    """
 
     def cli(self, vrf_type, af_type=''):
 
@@ -1955,12 +1954,12 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
 
 class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
 
-    ''' Schema for:
-        * 'show bgp instance all all all neighbors detail'
-        * 'show bgp instance all vrf all neighbors detail'
-        * 'show bgp instance all vrf all ipv4 unicast neighbors detail'
-        * 'show bgp instance all vrf all ipv6 unicast neighbors detail'
-    '''
+    """Schema for:
+        show bgp instance all all all neighbors detail
+        show bgp instance all vrf all neighbors detail
+        show bgp instance all vrf all ipv4 unicast neighbors detail
+        show bgp instance all vrf all ipv6 unicast neighbors detail
+    """
 
     schema = {
         'instance':
@@ -2144,12 +2143,12 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
 
 class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
 
-    ''' Parser for:
-        * 'show bgp instance all all all neighbors detail'
-        * 'show bgp instance all vrf all neighbors detail'
-        * 'show bgp instance all vrf all ipv4 unicast neighbors detail'
-        * 'show bgp instance all vrf all ipv6 unicast neighbors detail'
-    '''
+    """ Parser for:
+        show bgp instance all all all neighbors detail
+        show bgp instance all vrf all neighbors detail
+        show bgp instance all vrf all ipv4 unicast neighbors detail
+        show bgp instance all vrf all ipv6 unicast neighbors detail
+    """
 
     def cli(self, vrf_type, af_type=''):
 
@@ -3045,20 +3044,19 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
 
 # =============================================================================
 # Parser for:
-# 'show bgp instance all all all neighbors <WORD> received routes'
-# 'show bgp instance all vrf all neighbors <WORD> received routes'
-# 'show bgp instance all vrf all ipv4 unicast neighbors <WORD> received routes'
-# 'show bgp instance all vrf all ipv6 unicast neighbors <WORD> received routes'
+# 'show bgp instance all all all neighbors <neighbor> received routes'
+# 'show bgp instance all vrf all neighbors <neighbor> received routes'
+# 'show bgp instance all vrf all ipv4 unicast neighbors <neighbor> received routes'
+# 'show bgp instance all vrf all ipv6 unicast neighbors <neighbor> received routes'
 # =============================================================================
 
 class ShowBgpInstanceNeighborsReceivedRoutesSchema(MetaParser):
     
-    ''' Schema for:
-        * 'show bgp instance all all all neighbors <WORD> received routes'
-        * 'show bgp instance all vrf all neighbors <WORD> received routes'
-        * 'show bgp instance all vrf all ipv4 unicast neighbors <WORD> received routes'
-        * 'show bgp instance all vrf all ipv6 unicast neighbors <WORD> received routes'
-    '''
+    """Schema for:
+        show bgp instance all all all neighbors <neighbor> received routes
+        show bgp instance all vrf all neighbors <neighbor> received routes
+        show bgp instance all vrf all ipv4 unicast neighbors <neighbor> received routes
+        show bgp instance all vrf all ipv6 unicast neighbors <neighbor> received routes"""
 
     schema = {'instance':
                 {Any():
@@ -3110,12 +3108,12 @@ class ShowBgpInstanceNeighborsReceivedRoutesSchema(MetaParser):
 
 class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRoutesSchema):
 
-    ''' Parser for:
-        * 'show bgp instance all all all neighbors <WORD> received routes'
-        * 'show bgp instance all vrf all neighbors <WORD> received routes'
-        * 'show bgp instance all vrf all ipv4 unicast neighbors <WORD> received routes'
-        * 'show bgp instance all vrf all ipv6 unicast neighbors <WORD> received routes'
-    '''
+    """Parser for:
+        show bgp instance all all all neighbors <neighbor> received routes
+        show bgp instance all vrf all neighbors <neighbor> received routes
+        show bgp instance all vrf all ipv4 unicast neighbors <neighbor> received routes
+        show bgp instance all vrf all ipv6 unicast neighbors <neighbor> received routes
+    """
 
     def cli(self, neighbor, vrf_type, af_type='', route_type='received routes'):
 
@@ -3518,12 +3516,12 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
 
 class ShowBgpInstanceNeighborsAdvertisedRoutesSchema(MetaParser):
 
-    ''' Schema for:
-        * 'show bgp instance all all all neighbors <WORD> advertised-routes'
-        * 'show bgp instance all vrf all neighbors <WORD> advertised-routes'
-        * 'show bgp instance all vrf all ipv4 unicast neighbors <WORD> advertised-routes'
-        * 'show bgp instance all vrf all ipv6 unicast neighbors <WORD> advertised-routes'
-    '''
+    """ Schema for:
+        show bgp instance all all all neighbors <neighbor> advertised-routes
+        show bgp instance all vrf all neighbors <neighbor> advertised-routes
+        show bgp instance all vrf all ipv4 unicast neighbors <neighbor> advertised-routes
+        show bgp instance all vrf all ipv6 unicast neighbors <neighbor> advertised-routes
+    """
 
     schema = {'instance':
                 {Any():
@@ -3562,12 +3560,12 @@ class ShowBgpInstanceNeighborsAdvertisedRoutesSchema(MetaParser):
 
 class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertisedRoutesSchema):
 
-    ''' Parser for:
-        * 'show bgp instance all all all neighbors <WORD> advertised-routes'
-        * 'show bgp instance all vrf all neighbors <WORD> advertised-routes'
-        * 'show bgp instance all vrf all ipv4 unicast neighbors <WORD> advertised-routes'
-        * 'show bgp instance all vrf all ipv6 unicast neighbors <WORD> advertised-routes'
-    '''
+    """ Parser for:
+        show bgp instance all all all neighbors <neighbor> advertised-routes
+        show bgp instance all vrf all neighbors <neighbor> advertised-routes
+        show bgp instance all vrf all ipv4 unicast neighbors <neighbor> advertised-routes
+        show bgp instance all vrf all ipv6 unicast neighbors <neighbor> advertised-routes
+    """
 
     def cli(self, neighbor, vrf_type, af_type=''):
         
@@ -3720,12 +3718,12 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
 
 class ShowBgpInstanceNeighborsRoutesSchema(MetaParser):
 
-    ''' Schema for:
-        * 'show bgp instance all all all neighbors <WORD> routes'
-        * 'show bgp instance all vrf all neighbors <WORD> routes'
-        * 'show bgp instance all vrf all ipv4 unicast neighbors <WORD> routes'
-        * 'show bgp instance all vrf all ipv6 unicast neighbors <WORD> routes'
-    '''
+    """Schema for:
+        show bgp instance all all all neighbors <neighbor> routes
+        show bgp instance all vrf all neighbors <neighbor> routes
+        show bgp instance all vrf all ipv4 unicast neighbors <neighbor> routes
+        show bgp instance all vrf all ipv6 unicast neighbors <neighbor> routes
+    """
 
     schema = {
         'instance':
@@ -3777,12 +3775,12 @@ class ShowBgpInstanceNeighborsRoutesSchema(MetaParser):
 
 class ShowBgpInstanceNeighborsRoutes(ShowBgpInstanceNeighborsRoutesSchema):
     
-    ''' Parser for:
-        * 'show bgp instance all all all neighbors <WORD> routes'
-        * 'show bgp instance all vrf all neighbors <WORD> routes'
-        * 'show bgp instance all vrf all ipv4 unicast neighbors <WORD> routes'
-        * 'show bgp instance all vrf all ipv6 unicast neighbors <WORD> routes'
-    '''
+    """ Parser for:
+        show bgp instance all all all neighbors <WORD> routes
+        show bgp instance all vrf all neighbors <WORD> routes
+        show bgp instance all vrf all ipv4 unicast neighbors <WORD> routes
+        show bgp instance all vrf all ipv6 unicast neighbors <WORD> routes
+    """
 
     def cli(self, neighbor, vrf_type, af_type=''):
         return ShowBgpInstanceNeighborsReceivedRoutes.cli(
@@ -3799,12 +3797,12 @@ class ShowBgpInstanceNeighborsRoutes(ShowBgpInstanceNeighborsRoutesSchema):
 
 class ShowBgpInstanceSummarySchema(MetaParser):
 
-    ''' Schema for:
-        * 'show bgp instance all all all summary'
-        * 'show bgp instance all vrf all summary'
-        * 'show bgp instance all vrf all ipv4 unicast summary'
-        * 'show bgp instance all vrf all ipv6 unicast summary'
-    '''
+    """ Schema for:
+        show bgp instance all all all summary
+        show bgp instance all vrf all summary
+        show bgp instance all vrf all ipv4 unicast summary
+        show bgp instance all vrf all ipv6 unicast summary
+    """
 
     schema = {
         'instance':
@@ -3865,12 +3863,12 @@ class ShowBgpInstanceSummarySchema(MetaParser):
 
 class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
 
-    ''' Parser for:
-        * 'show bgp instance all all all summary'
-        * 'show bgp instance all vrf all summary'
-        * 'show bgp instance all vrf all ipv4 unicast summary'
-        * 'show bgp instance all vrf all ipv6 unicast summary'
-    '''
+    """ Parser for:
+        show bgp instance all all all summary
+        show bgp instance all vrf all summary
+        show bgp instance all vrf all ipv4 unicast summary
+        show bgp instance all vrf all ipv6 unicast summary
+    """
 
     def cli(self, vrf_type, af_type=''):
 
@@ -4184,12 +4182,12 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
 
 class ShowBgpInstanceAllAllSchema(MetaParser):
 
-    ''' Schema for:
-        * 'show bgp instance all all all'
-        * 'show bgp instance all vrf all'
-        * 'show bgp instance all vrf all ipv4 unicast'
-        * 'show bgp instance all vrf all ipv6 unicast'
-    '''
+    """ Schema for:
+        show bgp instance all all all
+        show bgp instance all vrf all
+        show bgp instance all vrf all ipv4 unicast
+        show bgp instance all vrf all ipv6 unicast
+    """
 
     schema = {
         'instance':
@@ -4243,12 +4241,12 @@ class ShowBgpInstanceAllAllSchema(MetaParser):
 
 class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
 
-    ''' Parser for:
-        * 'show bgp instance all all all'
-        * 'show bgp instance all vrf all'
-        * 'show bgp instance all vrf all ipv4 unicast'
-        * 'show bgp instance all vrf all ipv6 unicast'
-    '''
+    """Parser for:
+        show bgp instance all all all
+        show bgp instance all vrf all
+        show bgp instance all vrf all ipv4 unicast
+        show bgp instance all vrf all ipv6 unicast
+    """
 
     def cli(self, vrf_type, af_type=''):
 
@@ -4608,13 +4606,13 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
 # ==============================
 
 class ShowBgpSessions(MetaParser):
-    '''Parser class for 'show bgp sessions' CLI.'''
+    """Parser for show bgp sessions"""
 
     # TODO schema
 
     def cli(self):
-        '''parsing mechanism: cli
-        '''
+        """parsing mechanism: cli
+        """
 
         cmd = 'show bgp sessions'
 
@@ -4630,13 +4628,13 @@ class ShowBgpSessions(MetaParser):
 # ====================================
 
 class ShowBgpVrfDbVrfAll(MetaParser):
-    '''Parser class for 'show bgp vrf-db vrf all'' CLI.'''
+    """Parser for show bgp vrf-db vrf all"""
 
     # TODO schema
 
     def cli(self):
-        ''' parsing mechanism: cli
-        '''
+        """ parsing mechanism: cli
+        """
 
         cmd = 'show bgp vrf-db vrf all'
 
@@ -4701,7 +4699,7 @@ class ShowBgpVrfDbVrfAll(MetaParser):
 # ================================
 
 class ShowBgpL2vpnEvpn(MetaParser):
-    '''Parser class for 'show bgp l2vpn evpn' CLI.'''
+    """Parser for show bgp l2vpn evpn"""
 
     # TODO schema
 
@@ -4712,8 +4710,8 @@ class ShowBgpL2vpnEvpn(MetaParser):
         super().__init__(**kwargs)
 
     def cli(self):
-        ''' parsing mechanism: cli
-        '''
+        """ parsing mechanism: cli
+        """
 
         is_detail = False
         cmd = 'show bgp l2vpn evpn'
@@ -4972,7 +4970,7 @@ class ShowBgpL2vpnEvpn(MetaParser):
 # ===========================================
 
 class ShowBgpL2vpnEvpnAdvertised(MetaParser):
-    '''Parser class for 'show bgp l2vpn evpn advertised' CLI.'''
+    """Parser class for 'show bgp l2vpn evpn advertised' CLI."""
 
     # TODO schema
 

@@ -1,8 +1,8 @@
-''' show_system.py
+"""show_system.py
 
 NXOS parsers for the following show commands:
     * 'show system internal sysmgr service name <WORD>'
-'''
+"""
 
 # Python
 import re
@@ -14,10 +14,10 @@ from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
 
 
 # ====================================================================
-# Parser for 'show system internal sysmgr service name <WORD>'
+# Schema for 'show system internal sysmgr service name <process>'
 # ====================================================================
 class ShowSystemInternalSysmgrServiceNameSchema(MetaParser):    
-    '''Schema for show system internal sysmgr service name <WORD>'''
+    """Schema for show system internal sysmgr service name <process>"""
     schema = {'instance':
                 {Any():
                     {'tag':
@@ -42,7 +42,7 @@ class ShowSystemInternalSysmgrServiceNameSchema(MetaParser):
 
 class ShowSystemInternalSysmgrServiceName(
     ShowSystemInternalSysmgrServiceNameSchema):
-    '''Parser for show system internal sysmgr service name <WORD>'''
+    """Parser for show system internal sysmgr service name <process>"""
 
     def cli(self, process):
         cmd = 'show system internal sysmgr service name {}'.format(process)

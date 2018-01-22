@@ -17,8 +17,9 @@ from metaparser.util.schemaengine import Schema, Any, Optional
 # =============================================
 
 class ShowArchiveSchema(MetaParser):
-
-    # Schema for 'show archive'
+    """
+    Schema for show archive
+    """
 
     schema = {'archive': {
                 'total': int,
@@ -31,6 +32,7 @@ class ShowArchiveSchema(MetaParser):
         }
 
 class ShowArchive(ShowArchiveSchema):
+    """ Parser for show archive """
 
     # Parser for 'show archive'
 

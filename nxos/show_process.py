@@ -1,8 +1,8 @@
-''' show_process.py
+"""show_process.py
 
 NXOS parsers for the following show commands:
     * 'show processes'
-'''
+"""
 
 # Python
 import re
@@ -17,7 +17,7 @@ from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
 # Parser for 'show processes'
 # ====================================================================
 class ShowProcessesSchema(MetaParser):    
-    '''Schema for show processes'''
+    """Schema for show processes <process>"""
     schema = {'process': {
                 Any(): {
                     Optional('pid'): {
@@ -40,7 +40,7 @@ class ShowProcessesSchema(MetaParser):
         }
 
 class ShowProcesses(ShowProcessesSchema):
-    '''Parser for show processes'''
+    """Parser for show processes <process>"""
 
     def cli(self, process=''):
         cmd = 'show processes' if not process else \

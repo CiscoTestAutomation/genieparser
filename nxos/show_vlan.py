@@ -1,8 +1,8 @@
-''' show_vlan.py
+"""show_vlan.py
 
 Example parser class
 
-'''
+"""
 import re
 
 
@@ -20,6 +20,7 @@ from parser.utils.common import Common
 #  schema for show vlan
 # ====================================================
 class ShowVlanSchema(MetaParser):
+    """Schema for show vlan"""
     schema = {
         'vlans':{
             Any():{
@@ -47,9 +48,7 @@ class ShowVlanSchema(MetaParser):
 #  parser for show vlan
 # ====================================================
 class ShowVlan(ShowVlanSchema):
-    '''
-    show vlan
-    '''
+    """Parser for show vlan"""
 
     def cli(self):
         cmd = 'show vlan'
@@ -204,6 +203,7 @@ class ShowVlan(ShowVlanSchema):
 #  schema for show vlan id 1-3967 vn_segment
 # ====================================================
 class ShowVlanIdVnSegmentSchema(MetaParser):
+    """Schema for show vlan id 1-3967 vn_segment"""
     schema = {
         'vlans': {
             Any(): {
@@ -217,9 +217,7 @@ class ShowVlanIdVnSegmentSchema(MetaParser):
 #  parser for show vlan id 1-3967 vn-segment
 # ====================================================
 class ShowVlanIdVnSegment(ShowVlanIdVnSegmentSchema):
-    '''
-    show vlan id 1-3967 vn-segment
-    '''
+    """Parser for show vlan id 1-3967 vn_segment"""
 
     def cli(self):
         cmd = 'show vlan id 1-3967 vn-segment'
@@ -433,6 +431,7 @@ class ShowVlanOld(ShowVlanOldSchema, MetaParser):
 
 #Incomplete parser - to be completed 
 class ShowVlanInternalInfoSchema(MetaParser):
+    """Schema for show vlan internal info"""
     schema = {'vlan_id':
                 {Any():
                      {'vlan_configuration': bool}
@@ -441,9 +440,8 @@ class ShowVlanInternalInfoSchema(MetaParser):
 
 
 class ShowVlanInternalInfo(ShowVlanInternalInfoSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show vlan internal info"""
+
     #*************************
     # schema - class variable
     #
@@ -485,6 +483,7 @@ class ShowVlanInternalInfo(ShowVlanInternalInfoSchema):
 
 
 class ShowVlanFilterSchema(MetaParser):
+    """Schema show vlan filter"""
     schema = {'vlan_id':
                 {Any():
                     {'access_map_tag':str}
@@ -493,9 +492,8 @@ class ShowVlanFilterSchema(MetaParser):
 
 
 class ShowVlanFilter(ShowVlanFilterSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show vlan filter"""
+
     #*************************
     # schema - class variable
     #
@@ -539,6 +537,7 @@ class ShowVlanFilter(ShowVlanFilterSchema):
 
 
 class ShowVlanAccessMapSchema(MetaParser):
+    """Schema for show vlan access-map"""
     schema = {'access_map_id':
                 {Any():
                     {'access_map_sequence':
@@ -553,9 +552,8 @@ class ShowVlanAccessMapSchema(MetaParser):
 
 
 class ShowVlanAccessMap(ShowVlanAccessMapSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show vlan access-map"""
+
     #*************************
     # schema - class variable
     #

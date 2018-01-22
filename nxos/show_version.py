@@ -1,8 +1,9 @@
-''' showversion.py
+"""show_version.py
 
-Example parser class
+NXOS parser class :
+         show version
 
-'''
+"""
 import xmltodict
 
 from metaparser import MetaParser
@@ -16,14 +17,15 @@ except ImportError:
 
 
 class ShowVersion(MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and 
-    yang output.
+    """Parser for:
+        show version
+        parser class implements detail parsing mechanisms for cli, xml, and yang output.
     """
     #*************************
     # schema - class variable
     #
-    # Purpose is to make sure the parser always return the output 
-    # (nested dict) that has the same data structure across all supported 
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
     schema = {'cmp': {
                         'module': {

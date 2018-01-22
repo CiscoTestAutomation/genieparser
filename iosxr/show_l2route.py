@@ -1,8 +1,8 @@
-''' show_l2route.py
+"""show_l2route.py
 
 show l2route parser class
 
-'''
+"""
 
 import re
 from netaddr import EUI
@@ -15,7 +15,7 @@ from parser.base import *
 
 
 class ShowL2routeTopology(MetaParser):
-    '''Parser class for 'show l2route topology' CLI.'''
+    """Parser class for show l2route topology """
 
     # TODO schema
 
@@ -56,7 +56,7 @@ class ShowL2routeTopology(MetaParser):
 
 
 class ShowL2routeEvpnMac(MetaParser):
-    '''Parser class for 'show l2route evpn mac all' CLI.'''
+    """Parser for show l2route evpn mac all"""
 
     # TODO schema
 
@@ -97,7 +97,7 @@ class ShowL2routeEvpnMac(MetaParser):
 
 
 class ShowL2routeEvpnMacIp(MetaParser):
-    '''Parser class for 'show l2route evpn mac-ip all' CLI.'''
+    """Parser for show l2route evpn mac-ip all"""
 
     # TODO schema
 

@@ -1,4 +1,4 @@
-''' show_mld.py
+"""show_mld.py
 
 NXOS parsers for the following show commands:
 
@@ -12,7 +12,7 @@ NXOS parsers for the following show commands:
     * show ipv6 mld local-groups vrf all
     * show ipv6 mld local-groups vrf <WORD>
 
-'''
+"""
 
 # Python
 import re
@@ -27,13 +27,14 @@ from parser.utils.common import Common
 # ==============================================
 # Parser for 'show ipv6 mld interface'
 # Parser for 'show ipv6 mld interface vrf all'
-# Parser for 'show ipv6 mld interface vrf <WORD>'
+# Parser for 'show ipv6 mld interface vrf <vrf>'
 # ==============================================
 
 class ShowIpv6MldInterfaceSchema(MetaParser):
-    # Schema for 'show ipv6 mld interface'
-    # Schema for 'show ipv6 mld interface vrf all'
-    # Schema for 'show ipv6 mld interface vrf <WORD>'
+    """Schema for:
+        show ipv6 mld interface
+        show ipv6 mld interface vrf all
+        show ipv6 mld interface vrf <vrf>"""
 
     schema = {'vrfs': {
                 Any(): {
@@ -101,9 +102,10 @@ class ShowIpv6MldInterfaceSchema(MetaParser):
         }
 
 class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
-    # Parser for 'show ipv6 mld interface'
-    # Parser for 'show ipv6 mld interface vrf all'
-    # Parser for 'show ipv6 mld interface vrf <WORD>'
+    """Parser for:
+        show ipv6 mld interface
+        show ipv6 mld interface vrf all
+        show ipv6 mld interface vrf <vrf>"""
 
     def cli(self, vrf=''):
 
@@ -419,12 +421,13 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
 # ===========================================
 # Parser for 'show ipv6 mld groups'
 # Parser for 'show ipv6 mld groups vrf all'
-# Parser for 'show ipv6 mld groups vrf <WORD>'
+# Parser for 'show ipv6 mld groups vrf <vrf>'
 # ===========================================
 class ShowIpv6MldGroupsSchema(MetaParser):
-    # Schema for 'show ipv6 mld groups'
-    # Schema for 'show ipv6 mld groups vrf all'
-    # Schema for 'show ipv6 mld groups vrf <WORD>'
+    """Schema for:
+        show ipv6 mld groups
+        show ipv6 mld groups vrf all
+        show ipv6 mld groups vrf <vrf>"""
 
     schema = {'vrfs': {
                 Any(): {
@@ -454,9 +457,10 @@ class ShowIpv6MldGroupsSchema(MetaParser):
         }
 
 class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
-    # Parser for 'show ipv6 mld groups'
-    # Parser for 'show ipv6 mld groups vrf all'
-    # Parser for 'show ipv6 mld groups vrf <WORD>'
+    """Parser for:
+        show ipv6 mld groups
+        show ipv6 mld groups vrf all
+        show ipv6 mld groups vrf <vrf>"""
 
     def cli(self, vrf=''):
 
@@ -539,14 +543,15 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
 
 
 # ===========================================
-# Parser for 'show ipv6 mld local-groups'
-# Parser for 'show ipv6 mld local-groups vrf all'
-# Parser for 'show ipv6 mld local-groups vrf <WORD>'
+# Schema for 'show ipv6 mld local-groups'
+# Schema for 'show ipv6 mld local-groups vrf all'
+# Schema for 'show ipv6 mld local-groups vrf <vrf>'
 # ===========================================
 class ShowIpv6MldLocalGroupsSchema(MetaParser):
-    # Schema for 'show ipv6 mld local-groups'
-    # Schema for 'show ipv6 mld local-groups vrf all'
-    # Schema for 'show ipv6 mld local-groups vrf <WORD>'
+    """Schema for:
+        show ipv6 mld local-groups
+        show ipv6 mld local-groups vrf all
+        show ipv6 mld local-groups vrf <vrf>"""
 
     schema = {'vrfs': {
                 Any(): {
@@ -583,9 +588,10 @@ class ShowIpv6MldLocalGroupsSchema(MetaParser):
         }
 
 class ShowIpv6MldLocalGroups(ShowIpv6MldLocalGroupsSchema):
-    # Parser for 'show ipv6 mld local-groups'
-    # Parser for 'show ipv6 mld local-groups vrf all'
-    # Parser for 'show ipv6 mld local-groups vrf <WORD>'
+    """Parser for:
+        show ipv6 mld local-groups
+        show ipv6 mld local-groups vrf all
+        show ipv6 mld local-groups vrf <vrf>"""
 
     def cli(self, vrf=''):
 

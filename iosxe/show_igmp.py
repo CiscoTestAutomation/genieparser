@@ -1,4 +1,5 @@
-''' show_igmp.py
+"""
+show_igmp.py
 
 IOSXE parsers for the following show commands:
 
@@ -8,8 +9,7 @@ IOSXE parsers for the following show commands:
     * show ip igmp vrf <WORD> groups detail
     * show ip igmp ssm-mapping <WORD>
     * show ip igmp vrf <WORD> ssm-mapping <WORD>
-
-'''
+"""
 
 # Python
 import re
@@ -25,8 +25,10 @@ from metaparser.util.schemaengine import Schema, Any, Optional
 # ==============================================
 
 class ShowIpIgmpInterfaceSchema(MetaParser):
-    # Schema for 'show ip igmp interface'
-    # Schema for 'show ip igmp vrf <WORD> interface'
+    """
+    Schema for 'show ip igmp interface'
+    Schema for 'show ip igmp vrf <WORD> interface'
+    """
 
     schema = {'vrf':
                 {Any(): {
@@ -75,9 +77,10 @@ class ShowIpIgmpInterfaceSchema(MetaParser):
         }
 
 class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
-    # Parser for 'show ip igmp interface'
-    # Parser for 'show ip igmp vrf <WORD> interface'
-
+    """
+    Parser for 'show ip igmp interface'
+    Parser for 'show ip igmp vrf <WORD> interface'
+    """
     def cli(self, vrf=''):
 
         cmd = 'show ip igmp interface' if not vrf else \
@@ -331,8 +334,10 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 # ==================================================
 
 class ShowIpIgmpGroupsDetailSchema(MetaParser):
-    # Schema for 'show ip igmp groups detail'
-    # Schema for 'show ip igmp vrf <WORD> groups detail'
+    """
+    Schema for 'show ip igmp groups detail'
+    Schema for 'show ip igmp vrf <WORD> groups detail'
+    """
 
     schema = {'vrf':
                 {Any(): {
@@ -391,8 +396,10 @@ class ShowIpIgmpGroupsDetailSchema(MetaParser):
         }
 
 class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
-    # Parser for 'show ip igmp groups detail'
-    # Parser for 'show ip igmp vrf <WORD> groups detail'
+    """
+    Parser for 'show ip igmp groups detail'
+    Parser for 'show ip igmp vrf <WORD> groups detail'
+    """
 
     # internal function to do the key creation wehn the key is assign first
     def build_pre_define_key(self, key_value_dict):
@@ -603,8 +610,10 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
 # ========================================================
 
 class ShowIpIgmpSsmMappingSchema(MetaParser):
-    # Schema for 'show ip igmp ssm-mapping <WROD>'
-    # Schema for 'show ip igmp vrf <WORD> ssm-mapping <WORD>'
+    """
+    Schema for 'show ip igmp ssm-mapping <WROD>'
+    Schema for 'show ip igmp vrf <WORD> ssm-mapping <WORD>'
+    """
 
     schema = {'vrf':
                 {Any(): {
@@ -620,8 +629,10 @@ class ShowIpIgmpSsmMappingSchema(MetaParser):
         }
 
 class ShowIpIgmpSsmMapping(ShowIpIgmpSsmMappingSchema):
-    # Schema for 'show ip igmp ssm-mapping <WROD>'
-    # Schema for 'show ip igmp vrf <WORD> ssm-mapping <WORD>'
+    """
+    Parser for 'show ip igmp ssm-mapping <WROD>'
+    parser for 'show ip igmp vrf <WORD> ssm-mapping <WORD>'
+    """
 
     def cli(self, group, vrf=''):
 
