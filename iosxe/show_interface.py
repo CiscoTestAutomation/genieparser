@@ -800,6 +800,7 @@ class ShowInterfaces(ShowInterfacesSchema):
 # parser using parsergen
 # ----------------------
 class ShowIpInterfaceBriefSchema(MetaParser):
+    """Parser for show ip interface brief"""
     schema = {'interface':
                 {Any():
                     {Optional('vlan_id'):
@@ -819,8 +820,9 @@ class ShowIpInterfaceBriefSchema(MetaParser):
             }
 
 class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
+    """Parser for:
+     show ip interface brief
+     parser class implements detail parsing mechanisms for cli and yang output.
     """
     #*************************
     # schema - class variable
@@ -886,8 +888,9 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         return merged_output
 
 class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
+    """Parser for:
+     show ip interface brief | include Vlan
+     parser class implements detail parsing mechanisms for cli and yang output.
     """
     #*************************
     # schema - class variable

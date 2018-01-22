@@ -65,7 +65,7 @@ class test_show_interface_brief_pipe_vlan_yang(unittest.TestCase):
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowIpInterfaceBriefPipeVlan(device=self.device)
-        intf_obj.context = Context.yang.value
+        intf_obj.context = Context.yang.value.split()
         parsed_output = intf_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
@@ -89,11 +89,12 @@ class test_show_interface_brief_pipe_vlan_yang(unittest.TestCase):
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         intf_obj = ShowIpInterfaceBriefPipeVlan(device=self.device1)
-        intf_obj.context = Context.yang.value
+        intf_obj.context = Context.yang.value.split()
         parsed_output = intf_obj.parse()
         self.assertEqual(parsed_output,self.empty_parsed_output)
 
-
+# There is Not Yang output for show interface switchport
+"""
 class test_show_interfaces_switchport_yang(unittest.TestCase):
 
     device = Device(name='aDevice')
@@ -827,6 +828,6 @@ class test_show_interfaces_switchport_yang(unittest.TestCase):
         parsed_output = intf_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.empty_parsed_output)
-
+"""
 if __name__ == '__main__':
     unittest.main()
