@@ -14,7 +14,7 @@ from metaparser.util.schemaengine import Schema, \
                                          Use
 try:
     import parsergen
-except ImportError:
+except (ImportError, OSError):
     pass
 
 logger = logging.getLogger(__name__)

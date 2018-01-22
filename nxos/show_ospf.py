@@ -25,6 +25,7 @@ NXOS parsers for the following show commands:
 
 # Python
 import re
+from netaddr import IPNetwork
 
 # Metaparser
 from metaparser import MetaParser
@@ -2598,7 +2599,8 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
             p10 = re.compile(r'^Network +Mask: +\/(?P<net_mask>(\S+))$')
             m = p10.match(line)
             if m:
-                db_dict['network_mask'] = '.'.join([str((0xffffffff << (32 - int(m.groupdict()['net_mask'])) >> i) & 0xff) for i in [24, 16, 8, 0]])
+                dummy = '{}/{}'.format('0.0.0.0', m.groupdict()['net_mask'])
+                db_dict['network_mask'] = str(IPNetwork(dummy).netmask)
                 continue
 
             # Metric Type: 2 (Larger than any link state path)
