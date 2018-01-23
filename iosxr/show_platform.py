@@ -306,7 +306,7 @@ class ShowPlatformSchema(MetaParser):
         }
 
 class ShowPlatform(ShowPlatformSchema):
-    """Schema for show platform"""
+    """Parser for show platform"""
     def cli(self):
         cmd = 'show platform'.format()
         out = self.device.execute(cmd)
