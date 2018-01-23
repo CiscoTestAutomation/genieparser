@@ -4354,30 +4354,40 @@ class ShowIpOspfMplsTrafficEngLinkSchema(MetaParser):
                     {Any(): 
                         {'instance': 
                             {Any(): 
-                                {'areas': 
+                                {'mpls': 
+                                    {'te': 
+                                        {'router_id': str},
+                                    },
+                                'areas': 
                                     {Any(): 
                                         {'mpls': 
                                             {'te': 
-                                                {'enable': bool}},
-                                        Optional('total_mpls_te_links'): int,
-                                        Optional('area_instance'): int,
-                                        Optional('link_hash_bucket'): 
-                                            {Any(): 
-                                                {'fragment_association': int,
-                                                'link_instance': int,
-                                                'link_type': str,
-                                                'link_id': str,
-                                                'interface_address': str,
-                                                'te_admin_metric': int,
-                                                'igp_admin_metric': int,
-                                                'max_bandwidth': int,
-                                                'max_reservable_bandwidth': int,
-                                                'affinity_bit': str,
-                                                'total_priority': int,
-                                                Optional('unreserved_bandwidths'): 
+                                                {'enable': bool,
+                                                Optional('total_links'): int,
+                                                Optional('area_instance'): int,
+                                                Optional('link_hash_bucket'):
                                                     {Any(): 
-                                                        {'priority': int,
-                                                        'unreserved_bandwidth': int},
+                                                        {'link_fragments': 
+                                                            {Any(): 
+                                                                {'link_instance': int,
+                                                                'network_type': str,
+                                                                'link_id': str,
+                                                                'interface_address': str,
+                                                                'te_admin_metric': int,
+                                                                'igp_admin_metric': int,
+                                                                'max_bandwidth': int,
+                                                                'max_reservable_bandwidth': int,
+                                                                'affinity_bit': str,
+                                                                'total_priority': int,
+                                                                Optional('unreserved_bandwidths'): 
+                                                                    {Any(): 
+                                                                        {'priority': int,
+                                                                        'unreserved_bandwidth': int,
+                                                                        },
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
                                                     },
                                                 },
                                             },
@@ -4449,7 +4459,17 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
                         ['instance']:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
                         [instance] = {}
-                    continue
+                if 'mpls' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['mpls'] = {}
+                if 'te' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['mpls']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['mpls']['te'] = {}
+                ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['mpls']['te']['router_id'] = router_id
+                continue
 
             # Area 0 has 2 MPLS TE links. Area instance is 2.
             p2 = re.compile(r'^Area +(?P<area>(\d+)) +has +(?P<links>(\d+))'
@@ -4458,6 +4478,8 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
             m = p2.match(line)
             if m:
                 area = str(IPAddress(str(m.groupdict()['area'])))
+                total_links = int(m.groupdict()['links'])
+                area_instance = int(m.groupdict()['area_instance'])
                 # Create dict
                 if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]\
                         ['instance'][instance]:
@@ -4467,17 +4489,23 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
                         ['instance'][instance]['areas']:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
                         [instance]['areas'][area] = {}
-                sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
-                        ['instance'][instance]['areas'][area]
-
+                if 'mpls' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area]['mpls'] = {}
+                if 'te' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area]['mpls']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area]['mpls']['te'] = {}
                 # Set values
-                sub_dict['total_mpls_te_links'] = int(m.groupdict()['links'])
-                sub_dict['area_instance'] = int(m.groupdict()['area_instance'])
-                if 'mpls' not in sub_dict:
-                    sub_dict['mpls'] = {}
-                if 'te' not in sub_dict['mpls']:
-                    sub_dict['mpls']['te'] = {}
-                sub_dict['mpls']['te']['enable'] = True
+                ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                    [instance]['areas'][area]['mpls']['te']['enable'] = True
+                ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                    [instance]['areas'][area]['mpls']['te']['total_links'] = \
+                        total_links
+                ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                    [instance]['areas'][area]['mpls']['te']['area_instance'] = \
+                        area_instance
                 continue
 
             # Area 1 MPLS TE not initialized
@@ -4494,27 +4522,40 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
                         ['instance'][instance]['areas']:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
                         [instance]['areas'][area] = {}
-                sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
-                        ['instance'][instance]['areas'][area]
-
+                if 'mpls' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area]['mpls'] = {}
+                if 'te' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area]['mpls']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area]['mpls']['te'] = {}
                 # Set values
-                if 'mpls' not in sub_dict:
-                    sub_dict['mpls'] = {}
-                if 'te' not in sub_dict['mpls']:
-                    sub_dict['mpls']['te'] = {}
-                sub_dict['mpls']['te']['enable'] = False
+                ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                    [instance]['areas'][area]['mpls']['te']['enable'] = False
                 continue
 
             # Links in hash bucket 8.
             p4 = re.compile(r'^Links +in +hash +bucket +(?P<hash>(\d+))\.$')
             m = p4.match(line)
             if m:
-                hashval = int(m.groupdict()['hash'])
-                if 'link_hash_bucket' not in sub_dict:
-                    sub_dict['link_hash_bucket'] = {}
-                if hashval not in sub_dict['link_hash_bucket']:
-                    sub_dict['link_hash_bucket'][hashval] = {}
-                    continue
+                link_hash_bucket = int(m.groupdict()['hash'])
+                if 'link_hash_bucket' not in ret_dict['vrf'][vrf]\
+                        ['address_family'][af]['instance'][instance]['areas']\
+                        [area]['mpls']['te']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area]['mpls']['te']\
+                        ['link_hash_bucket'] = {}
+                if link_hash_bucket not in ret_dict['vrf'][vrf]\
+                        ['address_family'][af]['instance'][instance]['areas']\
+                        [area]['mpls']['te']['link_hash_bucket']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area]['mpls']['te']\
+                        ['link_hash_bucket'][link_hash_bucket] = {}
+                link_dict = ret_dict['vrf'][vrf]['address_family'][af]\
+                                ['instance'][instance]['areas'][area]['mpls']\
+                                ['te']['link_hash_bucket'][link_hash_bucket]
+                continue
 
             # Link is associated with fragment 2. Link instance is 2
             p5 = re.compile(r'^Link +is +associated +with +fragment'
@@ -4522,34 +4563,34 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
                              ' +(?P<link_instance>(\d+))$')
             m = p5.match(line)
             if m:
-                sub_dict['link_hash_bucket'][hashval]['fragment_association'] = \
-                    int(m.groupdict()['fragment'])
-                sub_dict['link_hash_bucket'][hashval]['link_instance'] = \
-                    int(m.groupdict()['link_instance'])
+                link_fragment = int(m.groupdict()['fragment'])
+                if 'link_fragments' not in link_dict:
+                    link_dict['link_fragments'] = {}
+                if link_fragment not in link_dict['link_fragments']:
+                    link_dict['link_fragments'][link_fragment] = {}
+                sub_dict = link_dict['link_fragments'][link_fragment]
+                sub_dict['link_instance'] = int(m.groupdict()['link_instance'])
                 continue
 
             # Link connected to Broadcast network
             p6 = re.compile(r'^Link +connected +to +(?P<type>([a-zA-Z\s]+))$')
             m = p6.match(line)
             if m:
-                sub_dict['link_hash_bucket'][hashval]['link_type'] = \
-                    str(m.groupdict()['type']).lower()
+                sub_dict['network_type'] = str(m.groupdict()['type']).lower()
                 continue
 
             # Link ID : 10.1.2.1
             p7 = re.compile(r'^Link +ID *: +(?P<link_id>(\S+))$')
             m = p7.match(line)
             if m:
-                sub_dict['link_hash_bucket'][hashval]['link_id'] = \
-                    str(m.groupdict()['link_id'])
+                sub_dict['link_id'] = str(m.groupdict()['link_id'])
                 continue
 
             # Interface Address : 10.1.2.1
             p8 = re.compile(r'^Interface +Address *: +(?P<addr>(\S+))$')
             m = p8.match(line)
             if m:
-                sub_dict['link_hash_bucket'][hashval]['interface_address'] = \
-                    str(m.groupdict()['addr'])
+                sub_dict['interface_address'] = str(m.groupdict()['addr'])
                 continue
 
             # Admin Metric te: 1 igp: 1
@@ -4557,18 +4598,15 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
                              ' +(?P<igp>(\d+))$')
             m = p9.match(line)
             if m:
-                sub_dict['link_hash_bucket'][hashval]['te_admin_metric'] = \
-                    int(m.groupdict()['te'])
-                sub_dict['link_hash_bucket'][hashval]['igp_admin_metric'] = \
-                    int(m.groupdict()['igp'])
+                sub_dict['te_admin_metric'] = int(m.groupdict()['te'])
+                sub_dict['igp_admin_metric'] = int(m.groupdict()['igp'])
                 continue
 
             # Maximum bandwidth : 125000000
             p9 = re.compile(r'^Maximum +(B|b)andwidth *: +(?P<mband>(\d+))$')
             m = p9.match(line)
             if m:
-                sub_dict['link_hash_bucket'][hashval]['max_bandwidth'] = \
-                    int(m.groupdict()['mband'])
+                sub_dict['max_bandwidth'] = int(m.groupdict()['mband'])
                 continue
 
             # Maximum reservable bandwidth : 93750000
@@ -4576,24 +4614,22 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
                               ' +(?P<res_band>(\d+))$')
             m = p10.match(line)
             if m:
-                sub_dict['link_hash_bucket'][hashval]\
-                    ['max_reservable_bandwidth'] = int(m.groupdict()['res_band'])
+                sub_dict['max_reservable_bandwidth'] = \
+                    int(m.groupdict()['res_band'])
                 continue
 
             # Affinity Bit : 0x0
             p11 = re.compile(r'^Affinity +Bit *: +(?P<admin_group>(\S+))$')
             m = p11.match(line)
             if m:
-                sub_dict['link_hash_bucket'][hashval]['affinity_bit'] = \
-                    str(m.groupdict()['admin_group'])
+                sub_dict['affinity_bit'] = str(m.groupdict()['admin_group'])
                 continue
 
             # Number of Priority : 8
             p12 = re.compile(r'^Number +of +Priority +: +(?P<priority>(\d+))$')
             m = p12.match(line)
             if m:
-                sub_dict['link_hash_bucket'][hashval]['total_priority'] = \
-                    int(m.groupdict()['priority'])
+                sub_dict['total_priority'] = int(m.groupdict()['priority'])
                 continue
 
             # Priority 0 : 93750000     Priority 1 : 93750000
@@ -4604,30 +4640,20 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
             if m:
                 value1 = '{} {}'.format(str(m.groupdict()['num1']), str(m.groupdict()['band1']))
                 value2 = '{} {}'.format(str(m.groupdict()['num2']), str(m.groupdict()['band2']))
-                if 'unreserved_bandwidths' not in sub_dict['link_hash_bucket']\
-                        [hashval]:
-                    sub_dict['link_hash_bucket'][hashval]\
-                        ['unreserved_bandwidths'] = {}
-                if value1 not in sub_dict['link_hash_bucket'][hashval]\
-                        ['unreserved_bandwidths']:
-                    sub_dict['link_hash_bucket'][hashval]\
-                        ['unreserved_bandwidths'][value1] = {}
-                    sub_dict['link_hash_bucket'][hashval]\
-                        ['unreserved_bandwidths'][value1]['priority'] =  \
-                            int(m.groupdict()['num1'])
-                    sub_dict['link_hash_bucket'][hashval]\
-                        ['unreserved_bandwidths'][value1]\
-                            ['unreserved_bandwidth'] = int(m.groupdict()['band1'])
-                if value2 not in sub_dict['link_hash_bucket'][hashval]\
-                        ['unreserved_bandwidths']:
-                    sub_dict['link_hash_bucket'][hashval]\
-                        ['unreserved_bandwidths'][value2] = {}
-                    sub_dict['link_hash_bucket'][hashval]\
-                        ['unreserved_bandwidths'][value2]['priority'] = \
-                            int(m.groupdict()['num2'])
-                    sub_dict['link_hash_bucket'][hashval]\
-                        ['unreserved_bandwidths'][value2]\
-                            ['unreserved_bandwidth'] = int(m.groupdict()['band2'])
+                if 'unreserved_bandwidths' not in sub_dict:
+                    sub_dict['unreserved_bandwidths'] = {}
+                if value1 not in sub_dict['unreserved_bandwidths']:
+                    sub_dict['unreserved_bandwidths'][value1] = {}
+                    sub_dict['unreserved_bandwidths'][value1]['priority'] =  \
+                        int(m.groupdict()['num1'])
+                    sub_dict['unreserved_bandwidths'][value1]\
+                        ['unreserved_bandwidth'] = int(m.groupdict()['band1'])
+                if value2 not in sub_dict['unreserved_bandwidths']:
+                    sub_dict['unreserved_bandwidths'][value2] = {}
+                    sub_dict['unreserved_bandwidths'][value2]['priority'] = \
+                        int(m.groupdict()['num2'])
+                    sub_dict['unreserved_bandwidths'][value2]\
+                        ['unreserved_bandwidth'] = int(m.groupdict()['band2'])
                 continue
 
         return ret_dict

@@ -4804,92 +4804,99 @@ class test_show_ip_ospf_mpls_traffic_eng_link(unittest.TestCase):
                             {'1': 
                                 {'areas': 
                                     {'0.0.0.0': 
-                                        {'area_instance': 2,
-                                        'link_hash_bucket': 
-                                            {8: 
-                                                {'affinity_bit': '0x0',
-                                                'fragment_association': 2,
-                                                'igp_admin_metric': 1,
-                                                'interface_address': '10.1.2.1',
-                                                'link_id': '10.1.2.1',
-                                                'link_instance': 2,
-                                                'link_type': 'broadcast network',
-                                                'max_bandwidth': 125000000,
-                                                'max_reservable_bandwidth': 93750000,
-                                                'te_admin_metric': 1,
-                                                'total_priority': 8,
-                                                'unreserved_bandwidths': 
-                                                    {'0 93750000': 
-                                                        {'priority': 0,
-                                                        'unreserved_bandwidth': 93750000},
-                                                    '1 93750000': 
-                                                        {'priority': 1,
-                                                        'unreserved_bandwidth': 93750000},
-                                                    '2 93750000': 
-                                                        {'priority': 2,
-                                                        'unreserved_bandwidth': 93750000},
-                                                    '3 93750000': 
-                                                        {'priority': 3,
-                                                        'unreserved_bandwidth': 93750000},
-                                                    '4 93750000': 
-                                                        {'priority': 4,
-                                                        'unreserved_bandwidth': 93750000},
-                                                    '5 93750000': 
-                                                        {'priority': 5,
-                                                        'unreserved_bandwidth': 93750000},
-                                                    '6 93750000': 
-                                                        {'priority': 6,
-                                                        'unreserved_bandwidth': 93750000},
-                                                    '7 93750000': 
-                                                        {'priority': 7,
-                                                        'unreserved_bandwidth': 93750000}}},
-                                            9: 
-                                                {'affinity_bit': '0x0',
-                                                'fragment_association': 1,
-                                                'igp_admin_metric': 1,
-                                                'interface_address': '10.1.4.1',
-                                                'link_id': '10.1.4.4',
-                                                'link_instance': 2,
-                                                'link_type': 'broadcast network',
-                                                'max_bandwidth': 125000000,
-                                                'max_reservable_bandwidth': 93750000,
-                                                'te_admin_metric': 1,
-                                                'total_priority': 8,
-                                                'unreserved_bandwidths': 
-                                                    {'0 93750000': 
-                                                        {'priority': 0,
-                                                        'unreserved_bandwidth': 93750000},
-                                                    '1 93750000': 
-                                                        {'priority': 1,
-                                                        'unreserved_bandwidth': 93750000},
-                                                    '2 93750000': 
-                                                        {'priority': 2,
-                                                        'unreserved_bandwidth': 93750000},
-                                                    '3 93750000': 
-                                                        {'priority': 3,
-                                                        'unreserved_bandwidth': 93750000},
-                                                    '4 93750000': 
-                                                        {'priority': 4,
-                                                        'unreserved_bandwidth': 93750000},
-                                                    '5 93750000': 
-                                                        {'priority': 5,
-                                                        'unreserved_bandwidth': 93750000},
-                                                    '6 93750000': 
-                                                        {'priority': 6,
-                                                        'unreserved_bandwidth': 93750000},
-                                                    '7 93750000': 
-                                                        {'priority': 7,
-                                                        'unreserved_bandwidth': 93750000}}}},
-                                        'mpls': 
+                                        {'mpls': 
                                             {'te': 
-                                                {'enable': True}},
-                                        'total_mpls_te_links': 2}}},
+                                                {'area_instance': 2,
+                                                'enable': True,
+                                                'link_hash_bucket': 
+                                                    {8: 
+                                                        {'link_fragments': 
+                                                            {2: 
+                                                                {'affinity_bit': '0x0',
+                                                                'igp_admin_metric': 1,
+                                                                'interface_address': '10.1.2.1',
+                                                                'link_id': '10.1.2.1',
+                                                                'link_instance': 2,
+                                                                'max_bandwidth': 125000000,
+                                                                'max_reservable_bandwidth': 93750000,
+                                                                'network_type': 'broadcast network',
+                                                                'te_admin_metric': 1,
+                                                                'total_priority': 8,
+                                                                'unreserved_bandwidths': 
+                                                                    {'0 93750000': 
+                                                                        {'priority': 0,
+                                                                        'unreserved_bandwidth': 93750000},
+                                                                    '1 93750000': 
+                                                                        {'priority': 1,
+                                                                        'unreserved_bandwidth': 93750000},
+                                                                    '2 93750000': 
+                                                                        {'priority': 2,
+                                                                        'unreserved_bandwidth': 93750000},
+                                                                    '3 93750000': 
+                                                                        {'priority': 3,
+                                                                        'unreserved_bandwidth': 93750000},
+                                                                    '4 93750000': 
+                                                                        {'priority': 4,
+                                                                        'unreserved_bandwidth': 93750000},
+                                                                    '5 93750000': 
+                                                                        {'priority': 5,
+                                                                        'unreserved_bandwidth': 93750000},
+                                                                    '6 93750000': 
+                                                                        {'priority': 6,
+                                                                        'unreserved_bandwidth': 93750000},
+                                                                    '7 93750000': 
+                                                                        {'priority': 7,
+                                                                        'unreserved_bandwidth': 93750000}}}}},
+                                                    9: 
+                                                        {'link_fragments': 
+                                                            {1: 
+                                                                {'affinity_bit': '0x0',
+                                                                'igp_admin_metric': 1,
+                                                                'interface_address': '10.1.4.1',
+                                                                'link_id': '10.1.4.4',
+                                                                'link_instance': 2,
+                                                                'max_bandwidth': 125000000,
+                                                                'max_reservable_bandwidth': 93750000,
+                                                                'network_type': 'broadcast network',
+                                                                'te_admin_metric': 1,
+                                                                'total_priority': 8,
+                                                                'unreserved_bandwidths': 
+                                                                    {'0 93750000': 
+                                                                        {'priority': 0,
+                                                                        'unreserved_bandwidth': 93750000},
+                                                                    '1 93750000': 
+                                                                        {'priority': 1,
+                                                                        'unreserved_bandwidth': 93750000},
+                                                                    '2 93750000': 
+                                                                        {'priority': 2,
+                                                                        'unreserved_bandwidth': 93750000},
+                                                                    '3 93750000': 
+                                                                        {'priority': 3,
+                                                                        'unreserved_bandwidth': 93750000},
+                                                                    '4 93750000': 
+                                                                        {'priority': 4,
+                                                                        'unreserved_bandwidth': 93750000},
+                                                                    '5 93750000': 
+                                                                        {'priority': 5,
+                                                                        'unreserved_bandwidth': 93750000},
+                                                                    '6 93750000': 
+                                                                        {'priority': 6,
+                                                                        'unreserved_bandwidth': 93750000},
+                                                                    '7 93750000': 
+                                                                        {'priority': 7,
+                                                                        'unreserved_bandwidth': 93750000}}}}}},
+                                                'total_links': 2}}}},
+                                'mpls': 
+                                    {'te': 
+                                        {'router_id': '1.1.1.1'}}},
                             '2': 
                                 {'areas': 
                                     {'0.0.0.1': 
                                         {'mpls': 
                                             {'te': 
-                                                {'enable': False}}}}}}}}}}}
+                                                {'enable': False}}}},
+                                'mpls': 
+                                    {'te': {'router_id': '11.11.11.11'}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         R1_ospf_xe#show ip ospf 1 | i Connected to MPLS
