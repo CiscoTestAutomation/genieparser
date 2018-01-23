@@ -30,31 +30,35 @@ class test_show_ip_protocols(unittest.TestCase):
                 'holddown': 0,
                 'incoming_filter_list': 'not set',
                 'invalid': 0,
+                'maximum_path': 32,
                 'outgoing_filter_list': 'not set',
                 'preference': 
                     {'single_value': 
                         {'all': 4}},
-                'spf_control': 
-                    {'paths': 32},
                 'update_frequency': 0},
             'bgp': 
-                {'automatic_route_summarization': False,
-                'bgp_pid': 100,
-                'igp_sync': False,
-                'incoming_filter_list': 'not set',
-                'outgoing_filter_list': 'not set',
-                'preference': 
-                    {'multi_values': 
-                        {'external': 20,
-                        'internal': 200,
-                        'local': 200}},
-                'routing_information_sources': 
-                    {'gateway': 
-                        {'4.4.4.4': 
-                            {'distance': 200,
-                            'last_update': '03:34:58'}}},
-                'spf_control': 
-                    {'paths': 1}},
+                {'instance': 
+                    {'default': 
+                        {'bgp_id': 100,
+                        'vrf': 
+                            {'default': 
+                                {'address_family': 
+                                    {'ipv4': 
+                                        {'automatic_route_summarization': False,
+                                        'igp_sync': False,
+                                        'incoming_filter_list': 'not set',
+                                        'maximum_path': 1,
+                                        'neighbor': 
+                                            {'4.4.4.4': 
+                                                {'distance': 200,
+                                                'last_update': '03:34:58',
+                                                'neighbor_id': '4.4.4.4'}},
+                                        'outgoing_filter_list': 'not set',
+                                        'preference': 
+                                            {'multi_values': 
+                                                {'external': 20,
+                                                'internal': 200,
+                                                'local': 200}}}}}}}}},
             'ospf': 
                 {'vrf': 
                     {'default': 
@@ -64,7 +68,7 @@ class test_show_ip_protocols(unittest.TestCase):
                                     {'1': 
                                         {'areas': 
                                             {'0.0.0.0': 
-                                                {'routing_interfaces': ['Loopback0', 'GigabitEthernet2', 'GigabitEthernet1']}},
+                                                {'configured_interfaces': ['Loopback0', 'GigabitEthernet2', 'GigabitEthernet1']}},
                                         'incoming_filter_list': 'not set',
                                         'outgoing_filter_list': 'not set',
                                         'preference': 
@@ -91,9 +95,9 @@ class test_show_ip_protocols(unittest.TestCase):
                                         'spf_control': 
                                             {'paths': 4},
                                         'total_areas': 1,
-                                        'total_normal': 1,
-                                        'total_nssa': 0,
-                                        'total_stub': 0}}}}}}}}}
+                                        'total_normal_area': 1,
+                                        'total_nssa_area': 0,
+                                        'total_stub_area': 0}}}}}}}}}
 
     def test_show_ip_protocols_full1(self):
         

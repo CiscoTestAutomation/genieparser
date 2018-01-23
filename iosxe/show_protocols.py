@@ -49,9 +49,9 @@ class ShowIpProtocolsSchema(MetaParser):
                                         'outgoing_filter_list': str,
                                         'incoming_filter_list': str,
                                         'total_areas': int,
-                                        'total_stub': int,
-                                        'total_normal': int,
-                                        'total_nssa': int,
+                                        'total_stub_area': int,
+                                        'total_normal_area': int,
+                                        'total_nssa_area': int,
                                         Optional('routing_information_sources'): 
                                             {'gateway': 
                                                 {Any(): 
@@ -62,7 +62,7 @@ class ShowIpProtocolsSchema(MetaParser):
                                             },
                                         'areas': 
                                             {Any(): 
-                                                {'routing_interfaces': list},
+                                                {'configured_interfaces': list},
                                             },
                                         },
                                     },
@@ -74,8 +74,7 @@ class ShowIpProtocolsSchema(MetaParser):
             'application': 
                 {'outgoing_filter_list': str,
                 'incoming_filter_list': str,
-                'spf_control': 
-                    {'paths': int},
+                'maximum_path': int,
                 'preference': 
                     {'single_value': 
                         {'all': int}},
@@ -85,26 +84,36 @@ class ShowIpProtocolsSchema(MetaParser):
                 'flushed': int,
                 },
             'bgp': 
-                {'bgp_pid': int,
-                'outgoing_filter_list': str,
-                'incoming_filter_list': str,
-                'igp_sync': bool,
-                'automatic_route_summarization': bool,
-                'spf_control': 
-                    {'paths': int},
-                Optional('routing_information_sources'): 
-                    {'gateway': 
-                        {Any(): 
-                            {'distance': int,
-                            'last_update': str,
+                {'instance': 
+                    {'default': 
+                        {'bgp_id': int,
+                        'vrf': 
+                            {'default': 
+                                {'address_family': 
+                                    {'ipv4': 
+                                        {'outgoing_filter_list': str,
+                                        'incoming_filter_list': str,
+                                        'igp_sync': bool,
+                                        'automatic_route_summarization': bool,
+                                        'maximum_path': int,
+                                        Optional('preference'): 
+                                            {'multi_values': 
+                                                {'external': int,
+                                                'local': int,
+                                                'internal': int,
+                                                },
+                                            },
+                                        Optional('neighbor'): 
+                                            {Any(): 
+                                                {'neighbor_id': str,
+                                                'distance': int,
+                                                'last_update': str,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
                             },
-                        },
-                    },
-                Optional('preference'): 
-                    {'multi_values': 
-                        {'external': int,
-                        'local': int,
-                        'internal': int,
                         },
                     },
                 },
@@ -217,8 +226,30 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                     ret_dict['protocols'] = {}
                 if 'bgp' not in ret_dict['protocols']:
                     ret_dict['protocols']['bgp'] = {}
-                bgp_dict = ret_dict['protocols']['bgp']
-                bgp_dict['bgp_pid'] = int(m.groupdict()['pid'])
+                if 'instance' not in ret_dict['protocols']['bgp']:
+                    ret_dict['protocols']['bgp']['instance'] = {}
+                if 'default' not in ret_dict['protocols']['bgp']['instance']:
+                    ret_dict['protocols']['bgp']['instance']['default'] = {}
+                ret_dict['protocols']['bgp']['instance']['default']['bgp_id'] = \
+                    int(m.groupdict()['pid'])
+                if 'vrf' not in ret_dict['protocols']['bgp']['instance']\
+                        ['default']:
+                    ret_dict['protocols']['bgp']['instance']['default']\
+                        ['vrf'] = {}
+                if 'default' not in ret_dict['protocols']['bgp']['instance']\
+                        ['default']['vrf']:
+                    ret_dict['protocols']['bgp']['instance']['default']['vrf']\
+                        ['default'] = {}
+                if 'address_family' not in ret_dict['protocols']['bgp']\
+                        ['instance']['default']['vrf']['default']:
+                    ret_dict['protocols']['bgp']['instance']['default']['vrf']\
+                        ['default']['address_family'] = {}
+                if 'ipv4' not in ret_dict['protocols']['bgp']['instance']\
+                        ['default']['vrf']['default']['address_family']:
+                    ret_dict['protocols']['bgp']['instance']['default']['vrf']\
+                        ['default']['address_family']['ipv4'] = {}
+                bgp_dict = ret_dict['protocols']['bgp']['instance']['default']\
+                            ['vrf']['default']['address_family']['ipv4']
                 continue
 
             # Outgoing update filter list for all interfaces is not set
@@ -253,9 +284,9 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
             m = p4.match(line)
             if m:
                 ospf_dict['total_areas'] = int(m.groupdict()['areas'])
-                ospf_dict['total_normal'] = int(m.groupdict()['normal'])
-                ospf_dict['total_stub'] = int(m.groupdict()['stub'])
-                ospf_dict['total_nssa'] = int(m.groupdict()['nssa'])
+                ospf_dict['total_normal_area'] = int(m.groupdict()['normal'])
+                ospf_dict['total_stub_area'] = int(m.groupdict()['stub'])
+                ospf_dict['total_nssa_area'] = int(m.groupdict()['nssa'])
                 continue
 
             # Maximum path: 4
@@ -267,13 +298,9 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                         ospf_dict['spf_control'] = {}
                     ospf_dict['spf_control']['paths'] = int(m.groupdict()['max'])
                 elif protocol == 'application':
-                    if 'spf_control' not in app_dict:
-                        app_dict['spf_control'] = {}
-                    app_dict['spf_control']['paths'] = int(m.groupdict()['max'])
+                    app_dict['maximum_path'] = int(m.groupdict()['max'])
                 elif protocol == 'bgp':
-                    if 'spf_control' not in bgp_dict:
-                        bgp_dict['spf_control'] = {}
-                    bgp_dict['spf_control']['paths'] = int(m.groupdict()['max'])
+                    bgp_dict['maximum_path'] = int(m.groupdict()['max'])
                 continue
 
             # Routing for Networks:
@@ -297,7 +324,7 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
             m = p7.match(line)
             if m:
                 area_intf_list.append(str(m.groupdict()['interface']))
-                ospf_dict['areas'][area]['routing_interfaces'] = area_intf_list
+                ospf_dict['areas'][area]['configured_interfaces'] = area_intf_list
                 continue
 
             # Routing Information Sources:
@@ -326,18 +353,13 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                     ospf_dict['routing_information_sources']['gateway'][gateway]\
                         ['last_update'] = last_update
                 elif protocol == 'bgp':
-                    if 'routing_information_sources' not in bgp_dict:
-                        bgp_dict['routing_information_sources'] = {}
-                    if 'gateway' not in bgp_dict['routing_information_sources']:
-                        bgp_dict['routing_information_sources']['gateway'] = {}
-                    if gateway not in bgp_dict['routing_information_sources']\
-                            ['gateway']:
-                        bgp_dict['routing_information_sources']['gateway']\
-                            [gateway] = {}
-                    bgp_dict['routing_information_sources']['gateway'][gateway]\
-                        ['distance'] = distance
-                    bgp_dict['routing_information_sources']['gateway'][gateway]\
-                        ['last_update'] = last_update
+                    if 'neighbor' not in bgp_dict:
+                        bgp_dict['neighbor'] = {}
+                    if gateway not in bgp_dict['neighbor']:
+                        bgp_dict['neighbor'][gateway] = {}
+                    bgp_dict['neighbor'][gateway]['neighbor_id'] = gateway
+                    bgp_dict['neighbor'][gateway]['distance'] = distance
+                    bgp_dict['neighbor'][gateway]['last_update'] = last_update
                 continue
             
             # Distance: (default is 110)
