@@ -1111,8 +1111,8 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                 Optional('total_dcbitless_lsa'): int,
                                                 Optional('donotage_lsa'): bool,
                                                 Optional('ti_lfa_protected'): bool,
-                                                Optional('frr_enabled'): bool,
-                                                Optional('frr_protected'): bool,
+                                                Optional('ipfrr_candidate'): bool,
+                                                Optional('ipfrr_protected'): bool,
                                                 Optional('stub_host'): bool,
                                                 Optional('prefix_suppression'): bool,
                                                 Optional('ttl_security'): 
@@ -1137,6 +1137,12 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                     {Any(): 
                                                         {Optional('dr_router_id'): str,
                                                         Optional('bdr_router_id'): str,
+                                                        },
+                                                    },
+                                                Optional('authentication'): 
+                                                    {'auth_trailer_key': 
+                                                        {'crypto_algorithm': str,
+                                                        Optional('youngest_key_id'): int,
                                                         },
                                                     },
                                                 },
@@ -1181,8 +1187,8 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                 Optional('total_dcbitless_lsa'): int,
                                                 Optional('donotage_lsa'): bool,
                                                 Optional('ti_lfa_protected'): bool,
-                                                Optional('frr_enabled'): bool,
-                                                Optional('frr_protected'): bool,
+                                                Optional('ipfrr_candidate'): bool,
+                                                Optional('ipfrr_protected'): bool,
                                                 Optional('stub_host'): bool,
                                                 Optional('prefix_suppression'): bool,
                                                 Optional('ttl_security'): 
@@ -1207,6 +1213,12 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                     {Any(): 
                                                         {Optional('dr_router_id'): str,
                                                         Optional('bdr_router_id'): str,
+                                                        },
+                                                    },
+                                                Optional('authentication'): 
+                                                    {'auth_trailer_key': 
+                                                        {'crypto_algorithm': str,
+                                                        Optional('youngest_key_id'): int,
                                                         },
                                                     },
                                                 },
@@ -1251,8 +1263,8 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                 Optional('total_dcbitless_lsa'): int,
                                                 Optional('donotage_lsa'): bool,
                                                 Optional('ti_lfa_protected'): bool,
-                                                Optional('frr_enabled'): bool,
-                                                Optional('frr_protected'): bool,
+                                                Optional('ipfrr_candidate'): bool,
+                                                Optional('ipfrr_protected'): bool,
                                                 Optional('stub_host'): bool,
                                                 Optional('prefix_suppression'): bool,
                                                 Optional('ttl_security'): 
@@ -1276,6 +1288,12 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                     {Any(): 
                                                         {Optional('dr_router_id'): str,
                                                         Optional('bdr_router_id'): str,
+                                                        },
+                                                    },
+                                                Optional('authentication'): 
+                                                    {'auth_trailer_key': 
+                                                        {'crypto_algorithm': str,
+                                                        Optional('youngest_key_id'): int,
                                                         },
                                                     },
                                                 },
@@ -1841,7 +1859,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                               ' +FastReroute$')
             m = p23.match(line)
             if m:
-                sub_dict['frr_protected'] = True
+                sub_dict['ipfrr_protected'] = True
                 continue
 
             # Can be used for per-prefix Loop-Free FastReroute repair paths
@@ -1849,7 +1867,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                               ' +FastReroute +repair +paths$')
             m = p24.match(line)
             if m:
-                sub_dict['frr_enabled'] = True
+                sub_dict['ipfrr_candidate'] = True
                 continue
 
             # Not Protected by per-prefix TI-LFA
@@ -1885,7 +1903,53 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     continue
 
             # Simple password authentication enabled
+            p28_1 = re.compile(r'^Simple +password +authentication +enabled$')
+            m = p28_1.match(line)
+            if m:
+                if 'authentication' not in sub_dict:
+                    sub_dict['authentication'] = {}
+                if 'auth_trailer_key' not in sub_dict['authentication']:
+                    sub_dict['authentication']['auth_trailer_key'] = {}
+                sub_dict['authentication']['auth_trailer_key']\
+                    ['crypto_algorithm'] = 'simple'
+                continue
 
+            # Cryptographic authentication enabled
+            p28_2 = re.compile(r'^Cryptographic +authentication +enabled$')
+            m = p28_2.match(line)
+            if m:
+                continue
+
+            # Youngest key id is 2
+            p28_3 = re.compile(r'^Youngest +key +id +is +(?P<id>(\d+))$')
+            m = p28_3.match(line)
+            if m:
+                if 'authentication' not in sub_dict:
+                    sub_dict['authentication'] = {}
+                if 'auth_trailer_key' not in sub_dict['authentication']:
+                    sub_dict['authentication']['auth_trailer_key'] = {}
+                sub_dict['authentication']['auth_trailer_key']\
+                    ['youngest_key_id'] = int(m.groupdict()['id'])
+                continue
+            
+            # Rollover in progress, 1 neighbor(s) using the old key(s):
+            p28_4 = re.compile(r'^Rollover +in +progress, +(?P<num>(\d+))'
+                                ' +neighbor(s) +using +the +old +key(s):$')
+            m = p28_4.match(line)
+            if m:
+                continue
+
+            # key id 1 algorithm MD5
+            p28_5 = re.compile(r'^key +id +1 +algorithm +MD5$')
+            m = p28_5.match(line)
+            if m:
+                if 'authentication' not in sub_dict:
+                    sub_dict['authentication'] = {}
+                if 'auth_trailer_key' not in sub_dict['authentication']:
+                    sub_dict['authentication']['auth_trailer_key'] = {}
+                sub_dict['authentication']['auth_trailer_key']\
+                    ['crypto_algorithm'] = 'md5'
+                continue
 
         return ret_dict
 
@@ -4095,13 +4159,22 @@ class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
                                         {'autoconfig': bool,
                                         'autoconfig_area_id': str,
                                         'igp_sync': bool}},
-                                'interfaces': 
+                                'areas': 
                                     {Any(): 
-                                        {'ldp_autoconfig': bool,
-                                        'ldp_autoconfig_area_id': str,
-                                        'ldp_igp_sync': bool,
-                                        'holddown_timer': bool,
-                                        'state': str},
+                                        {'interfaces': 
+                                            {Any(): 
+                                                {'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': bool,
+                                                        'autoconfig_area_id': str,
+                                                        'igp_sync': bool,
+                                                        'holddown_timer': bool,
+                                                        'state': str,
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
                                     },
                                 },
                             },
@@ -4169,22 +4242,7 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                         ['instance']:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
                         [instance] = {}
-
-                # Create intf dict
-                if 'interfaces' not in ret_dict['vrf'][vrf]['address_family']\
-                        [af]['instance'][instance]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['interfaces'] = {}
-                if interface not in ret_dict['vrf'][vrf]['address_family'][af]\
-                        ['instance'][instance]['interfaces']:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['interfaces'][interface] = {}
-                # Set intf_dict
-                intf_dict = ret_dict['vrf'][vrf]['address_family'][af]\
-                        ['instance'][instance]['interfaces'][interface]
-                del interface
-
-                # Create ldp dict
+                # Create mpls dict
                 if 'mpls' not in ret_dict['vrf'][vrf]['address_family'][af]\
                         ['instance'][instance]:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
@@ -4193,13 +4251,44 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                         ['instance'][instance]['mpls']:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
                         [instance]['mpls']['ldp'] = {}
-                # Set mpls_dict
-                ldp_dict = ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                            [instance]['mpls']['ldp']
-
-                # Set values
-                intf_dict['ldp_autoconfig_area_id'] = area
-                ldp_dict['autoconfig_area_id'] = area
+                mpls_ldp_dict = ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['mpls']['ldp']
+                # Set values to mpls_ldp_dict
+                mpls_ldp_dict['autoconfig_area_id'] = area
+                if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'] = {}
+                if area not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area] = {}
+                if 'interfaces' not in ret_dict['vrf'][vrf]['address_family']\
+                        [af]['instance'][instance]['areas'][area]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area]['interfaces'] = {}
+                if interface not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area]['interfaces']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area]['interfaces'][interface] = {}
+                if 'mpls' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area]['interfaces']\
+                        [interface]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area]['interfaces'][interface]\
+                        ['mpls'] = {}
+                if 'ldp' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area]['interfaces']\
+                        [interface]['mpls']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area]['interfaces'][interface]\
+                        ['mpls']['ldp'] = {}
+                # Creat intf_dict
+                intf_dict = ret_dict['vrf'][vrf]['address_family'][af]\
+                                ['instance'][instance]['areas'][area]\
+                                ['interfaces'][interface]['mpls']['ldp']
+                # Set values to intf_dict
+                intf_dict['autoconfig_area_id'] = area
                 continue
 
             # LDP is not configured through LDP autoconfig
@@ -4210,11 +4299,11 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
             m = p3.match(line)
             if m:
                 if 'configured' in m.groupdict()['auto_config']:
-                    intf_dict['ldp_autoconfig'] = True
-                    ldp_dict['autoconfig'] = True
+                    intf_dict['autoconfig'] = True
+                    mpls_ldp_dict['autoconfig'] = True
                 else:
-                    intf_dict['ldp_autoconfig'] = False
-                    ldp_dict['autoconfig'] = False
+                    intf_dict['autoconfig'] = False
+                    mpls_ldp_dict['autoconfig'] = False
                     continue
             
             # LDP-IGP Synchronization : Not required
@@ -4224,11 +4313,11 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
             m = p4.match(line)
             if m:
                 if 'Required' in m.groupdict()['igp_sync']:
-                    intf_dict['ldp_igp_sync'] = True
-                    ldp_dict['igp_sync'] = True
+                    intf_dict['igp_sync'] = True
+                    mpls_ldp_dict['igp_sync'] = True
                 else:
-                    intf_dict['ldp_igp_sync'] = False
-                    ldp_dict['igp_sync'] = False
+                    intf_dict['igp_sync'] = False
+                    mpls_ldp_dict['igp_sync'] = False
                     continue
 
             # Holddown timer is disabled

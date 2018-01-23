@@ -383,8 +383,8 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                 'dr_router_id': '11.11.11.11',
                                                 'enable': True,
                                                 'flood_queue_length': 0,
-                                                'frr_enabled': True,
-                                                'frr_protected': True,
+                                                'ipfrr_candidate': True,
+                                                'ipfrr_protected': True,
                                                 'graceful_restart': 
                                                     {'cisco': 
                                                         {'helper': True,
@@ -491,6 +491,10 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                         {'interfaces': 
                                             {'GigabitEthernet1': 
                                                 {'attached': 'interface enable',
+                                                'authentication': 
+                                                    {'auth_trailer_key': 
+                                                        {'crypto_algorithm': 'md5',
+                                                        'youngest_key_id': 2}},
                                                 'bdr_ip_addr': '10.1.4.1',
                                                 'bdr_router_id': '1.1.1.1',
                                                 'bfd': 
@@ -502,8 +506,8 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                 'dr_router_id': '4.4.4.4',
                                                 'enable': True,
                                                 'flood_queue_length': 0,
-                                                'frr_enabled': True,
-                                                'frr_protected': True,
+                                                'ipfrr_candidate': True,
+                                                'ipfrr_protected': True,
                                                 'graceful_restart': 
                                                     {'cisco': 
                                                         {'helper': True,
@@ -550,6 +554,9 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                 'wait_interval': 40},
                                             'GigabitEthernet2': 
                                                 {'attached': 'interface enable',
+                                                'authentication': 
+                                                    {'auth_trailer_key': 
+                                                        {'crypto_algorithm': 'simple'}},
                                                 'bdr_ip_addr': '10.1.2.2',
                                                 'bdr_router_id': '2.2.2.2',
                                                 'bfd': 
@@ -561,8 +568,8 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                 'dr_router_id': '1.1.1.1',
                                                 'enable': True,
                                                 'flood_queue_length': 0,
-                                                'frr_enabled': True,
-                                                'frr_protected': True,
+                                                'ipfrr_candidate': True,
+                                                'ipfrr_protected': True,
                                                 'graceful_restart': 
                                                     {'cisco': 
                                                         {'helper': True,
@@ -915,7 +922,9 @@ class test_show_ip_ospf_interface(unittest.TestCase):
               Last flood scan length is 3, maximum is 3
               Last flood scan time is 0 msec, maximum is 1 msec
               Cryptographic authentication enabled
-                No key configured, using default key id 0
+                Youngest key id is 2
+                Rollover in progress, 1 neighbor(s) using the old key(s):
+                key id 1 algorithm MD5
               Neighbor Count is 1, Adjacent neighbor count is 1 
                 Adjacent with neighbor 4.4.4.4  (Designated Router)
               Suppress hello for 0 neighbor(s)
@@ -1771,7 +1780,7 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
 # =======================================
 class test_show_ip_ospf_sham_links(unittest.TestCase):
 
-    '''Unit test for "show ip ospf sham-links" - TAKASHI'''
+    '''Unit test for "show ip ospf sham-links"'''
 
     device = Device(name='aDevice')
     
@@ -1888,7 +1897,7 @@ class test_show_ip_ospf_sham_links(unittest.TestCase):
 # ==========================================
 class test_show_ip_ospf_virtual_links(unittest.TestCase):
 
-    '''Unit test for "show ip ospf virtual-links" - TAKASHI'''
+    '''Unit test for "show ip ospf virtual-links"'''
 
     device = Device(name='aDevice')
     
@@ -4664,19 +4673,25 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                     {'ipv4': 
                         {'instance': 
                             {'2': 
-                                {'interfaces': 
-                                    {'GigabitEthernet3': 
-                                        {'holddown_timer': True,
-                                        'ldp_autoconfig': True,
-                                        'ldp_autoconfig_area_id': '0.0.0.1',
-                                        'ldp_igp_sync': False,
-                                        'state': 'up'},
-                                    'OSPF_SL1': 
-                                        {'holddown_timer': True,
-                                        'ldp_autoconfig': True,
-                                        'ldp_autoconfig_area_id': '0.0.0.1',
-                                        'ldp_igp_sync': False,
-                                        'state': 'up'}},
+                                {'areas': 
+                                    {'0.0.0.1': 
+                                        {'interfaces': 
+                                            {'GigabitEthernet3': 
+                                                {'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': True,
+                                                        'autoconfig_area_id': '0.0.0.1',
+                                                        'holddown_timer': True,
+                                                        'igp_sync': False,
+                                                        'state': 'up'}}},
+                                            'OSPF_SL1': 
+                                                {'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': True,
+                                                        'autoconfig_area_id': '0.0.0.1',
+                                                        'holddown_timer': True,
+                                                        'igp_sync': False,
+                                                        'state': 'up'}}}}}},
                                 'mpls': 
                                     {'ldp': 
                                         {'autoconfig': True,
@@ -4687,25 +4702,33 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                     {'ipv4': 
                         {'instance': 
                             {'1': 
-                                {'interfaces': 
-                                    {'GigabitEthernet1': 
-                                        {'holddown_timer': True,
-                                        'ldp_autoconfig': True,
-                                        'ldp_autoconfig_area_id': '0.0.0.0',
-                                        'ldp_igp_sync': False,
-                                        'state': 'up'},
-                                    'GigabitEthernet2': 
-                                        {'holddown_timer': True,
-                                        'ldp_autoconfig': True,
-                                        'ldp_autoconfig_area_id': '0.0.0.0',
-                                        'ldp_igp_sync': False,
-                                        'state': 'up'},
-                                    'Loopback1': 
-                                        {'holddown_timer': True,
-                                        'ldp_autoconfig': True,
-                                        'ldp_autoconfig_area_id': '0.0.0.0',
-                                        'ldp_igp_sync': False,
-                                        'state': 'up'}},
+                                {'areas': 
+                                    {'0.0.0.0': 
+                                        {'interfaces': 
+                                            {'GigabitEthernet1': 
+                                                {'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': True,
+                                                        'autoconfig_area_id': '0.0.0.0',
+                                                        'holddown_timer': True,
+                                                        'igp_sync': False,
+                                                        'state': 'up'}}},
+                                            'GigabitEthernet2': 
+                                                {'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': True,
+                                                        'autoconfig_area_id': '0.0.0.0',
+                                                        'holddown_timer': True,
+                                                        'igp_sync': False,
+                                                        'state': 'up'}}},
+                                            'Loopback1': 
+                                                {'mpls': 
+                                                    {'ldp': 
+                                                        {'autoconfig': True,
+                                                        'autoconfig_area_id': '0.0.0.0',
+                                                        'holddown_timer': True,
+                                                        'igp_sync': False,
+                                                        'state': 'up'}}}}}},
                                 'mpls': 
                                     {'ldp': 
                                         {'autoconfig': True,
