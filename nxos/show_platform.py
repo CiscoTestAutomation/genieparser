@@ -1299,7 +1299,7 @@ class ShowVdcMembershipStatusSchema(MetaParser):
             }
 
 class ShowVdcMembershipStatus(ShowVdcMembershipStatusSchema):
-    """Schema for show vdc membership status"""
+    """Parser for show vdc membership status"""
 
     def cli(self):
         ''' parsing mechanism: cli

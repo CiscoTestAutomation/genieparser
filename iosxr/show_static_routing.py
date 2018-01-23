@@ -75,7 +75,7 @@ class ShowStaticTopologyDetailSchema(MetaParser):
 #  parser for show static topology detail
 # ====================================================
 class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
-    """Schema for:
+    """Parser for:
        show static topology detail
        show static vrf all topology detail
        show static vrf <vrf> topology detail

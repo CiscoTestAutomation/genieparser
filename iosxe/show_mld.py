@@ -58,7 +58,7 @@ class ShowIpv6MldInterfaceSchema(MetaParser):
         }
 
 class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
-    """Schema for:
+    """Parser for:
         show ipv6 mld interface
         show ipv6 mld vrf <vrf> interface"""
 
