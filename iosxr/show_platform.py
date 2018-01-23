@@ -973,9 +973,11 @@ class ShowRedundancy(ShowRedundancySchema):
             # Active node booted Thu Apr 27 03:22:37 2017: 8 minutes ago
             # Active node booted Thu Jan 11 12:31:59 2018: 5 days, 23 hours,  ago
             # Active node booted Tue Jan  2 07:32:33 2018: 1 day, 1 hour, 6 minutes ago
+            # Active node booted Thu Jan 11 12:32:03 2018: 1 week, 4 days, 20 hours, 19 minutes ago
             p7 = re.compile(r'\s*Active +node +booted'
                              ' +(?P<node_uptime_timestamp>[a-zA-Z0-9\:\s]+):'
-                             ' +(?P<node_uptime>((?P<day>\d+) +(day|days), *)?'
+                             ' +(?P<node_uptime>((?P<ignore>\d+ \w+, *)?'
+                             '(?P<day>\d+) +(day|days), *)?'
                              '((?P<hour>\d+) +(hour|hours), *)?'
                              '(((?P<minute>\d+) +(minute|minutes))|'
                              '((?P<second>\d+) +(seconds|seconds)))?) +ago$')
