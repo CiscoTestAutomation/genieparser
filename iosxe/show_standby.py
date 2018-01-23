@@ -1,11 +1,9 @@
-''' show_hsrp.py
+"""show_hsrp.py
 
 IOSXE parsers for show commands:
     * 'show standby all'
     * 'show standby internal'
-
-'''
-
+"""
 # Python
 import re
 
@@ -30,7 +28,7 @@ def regexp(expression):
 # ======================================
 
 class ShowStandbyInternalSchema(MetaParser):
-
+    """Schema for show standby internal"""
     schema = \
             {
                 'hsrp_common_process_state': str,
@@ -61,6 +59,7 @@ class ShowStandbyInternalSchema(MetaParser):
 
 
 class ShowStandbyInternal(ShowStandbyInternalSchema):
+    """Parser for show standby internal"""
 
     def cli(self):
         cmd = 'show standby internal'.format()
@@ -198,11 +197,11 @@ class ShowStandbyInternal(ShowStandbyInternalSchema):
 
 
 # ======================================
-#   Parser for 'show standby all'       
+#   Schema for 'show standby all'
 # ======================================
 
 class ShowStandbyAllSchema(MetaParser):
-
+    """Schema for show standby all"""
     schema = \
     {
         Any(): {
@@ -369,8 +368,18 @@ class ShowStandbyAllSchema(MetaParser):
     }
 
 class ShowStandbyAll(ShowStandbyAllSchema):
+    """Parser for show standby all
+    parser class - implements detail parsing mechanisms for cli,yang output.
+    """
+    # *************************
+    # schema - class variable
+    #
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
+    # parsing mechanisms (cli(), yang(), xml()).
 
     def cli(self):
+        """Cli result for show standby all """
         cmd = 'show standby all'.format()
         out = self.device.execute(cmd)
         
@@ -925,6 +934,7 @@ class ShowStandbyAll(ShowStandbyAllSchema):
 
 
     def yang(self):
+        """Yang result for show standby all"""
         ret = {}
         cmd = '''<native><interface><GigabitEthernet/></interface></native>'''
         output = self.device.get(('subtree', cmd))
@@ -944,11 +954,11 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                             continue
 
 # ======================================
-#   Parser for 'show hsrp delay'
+#   Schema for 'show standby delay'
 # ======================================
 
 class ShowStandbyDelaySchema(MetaParser):
-
+    """Schema for show standby delay"""
     schema = {
                 Any(): {
                     'delay': {
@@ -959,7 +969,7 @@ class ShowStandbyDelaySchema(MetaParser):
              }
 
 class ShowStandbyDelay(ShowStandbyDelaySchema):
-
+    """Parser for show standby delay"""
     def cli(self):
         cmd = 'show standby delay'
         out = self.device.execute(cmd)

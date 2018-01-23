@@ -19,7 +19,7 @@ from parser.utils.common import Common
 # Schema for 'show protocols afi-all all'
 # =======================================
 class ShowProtocolsAfiAllAllSchema(MetaParser):
-
+    """Schema for show protocols afi-all all"""
     schema = {
         'protocols': 
             {Optional('ospf'): 
@@ -150,8 +150,7 @@ class ShowProtocolsAfiAllAllSchema(MetaParser):
 # Parser for 'show protocols afi-all all'
 # =======================================
 class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
-
-     ''' Parser for "show protocols afi-all all" '''
+     """Parser for show protocols afi-all all"""
      def cli(self):
 
         # Execute command on device

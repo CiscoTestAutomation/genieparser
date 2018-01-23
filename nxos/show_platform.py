@@ -1,8 +1,9 @@
-''' showplatform.py
+"""show_platform.py
 
-Example parser class
+NXOS parser class for below commands:
+       show version
 
-'''
+"""
 import re
 import xmltodict
 
@@ -26,6 +27,8 @@ def regexp(expression):
 
 
 class ShowVersionSchema(MetaParser):
+    """Schema for show version"""
+
     schema = {'platform':
                   {Optional('name'): str,
                    Optional('reason'): str,
@@ -59,8 +62,9 @@ class ShowVersionSchema(MetaParser):
               }
 
 class ShowVersion(ShowVersionSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
+    """Parser for :
+        show version
+        parser class implements detail parsing mechanisms for cli, xml and yang output.
     """
     #*************************
     # schema - class variable
@@ -404,6 +408,7 @@ class ShowVersion(ShowVersionSchema):
         return result
 
 class ShowInventorySchema(MetaParser):
+    """Schema for show inventory"""
     schema = {'name':
                 {Any():
                     {'description': str,
@@ -416,15 +421,7 @@ class ShowInventorySchema(MetaParser):
 
 
 class ShowInventory(ShowInventorySchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
+    """Parser for show inventory"""
 
     def cli(self):
         ''' parsing mechanism: cli
@@ -469,6 +466,7 @@ class ShowInventory(ShowInventorySchema):
         return inventory_dict
 
 class ShowInstallActiveSchema(MetaParser):
+    """Schema for show install active"""
     schema = {'boot_images':
                 {Optional('kickstart_image'): str,
                  Optional('system_image'): str},
@@ -480,9 +478,8 @@ class ShowInstallActiveSchema(MetaParser):
 
 
 class ShowInstallActive(ShowInstallActiveSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show install active"""
+
     #*************************
     # schema - class variable
     #
@@ -549,13 +546,13 @@ class ShowInstallActive(ShowInstallActiveSchema):
 
 
 # =====================================
-# Parser for 'show redundancy status'
+# Schema for 'show redundancy status'
 # =====================================
 
 class ShowRedundancyStatusSchema(MetaParser):
-    
-    '''Schema for show redundancy status and 
-                  show system redundancy status'''
+    """Schema for:
+        show redundancy status
+        show system redundancy status"""
 
     schema = {'redundancy_mode':
                   {'administrative': str,
@@ -571,8 +568,7 @@ class ShowRedundancyStatusSchema(MetaParser):
 
 
 class ShowRedundancyStatus(ShowRedundancyStatusSchema):
-
-    '''Parser for show redundancy status'''
+    """Parser for show redundancy status"""
 
     def cli(self, cmd='show redundancy status'):
 
@@ -665,14 +661,15 @@ class ShowRedundancyStatus(ShowRedundancyStatusSchema):
 # Parser for 'show system redundancy status'
 # ==========================================
 class ShowSystemRedundancyStatus(ShowRedundancyStatus):
-
-    '''Parser for show system redundancy status'''
+    """Parser for show system redundancy status"""
 
     def cli(self):
         return(super().cli(cmd='show system redundancy status'))
 
 
 class ShowBootSchema(MetaParser):
+    """Schema for show boot"""
+
     schema = {'current_boot_variable':
                   {Optional('sup_number'):
                       {Any():
@@ -696,15 +693,7 @@ class ShowBootSchema(MetaParser):
               }
 
 class ShowBoot(ShowBootSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
+    """Parser for show boot"""
 
     def cli(self):
         ''' parsing mechanism: cli
@@ -857,7 +846,7 @@ class ShowBoot(ShowBootSchema):
         return boot_dict
 
 class ShowModuleSchema(MetaParser):
-
+    """Schema for show module"""
     schema = {'slot':
                   {'rp':
                     {Any():
@@ -902,16 +891,7 @@ class ShowModuleSchema(MetaParser):
               }
 
 class ShowModule(ShowModuleSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
-
+    """Parser for show module"""
     def cli(self):
         ''' parsing mechanism: cli
 
@@ -1062,6 +1042,7 @@ class ShowModule(ShowModuleSchema):
         return module_dict
 
 class DirSchema(MetaParser):
+    """Schema for dir"""
     schema = {'disk_used_space': str,
               'disk_free_space': str,
               'disk_total_space': str,
@@ -1075,15 +1056,7 @@ class DirSchema(MetaParser):
               }
 
 class Dir(DirSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
+    """Parser for dir"""
 
     def cli(self):
         ''' parsing mechanism: cli
@@ -1133,6 +1106,7 @@ class Dir(DirSchema):
         return dir_dict
 
 class ShowVdcDetailSchema(MetaParser):
+    """Schema for show vdc detail"""
     schema = {'vdc':
                 {Any():
                   {'name': str,
@@ -1154,16 +1128,7 @@ class ShowVdcDetailSchema(MetaParser):
             }
 
 class ShowVdcDetail(ShowVdcDetailSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
-
+    """Parser for show vdc detail"""
     def cli(self):
         ''' parsing mechanism: cli
 
@@ -1287,21 +1252,14 @@ class ShowVdcDetail(ShowVdcDetailSchema):
         return vdc_dict
 
 class ShowVdcCurrentSchema(MetaParser):
+    """Schema for show vdc current-vdc"""
     schema = {'current_vdc':
                 {'id': str,
                  'name': str}
              }
 
 class ShowVdcCurrent(ShowVdcCurrentSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
+    """Parser for show vdc current-vdc"""
 
     def cli(self):
         ''' parsing mechanism: cli
@@ -1326,7 +1284,7 @@ class ShowVdcCurrent(ShowVdcCurrentSchema):
         return current_vdc_dict
 
 class ShowVdcMembershipStatusSchema(MetaParser):
-
+    """Schema for show vdc membership status"""
     schema = {'virtual_device':
                 {Any():
                     {'membership':
@@ -1341,15 +1299,7 @@ class ShowVdcMembershipStatusSchema(MetaParser):
             }
 
 class ShowVdcMembershipStatus(ShowVdcMembershipStatusSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
+    """Schema for show vdc membership status"""
 
     def cli(self):
         ''' parsing mechanism: cli

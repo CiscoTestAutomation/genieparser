@@ -1,24 +1,22 @@
-''' show_ip_route.py
+""" show_ip_route.py
 
 IOSXE parsers for the following show commands:
     * 'show ip route bgp'
     * 'show ip route vrf <WORD> bgp'
     * 'show ipv6 route bgp'
     * 'show ipv6 route vrf <WORD> bgp'
-'''
+"""
 import re   
 from metaparser import MetaParser   
 from metaparser.util.schemaengine import Any, Optional 
 
 
 class ShowIpRouteSchema(MetaParser):
-
-    ''' Schema for:
-        # 'show ip route bgp'
-        # 'show ip route vrf <WORD> bgp'
-        # 'show ipv6 route bgp'
-        # 'show ipv6 route vrf <WORD> bgp'
-    '''
+    """Schema for:
+         show ip route bgp
+         show ip route vrf <WORD> bgp
+         show ipv6 route bgp
+         show ipv6 route vrf <WORD> bgp"""
 
     schema = {
         'vrf':
@@ -50,7 +48,11 @@ class ShowIpRouteSchema(MetaParser):
 
 
 class ShowIpRoute(ShowIpRouteSchema):
-
+    """Parser for:
+        show ip route bgp
+        show ip route vrf <vrf> bgp
+        show ipv6 route bgp
+        show ipv6 route vrf <vrf> bgp"""
     def cli(self, protocol, vrf='', ip='ip'):
 
         # Calling the corresponding show command
@@ -217,5 +219,9 @@ class ShowIpRoute(ShowIpRouteSchema):
 
 
 class ShowIpv6Route(ShowIpRoute):
+    """Parser for:
+        show ipv6 route bgp
+        show ipv6 route vrf <vrf> bgp"""
+
     def cli(self, protocol, ip='ipv6', vrf = ''):
         return(super().cli(protocol=protocol, ip='ipv6', vrf=vrf))

@@ -1,4 +1,4 @@
-''' show_igmp.py
+"""show_igmp.py
 
 NXOS parsers for the following show commands:
 
@@ -13,7 +13,7 @@ NXOS parsers for the following show commands:
     * show ip igmp local-groups vrf <WORD>
     * show ip igmp snooping
 
-'''
+"""
 
 # Python
 import re
@@ -30,6 +30,8 @@ from parser.utils.common import Common
 #  Schema for show ip igmp snooping
 # ==============================================
 class ShowIpIgmpSnoopingSchema(MetaParser):
+    """Schema for show ip igmp snooping"""
+
     schema = {
         Optional('global_configuration'): {
             Optional('enabled'): str,
@@ -71,7 +73,7 @@ class ShowIpIgmpSnoopingSchema(MetaParser):
 #  Parser for show ip igmp snooping
 # ==============================================
 class ShowIpIgmpSnooping(ShowIpIgmpSnoopingSchema):
-
+    """Parser for show ip igmp snooping"""
     def cli(self, vlan=''):
         if vlan:
             cmd = 'show ip igmp snooping vlan {}'.format(vlan)
@@ -368,9 +370,10 @@ class ShowIpIgmpSnooping(ShowIpIgmpSnoopingSchema):
 # ==============================================
 
 class ShowIpIgmpInterfaceSchema(MetaParser):
-    # Schema for 'show ip igmp interface'
-    # Schema for 'show ip igmp interface vrf all'
-    # Schema for 'show ip igmp interface vrf <WORD>'
+    """Schema for:
+        show ip igmp interface
+        show ip igmp interface vrf all
+        show ip igmp interface vrf <vrf>"""
 
     schema = {'vrfs': {
                 Any(): {
@@ -448,9 +451,10 @@ class ShowIpIgmpInterfaceSchema(MetaParser):
         }
 
 class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
-    # Parser for 'show ip igmp interface'
-    # Parser for 'show ip igmp interface vrf all'
-    # Parser for 'show ip igmp interface vrf <WORD>'
+    """Parser for:
+            show ip igmp interface
+            show ip igmp interface vrf all
+            show ip igmp interface vrf <vrf>"""
 
     def cli(self, vrf=''):
 
@@ -806,9 +810,10 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 # Parser for 'show ip igmp groups vrf <WORD>'
 # ===========================================
 class ShowIpIgmpGroupsSchema(MetaParser):
-    # Schema for 'show ip igmp groups'
-    # Schema for 'show ip igmp groups vrf all'
-    # Schema for 'show ip igmp groups vrf <WORD>'
+    """Schema for:
+        show ip igmp groups
+        show ip igmp groups vrf all
+        show ip igmp groups vrf <vrf>"""
 
     schema = {'vrfs': {
                 Any(): {
@@ -838,9 +843,10 @@ class ShowIpIgmpGroupsSchema(MetaParser):
         }
 
 class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
-    # Parser for 'show ip igmp groups'
-    # Parser for 'show ip igmp groups vrf all'
-    # Parser for 'show ip igmp groups vrf <WORD>'
+    """Parser for:
+        show ip igmp groups
+        show ip igmp groups vrf all
+        show ip igmp groups vrf <vrf>"""
 
     def cli(self, vrf=''):
 
@@ -937,9 +943,10 @@ class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
 # Parser for 'show ip igmp local-groups vrf <WORD>'
 # ===========================================
 class ShowIpIgmpLocalGroupsSchema(MetaParser):
-    # Schema for 'show ip igmp local-groups'
-    # Schema for 'show ip igmp local-groups vrf all'
-    # Schema for 'show ip igmp local-groups vrf <WORD>'
+    """Schema for:
+        show ip igmp local-groups
+        show ip igmp local-groups vrf all
+        show ip igmp local-groups vrf <vrf>"""
 
     schema = {'vrfs': {
                 Any(): {
@@ -976,9 +983,10 @@ class ShowIpIgmpLocalGroupsSchema(MetaParser):
         }
 
 class ShowIpIgmpLocalGroups(ShowIpIgmpLocalGroupsSchema):
-    # Parser for 'show ip igmp local-groups'
-    # Parser for 'show ip igmp local-groups vrf all'
-    # Parser for 'show ip igmp local-groups vrf <WORD>'
+    """Parser for:
+        show ip igmp local-groups
+        show ip igmp local-groups vrf all
+        show ip igmp local-groups vrf <vrf>"""
 
     def cli(self, vrf=''):
 

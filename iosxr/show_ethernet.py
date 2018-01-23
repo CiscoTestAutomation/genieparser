@@ -1,8 +1,10 @@
-''' show_ethernet.py
+"""show_ethernet.py
+    IOSXR commands:
+        show ethernet cfm peer meps
+        show ethernet trunk detail
+        show ethernet tags
 
-Example parser class
-
-'''
+"""
 
 import logging
 
@@ -33,7 +35,7 @@ def regexp(expression):
 
 
 class ShowEthernetCfmMeps(MetaParser):
-
+    """Parser for show ethernet cfm peer meps"""
     # TODO schema
 
     def __init__(self,**kwargs):
@@ -152,6 +154,7 @@ class ShowEthernetCfmMeps(MetaParser):
 
 #Incomplete parser - to be completed 
 class ShowEthernetTrunkDetailSchema(MetaParser):
+    """Schema for show ethernet trunk detail"""
     schema = {'interface':
                 {Any():
                     {Optional('dot1q_tunneling_ethertype'): str}
@@ -160,8 +163,8 @@ class ShowEthernetTrunkDetailSchema(MetaParser):
 
 
 class ShowEthernetTrunkDetail(ShowEthernetTrunkDetailSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
+    """Parser for show ethernet trunk detail
+    parser class - implements detail parsing mechanisms for cli output.
     """
     #*************************
     # schema - class variable
@@ -171,12 +174,12 @@ class ShowEthernetTrunkDetail(ShowEthernetTrunkDetailSchema):
     # parsing mechanisms (cli(), yang(), xml()).
 
     def cli(self):
-        ''' parsing mechanism: cli
+        """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
-        '''
+        """
         cmd = 'show ethernet trunk detail'.format()
         out = self.device.execute(cmd)
         trunk_dict = {}
@@ -205,6 +208,7 @@ class ShowEthernetTrunkDetail(ShowEthernetTrunkDetailSchema):
 
 
 class ShowEthernetTagsSchema(MetaParser):
+    """Schema for show ethernet tags"""
     schema = {'interface':
                 {Any():
                     {'sub_interface':
@@ -226,8 +230,8 @@ class ShowEthernetTagsSchema(MetaParser):
 
 
 class ShowEthernetTags(ShowEthernetTagsSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
+    """Parser for show ethernet tags
+    parser class - implements detail parsing mechanisms for cli and yang output.
     """
     #*************************
     # schema - class variable
@@ -237,12 +241,12 @@ class ShowEthernetTags(ShowEthernetTagsSchema):
     # parsing mechanisms (cli(), yang(), xml()).
 
     def cli(self):
-        ''' parsing mechanism: cli
+        """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
-        '''
+        """
         cmd = 'show ethernet tags'.format()
         out = self.device.execute(cmd)
         intf_dict = {}
@@ -295,11 +299,11 @@ class ShowEthernetTags(ShowEthernetTagsSchema):
         return intf_dict
 
     def yang(self):
-        ''' parsing mechanism: yang
+        """parsing mechanism: yang
 
         Function yang() defines the yang type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
-        '''
+        """
 
         ret = {}
         cmd = '''<interfaces xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-pfi-im-cmd-oper"><interface-xr><interface/></interface-xr></interfaces>'''

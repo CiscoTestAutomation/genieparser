@@ -1,4 +1,4 @@
-''' show_mcast.py
+"""show_mcast.py
 
 IOSXE parsers for the following show commands:
 
@@ -11,7 +11,7 @@ IOSXE parsers for the following show commands:
     * show ip multicast
     * show ip multicast vrf <vrf_name>
 
-'''
+"""
 
 # Python
 import re
@@ -29,10 +29,11 @@ from metaparser.util.schemaengine import Schema, Any, Optional
 # =====================================
 
 class ShowIpMrouteSchema(MetaParser):
-    # Parser for 'show ip mroute'
-    # Parser for 'show ip mroute vrf xxx'
-    # Parser for 'show ipv6 mroute'
-    # Parser for 'show ipv6 mroute vrf xxx'
+    """Schema for:
+        show ip mroute
+        show ip mroute vrf <vrf>
+        show ipv6 mroute
+        show ipv6 mroute vrf <vrf>"""
 
     schema = {'vrf':         
                 {Any():
@@ -76,6 +77,9 @@ class ShowIpMrouteSchema(MetaParser):
             }
 
 class ShowIpMroute(ShowIpMrouteSchema):
+    """Parser for:
+        show ip mroute
+        show ip mroute vrf <vrf>"""
 
     def cli(self, cmd='show ip mroute', vrf=''):
 
@@ -285,6 +289,9 @@ class ShowIpMroute(ShowIpMrouteSchema):
 # Parser for 'show ipv6 mroute vrf xxx'
 # ===========================================
 class ShowIpv6Mroute(ShowIpMroute):
+    """Parser for:
+       show ipv6 mroute
+       show ipv6 mroute vrf <vrf>"""
     def cli(self, vrf=''):
         return super().cli(cmd='show ipv6 mroute', vrf=vrf)
 
@@ -295,8 +302,10 @@ class ShowIpv6Mroute(ShowIpMroute):
 # ===========================================
 
 class ShowIpMrouteStaticSchema(MetaParser):
-    # schema for show ip mroute static
-
+    """Schema for:
+        show ip mroute static
+        show ip mroute vrf <vrf> static
+    """
     schema = {'vrf': 
                 {Any():
                     {'mroute':
@@ -314,8 +323,10 @@ class ShowIpMrouteStaticSchema(MetaParser):
             }
 
 class ShowIpMrouteStatic(ShowIpMrouteStaticSchema):
-
-    # Parser for show ip mroute static
+    """Parser for:
+            show ip mroute static
+            show ip mroute vrf <vrf> static
+        """
 
     def cli(self, vrf=''):
         # cli implemetation of parsers
@@ -378,8 +389,10 @@ class ShowIpMrouteStatic(ShowIpMrouteStaticSchema):
 # ===========================================
 
 class ShowIpMulticastSchema(MetaParser):
-    # schema for show ip multicast
-
+    """Schema for:
+        show ip multicast
+        show ip multicast vrf <vrf>
+    """
     schema = {'vrf': 
                 {Any():
                     {
@@ -394,9 +407,10 @@ class ShowIpMulticastSchema(MetaParser):
             }
 
 class ShowIpMulticast(ShowIpMulticastSchema):
-
-    # Parser for show ip multicast
-
+    """Parser for:
+        show ip multicast
+        show ip multicast vrf <vrf>
+    """
     def cli(self, vrf=''):
 
         # cli implemetation of parsers

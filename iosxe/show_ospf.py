@@ -1,8 +1,8 @@
-''' showversion.py
+"""showversion.py
 
 Example parser class
 
-'''
+"""
 import xmltodict
 import re
 
@@ -53,6 +53,7 @@ def _merge_dict(a, b, path=None):
     return ret
 
 class ShowIpOspfSchema(MetaParser):
+    """Schema forshow ip ospf """
 
     schema = {'process_id':
                 {Any():
@@ -79,7 +80,8 @@ class ShowIpOspfSchema(MetaParser):
              }
 
 class ShowIpOspf(ShowIpOspfSchema, MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
+    """Parser for show ip ospf
+    parser class - implements detail parsing mechanisms for cli, xml, and
     yang output.
     """
     #*************************
@@ -196,11 +198,10 @@ class ShowIpOspf(ShowIpOspfSchema, MetaParser):
         return ospf_dict
 
     def xml(self):
-        ''' parsing mechanism: xml
-
+        """parsing mechanism: xml
         Function xml() defines the xml type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
-        '''
+        """
         output =  tcl.q.caas.abstract(device=self.device.handle,
                                       exec='show ip ospf | xml')
         result = tcl.cast_any(output[1])
@@ -208,11 +209,10 @@ class ShowIpOspf(ShowIpOspfSchema, MetaParser):
         return result
 
     def yang(self):
-        ''' parsing mechanism: yang
-
+        """parsing mechanism: yang
         Function yang() defines the yang type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
-        '''
+        """
 
         ret = {}
         cmd = '''<native><router><ospf/></router></native>'''
@@ -290,6 +290,7 @@ class ShowIpOspf(ShowIpOspfSchema, MetaParser):
         return merged_output
 
 class ShowIpOspfNeighborDetailSchema(MetaParser):
+    """Schema for show ip ospf neighbor detail"""
     schema = {Optional('intf_list'): list,
               'intf':
                 {Any():
@@ -307,7 +308,8 @@ class ShowIpOspfNeighborDetailSchema(MetaParser):
             }
 
 class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema, MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
+    """Parser for show ip ospf neighbor detail
+    parser class - implements detail parsing mechanisms for cli, xml, and
     yang output.
     """
     #*************************
@@ -319,11 +321,10 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema, MetaParser):
 
 
     def cli(self):
-        ''' parsing mechanism: cli
-
+        """parsing mechanism: cli
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
-        '''
+        """
         cmd = 'show ip ospf neighbor detail'.format()
         out = self.device.execute(cmd)
         intf_list = []
@@ -385,11 +386,11 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema, MetaParser):
         return ospf_neigh_dict
 
     def xml(self):
-        ''' parsing mechanism: xml
+        """parsing mechanism: xml
 
         Function xml() defines the xml type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
-        '''
+        """
         output =  tcl.q.caas.abstract(device=self.device.handle,
                                       exec='show ip ospf neighbor detail | xml')
         result = tcl.cast_any(output[1])
@@ -397,6 +398,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema, MetaParser):
         return result
 
 class ShowIpOspfInterfaceSchema(MetaParser):
+    """Schema for show ip ospf interface """
     schema = {Optional('intfs_all'): OrKeyedList(list),
               Optional('intfs_up'): OrKeyedList(list),
               Optional('intfs_down'): OrKeyedList(list),
@@ -423,7 +425,8 @@ class ShowIpOspfInterfaceSchema(MetaParser):
 
 
 class ShowIpOspfInterface(ShowIpOspfInterfaceSchema,MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
+    """Parser for show ip ospf interface
+    parser class - implements detail parsing mechanisms for cli, xml, and
     yang output.
     """
     #*************************
@@ -435,11 +438,11 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema,MetaParser):
 
 
     def cli(self):
-        ''' parsing mechanism: cli
+        """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
-        '''
+        """
         cmd = 'show ip ospf interface'.format()
         out = self.device.execute(cmd)
         intfs_all = []
@@ -554,11 +557,11 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema,MetaParser):
 
 
     def xml(self):
-        ''' parsing mechanism: xml
+        """parsing mechanism: xml
 
         Function xml() defines the xml type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
-        '''
+        """
         output =  tcl.q.caas.abstract(device=self.device.handle,
                                       exec='show ip ospf interface | xml')
         result = tcl.cast_any(output[1])
@@ -566,6 +569,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema,MetaParser):
         return result
 
 class ShowIpOspfDatabaseSchema(MetaParser):
+    """Schema for show ip ospf database"""
 
     schema = {'process_id':
                   {Any():
@@ -592,7 +596,8 @@ class ShowIpOspfDatabaseSchema(MetaParser):
               }
 
 class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema, MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
+    """Parser for show ip ospf database
+    parser class - implements detail parsing mechanisms for cli, xml, and
     yang output.
     """
     #*************************
@@ -604,11 +609,11 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema, MetaParser):
 
 
     def cli(self):
-        ''' parsing mechanism: cli
+        """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
-        '''
+        """
         cmd = 'show ip ospf database'.format()
         out = self.device.execute(cmd)
         ospf_db_dict = {}

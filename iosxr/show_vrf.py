@@ -1,8 +1,8 @@
-''' show_vrf.py
+""" show_vrf.py
 
 IOSXR parsers for the following show commands:
     * 'show vrf detail'
-'''
+"""
 
 # Python
 import re
@@ -15,8 +15,7 @@ from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
 
 
 class ShowVrfAllDetailSchema(MetaParser):
-
-    '''Schema for show vrf all detail'''
+    """Schema for show vrf all detail"""
 
     schema = {Any():
                 {
@@ -43,8 +42,7 @@ class ShowVrfAllDetailSchema(MetaParser):
         }
 
 class ShowVrfAllDetail(ShowVrfAllDetailSchema):
-
-    '''Parser for show vrf all detail'''
+    """Parser for show vrf all detail"""
 
     def cli(self):
         cmd = 'show vrf all detail'

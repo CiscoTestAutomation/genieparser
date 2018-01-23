@@ -4,10 +4,7 @@ from metaparser.util.schemaengine import Schema, Any, Optional
 
 
 class ShowRouteMapSchema(MetaParser):
-
-    ''' Schema for:
-        # 'show route-map'
-    '''
+    """Schema for show route-map"""
     schema = {
         Any():
             {Optional('description'): str,
@@ -64,7 +61,7 @@ class ShowRouteMapSchema(MetaParser):
         }
     
 class ShowRouteMap(ShowRouteMapSchema):
-
+    """Parser for show route-map"""
     def cli(self):
         out = self.device.execute('show route-map')
 

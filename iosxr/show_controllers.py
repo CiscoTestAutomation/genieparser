@@ -16,7 +16,7 @@ from parser.base import *
 logger = logging.getLogger(__name__)
 
 class ShowControllersFiaDiagshellL2show(MetaParser):
-    '''Parser class for 'show controllers fia diagshell 0 "l2 show"' CLI.'''
+    """Parser class for show controllers fia diagshell 0 'l2 show' """
 
     # TODO schema
 

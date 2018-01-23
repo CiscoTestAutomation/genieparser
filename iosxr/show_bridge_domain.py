@@ -1,8 +1,8 @@
-''' show_bridge_domain.py
+"""show_bridge_domain.py
 
 show bridge domain parser class
 
-'''
+"""
 
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
@@ -42,9 +42,9 @@ from parser.base import *
 
 
 class ShowL2VpnBridgeDomainSummary(MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show l2vpn bridge-domain summary"""
+    # parser class - implements detail parsing mechanisms for cli, xml, and yang output.
+
     #*************************
     # schema - class variable
     #
@@ -103,9 +103,9 @@ class ShowL2VpnBridgeDomainSummary(MetaParser):
 
 
 class ShowL2VpnBridgeDomainBrief(MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show l2vpn bridge-domain brief"""
+    # parser class - implements detail parsing mechanisms for cli, xml, and yang output.
+
     #*************************
     # schema - class variable
     #
@@ -164,9 +164,9 @@ class ShowL2VpnBridgeDomainBrief(MetaParser):
 
 
 class ShowL2VpnBridgeDomain(MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show l2vpn bridge-domain"""
+    # parser class - implements detail parsing mechanisms for cli, xml, and yang output.
+
     #*************************
     # schema - class variable
     #
@@ -225,9 +225,9 @@ class ShowL2VpnBridgeDomain(MetaParser):
 
 
 class ShowL2VpnBridgeDomainDetail(MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show l2vpn bridge-domain detail"""
+    # parser class - implements detail parsing mechanisms for cli, xml, and yang output.
+
     #*************************
     # schema - class variable
     #

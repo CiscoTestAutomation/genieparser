@@ -37,7 +37,7 @@ def regexp(expression):
 # =========================
 
 class ShowVersionSchema(MetaParser):
-
+    """Schema for show version"""
     schema = {'operating_system': str,
               'software_version': str,
               'uptime': str,
@@ -52,7 +52,7 @@ class ShowVersionSchema(MetaParser):
              }
 
 class ShowVersion(ShowVersionSchema):
-
+    """Parser for show version"""
     def cli(self):
         cmd = 'show version'.format()
         out = self.device.execute(cmd)
@@ -143,7 +143,7 @@ class ShowVersion(ShowVersionSchema):
 # ============================
 
 class ShowSdrDetailSchema(MetaParser):
-
+    """Schema for show sdr detail"""
     schema = {
         'sdr_id': 
             {Any(): 
@@ -166,7 +166,7 @@ class ShowSdrDetailSchema(MetaParser):
         }
 
 class ShowSdrDetail(ShowSdrDetailSchema):
-
+    """Parser for show sdr detail"""
     def cli(self):
         cmd = 'show sdr detail'.format()
         out = self.device.execute(cmd)
@@ -282,7 +282,7 @@ class ShowSdrDetail(ShowSdrDetailSchema):
 # ==========================
 
 class ShowPlatformSchema(MetaParser):
-
+    """Schema for show platform"""
     schema = {
         'slot': 
             {Any():
@@ -306,7 +306,7 @@ class ShowPlatformSchema(MetaParser):
         }
 
 class ShowPlatform(ShowPlatformSchema):
-
+    """Schema for show platform"""
     def cli(self):
         cmd = 'show platform'.format()
         out = self.device.execute(cmd)
@@ -418,7 +418,7 @@ class ShowPlatform(ShowPlatformSchema):
 # =============================
 
 class ShowPlatformVmSchema(MetaParser):
-
+    """Schema for show platform vm"""
     schema = {
         'node': 
             {Any():
@@ -431,7 +431,7 @@ class ShowPlatformVmSchema(MetaParser):
         }
 
 class ShowPlatformVm(ShowPlatformVmSchema):
-
+    """Parser for show platform vm"""
     def cli(self):
         cmd = 'show platform vm'.format()
         out = self.device.execute(cmd)
@@ -470,11 +470,10 @@ class ShowPlatformVm(ShowPlatformVmSchema):
         return show_platform_vm
 
 # ========================================
-# Parser for 'show install active summary'
+# Schema for 'show install active summary'
 # ========================================
-
 class ShowInstallActiveSummarySchema(MetaParser):
-
+    """Schema for show install active summary"""
     schema = {
         'active_packages': Any(),
         Optional('num_active_packages'): int,
@@ -482,7 +481,7 @@ class ShowInstallActiveSummarySchema(MetaParser):
         }
 
 class ShowInstallActiveSummary(ShowInstallActiveSummarySchema):
-
+    """Parser for show install active summary"""
     def cli(self):
         cmd = 'show install active summary'.format()
         out = self.device.execute(cmd)
@@ -531,11 +530,11 @@ class ShowInstallActiveSummary(ShowInstallActiveSummarySchema):
         return install_active_dict
 
 # ===========================
-# Parser for 'show inventory'
+# Schema for 'show inventory'
 # ===========================
 
 class ShowInventorySchema(MetaParser):
-
+    """Schema for show inventory"""
     schema = {
         'module_name': 
             {Any(): 
@@ -548,7 +547,7 @@ class ShowInventorySchema(MetaParser):
         }
 
 class ShowInventory(ShowInventorySchema):
-
+    """Parser for show inventory"""
     def cli(self):
         cmd = 'show inventory'.format()
         out = self.device.execute(cmd)
@@ -592,11 +591,11 @@ class ShowInventory(ShowInventorySchema):
         return inventory_dict
             
 # ====================================
-# Parser for 'admin show diag chassis'
+# Schema for 'admin show diag chassis'
 # ====================================
 
 class AdminShowDiagChassisSchema(MetaParser):
-
+    """Schema for admin show diag chassis"""
     schema = {
         'device_family': str,
         'device_series': int,
@@ -612,7 +611,7 @@ class AdminShowDiagChassisSchema(MetaParser):
         }
 
 class AdminShowDiagChassis(AdminShowDiagChassisSchema):
-
+    """Parser for admin show diag chassis"""
     def cli(self):
         cmd = 'admin show diag chassis'.format()
         out = self.device.execute(cmd)
@@ -705,11 +704,11 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
         return admin_show_diag_dict
 
 # ====================================
-# Parser for 'show redundancy summary'
+# Schema for 'show redundancy summary'
 # ====================================
 
 class ShowRedundancySummarySchema(MetaParser):
-
+    """Schema for show redundancy summary"""
     schema = {
         'node': 
             {Any(): 
@@ -723,7 +722,7 @@ class ShowRedundancySummarySchema(MetaParser):
         }
 
 class ShowRedundancySummary(ShowRedundancySummarySchema):
-
+    """Parser for show redundancy summary"""
     def cli(self):
         cmd = 'show redundancy summary'.format()
         out = self.device.execute(cmd)
@@ -814,11 +813,11 @@ class ShowRedundancySummary(ShowRedundancySummarySchema):
         return redundancy_summary
 
 # ============================
-# Parser for 'show redundancy'
+# Schema for 'show redundancy'
 # ============================
 
 class ShowRedundancySchema(MetaParser):
-
+    """Schema for show redundancy"""
     schema = {
         'node': 
             {Any(): 
@@ -855,7 +854,7 @@ class ShowRedundancySchema(MetaParser):
         }
 
 class ShowRedundancy(ShowRedundancySchema):
-
+    """Parser for show redundancy"""
     def cli(self):
         cmd = 'show redundancy'.format()
         out = self.device.execute(cmd)
@@ -1069,11 +1068,10 @@ class ShowRedundancy(ShowRedundancySchema):
         return redundancy_dict
 
 # ================
-# Parser for 'dir'
+# Schema for 'dir'
 # ================
-
 class DirSchema(MetaParser):
-
+    """Schema for dir"""
     schema = {
         'dir': {
             'dir_name': str,
@@ -1083,7 +1081,7 @@ class DirSchema(MetaParser):
         }
 
 class Dir(DirSchema):
-
+    """Parser for dir"""
     def cli(self):
         cmd = 'dir'.format()
         out = self.device.execute(cmd)

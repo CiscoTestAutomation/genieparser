@@ -1,9 +1,9 @@
-''' show_vrf.py
+"""show_vrf.py
 
 NXOS parsers for the following show commands:
     * 'show vrf'
     * 'show vrf <WORD> detail'
-'''
+"""
 
 # Python
 import re
@@ -20,8 +20,7 @@ from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
 # =====================
 
 class ShowVrfSchema(MetaParser):
-    
-    '''Schema for show vrf'''
+    """Schema for show vrf"""
 
     schema = {
         'vrfs':
@@ -33,8 +32,7 @@ class ShowVrfSchema(MetaParser):
         }
 
 class ShowVrf(ShowVrfSchema):
-    
-    '''Parser for show vrf'''
+    """Parser for show vrf"""
 
     def cli(self):
         cmd = 'show vrf'
@@ -68,8 +66,7 @@ class ShowVrf(ShowVrfSchema):
         return vrf_dict
 
 class ShowVrfInterfaceSchema(MetaParser):
-
-    '''Schema for show vrf interface'''
+    """Schema for show vrf interface"""
 
     schema = {
             'vrf_interface':
@@ -81,8 +78,7 @@ class ShowVrfInterfaceSchema(MetaParser):
             }
 
 class ShowVrfInterface(ShowVrfInterfaceSchema):
-
-    '''Parser for show vrf Interface'''
+    """Parser for show vrf Interface"""
 
     def cli(self):
         cmd = 'show vrf interface'
@@ -121,8 +117,7 @@ class ShowVrfInterface(ShowVrfInterfaceSchema):
 
 
 class ShowVrfDetailSchema(MetaParser):
-
-    '''Schema for show vrf <WORD> detail'''
+    """Schema for show vrf <vrf> detail"""
 
     schema = {Any():
                 {
@@ -143,8 +138,7 @@ class ShowVrfDetailSchema(MetaParser):
         }
 
 class ShowVrfDetail(ShowVrfDetailSchema):
-
-    '''Parser for show vrf <WORD> detail'''
+    """Parser for show vrf <vrf> detail"""
 
     def cli(self, vrf='all'):
         cmd = 'show vrf {} detail'.format(vrf)

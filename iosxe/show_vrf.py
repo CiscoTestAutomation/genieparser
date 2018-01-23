@@ -1,8 +1,8 @@
-''' show_vrf.py
+"""show_vrf.py
 
 IOSXE parsers for the following show commands:
     * 'show vrf detail'
-'''
+"""
 
 # Python
 import re
@@ -18,8 +18,7 @@ from parser.utils.common import Common
 
 
 class ShowVrfDetailSchema(MetaParser):
-
-    '''Schema for show vrf detail'''
+    """Schema for show vrf detail"""
 
     schema = {Any():
                 {
@@ -70,8 +69,7 @@ class ShowVrfDetailSchema(MetaParser):
         }
 
 class ShowVrfDetail(ShowVrfDetailSchema):
-
-    '''Parser for show vrf detail'''
+    """Parser for show vrf detail"""
 
     def cli(self):
         cmd = 'show vrf detail'

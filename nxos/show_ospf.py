@@ -34,11 +34,12 @@ from parser.utils.common import Common
 
 
 # ======================================
-# Schema for 'show ip ospf [vrf <WORD>]'
+# Schema for 'show ip ospf [vrf <vrf>]'
 # ======================================
 class ShowIpOspfSchema(MetaParser):
-
-    '''Schema for "show ip ospf [vrf <WORD>]" '''
+    """Schema for:
+        show ip ospfs
+        show ip ospf vrf <vrf>"""
 
     schema = {
         'vrf': 
@@ -165,8 +166,9 @@ class ShowIpOspfSchema(MetaParser):
 # Parser for 'show ip ospf [vrf <WORD>]'
 # ======================================
 class ShowIpOspf(ShowIpOspfSchema):
-
-    ''' Parser for "show ip ospf [vrf <WORD>]" '''
+    """Parser for:
+        show ip ospf
+        show ip ospf vrf <vrf>"""
 
     def cli(self, vrf=''):
         
@@ -719,8 +721,9 @@ class ShowIpOspf(ShowIpOspfSchema):
 # Schema for 'show ip ospf mpls ldp interface [vrf <WORD>]'
 # =========================================================
 class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
-
-    ''' Schema for "show ip ospf mpls ldp interface [vrf <WORD>]" '''
+    """Schema for:
+        show ip ospf mpls ldp interface
+        show ip ospf mpls ldp interface vrf <vrf>"""
 
     schema = {
         'vrf': 
@@ -794,8 +797,9 @@ class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
 # Parser for 'show ip ospf mpls ldp interface [vrf <WORD>]'
 # =========================================================
 class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
-
-    ''' Parser for "show ip ospf mpls ldp interface [vrf <WORD>]" '''
+    """Parser for:
+        show ip ospf mpls ldp interface
+        show ip ospf mpls ldp interface vrf <vrf>"""
 
     def cli(self, vrf=''):
         
@@ -972,8 +976,9 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
 # Parser for 'show ip ospf <WORD> [vrf <WORD>]'
 # =============================================
 class ShowIpOspfLinksParser(MetaParser):
-
-    ''' Parser for "show ip ospf <LINK-TYPE> [vrf <WORD>]" '''
+    """Parser for:
+        show ip ospf <link_type>
+        show ip ospf <link_type> vrf <vrf>"""
 
     def cli(self, cmd):
         
@@ -1374,7 +1379,9 @@ class ShowIpOspfLinksParser(MetaParser):
 # ====================================================
 class ShowIpOspfVirtualLinksSchema(MetaParser):
 
-    ''' Schema for "show ip ospf virtual-links [vrf <WORD>]" '''
+    """Schema for:
+        show ip ospf virtual-links
+        show ip ospf virtual-links vrf <vrf>"""
 
     schema = {
         'vrf': {
@@ -1457,8 +1464,9 @@ class ShowIpOspfVirtualLinksSchema(MetaParser):
 # Parser for 'show ip ospf virtual-links [vrf <WORD>]'
 # ====================================================
 class ShowIpOspfVirtualLinks(ShowIpOspfVirtualLinksSchema, ShowIpOspfLinksParser):
-
-    ''' Parser for "show ip ospf virtual-links [vrf <WORD>]" '''
+    """Parser for:
+        show ip ospf virtual-links
+        show ip ospf virtual-links vrf <vrf>"""
 
     def cli(self, vrf=''):
         
@@ -1474,8 +1482,9 @@ class ShowIpOspfVirtualLinks(ShowIpOspfVirtualLinksSchema, ShowIpOspfLinksParser
 # Schema for 'show ip ospf sham-links [vrf <WORD>]'
 # =================================================
 class ShowIpOspfShamLinksSchema(MetaParser):
-
-    ''' Schema for "show ip ospf sham-links [vrf <WORD>]" '''
+    """Schema for:
+        show ip ospf sham-links
+        show ip ospf sham-links vrf <vrf>"""
 
     schema = {
         'vrf': {
@@ -1563,8 +1572,9 @@ class ShowIpOspfShamLinksSchema(MetaParser):
 # Parser for 'show ip ospf sham-links [vrf <WORD>]'
 # =================================================
 class ShowIpOspfShamLinks(ShowIpOspfShamLinksSchema, ShowIpOspfLinksParser):
-
-    ''' Parser for "show ip ospf sham-links [vrf <WORD>]" '''
+    """Parser for:
+        show ip ospf sham-links
+        show ip ospf sham-links vrf <vrf>"""
 
     def cli(self, vrf=''):
         
@@ -1580,8 +1590,9 @@ class ShowIpOspfShamLinks(ShowIpOspfShamLinksSchema, ShowIpOspfLinksParser):
 # Schema for 'show ip ospf interface [vrf <WORD>]'
 # ================================================
 class ShowIpOspfInterfaceSchema(MetaParser):
-
-    ''' Schema for "show ip ospf interface [vrf <WORD>]" '''
+    """Schema for:
+        show ip ospf interface
+        show ip ospf interface vrf <WORD>"""
 
     schema = {
         'vrf': 
@@ -1728,8 +1739,9 @@ class ShowIpOspfInterfaceSchema(MetaParser):
 # Parser for 'show ip ospf interface [vrf <WORD>]'
 # ================================================
 class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
-
-    ''' Parser for "show ip ospf interface [vrf <WORD>]" '''
+    """Parser for:
+        show ip ospf interface
+        show ip ospf interface vrf <vrf>"""
 
     def cli(self, vrf=''):
         
@@ -2048,8 +2060,9 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 # Schema for 'show ip ospf neighbors detail [vrf <WORD>]'
 # =======================================================
 class ShowIpOspfNeighborDetailSchema(MetaParser):
-
-    ''' Schema for "show ip ospf neighbors detail [vrf <WORD>]" '''
+    """Schema for:
+        show ip ospf neighbors detail
+        show ip ospf neighbors detail vrf <vrf>"""
 
     schema = {
         'vrf': 
@@ -2147,8 +2160,9 @@ class ShowIpOspfNeighborDetailSchema(MetaParser):
 # Parser for 'show ip ospf neighbors detail [vrf <WORD>]'
 # =======================================================
 class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
-
-    ''' Parser for "show ip ospf neighbors detail [vrf <WORD>]" '''
+    """Parser for:
+        show ip ospf neighbors detail
+        show ip ospf neighbors detail vrf <vrf>"""
 
     def cli(self, vrf=''):
         
@@ -2331,8 +2345,9 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
 # Super parser for 'show ip ospf database <WORD> detail [vrf <WORD>]'
 # ===================================================================
 class ShowIpOspfDatabaseDetailParser(MetaParser):
-
-    ''' Parser for "show ip ospf database <WORD> detail [vrf <WORD>]" '''
+    """Parser for:
+        show ip ospf database <db_type> detail
+        show ip ospf database <db_type> detail vrf <vrf>"""
 
     def cli(self, cmd, db_type):
 
@@ -3020,8 +3035,9 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
 # Schema for 'show ip ospf database external detail [vrf <WORD>]'
 # ===============================================================
 class ShowIpOspfDatabaseExternalDetailSchema(MetaParser):
-
-    ''' Schema for "show ip ospf database external detail [vrf <WORD>]" '''
+    """Schema for:
+        show ip ospf database external detail
+        show ip ospf database external detail vrf <vrf>"""
 
     schema = {
         'vrf': 
@@ -3086,8 +3102,9 @@ class ShowIpOspfDatabaseExternalDetailSchema(MetaParser):
 # Super parser for 'show ip ospf database <WORD> detail [vrf <WORD>]'
 # ===================================================================
 class ShowIpOspfDatabaseExternalDetail(ShowIpOspfDatabaseExternalDetailSchema, ShowIpOspfDatabaseDetailParser):
-
-    ''' Parser for "show ip ospf database external detail [vrf <WORD>]" '''
+    """Parser for:
+        show ip ospf database external detail
+        show ip ospf database external detail vrf <vrf>"""
 
     def cli(self, vrf=''):
         # excute command to get output
@@ -3103,8 +3120,9 @@ class ShowIpOspfDatabaseExternalDetail(ShowIpOspfDatabaseExternalDetailSchema, S
 # Schema for 'show ip ospf database network detail [vrf <WORD>]'
 # ==============================================================
 class ShowIpOspfDatabaseNetworkDetailSchema(MetaParser):
-
-    ''' Schema for "show ip ospf database network detail [vrf <WORD>]" '''
+    """Schema for:
+        show ip ospf database network detail
+        show ip ospf database network detail vrf <vrf>"""
 
     schema = {
         'vrf': 
@@ -3163,8 +3181,9 @@ class ShowIpOspfDatabaseNetworkDetailSchema(MetaParser):
 # Parser for 'show ip ospf database network detail [vrf <WORD>]'
 # ===============================================================
 class ShowIpOspfDatabaseNetworkDetail(ShowIpOspfDatabaseNetworkDetailSchema, ShowIpOspfDatabaseDetailParser):
-
-    ''' Parser for "show ip ospf database network detail [vrf <WORD>]" '''
+    """Parser for:
+        show ip ospf database network detail
+        show ip ospf database network detail vrf <vrf>"""
 
     def cli(self, vrf=''):
         # excute command to get output
@@ -3181,7 +3200,9 @@ class ShowIpOspfDatabaseNetworkDetail(ShowIpOspfDatabaseNetworkDetailSchema, Sho
 # ==============================================================
 class ShowIpOspfDatabaseSummaryDetailSchema(MetaParser):
 
-    ''' Schema for "show ip ospf database summary detail [vrf <WORD>]" '''
+    """Schema for:
+        show ip ospf database summary detail
+        show ip ospf database summary detail vrf <vrf>"""
 
     schema = {
         'vrf': 
@@ -3243,8 +3264,9 @@ class ShowIpOspfDatabaseSummaryDetailSchema(MetaParser):
 # Parser for 'show ip ospf database summary detail [vrf <WORD>]'
 # ===============================================================
 class ShowIpOspfDatabaseSummaryDetail(ShowIpOspfDatabaseSummaryDetailSchema, ShowIpOspfDatabaseDetailParser):
-
-    ''' Parser for "show ip ospf database summary detail [vrf <WORD>]" '''
+    """Parser for:
+        show ip ospf database summary detail
+        show ip ospf database summary detail vrf <vrf>"""
 
     def cli(self, vrf=''):
         # excute command to get output
@@ -3260,8 +3282,9 @@ class ShowIpOspfDatabaseSummaryDetail(ShowIpOspfDatabaseSummaryDetailSchema, Sho
 # Schema for 'show ip ospf database router detail [vrf <WORD>]'
 # =============================================================
 class ShowIpOspfDatabaseRouterDetailSchema(MetaParser):
-
-    ''' Schema for "show ip ospf database router detail [vrf <WORD>]" '''
+    """Schema for:
+        show ip ospf database router detail
+        show ip ospf database router detail vrf <vrf>"""
 
     schema = {
         'vrf': 
@@ -3332,8 +3355,9 @@ class ShowIpOspfDatabaseRouterDetailSchema(MetaParser):
 # Parser for 'show ip ospf database router detail [vrf <WORD>]'
 # ==============================================================
 class ShowIpOspfDatabaseRouterDetail(ShowIpOspfDatabaseRouterDetailSchema, ShowIpOspfDatabaseDetailParser):
-
-    ''' Parser for "show ip ospf database router detail [vrf <WORD>]" '''
+    """Parser for:
+        show ip ospf database router detail
+        show ip ospf database router detail vrf <vrf>"""
 
     def cli(self, vrf=''):
         # excute command to get output
@@ -3349,8 +3373,9 @@ class ShowIpOspfDatabaseRouterDetail(ShowIpOspfDatabaseRouterDetailSchema, ShowI
 # Schema for 'show ip ospf database opqaue-area detail [vrf <WORD>]'
 # =============================================================
 class ShowIpOspfDatabaseOpaqueAreaDetailSchema(MetaParser):
-
-    ''' Schema for "show ip ospf database opaque-area detail [vrf <WORD>]" '''
+    """Schema for:
+        show ip ospf database opaque-area detail
+        show ip ospf database opaque-area detail vrf <vrf>"""
 
     schema = {
         'vrf': 
@@ -3436,8 +3461,9 @@ class ShowIpOspfDatabaseOpaqueAreaDetailSchema(MetaParser):
 # Parser for 'show ip ospf database opaque-area detail [vrf <WORD>]'
 # ==================================================================
 class ShowIpOspfDatabaseOpaqueAreaDetail(ShowIpOspfDatabaseOpaqueAreaDetailSchema, ShowIpOspfDatabaseDetailParser):
-
-    ''' Parser for "show ip ospf database opaque-area detail [vrf <WORD>]" '''
+    """Parser for:
+        show ip ospf database opaque-area detail
+        show ip ospf database opaque-area detail vrf <vrf>"""
 
     def cli(self, vrf=''):
         # excute command to get output
