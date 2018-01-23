@@ -1697,9 +1697,10 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
                     interface_switchport_dict[interface]['switchport_mode'] = switchport_mode 
                     continue
 
-            #Access Mode VLAN: 1 (default)
+            # Access Mode VLAN: 1 (default)
+            # Access Mode VLAN: 7 (server-vlan7)
             p5 = re.compile(r'^\s*Access *Mode *VLAN: *(?P<access_vlan>[0-9]+)'
-                             '(?: *\((?P<access_vlan_mode>[a-zA-Z0-9\s]+)\))?$')
+                             '(?: *\((?P<access_vlan_mode>[\w\-\s]+)\))?$')
             m = p5.match(line)
             if m:
                 access_vlan = int(m.groupdict()['access_vlan'])
