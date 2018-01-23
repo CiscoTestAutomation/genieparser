@@ -1,11 +1,11 @@
-''' show_prefix_list.py
+"""show_prefix_list.py
 
 NXOS parsers for the following show commands:
 
     * show ip prefix-list
     * show ipv6 prefix-list
 
-'''
+"""
 
 # Python
 import re
@@ -16,13 +16,14 @@ from metaparser.util.schemaengine import Schema, Any, Optional
 
 
 # ==============================================
-# Parser for 'show ip prefix-list'
-# Parser for 'show ipv6 prefix-list'
+# Schema for 'show ip prefix-list'
+# Schema for 'show ipv6 prefix-list'
 # ==============================================
 
 class ShowIpPrefixListSchema(MetaParser):
-    # Schema for 'show ip prefix-list'
-    # Schema for 'show ipv6 prefix-list'
+    """Schema for:
+        show ip prefix-list
+        show ipv6 prefix-list"""
 
     schema = {'prefix_set_name':         
                 {Any(): {
@@ -42,8 +43,7 @@ class ShowIpPrefixListSchema(MetaParser):
             }
 
 class ShowIpPrefixList(ShowIpPrefixListSchema):
-    # Parser for 'show ip prefix-list detail'
-    # Parser for 'show ipv6 prefix-list detail'
+    """Parser for show ip prefix-list detail"""
 
     def cli(self, af='ip'):
 
@@ -145,7 +145,8 @@ class ShowIpPrefixList(ShowIpPrefixListSchema):
 # Parser for 'show ipv6 prefix-list'
 # ===========================================
 class ShowIpv6PrefixList(ShowIpPrefixList):
-    # Parser for 'show ipv6 prefix-list'
+    """Parser for show ipv6 prefix-list detail"""
+
     def cli(self):
         return super().cli(af='ipv6')
 

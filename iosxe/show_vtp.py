@@ -1,8 +1,8 @@
-''' show_vtp.py
+""" show_vtp.py
 
 IOSXE parsers for the following show commands:
     * show vtp status
-'''
+"""
 
 # Python
 import re
@@ -17,8 +17,7 @@ from metaparser.util.schemaengine import Schema, Any, Optional
 # =============================================
 
 class ShowVtpStatusSchema(MetaParser):
-
-    # Schema for 'show vtp status'
+    """Schema for show vtp status"""
 
     schema = {'vtp': {
                 Optional('version_capable'): list,
@@ -43,8 +42,7 @@ class ShowVtpStatusSchema(MetaParser):
         }
 
 class ShowVtpStatus(ShowVtpStatusSchema):
-
-    # Parser for 'show vtp status'
+    """Parser for show vtp status """
 
     def cli(self):
 

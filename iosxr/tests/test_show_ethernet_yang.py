@@ -957,7 +957,7 @@ class test_show_ethernet_tags_yang(unittest.TestCase):
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowEthernetTags(device=self.device)
-        intf_obj.context = Context.yang.value
+        intf_obj.context = Context.yang.value.split()
         parsed_output = intf_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
@@ -1066,7 +1066,7 @@ class test_show_ethernet_tags_yang(unittest.TestCase):
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         intf_obj = ShowEthernetTags(device=self.device1)
-        intf_obj.context = Context.yang.value
+        intf_obj.context = Context.yang.value.split()
         parsed_output = intf_obj.parse()
         self.assertEqual(parsed_output,self.empty_parsed_output)
 

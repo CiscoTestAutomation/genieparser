@@ -1,8 +1,8 @@
-''' show_xconnect.py
+"""show_xconnect.py
 
 show xsconnect parser class
 
-'''
+"""
 
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Any
@@ -20,9 +20,9 @@ from parser.base import *
 
 
 class ShowL2VpnXconnectSummary(MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show l2vpn xconnect summary"""
+    # parser class - implements detail parsing mechanisms for cli output.
+
 
     #*************************
     # schema - class variable
@@ -82,9 +82,9 @@ class ShowL2VpnXconnectSummary(MetaParser):
 
 
 class ShowL2VpnXconnectBrief(MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show l2vpn xconnect brief"""
+    # parser class - implements detail parsing mechanisms for cli output.
+
 
     #*************************
     # schema - class variable
@@ -144,9 +144,8 @@ class ShowL2VpnXconnectBrief(MetaParser):
 
 
 class ShowL2VpnXconnectDetail(MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show l2vpn xconnect detail"""
+    # parser class - implements detail parsing mechanisms for cli output.
 
     #*************************
     # schema - class variable
@@ -206,9 +205,8 @@ class ShowL2VpnXconnectDetail(MetaParser):
 
 
 class ShowL2VpnXconnectMp2mpDetail(MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show l2vpn xconnect mp2mp detail"""
+    # parser class - implements detail parsing mechanisms for cli output.
 
     #*************************
     # schema - class variable

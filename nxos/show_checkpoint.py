@@ -1,8 +1,8 @@
-''' show_checkpoint.py
+""" show_checkpoint.py
 
 NXOS parsers for the following show commands:
     * 'show checkpoint summary'
-'''
+"""
 
 # Python
 import re
@@ -17,7 +17,7 @@ from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
 # Parser for 'show checkpoint summary'
 # =====================================
 class ShowCheckpointSummarySchema(MetaParser):    
-    '''Schema for show checkpoint summary'''
+    """Schema for show checkpoint summary"""
     schema = {'checkpoint':
                 {Any():
                     {'created_by': str,
@@ -28,7 +28,7 @@ class ShowCheckpointSummarySchema(MetaParser):
             }
 
 class ShowCheckpointSummary(ShowCheckpointSummarySchema):
-    '''Parser for show checkpoint summary'''
+    """Parser for show checkpoint summary"""
 
     def cli(self):
         cmd = 'show checkpoint summary'

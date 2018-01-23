@@ -24,9 +24,9 @@ from parser.utils.common import Common
 # =============================================
 
 class ShowIpv6PimInterfaceSchema(MetaParser):
-
-    # Schema for 'show ipv6 pim interface'
-    # Schema for 'show ipv6 pim vrf <WROD> interface'
+    """Schema for
+        show ipv6 pim interface
+        show ipv6 pim vrf <vrf> interface"""
 
     schema = {'vrf': {
                 Any(): {
@@ -46,9 +46,9 @@ class ShowIpv6PimInterfaceSchema(MetaParser):
 
 
 class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
-
-    # Parser for 'show ipv6 pim interface'
-    # Parser for 'show ipv6 pim vrf <WROD> interface'
+    """Parser for:
+        show ipv6 pim interface
+        show ipv6 pim vrf <vrf> interface"""
 
     def cli(self, vrf=''):
 
@@ -125,7 +125,9 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
 #  schema for  'show ipv6 pim vrf <vrf_name> bsr election'
 # ========================================================
 class ShowIpv6PimBsrElectionSchema(MetaParser):
-    # Schema for 'show ipv6 pim bsr election'
+    """Schema for
+        show ipv6 pim bsr election
+        show ipv6 pim vrf <vrf> bsr election"""
     schema = {
         'vrf': {
             Any(): {
@@ -158,11 +160,12 @@ class ShowIpv6PimBsrElectionSchema(MetaParser):
     }
 # ========================================================
 #  parser for  'show ipv6 pim bsr election'
-#  parser for  'show ipv6 pim vrf <vrf_name> bsr election'
+#  parser for  'show ipv6 pim vrf <vrf> bsr election'
 # ========================================================
 class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
-    # Parser for 'show ipv6 pim bsr election'
-    # Parser for 'show ipv6 pim vrf <vrf_name> bsr election'
+    """Parser for:
+        show ipv6 pim bsr election
+        show ipv6 pim vrf <vrf> bsr election"""
 
     def cli(self, vrf=""):
 
@@ -292,8 +295,9 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
 #  Schema for show ipv6 pim vrf <vrf_name> bsr candidate-rp
 # ==============================================
 class ShowIpv6PimBsrCandidateRpSchema(MetaParser):
-    # show ipv6 pim bsr candidate-rp
-    # show ipv6 pim vrf <vrf_name> bsr candidate-rp
+    """schema for:
+        show ipv6 pim bsr candidate-rp
+        show ipv6 pim vrf <vrf> bsr candidate-rp"""
     schema = {
         'vrf': {
             Any(): {
@@ -322,8 +326,9 @@ class ShowIpv6PimBsrCandidateRpSchema(MetaParser):
 #  parser for show ipv6 pim vrf <vrf_name> bsr candidate-rp
 # ==============================================
 class ShowIpv6PimBsrCandidateRp(ShowIpv6PimBsrCandidateRpSchema):
-    # Parser for 'show ipv6 pim bsr candidate-rp'
-    # Parser for 'show ipv6 pim vrf <vrf_name> bsr candidate-rp'
+    """Parser for:
+        show ipv6 pim bsr candidate-rp
+        show ipv6 pim vrf <vrf> bsr candidate-rp"""
 
     def cli(self, vrf=""):
 
@@ -430,8 +435,9 @@ class ShowIpv6PimBsrCandidateRp(ShowIpv6PimBsrCandidateRpSchema):
 #  show ip pim vrf <vrf_name> interface
 # ==============================================
 class ShowIpPimInterfaceSchema(MetaParser):
-
-    # Schema for 'show ip pim Interface'
+    """Schema for:
+        show ip pim interface
+        show ip pim vrf <vrf> interface"""
     schema = {
         'vrf': {
             Any(): {
@@ -460,97 +466,98 @@ class ShowIpPimInterfaceSchema(MetaParser):
 # ==========================================================
 
 class ShowIpPimInterface(ShowIpPimInterfaceSchema):
+    """Parser for:
+            show ip pim interface
+            show ip pim vrf <vrf> interface"""
 
-        # Parser for 'show ip pim Interface'
-        # Parser for 'show ip pim vrf <vrf_name> interface'
+    def cli(self, vrf=""):
 
-        def cli(self, vrf=""):
+        # find cmd
+        if vrf:
+            cmd = 'show ip pim vrf {} interface'.format(vrf)
+        else:
+            cmd = 'show ip pim interface'
+            vrf = 'default'
 
-            # find cmd
-            if vrf:
-                cmd = 'show ip pim vrf {} interface'.format(vrf)
-            else:
-                cmd = 'show ip pim interface'
-                vrf = 'default'
+        af_name = 'ipv4'
 
-            af_name = 'ipv4'
+        # excute command to get output
+        out = self.device.execute(cmd)
 
-            # excute command to get output
-            out = self.device.execute(cmd)
+        # initial variables
+        ret_dict = {}
 
-            # initial variables
-            ret_dict = {}
+        for line in out.splitlines():
+            line = line.strip()
+            # Address          Interface                Ver/   Nbr    Query  DR         DR
+            #                              Mode   Count  Intvl  Prior
+            # 10.1.2.1         GigabitEthernet1         v2/S   1      30     1          10.1.2.2
+            p1 = re.compile(r'^\s*(?P<address>[\w\:\.]+) +(?P<interface>[\w\d\S]+)'
+                            ' +v(?P<version>[\d]+)\/(?P<mode>[\w]+)'
+                            ' +(?P<nbr_count>[\d]+)'
+                            ' +(?P<query_interval>[\d]+)'
+                            ' +(?P<dr_priority>[\d]+)'
+                            ' +(?P<dr_address>[\w\d\.\:]+)$')
+            m = p1.match(line)
+            if m:
+                new_mode = ""
+                address = m.groupdict()['address']
+                intf_name = m.groupdict()['interface']
+                nbr_count = int(m.groupdict()['nbr_count'])
+                version = int(m.groupdict()['version'])
+                mode = m.groupdict()['mode']
+                query_interval = int(m.groupdict()['query_interval'])
+                dr_priority = int(m.groupdict()['dr_priority'])
+                dr_address = m.groupdict()['dr_address']
 
-            for line in out.splitlines():
-                line = line.strip()
-                # Address          Interface                Ver/   Nbr    Query  DR         DR
-                #                              Mode   Count  Intvl  Prior
-                # 10.1.2.1         GigabitEthernet1         v2/S   1      30     1          10.1.2.2
-                p1 = re.compile(r'^\s*(?P<address>[\w\:\.]+) +(?P<interface>[\w\d\S]+)'
-                                ' +v(?P<version>[\d]+)\/(?P<mode>[\w]+)'
-                                ' +(?P<nbr_count>[\d]+)'
-                                ' +(?P<query_interval>[\d]+)'
-                                ' +(?P<dr_priority>[\d]+)'
-                                ' +(?P<dr_address>[\w\d\.\:]+)$')
-                m = p1.match(line)
-                if m:
-                    new_mode = ""
-                    address = m.groupdict()['address']
-                    intf_name = m.groupdict()['interface']
-                    nbr_count = int(m.groupdict()['nbr_count'])
-                    version = int(m.groupdict()['version'])
-                    mode = m.groupdict()['mode']
-                    query_interval = int(m.groupdict()['query_interval'])
-                    dr_priority = int(m.groupdict()['dr_priority'])
-                    dr_address = m.groupdict()['dr_address']
+                if mode == 'S':
+                    new_mode = 'sparse-mode'
+                if mode == 'SD':
+                    new_mode = 'sparse-dense-mode'
+                if mode == 'D':
+                    new_mode = 'dense-mode'
 
-                    if mode == 'S':
-                        new_mode = 'sparse-mode'
-                    if mode == 'SD':
-                        new_mode = 'sparse-dense-mode'
-                    if mode == 'D':
-                        new_mode = 'dense-mode'
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+                if 'interfaces' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['interfaces'] = {}
+                if intf_name not in ret_dict['vrf'][vrf]['interfaces']:
+                    ret_dict['vrf'][vrf]['interfaces'][intf_name] = {}
+                if 'address_family' not in ret_dict['vrf'][vrf]['interfaces'][intf_name]:
+                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] = {}
+                if intf_name not in ret_dict['vrf'][vrf]['interfaces'] \
+                        [intf_name]['address_family']:
+                    ret_dict['vrf'][vrf]['interfaces'][intf_name] \
+                        ['address_family'][af_name] = {}
 
-                    if 'vrf' not in ret_dict:
-                        ret_dict['vrf'] = {}
-                    if vrf not in ret_dict['vrf']:
-                        ret_dict['vrf'][vrf] = {}
-                    if 'interfaces' not in ret_dict['vrf'][vrf]:
-                        ret_dict['vrf'][vrf]['interfaces'] = {}
-                    if intf_name not in ret_dict['vrf'][vrf]['interfaces']:
-                        ret_dict['vrf'][vrf]['interfaces'][intf_name] = {}
-                    if 'address_family' not in ret_dict['vrf'][vrf]['interfaces'][intf_name]:
-                        ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'] = {}
-                    if intf_name not in ret_dict['vrf'][vrf]['interfaces'] \
-                            [intf_name]['address_family']:
-                        ret_dict['vrf'][vrf]['interfaces'][intf_name] \
-                            ['address_family'][af_name] = {}
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name] \
+                    ['address'] = address.split()
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name] \
+                    ['neighbor_count'] = nbr_count
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name] \
+                    ['version'] = version
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name] \
+                    ['mode'] = new_mode
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name] \
+                    ['hello_interval'] = query_interval
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name] \
+                    ['dr_priority'] = dr_priority
+                ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name] \
+                    ['dr_address'] = dr_address
+                continue
 
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name] \
-                        ['address'] = address.split()
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name] \
-                        ['neighbor_count'] = nbr_count
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name] \
-                        ['version'] = version
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name] \
-                        ['mode'] = new_mode
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name] \
-                        ['hello_interval'] = query_interval
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name] \
-                        ['dr_priority'] = dr_priority
-                    ret_dict['vrf'][vrf]['interfaces'][intf_name]['address_family'][af_name] \
-                        ['dr_address'] = dr_address
-                    continue
-
-            return ret_dict
+        return ret_dict
 
 # ============================================
 # schema for parser 'show ip pim bsr-router'
 # schema for parser 'show ip pim vrf xxx bsr-router'
 # ============================================
 class ShowIpPimBsrRouterSchema(MetaParser):
-
-    # Schema for 'show ip pim bsr-router'
+    """Schema for:
+        show ip pim bsr-router
+        show ip pim vrf <vrf> bsr-router"""
     schema = {
         'vrf': {
             Any(): {
@@ -592,8 +599,9 @@ class ShowIpPimBsrRouterSchema(MetaParser):
 # Parser for 'show ip pim vrf xxx bsr-router'
 # ============================================
 class ShowIpPimBsrRouter(ShowIpPimBsrRouterSchema):
-    # Parser for 'show ip pim bsr-router'
-    # Parser for 'show ip pim vrf <vrf_name> bsr-router'
+    '''Parser for:
+        show ip pim bsr-router
+        show ip pim vrf <vrf> bsr-router'''
 
     def cli(self, vrf=""):
 

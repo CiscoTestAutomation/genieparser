@@ -1,10 +1,10 @@
-''' show_pim.py
+"""show_pim.py
 
 IOSXR parsers for the following show commands:
     * 'show pim vrf <WORD> <WORD> mstatic'
     * 'show pim vrf <WORD> <WORD> interface detail'
     * 'show pim vrf <WORD> <WORD> rpf summary'
-'''
+"""
 
 # Python
 import re
@@ -15,12 +15,11 @@ from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
 
 # ===============================================
-# Parser for 'show pim vrf <WORD> <WORD> mstatic'
+# Schema for 'show pim vrf <vrf> <address_family> mstatic'
 # ===============================================
 
 class ShowPimVrfMstaticSchema(MetaParser):
-    
-    '''Schema for show pim vrf <WORD> <WORD> mstatic'''
+    """Schema for show pim vrf <vrf> <address_family> mstatic"""
 
     schema = {
         'vrf':
@@ -45,8 +44,7 @@ class ShowPimVrfMstaticSchema(MetaParser):
         }
 
 class ShowPimVrfMstatic(ShowPimVrfMstaticSchema):
-
-    '''Parser for show pim vrf <WORD> <WORD> mstatic'''
+    """Parser for show pim vrf <vrf> <address_family> mstatic"""
 
     def cli(self, vrf='default', af='ipv4'):
         out = self.device.execute('show pim vrf {vrf} {af} mstatic'.\
@@ -111,12 +109,10 @@ class ShowPimVrfMstatic(ShowPimVrfMstaticSchema):
 
 
 # ========================================================
-# Parser for 'show pim vrf <WORD> <WORD> interface detail'
+# Schema for 'show pim vrf <vrf> <address_family> interface detail'
 # ========================================================
-
 class ShowPimVrfInterfaceDetailSchema(MetaParser):
-
-    '''Schema for show pim vrf <WORD> <WORD> interface detail'''
+    """Schema for show pim vrf <vrf> <address_family> interface detail"""
 
     schema = {
         'vrf':
@@ -152,8 +148,7 @@ class ShowPimVrfInterfaceDetailSchema(MetaParser):
         }
 
 class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
-
-    '''Parser for show pim vrf <WORD> <WORD> interface detail'''
+    """Parser for show pim vrf <vrf> <address_family> interface detail"""
 
     def cli(self, vrf='default', af='ipv4'):
         out = self.device.execute('show pim vrf {vrf} {af} interface detail'.\
@@ -317,12 +312,11 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
 
 
 # ========================================================
-# Parser for 'show pim vrf <WORD> <WORD> rpf summary'
+# Schema for 'show pim vrf <vrf> <address_family> rpf summary'
 # ========================================================
 
 class ShowPimVrfRpfSummarySchema(MetaParser):
-
-    '''Schema for show pim vrf <WORD> <WORD> rpf summary'''
+    """Schema for show pim vrf <vrf> <address_family> rpf summary"""
 
     schema = {
         'vrf':
@@ -351,8 +345,7 @@ class ShowPimVrfRpfSummarySchema(MetaParser):
         }
 
 class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
-
-    '''Parser for show pim vrf <WORD> <WORD> rpf summary'''
+    """Parser for show pim vrf <vrf> <address_family> rpf summary"""
 
     def cli(self, vrf='default', af='ipv4'):
         out = self.device.execute('show pim vrf {vrf} {af} rpf summary'.\

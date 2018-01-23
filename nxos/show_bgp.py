@@ -1,4 +1,4 @@
-''' show_bgp.py
+"""show_bgp.py
 
 NXOS parsers for the following show commands:
     * 'show bgp process vrf all'
@@ -32,7 +32,7 @@ NXOS parsers for the following show commands:
     * 'show bgp <address_family>  policy statistics dampening | xml'
     * 'show bgp <address_family>  policy statistics neighbor <neighbor>'
     * 'show bgp <address_family>  policy statistics neighbor <neighbor> | xml'
-'''
+"""
 
 # Python
 import re
@@ -54,8 +54,7 @@ from parser.utils.common import Common
 # =====================================
 
 class ShowBgpProcessVrfAllSchema(MetaParser):
-    
-    '''Schema for show bgp process vrf all'''
+    """Schema for show bgp process vrf all"""
 
     schema = {
         'bgp_pid': int,
@@ -139,8 +138,10 @@ class ShowBgpProcessVrfAllSchema(MetaParser):
         }
 
 class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
-
-    '''Parser for show bgp process vrf all'''
+    """Parser for:
+        show bgp process vrf all
+        parser class - implements detail parsing mechanisms for cli,xml and yang output.
+    """
 
     def cli(self):
         out = self.device.execute('show bgp process vrf all')
@@ -968,8 +969,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
 # =========================================
 
 class ShowBgpPeerSessionSchema(MetaParser):
-    
-    '''Schema for show bgp peer-session <WORD>'''
+    """Schema for show bgp peer-session <peer_session>"""
 
     schema = {
         'peer_session': 
@@ -995,10 +995,11 @@ class ShowBgpPeerSessionSchema(MetaParser):
 
 class ShowBgpPeerSession(ShowBgpPeerSessionSchema):
 
-    '''Parser for show bgp peer-session <WORD>
-       Executing 'show running-config bgp | inc peer-session' to colllect
-       configured peer-session names.
-    '''
+    """Parser for:
+        show bgp peer-session <peer_session>
+        Executing 'show running-config bgp | inc peer-session' to collect
+        configured peer-session names.
+    """
 
     def cli(self):
         
@@ -1157,8 +1158,7 @@ class ShowBgpPeerSession(ShowBgpPeerSessionSchema):
 # ========================================
 
 class ShowBgpPeerPolicySchema(MetaParser):
-    
-    '''Schema for show bgp peer-policy <WORD>'''
+    """Schema for show bgp peer-policy <peer_policy>"""
 
     schema = {
         'peer_policy': 
@@ -1182,11 +1182,11 @@ class ShowBgpPeerPolicySchema(MetaParser):
         }
 
 class ShowBgpPeerPolicy(ShowBgpPeerPolicySchema):
-
-    '''Parser for show bgp peer-policy <WORD>
-       Executing 'show running-config bgp | inc peer-policy' to colllect
-       configured peer-policy names.
-    '''
+    """Parser for:
+        show bgp peer-policy <peer_policy>
+        Executing 'show running-config bgp | inc peer-policy' to collect
+        configured peer-policy names.
+    """
 
     def cli(self):
         
@@ -1341,12 +1341,11 @@ class ShowBgpPeerPolicy(ShowBgpPeerPolicySchema):
 
 
 # ==========================================
-# Parser for 'show bgp peer-template <WORD>'
+# Parser for 'show bgp peer-template <peer_template>'
 # ==========================================
 
 class ShowBgpPeerTemplateSchema(MetaParser):
-
-    '''Schema for show bgp peer-template <WORD>'''
+    """Schema for show bgp peer-template <peer_template>"""
 
     schema = {
         'peer_template':
@@ -1370,7 +1369,7 @@ class ShowBgpPeerTemplateSchema(MetaParser):
 
 class ShowBgpPeerTemplate(ShowBgpPeerTemplateSchema):
 
-    '''Parser for show bgp peer-template <WORD>
+    '''Parser for show bgp peer-template <peer_template>
        Executing 'show running-config bgp | inc peer' to colllect
        configured peer-template names.
     '''
@@ -1533,8 +1532,7 @@ class ShowBgpPeerTemplate(ShowBgpPeerTemplateSchema):
 # =================================
 
 class ShowBgpVrfAllAllSchema(MetaParser):
-    
-    '''Schema for show bgp vrf all all'''
+    """Schema for show bgp vrf all all"""
 
     schema = {
         'vrf': 
@@ -1575,8 +1573,7 @@ class ShowBgpVrfAllAllSchema(MetaParser):
         }
 
 class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
-    
-    '''Parser for show bgp vrf all all'''
+    """Parser for show bgp vrf all all"""
 
     def cli(self):
         cmd = 'show bgp vrf all all'
@@ -1943,12 +1940,11 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
 
 
 # ==============================================
-# Parser for 'show bgp vrf <WORD> all neighbors'
+# Schema for 'show bgp vrf <vrf> all neighbors'
 # ==============================================
 
 class ShowBgpVrfAllNeighborsSchema(MetaParser):
-    
-    '''Schema for show bgp vrf <WORD> all neighbors'''
+    """Schema for show bgp vrf <vrf> all neighbors"""
 
     schema = {
         'neighbor':
@@ -2092,8 +2088,10 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
         }
 
 class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
-    
-    '''Parser for show bgp vrf <WORD> all neighbors'''
+    """Parser for:
+        show bgp vrf <vrf> all neighbors
+        parser class - implements detail parsing mechanisms for cli and yang output.
+        """
 
     def cli(self, vrf):
         cmd  = 'show bgp vrf {vrf} all neighbors'.format(vrf=vrf)
@@ -2891,12 +2889,11 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
 
 
 # ==================================================
-# Parser for 'show bgp vrf all all nexthop-database'
+# Schema for 'show bgp vrf all all nexthop-database'
 # ==================================================
 
 class ShowBgpVrfAllAllNextHopDatabaseSchema(MetaParser):
-    
-    '''Schema for show bgp vrf all all nexthop-database'''
+    """Schema for show bgp vrf all all nexthop-database"""
 
     schema = {
         'vrf': 
@@ -2937,8 +2934,7 @@ class ShowBgpVrfAllAllNextHopDatabaseSchema(MetaParser):
             }
 
 class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
-    
-    '''Parser for show bgp vrf all all nexthop-database'''
+    """Parser for show bgp vrf all all nexthop-database"""
 
     def cli(self, cmd='show bgp vrf all all nexthop-database'):
         out = self.device.execute(cmd)
@@ -3096,12 +3092,11 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
 
 
 # =========================================
-# Parser for 'show bgp vrf all all summary'
+# Schema for 'show bgp vrf all all summary'
 # =========================================
 
 class ShowBgpVrfAllAllSummarySchema(MetaParser):
-    
-    '''Schema for show bgp vrf all all summary'''
+    """Schema for show bgp vrf all all summary"""
 
     schema = {
         'vrf':
@@ -3148,8 +3143,7 @@ class ShowBgpVrfAllAllSummarySchema(MetaParser):
         }
 
 class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
-    
-    '''Parser for show bgp vrf all all summary'''
+    """Parser for show bgp vrf all all summary"""
 
     def cli(self):
         cmd = 'show bgp vrf all all summary'
@@ -3387,12 +3381,11 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
 
 
 # ==================================================
-# Parser for 'show bgp vrf all dampening parameters'
+# Schema for 'show bgp vrf all dampening parameters'
 # ==================================================
 
 class ShowBgpVrfAllAllDampeningParametersSchema(MetaParser):
-    
-    '''Schema for 'show bgp vrf all dampening parameters'''
+    """Schema for 'show bgp vrf all dampening parameters"""
     
     schema = {
         'vrf':
@@ -3425,8 +3418,7 @@ class ShowBgpVrfAllAllDampeningParametersSchema(MetaParser):
         }
 
 class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSchema):
-    
-    '''Parser for 'show bgp vrf all dampening parameters'''
+    """Parser for 'show bgp vrf all dampening parameters"""
     
     def cli(self):
         cmd = 'show bgp vrf all all dampening parameters'
@@ -3526,12 +3518,11 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
 
 
 # ======================================================================
-# Parser for 'show bgp vrf <WORD> all neighbors <WORD> advertised-routes'
+# Schema for 'show bgp vrf <vrf> all neighbors <neighbor> advertised-routes'
 # ======================================================================
 
 class ShowBgpVrfAllNeighborsAdvertisedRoutesSchema(MetaParser):
-    
-    '''Schema for show bgp vrf <WORD> all neighbors <WORD> advertised-routes'''
+    """Schema for show bgp vrf <vrf> all neighbors <neighbor> advertised-routes"""
 
     schema = {
         'vrf':
@@ -3569,8 +3560,7 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutesSchema(MetaParser):
         }
 
 class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRoutesSchema):
-    
-    '''Parser for show bgp vrf <WORD> all neighbors <WORD> advertised-routes'''
+    """Parser for show bgp vrf <vrf> all neighbors <neighbor> advertised-routes"""
 
     def cli(self, vrf, neighbor):
         cmd  = 'show bgp vrf {vrf} all neighbors {neighbor} advertised-routes'.format(vrf=vrf, neighbor=neighbor)
@@ -3903,12 +3893,11 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
 
 
 # ============================================================
-# Parser for 'show bgp vrf <WORD> all neighbors <WORD> routes'
+# Schema for 'show bgp vrf <vrf> all neighbors <neighbor> routes'
 # ============================================================
 
 class ShowBgpVrfAllNeighborsRoutesSchema(MetaParser):
-    
-    '''Schema for show bgp vrf <WORD> all neighbors <WORD> routes'''
+    """Schema for show bgp vrf <vrf> all neighbors <neighbor> routes"""
 
     schema = {
         'vrf':
@@ -3946,8 +3935,7 @@ class ShowBgpVrfAllNeighborsRoutesSchema(MetaParser):
         }
 
 class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
-    
-    '''Parser for show bgp vrf <WORD> all neighbors <WORD> routes'''
+    """Parser for show bgp vrf <vrf> all neighbors <neighbor> routes"""
 
     def cli(self, vrf, neighbor):
         cmd  = 'show bgp vrf {vrf} all neighbors {neighbor} routes'.format(vrf=vrf, neighbor=neighbor)
@@ -4284,8 +4272,7 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
 # =====================================================================
 
 class ShowBgpVrfAllNeighborsReceivedRoutesSchema(MetaParser):
-    
-    '''Schema for show bgp vrf <WORD> all neighbors <WORD> routes'''
+    """Schema for show bgp vrf <vrf> all neighbors <neighbor> received-routes"""
 
     schema = {
         'vrf':
@@ -4323,8 +4310,7 @@ class ShowBgpVrfAllNeighborsReceivedRoutesSchema(MetaParser):
         }
 
 class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesSchema):
-    
-    '''Parser for show bgp vrf <WORD> all neighbors <WORD> received-routes'''
+    """Parser for show bgp vrf <vrf> all neighbors <neighbor> received-routes"""
 
     def cli(self, vrf, neighbor):
         cmd  = 'show bgp vrf {vrf} all neighbors {neighbor} received-routes'.format(vrf=vrf, neighbor=neighbor)
@@ -4657,12 +4643,11 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
 
 
 # ====================================
-# Parser for 'show running-config bgp'
+# Schema for 'show running-config bgp'
 # ====================================
 
 class ShowRunningConfigBgpSchema(MetaParser):
-
-    '''Schema for show running-config bgp'''
+    """Schema for show running-config bgp"""
 
     schema = {'bgp':
                 {'instance':
@@ -4836,8 +4821,7 @@ class ShowRunningConfigBgpSchema(MetaParser):
 
 
 class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
-
-    '''Parser for show running-config bgp'''
+    """Parser for show running-config bgp"""
 
     def cli(self):
         cmd  = 'show running-config bgp'
@@ -5974,12 +5958,11 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
 
 
 # ===================================================
-# Parser for 'show bgp all dampening flap-statistics'
+# Schema for 'show bgp all dampening flap-statistics'
 # ===================================================
 
 class ShowBgpAllDampeningFlapStatisticsSchema(MetaParser):
-    
-    '''Schema for show bgp all dampening flap-statistics'''
+    """Schema for show bgp all dampening flap-statistics"""
 
     schema = {
         'vrf': {
@@ -6032,8 +6015,9 @@ class ShowBgpAllDampeningFlapStatisticsSchema(MetaParser):
 
 
 class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema):
-    
-    '''Parser for show bgp all dampening flap-statistics'''
+    """Parser for:
+        show bgp all dampening flap-statistics
+        parser class implements detail parsing mechanisms for cli,xml output."""
 
     def cli(self):
         cmd = 'show bgp all dampening flap-statistics'
@@ -6379,8 +6363,9 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
 # Parser for 'show bgp all nexthop-database'
 # ===================================================
 class ShowBgpAllNexthopDatabase(ShowBgpVrfAllAllNextHopDatabase):
-    
-    '''Parser for show bgp all nexthop-database'''
+    """Parser for:
+        show bgp all nexthop-database
+        parser class implements detail parsing mechanisms for cli,xml output."""
 
     def cli(self):
         cmd = 'show bgp all nexthop-database'
@@ -6609,8 +6594,7 @@ class ShowBgpAllNexthopDatabase(ShowBgpVrfAllAllNextHopDatabase):
 # Parser for 'show bgp peer-template'
 # ===================================================
 class ShowBgpPeerTemplateCmdSchema(MetaParser):
-    
-    '''Schema for show bgp peer-template'''
+    """Schema for show bgp peer-template"""
 
     schema = {
         'template': {
@@ -6669,8 +6653,9 @@ class ShowBgpPeerTemplateCmdSchema(MetaParser):
         }
     }
 class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
-    
-    '''Parser for show bgp peer-template'''
+    """Parser for:
+        show bgp peer-template
+    parser class implements detail parsing mechanisms for cli,xml output."""
 
     def cli(self):
         cmd = 'show bgp peer-template'
@@ -7297,12 +7282,11 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
 #   'show bgp vrf <vrf> <address_family>  policy statistics neighbor <neighbor>'
 # ================================================================================
 class ShowBgpPolicyStatisticsSchema(MetaParser):
-    
-    '''Schema for
+    """Schema for:
        show bgp [vrf <vrf>] <address_family>  policy statistics redistribute
        show bgp [vrf <vrf>] <address_family>  policy statistics dampening
        show bgp [vrf <vrf>] <address_family>  policy statistics neighbor <neighbor>
-    '''
+    """
 
     schema = {
         'vrf': {
@@ -7327,6 +7311,11 @@ class ShowBgpPolicyStatisticsSchema(MetaParser):
         }
     }
 class ShowBgpPolicyStatistics(ShowBgpPolicyStatisticsSchema):
+    """Parser for:
+        show bgp [vrf <vrf>] <address_family>  policy statistics redistribute
+        show bgp [vrf <vrf>] <address_family>  policy statistics dampening
+        show bgp [vrf <vrf>] <address_family>  policy statistics neighbor <neighbor>
+        parser class implements detail parsing mechanisms for cli,xml output"""
     
     def cli(self, cmd):
 
@@ -7626,7 +7615,10 @@ class ShowBgpPolicyStatistics(ShowBgpPolicyStatisticsSchema):
 # 'show bgp <address_family> policy statistics redistribute'
 # ================================================================================
 class ShowBgpPolicyStatisticsRedistribute(ShowBgpPolicyStatistics):
-    
+    """Parser for:
+        show bgp [vrf <vrf>] <address_family> policy statistics redistribute
+        parser class implements detail parsing mechanisms for cli,xml output"""
+
     def cli(self, address_family, vrf=''):
         if vrf:
             cmd = 'show bgp vrf {vrf} {af} policy statistics redistribute'\
@@ -7651,6 +7643,9 @@ class ShowBgpPolicyStatisticsRedistribute(ShowBgpPolicyStatistics):
 # 'show bgp <address_family> policy statistics neighbor <xxx>'
 # ================================================================================
 class ShowBgpPolicyStatisticsNeighbor(ShowBgpPolicyStatistics):
+    """Parser for:
+        show bgp [vrf <vrf>] <address_family> policy statistics neighbor <neighbor>
+        parser class implements detail parsing mechanisms for cli,xml output"""
     
     def cli(self, address_family, neighbor, vrf=''):
         if vrf:
@@ -7676,6 +7671,9 @@ class ShowBgpPolicyStatisticsNeighbor(ShowBgpPolicyStatistics):
 # 'show bgp <address_family> policy statistics dampening'
 # ================================================================================
 class ShowBgpPolicyStatisticsDampening(ShowBgpPolicyStatistics):
+    """Parser for:
+        show bgp [vrf <vrf>] <address_family> policy statistics dampening
+        parser class implements detail parsing mechanisms for cli,xml output"""
     
     def cli(self, address_family, vrf=''):
         if vrf:

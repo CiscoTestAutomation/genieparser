@@ -1,4 +1,4 @@
-''' show_mld.py
+"""show_mld.py
 
 IOSXE parsers for the following show commands:
 
@@ -8,8 +8,7 @@ IOSXE parsers for the following show commands:
     * show ipv6 mld vrf <WORD> groups detail
     * show ipv6 mld ssm-map <WORD>
     * show ipv6 mld vrf <WORD> ssm-map <WORD>
-
-'''
+"""
 
 # Python
 import re
@@ -25,9 +24,9 @@ from metaparser.util.schemaengine import Schema, Any, Optional
 # ==============================================
 
 class ShowIpv6MldInterfaceSchema(MetaParser):
-    # Schema for 'show ipv6 mld interface'
-    # Schema for 'show ipv6 mld vrf <WORD> interface'
-
+    """Schema for:
+        show ipv6 mld interface
+        show ipv6 mld vrf <vrf> interface"""
     schema = {'vrf':
                 {Any(): {
                     Optional('max_groups'): int,
@@ -59,8 +58,9 @@ class ShowIpv6MldInterfaceSchema(MetaParser):
         }
 
 class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
-    # Parser for 'show ipv6 mld interface'
-    # Parser for 'show ipv6 mld vrf <WORD> interface'
+    """Parser for:
+        show ipv6 mld interface
+        show ipv6 mld vrf <vrf> interface"""
 
     def cli(self, vrf=''):
 
@@ -224,8 +224,9 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
 # ==================================================
 
 class ShowIpv6MldGroupsDetailSchema(MetaParser):
-    # Schema for 'show ipv6 mld groups detail'
-    # Schema for 'show ipv6 mld vrf <WORD> groups detail'
+    """Schema for:
+        show ipv6 mld groups detail
+        show ipv6 mld vrf <vrf> groups detail"""
 
     schema = {'vrf':
                 {Any(): {
@@ -267,8 +268,9 @@ class ShowIpv6MldGroupsDetailSchema(MetaParser):
         }
 
 class ShowIpv6MldGroupsDetail(ShowIpv6MldGroupsDetailSchema):
-    # Parser for 'show ipv6 mld groups detail'
-    # Parser for 'show ipv6 mld vrf <WORD> groups detail'
+    """Parser for:
+        show ipv6 mld groups detail
+        show ipv6 mld vrf <vrf> groups detail"""
 
     def cli(self, vrf=''):
 
@@ -422,8 +424,9 @@ class ShowIpv6MldGroupsDetail(ShowIpv6MldGroupsDetailSchema):
 # ========================================================
 
 class ShowIpv6MldSsmMapSchema(MetaParser):
-    # Schema for 'show ipv6 mld ssm-map <WROD>'
-    # Schema for 'show ipv6 mld vrf <WORD> ssm-map <WORD>'
+    """Schema for:
+        show ipv6 mld ssm-map <group_address>
+        show ipv6 mld vrf <vrf> ssm-map <group_address>"""
 
     schema = {'vrf':
                 {Any(): {
@@ -440,8 +443,9 @@ class ShowIpv6MldSsmMapSchema(MetaParser):
         }
 
 class ShowIpv6MldSsmMap(ShowIpv6MldSsmMapSchema):
-    # Schema for 'show ipv6 mld ssm-map <WROD>'
-    # Schema for 'show ipv6 mld vrf <WORD> ssm-map <WORD>'
+    """Parser for:
+        show ipv6 mld ssm-map <group_address>
+        show ipv6 mld vrf <vrf> ssm-map <group_address>"""
 
     def cli(self, group, vrf=''):
 

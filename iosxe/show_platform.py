@@ -1,8 +1,6 @@
-''' show_platform.py
+"""show_platform.py
 
-Example parser class
-
-'''
+"""
 import re
 import logging
 
@@ -23,6 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 class ShowVersionSchema(MetaParser):
+    """Schema for show version"""
     schema = {
                 'version': {
                     'version_short': str,
@@ -83,8 +82,8 @@ class ShowVersionSchema(MetaParser):
 
 
 class ShowVersion(ShowVersionSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
+    """Parser for show version
+    parser class - implements detail parsing mechanisms for cli output.
     """
     # *************************
     # schema - class variable
@@ -94,12 +93,12 @@ class ShowVersion(ShowVersionSchema):
     # parsing mechanisms (cli(), yang(), xml()).
 
     def cli(self):
-        ''' parsing mechanism: cli
+        """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
-        '''
+        """
         cmd = 'show version'.format()
         out = self.device.execute(cmd)
         version_dict = {}
@@ -495,6 +494,7 @@ class ShowVersion(ShowVersionSchema):
 
 
 class DirSchema(MetaParser):
+    """Schema for dir"""
     schema = {
                 'dir': {
                     'dir': str,
@@ -515,8 +515,8 @@ class DirSchema(MetaParser):
 
 
 class Dir(DirSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
+    """Parser for dir
+    parser class - implements detail parsing mechanisms for cli output.
     """
     # *************************
     # schema - class variable
@@ -526,12 +526,12 @@ class Dir(DirSchema):
     # parsing mechanisms (cli(), yang(), xml()).
 
     def cli(self):
-        ''' parsing mechanism: cli
+        """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
-        '''
+        """
         cmd = 'dir'.format()
         out = self.device.execute(cmd)
         dir_dict = {}
@@ -580,6 +580,7 @@ class Dir(DirSchema):
 
 
 class ShowRedundancySchema(MetaParser):
+    """Schema for show redundancy """
     schema = {
                 'red_sys_info': {
                     'available_system_uptime': str,
@@ -608,8 +609,8 @@ class ShowRedundancySchema(MetaParser):
 
 
 class ShowRedundancy(ShowRedundancySchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
+    """Parser for show redundancy
+    parser class - implements detail parsing mechanisms for cli output.
     """
     # *************************
     # schema - class variable
@@ -619,12 +620,12 @@ class ShowRedundancy(ShowRedundancySchema):
     # parsing mechanisms (cli(), yang(), xml()).
 
     def cli(self):
-        ''' parsing mechanism: cli
+        """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
-        '''
+        """
         cmd = 'show redundancy'.format()
         out = self.device.execute(cmd)
         redundancy_dict = {}
@@ -800,6 +801,7 @@ class ShowRedundancy(ShowRedundancySchema):
 
 
 class ShowInventorySchema(MetaParser):
+    """Schema for show inventory"""
     schema = {
                 Optional('main'): {
                     Optional('swstack'): bool,
@@ -872,8 +874,8 @@ class ShowInventorySchema(MetaParser):
 
 
 class ShowInventory(ShowInventorySchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
+    """Parser for show Inventory
+    parser class - implements detail parsing mechanisms for cli output.
     """
     # *************************
     # schema - class variable
@@ -883,12 +885,12 @@ class ShowInventory(ShowInventorySchema):
     # parsing mechanisms (cli(), yang(), xml()).
 
     def cli(self):
-        ''' parsing mechanism: cli
+        """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
-        '''
+        """
         cmd = 'show inventory'.format()
         out = self.device.execute(cmd)
         name = descr = slot = subslot = pid = ''
@@ -1029,6 +1031,7 @@ class ShowInventory(ShowInventorySchema):
 
 
 class ShowPlatformSchema(MetaParser):
+    """Schema for show platform"""
     schema = {
                 Optional('main'): {
                     Optional('switch_mac_address'): str,
@@ -1093,8 +1096,8 @@ class ShowPlatformSchema(MetaParser):
 
 
 class ShowPlatform(ShowPlatformSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
+    """Parser for show platform
+    parser class - implements detail parsing mechanisms for cli output.
     """
     # *************************
     # schema - class variable
@@ -1104,12 +1107,12 @@ class ShowPlatform(ShowPlatformSchema):
     # parsing mechanisms (cli(), yang(), xml()).
 
     def cli(self):
-        ''' parsing mechanism: cli
+        """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
-        '''
+        """
 
         cmd = 'show platform'.format()
         out = self.device.execute(cmd)
@@ -1313,7 +1316,7 @@ class ShowPlatform(ShowPlatformSchema):
 
 
 class ShowBootSchema(MetaParser):
-    '''Schema for command 'show boot' '''
+    """Schema for show boot"""
 
     schema = {Optional('current_boot_variable'): str,
               Optional('next_reload_boot_variable'): str,
@@ -1332,7 +1335,7 @@ class ShowBootSchema(MetaParser):
     }
 
 class ShowBoot(ShowBootSchema):
-    '''parser for command 'show boot' '''
+    """Parser for show boot"""
 
     def cli(self):
         cmd = 'show boot'.format()

@@ -1,8 +1,6 @@
-''' show_vlan.py
+"""show_vlan.py
 
-Example parser class
-
-'''
+"""
 import xmltodict
 import re
 import logging
@@ -33,6 +31,7 @@ def regexp(expression):
 #  schema for show vlan
 # ====================================================
 class ShowVlanSchema(MetaParser):
+    """Schema for show vlan"""
     schema = {
         'vlans':{
             Any():{
@@ -67,9 +66,7 @@ class ShowVlanSchema(MetaParser):
 #  parser for show vlan
 # ====================================================
 class ShowVlan(ShowVlanSchema):
-    '''
-       show vlan
-    '''
+    """Parser for show vlan"""
     def cli(self):
         cmd = 'show vlan'
         out = self.device.execute(cmd)
@@ -258,6 +255,7 @@ class ShowVlan(ShowVlanSchema):
 #=================================================================
 
 class ShowVlanMtuSchema(MetaParser):
+    """Schema for show vlan mtu"""
     schema = {'vlan_id':
                 {Any():
                      {'vlan_mtu': str,
@@ -269,9 +267,8 @@ class ShowVlanMtuSchema(MetaParser):
 
 
 class ShowVlanMtu(ShowVlanMtuSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show vlan mtu"""
+
     #*************************
     # schema - class variable
     #
@@ -319,6 +316,7 @@ class ShowVlanMtu(ShowVlanMtuSchema):
 
 
 class ShowVlanAccessMapSchema(MetaParser):
+    """Schema for show vlan access map"""
     schema = {'access_map_id':
                 {Any():
                     {'access_map_sequence':
@@ -332,9 +330,8 @@ class ShowVlanAccessMapSchema(MetaParser):
             }
 
 class ShowVlanAccessMap(ShowVlanAccessMapSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show vlan access-map"""
+
     #*************************
     # schema - class variable
     #
@@ -393,6 +390,7 @@ class ShowVlanAccessMap(ShowVlanAccessMapSchema):
 
 
 class ShowVlanRemoteSpanSchema(MetaParser):
+    """Schema for show vlan remote-span"""
     schema = {'vlan_id':
                 {Any():
                     {'vlan_is_remote_span':bool}
@@ -400,9 +398,7 @@ class ShowVlanRemoteSpanSchema(MetaParser):
             }
 
 class ShowVlanRemoteSpan(ShowVlanRemoteSpanSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show vlan remote-span"""
     #*************************
     # schema - class variable
     #
@@ -411,12 +407,12 @@ class ShowVlanRemoteSpan(ShowVlanRemoteSpanSchema):
     # parsing mechanisms (cli(), yang(), xml()).
 
     def cli(self):
-        ''' parsing mechanism: cli
+        """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
-        '''
+        """
         cmd = 'show vlan remote-span'.format()
         out = self.device.execute(cmd)
         remote_span_vlan_dict = {}
@@ -443,6 +439,7 @@ class ShowVlanRemoteSpan(ShowVlanRemoteSpanSchema):
 
 
 class ShowVlanFilterSchema(MetaParser):
+    """Schema for show vlan filter"""
     schema = {'vlan_id':
                 {Any():
                     {'access_map_tag':str}
@@ -450,9 +447,8 @@ class ShowVlanFilterSchema(MetaParser):
             }
 
 class ShowVlanFilter(ShowVlanFilterSchema):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
-    """
+    """Parser for show vlan filter"""
+
     #*************************
     # schema - class variable
     #
@@ -461,12 +457,12 @@ class ShowVlanFilter(ShowVlanFilterSchema):
     # parsing mechanisms (cli(), yang(), xml()).
 
     def cli(self):
-        ''' parsing mechanism: cli
+        """parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
-        '''
+        """
 
         cmd = 'show vlan filter'.format()
         out = self.device.execute(cmd)

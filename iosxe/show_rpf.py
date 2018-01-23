@@ -1,4 +1,4 @@
-''' show_mcast.py
+"""show_mcast.py
 
 IOSXE parsers for the following show commands:
 
@@ -6,9 +6,7 @@ IOSXE parsers for the following show commands:
     * show ip rpf vrf <WORD> <mroute address>
     * show ipv6 rpf <mroute address>
     * show ipv6 rpf vrf <WORD> <mroute address>
-
-'''
-
+"""
 # Python
 import re
 
@@ -23,10 +21,11 @@ from metaparser.util.schemaengine import Schema, Any, Optional
 # ==============================================
 
 class ShowIpRpfSchema(MetaParser):
-    # Schema for 'show ip rpf <mroute address>'
-    # Schema for 'show ip rpf vrf <WORD> <mroute address>'
-    # Schema for 'show ipv6 rpf <mroute address>'
-    # Schema for 'show ipv6 rpf vrf <WORD> <mroute address>'
+    """Schema for:
+        show ip rpf <mroute address>
+        show ip rpf vrf <vrf> <mroute address>
+        show ipv6 rpf <mroute address>
+        show ipv6 rpf vrf <vrf> <mroute address>"""
 
     schema = {'vrf':         
                 {Any(): {
@@ -55,6 +54,9 @@ class ShowIpRpfSchema(MetaParser):
             }
 
 class ShowIpRpf(ShowIpRpfSchema):
+    """Parser for:
+        show ip rpf <mroute address>
+        show ip rpf vrf <vrf> <mroute address>"""
 
     def cli(self, mroute, af='ip', vrf=''):
 
@@ -263,9 +265,13 @@ class ShowIpRpf(ShowIpRpfSchema):
 
 # ===========================================
 # Parser for 'show ipv6 rpf <mroute address>'
-# Parser for 'show ipv6 rpf vrf <WORD> <mroute address>'
+# Parser for 'show ipv6 rpf vrf <vrf> <mroute address>'
 # ===========================================
 class ShowIpv6Rpf(ShowIpRpf):
+    """Parser for:
+        show ipv6 rpf <mroute address>
+        show ipv6 rpf vrf <vrf> <mroute address>"""
+
     def cli(self, mroute, vrf=''):
         return super().cli(mroute=mroute, af='ipv6', vrf=vrf)
 

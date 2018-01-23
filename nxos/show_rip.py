@@ -1,8 +1,8 @@
-''' showversion.py
+"""show_rip.py
 
-Example parser class
-
-'''
+NXOS parser class for below command(s):
+    show ip rip vrf all
+"""
 import xmltodict
 import re
 
@@ -24,7 +24,7 @@ def regexp(expression):
     return match
 
 class ShowIpRipSchema(MetaParser):
-
+    """Schema for show ip rip vrf all"""
     schema = {'process':
                 {regexp('rip-(.*)'):
                     {'vrf':
@@ -46,8 +46,9 @@ class ShowIpRipSchema(MetaParser):
             }
 
 class ShowIpRipVrfAll(ShowIpRipSchema, MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
+    """Parser for:
+        show ip rip vrf all
+        parser class implements detail parsing mechanisms for cli and xml output.
     """
     #*************************
     # schema - class variable
@@ -84,8 +85,9 @@ class ShowIpRipVrfAll(ShowIpRipSchema, MetaParser):
         return result
 
 class ShowIpv6RipVrfAll(MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
+    """Parser for:
+        show ipv6 rip vrf all
+        parser class implements detail parsing mechanisms for cli and xml output.
     """
     #*************************
     # schema - class variable
@@ -122,8 +124,9 @@ class ShowIpv6RipVrfAll(MetaParser):
         return result
 
 class ShowRunRip(MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
+    """Parser for:
+        show running-config rip
+        parser class implements detail parsing mechanisms for cli and xml output.
     """
     #*************************
     # schema - class variable
@@ -160,6 +163,7 @@ class ShowRunRip(MetaParser):
         return result
 
 class ShowIpRipNeighborSchema(MetaParser):
+    """Schema for show ip rip neighbor vrf all"""
     schema = {'interfaces': str,
               'process_id':
                   {regexp('rip-(.*)'):
@@ -184,8 +188,9 @@ class ShowIpRipNeighborSchema(MetaParser):
              }
 
 class ShowIpRipNeighborVrfAll(ShowIpRipNeighborSchema, MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
+    """Parser for:
+        show ip rip neighbor vrf all
+        parser class implements detail parsing mechanisms for cli and xml output.
     """
     #*************************
     # schema - class variable
@@ -222,8 +227,9 @@ class ShowIpRipNeighborVrfAll(ShowIpRipNeighborSchema, MetaParser):
         return result
 
 class ShowIpv6RipNeighborVrfAll(ShowIpRipNeighborSchema, MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
+    """Parser for:
+        show ipv6 rip neighbor vrf all
+        parser class implements detail parsing mechanisms for cli and xml output.
     """
     #*************************
     # schema - class variable
@@ -260,6 +266,7 @@ class ShowIpv6RipNeighborVrfAll(ShowIpRipNeighborSchema, MetaParser):
         return result
 
 class ShowIpRipInterfaceSchema(MetaParser):
+    """Schema for show ip rip interface vrf all"""
     schema = {regexp('rip-(.*)'):
                 {Any():
                      {Any():
@@ -277,8 +284,9 @@ class ShowIpRipInterfaceSchema(MetaParser):
 
 
 class ShowIpRipInterfaceVrfAll(ShowIpRipInterfaceSchema,MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
+    """Parser for:
+        show ip rip interface vrf all
+        parser class implements detail parsing mechanisms for cli and xml output.
     """
     #*************************
     # schema - class variable
@@ -315,8 +323,9 @@ class ShowIpRipInterfaceVrfAll(ShowIpRipInterfaceSchema,MetaParser):
         return result
 
 class ShowIpv6RipInterfaceVrfAll(ShowIpRipInterfaceSchema,MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
+    """Parser for:
+        show ipv6 rip interface vrf all
+        parser class implements detail parsing mechanisms for cli and xml output.
     """
     #*************************
     # schema - class variable
@@ -353,7 +362,7 @@ class ShowIpv6RipInterfaceVrfAll(ShowIpRipInterfaceSchema,MetaParser):
         return result
 
 class ShowIpRipStatisticsSchema(MetaParser):
-
+    """Schema for show ip rip statistics"""
     schema = {'process':
                   {regexp('rip-(.*)'):
                        {'multicast_update_periodic': str,
@@ -372,8 +381,9 @@ class ShowIpRipStatisticsSchema(MetaParser):
 
 
 class ShowIpRipStatistics(ShowIpRipStatisticsSchema, MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
+    """Parser for:
+        show ip rip statistics
+        parser class implements detail parsing mechanisms for cli and xml output.
     """
     #*************************
     # schema - class variable
@@ -410,9 +420,11 @@ class ShowIpRipStatistics(ShowIpRipStatisticsSchema, MetaParser):
         return result
 
 class ShowIpv6RipStatistics(ShowIpRipStatisticsSchema, MetaParser):
-    """ parser class - implements detail parsing mechanisms for cli, xml, and
-    yang output.
+    """Parser for:
+           show ipv6 rip statistics
+           parser class implements detail parsing mechanisms for cli and xml output.
     """
+
     #*************************
     # schema - class variable
     #

@@ -1,11 +1,10 @@
-''' show_hsrp.py
+"""show_hsrp.py
 
 NXOS parsers for show commands:
     * 'show hsrp summary'
     * 'show hsrp all'
     * 'show hsrp delay'
-
-'''
+"""
 
 # Python
 import re
@@ -27,11 +26,11 @@ def regexp(expression):
 
 
 # ======================================
-#   Parser for 'show hsrp summary'
+#   Schema for 'show hsrp summary'
 # ======================================
 
 class ShowHsrpSummarySchema(MetaParser):
-
+    """Schema for show hsrp summary"""
     schema = {
                 'nsf': str,
                  Optional('nsf_time'): int,
@@ -59,7 +58,7 @@ class ShowHsrpSummarySchema(MetaParser):
              }
 
 class ShowHsrpSummary(ShowHsrpSummarySchema):
-
+    """Parser for show hsrp summary"""
     def cli(self):
         cmd = 'show hsrp summary'
         out = self.device.execute(cmd)
@@ -186,11 +185,11 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
         return hsrp_summary
 
 # ======================================
-#   Parser for 'show hsrp all'       
+#   Schema for 'show hsrp all'
 # ======================================
 
 class ShowHsrpAllSchema(MetaParser):
-    
+    """Schema for show hsrp all"""
     schema = {
         Any(): {
             'address_family': {
@@ -350,7 +349,7 @@ class ShowHsrpAllSchema(MetaParser):
     }
 
 class ShowHsrpAll(ShowHsrpAllSchema):
-
+    """Parser for show hsrp all"""
     def cli(self):
         cmd = 'show hsrp all'
         out = self.device.execute(cmd)
@@ -785,11 +784,11 @@ class ShowHsrpAll(ShowHsrpAllSchema):
         return hsrp_all_dict
 
 # ======================================
-#   Parser for 'show hsrp delay'
+#   Schema for 'show hsrp delay'
 # ======================================
 
 class ShowHsrpDelaySchema(MetaParser):
-
+    """Schema for show hsrp delay"""
     schema = {
                 Any(): {
                     'delay': {
@@ -800,7 +799,7 @@ class ShowHsrpDelaySchema(MetaParser):
              }
 
 class ShowHsrpDelay(ShowHsrpDelaySchema):
-
+    """Parser for show hsrp delay"""
     def cli(self):
         cmd = 'show hsrp delay'
         out = self.device.execute(cmd)

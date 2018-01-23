@@ -17,8 +17,10 @@ from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
 # Parser for 'show feature'
 # =====================================
 class ShowFeatureSchema(MetaParser):    
-    '''Schema for show feature'''    
-    '''Schema for show feature-set'''
+    """Schema for:
+        show feature
+        show feature-set"""
+
     schema = {'feature':
                 {Any():
                     {'instance':
@@ -31,7 +33,7 @@ class ShowFeatureSchema(MetaParser):
             }
 
 class ShowFeature(ShowFeatureSchema):
-    '''Parser for show feature'''
+    """Parser for show feature"""
 
     def cli(self, cmd='show feature'):
         out = self.device.execute(cmd)
@@ -69,7 +71,7 @@ class ShowFeature(ShowFeatureSchema):
 
 
 class ShowFeatureSet(ShowFeature):
-    '''Parser for show feature-set'''
+    """Parser for show feature-set"""
     pass
 
     def cli(self):

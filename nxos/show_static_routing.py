@@ -1,7 +1,6 @@
-'''
-show_static_route.py
+"""show_static_route.py
 
-'''
+"""
 import re
 from metaparser import MetaParser
 from metaparser.util.schemaengine import Schema, \
@@ -12,6 +11,7 @@ from metaparser.util.schemaengine import Schema, \
 #  schema for show ip static-route
 # ====================================================
 class ShowIpStaticRouteSchema(MetaParser):
+    """Schema for show ip static-route"""
     schema = {
         'vrf': {
             Any(): {
@@ -50,11 +50,11 @@ class ShowIpStaticRouteSchema(MetaParser):
 #  parser for show ip static-route
 # ====================================================
 class ShowIpStaticRoute(ShowIpStaticRouteSchema):
-    '''
+    """Parser for:
        show ip static-route
        show ip static-route vrf <vrf>
        show ip static-route vrf all
-    '''
+    """
     def cli(self, vrf=""):
         if vrf:
             cmd = 'show ip static-route vrf {}'.format(vrf)
@@ -205,6 +205,7 @@ class ShowIpStaticRoute(ShowIpStaticRouteSchema):
 #  schema for show ipv6 static-static
 # ====================================================
 class ShowIpv6StaticRouteSchema(MetaParser):
+    """chema for show ipv6 static-static"""
     schema = {
         'vrf': {
             Any(): {
@@ -249,11 +250,11 @@ class ShowIpv6StaticRouteSchema(MetaParser):
 #  parser for show ipv6 static-route
 # ====================================================
 class ShowIpv6StaticRoute(ShowIpv6StaticRouteSchema):
-    '''
-       show ipv6 static-route
-       show ipv6 static-route vrf <vrf>
-       show ipv6 static-route vrf all
-    '''
+    """Parser for:
+        show ipv6 static-route
+        show ipv6 static-route vrf <vrf>
+        show ipv6 static-route vrf all"""
+
     def cli(self, vrf=""):
         if vrf:
             cmd = 'show ipv6 static-route vrf {}'.format(vrf)

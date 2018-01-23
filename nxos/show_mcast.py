@@ -1,4 +1,4 @@
-''' show_mcast.py
+"""show_mcast.py
 
 NXOS parsers for the following show commands:
 
@@ -7,7 +7,7 @@ NXOS parsers for the following show commands:
     * Show ip static-route multicast
     * Show ipv6 static-route multicast
 
-'''
+"""
 
 # Python
 import re
@@ -22,7 +22,7 @@ from metaparser.util.schemaengine import Schema, Any, Optional
 # ===================================
 
 class ShowIpMrouteVrfAllSchema(MetaParser):
-    # schema for show ip mroute vrf all 
+    """Schema for show ip mroute vrf all"""
 
     schema = {'vrf':         
                 {Any():
@@ -58,9 +58,9 @@ class ShowIpMrouteVrfAllSchema(MetaParser):
             }
 
 class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
+    """Parser for show ip mroute vrf all"""
 
     def cli(self):
-        # Parser for show ip mroute vrf all
         out = self.device.execute('show ip mroute vrf all')
         mroute_dict = {}
 
@@ -189,11 +189,11 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
 
 
 # =====================================
-# Parser for 'show ipv6 mroute vrf all'
+# Schema for 'show ipv6 mroute vrf all'
 # =====================================
 
 class ShowIpv6MrouteVrfAllSchema(MetaParser):
- 
+    """Schema for show ipv6 mroute vrf all"""
     schema = {'vrf': 
                 {Any():
                     {'address_family':
@@ -229,7 +229,8 @@ class ShowIpv6MrouteVrfAllSchema(MetaParser):
             }
 
 class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
-    
+    """Parser for show ipv6 mroute vrf all"""
+
     def cli(self):
         # Parser for show ipv6 mroute vrf all
 
@@ -391,11 +392,10 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
 
 
 # ===========================================
-# Parser for 'show ip static route multicast'
+# Schema for 'show ip static route multicast'
 # ===========================================
-
 class ShowIpStaticRouteMulticastSchema(MetaParser):
-    # schema for show ip static-route multicast 
+    """Schema for show ip static-route multicast vrf all"""
 
     schema = {'vrf': 
                 {Any():
@@ -420,8 +420,7 @@ class ShowIpStaticRouteMulticastSchema(MetaParser):
             }
 
 class ShowIpStaticRouteMulticast(ShowIpStaticRouteMulticastSchema):
-
-    # Parser for show ip static-route multicast
+    """Parser for show ip static-route multicast vrf all"""
 
     def cli(self):
         # cli implemetation of parsers
@@ -551,8 +550,7 @@ class ShowIpStaticRouteMulticast(ShowIpStaticRouteMulticastSchema):
 # =============================================
 
 class ShowIpv6StaticRouteMulticastSchema(MetaParser):
-
-    # schema for show ipv6 static-route multicast 
+    """Schema for show ipv6 static-route multicast vrf all"""
 
     schema = {'vrf':
                 {Any():
@@ -582,8 +580,7 @@ class ShowIpv6StaticRouteMulticastSchema(MetaParser):
             }
 
 class ShowIpv6StaticRouteMulticast(ShowIpv6StaticRouteMulticastSchema):
-
-    # Parser for show ipv6 static-route multicast
+    """Parser for show ipv6 static-route multicast vrf all"""
 
     def cli(self):
         # cli implementation of parsers '''

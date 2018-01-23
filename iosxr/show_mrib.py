@@ -18,7 +18,7 @@ from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
 
 class ShowMribVrfRouteSchema(MetaParser):
     
-    '''Schema for show mrib vrf <WORD> <WORD> route'''
+    """Schema for show mrib vrf <vrf> <address-family> route"""
 
     schema = {
         'vrf': 
@@ -62,7 +62,7 @@ class ShowMribVrfRouteSchema(MetaParser):
 
 class ShowMribVrfRoute(ShowMribVrfRouteSchema):
     
-    '''Parser for show mrib vrf <WORD> <WORD> route'''
+    """Parser for show mrib vrf <vrf> <address-family> route"""
 
     def cli(self, vrf='default', af='ipv4'):
         out = self.device.execute('show mrib vrf {vrf} {af} route'.\

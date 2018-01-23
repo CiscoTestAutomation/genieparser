@@ -1,10 +1,10 @@
-''' show_hsrp.py
+""" show_hsrp.py
 
 IOSXR parsers for show commands:
     * 'show hsrp summary'
     * 'show hsrp detail'
 
-'''
+"""
 
 # Python
 import re
@@ -30,7 +30,7 @@ def regexp(expression):
 # ======================================
 
 class ShowHsrpSummarySchema(MetaParser):
-
+    """Schema for show hsrp summary"""
     schema = \
                 {'address_family': {
                     Any(): {
@@ -60,7 +60,7 @@ class ShowHsrpSummarySchema(MetaParser):
              
 
 class ShowHsrpSummary(ShowHsrpSummarySchema):
-
+    """Parser for show hsrp summary"""
     def cli(self):
         cmd = 'show hsrp summary'
         out = self.device.execute(cmd)
@@ -211,7 +211,7 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
 # ======================================
 
 class ShowHsrpDetailSchema(MetaParser):
-
+    """Schema for show hsrp detail"""
     schema = {
         Any(): {
             'interface': str,
@@ -378,6 +378,7 @@ class ShowHsrpDetailSchema(MetaParser):
 
 
 class ShowHsrpDetail(ShowHsrpDetailSchema):
+    """Parser for show hsrp detail"""
 
     def cli(self):
         cmd = 'show hsrp detail'
