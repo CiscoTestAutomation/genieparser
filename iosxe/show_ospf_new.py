@@ -46,7 +46,6 @@ class ShowIpOspfSchema(MetaParser):
                                 'bfd': 
                                     {'enable': bool,
                                     Optional('strict_mode'): bool},
-                                Optional('incremental_spf'): bool,
                                 Optional('domain_id_type'): str,
                                 Optional('domain_id_value'): str,
                                 Optional('start_time'): str,
@@ -101,7 +100,8 @@ class ShowIpOspfSchema(MetaParser):
                                         'state': str},
                                     },
                                 Optional('spf_control'): 
-                                    {'throttle': 
+                                    {Optional('incremental_spf'): bool,
+                                    'throttle': 
                                         {'spf': 
                                             {'start': int,
                                             'hold': int,
@@ -145,6 +145,7 @@ class ShowIpOspfSchema(MetaParser):
                                 Optional('total_nssa_areas'): int,
                                 Optional('total_areas_transit_capable'): int,
                                 Optional('lsa_group_pacing_timer'): int,
+                                Optional('interface_flood_pacing_timer'): int,
                                 Optional('retransmission_pacing_timer'): int,
                                 Optional('external_flood_list_length'): int,
                                 Optional('db_exchange_summary_list_optimization'): bool,
@@ -164,6 +165,7 @@ class ShowIpOspfSchema(MetaParser):
                                         Optional('ranges'): 
                                             {Any(): 
                                                 {'prefix': str,
+                                                Optional('cost'): int,
                                                 'advertise': bool}},
                                         Optional('rrr_enabled'): bool,
                                         Optional('statistics'): 
@@ -620,10 +622,12 @@ class ShowIpOspf(ShowIpOspfSchema):
             p22 = re.compile(r'^Incremental-SPF +(?P<incr>(disabled|enabled))$')
             m = p22.match(line)
             if m:
+                if 'spf_control' not in sub_dict:
+                    sub_dict['spf_control'] = {}
                 if 'enabled' in m.groupdict()['incr']:
-                    sub_dict['incremental_spf'] = True
+                    sub_dict['spf_control']['incremental_spf'] = True
                 else:
-                    sub_dict['incremental_spf'] = False
+                    sub_dict['spf_control']['incremental_spf'] = False
                     continue
 
             # LSA group pacing timer 240 secs
@@ -640,7 +644,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                               ' +(?P<interface>(\d+)) +msecs$')
             m = p24.match(line)
             if m:
-                sub_dict['retransmission_pacing_timer'] = \
+                sub_dict['interface_flood_pacing_timer'] = \
                     int(float(m.groupdict()['interface']))
                 continue
 
@@ -818,7 +822,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                     sub_dict['auto_cost']['enable'] = False
                 else:
                     sub_dict['auto_cost']['enable'] = True
-                    continue
+                continue
 
             # Area BACKBONE(0)
             # Area 1
@@ -858,7 +862,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                         sub_dict['areas'][area]['summary'] = False
                     else:
                         sub_dict['areas'][area]['summary'] = True
-                        continue
+                    continue
 
             # generates stub default route with cost 111
             # generates stub default route with cost 222
@@ -876,13 +880,13 @@ class ShowIpOspf(ShowIpOspfSchema):
             if m:
                 if 'ranges' not in sub_dict['areas'][area]:
                     sub_dict['areas'][area]['ranges'] = {}
-                    continue
+                continue
 
             # 1.1.1.0/24 Passive Advertise
             # 1.1.0.0/16 Passive DoNotAdvertise 
             # 1.1.0.0/16 Active(10 - configured) Advertise
             p40_2 = re.compile(r'^(?P<prefix>([0-9\.\/]+)) +(Passive|Active)'
-                                '(?:\(\d+ +\- +configured\))?'
+                                '(?:\((?P<cost>(\d+)) +\- +configured\))?'
                                 ' +(?P<advertise>(Advertise|DoNotAdvertise))$')
             m = p40_2.match(line)
             if m:
@@ -892,11 +896,14 @@ class ShowIpOspf(ShowIpOspfSchema):
                 if prefix not in sub_dict['areas'][area]['ranges']:
                     sub_dict['areas'][area]['ranges'][prefix] = {}
                 sub_dict['areas'][area]['ranges'][prefix]['prefix'] = prefix
+                if m.groupdict()['cost']:
+                    sub_dict['areas'][area]['ranges'][prefix]['cost'] = \
+                        int(m.groupdict()['cost'])
                 if 'Advertise' in m.groupdict()['advertise']:
                     sub_dict['areas'][area]['ranges'][prefix]['advertise'] = True
                 else:
                     sub_dict['areas'][area]['ranges'][prefix]['advertise'] = False
-                    continue
+                continue
 
             # Number of interfaces in this area is 3
             # Number of interfaces in this area is 3 (1 loopback)
@@ -947,7 +954,6 @@ class ShowIpOspf(ShowIpOspfSchema):
             p45 = re.compile(r'^Area +has +no +authentication$')
             m = p45.match(line)
             if m:
-                sub_dict['areas'][area]['authentication'] = False
                 continue
 
             # Number of LSA 19.  Checksum Sum 0x0a2fb5
@@ -1326,17 +1332,15 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     if x:
                         intf_type = 'sham_links'
                         name = 'SL' + str(x.groupdict()['num'])
-                        continue
                 elif re.search('VL', interface):
                     x = re.match('(?P<ignore>\S+)_VL(?P<num>(\d+))', interface)
                     if x:
                         intf_type = 'virtual_links'
                         name = 'VL' + str(x.groupdict()['num'])
-                        continue
                 else:
                     intf_type = 'interfaces'
                     name = interface
-                    continue
+                continue
 
             # Internet Address 1.1.1.1/32, Interface ID 11, Area 0
             # Internet Address 0.0.0.0/0, Area 0, Attached via Not Attached
@@ -1353,7 +1357,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     intf_id = int(m.groupdict()['intf_id'])
                 if m.groupdict()['attach']:
                     attached = str(m.groupdict()['attach']).lower()
-                    continue
+                continue
 
             # Attached via Interface Enable
             p2_1 = re.compile(r'^Attached +via +(?P<attached>([a-zA-Z0-9\s]+))$')
@@ -1723,7 +1727,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     sub_dict['graceful_restart'][gr_type]['helper'] = True
                 else:
                     sub_dict['graceful_restart'][gr_type]['helper'] = False
-                    continue
+                continue
 
             # Index 2/2, flood queue length 0
             p15 = re.compile(r'^Index +(?P<index>(\S+)),'
@@ -1880,6 +1884,9 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     sub_dict['ttl_security']['hops'] = int(m.groupdict()['hops'])
                     continue
 
+            # Simple password authentication enabled
+
+
         return ret_dict
 
 
@@ -1982,7 +1989,7 @@ class ShowIpOspfLinksParser(MetaParser):
                         ['instance']:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
                         [instance] = {}
-                    continue
+                continue
 
 
             # Area 1, source address 33.33.33.33
@@ -2067,7 +2074,7 @@ class ShowIpOspfLinksParser(MetaParser):
                         sub_dict['cost'] = cost
                     if m.groupdict()['state']:
                         sub_dict['state'] = link_state
-                        continue
+                    continue
 
             # Transit area 1
             # Transit area 1, via interface GigabitEthernet0/1
@@ -2237,6 +2244,7 @@ class ShowIpOspfLinksParser(MetaParser):
             m = p13.match(line)
             if m:
                 sub_dict['first'] = str(m.groupdict()['first'])
+                sub_dict['next'] = str(m.groupdict()['next'])
                 continue
 
             # Last retransmission scan length is 1, maximum is 1
@@ -2305,6 +2313,7 @@ class ShowIpOspfShamLinksSchema(MetaParser):
                                                     Optional('hops'): int},
                                                 Optional('index'): str,
                                                 Optional('first'): str,
+                                                Optional('next'): str,
                                                 Optional('last_retransmission_max_length'): int,
                                                 Optional('last_retransmission_max_scan'): int,
                                                 Optional('last_retransmission_scan_length'): int,
@@ -2383,6 +2392,7 @@ class ShowIpOspfVirtualLinksSchema(MetaParser):
                                                     Optional('hops'): int},
                                                 Optional('index'): str,
                                                 Optional('first'): str,
+                                                Optional('next'): str,
                                                 Optional('last_retransmission_max_length'): int,
                                                 Optional('last_retransmission_max_scan'): int,
                                                 Optional('last_retransmission_scan_length'): int,
@@ -2451,7 +2461,7 @@ class ShowIpOspfNeighborDetailSchema(MetaParser):
                                                         Optional('hello_options'): str,
                                                         Optional('dbd_options'): str,
                                                         Optional('dead_timer'): str,
-                                                        Optional('neighbor_uptime'): str,
+                                                        Optional('uptime'): str,
                                                         Optional('index'): str,
                                                         Optional('first'): str,
                                                         Optional('next'): str,
@@ -2482,7 +2492,7 @@ class ShowIpOspfNeighborDetailSchema(MetaParser):
                                                         Optional('hello_options'): str,
                                                         Optional('dbd_options'): str,
                                                         Optional('dead_timer'): str,
-                                                        Optional('neighbor_uptime'): str,
+                                                        Optional('uptime'): str,
                                                         Optional('index'): str,
                                                         Optional('first'): str,
                                                         Optional('next'): str,
@@ -2513,7 +2523,7 @@ class ShowIpOspfNeighborDetailSchema(MetaParser):
                                                         Optional('hello_options'): str,
                                                         Optional('dbd_options'): str,
                                                         Optional('dead_timer'): str,
-                                                        Optional('neighbor_uptime'): str,
+                                                        Optional('uptime'): str,
                                                         Optional('index'): str,
                                                         Optional('first'): str,
                                                         Optional('next'): str,
@@ -2808,8 +2818,9 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                 continue
 
             # Options is 0x42 in DBD (E-bit, O-bit)
+            # Options is 0x42 in DBD (E-bit, O-bit)
             p6 = re.compile(r'^Options +is +(?P<options>(\S+)) +in +DBD'
-                             ' +\(E-bit, 0-bit\)$')
+                             ' +\(E-bit, O-bit\)$')
             m = p6.match(line)
             if m:
                 sub_dict['dbd_options'] = str(m.groupdict()['options'])
@@ -2826,7 +2837,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
             p8 = re.compile(r'^Neighbor +is +up +for +(?P<uptime>(\S+))$')
             m = p8.match(line)
             if m:
-                sub_dict['neighbor_uptime'] = str(m.groupdict()['uptime'])
+                sub_dict['uptime'] = str(m.groupdict()['uptime'])
                 continue
 
             # Index 1/2/2, retransmission queue length 0, number of retransmission 0
@@ -2946,7 +2957,7 @@ class ShowIpOspfDatabaseParser(MetaParser):
                         ['instance']:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
                         [instance] = {}
-                    continue
+                continue
 
             # Router Link States (Area 0)
             # Net Link States (Area 1)
@@ -3232,7 +3243,7 @@ class ShowIpOspfDatabaseParser(MetaParser):
                     db_dict['attached_routers'] = {}
                 if attached_router not in db_dict['attached_routers']:
                     db_dict['attached_routers'][attached_router] = {}
-                    continue
+                continue
 
             # Number of links: 3
             # Number of Links: 3
@@ -4528,6 +4539,6 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
                     sub_dict['link_hash_bucket'][hashval]\
                         ['unreserved_bandwidths'][value2]\
                             ['unreserved_bandwidth'] = int(m.groupdict()['band2'])
-                    continue
+                continue
 
         return ret_dict

@@ -288,7 +288,7 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                     ospf_dict['areas'] = {}
                 if area not in ospf_dict['areas']:
                     ospf_dict['areas'][area] = {}
-                    continue
+                continue
 
             # Loopback0
             # GigabitEthernet2

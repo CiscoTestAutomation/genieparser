@@ -51,10 +51,10 @@ class test_show_ip_ospf(unittest.TestCase):
                                     {'0.0.0.0': 
                                         {'area_id': '0.0.0.0',
                                         'area_type': 'normal',
-                                        'authentication': False,
                                         'ranges': 
                                             {'1.1.0.0/16': 
                                                 {'advertise': True,
+                                                'cost': 10,
                                                 'prefix': '1.1.0.0/16'}},
                                         'rrr_enabled': True,
                                         'statistics': 
@@ -95,7 +95,6 @@ class test_show_ip_ospf(unittest.TestCase):
                                         {'enable': False,
                                         'helper_enable': True,
                                         'type': 'ietf'}},
-                                'incremental_spf': False,
                                 'lls': True,
                                 'lsa_group_pacing_timer': 240,
                                 'nsr': 
@@ -109,10 +108,12 @@ class test_show_ip_ospf(unittest.TestCase):
                                     'opaque_as_lsa': 0,
                                     'opaque_as_lsa_checksum': '0x000000'},
                                 'opqaue_lsa': True,
+                                'interface_flood_pacing_timer': 33,
                                 'retransmission_pacing_timer': 66,
                                 'router_id': '1.1.1.1',
                                 'spf_control': 
-                                    {'throttle': 
+                                    {'incremental_spf': False,
+                                    'throttle': 
                                         {'lsa': 
                                             {'arrival': 100,
                                             'hold': 200,
@@ -143,7 +144,6 @@ class test_show_ip_ospf(unittest.TestCase):
                                     {'0.0.0.1': 
                                         {'area_id': '0.0.0.1',
                                         'area_type': 'normal',
-                                        'authentication': False,
                                         'ranges': 
                                             {'1.1.1.0/24': 
                                                 {'advertise': True,
@@ -183,7 +183,6 @@ class test_show_ip_ospf(unittest.TestCase):
                                         {'enable': False,
                                         'helper_enable': True,
                                         'type': 'ietf'}},
-                                'incremental_spf': False,
                                 'lls': True,
                                 'lsa_group_pacing_timer': 240,
                                 'nsr': 
@@ -202,10 +201,12 @@ class test_show_ip_ospf(unittest.TestCase):
                                         {'bgp_id': 100,
                                         'subnets': 'subnets'
                                         }},
+                                'interface_flood_pacing_timer': 33,
                                 'retransmission_pacing_timer': 66,
                                 'router_id': '11.11.11.11',
                                 'spf_control': 
-                                    {'throttle': 
+                                    {'incremental_spf': False,
+                                    'throttle': 
                                         {'lsa': 
                                             {'arrival': 100,
                                             'hold': 200,
@@ -1182,7 +1183,7 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
                                                         'index': '1/1/1,',
                                                         'interface': 'GigabitEthernet3',
                                                         'neighbor_router_id': '55.55.55.55',
-                                                        'neighbor_uptime': '15:47:14',
+                                                        'uptime': '15:47:14',
                                                         'next': '0x0(0)/0x0(0)/0x0(0)',
                                                         'priority': 1,
                                                         'state': 'full',
@@ -1204,10 +1205,11 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
                                                         'dr_ip_addr': '0.0.0.0',
                                                         'first': '0x0(0)/0x0(0)/0x0(0)',
                                                         'hello_options': '0x2',
+                                                        'dbd_options': '0x42',
                                                         'index': '1/2/2,',
                                                         'interface': 'OSPF_SL1',
                                                         'neighbor_router_id': '22.22.22.22',
-                                                        'neighbor_uptime': '07:41:59',
+                                                        'uptime': '07:41:59',
                                                         'next': '0x0(0)/0x0(0)/0x0(0)',
                                                         'priority': 0,
                                                         'state': 'full',
@@ -1238,7 +1240,7 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
                                                         'index': '1/1/1,',
                                                         'interface': 'GigabitEthernet1',
                                                         'neighbor_router_id': '4.4.4.4',
-                                                        'neighbor_uptime': '1d01h',
+                                                        'uptime': '1d01h',
                                                         'next': '0x0(0)/0x0(0)/0x0(0)',
                                                         'priority': 1,
                                                         'state': 'full',
@@ -1259,10 +1261,11 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
                                                         'dr_ip_addr': '10.1.2.1',
                                                         'first': '0x0(0)/0x0(0)/0x0(0)',
                                                         'hello_options': '0x2',
+                                                        'dbd_options': '0x42',
                                                         'index': '1/2/2,',
                                                         'interface': 'GigabitEthernet2',
                                                         'neighbor_router_id': '2.2.2.2',
-                                                        'neighbor_uptime': '08:04:20',
+                                                        'uptime': '08:04:20',
                                                         'next': '0x0(0)/0x0(0)/0x0(0)',
                                                         'priority': 1,
                                                         'state': 'full',
@@ -1296,7 +1299,7 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
                                                         'index': '1/1,',
                                                         'interface': 'GigabitEthernet0/0',
                                                         'neighbor_router_id': '2.2.2.2',
-                                                        'neighbor_uptime': '05:07:40',
+                                                        'uptime': '05:07:40',
                                                         'next': '0x0(0)/0x0(0)',
                                                         'priority': 1,
                                                         'state': 'full',
@@ -1317,10 +1320,11 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
                                                         'dr_ip_addr': '20.3.4.4',
                                                         'first': '0x0(0)/0x0(0)',
                                                         'hello_options': '0x2',
+                                                        'dbd_options': '0x42',
                                                         'index': '2/2,',
                                                         'interface': 'GigabitEthernet0/1',
                                                         'neighbor_router_id': '3.3.3.3',
-                                                        'neighbor_uptime': '16:31:06',
+                                                        'uptime': '16:31:06',
                                                         'next': '0x0(0)/0x0(0)',
                                                         'priority': 1,
                                                         'state': 'full',
@@ -1342,10 +1346,11 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
                                                         'dr_ip_addr': '0.0.0.0',
                                                         'first': '0x0(0)/0x0(0)',
                                                         'hello_options': '0x2',
+                                                        'dbd_options': '0x42',
                                                         'index': '1/3,',
                                                         'interface': 'OSPF_VL1',
                                                         'neighbor_router_id': '3.3.3.3',
-                                                        'neighbor_uptime': '05:07:21',
+                                                        'uptime': '05:07:21',
                                                         'next': '0x0(0)/0x0(0)',
                                                         'priority': 0,
                                                         'state': 'full',
@@ -1800,6 +1805,7 @@ class test_show_ip_ospf_sham_links(unittest.TestCase):
                                                 'link_state': 'up',
                                                 'local_id': '11.11.11.11',
                                                 'name': 'SL0',
+                                                'next': '0x0(0)/0x0(0)/0x0(0)',
                                                 'remote_id': '22.22.22.22',
                                                 'retrans_qlen': 0,
                                                 'state': 'point_to_point,',
@@ -1915,6 +1921,7 @@ class test_show_ip_ospf_virtual_links(unittest.TestCase):
                                                 'last_retransmission_scan_time': 0,
                                                 'link_state': 'up',
                                                 'name': 'VL0',
+                                                'next': '0x0(0)/0x0(0)',
                                                 'retrans_qlen': 0,
                                                 'retransmit_interval': 5,
                                                 'router_id': '3.3.3.3',
