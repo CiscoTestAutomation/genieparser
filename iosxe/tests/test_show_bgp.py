@@ -43,6 +43,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                        'index':
                         {1:
                           {'gateway': '0.0.0.0',
+                           'inaccessible': False,
                            'localpref': 100,
                            'metric': 0,
                            'next_hop': '0.0.0.0',
@@ -50,7 +51,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                                            'VRF1',
                            'origin_codes': '?',
                            'originator': '10.1.1.1',
-                           'recipient_pathid': 0,
+                           'recipient_pathid': '0',
                            'refresh_epoch': 1,
                            'route_info': 'Local',
                            'status_codes': '*>',
@@ -73,6 +74,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                        'index':
                         {1:
                           {'gateway': '0.0.0.0',
+                           'inaccessible': False,
                            'localpref': 100,
                            'metric': 0,
                            'next_hop': '::',
@@ -80,7 +82,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                                            'VRF1',
                            'origin_codes': '?',
                            'originator': '10.1.1.1',
-                           'recipient_pathid': 0,
+                           'recipient_pathid': '0',
                            'refresh_epoch': 1,
                            'route_info': 'Local',
                            'status_codes': '*>',
@@ -109,7 +111,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'next_hop': '0.0.0.0',
                            'origin_codes': '?',
                            'originator': '10.1.1.1',
-                           'recipient_pathid': 0,
+                           'recipient_pathid': '0',
                            'refresh_epoch': 1,
                            'route_info': 'Local',
                            'status_codes': '*>',
@@ -134,7 +136,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'next_hop': '0.0.0.0',
                            'origin_codes': '?',
                            'originator': '10.1.1.1',
-                           'recipient_pathid': 0,
+                           'recipient_pathid': '0',
                            'refresh_epoch': 1,
                            'route_info': 'Local',
                            'status_codes': '*>',
@@ -148,6 +150,8 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'next_hop': '10.1.1.2',
                            'origin_codes': '?',
                            'originator': '10.1.1.2',
+                           'recipient_pathid': '0',
+                           'transfer_pathid': '0',
                            'refresh_epoch': 1,
                            'route_info': 'Local',
                            'status_codes': '* '
@@ -171,7 +175,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'next_hop': '10.1.1.2',
                            'origin_codes': '?',
                            'originator': '10.1.1.2',
-                           'recipient_pathid': 0,
+                           'recipient_pathid': '0',
                            'refresh_epoch': 1,
                            'route_info': 'Local',
                            'status_codes': '*>',
@@ -196,7 +200,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'next_hop': '::',
                            'origin_codes': '?',
                            'originator': '10.1.1.1',
-                           'recipient_pathid': 0,
+                           'recipient_pathid': '0',
                            'refresh_epoch': 1,
                            'route_info': 'Local',
                            'status_codes': '*>',
@@ -221,12 +225,25 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'next_hop': '2001:DB8:1:1::2',
                            'origin_codes': '?',
                            'originator': '10.1.1.2',
-                           'recipient_pathid': 0,
+                           'recipient_pathid': '0',
+                           'refresh_epoch': 1,
+                           'route_info': 'Local',
+                           'status_codes': '*>',
+                           'transfer_pathid': '0x0'},
+                        2:
+                          {'gateway': '10.1.1.2',
+                           'localpref': 100,
+                           'metric': 0,
+                           'next_hop': '::FFFF:10.1.1.2',
+                           'origin_codes': '?',
+                           'originator': '10.1.1.2',
+                           'recipient_pathid': '0',
+                           'transfer_pathid': '0',
                            'refresh_epoch': 1,
                            'route_info': 'Local',
                            'status_codes': '* '
                                            'i',
-                           'transfer_pathid': '0x0'}},
+                           'transfer_pathid': '0'}},
                        'paths': '(2 '
                                 'available, '
                                 'best '
@@ -245,7 +262,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'next_hop': '::',
                            'origin_codes': '?',
                            'originator': '10.1.1.1',
-                           'recipient_pathid': 0,
+                           'recipient_pathid': '0',
                            'refresh_epoch': 1,
                            'route_info': 'Local',
                            'status_codes': '*>',
@@ -258,6 +275,21 @@ class test_show_bgp_all_detail(unittest.TestCase):
                             'next_hop': '2001:DB8:1:1::2',
                             'origin_codes': '?',
                             'originator': '10.1.1.2',
+                            'recipient_pathid': '0',
+                            'transfer_pathid': '0',
+                            'refresh_epoch': 1,
+                            'route_info': 'Local',
+                            'status_codes': '* '
+                                            'i',
+                            'update_group': 1},
+                        3: {'gateway': '10.1.1.2',
+                            'localpref': 100,
+                            'metric': 0,
+                            'next_hop': '::FFFF:10.1.1.2',
+                            'origin_codes': '?',
+                            'originator': '10.1.1.2',
+                            'recipient_pathid': '0',
+                            'transfer_pathid': '0',
                             'refresh_epoch': 1,
                             'route_info': 'Local',
                             'status_codes': '* '
@@ -424,6 +456,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                              'local_vtep': '33.33.33.33',
                              'router_mac': 'MAC:001E.7A13.E9BF'},
                           'gateway': '0.0.0.0',
+                          'inaccessible': False,
                           'localpref': 100,
                           'metric': 0,
                           'next_hop': '0.0.0.0',
@@ -431,7 +464,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                                           'evpn1',
                           'origin_codes': '?',
                           'originator': '33.33.33.33',
-                          'recipient_pathid': 0,
+                          'recipient_pathid': '0',
                           'refresh_epoch': 1,
                           'route_info': 'Local, '
                                         'imported '
@@ -462,6 +495,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                              'local_vtep': '33.33.33.33',
                              'router_mac': 'MAC:001E.7A13.E9BF'},
                           'gateway': '0.0.0.0',
+                          'inaccessible': False,
                           'localpref': 100,
                           'metric': 0,
                           'next_hop': '0.0.0.0',
@@ -469,7 +503,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                                           'evpn1',
                           'origin_codes': '?',
                           'originator': '33.33.33.33',
-                          'recipient_pathid': 0,
+                          'recipient_pathid': '0',
                           'refresh_epoch': 1,
                           'route_info': 'Local, '
                                         'imported '
@@ -489,6 +523,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                              'local_vtep': '33.33.33.33',
                              'router_mac': 'MAC:001E.7A13.E9BF'},
                           'gateway': '3.3.3.254',
+                          'inaccessible': False,
                           'localpref': 100,
                           'metric': 0,
                           'next_hop': '3.3.3.254',
@@ -496,6 +531,8 @@ class test_show_bgp_all_detail(unittest.TestCase):
                                           'evpn1',
                           'origin_codes': '?',
                           'originator': '33.33.33.22',
+                          'recipient_pathid': '0',
+                          'transfer_pathid': '0',
                           'refresh_epoch': 1,
                           'route_info': '65530, '
                                         'imported '
@@ -522,6 +559,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'index':
                             {1:
                               {'gateway': '0.0.0.0',
+                               'inaccessible': False,
                                'local_vxlan_vtep':
                                 {'bdi': 'BDI200',
                                  'encap': '8',
@@ -536,7 +574,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                                                'evpn1',
                                'origin_codes': '?',
                                'originator': '33.33.33.33',
-                               'recipient_pathid': 0,
+                               'recipient_pathid': '0',
                                'refresh_epoch': 1,
                                'route_info': 'Local',
                                'status_codes': '*>',
@@ -556,6 +594,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'index':
                             {1:
                               {'gateway': '3.3.3.254',
+                               'inaccessible': False,
                                'local_vxlan_vtep':
                                 {'bdi': 'BDI200',
                                  'encap': '8',
@@ -570,12 +609,15 @@ class test_show_bgp_all_detail(unittest.TestCase):
                                                'evpn1',
                                'origin_codes': '?',
                                'originator': '33.33.33.22',
+                               'recipient_pathid': '0',
+                               'transfer_pathid': '0',
                                'refresh_epoch': 1,
                                'route_info': '65530',
                                'status_codes': '* ',
                                'update_group': 1},
                             2:
                               {'gateway': '0.0.0.0',
+                               'inaccessible': False,
                                'local_vxlan_vtep':
                                 {'bdi': 'BDI200',
                                  'encap': '8',
@@ -590,7 +632,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                                                'evpn1',
                                'origin_codes': '?',
                                'originator': '33.33.33.33',
-                               'recipient_pathid': 0,
+                               'recipient_pathid': '0',
                                'refresh_epoch': 1,
                                'route_info': 'Local',
                                'status_codes': '*>',

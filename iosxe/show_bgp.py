@@ -62,11 +62,12 @@ class ShowBgpAllDetailSchema(MetaParser):
                                              Optional('status_codes'): str,
                                              Optional('origin_codes'): str,
                                              Optional('metric'): int,
+                                             Optional('inaccessible'): bool,
                                              Optional('localpref'): int,
                                              Optional('weight'): str,
                                              Optional('originator'): str,
                                              Optional('refresh_epoch'): int,
-                                             Optional('recipient_pathid'): int,
+                                             Optional('recipient_pathid'): str,
                                              Optional('transfer_pathid'): str,
                                              Optional('evpn'):
                                                 {Optional('ext_community'): str,
@@ -287,8 +288,10 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
             # 10.1.1.2 from 10.1.1.2 (10.1.1.2)
             # 2.2.2.2 (metric 11) (via default) from 2.2.2.2 (2.2.2.2)
             # :: (via vrf VRF1) from 0.0.0.0 (10.1.1.1)
+            # 192.168.0.1 (inaccessible) from 192.168.0.9 (192.168.0.9)
             p4 = re.compile(r'^\s*((?P<nexthop>[a-zA-Z0-9\.\:]+)'
-                             '( +\(metric +(?P<next_hop_igp_metric>[0-9]+)\))?'
+                             '(( +\(metric +(?P<next_hop_igp_metric>[0-9]+)\))|'
+                             '( +\((?P<inaccessible>inaccessible)\)))?'
                              '( +\(via +(?P<next_hop_via>[a-zA-Z0-9\s]+)\))? +'
                              'from +(?P<gateway>[a-zA-Z0-9\.\:]+)'
                              ' +\((?P<originator>[0-9\.]+)\))$')
@@ -321,6 +324,10 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
                     if m.groupdict()['next_hop_igp_metric']:
                         subdict['next_hop_igp_metric'] = \
                             m.groupdict()['next_hop_igp_metric']
+                    if m.groupdict()['inaccessible']:
+                        subdict['inaccessible'] = True
+                    else:
+                        subdict['inaccessible'] = False
                     if m.groupdict()['next_hop_via']:
                         subdict['next_hop_via'] = \
                             m.groupdict()['next_hop_via']
@@ -454,12 +461,12 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
                 continue
 
             # rx pathid: 0, tx pathid: 0
-            p9 = re.compile(r'^\s*rx +pathid\: +(?P<recipient_pathid>[0-9]+)\,'
+            p9 = re.compile(r'^\s*rx +pathid\: +(?P<recipient_pathid>[0-9x]+)\,'
                              ' +tx +pathid\:'
-                             ' +(?P<transfer_pathid>[0-9]+x[0-9]+)$')
+                             ' +(?P<transfer_pathid>[0-9x]+)$')
             m = p9.match(line)
             if m:
-                recipient_pathid = int(m.groupdict()['recipient_pathid'])
+                recipient_pathid = str(m.groupdict()['recipient_pathid'])
                 transfer_pathid = str(m.groupdict()['transfer_pathid'])
 
                 subdict['recipient_pathid'] = recipient_pathid
