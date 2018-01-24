@@ -4801,6 +4801,19 @@ class test_show_ip_ospf_mpls_traffic_eng_link(unittest.TestCase):
                 {'address_family': 
                     {'ipv4': 
                         {'instance': 
+                            {'2': 
+                                {'areas': 
+                                    {'0.0.0.1': 
+                                        {'mpls': 
+                                            {'te': 
+                                                {'enable': False}}}},
+                                'mpls': 
+                                    {'te': 
+                                        {'router_id': '11.11.11.11'}}}}}}},
+            'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'instance': 
                             {'1': 
                                 {'areas': 
                                     {'0.0.0.0': 
@@ -4888,27 +4901,23 @@ class test_show_ip_ospf_mpls_traffic_eng_link(unittest.TestCase):
                                                 'total_links': 2}}}},
                                 'mpls': 
                                     {'te': 
-                                        {'router_id': '1.1.1.1'}}},
-                            '2': 
-                                {'areas': 
-                                    {'0.0.0.1': 
-                                        {'mpls': 
-                                            {'te': 
-                                                {'enable': False}}}},
-                                'mpls': 
-                                    {'te': {'router_id': '11.11.11.11'}}}}}}}}}
+                                        {'router_id': '1.1.1.1'}}}}}}}}}
+    
+    def test_show_ip_ospf_mpls_traffic_eng_link_full1(self):
+        
+        self.maxDiff = None
 
-    golden_output1 = {'execute.return_value': '''
-        R1_ospf_xe#show ip ospf 1 | i Connected to MPLS
-          Connected to MPLS VPN Superbackbone, VRF VRF1
-
-        R1_ospf_xe#show ip ospf mpls traffic-eng link 
+        def mapper(key):
+            return self.outputs[key]
+        
+        raw1 = '''\
+            R1_ospf_xe#show ip ospf mpls traffic-eng link 
 
             OSPF Router with ID (1.1.1.1) (Process ID 1)
 
-          Area 0 has 2 MPLS TE links. Area instance is 2.
+            Area 0 has 2 MPLS TE links. Area instance is 2.
 
-          Links in hash bucket 8.
+            Links in hash bucket 8.
             Link is associated with fragment 2. Link instance is 2
               Link connected to Broadcast network
               Link ID : 10.1.2.1
@@ -4923,7 +4932,7 @@ class test_show_ip_ospf_mpls_traffic_eng_link(unittest.TestCase):
               Priority 6 : 93750000     Priority 7 : 93750000   
               Affinity Bit : 0x0
 
-          Links in hash bucket 9.
+            Links in hash bucket 9.
             Link is associated with fragment 1. Link instance is 2
               Link connected to Broadcast network
               Link ID : 10.1.4.4
@@ -4938,14 +4947,25 @@ class test_show_ip_ospf_mpls_traffic_eng_link(unittest.TestCase):
               Priority 6 : 93750000     Priority 7 : 93750000   
               Affinity Bit : 0x0
 
-                    OSPF Router with ID (11.11.11.11) (Process ID 2)
+                OSPF Router with ID (11.11.11.11) (Process ID 2)
 
             Area 1 MPLS TE not initialized
-        '''}
+            '''
+        raw2 = '''\
+            R1_ospf_xe#show running-config | section router ospf 1
+              router ospf 1
+            '''
+        raw3 = '''\
+            R1_ospf_xe#show running-config | section router ospf 2
+              router ospf 2 vrf VRF1
+            '''
 
-    def test_show_ip_ospf_mpls_traffic_eng_link_full1(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output1)
+        self.outputs = {}
+        self.outputs['show ip ospf mpls traffic-eng link'] = raw1
+        self.outputs['show running-config | section router ospf 1'] = raw2
+        self.outputs['show running-config | section router ospf 2'] = raw3
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
         obj = ShowIpOspfMplsTrafficEngLink(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)

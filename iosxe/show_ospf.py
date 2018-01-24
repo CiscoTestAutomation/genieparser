@@ -4429,20 +4429,30 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
                 router_id = str(m.groupdict()['router_id'])
                 instance = str(m.groupdict()['instance'])
 
-                # Get VRF information based on ospf instance
-                cmd = 'show ip ospf {} | i Connected to MPLS'.format(instance)
+                # Get VRF information using the ospf instance
+                cmd = 'show running-config | section router ospf {}'.format(instance)
                 out = self.device.execute(cmd)
-                if out is None:
-                    vrf = 'default'
-                else:
-                    for line in out.splitlines():
-                        line = line.rstrip()
-                        # Connected to MPLS VPN Superbackbone, VRF VRF1
-                        p = re.search('Connected +to +MPLS +VPN +Superbackbone,'
-                                      ' +VRF +(?P<vrf>(\S+))', line)
-                        if p:
-                            vrf = str(p.groupdict()['vrf'])
-                            break
+
+                for line in out.splitlines():
+                    line = line.rstrip()
+
+                    # Skip the show command line so as to not match
+                    if re.search('show', line):
+                        continue
+
+                    # router ospf 1
+                    # router ospf 2 vrf VRF1
+                    p = re.search('router +ospf +(?P<instance>(\S+))'
+                                  '(?: +vrf +(?P<vrf>(\S+)))?', line)
+                    if p:
+                        p_instance = str(p.groupdict()['instance'])
+                        if p_instance == instance:
+                            if p.groupdict()['vrf']:
+                                vrf = str(p.groupdict()['vrf'])
+                                break
+                            else:
+                                vrf = 'default'
+                                break
 
                 # Create dict
                 if 'vrf' not in ret_dict:
