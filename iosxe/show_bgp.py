@@ -461,9 +461,9 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
                 continue
 
             # rx pathid: 0, tx pathid: 0
-            p9 = re.compile(r'^\s*rx +pathid\: +(?P<recipient_pathid>.+)\,'
+            p9 = re.compile(r'^\s*rx +pathid\: +(?P<recipient_pathid>[0-9x]+)\,'
                              ' +tx +pathid\:'
-                             ' +(?P<transfer_pathid>.+)$')
+                             ' +(?P<transfer_pathid>[0-9x]+)$')
             m = p9.match(line)
             if m:
                 recipient_pathid = str(m.groupdict()['recipient_pathid'])
