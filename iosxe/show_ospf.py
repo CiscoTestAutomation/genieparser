@@ -3434,7 +3434,7 @@ class ShowIpOspfDatabaseParser(MetaParser):
                 continue
 
             # MTID 32 Metrics: 1
-            p21 = re.compile(r'^MTID:? +(?P<mtid>(\d+)) +(M|m)etric(s?): +(?P<metric>(\d+))$')
+            p21 = re.compile(r'^MTID:? +(?P<mtid>(\d+))(\t+|\s+)(M|m)etric(s?): +(?P<metric>(\d+))$')
             m = p21.match(line)
             if m:
                 mtid = int(m.groupdict()['mtid'])
