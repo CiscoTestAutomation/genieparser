@@ -2607,7 +2607,7 @@ class test_show_bgp_all_cluster_ids(unittest.TestCase):
                     'reflection_intra_cluster_configured': 'enabled',
                     'reflection_intra_cluster_used': 'enabled',
                 },
-                'vrf1':
+                'VRF1':
                 {
                     'cluster_id': '4.4.4.4',
                     'configured_id': '0.0.0.0',
@@ -2616,7 +2616,7 @@ class test_show_bgp_all_cluster_ids(unittest.TestCase):
                     'reflection_intra_cluster_used': 'enabled',
 
                 },
-                'vrf2':
+                'VRF2':
                     {
                     'cluster_id': '4.4.4.4',
                     'configured_id': '0.0.0.0',
@@ -2697,7 +2697,7 @@ class test_show_bgp_all_cluster_ids(unittest.TestCase):
 
                         }
                 },
-                'vrf1':
+                'VRF1':
                     {
                         'cluster_id': '4.4.4.4',
                         'configured_id': '0.0.0.0',
@@ -2721,7 +2721,7 @@ class test_show_bgp_all_cluster_ids(unittest.TestCase):
 
                             }
                     },
-                'vrf2':
+                'VRF2':
                     {
                         'cluster_id': '4.4.4.4',
                         'configured_id': '0.0.0.0',
@@ -3211,7 +3211,7 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                               },
                         },
                 },
-            'vrf1':
+            'VRF1':
                 {
                     'neighbor':
                         {'10.4.6.6':
@@ -3592,7 +3592,7 @@ class test_show_bgp_all_neighbores(unittest.TestCase):
                               },
                          },
                 },
-            'vrf2':
+            'VRF2':
                 {
                     'neighbor':
                         {'20.4.6.6':
