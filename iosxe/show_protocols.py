@@ -52,6 +52,7 @@ class ShowIpProtocolsSchema(MetaParser):
                                         'total_stub_area': int,
                                         'total_normal_area': int,
                                         'total_nssa_area': int,
+                                        Optional('passive_interfaces'): list,
                                         Optional('routing_information_sources'): 
                                             {'gateway': 
                                                 {Any(): 
@@ -60,9 +61,9 @@ class ShowIpProtocolsSchema(MetaParser):
                                                     },
                                                 },
                                             },
-                                        'areas': 
+                                        Optional('areas'): 
                                             {Any(): 
-                                                {'configured_interfaces': list},
+                                                {Optional('configured_interfaces'): list},
                                             },
                                         },
                                     },
@@ -137,6 +138,8 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
         ret_dict = {}
         af = 'ipv4' # this is ospf - always ipv4
         protocol = None
+        routing_interfaces = None
+        passive_interfaces = None
 
         for line in out.splitlines():
             line = line.strip()
@@ -305,16 +308,23 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
 
             # Routing for Networks:
             # Routing on Interfaces Configured Explicitly (Area 0):
-            p6 = re.compile(r'^Routing +on +Interfaces +Configured +Explicitly'
+            p6_1 = re.compile(r'^Routing +on +Interfaces +Configured +Explicitly'
                              ' +\(Area +(?P<area>(\d+))\)\:$')
-            m = p6.match(line)
+            m = p6_1.match(line)
             if m:
-                area_intf_list = []
                 area = str(IPAddress(str(m.groupdict()['area'])))
                 if 'areas' not in ospf_dict:
                     ospf_dict['areas'] = {}
                 if area not in ospf_dict['areas']:
                     ospf_dict['areas'][area] = {}
+                routing_interfaces = []
+                continue
+
+            # Passive Interface(s):
+            p6_2 = re.compile(r'^Passive +Interface\(s\):$')
+            m = p6_2.match(line)
+            if m:
+                passive_interfaces = []
                 continue
 
             # Loopback0
@@ -323,8 +333,12 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
             p7 = re.compile(r'^(?P<interface>(Lo.*|Gi.*|.*(SL|VL).*))$')
             m = p7.match(line)
             if m:
-                area_intf_list.append(str(m.groupdict()['interface']))
-                ospf_dict['areas'][area]['configured_interfaces'] = area_intf_list
+                if routing_interfaces is not None:
+                    routing_interfaces.append(str(m.groupdict()['interface']))
+                    ospf_dict['areas'][area]['configured_interfaces'] = routing_interfaces
+                elif passive_interfaces is not None:
+                    passive_interfaces.append(str(m.groupdict()['interface']))
+                    ospf_dict['passive_interfaces'] = passive_interfaces
                 continue
 
             # Routing Information Sources:
