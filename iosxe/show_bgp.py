@@ -373,7 +373,7 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
             if m:
                 status_codes = ''
                 if m.groupdict()['locprf']:
-                    subdict['localpref'] = int(m.groupdict()['locprf'])
+                     subdict['localpref'] = int(m.groupdict()['locprf'])
                 if m.groupdict()['metric']:
                      subdict['metric'] = int(m.groupdict()['metric'])
                 if m.groupdict()['weight']:
@@ -1527,7 +1527,7 @@ class ShowBgpAllClusterIds(ShowBgpAllClusterIdsSchema):
                 # Save variables for use later
                 vrf_name = str(m.groupdict()['vrf_name'])
                 vrf_id = str(m.groupdict()['vrf_id'])
-                vrf_dict[vrf_id] = vrf_name.lower()
+                vrf_dict[vrf_id] = vrf_name
                 continue
 
 
@@ -1919,7 +1919,7 @@ class ShowBgpAllNeighbors(ShowBgpAllNeighborsSchema):
             m = p2_2.match(line)
             if m:
                 neighbor_id = m.groupdict()['neghibor']
-                vrf_name = m.groupdict()['vrf_name'].lower()
+                vrf_name = m.groupdict()['vrf_name']
                 remote_as = int(m.groupdict()['remote_as'])
                 link = m.groupdict()['link']  # internal / external
 
