@@ -265,7 +265,7 @@ class test_show_ip_ospf(unittest.TestCase):
          Cisco NSF helper support enabled
          BFD is enabled in strict mode
          Reference bandwidth unit is 100 mbps
-            Area BACKBONE(0)
+            Area BACKBONE(0.0.0.0)
                 Number of interfaces in this area is 3 (1 loopback)
                 Area has RRR enabled
                 Area has no authentication

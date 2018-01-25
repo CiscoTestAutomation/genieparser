@@ -830,7 +830,7 @@ class ShowIpOspf(ShowIpOspfSchema):
             m = p38.match(line)
             if m:
                 parsed_area = str(m.groupdict()['area'])
-                n = re.match('BACKBONE\((?P<area_num>(\d+))\)', parsed_area)
+                n = re.match('BACKBONE\((?P<area_num>(\S+))\)', parsed_area)
                 if n:
                     area = str(IPAddress(str(n.groupdict()['area_num'])))
                 else:
