@@ -2063,7 +2063,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
                         ipv6_virtual_groups.append(add)
 
                     ipv6_interface_dict[interface]['ipv6']['ipv6_virtual_groups']\
-                    = ipv6_virtual_groups
+                    = sorted(ipv6_virtual_groups)
                     continue
 
             #IPv6 multicast routing: disabled
