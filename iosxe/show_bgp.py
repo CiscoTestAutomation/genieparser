@@ -142,10 +142,7 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
             # Paths: (1 available, best #1, table VRF1)
             # Paths: (1 available, best #1, no table)
             # Paths: (1 available, best #1, table default, RIB-failure(17))
-            p2 = re.compile(r'^\s*Paths: +(?P<paths>\((?P<available_path>[0-9]'
-                             '+) +available\, +(no +best +path|best +\#(?P<best_path>[0-9]+))\,?'
-                             '(?: +((table +(?P<vrf_id>[a-zA-Z0-9\-]+)(?:\,|\)?)?'
-                             '|(no table)?\)))?))')
+            p2 = re.compile(r'^\s*Paths: +\((?P<paths>(?P<available_path>[0-9]+) +available\, +(no +best +path|best +\#(?P<best_path>[0-9]+))\,?(?: +(table +(?P<vrf_id>(\S+))|no +table),)?(?: +(.*))?)\)')
             m = p2.match(line)
             if m:
                 paths = m.groupdict()['paths']
@@ -153,7 +150,7 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
                 if m.groupdict()['best_path']:  
                     best_path = m.groupdict()['best_path']
                 else: 
-                    best_path = None 
+                    best_path = '' 
                 if m.groupdict()['vrf_id']:
                     vrf = m.groupdict()['vrf_id']
                 else:
