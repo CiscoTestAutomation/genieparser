@@ -2636,9 +2636,10 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
 
             # Neighbor 2.2.2.2, interface address 10.1.2.2
             # Neighbor 200.0.1.1, interface address 201.0.14.1, interface-id 192
+            # Neighbor 192.168.255.9, interface address 10.0.109.9, interface-id unknown
             p1 = re.compile(r'^Neighbor +(?P<neighbor>(\S+)), +interface'
                              ' +address +(?P<address>(\S+))'
-                             '(?:, +interface-id +(?P<intf_id>(\d+)))?$')
+                             '(?:, +interface-id +(?P<intf_id>(\S+)))?$')
             m = p1.match(line)
             if m:
                 neighbor = str(m.groupdict()['neighbor'])
