@@ -60,19 +60,19 @@ class ShowIpOspfSchema(MetaParser):
                                         'state': str,
                                         'exist_status': str},
                                     },
-                                'single_tos_routes_enable': bool,
-                                'opaque_lsa_enable': bool,
-                                'preference': 
+                                Optional('single_tos_routes_enable'): bool,
+                                Optional('opaque_lsa_enable'): bool,
+                                Optional('preference'): 
                                     {'single_value': 
                                         {'all': int},
                                     },
                                 Optional('bfd'): 
                                     {'enable': bool},
-                                'auto_cost': 
+                                Optional('auto_cost'): 
                                     {'enable': bool,
                                     'reference_bandwidth': int,
                                     'bandwidth_unit': str},
-                                'spf_control': 
+                                Optional('spf_control'): 
                                     {'paths': int,
                                     'throttle': 
                                         {'spf': 
@@ -96,7 +96,7 @@ class ShowIpOspfSchema(MetaParser):
                                             },
                                         },
                                     },
-                                'numbers': 
+                                Optional('numbers'): 
                                     {'active_areas': 
                                         {'total': int,
                                         'nssa': int,
@@ -123,16 +123,16 @@ class ShowIpOspfSchema(MetaParser):
                                         Optional('summary_lsa'): bool,
                                         Optional('external_lsa'): bool},
                                     },
-                                'enable': bool,
+                                Optional('enable'): bool,
                                 Optional('discard_route_external'): bool,
                                 Optional('discard_route_internal'): bool,
-                                'areas': 
+                                Optional('areas'): 
                                     {Any(): 
                                         {'area_type': str,
                                         'area_id': str,
-                                        'existed': str,
+                                        Optional('existed'): str,
                                         Optional('default_cost'): int,
-                                        'numbers': 
+                                        Optional('numbers'): 
                                             {'interfaces': int,
                                             'active_interfaces': int,
                                             'passive_interfaces': int,
@@ -145,7 +145,7 @@ class ShowIpOspfSchema(MetaParser):
                                                 'net': int},
                                             },
                                         Optional('authentication'): str,
-                                        'statistics': 
+                                        Optional('statistics'): 
                                             {'spf_runs_count': int,                                            
                                             'spf_last_run_time': float,
                                             'area_scope_lsa_count': int,
