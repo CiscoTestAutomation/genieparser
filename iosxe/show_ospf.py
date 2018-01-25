@@ -2522,6 +2522,7 @@ class ShowIpOspfNeighborDetailSchema(MetaParser):
                                                         'state': str,
                                                         'dr_ip_addr': str,
                                                         'bdr_ip_addr': str,
+                                                        Optional('interface_id'): str,
                                                         Optional('hello_options'): str,
                                                         Optional('dbd_options'): str,
                                                         Optional('dead_timer'): str,
@@ -2553,6 +2554,7 @@ class ShowIpOspfNeighborDetailSchema(MetaParser):
                                                         'state': str,
                                                         'dr_ip_addr': str,
                                                         'bdr_ip_addr': str,
+                                                        Optional('interface_id'): str,
                                                         Optional('hello_options'): str,
                                                         Optional('dbd_options'): str,
                                                         Optional('dead_timer'): str,
@@ -2584,6 +2586,7 @@ class ShowIpOspfNeighborDetailSchema(MetaParser):
                                                         'state': str,
                                                         'dr_ip_addr': str,
                                                         'bdr_ip_addr': str,
+                                                        Optional('interface_id'): str,
                                                         Optional('hello_options'): str,
                                                         Optional('dbd_options'): str,
                                                         Optional('dead_timer'): str,
@@ -2645,7 +2648,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                 neighbor = str(m.groupdict()['neighbor'])
                 address = str(m.groupdict()['address'])
                 if m.groupdict()['intf_id']:
-                    interface_id = int(m.groupdict()['intf_id'])
+                    interface_id = str(m.groupdict()['intf_id'])
                 continue
 
             # In the area 0 via interface GigabitEthernet2
@@ -2841,10 +2844,15 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
 
                 # Set values
                 sub_dict['neighbor_router_id'] = neighbor
-                sub_dict['address'] = address
                 sub_dict['interface'] = interface
                 try:
+                    sub_dict['address'] = address
+                    del address
+                except:
+                    pass
+                try:
                     sub_dict['interface_id'] = interface_id
+                    del interface_id
                 except:
                     pass
                 continue

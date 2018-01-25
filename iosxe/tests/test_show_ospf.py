@@ -1273,6 +1273,7 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
                                                         'dbd_options': '0x42',
                                                         'index': '1/2/2,',
                                                         'interface': 'GigabitEthernet2',
+                                                        'interface_id': 'unknown',
                                                         'neighbor_router_id': '2.2.2.2',
                                                         'uptime': '08:04:20',
                                                         'next': '0x0(0)/0x0(0)/0x0(0)',
@@ -1381,7 +1382,7 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
 
         raw1 = '''\
             R1_ospf_xe#show ip ospf neighbor detail 
-             Neighbor 2.2.2.2, interface address 10.1.2.2
+            Neighbor 2.2.2.2, interface address 10.1.2.2, interface-id unknown
                 In the area 0 via interface GigabitEthernet2
                 Neighbor priority is 1, State is FULL, 6 state changes
                 DR is 10.1.2.1 BDR is 10.1.2.2
@@ -1393,7 +1394,7 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
                 First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
                 Last retransmission scan length is 0, maximum is 0
                 Last retransmission scan time is 0 msec, maximum is 0 msec
-             Neighbor 4.4.4.4, interface address 10.1.4.4
+            Neighbor 4.4.4.4, interface address 10.1.4.4
                 In the area 0 via interface GigabitEthernet1
                 Neighbor priority is 1, State is FULL, 6 state changes
                 DR is 10.1.4.4 BDR is 10.1.4.1
@@ -1406,7 +1407,7 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
                 First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
                 Last retransmission scan length is 0, maximum is 1
                 Last retransmission scan time is 0 msec, maximum is 0 msec
-             Neighbor 22.22.22.22, interface address 22.22.22.22
+            Neighbor 22.22.22.22, interface address 22.22.22.22
                 In the area 1 via interface OSPF_SL1
                 Neighbor priority is 0, State is FULL, 6 state changes
                 DR is 0.0.0.0 BDR is 0.0.0.0
@@ -1418,7 +1419,7 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
                 First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
                 Last retransmission scan length is 1, maximum is 1
                 Last retransmission scan time is 0 msec, maximum is 0 msec
-             Neighbor 55.55.55.55, interface address 20.1.5.5
+            Neighbor 55.55.55.55, interface address 20.1.5.5
                 In the area 1 via interface GigabitEthernet3
                 Neighbor priority is 1, State is FULL, 6 state changes
                 DR is 20.1.5.1 BDR is 20.1.5.5
@@ -1597,7 +1598,7 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-    def test_show_ip_ospf_neighbor_detail_full1(self):
+    def test_show_ip_ospf_neighbor_detail_full2(self):
         
         self.maxDiff = None
 
