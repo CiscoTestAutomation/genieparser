@@ -1183,7 +1183,7 @@ class ShowPlatform(ShowPlatformSchema):
                 # -------------------------------------------
                 # *1       Active          3          Ready
                 p4 = re.compile(r'^\*?(?P<switch>\d+) +(?P<role>\w+) +'
-                                 '(?P<priority>\d+) +(?P<state>\w+)$')
+                                 '(?P<priority>\d+) +(?P<state>[\w\s]+)$')
                 m = p4.match(line)
                 if m:
                     slot = m.groupdict()['switch']
