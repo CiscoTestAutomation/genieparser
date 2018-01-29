@@ -31,14 +31,13 @@ class ShowIpRouteSchema(MetaParser):
                                     Optional('outgoing_interface'): {
                                         Any(): {  # interface  if there is no next_hop
                                             Optional('outgoing_interface'): str,
-                                            Optional('last_updated'): str,
+                                            Optional('updated'): str,
                                         },
                                     },
                                     Optional('next_hop_list'): {
                                         Any(): {  # index
                                             Optional('index'): int,
                                             Optional('next_hop'): str,
-                                            Optional('last_updated'): str,
                                             Optional('outgoing_interface'): str,
                                             Optional('updated'): str,
                                         },
