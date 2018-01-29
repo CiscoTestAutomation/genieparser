@@ -486,6 +486,7 @@ class test_show_ipv6_route_updated(unittest.TestCase):
         Last updated 09:43:27 06 December 2017
     '''}
     golden_parsed_output_1 = {
+        'ipv6_unicast_routing_enabled': True,
         'vrf':{
             'default':{
                 'address_family': {
@@ -597,6 +598,7 @@ class test_show_ipv6_route_updated(unittest.TestCase):
 
        '''}
     golden_parsed_output_2 = {
+        'ipv6_unicast_routing_enabled': True,
         'vrf': {
             'VRF1': {
                 'address_family': {

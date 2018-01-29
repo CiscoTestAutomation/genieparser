@@ -424,6 +424,7 @@ class ShowIpRoute(ShowIpRouteSchema):
 class ShowIpv6RouteUpdatedSchema(MetaParser):
     """Schema for show ipv6 route updated"""
     schema = {
+        'ipv6_unicast_routing_enabled': bool,
         'vrf': {
             Any(): {
                 Optional('address_family'): {
@@ -447,7 +448,6 @@ class ShowIpv6RouteUpdatedSchema(MetaParser):
                                         Any(): {  # index
                                             Optional('index'): int,
                                             Optional('next_hop'): str,
-                                            Optional('last_updated'): str,
                                             Optional('outgoing_interface'): str,
                                             Optional('updated'): str,
                                         },
@@ -757,4 +757,7 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
                 index += 1
 
                 continue
+
+        if len(result_dict):
+            result_dict['ipv6_unicast_routing_enabled'] = True
         return result_dict
