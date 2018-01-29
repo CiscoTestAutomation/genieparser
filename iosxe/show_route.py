@@ -19,9 +19,6 @@ class ShowIpRouteSchema(MetaParser):
             Any(): {
                 Optional('address_family'): {
                     Any(): {
-                        Optional('subnetted_ip'): str,
-                        Optional('total_masks'): int,
-                        Optional('total_subnetd'): int,
                         Optional('routes'): {
                             Any(): {
                                 Optional('route'): str,
