@@ -189,7 +189,7 @@ class ShowVersion(ShowVersionSchema):
                     version_dict['platform']['software']['system_compile_time'] = system_compile_time
                 continue
 
-            p12 = re.compile(r'^\s*NXOS +image +file +is: +(?P<system_image_file>[a-zA-Z\:\/0-9\-\.]+)$')
+            p12 = re.compile(r'^\s*NXOS +image +file +is: +(?P<system_image_file>[\w\:\/\-\.]+)$')
             m = p12.match(line)
             if m:
                 system_image_file = str(m.groupdict()['system_image_file'])
