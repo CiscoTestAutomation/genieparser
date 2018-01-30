@@ -7,7 +7,7 @@ from ats.topology import Device
 from metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from parser.iosxe.show_route import ShowIpRoute, ShowIpv6RouteUpdated
+from parser.iosxe.show_routing import ShowIpRoute, ShowIpv6RouteUpdated
 
 # ============================================
 # unit test for 'show ip route'
@@ -427,6 +427,7 @@ class test_show_ip_route(unittest.TestCase):
             },
         },
     }
+
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpRoute(device=self.device)
@@ -448,7 +449,8 @@ class test_show_ip_route(unittest.TestCase):
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output_2_with_vrf)
 
-##################################################
+
+###################################################
 # unit test for show ipv6 route updated
 ####################################################
 class test_show_ipv6_route_updated(unittest.TestCase):
@@ -664,6 +666,7 @@ class test_show_ipv6_route_updated(unittest.TestCase):
             },
         },
     }
+
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpv6RouteUpdated(device=self.device)
