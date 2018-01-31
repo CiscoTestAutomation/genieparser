@@ -90,14 +90,6 @@ class ShowIpOspfSchema(MetaParser):
                                         'external_lsa': bool,
                                         'external_lsa_metric': int,
                                         'state': str},
-                                    Optional('on_switchover'): 
-                                        {'on_switchover': int,
-                                        'include_stub': bool,
-                                        'summary_lsa': bool,
-                                        'summary_lsa_metric': int,
-                                        'external_lsa': bool,
-                                        'external_lsa_metric': int,
-                                        'state': str},
                                     },
                                 Optional('spf_control'): 
                                     {Optional('incremental_spf'): bool,
@@ -466,10 +458,9 @@ class ShowIpOspf(ShowIpOspfSchema):
                     continue
 
             # Condition: always State: active
-            # Condition: on switch-over for 10 seconds, State: inactive
             # Condition: on start-up for 5 seconds, State: inactive
             p14_2 = re.compile(r'^Condition:'
-                               ' +(?P<condition>(always|on switch-over|on start-up))'
+                               ' +(?P<condition>(always|on start-up))'
                                '(?: +for +(?P<seconds>(\d+)) +seconds,)?'
                                ' +State: +(?P<state>(\S+))$')
             m = p14_2.match(line)
