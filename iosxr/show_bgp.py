@@ -2556,6 +2556,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
             #                    Last_Sent               Sent  Last_Rcvd               Rcvd
             #    Open:           Jun 28 18:24:28.875        1  Jun 28 18:24:28.875        1
             #    Notification:   ---                        0  ---                        0
+            #    Notification:   Feb  2 15:59:59.043        1  ---                        0
             #    Update:         Jun 28 18:28:43.838        2  Jun 28 18:24:29.135        1
             #    Keepalive:      Jun 28 19:17:44.616       55  Jun 28 19:17:31.987       54
             #    Route_Refresh:  ---                        0  ---                        0
@@ -2563,7 +2564,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
             p29 = re.compile(r'^(?P<name>[a-zA-Z\s]+) *: *'
                               '(?P<last_sent>\w+ *\d+ *[\d\:\.]+) *'
                               '(?P<sent>[0-9]+) *'
-                              '(?P<last_received>\w+ *\d+ *[\d\:\.]+) *'
+                              '(?P<last_received>\w+ *\d+ *[\d\:\.\-]+) *'
                               '(?P<received>[0-9]+)$')
             m = p29.match(line)
 
