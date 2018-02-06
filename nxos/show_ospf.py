@@ -2461,6 +2461,9 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
             m = p3.match(line)
             if m:
                 age = int(m.groupdict()['age'])
+                dummy = m.groupdict()['dummy']
+                if dummy and "maxage" in dummy.lower():
+                    maxage = True
                 continue
 
             # Options: 0x20 (No TOS-capability, DC)
@@ -2542,6 +2545,13 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                     del age
                 except:
                     pass
+                try:
+                    # Set previously parsed values
+                    header_dict['maxage'] = maxage
+                    del maxage
+                except:
+                    pass
+
                 try:
                     header_dict['option'] = option
                     del option
@@ -2903,6 +2913,7 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 continue
 
             # Link ID : 10.1.4.4
+            # Link-ID : 100.1.11.2
             p28 = re.compile(r'^(Link +ID|Link-ID) *: +(?P<id>(\S+))$')
             m = p28.match(line)
             if m:
@@ -3065,6 +3076,7 @@ class ShowIpOspfDatabaseExternalDetailSchema(MetaParser):
                                                                     'option_desc': str,
                                                                     'lsa_id': str,
                                                                     'age': int,
+                                                                    Optional('maxage'): bool,
                                                                     'type': int,
                                                                     'adv_router': str,
                                                                     'seq_num': str,
@@ -3150,6 +3162,7 @@ class ShowIpOspfDatabaseNetworkDetailSchema(MetaParser):
                                                                     'option_desc': str,
                                                                     'lsa_id': str,
                                                                     'age': int,
+                                                                    Optional('maxage'): bool,
                                                                     'type': int,
                                                                     'adv_router': str,
                                                                     'seq_num': str,
@@ -3230,6 +3243,7 @@ class ShowIpOspfDatabaseSummaryDetailSchema(MetaParser):
                                                                     'option_desc': str,
                                                                     'lsa_id': str,
                                                                     'age': int,
+                                                                    Optional('maxage'): bool,
                                                                     'type': int,
                                                                     'adv_router': str,
                                                                     'seq_num': str,
@@ -3312,6 +3326,7 @@ class ShowIpOspfDatabaseRouterDetailSchema(MetaParser):
                                                                     'option_desc': str,
                                                                     'lsa_id': str,
                                                                     'age': int,
+                                                                    Optional('maxage'): bool,
                                                                     'type': int,
                                                                     'adv_router': str,
                                                                     'seq_num': str,
@@ -3403,6 +3418,7 @@ class ShowIpOspfDatabaseOpaqueAreaDetailSchema(MetaParser):
                                                                     'option_desc': str,
                                                                     'lsa_id': str,
                                                                     'age': int,
+                                                                    Optional('maxage'): bool,
                                                                     'type': int,
                                                                     'adv_router': str,
                                                                     'seq_num': str,
