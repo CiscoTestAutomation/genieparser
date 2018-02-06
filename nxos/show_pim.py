@@ -973,6 +973,15 @@ class ShowPimRp(ShowPimRpSchema):
             if m:
                 anycast_rp = m.groupdict()['anycast_rp']
                 flag = True
+                
+                if 'vrf' not in parsed_output:
+                    parsed_output['vrf'] = {}
+                if vrf_name not in parsed_output['vrf']:
+                    parsed_output['vrf'][vrf_name] = {}
+                if 'address_family' not in parsed_output['vrf'][vrf_name]:
+                    parsed_output['vrf'][vrf_name]['address_family'] = {}
+                if af_name not in parsed_output['vrf'][vrf_name]['address_family']:
+                    parsed_output['vrf'][vrf_name]['address_family'][af_name] = {}
                 continue
 
             # 10.1.2.1*  10.1.5.1
@@ -1057,10 +1066,13 @@ class ShowPimRp(ShowPimRpSchema):
                 continue
 
             # RP-source: (local), 
-            p8_3 = re.compile(r'^\s*RP\-source:( +(?P<rp_source>[\w\S]+))? +\(+(?P<info_source_type>\w+)+\),$')
+            # RP-source: (local), group-map: BIDIR_SPARSE1, 
+            p8_3 = re.compile(r'^\s*RP\-source:( +(?P<rp_source>\S+))? +\(+(?P<info_source_type>\w+)+\),'
+                               ' *(group-map: +(?P<route_map>[\w\-]+),)?$')
             m = p8_3.match(line)
             if m:
                 rp_source = m.groupdict()['rp_source']
+                route_map = m.groupdict()['route_map']
                 info_source_type = m.groupdict()['info_source_type']
                 if info_source_type.lower() == 'local':
                     info_source_type_conversion = 'static'
@@ -1255,9 +1267,9 @@ class ShowPimRp(ShowPimRpSchema):
 
                     parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
                         ['bsr']['bsr_address'][rp_source]['priority'] = priority
-
-                    parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
-                        ['bsr']['rp_candidate_next_advertisement'] = expires
+                    if expires:
+                        parsed_output['vrf'][vrf_name]['address_family'][af_name]['rp']\
+                            ['bsr']['rp_candidate_next_advertisement'] = expires
 
 
                 # rp  bsr  rp

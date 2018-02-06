@@ -740,7 +740,7 @@ class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
                                                 'autoconfig_area_id': str,
                                                 'igp_sync': bool},
                                             },
-                                        'interfaces': 
+                                        Optional('interfaces'): 
                                             {Any(): 
                                                 {'area': str,
                                                 'name': str,
@@ -1425,13 +1425,13 @@ class ShowIpOspfVirtualLinksSchema(MetaParser):
                                               'cost': int,
                                               'state': str,
                                               'interface_type': str,
-                                              'hello_timer': str,
+                                              Optional('hello_timer'): str,
                                               Optional('wait_timer'): int,
                                               'statistics': {
                                                   'link_scope_lsa_count': int,
                                                   'link_scope_lsa_cksum_sum': int,
                                               },
-                                              'neighbors': {
+                                              Optional('neighbors'): {
                                                   Any(): {
                                                       'neighbor_router_id': str,
                                                       'address': str,
@@ -1603,7 +1603,7 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                             {Any(): 
                                 {'areas': 
                                     {Any(): 
-                                        {'interfaces': 
+                                        {Optional('interfaces'): 
                                             {Any(): 
                                                 {'name': str,
                                                 'bfd': 
@@ -1764,6 +1764,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
             line = line.strip()
 
             # Ethernet2/2 is up, line protocol is up
+            # port-channel2.100 is up, line protocol is up
             p1 = re.compile(r'^(?P<intf>(\S+)) +is +(?P<enable>(up|down)),'
                              ' +line +protocol +is'
                              ' +(?P<line_protocol>(up|down))$')
@@ -2454,10 +2455,15 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 continue
 
             # LS age: 1565
-            p3 = re.compile(r'^LS +age: +(?P<age>(\d+))$')
+            # LS age: 3690(Maxage)
+            p3 = re.compile(r'^LS +age: +(?P<age>\d+)'
+                             '(?P<dummy>\S+)?$')
             m = p3.match(line)
             if m:
                 age = int(m.groupdict()['age'])
+                dummy = m.groupdict()['dummy']
+                if dummy and "maxage" in dummy.lower():
+                    maxage = True
                 continue
 
             # Options: 0x20 (No TOS-capability, DC)
@@ -2539,6 +2545,13 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                     del age
                 except:
                     pass
+                try:
+                    # Set previously parsed values
+                    header_dict['maxage'] = maxage
+                    del maxage
+                except:
+                    pass
+
                 try:
                     header_dict['option'] = option
                     del option
@@ -2900,7 +2913,8 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 continue
 
             # Link ID : 10.1.4.4
-            p28 = re.compile(r'^Link +ID *: +(?P<id>(\S+))$')
+            # Link-ID : 100.1.11.2
+            p28 = re.compile(r'^(Link +ID|Link-ID) *: +(?P<id>(\S+))$')
             m = p28.match(line)
             if m:
                 db_dict['link_tlvs'][link_tlv_counter]['link_id'] = \
@@ -3062,6 +3076,7 @@ class ShowIpOspfDatabaseExternalDetailSchema(MetaParser):
                                                                     'option_desc': str,
                                                                     'lsa_id': str,
                                                                     'age': int,
+                                                                    Optional('maxage'): bool,
                                                                     'type': int,
                                                                     'adv_router': str,
                                                                     'seq_num': str,
@@ -3147,6 +3162,7 @@ class ShowIpOspfDatabaseNetworkDetailSchema(MetaParser):
                                                                     'option_desc': str,
                                                                     'lsa_id': str,
                                                                     'age': int,
+                                                                    Optional('maxage'): bool,
                                                                     'type': int,
                                                                     'adv_router': str,
                                                                     'seq_num': str,
@@ -3227,6 +3243,7 @@ class ShowIpOspfDatabaseSummaryDetailSchema(MetaParser):
                                                                     'option_desc': str,
                                                                     'lsa_id': str,
                                                                     'age': int,
+                                                                    Optional('maxage'): bool,
                                                                     'type': int,
                                                                     'adv_router': str,
                                                                     'seq_num': str,
@@ -3309,6 +3326,7 @@ class ShowIpOspfDatabaseRouterDetailSchema(MetaParser):
                                                                     'option_desc': str,
                                                                     'lsa_id': str,
                                                                     'age': int,
+                                                                    Optional('maxage'): bool,
                                                                     'type': int,
                                                                     'adv_router': str,
                                                                     'seq_num': str,
@@ -3400,6 +3418,7 @@ class ShowIpOspfDatabaseOpaqueAreaDetailSchema(MetaParser):
                                                                     'option_desc': str,
                                                                     'lsa_id': str,
                                                                     'age': int,
+                                                                    Optional('maxage'): bool,
                                                                     'type': int,
                                                                     'adv_router': str,
                                                                     'seq_num': str,

@@ -68,6 +68,7 @@ class ShowInterfaceSchema(MetaParser):
             Optional('port_channel'):
                 {Optional('port_channel_member'): bool,
                 Optional('port_channel_int'): str,
+                Optional('port_channel_member_intfs'): list
             },
             Optional('bandwidth'): int,
             Optional('counters'):
@@ -181,8 +182,9 @@ class ShowInterface(ShowInterfaceSchema):
                 continue
 
             # Vlan1 is down (Administratively down), line protocol is down, autostate enabled
+            # Vlan23 is administratively down (Administratively down), line protocol is down, autostate enabled
             p1_1 =  re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) *is'
-                              ' *(?P<enabled>\w+)'
+                              ' *(?P<enabled>[\w\s]+)'
                               '( *\((?P<link_state>[\w\-\/\s]+)\))?, +'
                               'line +protocol +is +(?P<line_protocol>\w+),? *'
                               '(autostate +(?P<autostate>\w+))?$')
@@ -205,8 +207,8 @@ class ShowInterface(ShowInterfaceSchema):
 
                 if enabled:
                     enabled = enabled.lower()
-                    interface_dict[interface]['enabled'] = False if enabled == 'down' else True
-                    interface_dict[interface]['oper_status'] = enabled
+                    interface_dict[interface]['enabled'] = False if 'down' in enabled else True
+                    interface_dict[interface]['oper_status'] = enabled.strip()
                 if line_protocol:
                     interface_dict[interface]['line_protocol'] = line_protocol.lower()
                 if autostate:
@@ -545,6 +547,21 @@ class ShowInterface(ShowInterfaceSchema):
                 continue
 
             # Members in this channel: Eth1/15, Eth1/16
+            # Members in this channel: Eth1/28
+            p38 = re.compile(r'^\s*Members +in +this +channel *: *'
+                              '(?P<port_channel_member_intfs>[\w\/\.\-\,\s]+)$')
+            m = p38.match(line)
+            if m:
+                port_channel_member_intfs = m.groupdict()['port_channel_member_intfs']
+                if port_channel_member_intfs:
+                    if 'port_channel' not in interface_dict[interface]:
+                        interface_dict[interface]['port_channel'] = {}
+                    interface_dict[interface]['port_channel']\
+                        ['port_channel_member'] = True
+                    interface_dict[interface]['port_channel']\
+                        ['port_channel_member_intfs'] = [Common.convert_intf_name(item) \
+                                for item in port_channel_member_intfs.split(',')]
+                continue
             
             #EEE (efficient-ethernet) : n/a
             p17 = re.compile(r'^\s*EEE *\(efficient-ethernet\) *:'
