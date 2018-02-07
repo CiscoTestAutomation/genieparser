@@ -44,12 +44,17 @@ class Common():
                    'Gi': 'GigabitEthernet',
                    'Te': 'TenGigabitEthernet',
                    'mgmt': 'mgmt'}
-        int_type = re.search('([a-zA-Z]+)', intf).group(0)
-        int_port = re.search('([\d\/\.]+)', intf).group(0)
-        if int_type in convert.keys():
-            return(convert[int_type] + int_port)
+        m = re.search('([a-zA-Z]+)', intf) 
+        m1 = re.search('([\d\/\.]+)', intf)
+        if hasattr(m, 'group') and hasattr(m1, 'group'):
+            int_type = m.group(0)
+            int_port = m1.group(0)
+            if int_type in convert.keys():
+                return(convert[int_type] + int_port)
+            else:
+                return(intf)
         else:
-            return(intf)
+            return(intf)           
 
 
     @classmethod

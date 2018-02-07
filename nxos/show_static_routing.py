@@ -93,8 +93,9 @@ class ShowIpStaticRoute(ShowIpStaticRouteSchema):
 
             #  2.2.2.2/32, configured nh: 10.2.3.2/32 Ethernet1/4
             #  2.2.2.2/32, configured nh: 20.2.3.2/32
+            # 200.0.5.1/32, configured nh: 0.0.0.0/32 tunnel-te12
             p2 = re.compile(r'^\s*(?P<route>[\d\/\.]+),'
-                             ' +configured +nh: +(?P<nexthop>[\d\/\.]+)?( +(?P<interface>[a-zA-Z][\w\/\.]+))?$')
+                             ' +configured +nh: +(?P<nexthop>[\d\/\.]+)?( +(?P<interface>[a-zA-Z][\w\-\/\.]+))?$')
             m = p2.match(line)
             if m:
                 next_hop = ""

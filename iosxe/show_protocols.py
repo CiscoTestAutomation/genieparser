@@ -24,7 +24,13 @@ class ShowIpProtocolsSchema(MetaParser):
 
     schema = {
         'protocols': 
-            {'ospf': 
+            {Optional('rip'):
+                {'protocol_under_dev': bool},
+            Optional('eigrp'):
+                {'protocol_under_dev': bool},
+            Optional('isis'):
+                {'protocol_under_dev': bool},
+            Optional('ospf'):
                 {'vrf': 
                     {Any(): 
                         {'address_family': 
@@ -72,7 +78,7 @@ class ShowIpProtocolsSchema(MetaParser):
                         },
                     },
                 },
-            'application': 
+            Optional('application'):
                 {'outgoing_filter_list': str,
                 'incoming_filter_list': str,
                 'maximum_path': int,
@@ -84,7 +90,7 @@ class ShowIpProtocolsSchema(MetaParser):
                 'holddown': int,
                 'flushed': int,
                 },
-            'bgp': 
+            Optional('bgp'):
                 {'instance': 
                     {'default': 
                         {'bgp_id': int,
@@ -255,6 +261,48 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                             ['vrf']['default']['address_family']['ipv4']
                 continue
 
+            # Routing Protocol is "isis"
+            p1_4 = re.compile(r'^Routing +Protocol +is +\"isis\"$')
+            m = p1_4.match(line)
+            if m:
+                protocol = 'isis'
+                # Build dictionary
+                if 'protocols' not in ret_dict:
+                    ret_dict['protocols'] = {}
+                if 'isis' not in ret_dict['protocols']:
+                    ret_dict['protocols']['isis'] = {}
+                    ret_dict['protocols']['isis']['protocol_under_dev'] = True
+                isis_dict = ret_dict['protocols']['isis']
+                continue
+
+            # Routing Protocol is "eigrp 1"
+            p1_5 = re.compile(r'^Routing +Protocol +is +\"eigrp +(?P<pid>(\d+))\"$')
+            m = p1_5.match(line)
+            if m:
+                protocol = 'eigrp'
+                # Build dictionary
+                if 'protocols' not in ret_dict:
+                    ret_dict['protocols'] = {}
+                if 'eigrp' not in ret_dict['protocols']:
+                    ret_dict['protocols']['eigrp'] = {}
+                    ret_dict['protocols']['eigrp']['protocol_under_dev'] = True
+                eigrp_dict = ret_dict['protocols']['eigrp']
+                continue
+
+            # Routing Protocol is "rip"
+            p1_6 = re.compile(r'^Routing +Protocol +is +\"rip\"$')
+            m = p1_6.match(line)
+            if m:
+                protocol = 'rip'
+                # Build dictionary
+                if 'protocols' not in ret_dict:
+                    ret_dict['protocols'] = {}
+                if 'rip' not in ret_dict['protocols']:
+                    ret_dict['protocols']['rip'] = {}
+                    ret_dict['protocols']['rip']['protocol_under_dev'] = True
+                rip_dict = ret_dict['protocols']['rip']
+                continue
+
             # Outgoing update filter list for all interfaces is not set
             # Incoming update filter list for all interfaces is not set
             p2 = re.compile(r'^(?P<dir>(Outgoing|Incoming)) +update +filter'
@@ -270,6 +318,8 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
                     pdict = app_dict
                 elif protocol == 'bgp':
                     pdict = bgp_dict
+                else:
+                    continue
                 pdict[direction] = str(m.groupdict()['state']).lower()
                 continue
             
