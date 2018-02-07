@@ -6344,13 +6344,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                             'PEER-POLICY2':
                                 {'inherit_peer_seq': 20}},
                         'maximum_prefix_max_prefix_no': 300,
-                        'nbr_af_default_originate': True,
-                        'nbr_af_default_originate_route_map': 'Default '
-                                                              'information '
-                                                              'originate, '
-                                                              'default '
-                                                              'not '
-                                                              'sent',
+                        'default_originate': True,
                         'next_hop_self': True,
                         'path':
                             {'accepted_paths': 0,

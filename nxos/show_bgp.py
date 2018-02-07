@@ -49,10 +49,10 @@ from parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
 # import parser utils
 from parser.utils.common import Common
 
-# =====================================
-# Parser for 'show bgp process vrf all'
-# =====================================
 
+# =====================================
+# Schema for 'show bgp process vrf all'
+# =====================================
 class ShowBgpProcessVrfAllSchema(MetaParser):
     """Schema for show bgp process vrf all"""
 
@@ -137,6 +137,9 @@ class ShowBgpProcessVrfAllSchema(MetaParser):
             },
         }
 
+# =====================================
+# Parser for 'show bgp process vrf all'
+# =====================================
 class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
     """Parser for:
         show bgp process vrf all
@@ -965,9 +968,8 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
 
 
 # =========================================
-# Parser for 'show bgp peer-session <WORD>'
+# Schema for 'show bgp peer-session <WORD>'
 # =========================================
-
 class ShowBgpPeerSessionSchema(MetaParser):
     """Schema for show bgp peer-session <peer_session>"""
 
@@ -993,6 +995,9 @@ class ShowBgpPeerSessionSchema(MetaParser):
             },
         }
 
+# =========================================
+# Parser for 'show bgp peer-session <WORD>'
+# =========================================
 class ShowBgpPeerSession(ShowBgpPeerSessionSchema):
 
     """Parser for:
@@ -1154,9 +1159,8 @@ class ShowBgpPeerSession(ShowBgpPeerSessionSchema):
 
 
 # ========================================
-# Parser for 'show bgp peer-policy <WORD>'
+# Schema for 'show bgp peer-policy <WORD>'
 # ========================================
-
 class ShowBgpPeerPolicySchema(MetaParser):
     """Schema for show bgp peer-policy <peer_policy>"""
 
@@ -1181,6 +1185,9 @@ class ShowBgpPeerPolicySchema(MetaParser):
             },
         }
 
+# ========================================
+# Parser for 'show bgp peer-policy <WORD>'
+# ========================================
 class ShowBgpPeerPolicy(ShowBgpPeerPolicySchema):
     """Parser for:
         show bgp peer-policy <peer_policy>
@@ -1340,10 +1347,9 @@ class ShowBgpPeerPolicy(ShowBgpPeerPolicySchema):
         return parsed_dict
 
 
-# ==========================================
-# Parser for 'show bgp peer-template <peer_template>'
-# ==========================================
-
+# ===================================================
+# Schema for 'show bgp peer-template <peer_template>'
+# ===================================================
 class ShowBgpPeerTemplateSchema(MetaParser):
     """Schema for show bgp peer-template <peer_template>"""
 
@@ -1367,6 +1373,9 @@ class ShowBgpPeerTemplateSchema(MetaParser):
             },
         }
 
+# ===================================================
+# Parser for 'show bgp peer-template <peer_template>'
+# ===================================================
 class ShowBgpPeerTemplate(ShowBgpPeerTemplateSchema):
 
     '''Parser for show bgp peer-template <peer_template>
@@ -1528,9 +1537,8 @@ class ShowBgpPeerTemplate(ShowBgpPeerTemplateSchema):
 
 
 # =================================
-# Parser for 'show bgp vrf all all'
+# Schema for 'show bgp vrf all all'
 # =================================
-
 class ShowBgpVrfAllAllSchema(MetaParser):
     """Schema for show bgp vrf all all"""
 
@@ -1572,6 +1580,9 @@ class ShowBgpVrfAllAllSchema(MetaParser):
             },
         }
 
+# =================================
+# Parser for 'show bgp vrf all all'
+# =================================
 class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
     """Parser for show bgp vrf all all"""
 
@@ -1942,7 +1953,6 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
 # ==============================================
 # Schema for 'show bgp vrf <vrf> all neighbors'
 # ==============================================
-
 class ShowBgpVrfAllNeighborsSchema(MetaParser):
     """Schema for show bgp vrf <vrf> all neighbors"""
 
@@ -2064,8 +2074,8 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                          Optional('maximum_prefix_max_prefix_no'): int,
                          Optional('route_map_name_in'): str,
                          Optional('route_map_name_out'): str,
-                         Optional('nbr_af_default_originate'): bool,
-                         Optional('nbr_af_default_originate_route_map'): str,
+                         Optional('default_originate'): bool,
+                         Optional('default_originate_route_map'): str,
                          Optional('route_reflector_client'): bool,
                          Optional('enabled'): bool,
                          Optional('graceful_restart'): bool,
@@ -2087,6 +2097,9 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
             },
         }
 
+# ==============================================
+# Parser for 'show bgp vrf <vrf> all neighbors'
+# ==============================================
 class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
     """Parser for:
         show bgp vrf <vrf> all neighbors
@@ -2756,15 +2769,19 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 continue
 
             # Default information originate, default not sent
-            p46 = re.compile(r'^\s*Default +information +originate, +default'
-                              ' +not +sent$')
+            # Default information originate, default sent
+            # Default information originate, route-map SOMENAME, default not sent
+            p46 = re.compile(r'^\s*Default +information +originate,'
+                              '(?: +route-map +(?P<route_map>(\S+)),)?'
+                              ' +default(?: +not)? +sent$')
             m = p46.match(line)
             if m:
                 parsed_dict['neighbor'][neighbor_id]['address_family']\
-                    [address_family]['nbr_af_default_originate'] = True
-                parsed_dict['neighbor'][neighbor_id]['address_family']\
-                    [address_family]['nbr_af_default_originate_route_map'] = \
-                        str(line).strip()
+                    [address_family]['default_originate'] = True
+                if m.groupdict()['route_map']:
+                    parsed_dict['neighbor'][neighbor_id]['address_family']\
+                        [address_family]['default_originate_route_map'] = \
+                            m.groupdict()['route_map']
                 continue
 
             # Inherited policy-templates:
@@ -2892,7 +2909,6 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
 # ==================================================
 # Schema for 'show bgp vrf all all nexthop-database'
 # ==================================================
-
 class ShowBgpVrfAllAllNextHopDatabaseSchema(MetaParser):
     """Schema for show bgp vrf all all nexthop-database"""
 
@@ -2934,6 +2950,9 @@ class ShowBgpVrfAllAllNextHopDatabaseSchema(MetaParser):
                 },
             }
 
+# ==================================================
+# Parser for 'show bgp vrf all all nexthop-database'
+# ==================================================
 class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
     """Parser for show bgp vrf all all nexthop-database"""
 
@@ -3095,7 +3114,6 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
 # =========================================
 # Schema for 'show bgp vrf all all summary'
 # =========================================
-
 class ShowBgpVrfAllAllSummarySchema(MetaParser):
     """Schema for show bgp vrf all all summary"""
 
@@ -3143,6 +3161,9 @@ class ShowBgpVrfAllAllSummarySchema(MetaParser):
             },
         }
 
+# =========================================
+# Parser for 'show bgp vrf all all summary'
+# =========================================
 class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
     """Parser for show bgp vrf all all summary"""
 
@@ -3384,7 +3405,6 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
 # ==================================================
 # Schema for 'show bgp vrf all dampening parameters'
 # ==================================================
-
 class ShowBgpVrfAllAllDampeningParametersSchema(MetaParser):
     """Schema for 'show bgp vrf all dampening parameters"""
     
@@ -3418,6 +3438,9 @@ class ShowBgpVrfAllAllDampeningParametersSchema(MetaParser):
             },
         }
 
+# ==================================================
+# Parser for 'show bgp vrf all dampening parameters'
+# ==================================================
 class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSchema):
     """Parser for 'show bgp vrf all dampening parameters"""
     
@@ -3518,10 +3541,9 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
         return bgp_dict
 
 
-# ======================================================================
+# ==========================================================================
 # Schema for 'show bgp vrf <vrf> all neighbors <neighbor> advertised-routes'
-# ======================================================================
-
+# ==========================================================================
 class ShowBgpVrfAllNeighborsAdvertisedRoutesSchema(MetaParser):
     """Schema for show bgp vrf <vrf> all neighbors <neighbor> advertised-routes"""
 
@@ -3560,6 +3582,9 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutesSchema(MetaParser):
             },
         }
 
+# ==========================================================================
+# Parser for 'show bgp vrf <vrf> all neighbors <neighbor> advertised-routes'
+# ==========================================================================
 class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRoutesSchema):
     """Parser for show bgp vrf <vrf> all neighbors <neighbor> advertised-routes"""
 
@@ -3893,10 +3918,9 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
         return route_dict
 
 
-# ============================================================
+# ===============================================================
 # Schema for 'show bgp vrf <vrf> all neighbors <neighbor> routes'
-# ============================================================
-
+# ===============================================================
 class ShowBgpVrfAllNeighborsRoutesSchema(MetaParser):
     """Schema for show bgp vrf <vrf> all neighbors <neighbor> routes"""
 
@@ -3935,6 +3959,9 @@ class ShowBgpVrfAllNeighborsRoutesSchema(MetaParser):
             },
         }
 
+# ===============================================================
+# Parser for 'show bgp vrf <vrf> all neighbors <neighbor> routes'
+# ===============================================================
 class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
     """Parser for show bgp vrf <vrf> all neighbors <neighbor> routes"""
 
@@ -4269,9 +4296,8 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
 
 
 # =====================================================================
-# Parser for 'show bgp vrf <WORD> all neighbors <WORD> received-routes'
+# Schema for 'show bgp vrf <WORD> all neighbors <WORD> received-routes'
 # =====================================================================
-
 class ShowBgpVrfAllNeighborsReceivedRoutesSchema(MetaParser):
     """Schema for show bgp vrf <vrf> all neighbors <neighbor> received-routes"""
 
@@ -4310,6 +4336,9 @@ class ShowBgpVrfAllNeighborsReceivedRoutesSchema(MetaParser):
             },
         }
 
+# =====================================================================
+# Parser for 'show bgp vrf <WORD> all neighbors <WORD> received-routes'
+# =====================================================================
 class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesSchema):
     """Parser for show bgp vrf <vrf> all neighbors <neighbor> received-routes"""
 
@@ -4646,7 +4675,6 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
 # ====================================
 # Schema for 'show running-config bgp'
 # ====================================
-
 class ShowRunningConfigBgpSchema(MetaParser):
     """Schema for show running-config bgp"""
 
@@ -4818,7 +4846,9 @@ class ShowRunningConfigBgpSchema(MetaParser):
                 },
             }
 
-
+# ====================================
+# Parser for 'show running-config bgp'
+# ====================================
 class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
     """Parser for show running-config bgp"""
 
@@ -5959,7 +5989,6 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
 # ===================================================
 # Schema for 'show bgp all dampening flap-statistics'
 # ===================================================
-
 class ShowBgpAllDampeningFlapStatisticsSchema(MetaParser):
     """Schema for show bgp all dampening flap-statistics"""
 
@@ -6012,7 +6041,9 @@ class ShowBgpAllDampeningFlapStatisticsSchema(MetaParser):
         }
     }
 
-
+# ===================================================
+# Parser for 'show bgp all dampening flap-statistics'
+# ===================================================
 class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema):
     """Parser for:
         show bgp all dampening flap-statistics
@@ -6358,9 +6389,9 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
         return etree_dict
 
 
-# ===================================================
+# ==========================================
 # Parser for 'show bgp all nexthop-database'
-# ===================================================
+# ==========================================
 class ShowBgpAllNexthopDatabase(ShowBgpVrfAllAllNextHopDatabase):
     """Parser for:
         show bgp all nexthop-database
@@ -6589,9 +6620,9 @@ class ShowBgpAllNexthopDatabase(ShowBgpVrfAllAllNextHopDatabase):
         return etree_dict
 
 
-# ===================================================
-# Parser for 'show bgp peer-template'
-# ===================================================
+# ===================================
+# Schema for 'show bgp peer-template'
+# ===================================
 class ShowBgpPeerTemplateCmdSchema(MetaParser):
     """Schema for show bgp peer-template"""
 
@@ -6651,6 +6682,10 @@ class ShowBgpPeerTemplateCmdSchema(MetaParser):
             },
         }
     }
+
+# ===================================
+# Parser for 'show bgp peer-template'
+# ===================================
 class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
     """Parser for:
         show bgp peer-template
@@ -7274,12 +7309,12 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
         return etree_dict
 
 
-# ================================================================================
-# common parse function for commands:
-#   'show bgp vrf <vrf> <address_family>  policy statistics redistribute'
-#   'show bgp vrf <vrf> <address_family>  policy statistics dampening'
-#   'show bgp vrf <vrf> <address_family>  policy statistics neighbor <neighbor>'
-# ================================================================================
+# ==============================================================================
+# Schema for:
+# * 'show bgp vrf <vrf> <address_family>  policy statistics redistribute
+# * 'show bgp vrf <vrf> <address_family>  policy statistics dampening'
+# * 'show bgp vrf <vrf> <address_family>  policy statistics neighbor <neighbor>'
+# ==============================================================================
 class ShowBgpPolicyStatisticsSchema(MetaParser):
     """Schema for:
        show bgp [vrf <vrf>] <address_family>  policy statistics redistribute
@@ -7309,6 +7344,13 @@ class ShowBgpPolicyStatisticsSchema(MetaParser):
             },
         }
     }
+
+# ==============================================================================
+# Parser for:
+# * 'show bgp vrf <vrf> <address_family>  policy statistics redistribute'
+# * 'show bgp vrf <vrf> <address_family>  policy statistics dampening''
+# * 'show bgp vrf <vrf> <address_family>  policy statistics neighbor <neighbor>'
+# ==============================================================================
 class ShowBgpPolicyStatistics(ShowBgpPolicyStatisticsSchema):
     """Parser for:
         show bgp [vrf <vrf>] <address_family>  policy statistics redistribute
@@ -7608,11 +7650,9 @@ class ShowBgpPolicyStatistics(ShowBgpPolicyStatisticsSchema):
                         pass
         return etree_dict
 
-
-# ================================================================================
-# 'show bgp vrf <vrf> <address_family> policy statistics redistribute'
-# 'show bgp <address_family> policy statistics redistribute'
-# ================================================================================
+# ===============================================================================
+# Parser for 'show bgp vrf <vrf> <address_family> policy statistics redistribute'
+# ===============================================================================
 class ShowBgpPolicyStatisticsRedistribute(ShowBgpPolicyStatistics):
     """Parser for:
         show bgp [vrf <vrf>] <address_family> policy statistics redistribute
@@ -7636,11 +7676,9 @@ class ShowBgpPolicyStatisticsRedistribute(ShowBgpPolicyStatistics):
                   .format(af=address_family)
         return super().xml(cmd)
 
-
-# ================================================================================
-# 'show bgp vrf <vrf> <address_family> policy statistics neighbor <xxx>'
-# 'show bgp <address_family> policy statistics neighbor <xxx>'
-# ================================================================================
+# ==================================================================================
+# Parser for 'show bgp vrf <vrf> <address_family> policy statistics neighbor <WORD>'
+# ==================================================================================
 class ShowBgpPolicyStatisticsNeighbor(ShowBgpPolicyStatistics):
     """Parser for:
         show bgp [vrf <vrf>] <address_family> policy statistics neighbor <neighbor>
@@ -7664,11 +7702,9 @@ class ShowBgpPolicyStatisticsNeighbor(ShowBgpPolicyStatistics):
                   .format(af=address_family, nei=neighbor)
         return super().xml(cmd)
 
-
-# ================================================================================
-# 'show bgp vrf <vrf> <address_family> policy statistics dampening'
-# 'show bgp <address_family> policy statistics dampening'
-# ================================================================================
+# ============================================================================
+# Parser for 'show bgp vrf <vrf> <address_family> policy statistics dampening'
+# ============================================================================
 class ShowBgpPolicyStatisticsDampening(ShowBgpPolicyStatistics):
     """Parser for:
         show bgp [vrf <vrf>] <address_family> policy statistics dampening
@@ -7691,5 +7727,3 @@ class ShowBgpPolicyStatisticsDampening(ShowBgpPolicyStatistics):
             cmd = 'show bgp {af} policy statistics dampening'\
                   .format(af=address_family)
         return super().xml(cmd)
-
-# vim: ft=python et sw=4
