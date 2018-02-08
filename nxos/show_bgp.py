@@ -153,6 +153,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
         parsed_dict = {}
 
         for line in out.splitlines():
+            line = line.replace('\t', '    ')
             line = line.rstrip()
 
             # BGP Process ID                 : 29474

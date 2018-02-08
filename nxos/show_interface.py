@@ -155,6 +155,7 @@ class ShowInterface(ShowInterfaceSchema):
         rx = False
         tx = False
         for line in out.splitlines():
+            line = line.replace('\t', '    ')
             line = line.rstrip()
 
 
@@ -582,10 +583,18 @@ class ShowInterface(ShowInterfaceSchema):
                  = last_link_flapped
                 continue
 
-            #Last clearing of "show interface" counters never
+            # Last clearing of "show interface" counters never
             p19 = re.compile(r'^\s*Last *clearing *of *\"show *interface\"'
                               ' *counters *(?P<last_clear>[a-z0-9\:]+)$')
             m = p19.match(line)
+            if m:
+                last_clear = m.groupdict()['last_clear']
+                continue
+
+            # Last clearing of "" counters 00:15:42
+            p19_1 = re.compile(r'^\s*Last *clearing *of *\" *\"'
+                              ' *counters *(?P<last_clear>[a-z0-9\:]+)$')
+            m = p19_1.match(line)
             if m:
                 last_clear = m.groupdict()['last_clear']
                 continue
