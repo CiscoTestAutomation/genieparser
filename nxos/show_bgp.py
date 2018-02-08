@@ -2054,7 +2054,7 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                     {Any(): 
                         {Optional('bgp_table_version'): int,
                          Optional('neighbor_version'): int,
-                         Optional('send_community'): bool,
+                         Optional('send_community'): str,
                          Optional('soo'): str,
                          Optional('soft_configuration'): bool,
                          Optional('next_hop_self'): bool,
@@ -2099,6 +2099,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
         
         # Init vars
         parsed_dict = {}
+        standard_send_community = False
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -2112,6 +2113,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                              ' +(?P<peer_index>[0-9]+)$')
             m = p1.match(line)
             if m:
+                standard_send_community = False
                 if 'neighbor' not in parsed_dict:
                     parsed_dict['neighbor'] = {}
                 neighbor_id = str(m.groupdict()['neighbor_id'])
@@ -2615,6 +2617,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                               ' +version +(?P<nbr_version>[0-9]+)$')
             m = p32.match(line)
             if m:
+                standard_send_community = False
                 parsed_dict['neighbor'][neighbor_id]['address_family']\
                     [address_family]['bgp_table_version'] = \
                         int(m.groupdict()['af_bgp_table_version'])
@@ -2659,8 +2662,9 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                               ' +neighbor$')
             m = p35.match(line)
             if m:
-                parsed_dict['neighbor'][neighbor_id]['address_family']\
-                    [address_family]['send_community'] = True
+                standard_send_community = True
+                parsed_dict['neighbor'][neighbor_id]['address_family'] \
+                    [address_family]['send_community'] = 'standard'
                 continue
 
             # Extended community attribute sent to this neighbor
@@ -2668,8 +2672,12 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                               ' +this +neighbor$')
             m = p36.match(line)
             if m:
-                parsed_dict['neighbor'][neighbor_id]['address_family']\
-                    [address_family]['send_community'] = True
+                parsed_dict['neighbor'][neighbor_id]['address_family'] \
+                    [address_family]['send_community'] = 'extended'
+
+                if standard_send_community:
+                    parsed_dict['neighbor'][neighbor_id]['address_family'] \
+                        [address_family]['send_community'] = 'both'
                 continue
 
             # Maximum prefixes allowed 300000
