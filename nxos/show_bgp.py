@@ -2279,13 +2279,23 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 continue
 
             # External BGP peer might be upto 255 hops away
-            p12 = re.compile(r'^\s*External +BGP +peer +might +be +upto'
+            p12_1 = re.compile(r'^\s*External +BGP +peer +might +be +upto'
                              ' +(?P<ebgp_multihop_max_hop>[0-9]+) +hops +away$')
-            m = p12.match(line)
+            m = p12_1.match(line)
             if m:
-                parsed_dict['neighbor'][neighbor_id]['ebgp_multihop_max_hop'] = \
-                    int(m.groupdict()['ebgp_multihop_max_hop'])
                 parsed_dict['neighbor'][neighbor_id]['ebgp_multihop'] = True
+                parsed_dict['neighbor'][neighbor_id]['ebgp_multihop_max_hop'] =\
+                    int(m.groupdict()['ebgp_multihop_max_hop'])
+                continue
+
+            # External BGP peer might be up to 5 hops away
+            p12_2 = re.compile(r'^\s*External +BGP +peer +might +be +up to'
+                             ' +(?P<ebgp_multihop_max_hop>[0-9]+) +hops +away$')
+            m = p12_2.match(line)
+            if m:
+                parsed_dict['neighbor'][neighbor_id]['ebgp_multihop'] = True
+                parsed_dict['neighbor'][neighbor_id]['ebgp_multihop_max_hop'] =\
+                    int(m.groupdict()['ebgp_multihop_max_hop'])
                 continue
 
             # TCP MD5 authentication is enabled
@@ -2301,8 +2311,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 continue
             
             # Only passive connection setup allowed
-            p14 = re.compile(r'^\s*Only +passive +connection +setup'
-                             ' +(?P<only_passive_conn>[a-zA-Z]+)$')
+            p14 = re.compile(r'^\s*Only +passive +connection +setup +allowed$')
             m = p14.match(line)
             if m:
                 if 'bgp_session_transport' not in parsed_dict['neighbor']\
@@ -2314,8 +2323,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                     parsed_dict['neighbor'][neighbor_id]\
                         ['bgp_session_transport']['connection'] = {}
                 parsed_dict['neighbor'][neighbor_id]['bgp_session_transport']\
-                    ['connection']['mode'] = \
-                    str(m.groupdict()['only_passive_conn'])
+                    ['connection']['mode'] = 'passive'
                 continue
 
             # Received 92717 messages, 3 notifications, 0 bytes in queue
@@ -2715,7 +2723,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                     [address_family]['route_map_name_out'] = \
                         str(m.groupdict()['route_map_name_out'])
                 continue
-            
+
             # Third-party Nexthop will not be computed.
             p40 = re.compile(r'^\s*Third-party +Nexthop +will +not +be'
                               ' +computed.$')

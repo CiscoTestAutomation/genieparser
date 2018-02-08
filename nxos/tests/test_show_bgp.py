@@ -6066,6 +6066,8 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 {'address_family':
                     {'ipv4 unicast':
                         {'bgp_table_version': 21,
+                        'default_originate': True,
+                        'default_originate_route_map': 'SOMENAME',
                         'third_party_nexthop': True,
                         'path':
                             {'accepted_paths': 0,
@@ -6158,6 +6160,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
           0 accepted paths consume 0 bytes of memory
           0 sent paths
           Third-party Nexthop will not be computed.
+          Default information originate, route-map SOMENAME, default not sent
           SOO Extcommunity: SOO:100:100
 
           No established BGP session with peer
@@ -6392,7 +6395,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                         {'dropped': 0,
                         'established': 0,
                         'last_reset': 'never',
-                        'mode': 'allowed',
+                        'mode': 'passive',
                         'reset_by': 'peer',
                         'reset_reason': 'no '
                                         'error'}},
