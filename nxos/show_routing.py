@@ -621,7 +621,8 @@ class ShowIpv6Route(ShowIpv6RouteSchema):
 
             # 1.1.1.1/32, ubest/mbest: 2/0
             # 3.3.3.3/32, ubest/mbest: 2/0, attached
-            p2 = re.compile(r'^\s*(?P<route>[\d\/\:]+)'
+            # 2004:ab4:123:13::1/128, ubest/mbest: 1/0, attached
+            p2 = re.compile(r'^\s*(?P<route>[\w\/\:]+)'
                             ', +ubest/mbest: +(?P<ubest_mbest>[\d\/]+)(, +(?P<attached>[\w]+))?$')
             m = p2.match(line)
             if m:
