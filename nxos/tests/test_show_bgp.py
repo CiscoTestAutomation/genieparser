@@ -28,7 +28,8 @@ from parser.nxos.show_bgp import ShowBgpProcessVrfAll, ShowBgpPeerSession,\
                                  ShowBgpPeerTemplateCmd, \
                                  ShowBgpPolicyStatisticsRedistribute, \
                                  ShowBgpPolicyStatisticsNeighbor, \
-                                 ShowBgpPolicyStatisticsDampening
+                                 ShowBgpPolicyStatisticsDampening,\
+                                 ShowBgpSessions, ShowBgpLabels
 
 
 # =========================================
@@ -10137,128 +10138,195 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
-        'vrf':
-            {'VRF1':
-                {'neighbor':
-                    {'2.2.2.10':
-                        {'address_family':
-                            {'ipv4 unicast':
-                                {'as': 0,
-                                'as_path_entries': '[0/0]',
-                                'attribute_entries': '[3/384]',
-                                'bgp_table_version': 40,
-                                'capable_peers': 0,
-                                'clusterlist_entries': '[1/4]',
-                                'community_entries': '[0/0]',
-                                'config_peers': 1,
-                                'dampened_paths': 0,
-                                'dampening': True,
-                                'history_paths': 0,
-                                'inq': 0,
-                                'local_as': 100,
-                                'msg_rcvd': 0,
-                                'msg_sent': 0,
-                                'outq': 0,
-                                'path': {'memory_usage': 620,
-                                        'total_entries': 5},
-                                'prefixes':
-                                    {'memory_usage': 620,
-                                    'total_entries': 5},
-                                'route_identifier': '4.4.4.4',
-                                'state_pfxrcd': 'Idle',
-                                'tbl_ver': 0,
-                                'up_down': '5w6d',
-                                'v': 4}}}}},
-            'default':
-                {'neighbor':
-                    {'2.2.2.2':
-                        {'address_family':
-                            {'vpnv4 unicast':
-                                {'as': 100,
-                                'as_path_entries': '[0/0]',
-                                'attribute_entries': '[1/128]',
-                                'bgp_table_version': 53,
-                                'capable_peers': 1,
-                                'clusterlist_entries': '[1/4]',
-                                'community_entries': '[0/0]',
-                                'config_peers': 1,
-                                'inq': 0,
-                                'local_as': 100,
-                                'msg_rcvd': 108554,
-                                'msg_sent': 108566,
-                                'outq': 0,
-                                'path': {'memory_usage': 620,
-                                        'total_entries': 5},
-                                'prefixes':
-                                    {'memory_usage': 620,
-                                    'total_entries': 5},
-                                'route_identifier': '1.1.1.1',
-                                'state_pfxrcd': '1',
-                                'tbl_ver': 53,
-                                'up_down': '5w6d',
-                                'v': 4},
-                            'vpnv6 unicast':
-                                {'as': 100,
-                                'as_path_entries': '[0/0]',
-                                'attribute_entries': '[1/128]',
-                                'bgp_table_version': 45,
-                                'capable_peers': 1,
-                                'clusterlist_entries': '[1/4]',
-                                'community_entries': '[0/0]',
-                                'config_peers': 1,
-                                'inq': 0,
-                                'local_as': 100,
-                                'msg_rcvd': 108554,
-                                'msg_sent': 108566,
-                                'outq': 0,
-                                'path': {'memory_usage': 544,
-                                        'total_entries': 4},
-                                'prefixes':
-                                    {'memory_usage': 544,
-                                    'total_entries': 4},
-                                'route_identifier': '1.1.1.1',
-                                'state_pfxrcd': '1',
-                                'tbl_ver': 45,
-                                'up_down': '5w6d',
-                                'v': 4}}},
-                    '2.2.2.5':
-                        {'address_family':
-                            {'ipv4 unicast':
-                                {'as': 200,
-                                'as_path_entries': '[0/0]',
-                                'attribute_entries': '[0/0]',
-                                'bgp_table_version': 2,
-                                'capable_peers': 0,
-                                'clusterlist_entries': '[1/4]',
-                                'community_entries': '[0/0]',
-                                'config_peers': 1,
-                                'dampened_paths': 0,
-                                'dampening': True,
-                                'history_paths': 0,
-                                'inq': 0,
-                                'local_as': 100,
-                                'msg_rcvd': 0,
-                                'msg_sent': 0,
-                                'outq': 0,
-                                'route_identifier': '1.1.1.1',
-                                'state_pfxrcd': 'Shut '
-                                '(Admin)',
-                                'tbl_ver': 0,
-                                'up_down': '5w6d',
-                                'v': 4}}},
-                    'fec::db8::20:1::5::5': 
-                        {'address_family': 
-                            {'ipv4 unicast': 
-                                {'as': 200,
-                                'inq': 0,
-                                'msg_rcvd': 0,
-                                'msg_sent': 0,
-                                'outq': 0,
-                                'state_pfxrcd': 'Shut '
-                                               '(Admin)',
-                                'tbl_ver': 0,
-                                'up_down': '5w5d',
-                                'v': 3}}}}}}}
+        "vrf": {
+          "VRF1": {
+               "neighbor": {
+                    "2.2.2.10": {
+                         "address_family": {
+                              "ipv4 unicast": {
+                                   "msg_rcvd": 0,
+                                   "path": {
+                                        "memory_usage": 620,
+                                        "total_entries": 5
+                                   },
+                                   "tbl_ver": 0,
+                                   "clusterlist_entries": "[1/4]",
+                                   "as_path_entries": "[0/0]",
+                                   "up_down": "5w6d",
+                                   "dampening": True,
+                                   "community_entries": "[0/0]",
+                                   "state_pfxrcd": "idle",
+                                   "state": "idle",
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 620,
+                                        "total_entries": 5
+                                   },
+                                   "local_as": 100,
+                                   "msg_sent": 0,
+                                   "dampened_paths": 0,
+                                   "neighbor_table_version": 4,
+                                   "as": 0,
+                                   "capable_peers": 0,
+                                   "outq": 0,
+                                   "attribute_entries": "[3/384]",
+                                   "route_identifier": "4.4.4.4",
+                                   "inq": 0,
+                                   "bgp_table_version": 40,
+                                   "config_peers": 1
+                              }
+                         }
+                    }
+               }
+          },
+          "default": {
+               "neighbor": {
+                    "2.2.2.5": {
+                         "address_family": {
+                              "ipv4 unicast": {
+                                   "msg_rcvd": 0,
+                                   "path": {
+                                        "memory_usage": 0,
+                                        "total_entries": 0
+                                   },
+                                   "tbl_ver": 0,
+                                   "clusterlist_entries": "[1/4]",
+                                   "as_path_entries": "[0/0]",
+                                   "up_down": "5w6d",
+                                   "dampening": True,
+                                   "community_entries": "[0/0]",
+                                   "state_pfxrcd": "shut (admin)",
+                                   "state": "shut (admin)",
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 0,
+                                        "total_entries": 0
+                                   },
+                                   "local_as": 100,
+                                   "msg_sent": 0,
+                                   "dampened_paths": 0,
+                                   "neighbor_table_version": 4,
+                                   "as": 200,
+                                   "capable_peers": 0,
+                                   "outq": 0,
+                                   "attribute_entries": "[0/0]",
+                                   "route_identifier": "1.1.1.1",
+                                   "inq": 0,
+                                   "bgp_table_version": 2,
+                                   "config_peers": 1
+                              }
+                         }
+                    },
+                    "fec::db8::20:1::5::5": {
+                         "address_family": {
+                              "ipv4 unicast": {
+                                   "msg_rcvd": 0,
+                                   "path": {
+                                        "memory_usage": 0,
+                                        "total_entries": 0
+                                   },
+                                   "tbl_ver": 0,
+                                   "clusterlist_entries": "[1/4]",
+                                   "as_path_entries": "[0/0]",
+                                   "up_down": "5w5d",
+                                   "dampening": True,
+                                   "community_entries": "[0/0]",
+                                   "state_pfxrcd": "shut (admin)",
+                                   "state": "shut (admin)",
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 0,
+                                        "total_entries": 0
+                                   },
+                                   "local_as": 100,
+                                   "msg_sent": 0,
+                                   "dampened_paths": 0,
+                                   "neighbor_table_version": 3,
+                                   "as": 200,
+                                   "capable_peers": 0,
+                                   "outq": 0,
+                                   "attribute_entries": "[0/0]",
+                                   "route_identifier": "1.1.1.1",
+                                   "inq": 0,
+                                   "bgp_table_version": 2,
+                                   "config_peers": 1
+                              }
+                         }
+                    },
+                    "2.2.2.2": {
+                         "address_family": {
+                              "vpnv6 unicast": {
+                                   "msg_rcvd": 108554,
+                                   "path": {
+                                        "memory_usage": 544,
+                                        "total_entries": 4
+                                   },
+                                   "tbl_ver": 45,
+                                   "clusterlist_entries": "[1/4]",
+                                   "as_path_entries": "[0/0]",
+                                   "up_down": "5w6d",
+                                   "dampening": True,
+                                   "community_entries": "[0/0]",
+                                   "state_pfxrcd": "1",
+                                   "state": "established",
+                                   "prefix_received": '1',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 544,
+                                        "total_entries": 4
+                                   },
+                                   "local_as": 100,
+                                   "msg_sent": 108566,
+                                   "dampened_paths": 0,
+                                   "neighbor_table_version": 4,
+                                   "as": 100,
+                                   "capable_peers": 1,
+                                   "outq": 0,
+                                   "attribute_entries": "[1/128]",
+                                   "route_identifier": "1.1.1.1",
+                                   "inq": 0,
+                                   "bgp_table_version": 45,
+                                   "config_peers": 1
+                              },
+                              "vpnv4 unicast": {
+                                   "msg_rcvd": 108554,
+                                   "path": {
+                                        "memory_usage": 620,
+                                        "total_entries": 5
+                                   },
+                                   "tbl_ver": 53,
+                                   "clusterlist_entries": "[1/4]",
+                                   "as_path_entries": "[0/0]",
+                                   "up_down": "5w6d",
+                                   "dampening": True,
+                                   "community_entries": "[0/0]",
+                                   "state_pfxrcd": "1",
+                                   "state": "established",
+                                   "prefix_received": '1',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 620,
+                                        "total_entries": 5
+                                   },
+                                   "local_as": 100,
+                                   "msg_sent": 108566,
+                                   "dampened_paths": 0,
+                                   "neighbor_table_version": 4,
+                                   "as": 100,
+                                   "capable_peers": 1,
+                                   "outq": 0,
+                                   "attribute_entries": "[1/128]",
+                                   "route_identifier": "1.1.1.1",
+                                   "inq": 0,
+                                   "bgp_table_version": 53,
+                                   "config_peers": 1
+                              }
+                         }
+                    }
+               }
+            }
+        }
+    }
 
     golden_output1 = {'execute.return_value': '''
         BGP summary information for VRF VRF1, address family IPv4 Unicast
@@ -10313,86 +10381,126 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         '''}
 
     golden_parsed_output2 = {
-        'vrf':
-            {'default':
-                {'neighbor':
-                    {'21.0.0.2':
-                        {'address_family':
-                            {'ipv4 multicast':
-                                {'as': 333,
-                                'as_path_entries': '[0/0]',
-                                'attribute_entries': '[2/312]',
-                                'bgp_table_version': 19,
-                                'capable_peers': 1,
-                                'clusterlist_entries': '[0/0]',
-                                'community_entries': '[1/32]',
-                                'config_peers': 1,
-                                'inq': 0,
-                                'local_as': 333,
-                                'msg_rcvd': 17,
-                                'msg_sent': 15,
-                                'outq': 0,
-                                'path':
-                                    {'memory_usage': 1856,
-                                    'total_entries': 8},
-                                'prefixes':
-                                    {'memory_usage': 1856,
-                                    'total_entries': 8},
-                                'route_identifier': '21.0.101.1',
-                                'state_pfxrcd': '3',
-                                'tbl_ver': 19,
-                                'up_down': '00:08:22',
-                                'v': 4},
-                            'ipv4 unicast':
-                                {'as': 333,
-                                'as_path_entries': '[0/0]',
-                                'attribute_entries': '[3/468]',
-                                'bgp_table_version': 25,
-                                'capable_peers': 2,
-                                'clusterlist_entries': '[0/0]',
-                                'community_entries': '[1/32]',
-                                'config_peers': 2,
-                                'inq': 0,
-                                'local_as': 333,
-                                'msg_rcvd': 17,
-                                'msg_sent': 15,
-                                'outq': 0,
-                                'path':
-                                    {'memory_usage': 1524,
-                                    'total_entries': 6},
-                                'prefixes':
-                                    {'memory_usage': 1524,
-                                    'total_entries': 6},
-                                'route_identifier': '21.0.101.1',
-                                'state_pfxrcd': '3',
-                                'tbl_ver': 25,
-                                'up_down': '00:08:22',
-                                'v': 4}}},
-                    'fec1::112': 
-                        {'address_family': 
-                            {'ipv4 unicast': 
-                                {'as': 333,
-                                'as_path_entries': '[0/0]',
-                                'attribute_entries': '[3/468]',
-                                'bgp_table_version': 25,
-                                'capable_peers': 2,
-                                'clusterlist_entries': '[0/0]',
-                                'community_entries': '[1/32]',
-                                'config_peers': 2,
-                                'inq': 0,
-                                'local_as': 333,
-                                'msg_rcvd': 16,
-                                'msg_sent': 13,
-                                'outq': 0,
-                                'path': {'memory_usage': 1524,
-                                         'total_entries': 6},
-                                'prefixes': {'memory_usage': 1524,
-                                             'total_entries': 6},
-                                'route_identifier': '21.0.101.1',
-                                'state_pfxrcd': '3',
-                                'tbl_ver': 25,
-                                'up_down': '00:08:17',
-                                'v': 4}}}}}}}
+        "vrf": {
+            "default": {
+               "neighbor": {
+                    "21.0.0.2": {
+                         "address_family": {
+                              "ipv4 unicast": {
+                                   "msg_rcvd": 17,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "tbl_ver": 25,
+                                   "config_peers": 2,
+                                   "path": {
+                                        "memory_usage": 1524,
+                                        "total_entries": 11
+                                   },
+                                   "as_path_entries": "[0/0]",
+                                   "clusterlist_entries": "[0/0]",
+                                   "inq": 0,
+                                   "outq": 0,
+                                   "attribute_entries": "[3/468]",
+                                   "community_entries": "[1/32]",
+                                   "route_identifier": "21.0.101.1",
+                                   "state_pfxrcd": "3",
+                                   "state": "established",
+                                   "prefix_received": '3',
+                                   "up_down": "00:08:22",
+                                   "bgp_table_version": 25,
+                                   "prefixes": {
+                                        "memory_usage": 1524,
+                                        "total_entries": 6
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 15,
+                                   "capable_peers": 2,
+                                   'soft_reconfig_bytes': 0,
+                                   'soft_reconfig_recvd_paths': 3,
+                                   'soft_reconfig_combo_paths': 0,
+                                   'soft_reconfig_filtered_recvd': 0,
+                                   'soft_reconfig_identical_paths': 3,
+                              },
+                              "ipv4 multicast": {
+                                   "msg_rcvd": 17,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "tbl_ver": 19,
+                                   "config_peers": 1,
+                                   "path": {
+                                        "memory_usage": 1856,
+                                        "total_entries": 8
+                                   },
+                                   "as_path_entries": "[0/0]",
+                                   "clusterlist_entries": "[0/0]",
+                                   "inq": 0,
+                                   "outq": 0,
+                                   "attribute_entries": "[2/312]",
+                                   "community_entries": "[1/32]",
+                                   "route_identifier": "21.0.101.1",
+                                   "state_pfxrcd": "3",
+                                   "state": "established",
+                                   "prefix_received": '3',
+                                   "up_down": "00:08:22",
+                                   "bgp_table_version": 19,
+                                   "prefixes": {
+                                        "memory_usage": 1856,
+                                        "total_entries": 8
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 15,
+                                   "capable_peers": 1,
+                                   'soft_reconfig_bytes': 0,
+                                   'soft_reconfig_recvd_paths': 3,
+                                   'soft_reconfig_combo_paths': 0,
+                                   'soft_reconfig_filtered_recvd': 0,
+                                   'soft_reconfig_identical_paths': 3,
+                              }
+                         }
+                    },
+                    "fec1::112": {
+                         "address_family": {
+                              "ipv4 unicast": {
+                                   "msg_rcvd": 16,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "tbl_ver": 25,
+                                   "config_peers": 2,
+                                   "path": {
+                                        "memory_usage": 1524,
+                                        "total_entries": 11
+                                   },
+                                   "as_path_entries": "[0/0]",
+                                   "clusterlist_entries": "[0/0]",
+                                   "inq": 0,
+                                   "outq": 0,
+                                   "attribute_entries": "[3/468]",
+                                   "community_entries": "[1/32]",
+                                   "route_identifier": "21.0.101.1",
+                                   "state_pfxrcd": "3",
+                                   "state": "established",
+                                   "prefix_received": '3',
+                                   "up_down": "00:08:17",
+                                   "bgp_table_version": 25,
+                                   "prefixes": {
+                                        "memory_usage": 1524,
+                                        "total_entries": 6
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 13,
+                                   "capable_peers": 2,
+                                   'soft_reconfig_bytes': 0,
+                                   'soft_reconfig_recvd_paths': 3,
+                                   'soft_reconfig_combo_paths': 0,
+                                   'soft_reconfig_filtered_recvd': 0,
+                                   'soft_reconfig_identical_paths': 3,
+                              }
+                         }
+                    }
+               }
+            }
+        }
+    }
 
     golden_output2 = {'execute.return_value': '''
         pinxdt-n9kv-2# show bgp vrf all all summary 
@@ -10456,552 +10564,1060 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         '''}
 
     golden_parsed_output3 = {
-        'vrf': 
-            {'default': 
-                {'neighbor': 
-                    {'19.0.101.1': 
-                        {'address_family': 
-                            {'ipv4 multicast': {'as': 333,
-                                               'as_path_entries': '[2/56]',
-                                               'attribute_entries': '[3/480]',
-                                               'bgp_table_version': 175,
-                                               'capable_peers': 3,
-                                               'clusterlist_entries': '[7/28]',
-                                               'community_entries': '[2/96]',
-                                               'config_peers': 3,
-                                               'dampened_paths': 2,
-                                               'dampening': True,
-                                               'history_paths': 0,
-                                               'inq': 0,
-                                               'local_as': 333,
-                                               'msg_rcvd': 29,
-                                               'msg_sent': 31,
-                                               'outq': 0,
-                                               'path': {'memory_usage': 1392,
-                                                        'total_entries': 6},
-                                               'prefixes': {'memory_usage': 1392,
-                                                            'total_entries': 6},
-                                               'route_identifier': '20.0.0.6',
-                                               'state_pfxrcd': '2',
-                                               'tbl_ver': 175,
-                                               'up_down': '00:20:33',
-                                               'v': 4},
-                            'ipv4 unicast': {'as': 333,
-                                             'as_path_entries': '[4/144]',
-                                             'attribute_entries': '[4/640]',
-                                             'bgp_table_version': 174,
-                                             'capable_peers': 3,
-                                             'clusterlist_entries': '[7/28]',
-                                             'community_entries': '[2/96]',
-                                             'config_peers': 3,
-                                             'dampened_paths': 2,
-                                             'dampening': True,
-                                             'history_paths': 0,
-                                             'inq': 0,
-                                             'local_as': 333,
-                                             'msg_rcvd': 29,
-                                             'msg_sent': 31,
-                                             'outq': 0,
-                                             'path': {'memory_usage': 1424,
-                                                      'total_entries': 5},
-                                             'prefixes': {'memory_usage': 1424,
-                                                          'total_entries': 5},
-                                             'route_identifier': '20.0.0.6',
-                                             'state_pfxrcd': '3',
-                                             'tbl_ver': 174,
-                                             'up_down': '00:20:33',
-                                             'v': 4},
-                            'ipv6 multicast': {'as': 333,
-                                               'as_path_entries': '[0/0]',
-                                               'attribute_entries': '[1/160]',
-                                               'bgp_table_version': 6,
-                                               'capable_peers': 2,
-                                               'clusterlist_entries': '[7/28]',
-                                               'community_entries': '[2/96]',
-                                               'config_peers': 5,
-                                               'dampened_paths': 0,
-                                               'dampening': True,
-                                               'history_paths': 0,
-                                               'inq': 0,
-                                               'local_as': 333,
-                                               'msg_rcvd': 29,
-                                               'msg_sent': 31,
-                                               'outq': 0,
-                                               'path': {'memory_usage': 488,
-                                                        'total_entries': 2},
-                                               'prefixes': {'memory_usage': 488,
-                                                            'total_entries': 2},
-                                               'route_identifier': '20.0.0.6',
-                                               'state_pfxrcd': '0 '
-                                                               '(No '
-                                                               'Cap)',
-                                               'tbl_ver': 0,
-                                               'up_down': '00:20:33',
-                                               'v': 4},
-                            'ipv6 unicast': {'as': 333,
-                                             'as_path_entries': '[3/106]',
-                                             'attribute_entries': '[3/480]',
-                                             'bgp_table_version': 173,
-                                             'capable_peers': 2,
-                                             'clusterlist_entries': '[7/28]',
-                                             'community_entries': '[2/96]',
-                                             'config_peers': 5,
-                                             'dampened_paths': 2,
-                                             'dampening': True,
-                                             'history_paths': 0,
-                                             'inq': 0,
-                                             'local_as': 333,
-                                             'msg_rcvd': 29,
-                                             'msg_sent': 31,
-                                             'outq': 0,
-                                             'path': {'memory_usage': 1220,
-                                                      'total_entries': 5},
-                                             'prefixes': {'memory_usage': 1220,
-                                                          'total_entries': 5},
-                                             'route_identifier': '20.0.0.6',
-                                             'state_pfxrcd': '0 '
-                                                             '(No '
-                                                             'Cap)',
-                                             'tbl_ver': 0,
-                                             'up_down': '00:20:33',
-                                             'v': 4},
-                            'link-state': {'as': 333,
-                                           'inq': 0,
-                                           'local_as': 333,
-                                           'msg_rcvd': 29,
-                                           'msg_sent': 31,
-                                           'outq': 0,
-                                           'path': {'memory_usage': 928,
-                                                    'total_entries': 4},
-                                           'prefixes': {'memory_usage': 928,
-                                                        'total_entries': 4},
-                                           'route_identifier': '20.0.0.6',
-                                           'state_pfxrcd': '2',
-                                           'tbl_ver': 173,
-                                           'up_down': '00:20:33',
-                                           'v': 4},
-                            'vpnv4 unicast': {'as': 333,
-                                              'as_path_entries': '[4/140]',
-                                              'attribute_entries': '[4/640]',
-                                              'bgp_table_version': 183,
-                                              'capable_peers': 3,
-                                              'clusterlist_entries': '[7/28]',
-                                              'community_entries': '[2/96]',
-                                              'config_peers': 3,
-                                              'dampened_paths': 2,
-                                              'dampening': True,
-                                              'history_paths': 0,
-                                              'inq': 0,
-                                              'local_as': 333,
-                                              'msg_rcvd': 29,
-                                              'msg_sent': 31,
-                                              'outq': 0,
-                                              'path': {'memory_usage': 1656,
-                                                       'total_entries': 6},
-                                              'prefixes': {'memory_usage': 1656,
-                                                           'total_entries': 6},
-                                              'route_identifier': '20.0.0.6',
-                                              'state_pfxrcd': '2',
-                                              'tbl_ver': 183,
-                                              'up_down': '00:20:33',
-                                              'v': 4},
-                            'vpnv6 unicast': {'as': 333,
-                                              'as_path_entries': '[1/42]',
-                                              'attribute_entries': '[2/320]',
-                                              'bgp_table_version': 13,
-                                              'capable_peers': 3,
-                                              'clusterlist_entries': '[7/28]',
-                                              'community_entries': '[2/96]',
-                                              'config_peers': 3,
-                                              'dampened_paths': 0,
-                                              'dampening': True,
-                                              'history_paths': 0,
-                                              'inq': 0,
-                                              'local_as': 333,
-                                              'msg_rcvd': 29,
-                                              'msg_sent': 31,
-                                              'outq': 0,
-                                              'path': {'memory_usage': 976,
-                                                       'total_entries': 4},
-                                              'prefixes': {'memory_usage': 976,
-                                                           'total_entries': 4},
-                                              'route_identifier': '20.0.0.6',
-                                              'state_pfxrcd': '2',
-                                              'tbl_ver': 13,
-                                              'up_down': '00:20:33',
-                                              'v': 4}}},
-                    '19.0.102.3': 
-                        {'address_family': 
-                            {'ipv4 multicast': {'as': 888,
-                                               'inq': 0,
-                                               'msg_rcvd': 841,
-                                               'msg_sent': 28,
-                                               'outq': 0,
-                                               'path': {'memory_usage': 1392,
-                                                        'total_entries': 6},
-                                               'prefixes': {'memory_usage': 1392,
-                                                            'total_entries': 6},
-                                               'state_pfxrcd': '2',
-                                               'tbl_ver': 175,
-                                               'up_down': '00:20:33',
-                                               'v': 4},
-                            'ipv4 unicast': {'as': 888,
-                                             'inq': 0,
-                                             'msg_rcvd': 841,
-                                             'msg_sent': 28,
-                                             'outq': 0,
-                                             'path': {'memory_usage': 1424,
-                                                      'total_entries': 5},
-                                             'prefixes': {'memory_usage': 1424,
-                                                          'total_entries': 5},
-                                             'state_pfxrcd': '2',
-                                             'tbl_ver': 174,
-                                             'up_down': '00:20:33',
-                                             'v': 4},
-                            'ipv6 multicast': {'as': 888,
-                                               'inq': 0,
-                                               'msg_rcvd': 841,
-                                               'msg_sent': 28,
-                                               'outq': 0,
-                                               'path': {'memory_usage': 488,
-                                                        'total_entries': 2},
-                                               'prefixes': {'memory_usage': 488,
-                                                            'total_entries': 2},
-                                               'state_pfxrcd': '0 '
-                                                               '(No '
-                                                               'Cap)',
-                                               'tbl_ver': 0,
-                                               'up_down': '00:20:33',
-                                               'v': 4},
-                            'ipv6 unicast': {'as': 888,
-                                             'inq': 0,
-                                             'msg_rcvd': 841,
-                                             'msg_sent': 28,
-                                             'outq': 0,
-                                             'path': {'memory_usage': 1220,
-                                                      'total_entries': 5},
-                                             'prefixes': {'memory_usage': 1220,
-                                                          'total_entries': 5},
-                                             'state_pfxrcd': '0 '
-                                                             '(No '
-                                                             'Cap)',
-                                             'tbl_ver': 0,
-                                             'up_down': '00:20:33',
-                                             'v': 4},
-                            'link-state': {'as': 888,
-                                           'inq': 0,
-                                           'local_as': 333,
-                                           'msg_rcvd': 841,
-                                           'msg_sent': 28,
-                                           'outq': 0,
-                                           'path': {'memory_usage': 928,
-                                                    'total_entries': 4},
-                                           'prefixes': {'memory_usage': 928,
-                                                        'total_entries': 4},
-                                           'route_identifier': '20.0.0.6',
-                                           'state_pfxrcd': '2',
-                                           'tbl_ver': 173,
-                                           'up_down': '00:20:33',
-                                           'v': 4},
-                            'vpnv4 unicast': {'as': 888,
-                                              'inq': 0,
-                                              'msg_rcvd': 841,
-                                              'msg_sent': 28,
-                                              'outq': 0,
-                                              'path': {'memory_usage': 1656,
-                                                       'total_entries': 6},
-                                              'prefixes': {'memory_usage': 1656,
-                                                           'total_entries': 6},
-                                              'state_pfxrcd': '2',
-                                              'tbl_ver': 183,
-                                              'up_down': '00:20:33',
-                                              'v': 4},
-                            'vpnv6 unicast': {'as': 888,
-                                              'inq': 0,
-                                              'msg_rcvd': 841,
-                                              'msg_sent': 28,
-                                              'outq': 0,
-                                              'path': {'memory_usage': 976,
-                                                       'total_entries': 4},
-                                              'prefixes': {'memory_usage': 976,
-                                                           'total_entries': 4},
-                                              'state_pfxrcd': '2',
-                                              'tbl_ver': 13,
-                                              'up_down': '00:20:33',
-                                              'v': 4}}},
-                    '19.0.102.4': 
-                        {'address_family': 
-                            {'ipv4 multicast': {'as': 333,
-                                               'inq': 0,
-                                               'msg_rcvd': 27,
-                                               'msg_sent': 31,
-                                               'outq': 0,
-                                               'path': {'memory_usage': 1392,
-                                                        'total_entries': 6},
-                                               'prefixes': {'memory_usage': 1392,
-                                                            'total_entries': 6},
-                                               'state_pfxrcd': '2',
-                                               'tbl_ver': 175,
-                                               'up_down': '00:20:33',
-                                               'v': 4},
-                            'ipv4 unicast': {'as': 333,
-                                             'inq': 0,
-                                             'msg_rcvd': 27,
-                                             'msg_sent': 31,
-                                             'outq': 0,
-                                             'path': {'memory_usage': 1424,
-                                                      'total_entries': 5},
-                                             'prefixes': {'memory_usage': 1424,
-                                                          'total_entries': 5},
-                                             'state_pfxrcd': '2',
-                                             'tbl_ver': 174,
-                                             'up_down': '00:20:33',
-                                             'v': 4},
-                            'ipv6 multicast': {'as': 333,
-                                               'inq': 0,
-                                               'msg_rcvd': 27,
-                                               'msg_sent': 31,
-                                               'outq': 0,
-                                               'path': {'memory_usage': 488,
-                                                        'total_entries': 2},
-                                               'prefixes': {'memory_usage': 488,
-                                                            'total_entries': 2},
-                                               'state_pfxrcd': '0 '
-                                                               '(No '
-                                                               'Cap)',
-                                               'tbl_ver': 0,
-                                               'up_down': '00:20:33',
-                                               'v': 4},
-                            'ipv6 unicast': {'as': 333,
-                                             'inq': 0,
-                                             'msg_rcvd': 27,
-                                             'msg_sent': 31,
-                                             'outq': 0,
-                                             'path': {'memory_usage': 1220,
-                                                      'total_entries': 5},
-                                             'prefixes': {'memory_usage': 1220,
-                                                          'total_entries': 5},
-                                             'state_pfxrcd': '0 '
-                                                             '(No '
-                                                             'Cap)',
-                                             'tbl_ver': 0,
-                                             'up_down': '00:20:33',
-                                             'v': 4},
-                            'link-state': {'as': 333,
-                                           'inq': 0,
-                                           'local_as': 333,
-                                           'msg_rcvd': 27,
-                                           'msg_sent': 31,
-                                           'outq': 0,
-                                           'path': {'memory_usage': 928,
-                                                    'total_entries': 4},
-                                           'prefixes': {'memory_usage': 928,
-                                                        'total_entries': 4},
-                                           'route_identifier': '20.0.0.6',
-                                           'state_pfxrcd': '0',
-                                           'tbl_ver': 173,
-                                           'up_down': '00:20:33',
-                                           'v': 4},
-                            'vpnv4 unicast': {'as': 333,
-                                              'inq': 0,
-                                              'msg_rcvd': 27,
-                                              'msg_sent': 31,
-                                              'outq': 0,
-                                              'path': {'memory_usage': 1656,
-                                                       'total_entries': 6},
-                                              'prefixes': {'memory_usage': 1656,
-                                                           'total_entries': 6},
-                                              'state_pfxrcd': '4',
-                                              'tbl_ver': 183,
-                                              'up_down': '00:20:33',
-                                              'v': 4},
-                            'vpnv6 unicast': {'as': 333,
-                                              'inq': 0,
-                                              'msg_rcvd': 27,
-                                              'msg_sent': 31,
-                                              'outq': 0,
-                                              'path': {'memory_usage': 976,
-                                                       'total_entries': 4},
-                                              'prefixes': {'memory_usage': 976,
-                                                           'total_entries': 4},
-                                              'state_pfxrcd': '0',
-                                              'tbl_ver': 13,
-                                              'up_down': '00:20:33',
-                                              'v': 4}}},
-                    'fec0::1002': 
-                        {'address_family': 
-                            {'ipv6 multicast': 
-                                {'as': 333,
-                                'inq': 0,
-                                'msg_rcvd': 26,
-                                'msg_sent': 26,
-                                'outq': 0,
-                                'path': {'memory_usage': 488,
-                                        'total_entries': 2},
-                                'prefixes': {'memory_usage': 488,
-                                            'total_entries': 2},
-                                'state_pfxrcd': '2',
-                                'tbl_ver': 6,
-                                'up_down': '00:20:33',
-                                'v': 4},
-                            'ipv6 unicast': {'as': 333,
-                                             'inq': 0,
-                                             'msg_rcvd': 26,
-                                             'msg_sent': 26,
-                                             'outq': 0,
-                                             'path': {'memory_usage': 1220,
-                                                      'total_entries': 5},
-                                             'prefixes': {'memory_usage': 1220,
-                                                          'total_entries': 5},
-                                             'state_pfxrcd': '3',
-                                             'tbl_ver': 173,
-                                             'up_down': '00:20:33',
-                                             'v': 4},
-                            'link-state': {'as': 333,
-                                           'inq': 0,
-                                           'local_as': 333,
-                                           'msg_rcvd': 26,
-                                           'msg_sent': 26,
-                                           'outq': 0,
-                                           'path': {'memory_usage': 928,
-                                                    'total_entries': 4},
-                                           'prefixes': {'memory_usage': 928,
-                                                        'total_entries': 4},
-                                           'route_identifier': '20.0.0.6',
-                                           'state_pfxrcd': '0 '
-                                                           '(No '
-                                                           'Cap)',
-                                           'tbl_ver': 0,
-                                           'up_down': '00:20:33',
-                                           'v': 4}}},
-                    'fec0::2002': 
-                        {'address_family': 
-                            {'ipv6 multicast': {'as': 888,
-                                               'inq': 0,
-                                               'msg_rcvd': 187,
-                                               'msg_sent': 25,
-                                               'outq': 0,
-                                               'path': {'memory_usage': 488,
-                                                        'total_entries': 2},
-                                               'prefixes': {'memory_usage': 488,
-                                                            'total_entries': 2},
-                                               'state_pfxrcd': '0',
-                                               'tbl_ver': 6,
-                                               'up_down': '00:20:33',
-                                               'v': 4},
-                            'ipv6 unicast': {'as': 888,
-                                             'inq': 0,
-                                             'msg_rcvd': 187,
-                                             'msg_sent': 25,
-                                             'outq': 0,
-                                             'path': {'memory_usage': 1220,
-                                                      'total_entries': 5},
-                                             'prefixes': {'memory_usage': 1220,
-                                                          'total_entries': 5},
-                                             'state_pfxrcd': '2',
-                                             'tbl_ver': 173,
-                                             'up_down': '00:20:33',
-                                             'v': 4},
-                            'link-state': {'as': 888,
-                                           'inq': 0,
-                                           'local_as': 333,
-                                           'msg_rcvd': 187,
-                                           'msg_sent': 25,
-                                           'outq': 0,
-                                           'path': {'memory_usage': 928,
-                                                    'total_entries': 4},
-                                           'prefixes': {'memory_usage': 928,
-                                                        'total_entries': 4},
-                                           'route_identifier': '20.0.0.6',
-                                           'state_pfxrcd': '0 '
-                                                           '(No '
-                                                           'Cap)',
-                                           'tbl_ver': 0,
-                                           'up_down': '00:20:33',
-                                           'v': 4}}}}},
-            'vpn1': 
-                {'neighbor': 
-                    {'19.0.103.1': 
-                        {'address_family': 
-                            {'ipv4 multicast': {'as': 333,
-                                            'as_path_entries': '[0/0]',
-                                            'attribute_entries': '[0/0]',
-                                            'bgp_table_version': 2,
-                                            'capable_peers': 0,
-                                            'clusterlist_entries': '[7/28]',
-                                            'community_entries': '[2/96]',
-                                            'config_peers': 1,
-                                            'inq': 0,
-                                            'local_as': 333,
-                                            'msg_rcvd': 0,
-                                            'msg_sent': 0,
-                                            'outq': 0,
-                                            'route_identifier': '0.0.0.0',
-                                            'state_pfxrcd': 'Idle',
-                                            'tbl_ver': 0,
-                                            'up_down': '00:20:35',
-                                            'v': 4},
-                            'ipv4 unicast': {'as': 333,
-                                          'as_path_entries': '[2/80]',
-                                          'attribute_entries': '[2/320]',
-                                          'bgp_table_version': 9,
-                                          'capable_peers': 0,
-                                          'clusterlist_entries': '[7/28]',
-                                          'community_entries': '[2/96]',
-                                          'config_peers': 1,
-                                          'dampened_paths': 2,
-                                          'dampening': True,
-                                          'history_paths': 0,
-                                          'inq': 0,
-                                          'local_as': 333,
-                                          'msg_rcvd': 0,
-                                          'msg_sent': 0,
-                                          'outq': 0,
-                                          'path': {'memory_usage': 300,
-                                                   'total_entries': 3},
-                                          'prefixes': {'memory_usage': 300,
-                                                       'total_entries': 3},
-                                          'route_identifier': '0.0.0.0',
-                                          'state_pfxrcd': 'Idle',
-                                          'tbl_ver': 0,
-                                          'up_down': '00:20:35',
-                                          'v': 4},
-                            'ipv6 multicast': {'as': 333,
-                                            'as_path_entries': '[0/0]',
-                                            'attribute_entries': '[0/0]',
-                                            'bgp_table_version': 2,
-                                            'capable_peers': 0,
-                                            'clusterlist_entries': '[7/28]',
-                                            'community_entries': '[2/96]',
-                                            'config_peers': 1,
-                                            'inq': 0,
-                                            'local_as': 333,
-                                            'msg_rcvd': 0,
-                                            'msg_sent': 0,
-                                            'outq': 0,
-                                            'route_identifier': '0.0.0.0',
-                                            'state_pfxrcd': 'Idle',
-                                            'tbl_ver': 0,
-                                            'up_down': '00:20:35',
-                                            'v': 4},
-                            'ipv6 unicast': {'as': 333,
-                                          'as_path_entries': '[0/0]',
-                                          'attribute_entries': '[0/0]',
-                                          'bgp_table_version': 2,
-                                          'capable_peers': 0,
-                                          'clusterlist_entries': '[7/28]',
-                                          'community_entries': '[2/96]',
-                                          'config_peers': 1,
-                                          'inq': 0,
-                                          'local_as': 333,
-                                          'msg_rcvd': 0,
-                                          'msg_sent': 0,
-                                          'outq': 0,
-                                          'route_identifier': '0.0.0.0',
-                                          'state_pfxrcd': 'Idle',
-                                          'tbl_ver': 0,
-                                          'up_down': '00:20:35',
-                                          'v': 4}}}}}}}
+        "vrf": {
+          "vpn1": {
+               "neighbor": {
+                    "19.0.103.1": {
+                         "address_family": {
+                              "ipv4 unicast": {
+                                   "msg_rcvd": 0,
+                                   "path": {
+                                        "memory_usage": 300,
+                                        "total_entries": 3
+                                   },
+                                   "tbl_ver": 0,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[2/80]",
+                                   "up_down": "00:20:35",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "idle",
+                                   "state": "idle",
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 300,
+                                        "total_entries": 3
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 0,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 0,
+                                   "outq": 0,
+                                   "attribute_entries": "[2/320]",
+                                   "route_identifier": "0.0.0.0",
+                                   "inq": 0,
+                                   "bgp_table_version": 9,
+                                   "config_peers": 1
+                              },
+                              "ipv6 multicast": {
+                                   "msg_rcvd": 0,
+                                   "path": {
+                                        "memory_usage": 0,
+                                        "total_entries": 0
+                                   },
+                                   "tbl_ver": 0,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[0/0]",
+                                   "up_down": "00:20:35",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "idle",
+                                   "state": "idle",
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 0,
+                                        "total_entries": 0
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 0,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 0,
+                                   "outq": 0,
+                                   "attribute_entries": "[0/0]",
+                                   "route_identifier": "0.0.0.0",
+                                   "inq": 0,
+                                   "bgp_table_version": 2,
+                                   "config_peers": 1
+                              },
+                              "ipv4 multicast": {
+                                   "msg_rcvd": 0,
+                                   "path": {
+                                        "memory_usage": 0,
+                                        "total_entries": 0
+                                   },
+                                   "tbl_ver": 0,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[0/0]",
+                                   "up_down": "00:20:35",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "idle",
+                                   "state": "idle",
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 0,
+                                        "total_entries": 0
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 0,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 0,
+                                   "outq": 0,
+                                   "attribute_entries": "[0/0]",
+                                   "route_identifier": "0.0.0.0",
+                                   "inq": 0,
+                                   "bgp_table_version": 2,
+                                   "config_peers": 1
+                              },
+                              "ipv6 unicast": {
+                                   "msg_rcvd": 0,
+                                   "path": {
+                                        "memory_usage": 0,
+                                        "total_entries": 0
+                                   },
+                                   "tbl_ver": 0,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[0/0]",
+                                   "up_down": "00:20:35",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "idle",
+                                   "state": "idle",
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 0,
+                                        "total_entries": 0
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 0,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 0,
+                                   "outq": 0,
+                                   "attribute_entries": "[0/0]",
+                                   "route_identifier": "0.0.0.0",
+                                   "inq": 0,
+                                   "bgp_table_version": 2,
+                                   "config_peers": 1
+                              }
+                         }
+                    }
+               }
+          },
+          "default": {
+               "neighbor": {
+                    "fec0::1002": {
+                         "address_family": {
+                              "ipv6 multicast": {
+                                   "msg_rcvd": 26,
+                                   "path": {
+                                        "memory_usage": 488,
+                                        "total_entries": 2
+                                   },
+                                   "tbl_ver": 6,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[0/0]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "2",
+                                   "state": "established",
+                                   "prefix_received": '2',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 488,
+                                        "total_entries": 2
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 26,
+                                   "dampened_paths": 0,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 2,
+                                   "outq": 0,
+                                   "attribute_entries": "[1/160]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 6,
+                                   "config_peers": 5
+                              },
+                              "ipv6 unicast": {
+                                   "msg_rcvd": 26,
+                                   "path": {
+                                        "memory_usage": 1220,
+                                        "total_entries": 5
+                                   },
+                                   "tbl_ver": 173,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[3/106]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "3",
+                                   "state": "established",
+                                   "prefix_received": '3',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 1220,
+                                        "total_entries": 5
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 26,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 2,
+                                   "outq": 0,
+                                   "attribute_entries": "[3/480]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 173,
+                                   "config_peers": 5
+                              },
+                              "link-state": {
+                                   "msg_rcvd": 26,
+                                   "path": {
+                                        "memory_usage": 928,
+                                        "total_entries": 4
+                                   },
+                                   "tbl_ver": 0,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[2/84]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "0 (no cap)",
+                                   "state": "established",
+                                   "prefix_received": '0',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 928,
+                                        "total_entries": 4
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 26,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 3,
+                                   "outq": 0,
+                                   "attribute_entries": "[2/320]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 13,
+                                   "config_peers": 3
+                              }
+                         }
+                    },
+                    "fec0::2002": {
+                         "address_family": {
+                              "ipv6 multicast": {
+                                   "msg_rcvd": 187,
+                                   "path": {
+                                        "memory_usage": 488,
+                                        "total_entries": 2
+                                   },
+                                   "tbl_ver": 6,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[0/0]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "0",
+                                   "state": "established",
+                                   "prefix_received": '0',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 488,
+                                        "total_entries": 2
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 25,
+                                   "dampened_paths": 0,
+                                   "neighbor_table_version": 4,
+                                   "as": 888,
+                                   "capable_peers": 2,
+                                   "outq": 0,
+                                   "attribute_entries": "[1/160]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 6,
+                                   "config_peers": 5
+                              },
+                              "ipv6 unicast": {
+                                   "msg_rcvd": 187,
+                                   "path": {
+                                        "memory_usage": 1220,
+                                        "total_entries": 5
+                                   },
+                                   "tbl_ver": 173,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[3/106]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "2",
+                                   "state": "established",
+                                   "prefix_received": '2',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 1220,
+                                        "total_entries": 5
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 25,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 888,
+                                   "capable_peers": 2,
+                                   "outq": 0,
+                                   "attribute_entries": "[3/480]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 173,
+                                   "config_peers": 5
+                              },
+                              "link-state": {
+                                   "msg_rcvd": 187,
+                                   "path": {
+                                        "memory_usage": 928,
+                                        "total_entries": 4
+                                   },
+                                   "tbl_ver": 0,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[2/84]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "0 (no cap)",
+                                   "state": "established",
+                                   "prefix_received": '0',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 928,
+                                        "total_entries": 4
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 25,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 888,
+                                   "capable_peers": 3,
+                                   "outq": 0,
+                                   "attribute_entries": "[2/320]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 13,
+                                   "config_peers": 3
+                              }
+                         }
+                    },
+                    "19.0.102.3": {
+                         "address_family": {
+                              "ipv4 unicast": {
+                                   "msg_rcvd": 841,
+                                   "path": {
+                                        "memory_usage": 1424,
+                                        "total_entries": 7
+                                   },
+                                   "tbl_ver": 174,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[4/144]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "2",
+                                   "state": "established",
+                                   "prefix_received": '2',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 1424,
+                                        "total_entries": 5
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 28,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 888,
+                                   "capable_peers": 3,
+                                   "outq": 0,
+                                   "attribute_entries": "[4/640]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 174,
+                                   "config_peers": 3
+                              },
+                              "ipv6 multicast": {
+                                   "msg_rcvd": 841,
+                                   "path": {
+                                        "memory_usage": 488,
+                                        "total_entries": 2
+                                   },
+                                   "tbl_ver": 0,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[0/0]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "0 (no cap)",
+                                   "state": "established",
+                                   "prefix_received": '0',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 488,
+                                        "total_entries": 2
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 28,
+                                   "dampened_paths": 0,
+                                   "neighbor_table_version": 4,
+                                   "as": 888,
+                                   "capable_peers": 2,
+                                   "outq": 0,
+                                   "attribute_entries": "[1/160]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 6,
+                                   "config_peers": 5
+                              },
+                              "vpnv4 unicast": {
+                                   "msg_rcvd": 841,
+                                   "path": {
+                                        "memory_usage": 1656,
+                                        "total_entries": 8
+                                   },
+                                   "tbl_ver": 183,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[4/140]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "2",
+                                   "state": "established",
+                                   "prefix_received": '2',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 1656,
+                                        "total_entries": 6
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 28,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 888,
+                                   "capable_peers": 3,
+                                   "outq": 0,
+                                   "attribute_entries": "[4/640]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 183,
+                                   "config_peers": 3
+                              },
+                              "vpnv6 unicast": {
+                                   "msg_rcvd": 841,
+                                   "path": {
+                                        "memory_usage": 976,
+                                        "total_entries": 4
+                                   },
+                                   "tbl_ver": 13,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[1/42]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "2",
+                                   "state": "established",
+                                   "prefix_received": '2',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 976,
+                                        "total_entries": 4
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 28,
+                                   "dampened_paths": 0,
+                                   "neighbor_table_version": 4,
+                                   "as": 888,
+                                   "capable_peers": 3,
+                                   "outq": 0,
+                                   "attribute_entries": "[2/320]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 13,
+                                   "config_peers": 3
+                              },
+                              "ipv4 multicast": {
+                                   "msg_rcvd": 841,
+                                   "path": {
+                                        "memory_usage": 1392,
+                                        "total_entries": 6
+                                   },
+                                   "tbl_ver": 175,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[2/56]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "2",
+                                   "state": "established",
+                                   "prefix_received": '2',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 1392,
+                                        "total_entries": 6
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 28,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 888,
+                                   "capable_peers": 3,
+                                   "outq": 0,
+                                   "attribute_entries": "[3/480]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 175,
+                                   "config_peers": 3
+                              },
+                              "ipv6 unicast": {
+                                   "msg_rcvd": 841,
+                                   "path": {
+                                        "memory_usage": 1220,
+                                        "total_entries": 5
+                                   },
+                                   "tbl_ver": 0,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[3/106]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "0 (no cap)",
+                                   "state": "established",
+                                   "prefix_received": '0',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 1220,
+                                        "total_entries": 5
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 28,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 888,
+                                   "capable_peers": 2,
+                                   "outq": 0,
+                                   "attribute_entries": "[3/480]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 173,
+                                   "config_peers": 5
+                              },
+                              "link-state": {
+                                   "msg_rcvd": 841,
+                                   "path": {
+                                        "memory_usage": 928,
+                                        "total_entries": 4
+                                   },
+                                   "tbl_ver": 173,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[2/84]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "2",
+                                   "state": "established",
+                                   "prefix_received": '2',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 928,
+                                        "total_entries": 4
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 28,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 888,
+                                   "capable_peers": 3,
+                                   "outq": 0,
+                                   "attribute_entries": "[2/320]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 13,
+                                   "config_peers": 3
+                              }
+                         }
+                    },
+                    "19.0.101.1": {
+                         "address_family": {
+                              "ipv4 unicast": {
+                                   "msg_rcvd": 29,
+                                   "path": {
+                                        "memory_usage": 1424,
+                                        "total_entries": 7
+                                   },
+                                   "tbl_ver": 174,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[4/144]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "3",
+                                   "state": "established",
+                                   "prefix_received": '3',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 1424,
+                                        "total_entries": 5
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 31,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 3,
+                                   "outq": 0,
+                                   "attribute_entries": "[4/640]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 174,
+                                   "config_peers": 3
+                              },
+                              "ipv6 multicast": {
+                                   "msg_rcvd": 29,
+                                   "path": {
+                                        "memory_usage": 488,
+                                        "total_entries": 2
+                                   },
+                                   "tbl_ver": 0,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[0/0]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "0 (no cap)",
+                                   "state": "established",
+                                   "prefix_received": '0',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 488,
+                                        "total_entries": 2
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 31,
+                                   "dampened_paths": 0,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 2,
+                                   "outq": 0,
+                                   "attribute_entries": "[1/160]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 6,
+                                   "config_peers": 5
+                              },
+                              "vpnv4 unicast": {
+                                   "msg_rcvd": 29,
+                                   "path": {
+                                        "memory_usage": 1656,
+                                        "total_entries": 8
+                                   },
+                                   "tbl_ver": 183,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[4/140]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "2",
+                                   "state": "established",
+                                   "prefix_received": '2',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 1656,
+                                        "total_entries": 6
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 31,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 3,
+                                   "outq": 0,
+                                   "attribute_entries": "[4/640]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 183,
+                                   "config_peers": 3
+                              },
+                              "vpnv6 unicast": {
+                                   "msg_rcvd": 29,
+                                   "path": {
+                                        "memory_usage": 976,
+                                        "total_entries": 4
+                                   },
+                                   "tbl_ver": 13,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[1/42]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "2",
+                                   "state": "established",
+                                   "prefix_received": '2',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 976,
+                                        "total_entries": 4
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 31,
+                                   "dampened_paths": 0,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 3,
+                                   "outq": 0,
+                                   "attribute_entries": "[2/320]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 13,
+                                   "config_peers": 3
+                              },
+                              "ipv4 multicast": {
+                                   "msg_rcvd": 29,
+                                   "path": {
+                                        "memory_usage": 1392,
+                                        "total_entries": 6
+                                   },
+                                   "tbl_ver": 175,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[2/56]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "2",
+                                   "state": "established",
+                                   "prefix_received": '2',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 1392,
+                                        "total_entries": 6
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 31,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 3,
+                                   "outq": 0,
+                                   "attribute_entries": "[3/480]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 175,
+                                   "config_peers": 3
+                              },
+                              "ipv6 unicast": {
+                                   "msg_rcvd": 29,
+                                   "path": {
+                                        "memory_usage": 1220,
+                                        "total_entries": 5
+                                   },
+                                   "tbl_ver": 0,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[3/106]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "0 (no cap)",
+                                   "state": "established",
+                                   "prefix_received": '0',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 1220,
+                                        "total_entries": 5
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 31,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 2,
+                                   "outq": 0,
+                                   "attribute_entries": "[3/480]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 173,
+                                   "config_peers": 5
+                              },
+                              "link-state": {
+                                   "msg_rcvd": 29,
+                                   "path": {
+                                        "memory_usage": 928,
+                                        "total_entries": 4
+                                   },
+                                   "tbl_ver": 173,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[2/84]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "2",
+                                   "state": "established",
+                                   "prefix_received": '2',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 928,
+                                        "total_entries": 4
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 31,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 3,
+                                   "outq": 0,
+                                   "attribute_entries": "[2/320]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 13,
+                                   "config_peers": 3
+                              }
+                         }
+                    },
+                    "19.0.102.4": {
+                         "address_family": {
+                              "ipv4 unicast": {
+                                   "msg_rcvd": 27,
+                                   "path": {
+                                        "memory_usage": 1424,
+                                        "total_entries": 7
+                                   },
+                                   "tbl_ver": 174,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[4/144]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "2",
+                                   "state": "established",
+                                   "prefix_received": '2',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 1424,
+                                        "total_entries": 5
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 31,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 3,
+                                   "outq": 0,
+                                   "attribute_entries": "[4/640]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 174,
+                                   "config_peers": 3
+                              },
+                              "ipv6 multicast": {
+                                   "msg_rcvd": 27,
+                                   "path": {
+                                        "memory_usage": 488,
+                                        "total_entries": 2
+                                   },
+                                   "tbl_ver": 0,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[0/0]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "0 (no cap)",
+                                   "state": "established",
+                                   "prefix_received": '0',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 488,
+                                        "total_entries": 2
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 31,
+                                   "dampened_paths": 0,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 2,
+                                   "outq": 0,
+                                   "attribute_entries": "[1/160]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 6,
+                                   "config_peers": 5
+                              },
+                              "vpnv4 unicast": {
+                                   "msg_rcvd": 27,
+                                   "path": {
+                                        "memory_usage": 1656,
+                                        "total_entries": 8
+                                   },
+                                   "tbl_ver": 183,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[4/140]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "4",
+                                   "state": "established",
+                                   "prefix_received": '4',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 1656,
+                                        "total_entries": 6
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 31,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 3,
+                                   "outq": 0,
+                                   "attribute_entries": "[4/640]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 183,
+                                   "config_peers": 3
+                              },
+                              "vpnv6 unicast": {
+                                   "msg_rcvd": 27,
+                                   "path": {
+                                        "memory_usage": 976,
+                                        "total_entries": 4
+                                   },
+                                   "tbl_ver": 13,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[1/42]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "0",
+                                   "state": "established",
+                                   "prefix_received": '0',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 976,
+                                        "total_entries": 4
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 31,
+                                   "dampened_paths": 0,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 3,
+                                   "outq": 0,
+                                   "attribute_entries": "[2/320]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 13,
+                                   "config_peers": 3
+                              },
+                              "ipv4 multicast": {
+                                   "msg_rcvd": 27,
+                                   "path": {
+                                        "memory_usage": 1392,
+                                        "total_entries": 6
+                                   },
+                                   "tbl_ver": 175,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[2/56]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "2",
+                                   "state": "established",
+                                   "prefix_received": '2',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 1392,
+                                        "total_entries": 6
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 31,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 3,
+                                   "outq": 0,
+                                   "attribute_entries": "[3/480]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 175,
+                                   "config_peers": 3
+                              },
+                              "ipv6 unicast": {
+                                   "msg_rcvd": 27,
+                                   "path": {
+                                        "memory_usage": 1220,
+                                        "total_entries": 5
+                                   },
+                                   "tbl_ver": 0,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[3/106]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "0 (no cap)",
+                                   "state": "established",
+                                   "prefix_received": '0',
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 1220,
+                                        "total_entries": 5
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 31,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 2,
+                                   "outq": 0,
+                                   "attribute_entries": "[3/480]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 173,
+                                   "config_peers": 5
+                              },
+                              "link-state": {
+                                   "msg_rcvd": 27,
+                                   "path": {
+                                        "memory_usage": 928,
+                                        "total_entries": 4
+                                   },
+                                   "tbl_ver": 173,
+                                   "clusterlist_entries": "[7/28]",
+                                   "as_path_entries": "[2/84]",
+                                   "up_down": "00:20:33",
+                                   "dampening": True,
+                                   "community_entries": "[2/96]",
+                                   "state_pfxrcd": "0",
+                                   "state": "established",
+                                   "prefix_received": "0",
+                                   "history_paths": 0,
+                                   "prefixes": {
+                                        "memory_usage": 928,
+                                        "total_entries": 4
+                                   },
+                                   "local_as": 333,
+                                   "msg_sent": 31,
+                                   "dampened_paths": 2,
+                                   "neighbor_table_version": 4,
+                                   "as": 333,
+                                   "capable_peers": 3,
+                                   "outq": 0,
+                                   "attribute_entries": "[2/320]",
+                                   "route_identifier": "20.0.0.6",
+                                   "inq": 0,
+                                   "bgp_table_version": 13,
+                                   "config_peers": 3
+                              }
+                         }
+                    }
+               }
+            }
+        }
+    }
 
     golden_output3 = {'execute.return_value': '''
         show bgp vrf all all summary
@@ -11175,6 +11791,517 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+class test_show_bgp_vrf_all_all_summary_xml(unittest.TestCase):
+
+    '''Unit test for show bgp vrf <WORD> all summary - XML'''
+    
+    device = Device(name='aDevice')
+    golden_parsed_output = {
+        "vrf": {
+            "default": {
+               "neighbor": {
+                    "19.0.102.4": {
+                         "address_family": {
+                              "ipv4 unicast": {
+                                   "soft_reconfig_bytes": 0,
+                                   "inq": 0,
+                                   "config_peers": 3,
+                                   "history_paths": 0,
+                                   "dampened_paths": 0,
+                                   "msg_sent": 5572,
+                                   "tbl_ver": 7,
+                                   "capable_peers": 2,
+                                   "outq": 0,
+                                   "dampening": True,
+                                   "bgp_table_version": 7,
+                                   "state": "established",
+                                   "soft_reconfig_recvd_paths": 10,
+                                   "soft_reconfig_filtered_recvd": 0,
+                                   "msg_rcvd": 5584,
+                                   "as": 333,
+                                   "state_pfxrcd": "5",
+                                   "neighbor_table_version": 4,
+                                   "path": {
+                                        "memory_usage": 1820,
+                                        "total_entries": 5
+                                   },
+                                   "prefixes": {
+                                        "memory_usage": 1820,
+                                        "total_entries": 5
+                                   },
+                                   "soft_reconfig_combo_paths": 0,
+                                   "prefix_received": "5",
+                                   "up_down": "3d20h",
+                                   "soft_reconfig_identical_paths": 10
+                              },
+                              "l2vpn evpn": {
+                                   "inq": 0,
+                                   "msg_rcvd": 5584,
+                                   "config_peers": 3,
+                                   "history_paths": 0,
+                                   "dampened_paths": 0,
+                                   "state": "established",
+                                   "bgp_table_version": 0,
+                                   "msg_sent": 5572,
+                                   "path": {
+                                        "memory_usage": 0,
+                                        "total_entries": 0
+                                   },
+                                   "prefixes": {
+                                        "memory_usage": 0,
+                                        "total_entries": 0
+                                   },
+                                   "tbl_ver": 2,
+                                   "as": 333,
+                                   "prefix_received": "0",
+                                   "capable_peers": 0,
+                                   "outq": 0,
+                                   "dampening": True,
+                                   "neighbor_table_version": 4,
+                                   "up_down": "3d20h",
+                                   "state_pfxrcd": "0"
+                              }
+                         }
+                    },
+                    "19.0.102.3": {
+                         "address_family": {
+                              "ipv4 unicast": {
+                                   "soft_reconfig_bytes": 0,
+                                   "inq": 0,
+                                   "config_peers": 3,
+                                   "history_paths": 0,
+                                   "dampened_paths": 0,
+                                   "msg_sent": 0,
+                                   "tbl_ver": 7,
+                                   "capable_peers": 2,
+                                   "outq": 0,
+                                   "dampening": True,
+                                   "bgp_table_version": 0,
+                                   "state": "idle",
+                                   "soft_reconfig_recvd_paths": 10,
+                                   "soft_reconfig_filtered_recvd": 0,
+                                   "msg_rcvd": 0,
+                                   "as": 888,
+                                   "state_pfxrcd": "idle",
+                                   "neighbor_table_version": 4,
+                                   "path": {
+                                        "memory_usage": 1820,
+                                        "total_entries": 5
+                                   },
+                                   "prefixes": {
+                                        "memory_usage": 1820,
+                                        "total_entries": 5
+                                   },
+                                   "soft_reconfig_combo_paths": 0,
+                                   "up_down": "3d20h",
+                                   "soft_reconfig_identical_paths": 10
+                              },
+                              "l2vpn evpn": {
+                                   "inq": 0,
+                                   "msg_rcvd": 0,
+                                   "config_peers": 3,
+                                   "history_paths": 0,
+                                   "dampened_paths": 0,
+                                   "state": "idle",
+                                   "bgp_table_version": 0,
+                                   "msg_sent": 0,
+                                   "path": {
+                                        "memory_usage": 0,
+                                        "total_entries": 0
+                                   },
+                                   "prefixes": {
+                                        "memory_usage": 0,
+                                        "total_entries": 0
+                                   },
+                                   "tbl_ver": 2,
+                                   "as": 888,
+                                   "capable_peers": 0,
+                                   "outq": 0,
+                                   "dampening": True,
+                                   "neighbor_table_version": 4,
+                                   "up_down": "3d20h",
+                                   "state_pfxrcd": "idle"
+                              }
+                         }
+                    },
+                    "19.0.101.1": {
+                         "address_family": {
+                              "ipv4 unicast": {
+                                   "soft_reconfig_bytes": 0,
+                                   "inq": 0,
+                                   "config_peers": 3,
+                                   "history_paths": 0,
+                                   "dampened_paths": 0,
+                                   "msg_sent": 5572,
+                                   "tbl_ver": 7,
+                                   "capable_peers": 2,
+                                   "outq": 0,
+                                   "dampening": True,
+                                   "bgp_table_version": 7,
+                                   "state": "established",
+                                   "soft_reconfig_recvd_paths": 10,
+                                   "soft_reconfig_filtered_recvd": 0,
+                                   "msg_rcvd": 5584,
+                                   "as": 333,
+                                   "state_pfxrcd": "5",
+                                   "neighbor_table_version": 4,
+                                   "path": {
+                                        "memory_usage": 1820,
+                                        "total_entries": 5
+                                   },
+                                   "prefixes": {
+                                        "memory_usage": 1820,
+                                        "total_entries": 5
+                                   },
+                                   "soft_reconfig_combo_paths": 0,
+                                   "prefix_received": "5",
+                                   "up_down": "3d20h",
+                                   "soft_reconfig_identical_paths": 10
+                              },
+                              "l2vpn evpn": {
+                                   "inq": 0,
+                                   "msg_rcvd": 5584,
+                                   "config_peers": 3,
+                                   "history_paths": 0,
+                                   "dampened_paths": 0,
+                                   "state": "established",
+                                   "bgp_table_version": 0,
+                                   "msg_sent": 5572,
+                                   "path": {
+                                        "memory_usage": 0,
+                                        "total_entries": 0
+                                   },
+                                   "prefixes": {
+                                        "memory_usage": 0,
+                                        "total_entries": 0
+                                   },
+                                   "tbl_ver": 2,
+                                   "as": 333,
+                                   "prefix_received": "0",
+                                   "capable_peers": 0,
+                                   "outq": 0,
+                                   "dampening": True,
+                                   "neighbor_table_version": 4,
+                                   "up_down": "3d20h",
+                                   "state_pfxrcd": "0"
+                              }
+                         }
+                    },
+                    "9.9.9.9": {
+                         "address_family": {
+                              "vpnv4 unicast": {
+                                   "inq": 0,
+                                   "msg_rcvd": 0,
+                                   "config_peers": 1,
+                                   "history_paths": 0,
+                                   "dampened_paths": 0,
+                                   "state": "idle",
+                                   "bgp_table_version": 0,
+                                   "msg_sent": 0,
+                                   "path": {
+                                        "memory_usage": 0,
+                                        "total_entries": 0
+                                   },
+                                   "prefixes": {
+                                        "memory_usage": 0,
+                                        "total_entries": 0
+                                   },
+                                   "tbl_ver": 2,
+                                   "as": 500,
+                                   "capable_peers": 0,
+                                   "outq": 0,
+                                   "dampening": True,
+                                   "neighbor_table_version": 4,
+                                   "up_down": "2d23h",
+                                   "state_pfxrcd": "idle"
+                              }
+                         }
+                    }
+               }
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
+        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:1.0:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+         <nf:data>
+          <show>
+           <bgp>
+            <__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
+             <__XML__BLK_Cmd_show_ip_bgp_regexp_cmd_new_ipv4>
+              <summary>
+               <__XML__OPT_Cmd_show_bgp_summary_cmd_new___readonly__>
+                <__readonly__>
+                 <TABLE_vrf>
+                  <ROW_vrf>
+                   <vrf-name-out>default</vrf-name-out>
+                   <vrf-router-id>19.0.0.6</vrf-router-id>
+                   <vrf-local-as>333</vrf-local-as>
+                  </ROW_vrf>
+                  <ROW_vrf>
+                   <vrf-name-out>default</vrf-name-out>
+                   <vrf-router-id>19.0.0.6</vrf-router-id>
+                   <vrf-local-as>333</vrf-local-as>
+                   <TABLE_af>
+                    <ROW_af>
+                     <af-id>1</af-id>
+                     <TABLE_saf>
+                      <ROW_saf>
+                       <safi>1</safi>
+                       <af-name>IPv4 Unicast</af-name>
+                       <tableversion>7</tableversion>
+                       <configuredpeers>3</configuredpeers>
+                       <capablepeers>2</capablepeers>
+                       <totalnetworks>5</totalnetworks>
+                       <totalpaths>10</totalpaths>
+                       <memoryused>1820</memoryused>
+                       <numberattrs>1</numberattrs>
+                       <bytesattrs>160</bytesattrs>
+                       <numberpaths>1</numberpaths>
+                       <bytespaths>34</bytespaths>
+                       <numbercommunities>0</numbercommunities>
+                       <bytescommunities>0</bytescommunities>
+                       <numberclusterlist>0</numberclusterlist>
+                       <bytesclusterlist>0</bytesclusterlist>
+                       <dampening>Enabled</dampening>
+                       <historypaths>0</historypaths>
+                       <dampenedpaths>0</dampenedpaths>
+                       <softreconfigrecvdpaths>10</softreconfigrecvdpaths>
+                       <softreconfigidenticalpaths>10</softreconfigidenticalpaths>
+                       <softreconfigcombopaths>0</softreconfigcombopaths>
+                       <softreconfigfilteredrecvd>0</softreconfigfilteredrecvd>
+                       <softreconfigbytes>0</softreconfigbytes>
+                       <TABLE_neighbor>
+                        <ROW_neighbor>
+                         <neighborid>19.0.101.1</neighborid>
+                         <neighborversion>4</neighborversion>
+                         <msgrecvd>5584</msgrecvd>
+                         <msgsent>5572</msgsent>
+                         <neighbortableversion>7</neighbortableversion>
+                         <inq>0</inq>
+                         <outq>0</outq>
+                         <neighboras>333</neighboras>
+                         <time>3d20h</time>
+                         <state>Established</state>
+                         <prefixreceived>5</prefixreceived>
+                        </ROW_neighbor>
+                        <ROW_neighbor>
+                         <neighborid>19.0.102.3</neighborid>
+                         <neighborversion>4</neighborversion>
+                         <msgrecvd>0</msgrecvd>
+                         <msgsent>0</msgsent>
+                         <neighbortableversion>0</neighbortableversion>
+                         <inq>0</inq>
+                         <outq>0</outq>
+                         <neighboras>888</neighboras>
+                         <time>3d20h</time>
+                         <state>Idle</state>
+                         <prefixreceived>0</prefixreceived>
+                        </ROW_neighbor>
+                        <ROW_neighbor>
+                         <neighborid>19.0.102.4</neighborid>
+                         <neighborversion>4</neighborversion>
+                         <msgrecvd>5584</msgrecvd>
+                         <msgsent>5572</msgsent>
+                         <neighbortableversion>7</neighbortableversion>
+                         <inq>0</inq>
+                         <outq>0</outq>
+                         <neighboras>333</neighboras>
+                         <time>3d20h</time>
+                         <state>Established</state>
+                         <prefixreceived>5</prefixreceived>
+                        </ROW_neighbor>
+                       </TABLE_neighbor>
+                      </ROW_saf>
+                     </TABLE_saf>
+                    </ROW_af>
+                    <ROW_af>
+                     <af-id>2</af-id>
+                     <TABLE_saf>
+                      <ROW_saf>
+                       <safi>1</safi>
+                       <af-name>IPv6 Unicast</af-name>
+                      </ROW_saf>
+                     </TABLE_saf>
+                    </ROW_af>
+                    <ROW_af>
+                     <af-id>1</af-id>
+                     <TABLE_saf>
+                      <ROW_saf>
+                       <safi>128</safi>
+                       <af-name>VPNv4 Unicast</af-name>
+                       <tableversion>2</tableversion>
+                       <configuredpeers>1</configuredpeers>
+                       <capablepeers>0</capablepeers>
+                       <totalnetworks>0</totalnetworks>
+                       <totalpaths>0</totalpaths>
+                       <memoryused>0</memoryused>
+                       <numberattrs>0</numberattrs>
+                       <bytesattrs>0</bytesattrs>
+                       <numberpaths>0</numberpaths>
+                       <bytespaths>0</bytespaths>
+                       <numbercommunities>0</numbercommunities>
+                       <bytescommunities>0</bytescommunities>
+                       <numberclusterlist>0</numberclusterlist>
+                       <bytesclusterlist>0</bytesclusterlist>
+                       <dampening>Enabled</dampening>
+                       <historypaths>0</historypaths>
+                       <dampenedpaths>0</dampenedpaths>
+                       <TABLE_neighbor>
+                        <ROW_neighbor>
+                         <neighborid>9.9.9.9</neighborid>
+                         <neighborversion>4</neighborversion>
+                         <msgrecvd>0</msgrecvd>
+                         <msgsent>0</msgsent>
+                         <neighbortableversion>0</neighbortableversion>
+                         <inq>0</inq>
+                         <outq>0</outq>
+                         <neighboras>500</neighboras>
+                         <time>2d23h</time>
+                         <state>Idle</state>
+                         <prefixreceived>0</prefixreceived>
+                        </ROW_neighbor>
+                       </TABLE_neighbor>
+                      </ROW_saf>
+                     </TABLE_saf>
+                    </ROW_af>
+                    <ROW_af>
+                     <af-id>2</af-id>
+                     <TABLE_saf>
+                      <ROW_saf>
+                       <safi>128</safi>
+                       <af-name>VPNv6 Unicast</af-name>
+                      </ROW_saf>
+                     </TABLE_saf>
+                    </ROW_af>
+                    <ROW_af>
+                     <af-id>25</af-id>
+                     <TABLE_saf>
+                      <ROW_saf>
+                       <safi>70</safi>
+                       <af-name>L2VPN EVPN</af-name>
+                       <tableversion>2</tableversion>
+                       <configuredpeers>3</configuredpeers>
+                       <capablepeers>0</capablepeers>
+                       <totalnetworks>0</totalnetworks>
+                       <totalpaths>0</totalpaths>
+                       <memoryused>0</memoryused>
+                       <numberattrs>0</numberattrs>
+                       <bytesattrs>0</bytesattrs>
+                       <numberpaths>0</numberpaths>
+                       <bytespaths>0</bytespaths>
+                       <numbercommunities>0</numbercommunities>
+                       <bytescommunities>0</bytescommunities>
+                       <numberclusterlist>0</numberclusterlist>
+                       <bytesclusterlist>0</bytesclusterlist>
+                       <dampening>Enabled</dampening>
+                       <historypaths>0</historypaths>
+                       <dampenedpaths>0</dampenedpaths>
+                       <TABLE_neighbor>
+                        <ROW_neighbor>
+                         <neighborid>19.0.101.1</neighborid>
+                         <neighborversion>4</neighborversion>
+                         <msgrecvd>5584</msgrecvd>
+                         <msgsent>5572</msgsent>
+                         <neighbortableversion>0</neighbortableversion>
+                         <inq>0</inq>
+                         <outq>0</outq>
+                         <neighboras>333</neighboras>
+                         <time>3d20h</time>
+                         <state>Established</state>
+                         <prefixreceived>0</prefixreceived>
+                        </ROW_neighbor>
+                        <ROW_neighbor>
+                         <neighborid>19.0.102.3</neighborid>
+                         <neighborversion>4</neighborversion>
+                         <msgrecvd>0</msgrecvd>
+                         <msgsent>0</msgsent>
+                         <neighbortableversion>0</neighbortableversion>
+                         <inq>0</inq>
+                         <outq>0</outq>
+                         <neighboras>888</neighboras>
+                         <time>3d20h</time>
+                         <state>Idle</state>
+                         <prefixreceived>0</prefixreceived>
+                        </ROW_neighbor>
+                        <ROW_neighbor>
+                         <neighborid>19.0.102.4</neighborid>
+                         <neighborversion>4</neighborversion>
+                         <msgrecvd>5584</msgrecvd>
+                         <msgsent>5572</msgsent>
+                         <neighbortableversion>0</neighbortableversion>
+                         <inq>0</inq>
+                         <outq>0</outq>
+                         <neighboras>333</neighboras>
+                         <time>3d20h</time>
+                         <state>Established</state>
+                         <prefixreceived>0</prefixreceived>
+                        </ROW_neighbor>
+                       </TABLE_neighbor>
+                      </ROW_saf>
+                     </TABLE_saf>
+                    </ROW_af>
+                   </TABLE_af>
+                  </ROW_vrf>
+                  <ROW_vrf>
+                   <vrf-name-out>vpn1</vrf-name-out>
+                   <vrf-router-id>11.11.11.11</vrf-router-id>
+                   <vrf-local-as>333</vrf-local-as>
+                  </ROW_vrf>
+                  <ROW_vrf>
+                   <vrf-name-out>vpn1</vrf-name-out>
+                   <vrf-router-id>11.11.11.11</vrf-router-id>
+                   <vrf-local-as>333</vrf-local-as>
+                  </ROW_vrf>
+                  <ROW_vrf>
+                   <vrf-name-out>vpn2</vrf-name-out>
+                   <vrf-router-id>22.22.22.22</vrf-router-id>
+                   <vrf-local-as>333</vrf-local-as>
+                  </ROW_vrf>
+                  <ROW_vrf>
+                   <vrf-name-out>vpn2</vrf-name-out>
+                   <vrf-router-id>22.22.22.22</vrf-router-id>
+                   <vrf-local-as>333</vrf-local-as>
+                   <TABLE_af>
+                    <ROW_af>
+                     <af-id>1</af-id>
+                     <TABLE_saf>
+                      <ROW_saf>
+                       <safi>1</safi>
+                       <af-name>IPv4 Unicast</af-name>
+                      </ROW_saf>
+                     </TABLE_saf>
+                    </ROW_af>
+                    <ROW_af>
+                     <af-id>2</af-id>
+                     <TABLE_saf>
+                      <ROW_saf>
+                       <safi>1</safi>
+                       <af-name>IPv6 Unicast</af-name>
+                      </ROW_saf>
+                     </TABLE_saf>
+                    </ROW_af>
+                   </TABLE_af>
+                  </ROW_vrf>
+                 </TABLE_vrf>
+                </__readonly__>
+               </__XML__OPT_Cmd_show_bgp_summary_cmd_new___readonly__>
+              </summary>
+             </__XML__BLK_Cmd_show_ip_bgp_regexp_cmd_new_ipv4>
+            </__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
+           </bgp>
+          </show>
+         </nf:data>
+        </nf:rpc-reply>
+    '''}
+
+    def test_golden_xml(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpVrfAllAllSummary(device=self.device, context='xml')
+        parsed_output = obj.parse(vrf='all')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
 
 # ==================================================================
 #  Unit test for 'show bgp process vrf all all dampening parameters'
@@ -11279,6 +12406,223 @@ class TestShowBgpVrfAllAllDampeningParameters(unittest.TestCase):
         bgp_obj = ShowBgpVrfAllAllDampeningParameters(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = bgp_obj.parse()
+
+
+class TestShowBgpVrfAllAllDampeningParameters_xml(unittest.TestCase):
+
+    '''Unit test for show bgp vrf <WORD> all dampening parameters - XML'''
+    
+    device = Device(name='aDevice')
+    golden_parsed_output = {
+         "vrf": {
+            "vpn2": {
+               "address_family": {
+                    "ipv4 unicast": {
+                         "dampening": "True",
+                         "dampening_half_life_time": "1",
+                         "dampening_reuse_time": "10",
+                         "dampening_max_suppress_penalty": "40",
+                         "dampening_suppress_time": "30",
+                         "dampening_max_suppress_time": "2"
+                    },
+               }
+            },
+            "default": {
+               "address_family": {
+                    "ipv4 unicast": {
+                         "dampening": "True",
+                         "dampening_half_life_time": "1",
+                         "dampening_reuse_time": "10",
+                         "dampening_max_suppress_penalty": "40",
+                         "dampening_suppress_time": "30",
+                         "dampening_max_suppress_time": "2"
+                    },
+                    "vpnv4 unicast": {
+                         "route_distinguisher": {
+                              "500:1": {
+                                   "dampening": "True",
+                                   "dampening_half_life_time": "1",
+                                   "dampening_reuse_time": "10",
+                                   "dampening_max_suppress_penalty": "40",
+                                   "dampening_suppress_time": "30",
+                                   "dampening_max_suppress_time": "2",
+                                   "rd_vrf": "vpn2"
+                              }
+                         }
+                    },
+                    "l2vpn evpn": {
+                         "route_distinguisher": {
+                              "500:1": {
+                                   "dampening": "True",
+                                   "dampening_half_life_time": "1",
+                                   "dampening_reuse_time": "10",
+                                   "dampening_max_suppress_penalty": "40",
+                                   "dampening_suppress_time": "30",
+                                   "dampening_max_suppress_time": "2",
+                                   "rd_vrf": "L3"
+                              }
+                         }
+                    },
+               }
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
+        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:1.0:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+         <nf:data>
+          <show>
+           <bgp>
+            <__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
+             <__XML__BLK_Cmd_show_ip_bgp_policy_cmd_policynew_ipv4>
+              <dampening>
+               <parameters>
+                <__XML__OPT_Cmd_show_ip_bgp_dampened_cmd_newparam_vrf>
+                 <__XML__OPT_Cmd_show_ip_bgp_dampened_cmd_newparam___readonly__>
+                  <__readonly__>
+                   <TABLE_vrf>
+                    <ROW_vrf>
+                     <vrf-name-out>default</vrf-name-out>
+                     <TABLE_afi>
+                      <ROW_afi>
+                       <afi>1</afi>
+                       <TABLE_safi>
+                        <ROW_safi>
+                         <safi>1</safi>
+                         <af-name>IPv4 Unicast</af-name>
+                         <TABLE_rd>
+                          <ROW_rd>
+                           <dampconfigured>Configured</dampconfigured>
+                           <damphalflife>1</damphalflife>
+                           <dampsuppress>30</dampsuppress>
+                           <dampreuse>10</dampreuse>
+                           <dampsuppresstime>2</dampsuppresstime>
+                           <dampmaxpenalty>40</dampmaxpenalty>
+                          </ROW_rd>
+                         </TABLE_rd>
+                        </ROW_safi>
+                       </TABLE_safi>
+                      </ROW_afi>
+                      <ROW_afi>
+                       <afi>2</afi>
+                       <TABLE_safi>
+                        <ROW_safi>
+                         <safi>1</safi>
+                         <af-name>IPv6 Unicast</af-name>
+                        </ROW_safi>
+                       </TABLE_safi>
+                      </ROW_afi>
+                      <ROW_afi>
+                       <afi>1</afi>
+                       <TABLE_safi>
+                        <ROW_safi>
+                         <safi>128</safi>
+                         <af-name>VPNv4 Unicast</af-name>
+                         <TABLE_rd>
+                          <ROW_rd>
+                           <rd_val>500:1</rd_val>
+                           <rd_vrf>vpn2</rd_vrf>
+                           <dampconfigured>Configured</dampconfigured>
+                           <damphalflife>1</damphalflife>
+                           <dampsuppress>30</dampsuppress>
+                           <dampreuse>10</dampreuse>
+                           <dampsuppresstime>2</dampsuppresstime>
+                           <dampmaxpenalty>40</dampmaxpenalty>
+                          </ROW_rd>
+                         </TABLE_rd>
+                        </ROW_safi>
+                       </TABLE_safi>
+                      </ROW_afi>
+                      <ROW_afi>
+                       <afi>2</afi>
+                       <TABLE_safi>
+                        <ROW_safi>
+                         <safi>128</safi>
+                         <af-name>VPNv6 Unicast</af-name>
+                        </ROW_safi>
+                       </TABLE_safi>
+                      </ROW_afi>
+                      <ROW_afi>
+                       <afi>25</afi>
+                       <TABLE_safi>
+                        <ROW_safi>
+                         <safi>70</safi>
+                         <af-name>L2VPN EVPN</af-name>
+                         <TABLE_rd>
+                          <ROW_rd>
+                           <rd_val>500:1</rd_val>
+                           <rd_vrf>L3</rd_vrf>
+                           <rd_vniid>2</rd_vniid>
+                           <dampconfigured>Configured</dampconfigured>
+                           <damphalflife>1</damphalflife>
+                           <dampsuppress>30</dampsuppress>
+                           <dampreuse>10</dampreuse>
+                           <dampsuppresstime>2</dampsuppresstime>
+                           <dampmaxpenalty>40</dampmaxpenalty>
+                          </ROW_rd>
+                         </TABLE_rd>
+                        </ROW_safi>
+                       </TABLE_safi>
+                      </ROW_afi>
+                     </TABLE_afi>
+                    </ROW_vrf>
+                    <ROW_vrf>
+                     <vrf-name-out>vpn1</vrf-name-out>
+                    </ROW_vrf>
+                    <ROW_vrf>
+                     <vrf-name-out>vpn2</vrf-name-out>
+                     <TABLE_afi>
+                      <ROW_afi>
+                       <afi>1</afi>
+                       <TABLE_safi>
+                        <ROW_safi>
+                         <safi>1</safi>
+                         <af-name>IPv4 Unicast</af-name>
+                         <TABLE_rd>
+                          <ROW_rd>
+                           <dampconfigured>Configured</dampconfigured>
+                           <damphalflife>1</damphalflife>
+                           <dampsuppress>30</dampsuppress>
+                           <dampreuse>10</dampreuse>
+                           <dampsuppresstime>2</dampsuppresstime>
+                           <dampmaxpenalty>40</dampmaxpenalty>
+                          </ROW_rd>
+                         </TABLE_rd>
+                        </ROW_safi>
+                       </TABLE_safi>
+                      </ROW_afi>
+                      <ROW_afi>
+                       <afi>2</afi>
+                       <TABLE_safi>
+                        <ROW_safi>
+                         <safi>1</safi>
+                         <af-name>IPv6 Unicast</af-name>
+                        </ROW_safi>
+                       </TABLE_safi>
+                      </ROW_afi>
+                     </TABLE_afi>
+                    </ROW_vrf>
+                   </TABLE_vrf>
+                  </__readonly__>
+                 </__XML__OPT_Cmd_show_ip_bgp_dampened_cmd_newparam___readonly__>
+                </__XML__OPT_Cmd_show_ip_bgp_dampened_cmd_newparam_vrf>
+               </parameters>
+              </dampening>
+             </__XML__BLK_Cmd_show_ip_bgp_policy_cmd_policynew_ipv4>
+            </__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
+           </bgp>
+          </show>
+         </nf:data>
+        </nf:rpc-reply>
+
+    '''}
+
+    def test_golden_xml(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpVrfAllAllDampeningParameters(device=self.device, context='xml')
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
 # ==========================================================================
@@ -20096,6 +21440,904 @@ class test_show_bgp_unicast_ps_dampening_xml(unittest.TestCase):
                                   address_family='ipv4 unicast')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
+
+# =============================================================================
+#  Unit test for 'show bgp sessions [vrf <WROD>]'
+# =============================================================================
+
+class test_show_bgp_sessions_cli(unittest.TestCase):
+
+    '''Unit test for show bgp sessions [vrf <WROD>] - CLI'''
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_1 = {
+        "total_peers": 3,
+        "total_established_peers": 2,
+        "local_as": 333,
+        "vrf": {
+          "default": {
+               "router_id": "19.0.0.6",
+               "neighbor": {
+                    "19.0.102.4": {
+                         "last_flap": "01:03:35",
+                         "last_write": "00:00:09",
+                         "last_read": "00:00:41",
+                         "remote_port": 36462,
+                         "notifications_sent": 0,
+                         "local_port": 179,
+                         "notifications_received": 0,
+                         "connections_dropped": 0,
+                         "state": "established",
+                         "remote_as": 333
+                    },
+                    "19.0.101.1": {
+                         "last_flap": "01:03:35",
+                         "last_write": "00:00:09",
+                         "last_read": "00:00:41",
+                         "remote_port": 48392,
+                         "notifications_sent": 0,
+                         "local_port": 179,
+                         "notifications_received": 0,
+                         "connections_dropped": 0,
+                         "state": "established",
+                         "remote_as": 333
+                    },
+                    "19.0.102.3": {
+                         "last_flap": "01:03:39",
+                         "last_write": "never",
+                         "last_read": "never",
+                         "remote_port": 0,
+                         "notifications_sent": 0,
+                         "local_port": 0,
+                         "notifications_received": 0,
+                         "connections_dropped": 0,
+                         "state": "idle",
+                         "remote_as": 888
+                    }
+               },
+               "vrf_peers": 3,
+               "vrf_established_peers": 2,
+               "local_as": 333
+            },
+            "vpn1": {
+               "router_id": "11.11.11.11",
+               "vrf_peers": 0,
+               "vrf_established_peers": 0,
+               "local_as": 333
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+        Total peers 3, established peers 2
+        ASN 333
+        VRF default, local ASN 333
+        peers 3, established peers 2, local router-id 19.0.0.6
+        State: I-Idle, A-Active, O-Open, E-Established, C-Closing, S-Shutdown
+
+        Neighbor        ASN    Flaps LastUpDn|LastRead|LastWrit St Port(L/R)  Notif(S/R)
+        19.0.101.1        333 0     01:03:35|00:00:41|00:00:09 E   179/48392      0/0
+        19.0.102.3        888 0     01:03:39|never   |never    I   0/0          0/0
+        19.0.102.4        333 0     01:03:35|00:00:41|00:00:09 E   179/36462      0/0
+
+        VRF vpn1, local ASN 333
+        peers 0, established peers 0, local router-id 11.11.11.11
+        State: I-Idle, A-Active, O-Open, E-Established, C-Closing, S-Shutdown
+
+        Neighbor        ASN    Flaps LastUpDn|LastRead|LastWrit St Port(L/R)  Notif(S/R)
+    '''}
+
+    golden_parsed_output_2 = {
+        "local_as": 100,
+        "total_established_peers": 3,
+        "total_peers": 4,
+        "vrf": {
+          "default": {
+               "router_id": "100.1.1.1",
+               "vrf_peers": 4,
+               "vrf_established_peers": 3,
+               "local_as": 100,
+               "neighbor": {
+                    "50.1.1.101": {
+                         "last_write": "never",
+                         "state": "idle",
+                         "notifications_received": 0,
+                         "last_flap": "00:30:22",
+                         "notifications_sent": 2,
+                         "remote_port": 0,
+                         "local_port": 0,
+                         "last_read": "never",
+                         "remote_as": 300,
+                         "connections_dropped": 2
+                    },
+                    "200:1::1:1": {
+                         "last_write": "00:00:04",
+                         "state": "established",
+                         "notifications_received": 0,
+                         "last_flap": "12:11:57",
+                         "notifications_sent": 0,
+                         "remote_port": 179,
+                         "local_port": 30942,
+                         "last_read": "0.599405",
+                         "remote_as": 100,
+                         "connections_dropped": 1
+                    },
+                    "50:1::1:101": {
+                         "last_write": "00:00:13",
+                         "state": "established",
+                         "notifications_received": 0,
+                         "last_flap": "02:29:16",
+                         "notifications_sent": 5,
+                         "remote_port": 32874,
+                         "local_port": 179,
+                         "last_read": "00:00:15",
+                         "remote_as": 300,
+                         "connections_dropped": 5
+                    },
+                    "200.1.1.1": {
+                         "last_write": "00:00:20",
+                         "state": "established",
+                         "notifications_received": 0,
+                         "last_flap": "12:12:01",
+                         "notifications_sent": 0,
+                         "remote_port": 37583,
+                         "local_port": 179,
+                         "last_read": "00:00:04",
+                         "remote_as": 100,
+                         "connections_dropped": 1
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+        Total peers 4, established peers 3
+        ASN 100
+        VRF default, local ASN 100
+        peers 4, established peers 3, local router-id 100.1.1.1
+        State: I-Idle, A-Active, O-Open, E-Established, C-Closing, S-Shutdown
+
+        Neighbor        ASN    Flaps LastUpDn|LastRead|LastWrit St Port(L/R)  Notif(S/R)
+        50.1.1.101        300 2     00:30:22|never   |never    I   0/0          2/0
+        200.1.1.1         100 1     12:12:01|00:00:04|00:00:20 E   179/37583      0/0
+        50:1::1:101       300 5     02:29:16|00:00:15|00:00:13 E   179/32874      5/0
+        200:1::1:1        100 1     12:11:57|0.599405|00:00:04 E   30942/179        0/0
+    '''}
+
+    def test_golden_vrf_all(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowBgpSessions(device=self.device)
+        parsed_output = obj.parse(vrf='all')
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+    def test_golden_vrf_default(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowBgpSessions(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpSessions(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+class test_show_bgp_sessions_xml(unittest.TestCase):
+
+    '''Unit test for show bgp sessions [vrf <WROD>] - XML'''
+    
+    device = Device(name='aDevice')
+    golden_parsed_output = {
+        "total_established_peers": 2,
+        "vrf": {
+          "vpn1": {
+               "vrf_peers": 0,
+               "router_id": "11.11.11.11",
+               "local_as": 333,
+               "vrf_established_peers": 0
+          },
+          "default": {
+               "vrf_peers": 3,
+               "router_id": "19.0.0.6",
+               "local_as": 333,
+               "neighbor": {
+                    "19.0.102.3": {
+                         "notifications_sent": 0,
+                         "state": "Idle",
+                         "local_port": 0,
+                         "last_flap": "01:04:46",
+                         "connections_dropped": 0,
+                         "remote_as": 888,
+                         "notifications_received": 0,
+                         "last_write": "never",
+                         "remote_port": 0,
+                         "last_read": "never"
+                    },
+                    "19.0.102.4": {
+                         "notifications_sent": 0,
+                         "state": "Established",
+                         "local_port": 179,
+                         "last_flap": "01:04:41",
+                         "connections_dropped": 0,
+                         "remote_as": 333,
+                         "notifications_received": 0,
+                         "last_write": "00:00:15",
+                         "remote_port": 36462,
+                         "last_read": "00:00:47"
+                    },
+                    "19.0.101.1": {
+                         "notifications_sent": 0,
+                         "state": "Established",
+                         "local_port": 179,
+                         "last_flap": "01:04:41",
+                         "connections_dropped": 0,
+                         "remote_as": 333,
+                         "notifications_received": 0,
+                         "last_write": "00:00:15",
+                         "remote_port": 48392,
+                         "last_read": "00:00:47"
+                    }
+               },
+               "vrf_established_peers": 2
+          }
+        },
+        "local_as": 333,
+        "total_peers": 3
+    }
+
+    golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
+        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:1.0:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+         <nf:data>
+          <show>
+           <bgp>
+            <__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
+             <sessions>
+              <__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
+               <__XML__OPT_Cmd_show_ip_bgp_session_cmd___readonly__>
+                <__readonly__>
+                 <totalpeers>3</totalpeers>
+                 <totalestablishedpeers>2</totalestablishedpeers>
+                 <localas>333</localas>
+                 <TABLE_vrf>
+                  <ROW_vrf>
+                   <vrf-name-out>default</vrf-name-out>
+                   <local-as>333</local-as>
+                   <vrfpeers>3</vrfpeers>
+                   <vrfestablishedpeers>2</vrfestablishedpeers>
+                   <router-id>19.0.0.6</router-id>
+                   <TABLE_neighbor>
+                    <ROW_neighbor>
+                     <neighbor-id>19.0.101.1</neighbor-id>
+                     <connectionsdropped>0</connectionsdropped>
+                     <remoteas>333</remoteas>
+                     <lastflap>PT1H4M41S</lastflap>
+                     <lastread>PT47S</lastread>
+                     <lastwrite>PT15S</lastwrite>
+                     <state>Established</state>
+                     <localport>179</localport>
+                     <remoteport>48392</remoteport>
+                     <notificationssent>0</notificationssent>
+                     <notificationsreceived>0</notificationsreceived>
+                    </ROW_neighbor>
+                    <ROW_neighbor>
+                     <neighbor-id>19.0.102.3</neighbor-id>
+                     <connectionsdropped>0</connectionsdropped>
+                     <remoteas>888</remoteas>
+                     <lastflap>PT1H4M46S</lastflap>
+                     <lastread>P4M13DT1H42M1S</lastread>
+                     <lastwrite>P4M13DT1H42M1S</lastwrite>
+                     <state>Idle</state>
+                     <localport>0</localport>
+                     <remoteport>0</remoteport>
+                     <notificationssent>0</notificationssent>
+                     <notificationsreceived>0</notificationsreceived>
+                    </ROW_neighbor>
+                    <ROW_neighbor>
+                     <neighbor-id>19.0.102.4</neighbor-id>
+                     <connectionsdropped>0</connectionsdropped>
+                     <remoteas>333</remoteas>
+                     <lastflap>PT1H4M41S</lastflap>
+                     <lastread>PT47S</lastread>
+                     <lastwrite>PT15S</lastwrite>
+                     <state>Established</state>
+                     <localport>179</localport>
+                     <remoteport>36462</remoteport>
+                     <notificationssent>0</notificationssent>
+                     <notificationsreceived>0</notificationsreceived>
+                    </ROW_neighbor>
+                   </TABLE_neighbor>
+                  </ROW_vrf>
+                  <ROW_vrf>
+                   <vrf-name-out>vpn1</vrf-name-out>
+                   <local-as>333</local-as>
+                   <vrfpeers>0</vrfpeers>
+                   <vrfestablishedpeers>0</vrfestablishedpeers>
+                   <router-id>11.11.11.11</router-id>
+                  </ROW_vrf>
+                 </TABLE_vrf>
+                </__readonly__>
+               </__XML__OPT_Cmd_show_ip_bgp_session_cmd___readonly__>
+              </__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
+             </sessions>
+            </__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
+           </bgp>
+          </show>
+         </nf:data>
+        </nf:rpc-reply>
+    '''}
+
+    def test_golden_xml(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpSessions(device=self.device, context='xml')
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+# =============================================================================
+#  Unit test for 'show bgp <address_family> labels [vrf <WROD>]'
+# =============================================================================
+
+class test_show_bgp_labels_cli(unittest.TestCase):
+
+    '''Unit test for show bgp <address_family> labels [vrf <WROD>] - CLI'''
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_1 = {
+        "vrf": {
+            "default": {
+               "address_family": {
+                    "ipv4 unicast": {
+                         "table_version": 7,
+                         "router_id": "19.0.0.6",
+                         "prefix": {
+                              "1.5.213.0/24": {
+                                   "index": {
+                                        0: {
+                                             "type_code": "i",
+                                             "in_label": "nolabel",
+                                             "status_code": "*",
+                                             "best_path": True,
+                                             "out_label": "nolabel",
+                                             "nexthop": "19.0.101.1",
+                                             "type": "internal",
+                                             "status": "valid",
+                                             "best_code": ">"
+                                        },
+                                        1: {
+                                             "type_code": "i",
+                                             "in_label": "nolabel",
+                                             "status_code": "*",
+                                             "best_path": False,
+                                             "nexthop": "19.0.102.4",
+                                             "type": "internal",
+                                             "status": "valid",
+                                             "out_label": "nolabel"
+                                        }
+                                   }
+                              },
+                              "1.5.212.0/24": {
+                                   "index": {
+                                        0: {
+                                             "type_code": "i",
+                                             "in_label": "nolabel",
+                                             "status_code": "*",
+                                             "best_path": True,
+                                             "out_label": "nolabel",
+                                             "nexthop": "19.0.101.1",
+                                             "type": "internal",
+                                             "status": "valid",
+                                             "best_code": ">"
+                                        },
+                                        1: {
+                                             "type_code": "i",
+                                             "in_label": "nolabel",
+                                             "status_code": "*",
+                                             "best_path": False,
+                                             "nexthop": "19.0.102.4",
+                                             "type": "internal",
+                                             "status": "valid",
+                                             "out_label": "nolabel"
+                                        }
+                                   }
+                              },
+                              "1.5.210.0/24": {
+                                   "index": {
+                                        0: {
+                                             "type_code": "i",
+                                             "in_label": "nolabel",
+                                             "status_code": "*",
+                                             "best_path": True,
+                                             "out_label": "nolabel",
+                                             "nexthop": "19.0.101.1",
+                                             "type": "internal",
+                                             "status": "valid",
+                                             "best_code": ">"
+                                        },
+                                        1: {
+                                             "type_code": "i",
+                                             "in_label": "nolabel",
+                                             "status_code": "*",
+                                             "best_path": False,
+                                             "nexthop": "19.0.102.4",
+                                             "type": "internal",
+                                             "status": "valid",
+                                             "out_label": "nolabel"
+                                        }
+                                   }
+                              },
+                              "1.5.211.0/24": {
+                                   "index": {
+                                        0: {
+                                             "type_code": "i",
+                                             "in_label": "nolabel",
+                                             "status_code": "*",
+                                             "best_path": True,
+                                             "out_label": "nolabel",
+                                             "nexthop": "19.0.101.1",
+                                             "type": "internal",
+                                             "status": "valid",
+                                             "best_code": ">"
+                                        },
+                                        1: {
+                                             "type_code": "i",
+                                             "in_label": "nolabel",
+                                             "status_code": "*",
+                                             "best_path": False,
+                                             "nexthop": "19.0.102.4",
+                                             "type": "internal",
+                                             "status": "valid",
+                                             "out_label": "nolabel"
+                                        }
+                                   }
+                              },
+                              "1.5.214.0/24": {
+                                   "index": {
+                                        0: {
+                                             "type_code": "i",
+                                             "in_label": "nolabel",
+                                             "status_code": "*",
+                                             "best_path": True,
+                                             "out_label": "nolabel",
+                                             "nexthop": "19.0.101.1",
+                                             "type": "internal",
+                                             "status": "valid",
+                                             "best_code": ">"
+                                        },
+                                        1: {
+                                             "type_code": "i",
+                                             "in_label": "nolabel",
+                                             "status_code": "*",
+                                             "best_path": False,
+                                             "nexthop": "19.0.102.4",
+                                             "type": "internal",
+                                             "status": "valid",
+                                             "out_label": "nolabel"
+                                        }
+                                   }
+                              }
+                         }
+                    }
+               }
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+        BGP routing table information for VRF default, address family IPv4 Unicast
+        BGP table version is 7, Local Router ID is 19.0.0.6
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            In label/Out label
+        *>i1.5.210.0/24       19.0.101.1          nolabel/nolabel
+        * i                   19.0.102.4          nolabel/nolabel
+        *>i1.5.211.0/24       19.0.101.1          nolabel/nolabel
+        * i                   19.0.102.4          nolabel/nolabel
+        *>i1.5.212.0/24       19.0.101.1          nolabel/nolabel
+        * i                   19.0.102.4          nolabel/nolabel
+        *>i1.5.213.0/24       19.0.101.1          nolabel/nolabel
+        * i                   19.0.102.4          nolabel/nolabel
+        *>i1.5.214.0/24       19.0.101.1          nolabel/nolabel
+        * i                   19.0.102.4          nolabel/nolabel
+    '''}
+
+    def test_golden_vrf_all(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowBgpLabels(device=self.device)
+        parsed_output = obj.parse(af='ipv4 unicast', vrf='all')
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpLabels(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(af='vpnv4 unicast')
+
+class test_show_bgp_labels_xml(unittest.TestCase):
+
+    '''Unit test for show bgp <address_family> labels [vrf <WROD>] - XML'''
+    
+    device = Device(name='aDevice')
+    golden_parsed_output = {
+        "vrf": {
+            "default": {
+               "address_family": {
+                    "ipv4 unicast": {
+                         "table_version": 7,
+                         "router_id": "19.0.0.6",
+                         "prefix": {
+                              "1.5.213.0/24": {
+                                   "index": {
+                                        0: {
+                                             "type_code": "i",
+                                             "in_label": "nolabel",
+                                             "status_code": "*",
+                                             "best_path": True,
+                                             "out_label": "nolabel",
+                                             "nexthop": "19.0.101.1",
+                                             "type": "internal",
+                                             "status": "valid",
+                                             "best_code": ">"
+                                        },
+                                        1: {
+                                             "type_code": "i",
+                                             "in_label": "nolabel",
+                                             "status_code": "*",
+                                             "best_path": False,
+                                             "nexthop": "19.0.102.4",
+                                             "type": "internal",
+                                             "status": "valid",
+                                             "out_label": "nolabel"
+                                        }
+                                   }
+                              },
+                              "1.5.212.0/24": {
+                                   "index": {
+                                        0: {
+                                             "type_code": "i",
+                                             "in_label": "nolabel",
+                                             "status_code": "*",
+                                             "best_path": True,
+                                             "out_label": "nolabel",
+                                             "nexthop": "19.0.101.1",
+                                             "type": "internal",
+                                             "status": "valid",
+                                             "best_code": ">"
+                                        },
+                                        1: {
+                                             "type_code": "i",
+                                             "in_label": "nolabel",
+                                             "status_code": "*",
+                                             "best_path": False,
+                                             "nexthop": "19.0.102.4",
+                                             "type": "internal",
+                                             "status": "valid",
+                                             "out_label": "nolabel"
+                                        }
+                                   }
+                              },
+                              "1.5.210.0/24": {
+                                   "index": {
+                                        0: {
+                                             "type_code": "i",
+                                             "in_label": "nolabel",
+                                             "status_code": "*",
+                                             "best_path": True,
+                                             "out_label": "nolabel",
+                                             "nexthop": "19.0.101.1",
+                                             "type": "internal",
+                                             "status": "valid",
+                                             "best_code": ">"
+                                        },
+                                        1: {
+                                             "type_code": "i",
+                                             "in_label": "nolabel",
+                                             "status_code": "*",
+                                             "best_path": False,
+                                             "nexthop": "19.0.102.4",
+                                             "type": "internal",
+                                             "status": "valid",
+                                             "out_label": "nolabel"
+                                        }
+                                   }
+                              },
+                              "1.5.211.0/24": {
+                                   "index": {
+                                        0: {
+                                             "type_code": "i",
+                                             "in_label": "nolabel",
+                                             "status_code": "*",
+                                             "best_path": True,
+                                             "out_label": "nolabel",
+                                             "nexthop": "19.0.101.1",
+                                             "type": "internal",
+                                             "status": "valid",
+                                             "best_code": ">"
+                                        },
+                                        1: {
+                                             "type_code": "i",
+                                             "in_label": "nolabel",
+                                             "status_code": "*",
+                                             "best_path": False,
+                                             "nexthop": "19.0.102.4",
+                                             "type": "internal",
+                                             "status": "valid",
+                                             "out_label": "nolabel"
+                                        }
+                                   }
+                              },
+                              "1.5.214.0/24": {
+                                   "index": {
+                                        0: {
+                                             "type_code": "i",
+                                             "in_label": "nolabel",
+                                             "status_code": "*",
+                                             "best_path": True,
+                                             "out_label": "nolabel",
+                                             "nexthop": "19.0.101.1",
+                                             "type": "internal",
+                                             "status": "valid",
+                                             "best_code": ">"
+                                        },
+                                        1: {
+                                             "type_code": "i",
+                                             "in_label": "nolabel",
+                                             "status_code": "*",
+                                             "best_path": False,
+                                             "nexthop": "19.0.102.4",
+                                             "type": "internal",
+                                             "status": "valid",
+                                             "out_label": "nolabel"
+                                        }
+                                   }
+                              }
+                         }
+                    }
+               }
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
+        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:1.0:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+         <nf:data>
+          <show>
+           <bgp>
+            <__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
+             <__XML__BLK_Cmd_show_bgp_cmd_ipv4>
+              <__XML__OPT_Cmd_show_bgp_cmd_vrf>
+               <__XML__OPT_Cmd_show_bgp_cmd___readonly__>
+                <__readonly__>
+                 <TABLE_vrf>
+                  <ROW_vrf>
+                   <vrf-name-out>default</vrf-name-out>
+                   <TABLE_afi>
+                    <ROW_afi>
+                     <afi>1</afi>
+                     <TABLE_safi>
+                      <ROW_safi>
+                       <safi>1</safi>
+                       <af-name>IPv4 Unicast</af-name>
+                       <table-version>7</table-version>
+                       <router-id>19.0.0.6</router-id>
+                       <TABLE_rd>
+                        <ROW_rd>
+                         <TABLE_prefix>
+                          <ROW_prefix>
+                           <ipprefix>1.5.210.0/24</ipprefix>
+                           <TABLE_path>
+                            <ROW_path>
+                             <pathnr>0</pathnr>
+                             <status>valid</status>
+                             <best>bestpath</best>
+                             <type>internal</type>
+                             <statuscode>*</statuscode>
+                             <bestcode>&gt;</bestcode>
+                             <typecode>i</typecode>
+                             <ipnexthop>19.0.101.1</ipnexthop>
+                             <inlabel>nolabel</inlabel>
+                             <outlabel>nolabel</outlabel>
+                             <vpn></vpn>
+                             <hold_down></hold_down>
+                            </ROW_path>
+                            <ROW_path>
+                             <pathnr>1</pathnr>
+                             <status>valid</status>
+                             <best>none</best>
+                             <type>internal</type>
+                             <statuscode>*</statuscode>
+                             <bestcode> </bestcode>
+                             <typecode>i</typecode>
+                             <ipnexthop>19.0.102.4</ipnexthop>
+                             <inlabel>nolabel</inlabel>
+                             <outlabel>nolabel</outlabel>
+                             <vpn></vpn>
+                             <hold_down></hold_down>
+                            </ROW_path>
+                           </TABLE_path>
+                          </ROW_prefix>
+                          <ROW_prefix>
+                           <ipprefix>1.5.211.0/24</ipprefix>
+                           <TABLE_path>
+                            <ROW_path>
+                             <pathnr>0</pathnr>
+                             <status>valid</status>
+                             <best>bestpath</best>
+                             <type>internal</type>
+                             <statuscode>*</statuscode>
+                             <bestcode>&gt;</bestcode>
+                             <typecode>i</typecode>
+                             <ipnexthop>19.0.101.1</ipnexthop>
+                             <inlabel>nolabel</inlabel>
+                             <outlabel>nolabel</outlabel>
+                             <vpn></vpn>
+                             <hold_down></hold_down>
+                            </ROW_path>
+                            <ROW_path>
+                             <pathnr>1</pathnr>
+                             <status>valid</status>
+                             <best>none</best>
+                             <type>internal</type>
+                             <statuscode>*</statuscode>
+                             <bestcode> </bestcode>
+                             <typecode>i</typecode>
+                             <ipnexthop>19.0.102.4</ipnexthop>
+                             <inlabel>nolabel</inlabel>
+                             <outlabel>nolabel</outlabel>
+                             <vpn></vpn>
+                             <hold_down></hold_down>
+                            </ROW_path>
+                           </TABLE_path>
+                          </ROW_prefix>
+                          <ROW_prefix>
+                           <ipprefix>1.5.212.0/24</ipprefix>
+                           <TABLE_path>
+                            <ROW_path>
+                             <pathnr>0</pathnr>
+                             <status>valid</status>
+                             <best>bestpath</best>
+                             <type>internal</type>
+                             <statuscode>*</statuscode>
+                             <bestcode>&gt;</bestcode>
+                             <typecode>i</typecode>
+                             <ipnexthop>19.0.101.1</ipnexthop>
+                             <inlabel>nolabel</inlabel>
+                             <outlabel>nolabel</outlabel>
+                             <vpn></vpn>
+                             <hold_down></hold_down>
+                            </ROW_path>
+                            <ROW_path>
+                             <pathnr>1</pathnr>
+                             <status>valid</status>
+                             <best>none</best>
+                             <type>internal</type>
+                             <statuscode>*</statuscode>
+                             <bestcode> </bestcode>
+                             <typecode>i</typecode>
+                             <ipnexthop>19.0.102.4</ipnexthop>
+                             <inlabel>nolabel</inlabel>
+                             <outlabel>nolabel</outlabel>
+                             <vpn></vpn>
+                             <hold_down></hold_down>
+                            </ROW_path>
+                           </TABLE_path>
+                          </ROW_prefix>
+                          <ROW_prefix>
+                           <ipprefix>1.5.213.0/24</ipprefix>
+                           <TABLE_path>
+                            <ROW_path>
+                             <pathnr>0</pathnr>
+                             <status>valid</status>
+                             <best>bestpath</best>
+                             <type>internal</type>
+                             <statuscode>*</statuscode>
+                             <bestcode>&gt;</bestcode>
+                             <typecode>i</typecode>
+                             <ipnexthop>19.0.101.1</ipnexthop>
+                             <inlabel>nolabel</inlabel>
+                             <outlabel>nolabel</outlabel>
+                             <vpn></vpn>
+                             <hold_down></hold_down>
+                            </ROW_path>
+                            <ROW_path>
+                             <pathnr>1</pathnr>
+                             <status>valid</status>
+                             <best>none</best>
+                             <type>internal</type>
+                             <statuscode>*</statuscode>
+                             <bestcode> </bestcode>
+                             <typecode>i</typecode>
+                             <ipnexthop>19.0.102.4</ipnexthop>
+                             <inlabel>nolabel</inlabel>
+                             <outlabel>nolabel</outlabel>
+                             <vpn></vpn>
+                             <hold_down></hold_down>
+                            </ROW_path>
+                           </TABLE_path>
+                          </ROW_prefix>
+                          <ROW_prefix>
+                           <ipprefix>1.5.214.0/24</ipprefix>
+                           <TABLE_path>
+                            <ROW_path>
+                             <pathnr>0</pathnr>
+                             <status>valid</status>
+                             <best>bestpath</best>
+                             <type>internal</type>
+                             <statuscode>*</statuscode>
+                             <bestcode>&gt;</bestcode>
+                             <typecode>i</typecode>
+                             <ipnexthop>19.0.101.1</ipnexthop>
+                             <inlabel>nolabel</inlabel>
+                             <outlabel>nolabel</outlabel>
+                             <vpn></vpn>
+                             <hold_down></hold_down>
+                            </ROW_path>
+                            <ROW_path>
+                             <pathnr>1</pathnr>
+                             <status>valid</status>
+                             <best>none</best>
+                             <type>internal</type>
+                             <statuscode>*</statuscode>
+                             <bestcode> </bestcode>
+                             <typecode>i</typecode>
+                             <ipnexthop>19.0.102.4</ipnexthop>
+                             <inlabel>nolabel</inlabel>
+                             <outlabel>nolabel</outlabel>
+                             <vpn></vpn>
+                             <hold_down></hold_down>
+                            </ROW_path>
+                           </TABLE_path>
+                          </ROW_prefix>
+                         </TABLE_prefix>
+                        </ROW_rd>
+                       </TABLE_rd>
+                      </ROW_safi>
+                     </TABLE_safi>
+                    </ROW_afi>
+                   </TABLE_afi>
+                  </ROW_vrf>
+                  <ROW_vrf>
+                   <vrf-name-out>vpn2</vrf-name-out>
+                   <TABLE_afi>
+                    <ROW_afi>
+                     <afi>1</afi>
+                     <TABLE_safi>
+                      <ROW_safi>
+                       <safi>1</safi>
+                       <af-name>IPv4 Unicast</af-name>
+                      </ROW_safi>
+                     </TABLE_safi>
+                    </ROW_afi>
+                   </TABLE_afi>
+                  </ROW_vrf>
+                 </TABLE_vrf>
+                </__readonly__>
+               </__XML__OPT_Cmd_show_bgp_cmd___readonly__>
+              </__XML__OPT_Cmd_show_bgp_cmd_vrf>
+             </__XML__BLK_Cmd_show_bgp_cmd_ipv4>
+            </__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
+           </bgp>
+          </show>
+         </nf:data>
+        </nf:rpc-reply>
+    '''}
+
+    def test_golden_xml(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpLabels(device=self.device, context='xml')
+        parsed_output = obj.parse(af='ipv4 unicast', vrf='all')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()
