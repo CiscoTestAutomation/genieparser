@@ -10,6 +10,7 @@ NXOS parsers for the following show commands:
     * 'show bgp vrf all all neighbors'
     * 'show bgp vrf all all nexthop-database'
     * 'show bgp vrf <WORD> all summary'
+    * 'show bgp vrf <WORD> all summary | xml'
     * 'show bgp vrf <WROD> all dampening parameters'
     * 'show bgp vrf <WROD> all dampening parameters | xml'
     * 'show bgp vrf all all neighbors <WORD> advertised-routes'
