@@ -49,10 +49,10 @@ from parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
 # import parser utils
 from parser.utils.common import Common
 
-# =====================================
-# Parser for 'show bgp process vrf all'
-# =====================================
 
+# =====================================
+# Schema for 'show bgp process vrf all'
+# =====================================
 class ShowBgpProcessVrfAllSchema(MetaParser):
     """Schema for show bgp process vrf all"""
 
@@ -137,6 +137,9 @@ class ShowBgpProcessVrfAllSchema(MetaParser):
             },
         }
 
+# =====================================
+# Parser for 'show bgp process vrf all'
+# =====================================
 class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
     """Parser for:
         show bgp process vrf all
@@ -150,6 +153,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
         parsed_dict = {}
 
         for line in out.splitlines():
+            line = line.replace('\t', '    ')
             line = line.rstrip()
 
             # BGP Process ID                 : 29474
@@ -965,9 +969,8 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
 
 
 # =========================================
-# Parser for 'show bgp peer-session <WORD>'
+# Schema for 'show bgp peer-session <WORD>'
 # =========================================
-
 class ShowBgpPeerSessionSchema(MetaParser):
     """Schema for show bgp peer-session <peer_session>"""
 
@@ -993,6 +996,9 @@ class ShowBgpPeerSessionSchema(MetaParser):
             },
         }
 
+# =========================================
+# Parser for 'show bgp peer-session <WORD>'
+# =========================================
 class ShowBgpPeerSession(ShowBgpPeerSessionSchema):
 
     """Parser for:
@@ -1154,9 +1160,8 @@ class ShowBgpPeerSession(ShowBgpPeerSessionSchema):
 
 
 # ========================================
-# Parser for 'show bgp peer-policy <WORD>'
+# Schema for 'show bgp peer-policy <WORD>'
 # ========================================
-
 class ShowBgpPeerPolicySchema(MetaParser):
     """Schema for show bgp peer-policy <peer_policy>"""
 
@@ -1181,6 +1186,9 @@ class ShowBgpPeerPolicySchema(MetaParser):
             },
         }
 
+# ========================================
+# Parser for 'show bgp peer-policy <WORD>'
+# ========================================
 class ShowBgpPeerPolicy(ShowBgpPeerPolicySchema):
     """Parser for:
         show bgp peer-policy <peer_policy>
@@ -1340,10 +1348,9 @@ class ShowBgpPeerPolicy(ShowBgpPeerPolicySchema):
         return parsed_dict
 
 
-# ==========================================
-# Parser for 'show bgp peer-template <peer_template>'
-# ==========================================
-
+# ===================================================
+# Schema for 'show bgp peer-template <peer_template>'
+# ===================================================
 class ShowBgpPeerTemplateSchema(MetaParser):
     """Schema for show bgp peer-template <peer_template>"""
 
@@ -1367,6 +1374,9 @@ class ShowBgpPeerTemplateSchema(MetaParser):
             },
         }
 
+# ===================================================
+# Parser for 'show bgp peer-template <peer_template>'
+# ===================================================
 class ShowBgpPeerTemplate(ShowBgpPeerTemplateSchema):
 
     '''Parser for show bgp peer-template <peer_template>
@@ -1528,9 +1538,8 @@ class ShowBgpPeerTemplate(ShowBgpPeerTemplateSchema):
 
 
 # =================================
-# Parser for 'show bgp vrf all all'
+# Schema for 'show bgp vrf all all'
 # =================================
-
 class ShowBgpVrfAllAllSchema(MetaParser):
     """Schema for show bgp vrf all all"""
 
@@ -1572,6 +1581,9 @@ class ShowBgpVrfAllAllSchema(MetaParser):
             },
         }
 
+# =================================
+# Parser for 'show bgp vrf all all'
+# =================================
 class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
     """Parser for show bgp vrf all all"""
 
@@ -1942,7 +1954,6 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
 # ==============================================
 # Schema for 'show bgp vrf <vrf> all neighbors'
 # ==============================================
-
 class ShowBgpVrfAllNeighborsSchema(MetaParser):
     """Schema for show bgp vrf <vrf> all neighbors"""
 
@@ -2054,7 +2065,7 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                     {Any(): 
                         {Optional('bgp_table_version'): int,
                          Optional('neighbor_version'): int,
-                         Optional('send_community'): bool,
+                         Optional('send_community'): str,
                          Optional('soo'): str,
                          Optional('soft_configuration'): bool,
                          Optional('next_hop_self'): bool,
@@ -2064,8 +2075,8 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                          Optional('maximum_prefix_max_prefix_no'): int,
                          Optional('route_map_name_in'): str,
                          Optional('route_map_name_out'): str,
-                         Optional('nbr_af_default_originate'): bool,
-                         Optional('nbr_af_default_originate_route_map'): str,
+                         Optional('default_originate'): bool,
+                         Optional('default_originate_route_map'): str,
                          Optional('route_reflector_client'): bool,
                          Optional('enabled'): bool,
                          Optional('graceful_restart'): bool,
@@ -2087,6 +2098,9 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
             },
         }
 
+# ==============================================
+# Parser for 'show bgp vrf <vrf> all neighbors'
+# ==============================================
 class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
     """Parser for:
         show bgp vrf <vrf> all neighbors
@@ -2099,6 +2113,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
         
         # Init vars
         parsed_dict = {}
+        standard_send_community = False
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -2112,6 +2127,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                              ' +(?P<peer_index>[0-9]+)$')
             m = p1.match(line)
             if m:
+                standard_send_community = False
                 if 'neighbor' not in parsed_dict:
                     parsed_dict['neighbor'] = {}
                 neighbor_id = str(m.groupdict()['neighbor_id'])
@@ -2266,18 +2282,29 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 continue
 
             # External BGP peer might be upto 255 hops away
-            p12 = re.compile(r'^\s*External +BGP +peer +might +be +upto'
+            p12_1 = re.compile(r'^\s*External +BGP +peer +might +be +upto'
                              ' +(?P<ebgp_multihop_max_hop>[0-9]+) +hops +away$')
-            m = p12.match(line)
+            m = p12_1.match(line)
             if m:
-                parsed_dict['neighbor'][neighbor_id]['ebgp_multihop_max_hop'] = \
-                    int(m.groupdict()['ebgp_multihop_max_hop'])
                 parsed_dict['neighbor'][neighbor_id]['ebgp_multihop'] = True
+                parsed_dict['neighbor'][neighbor_id]['ebgp_multihop_max_hop'] =\
+                    int(m.groupdict()['ebgp_multihop_max_hop'])
+                continue
+
+            # External BGP peer might be up to 5 hops away
+            p12_2 = re.compile(r'^\s*External +BGP +peer +might +be +up to'
+                             ' +(?P<ebgp_multihop_max_hop>[0-9]+) +hops +away$')
+            m = p12_2.match(line)
+            if m:
+                parsed_dict['neighbor'][neighbor_id]['ebgp_multihop'] = True
+                parsed_dict['neighbor'][neighbor_id]['ebgp_multihop_max_hop'] =\
+                    int(m.groupdict()['ebgp_multihop_max_hop'])
                 continue
 
             # TCP MD5 authentication is enabled
+            # TCP MD5 authentication is set (disabled)
             p13 = re.compile(r'^\s*TCP +MD5 +authentication +is'
-                              ' +(?P<tcp_md5_auth>[a-zA-Z\s]+)$')
+                              ' +(?P<tcp_md5_auth>[a-zA-Z\(\)\s]+)$')
             m = p13.match(line)
             if m:
                 parsed_dict['neighbor'][neighbor_id]['tcp_md5_auth'] = \
@@ -2287,8 +2314,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 continue
             
             # Only passive connection setup allowed
-            p14 = re.compile(r'^\s*Only +passive +connection +setup'
-                             ' +(?P<only_passive_conn>[a-zA-Z]+)$')
+            p14 = re.compile(r'^\s*Only +passive +connection +setup +allowed$')
             m = p14.match(line)
             if m:
                 if 'bgp_session_transport' not in parsed_dict['neighbor']\
@@ -2300,8 +2326,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                     parsed_dict['neighbor'][neighbor_id]\
                         ['bgp_session_transport']['connection'] = {}
                 parsed_dict['neighbor'][neighbor_id]['bgp_session_transport']\
-                    ['connection']['mode'] = \
-                    str(m.groupdict()['only_passive_conn'])
+                    ['connection']['mode'] = 'passive'
                 continue
 
             # Received 92717 messages, 3 notifications, 0 bytes in queue
@@ -2614,6 +2639,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                               ' +version +(?P<nbr_version>[0-9]+)$')
             m = p32.match(line)
             if m:
+                standard_send_community = False
                 parsed_dict['neighbor'][neighbor_id]['address_family']\
                     [address_family]['bgp_table_version'] = \
                         int(m.groupdict()['af_bgp_table_version'])
@@ -2658,8 +2684,9 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                               ' +neighbor$')
             m = p35.match(line)
             if m:
-                parsed_dict['neighbor'][neighbor_id]['address_family']\
-                    [address_family]['send_community'] = True
+                standard_send_community = True
+                parsed_dict['neighbor'][neighbor_id]['address_family'] \
+                    [address_family]['send_community'] = 'standard'
                 continue
 
             # Extended community attribute sent to this neighbor
@@ -2667,8 +2694,12 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                               ' +this +neighbor$')
             m = p36.match(line)
             if m:
-                parsed_dict['neighbor'][neighbor_id]['address_family']\
-                    [address_family]['send_community'] = True
+                parsed_dict['neighbor'][neighbor_id]['address_family'] \
+                    [address_family]['send_community'] = 'extended'
+
+                if standard_send_community:
+                    parsed_dict['neighbor'][neighbor_id]['address_family'] \
+                        [address_family]['send_community'] = 'both'
                 continue
 
             # Maximum prefixes allowed 300000
@@ -2701,7 +2732,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                     [address_family]['route_map_name_out'] = \
                         str(m.groupdict()['route_map_name_out'])
                 continue
-            
+
             # Third-party Nexthop will not be computed.
             p40 = re.compile(r'^\s*Third-party +Nexthop +will +not +be'
                               ' +computed.$')
@@ -2755,15 +2786,19 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 continue
 
             # Default information originate, default not sent
-            p46 = re.compile(r'^\s*Default +information +originate, +default'
-                              ' +not +sent$')
+            # Default information originate, default sent
+            # Default information originate, route-map SOMENAME, default not sent
+            p46 = re.compile(r'^\s*Default +information +originate,'
+                              '(?: +route-map +(?P<route_map>(\S+)),)?'
+                              ' +default(?: +not)? +sent$')
             m = p46.match(line)
             if m:
                 parsed_dict['neighbor'][neighbor_id]['address_family']\
-                    [address_family]['nbr_af_default_originate'] = True
-                parsed_dict['neighbor'][neighbor_id]['address_family']\
-                    [address_family]['nbr_af_default_originate_route_map'] = \
-                        str(line).strip()
+                    [address_family]['default_originate'] = True
+                if m.groupdict()['route_map']:
+                    parsed_dict['neighbor'][neighbor_id]['address_family']\
+                        [address_family]['default_originate_route_map'] = \
+                            m.groupdict()['route_map']
                 continue
 
             # Inherited policy-templates:
@@ -2891,7 +2926,6 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
 # ==================================================
 # Schema for 'show bgp vrf all all nexthop-database'
 # ==================================================
-
 class ShowBgpVrfAllAllNextHopDatabaseSchema(MetaParser):
     """Schema for show bgp vrf all all nexthop-database"""
 
@@ -2933,6 +2967,9 @@ class ShowBgpVrfAllAllNextHopDatabaseSchema(MetaParser):
                 },
             }
 
+# ==================================================
+# Parser for 'show bgp vrf all all nexthop-database'
+# ==================================================
 class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
     """Parser for show bgp vrf all all nexthop-database"""
 
@@ -3094,7 +3131,6 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
 # =========================================
 # Schema for 'show bgp vrf all all summary'
 # =========================================
-
 class ShowBgpVrfAllAllSummarySchema(MetaParser):
     """Schema for show bgp vrf all all summary"""
 
@@ -3142,6 +3178,9 @@ class ShowBgpVrfAllAllSummarySchema(MetaParser):
             },
         }
 
+# =========================================
+# Parser for 'show bgp vrf all all summary'
+# =========================================
 class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
     """Parser for show bgp vrf all all summary"""
 
@@ -3383,7 +3422,6 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
 # ==================================================
 # Schema for 'show bgp vrf all dampening parameters'
 # ==================================================
-
 class ShowBgpVrfAllAllDampeningParametersSchema(MetaParser):
     """Schema for 'show bgp vrf all dampening parameters"""
     
@@ -3417,6 +3455,9 @@ class ShowBgpVrfAllAllDampeningParametersSchema(MetaParser):
             },
         }
 
+# ==================================================
+# Parser for 'show bgp vrf all dampening parameters'
+# ==================================================
 class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSchema):
     """Parser for 'show bgp vrf all dampening parameters"""
     
@@ -3517,10 +3558,9 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
         return bgp_dict
 
 
-# ======================================================================
+# ==========================================================================
 # Schema for 'show bgp vrf <vrf> all neighbors <neighbor> advertised-routes'
-# ======================================================================
-
+# ==========================================================================
 class ShowBgpVrfAllNeighborsAdvertisedRoutesSchema(MetaParser):
     """Schema for show bgp vrf <vrf> all neighbors <neighbor> advertised-routes"""
 
@@ -3559,6 +3599,9 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutesSchema(MetaParser):
             },
         }
 
+# ==========================================================================
+# Parser for 'show bgp vrf <vrf> all neighbors <neighbor> advertised-routes'
+# ==========================================================================
 class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRoutesSchema):
     """Parser for show bgp vrf <vrf> all neighbors <neighbor> advertised-routes"""
 
@@ -3892,10 +3935,9 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
         return route_dict
 
 
-# ============================================================
+# ===============================================================
 # Schema for 'show bgp vrf <vrf> all neighbors <neighbor> routes'
-# ============================================================
-
+# ===============================================================
 class ShowBgpVrfAllNeighborsRoutesSchema(MetaParser):
     """Schema for show bgp vrf <vrf> all neighbors <neighbor> routes"""
 
@@ -3934,6 +3976,9 @@ class ShowBgpVrfAllNeighborsRoutesSchema(MetaParser):
             },
         }
 
+# ===============================================================
+# Parser for 'show bgp vrf <vrf> all neighbors <neighbor> routes'
+# ===============================================================
 class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
     """Parser for show bgp vrf <vrf> all neighbors <neighbor> routes"""
 
@@ -4268,9 +4313,8 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
 
 
 # =====================================================================
-# Parser for 'show bgp vrf <WORD> all neighbors <WORD> received-routes'
+# Schema for 'show bgp vrf <WORD> all neighbors <WORD> received-routes'
 # =====================================================================
-
 class ShowBgpVrfAllNeighborsReceivedRoutesSchema(MetaParser):
     """Schema for show bgp vrf <vrf> all neighbors <neighbor> received-routes"""
 
@@ -4309,6 +4353,9 @@ class ShowBgpVrfAllNeighborsReceivedRoutesSchema(MetaParser):
             },
         }
 
+# =====================================================================
+# Parser for 'show bgp vrf <WORD> all neighbors <WORD> received-routes'
+# =====================================================================
 class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesSchema):
     """Parser for show bgp vrf <vrf> all neighbors <neighbor> received-routes"""
 
@@ -4645,181 +4692,180 @@ class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesS
 # ====================================
 # Schema for 'show running-config bgp'
 # ====================================
-
 class ShowRunningConfigBgpSchema(MetaParser):
     """Schema for show running-config bgp"""
 
-    schema = {'bgp':
-                {'instance':
-                    {'default':
-                        {'bgp_id': int,
-                         'protocol_shutdown': bool,
-                         Optional('ps_name'):
-                            {Any():
-                                {'ps_fall_over_bfd': bool,
-                                 'ps_suppress_four_byte_as_capability': bool,
-                                 Optional('ps_description'): str,
-                                 'ps_disable_connected_check': bool,
-                                 'ps_ebgp_multihop': bool,
-                                 Optional('ps_ebgp_multihop_max_hop'): int,
-                                 Optional('ps_local_as_as_no'): int,
-                                 'ps_local_as_no_prepend': bool,
-                                 'ps_local_as_dual_as': bool,
-                                 'ps_local_as_replace_as': bool,
-                                 Optional('ps_password_text'): str,
-                                 Optional('ps_remote_as'): int,
-                                 'ps_shutdown': bool,
-                                 Optional('ps_keepalive_interval'): int,
-                                 Optional('ps_hodltime'): int,
-                                 Optional('ps_transport_connection_mode'): str,
-                                 Optional('ps_update_source'): str}
-                            },
-                         Optional('pp_name'):
-                            {Any():
-                                {Optional('pp_allowas_in'): bool,
-                                 'pp_allowas_in_as_number': int,
-                                 'pp_as_override': bool,
-                                 'pp_default_originate': bool,
-                                 Optional('pp_default_originate_route_map'): str,
-                                 Optional('pp_route_map_name_in'): str,
-                                 Optional('pp_route_map_name_out'): str,
-                                 Optional('pp_maximum_prefix_max_prefix_no'): int,
-                                 Optional('pp_maximum_prefix_threshold'): int,
-                                 Optional('pp_maximum_prefix_restart'): int,
-                                 Optional('pp_maximum_prefix_warning_only'): bool,
-                                 'pp_next_hop_self': bool,
-                                 'pp_route_reflector_client': bool,
-                                 Optional('pp_send_community'): str,
-                                 'pp_soft_reconfiguration': bool,
-                                 Optional('pp_soo'): str}
-                            },
-                         'vrf':
-                            {Any():
-                                {Optional('always_compare_med'): bool,
-                                 Optional('bestpath_compare_routerid'): bool,
-                                 Optional('bestpath_cost_community_ignore'): bool,
-                                 Optional('bestpath_med_missing_at_worst'): bool,
-                                 Optional('cluster_id'): str,
-                                 Optional('confederation_identifier'): int,
-                                 Optional('confederation_peers_as'): str,
-                                 'graceful_restart': bool,
-                                 Optional('graceful_restart_restart_time'): int,
-                                 Optional('graceful_restart_stalepath_time'): int,
-                                 'log_neighbor_changes': bool,
-                                 Optional('router_id'): str,
-                                 Optional('keepalive_interval'): int,
-                                 Optional('holdtime'): int,
-                                 'enforce_first_as': bool,
-                                 'fast_external_fallover': bool,
-                                 Optional('default_choice_ipv4_unicast'): str,
-                                 Optional('dynamic_med_interval'): int,
-                                 Optional('shutdown'): str,
-                                 'flush_routes': bool,
-                                 'isolate': bool,
-                                 Optional('disable_policy_batching_ipv4'): str,
-                                 Optional('disable_policy_batching_ipv6'): str,
-                                 Optional('af_name'):
-                                    {Any():
-                                        {Optional('af_dampening'): bool,
-                                         Optional('af_dampening_route_map'): str,
-                                         Optional('af_dampening_half_life_time'): int,
-                                         Optional('af_dampening_reuse_time'): int,
-                                         Optional('af_dampening_suppress_time'): int,
-                                         Optional('af_dampening_max_suppress_time'): int,
-                                         Optional('af_nexthop_route_map'): str,
-                                         Optional('af_nexthop_trigger_enable'): bool,
-                                         Optional('af_nexthop_trigger_delay_critical'): int,
-                                         Optional('af_nexthop_trigger_delay_non_critical'): int,
-                                         Optional('af_client_to_client_reflection'): bool,
-                                         Optional('af_distance_extern_as'): int,
-                                         Optional('af_distance_internal_as'): int,
-                                         Optional('af_distance_local'): int,
-                                         Optional('af_maximum_paths_ebgp'): int,
-                                         Optional('af_maximum_paths_ibgp'): int,
-                                         Optional('af_maximum_paths_eibgp'): int,
-                                         Optional('af_aggregate_address_ipv4_address'): str,
-                                         Optional('af_aggregate_address_ipv4_mask'): int,
-                                         Optional('af_aggregate_address_as_set'): bool,
-                                         Optional('af_aggregate_address_summary_only'): bool,
-                                         Optional('af_network_number'): str,
-                                         Optional('af_network_mask'): int,
-                                         Optional('af_network_route_map'): str,
-                                         Optional('af_redist_isis'): str,
-                                         Optional('af_redist_isis_metric'): str,
-                                         Optional('af_redist_isis_route_policy'): str,
-                                         Optional('af_redist_ospf'): str,
-                                         Optional('af_redist_ospf_metric'): str,
-                                         Optional('af_redist_ospf_route_policy'): str,
-                                         Optional('af_redist_rip'): str,
-                                         Optional('af_redist_rip_metric'): str,
-                                         Optional('af_redist_rip_route_policy'): str,
-                                         Optional('af_redist_static'): bool,
-                                         Optional('af_redist_static_metric'): str,
-                                         Optional('af_redist_static_route_policy'): str,
-                                         Optional('af_redist_connected'): bool,
-                                         Optional('af_redist_connected_metric'): str,
-                                         Optional('af_redist_connected_route_policy'): str,
-                                         Optional('af_v6_aggregate_address_ipv6_address'): str,
-                                         Optional('af_v6_aggregate_address_as_set'): bool,
-                                         Optional('af_v6_aggregate_address_summary_only'): bool,
-                                         Optional('af_v6_network_number'): str,
-                                         Optional('af_v6_network_route_map'): str,
-                                         Optional('af_v6_allocate_label_all'): bool,
-                                         Optional('af_retain_rt_all'): bool,
-                                         Optional('af_label_allocation_mode'): str}
-                                    },
-                                 Optional('neighbor_id'):
-                                    {Any():
-                                        {Optional('nbr_fall_over_bfd'): bool,
-                                         Optional('nbr_suppress_four_byte_as_capability'): bool,
-                                         Optional('nbr_description'): str,
-                                         Optional('nbr_disable_connected_check'): bool,
-                                         Optional('nbr_ebgp_multihop'): bool,
-                                         Optional('nbr_ebgp_multihop_max_hop'): int,
-                                         Optional('nbr_inherit_peer_session'): str,
-                                         Optional('nbr_local_as_as_no'): int,
-                                         Optional('nbr_local_as_no_prepend'): bool,
-                                         Optional('nbr_local_as_replace_as'): bool,
-                                         Optional('nbr_local_as_dual_as'): bool,
-                                         Optional('nbr_remote_as'): int,
-                                         Optional('nbr_remove_private_as'): bool,
-                                         Optional('nbr_shutdown'): bool,
-                                         Optional('nbr_keepalive_interval'): int,
-                                         Optional('nbr_holdtime'): int,
-                                         Optional('nbr_update_source'): str,
-                                         Optional('nbr_password_text'): str,
-                                         Optional('nbr_transport_connection_mode'): str,
-                                         Optional('nbr_af_name'):
-                                            {Any():
-                                                {Optional('nbr_af_allowas_in'): bool,
-                                                 Optional('nbr_af_allowas_in_as_number'): int,
-                                                 Optional('nbr_af_inherit_peer_policy'): str,
-                                                 Optional('nbr_af_inherit_peer_seq'): int,
-                                                 Optional('nbr_af_maximum_prefix_max_prefix_no'): int,
-                                                 Optional('nbr_af_maximum_prefix_threshold'): int,
-                                                 Optional('nbr_af_maximum_prefix_restart'): int,
-                                                 Optional('nbr_af_maximum_prefix_warning_only'): bool,
-                                                 Optional('nbr_af_route_map_name_in'): str,
-                                                 Optional('nbr_af_route_map_name_out'): str,
-                                                 Optional('nbr_af_route_reflector_client'): bool,
-                                                 Optional('nbr_af_send_community'): str,
-                                                 Optional('nbr_af_soft_reconfiguration'): bool,
-                                                 Optional('nbr_af_next_hop_self'): bool,
-                                                 Optional('nbr_af_as_override'): bool,
-                                                 Optional('nbr_af_default_originate'): bool,
-                                                 Optional('nbr_af_default_originate_route_map'): str,
-                                                 Optional('nbr_af_soo'): str}
+    schema = {
+        'bgp':
+            {'instance':
+                {'default':
+                    {'bgp_id': int,
+                    'protocol_shutdown': bool,
+                    Optional('ps_name'):
+                        {Any():
+                            {'ps_fall_over_bfd': bool,
+                            'ps_suppress_four_byte_as_capability': bool,
+                            Optional('ps_description'): str,
+                            'ps_disable_connected_check': bool,
+                            'ps_ebgp_multihop': bool,
+                            Optional('ps_ebgp_multihop_max_hop'): int,
+                            Optional('ps_local_as_as_no'): int,
+                            'ps_local_as_no_prepend': bool,
+                            'ps_local_as_dual_as': bool,
+                            'ps_local_as_replace_as': bool,
+                            Optional('ps_password_text'): str,
+                            Optional('ps_remote_as'): int,
+                            'ps_shutdown': bool,
+                            Optional('ps_keepalive_interval'): int,
+                            Optional('ps_hodltime'): int,
+                            Optional('ps_transport_connection_mode'): str,
+                            Optional('ps_update_source'): str}},
+                    Optional('pp_name'):
+                        {Any():
+                            {Optional('pp_allowas_in'): bool,
+                             'pp_allowas_in_as_number': int,
+                             'pp_as_override': bool,
+                             'pp_default_originate': bool,
+                             Optional('pp_default_originate_route_map'): str,
+                             Optional('pp_route_map_name_in'): str,
+                             Optional('pp_route_map_name_out'): str,
+                             Optional('pp_maximum_prefix_max_prefix_no'): int,
+                             Optional('pp_maximum_prefix_threshold'): int,
+                             Optional('pp_maximum_prefix_restart'): int,
+                             Optional('pp_maximum_prefix_warning_only'): bool,
+                             'pp_next_hop_self': bool,
+                             'pp_route_reflector_client': bool,
+                             Optional('pp_send_community'): str,
+                             'pp_soft_reconfiguration': bool,
+                             Optional('pp_soo'): str}},
+                    'vrf':
+                        {Any():
+                            {Optional('always_compare_med'): bool,
+                            Optional('bestpath_compare_routerid'): bool,
+                            Optional('bestpath_cost_community_ignore'): bool,
+                            Optional('bestpath_med_missing_at_worst'): bool,
+                            Optional('cluster_id'): str,
+                            Optional('confederation_identifier'): int,
+                            Optional('confederation_peers_as'): str,
+                            'graceful_restart': bool,
+                            Optional('graceful_restart_restart_time'): int,
+                            Optional('graceful_restart_stalepath_time'): int,
+                            'log_neighbor_changes': bool,
+                            Optional('router_id'): str,
+                            Optional('keepalive_interval'): int,
+                            Optional('holdtime'): int,
+                            'enforce_first_as': bool,
+                            'fast_external_fallover': bool,
+                            Optional('default_choice_ipv4_unicast'): str,
+                            Optional('dynamic_med_interval'): int,
+                            Optional('shutdown'): str,
+                            'flush_routes': bool,
+                            'isolate': bool,
+                            Optional('disable_policy_batching_ipv4'): str,
+                            Optional('disable_policy_batching_ipv6'): str,
+                            Optional('af_name'):
+                                {Any():
+                                    {Optional('af_dampening'): bool,
+                                    Optional('af_dampening_route_map'): str,
+                                    Optional('af_dampening_half_life_time'): int,
+                                    Optional('af_dampening_reuse_time'): int,
+                                    Optional('af_dampening_suppress_time'): int,
+                                    Optional('af_dampening_max_suppress_time'): int,
+                                    Optional('af_nexthop_route_map'): str,
+                                    Optional('af_nexthop_trigger_enable'): bool,
+                                    Optional('af_nexthop_trigger_delay_critical'): int,
+                                    Optional('af_nexthop_trigger_delay_non_critical'): int,
+                                    Optional('af_client_to_client_reflection'): bool,
+                                    Optional('af_distance_extern_as'): int,
+                                    Optional('af_distance_internal_as'): int,
+                                    Optional('af_distance_local'): int,
+                                    Optional('af_maximum_paths_ebgp'): int,
+                                    Optional('af_maximum_paths_ibgp'): int,
+                                    Optional('af_maximum_paths_eibgp'): int,
+                                    Optional('af_aggregate_address_ipv4_address'): str,
+                                    Optional('af_aggregate_address_ipv4_mask'): int,
+                                    Optional('af_aggregate_address_as_set'): bool,
+                                    Optional('af_aggregate_address_summary_only'): bool,
+                                    Optional('af_network_number'): str,
+                                    Optional('af_network_mask'): int,
+                                    Optional('af_network_route_map'): str,
+                                    Optional('af_redist_isis'): str,
+                                    Optional('af_redist_isis_metric'): str,
+                                    Optional('af_redist_isis_route_policy'): str,
+                                    Optional('af_redist_ospf'): str,
+                                    Optional('af_redist_ospf_metric'): str,
+                                    Optional('af_redist_ospf_route_policy'): str,
+                                    Optional('af_redist_rip'): str,
+                                    Optional('af_redist_rip_metric'): str,
+                                    Optional('af_redist_rip_route_policy'): str,
+                                    Optional('af_redist_static'): bool,
+                                    Optional('af_redist_static_metric'): str,
+                                    Optional('af_redist_static_route_policy'): str,
+                                    Optional('af_redist_connected'): bool,
+                                    Optional('af_redist_connected_metric'): str,
+                                    Optional('af_redist_connected_route_policy'): str,
+                                    Optional('af_v6_aggregate_address_ipv6_address'): str,
+                                    Optional('af_v6_aggregate_address_as_set'): bool,
+                                    Optional('af_v6_aggregate_address_summary_only'): bool,
+                                    Optional('af_v6_network_number'): str,
+                                    Optional('af_v6_network_route_map'): str,
+                                    Optional('af_v6_allocate_label_all'): bool,
+                                    Optional('af_retain_rt_all'): bool,
+                                    Optional('af_label_allocation_mode'): str}},
+                            Optional('neighbor_id'):
+                                {Any():
+                                    {Optional('nbr_fall_over_bfd'): bool,
+                                     Optional('nbr_suppress_four_byte_as_capability'): bool,
+                                     Optional('nbr_description'): str,
+                                     Optional('nbr_disable_connected_check'): bool,
+                                     Optional('nbr_ebgp_multihop'): bool,
+                                     Optional('nbr_ebgp_multihop_max_hop'): int,
+                                     Optional('nbr_inherit_peer_session'): str,
+                                     Optional('nbr_local_as_as_no'): int,
+                                     Optional('nbr_local_as_no_prepend'): bool,
+                                     Optional('nbr_local_as_replace_as'): bool,
+                                     Optional('nbr_local_as_dual_as'): bool,
+                                     Optional('nbr_remote_as'): int,
+                                     Optional('nbr_remove_private_as'): bool,
+                                     Optional('nbr_shutdown'): bool,
+                                     Optional('nbr_keepalive_interval'): int,
+                                     Optional('nbr_holdtime'): int,
+                                     Optional('nbr_update_source'): str,
+                                     Optional('nbr_password_text'): str,
+                                     Optional('nbr_transport_connection_mode'): str,
+                                     Optional('nbr_af_name'):
+                                        {Any():
+                                            {Optional('nbr_af_allowas_in'): bool,
+                                            Optional('nbr_af_allowas_in_as_number'): int,
+                                            Optional('nbr_af_inherit_peer_policy'): str,
+                                            Optional('nbr_af_inherit_peer_seq'): int,
+                                            Optional('nbr_af_maximum_prefix_max_prefix_no'): int,
+                                            Optional('nbr_af_maximum_prefix_threshold'): int,
+                                            Optional('nbr_af_maximum_prefix_restart'): int,
+                                            Optional('nbr_af_maximum_prefix_warning_only'): bool,
+                                            Optional('nbr_af_route_map_name_in'): str,
+                                            Optional('nbr_af_route_map_name_out'): str,
+                                            Optional('nbr_af_route_reflector_client'): bool,
+                                            Optional('nbr_af_send_community'): str,
+                                            Optional('nbr_af_soft_reconfiguration'): bool,
+                                            Optional('nbr_af_next_hop_self'): bool,
+                                            Optional('nbr_af_as_override'): bool,
+                                            Optional('nbr_af_default_originate'): bool,
+                                            Optional('nbr_af_default_originate_route_map'): str,
+                                            Optional('nbr_af_soo'): str},
                                             },
-                                        }
+                                        },
                                     },
-                                }
+                                },
                             },
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             }
 
-
+# ====================================
+# Parser for 'show running-config bgp'
+# ====================================
 class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
     """Parser for show running-config bgp"""
 
@@ -5960,7 +6006,6 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
 # ===================================================
 # Schema for 'show bgp all dampening flap-statistics'
 # ===================================================
-
 class ShowBgpAllDampeningFlapStatisticsSchema(MetaParser):
     """Schema for show bgp all dampening flap-statistics"""
 
@@ -6013,7 +6058,9 @@ class ShowBgpAllDampeningFlapStatisticsSchema(MetaParser):
         }
     }
 
-
+# ===================================================
+# Parser for 'show bgp all dampening flap-statistics'
+# ===================================================
 class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema):
     """Parser for:
         show bgp all dampening flap-statistics
@@ -6359,9 +6406,9 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
         return etree_dict
 
 
-# ===================================================
+# ==========================================
 # Parser for 'show bgp all nexthop-database'
-# ===================================================
+# ==========================================
 class ShowBgpAllNexthopDatabase(ShowBgpVrfAllAllNextHopDatabase):
     """Parser for:
         show bgp all nexthop-database
@@ -6590,9 +6637,9 @@ class ShowBgpAllNexthopDatabase(ShowBgpVrfAllAllNextHopDatabase):
         return etree_dict
 
 
-# ===================================================
-# Parser for 'show bgp peer-template'
-# ===================================================
+# ===================================
+# Schema for 'show bgp peer-template'
+# ===================================
 class ShowBgpPeerTemplateCmdSchema(MetaParser):
     """Schema for show bgp peer-template"""
 
@@ -6652,6 +6699,10 @@ class ShowBgpPeerTemplateCmdSchema(MetaParser):
             },
         }
     }
+
+# ===================================
+# Parser for 'show bgp peer-template'
+# ===================================
 class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
     """Parser for:
         show bgp peer-template
@@ -7275,12 +7326,12 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
         return etree_dict
 
 
-# ================================================================================
-# common parse function for commands:
-#   'show bgp vrf <vrf> <address_family>  policy statistics redistribute'
-#   'show bgp vrf <vrf> <address_family>  policy statistics dampening'
-#   'show bgp vrf <vrf> <address_family>  policy statistics neighbor <neighbor>'
-# ================================================================================
+# ==============================================================================
+# Schema for:
+# * 'show bgp vrf <vrf> <address_family>  policy statistics redistribute
+# * 'show bgp vrf <vrf> <address_family>  policy statistics dampening'
+# * 'show bgp vrf <vrf> <address_family>  policy statistics neighbor <neighbor>'
+# ==============================================================================
 class ShowBgpPolicyStatisticsSchema(MetaParser):
     """Schema for:
        show bgp [vrf <vrf>] <address_family>  policy statistics redistribute
@@ -7310,6 +7361,13 @@ class ShowBgpPolicyStatisticsSchema(MetaParser):
             },
         }
     }
+
+# ==============================================================================
+# Parser for:
+# * 'show bgp vrf <vrf> <address_family>  policy statistics redistribute'
+# * 'show bgp vrf <vrf> <address_family>  policy statistics dampening''
+# * 'show bgp vrf <vrf> <address_family>  policy statistics neighbor <neighbor>'
+# ==============================================================================
 class ShowBgpPolicyStatistics(ShowBgpPolicyStatisticsSchema):
     """Parser for:
         show bgp [vrf <vrf>] <address_family>  policy statistics redistribute
@@ -7609,11 +7667,9 @@ class ShowBgpPolicyStatistics(ShowBgpPolicyStatisticsSchema):
                         pass
         return etree_dict
 
-
-# ================================================================================
-# 'show bgp vrf <vrf> <address_family> policy statistics redistribute'
-# 'show bgp <address_family> policy statistics redistribute'
-# ================================================================================
+# ===============================================================================
+# Parser for 'show bgp vrf <vrf> <address_family> policy statistics redistribute'
+# ===============================================================================
 class ShowBgpPolicyStatisticsRedistribute(ShowBgpPolicyStatistics):
     """Parser for:
         show bgp [vrf <vrf>] <address_family> policy statistics redistribute
@@ -7637,11 +7693,9 @@ class ShowBgpPolicyStatisticsRedistribute(ShowBgpPolicyStatistics):
                   .format(af=address_family)
         return super().xml(cmd)
 
-
-# ================================================================================
-# 'show bgp vrf <vrf> <address_family> policy statistics neighbor <xxx>'
-# 'show bgp <address_family> policy statistics neighbor <xxx>'
-# ================================================================================
+# ==================================================================================
+# Parser for 'show bgp vrf <vrf> <address_family> policy statistics neighbor <WORD>'
+# ==================================================================================
 class ShowBgpPolicyStatisticsNeighbor(ShowBgpPolicyStatistics):
     """Parser for:
         show bgp [vrf <vrf>] <address_family> policy statistics neighbor <neighbor>
@@ -7665,11 +7719,9 @@ class ShowBgpPolicyStatisticsNeighbor(ShowBgpPolicyStatistics):
                   .format(af=address_family, nei=neighbor)
         return super().xml(cmd)
 
-
-# ================================================================================
-# 'show bgp vrf <vrf> <address_family> policy statistics dampening'
-# 'show bgp <address_family> policy statistics dampening'
-# ================================================================================
+# ============================================================================
+# Parser for 'show bgp vrf <vrf> <address_family> policy statistics dampening'
+# ============================================================================
 class ShowBgpPolicyStatisticsDampening(ShowBgpPolicyStatistics):
     """Parser for:
         show bgp [vrf <vrf>] <address_family> policy statistics dampening
@@ -7692,5 +7744,3 @@ class ShowBgpPolicyStatisticsDampening(ShowBgpPolicyStatistics):
             cmd = 'show bgp {af} policy statistics dampening'\
                   .format(af=address_family)
         return super().xml(cmd)
-
-# vim: ft=python et sw=4

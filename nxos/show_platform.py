@@ -577,6 +577,7 @@ class ShowRedundancyStatus(ShowRedundancyStatusSchema):
         sup_number = None
         for line in out.splitlines():
             line = line.rstrip()
+            line = line.replace('\t', '  ')
             p1 = re.compile(r'^\s*Redundancy mode$')
             m = p1.match(line)
             if m:
@@ -664,7 +665,7 @@ class ShowSystemRedundancyStatus(ShowRedundancyStatus):
     """Parser for show system redundancy status"""
 
     def cli(self):
-        return(super().cli(cmd='show system redundancy status'))
+        return super().cli(cmd='show system redundancy status')
 
 
 class ShowBootSchema(MetaParser):
