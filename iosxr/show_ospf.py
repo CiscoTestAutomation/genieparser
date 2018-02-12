@@ -314,11 +314,12 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
             # Process ID 1, Router ID 3.3.3.3, Network Type POINT_TO_POINT
             # Process ID 1, Router ID 3.3.3.3, Network Type BROADCAST, Cost: 1
             # Process ID 1, VRF VRF1, Router ID 3.3.3.3, Network Type SHAM_LINK, Cost: 111
+            # Process ID 1, VRF VRF501, Router ID 201.0.0.1, Network Type BROADCAST, Cost: 1 (RSVP-TE)
             p4 = re.compile(r'^Process +ID +(?P<pid>(\S+))'
                              '(?:, +VRF +(?P<vrf>(\S+)))?'
                              ', +Router +ID +(?P<router_id>(\S+))'
                              ', +Network +Type +(?P<interface_type>(\S+))'
-                             '(?:, +Cost: +(?P<cost>(\d+)))?$')
+                             '(?:, +Cost: +(?P<cost>(\d+))( \([A-Z\-]+\))?)?$')
             m = p4.match(line)
             if m:
                 pid = str(m.groupdict()['pid'])
