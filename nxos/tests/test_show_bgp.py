@@ -21954,14 +21954,14 @@ class test_show_bgp_labels_cli(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
         obj = ShowBgpLabels(device=self.device)
-        parsed_output = obj.parse(af='ipv4 unicast', vrf='all')
+        parsed_output = obj.parse(address_family='ipv4 unicast', vrf='all')
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpLabels(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(af='vpnv4 unicast')
+            parsed_output = obj.parse(address_family='vpnv4 unicast')
 
 class test_show_bgp_labels_xml(unittest.TestCase):
 
@@ -22336,7 +22336,7 @@ class test_show_bgp_labels_xml(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpLabels(device=self.device, context='xml')
-        parsed_output = obj.parse(af='ipv4 unicast', vrf='all')
+        parsed_output = obj.parse(address_family='ipv4 unicast', vrf='all')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 if __name__ == '__main__':

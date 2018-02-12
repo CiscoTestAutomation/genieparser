@@ -8675,13 +8675,13 @@ class ShowBgpLabels(ShowBgpSessionsSchema):
     """Parser for:
         show bgp <address_family> labels [vrf <WROD>]"""
     
-    def cli(self, af, vrf=''):
-        assert af in ['ipv4 unicast', 'ipv4 multicast',
-                      'ipv6 unicast', 'ipv6 multicast',
-                      'vpnv4 unicast', 'vpnv6 unicast']
+    def cli(self, address_family, vrf=''):
+        assert address_family in ['ipv4 unicast', 'ipv4 multicast',
+                                  'ipv6 unicast', 'ipv6 multicast',
+                                  'vpnv4 unicast', 'vpnv6 unicast']
 
-        cmd = 'show bgp {} labels'.format(af) if not vrf else \
-              'show bgp {af} labels vrf {vrf}'.format(af=af, vrf=vrf)
+        cmd = 'show bgp {} labels'.format(address_family) if not vrf else \
+              'show bgp {af} labels vrf {vrf}'.format(af=address_family, vrf=vrf)
 
         out = self.device.execute(cmd)
         
@@ -8790,13 +8790,13 @@ class ShowBgpLabels(ShowBgpSessionsSchema):
 
         return ret_dict
 
-    def xml(self, af, vrf=''):
-        assert af in ['ipv4 unicast', 'ipv4 multicast',
-                      'ipv6 unicast', 'ipv6 multicast',
-                      'vpnv4 unicast', 'vpnv6 unicast']
+    def xml(self, address_family, vrf=''):
+        assert address_family in ['ipv4 unicast', 'ipv4 multicast',
+                                  'ipv6 unicast', 'ipv6 multicast',
+                                  'vpnv4 unicast', 'vpnv6 unicast']
 
-        cmd = 'show bgp {} labels | xml'.format(af) if not vrf else \
-              'show bgp {af} labels vrf {vrf} | xml'.format(af=af, vrf=vrf)
+        cmd = 'show bgp {} labels | xml'.format(address_family) if not vrf else \
+              'show bgp {af} labels vrf {vrf} | xml'.format(af=address_family, vrf=vrf)
 
         out = self.device.execute(cmd)
 
