@@ -199,9 +199,12 @@ class Common():
                 >>> convert_xml_time(xml_time='PT1H4M41S')
                 >>> "01:04:41"
         '''
-        p = re.compile(r'^PT((?P<hour>\d+)H)?((?P<minute>\d+)M)?(?P<second>\d+)S$')
+        # P4DT12M38S
+        # PT1H4M41S
+        p = re.compile(r'^P((?P<day>\d+)D)?T((?P<hour>\d+)H)?((?P<minute>\d+)M)?((?P<second>\d+)S)?$')
         m = p.match(xml_time)
         if m:
+            day = m.groupdict()['day']
             hour = m.groupdict()['hour']
             hour = 0 if not hour else int(hour)
             minute = m.groupdict()['minute']
@@ -209,14 +212,16 @@ class Common():
             second = m.groupdict()['second']
             second = 0 if not  second else int(second)
 
-            standard_time = ''
-            standard_time += format("%02d"% (hour))
-            standard_time += ' ' + format("%02d"% (minute))
-            standard_time += ' ' +  format("%02d"% (second))
+            if day:
+                standard_time = "{d}d{h}h".format(d=day, h="%02d"% (hour))
+            else:
+                standard_time = ''
+                standard_time += format("%02d"% (hour))
+                standard_time += ' ' + format("%02d"% (minute))
+                standard_time += ' ' +  format("%02d"% (second))
 
-            standard_time = ':'.join(standard_time.strip().split())
+                standard_time = ':'.join(standard_time.strip().split())
         else:
             # P4M13DT21H21M19S
             standard_time = xml_time
-
         return standard_time

@@ -46,6 +46,7 @@ NXOS parsers for the following show commands:
 
 # Python
 import re
+from copy import deepcopy
 import xml.etree.ElementTree as ET
 
 # Metaparser
@@ -3205,6 +3206,18 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                 # Save variables for use later
                 address_family = str(m.groupdict()['address_family']).lower()
                 vrf = str(m.groupdict()['vrf_name'])
+                # Delete variables in preparation for next neighbor
+                try:
+                    del route_identifier; del local_as; del bgp_table_version;
+                    del config_peers; del capable_peers; del attribute_entries;
+                    del as_path_entries; del community_entries;
+                    del clusterlist_entries; del dampening; del history_paths;
+                    del dampened_paths; del soft_reconfig_recvd_paths;
+                    del soft_reconfig_identical_paths; del soft_reconfig_combo_paths;
+                    del soft_reconfig_filtered_recvd; del soft_reconfig_bytes
+                except:
+                    pass
+
                 continue
 
             # BGP router identifier 4.4.4.4, local AS number 100
@@ -3224,7 +3237,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
             # BGP table version is 40, IPv4 Unicast config peers 1, capable peers 0
             p3 = re.compile(r'^\s*BGP +table +version +is'
                              ' +(?P<bgp_table_version>[0-9]+),'
-                             ' +(?P<address_family>[a-zA-Z0-9\s]+) +config'
+                             ' +(?P<address_family>[a-zA-Z0-9\-\s]+) +config'
                              ' +peers +(?P<config_peers>[0-9]+), +capable'
                              ' +peers +(?P<capable_peers>[0-9]+)$')
             m = p3.match(line)
@@ -3499,15 +3512,15 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
 
             # <vrf-router-id>19.0.0.6</vrf-router-id>
             try:
-                af_dict['route_identifier'] = vrf_tree.find('{}vrf-router-id'.format(namespace)).text
+                route_identifier = vrf_tree.find('{}vrf-router-id'.format(namespace)).text
             except:
-                pass
+                route_identifier = None
 
             # <vrf-local-as>333</vrf-local-as>
             try:
-                af_dict['local_as'] = vrf_tree.find('{}vrf-local-as'.format(namespace)).text
+                local_as = vrf_tree.find('{}vrf-local-as'.format(namespace)).text
             except:
-                pass
+                local_as = None
 
             # Address family table
             af_tree = vrf_tree.find('{}TABLE_af'.format(namespace))
@@ -3526,12 +3539,16 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                         af = af.lower()
                         # initial af dictionary
                         af_dict = {}
+                        if route_identifier:
+                            af_dict['route_identifier'] = route_identifier
+                        if local_as:
+                            af_dict['local_as'] = int(local_as)
                     except:
                         continue
 
                     # <tableversion>7</tableversion>
                     try:
-                        af_dict['tbl_ver'] = int(
+                        af_dict['bgp_table_version'] = int(
                             saf_root.find('{}tableversion'.format(namespace)).text)
                     except:
                         # for valide entry, table version should be there
@@ -3561,7 +3578,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                             int(saf_root.find('{}totalpaths'.format(namespace)).text)
                         if 'path' not in af_dict:
                             af_dict['path'] = {}
-                        af_dict['path']['total_entries'] = total_prefix_entries
+                        af_dict['path']['total_entries'] = total_path_entries
                     except:
                         pass
                         
@@ -3583,7 +3600,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                         entries_2 = \
                             saf_root.find('{}bytesattrs'.format(namespace)).text
 
-                        af_dict['attribute_entries'] = '[{1}/{2}]'.format(attribute_entries_1, attribute_entries_2)
+                        af_dict['attribute_entries'] = '[{0}/{1}]'.format(entries_1, entries_2)
                     except:
                         pass
                         
@@ -3596,7 +3613,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                         entries_2 = \
                             saf_root.find('{}bytespaths'.format(namespace)).text
 
-                        af_dict['as_path_entries'] = '[{1}/{2}]'.format(attribute_entries_1, attribute_entries_2)
+                        af_dict['as_path_entries'] = '[{0}/{1}]'.format(entries_1, entries_2)
                     except:
                         pass
                         
@@ -3609,7 +3626,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                         entries_2 = \
                             saf_root.find('{}bytescommunities'.format(namespace)).text
 
-                        af_dict['community_entries'] = '[{1}/{2}]'.format(attribute_entries_1, attribute_entries_2)
+                        af_dict['community_entries'] = '[{0}/{1}]'.format(entries_1, entries_2)
                     except:
                         pass
                         
@@ -3622,7 +3639,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                         entries_2 = \
                             saf_root.find('{}bytesclusterlist'.format(namespace)).text
 
-                        af_dict['clusterlist_entries'] = '[{1}/{2}]'.format(attribute_entries_1, attribute_entries_2)
+                        af_dict['clusterlist_entries'] = '[{0}/{1}]'.format(entries_1, entries_2)
                     except:
                         pass
 
@@ -3710,7 +3727,8 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                         sub_dict = etree_dict['vrf'][vrf]['neighbor'][nei]['address_family'][af]
 
                         #  ---   AF attributes -------
-                        sub_dict.update(af_dict)
+                        update_dict = deepcopy(af_dict)
+                        sub_dict.update(update_dict)
 
                         #  ---   Neighbors attributes -------
                         # <neighborversion>4</neighborversion>
@@ -3726,7 +3744,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                             nei_root.find('{}msgsent'.format(namespace)).text)
                         
                         # <neighbortableversion>7</neighbortableversion>
-                        sub_dict['bgp_table_version'] = int(
+                        sub_dict['tbl_ver'] = int(
                             nei_root.find('{}neighbortableversion'.format(namespace)).text)
                         
                         # <inq>0</inq>
@@ -3781,9 +3799,9 @@ class ShowBgpVrfAllAllDampeningParametersSchema(MetaParser):
                         Optional('dampening_max_suppress_time'): str,
                         Optional('dampening_max_suppress_penalty'): str,
                         Optional('route_distinguisher'):
-                            {Optional(Any()):
-                                {Optional('dampening'): str,
+                            {Optional(Any()): {
                                 Optional('rd_vrf'): str,
+                                Optional('rd_vni_id'): str,
                                 Optional('dampening_route_map'): str,
                                 Optional('dampening_half_life_time'): str,
                                 Optional('dampening_reuse_time'): str,
@@ -3852,6 +3870,31 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
                     sub_dict['rd_vrf'] = rd_vrf
                 continue
 
+            # Route Distinguisher: 500:1    (L3VNI 2)
+            # rd_vrf = L3, vni = 2
+            p10 = re.compile(r'^Route +Distinguisher: +(?P<rd>[0-9\.:]+) +'
+                             '\((?P<rd_vrf>\w+)( *VNI +(?P<vni>\w+))\)')
+            m = p10.match(line)
+            if m:
+                if 'route_distinguisher' not in \
+                  bgp_dict['vrf'][vrf]['address_family'][af_name]:
+                   bgp_dict['vrf'][vrf]['address_family']\
+                     [af_name]['route_distinguisher'] = {}
+                rd = m.groupdict()['rd']
+                vni = m.groupdict()['vni']
+                if rd and rd not in bgp_dict['vrf'][vrf]['address_family']\
+                  [af_name]['route_distinguisher']:
+                    sub_dict = bgp_dict['vrf'][vrf]['address_family']\
+                      [af_name]['route_distinguisher'][rd] = {}
+
+                rd_vrf = m.groupdict()['rd_vrf']
+                if rd_vrf:
+                    sub_dict['rd_vrf'] = rd_vrf
+                if vni:
+                    sub_dict['rd_vni_id'] = vni
+                continue
+
+
             p2 = re.compile(r'^Dampening +policy +configured: '
                              '+(?P<route_map>\w+)$')
             m = p2.match(line)
@@ -3860,7 +3903,7 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
                 continue
 
             p3 = re.compile(r'^Half-life +time +: +'
-                             '(?P<half_time>[a-zA-Z0-9 ]+)$')
+                             '(?P<half_time>\d+)( *(?P<unit>\w+))?$')
             m = p3.match(line)
             if m:
                 sub_dict['dampening_half_life_time'] =\
@@ -3868,7 +3911,7 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
                 continue
 
             p4 = re.compile(r'^Suppress +penalty +: +'
-                             '(?P<suppress_pen>[a-zA-Z0-9 ]+)$')
+                             '(?P<suppress_pen>\d+)( *(?P<unit>\w+))?$')
             m = p4.match(line)
             if m:
                 sub_dict['dampening_suppress_time'] =\
@@ -3876,7 +3919,7 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
                 continue
 
             p5 = re.compile(r'^Reuse +penalty +: +'
-                             '(?P<reuse_pen>[a-zA-Z0-9 ]+)$')
+                             '(?P<reuse_pen>\d+)( *(?P<unit>\w+))?$')
             m = p5.match(line)
             if m:
                 sub_dict['dampening_reuse_time'] =\
@@ -3884,7 +3927,7 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
                 continue
 
             p6 = re.compile(r'^Max +suppress +time +: +'
-                             '(?P<max_sup_time>[a-zA-Z0-9 ]+)$')
+                             '(?P<max_sup_time>\d+)( *(?P<unit>\w+))?$')
             m = p6.match(line)
             if m:
                 sub_dict['dampening_max_suppress_time'] =\
@@ -3892,7 +3935,7 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
                 continue
 
             p7 = re.compile(r'^Max +suppress +penalty +: '
-                             '+(?P<max_sup_pen>[a-zA-Z0-9 ]+)$')
+                             '+(?P<max_sup_pen>\d+)( *(?P<unit>\w+))?$')
             m = p7.match(line)
             if m:
                 sub_dict['dampening_max_suppress_penalty'] =\
@@ -3982,6 +4025,9 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
                         if af not in etree_dict['vrf'][vrf]['address_family']:
                             etree_dict['vrf'][vrf]['address_family'][af] = {}
 
+                        # dampening
+                        etree_dict['vrf'][vrf]['address_family'][af]['dampening'] = 'True'
+
                         if rd:
                             if 'route_distinguisher' not in etree_dict['vrf'][vrf]:
                                 etree_dict['vrf'][vrf]['address_family'][af]\
@@ -3995,9 +4041,6 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
                         else:
                             sub_dict = etree_dict['vrf'][vrf]['address_family'][af]
                                     
-
-                        # dampening
-                        sub_dict['dampening'] = 'True'
 
                         # <dampconfigured>Configured</dampconfigured>
                         # cli does not have this key
@@ -4013,6 +4056,13 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
                         try:
                             sub_dict['rd_vrf'] = \
                                 rd_root.find('{}rd_vrf'.format(namespace)).text
+                        except:
+                            pass
+
+                        # <rd_vniid>2</rd_vniid>
+                        try:
+                            sub_dict['rd_vni_id'] = \
+                                rd_root.find('{}rd_vniid'.format(namespace)).text
                         except:
                             pass
 
@@ -8542,7 +8592,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
                     ret = nei_root.find('{}lastflap'.format(namespace)).text
                     ret = Common.convert_xml_time(ret)
                     etree_dict['vrf'][vrf]['neighbor'][nei]['last_flap'] = \
-                        'never' if ':' not in ret else ret
+                        'never' if 'P' in ret else ret
                 except:
                     pass
                     
@@ -8551,7 +8601,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
                     ret = nei_root.find('{}lastread'.format(namespace)).text
                     ret = Common.convert_xml_time(ret)
                     etree_dict['vrf'][vrf]['neighbor'][nei]['last_read'] = \
-                        'never' if ':' not in ret else ret
+                        'never' if 'P' in ret else ret
                 except:
                     pass
                     
@@ -8560,14 +8610,14 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
                     ret = nei_root.find('{}lastwrite'.format(namespace)).text
                     ret = Common.convert_xml_time(ret)
                     etree_dict['vrf'][vrf]['neighbor'][nei]['last_write'] = \
-                        'never' if ':' not in ret else ret
+                        'never' if 'P' in ret else ret
                 except:
                     pass
                     
                 # <state>Established</state>
                 try:
                     etree_dict['vrf'][vrf]['neighbor'][nei]['state'] = \
-                        nei_root.find('{}state'.format(namespace)).text
+                        nei_root.find('{}state'.format(namespace)).text.lower()
                 except:
                     pass
                     
