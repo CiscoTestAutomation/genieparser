@@ -2076,7 +2076,7 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                     {Any(): 
                         {Optional('bgp_table_version'): int,
                          Optional('neighbor_version'): int,
-                         Optional('send_community'): bool,
+                         Optional('send_community'): str,
                          Optional('soo'): str,
                          Optional('soft_configuration'): bool,
                          Optional('next_hop_self'): bool,
@@ -2124,6 +2124,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
         
         # Init vars
         parsed_dict = {}
+        standard_send_community = False
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -2137,6 +2138,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                              ' +(?P<peer_index>[0-9]+)$')
             m = p1.match(line)
             if m:
+                standard_send_community = False
                 if 'neighbor' not in parsed_dict:
                     parsed_dict['neighbor'] = {}
                 neighbor_id = str(m.groupdict()['neighbor_id'])
@@ -2291,13 +2293,23 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 continue
 
             # External BGP peer might be upto 255 hops away
-            p12 = re.compile(r'^\s*External +BGP +peer +might +be +upto'
+            p12_1 = re.compile(r'^\s*External +BGP +peer +might +be +upto'
                              ' +(?P<ebgp_multihop_max_hop>[0-9]+) +hops +away$')
-            m = p12.match(line)
+            m = p12_1.match(line)
             if m:
-                parsed_dict['neighbor'][neighbor_id]['ebgp_multihop_max_hop'] = \
-                    int(m.groupdict()['ebgp_multihop_max_hop'])
                 parsed_dict['neighbor'][neighbor_id]['ebgp_multihop'] = True
+                parsed_dict['neighbor'][neighbor_id]['ebgp_multihop_max_hop'] =\
+                    int(m.groupdict()['ebgp_multihop_max_hop'])
+                continue
+
+            # External BGP peer might be up to 5 hops away
+            p12_2 = re.compile(r'^\s*External +BGP +peer +might +be +up to'
+                             ' +(?P<ebgp_multihop_max_hop>[0-9]+) +hops +away$')
+            m = p12_2.match(line)
+            if m:
+                parsed_dict['neighbor'][neighbor_id]['ebgp_multihop'] = True
+                parsed_dict['neighbor'][neighbor_id]['ebgp_multihop_max_hop'] =\
+                    int(m.groupdict()['ebgp_multihop_max_hop'])
                 continue
 
             # TCP MD5 authentication is enabled
@@ -2313,8 +2325,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 continue
             
             # Only passive connection setup allowed
-            p14 = re.compile(r'^\s*Only +passive +connection +setup'
-                             ' +(?P<only_passive_conn>[a-zA-Z]+)$')
+            p14 = re.compile(r'^\s*Only +passive +connection +setup +allowed$')
             m = p14.match(line)
             if m:
                 if 'bgp_session_transport' not in parsed_dict['neighbor']\
@@ -2326,8 +2337,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                     parsed_dict['neighbor'][neighbor_id]\
                         ['bgp_session_transport']['connection'] = {}
                 parsed_dict['neighbor'][neighbor_id]['bgp_session_transport']\
-                    ['connection']['mode'] = \
-                    str(m.groupdict()['only_passive_conn'])
+                    ['connection']['mode'] = 'passive'
                 continue
 
             # Received 92717 messages, 3 notifications, 0 bytes in queue
@@ -2640,6 +2650,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                               ' +version +(?P<nbr_version>[0-9]+)$')
             m = p32.match(line)
             if m:
+                standard_send_community = False
                 parsed_dict['neighbor'][neighbor_id]['address_family']\
                     [address_family]['bgp_table_version'] = \
                         int(m.groupdict()['af_bgp_table_version'])
@@ -2684,8 +2695,9 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                               ' +neighbor$')
             m = p35.match(line)
             if m:
-                parsed_dict['neighbor'][neighbor_id]['address_family']\
-                    [address_family]['send_community'] = True
+                standard_send_community = True
+                parsed_dict['neighbor'][neighbor_id]['address_family'] \
+                    [address_family]['send_community'] = 'standard'
                 continue
 
             # Extended community attribute sent to this neighbor
@@ -2693,8 +2705,12 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                               ' +this +neighbor$')
             m = p36.match(line)
             if m:
-                parsed_dict['neighbor'][neighbor_id]['address_family']\
-                    [address_family]['send_community'] = True
+                parsed_dict['neighbor'][neighbor_id]['address_family'] \
+                    [address_family]['send_community'] = 'extended'
+
+                if standard_send_community:
+                    parsed_dict['neighbor'][neighbor_id]['address_family'] \
+                        [address_family]['send_community'] = 'both'
                 continue
 
             # Maximum prefixes allowed 300000
@@ -2727,7 +2743,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                     [address_family]['route_map_name_out'] = \
                         str(m.groupdict()['route_map_name_out'])
                 continue
-            
+
             # Third-party Nexthop will not be computed.
             p40 = re.compile(r'^\s*Third-party +Nexthop +will +not +be'
                               ' +computed.$')
