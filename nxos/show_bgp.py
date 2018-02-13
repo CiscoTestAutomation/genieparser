@@ -3644,9 +3644,9 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                         pass
 
                     # <dampening>Enabled</dampening>
-                    af_dict['dampening'] = True if 'enabled' in \
-                        saf_root.find('{}dampening'.format(namespace)).text.lower() \
-                            else None
+                    dampening = saf_root.find('{}dampening'.format(namespace)).text.lower()
+                    if 'enabled' in dampening or 'true' in dampening:
+                        af_dict['dampening'] = True
 
                     # <historypaths>0</historypaths>
                     try:
@@ -8690,6 +8690,7 @@ class ShowBgpSessionsSchema(MetaParser):
                         },
                         Optional('route_distinguisher'): {
                             Any(): {
+                                Optional('rd_vrf'): str,
                                 'prefix': {
                                     Any(): {
                                         'index': {
@@ -8745,7 +8746,7 @@ class ShowBgpLabels(ShowBgpSessionsSchema):
                       'h': 'history',
                       '>': 'best'}
         path_type_map = {'i': 'internal',
-                         'e': 'external,',
+                         'e': 'external',
                          'c': 'confed',
                          'l': 'local',
                          'r': 'redist',
@@ -8764,8 +8765,9 @@ class ShowBgpLabels(ShowBgpSessionsSchema):
                 continue
 
             # BGP table version is 7, Local Router ID is 19.0.0.6
+            # BGP table version is 3, local router ID is 92.1.1.0
             p2 = re.compile(r'^BGP +table +version +is +(?P<ver>\d+), +'
-                             'Local +Router +ID +is +(?P<router_id>[\w\.\:]+)$')
+                             '(L|l)ocal +(R|r)outer +ID +is +(?P<router_id>[\w\.\:]+)$')
             m = p2.match(line)
             if m:
                 if 'vrf' not in ret_dict:
@@ -8781,6 +8783,35 @@ class ShowBgpLabels(ShowBgpSessionsSchema):
 
                 sub_dict['table_version'] = int(m.groupdict()['ver'])
                 sub_dict['router_id'] = m.groupdict()['router_id']
+                continue
+
+            # Route Distinguisher: 92.1.1.0:3    (VRF vrf-9100)
+            p4 = re.compile(r'^Route +Distinguisher: +(?P<rd>[\w\.\:]+) +'
+                             '\(VRF +(?P<vrf>\S+)\)$')
+            m = p4.match(line)
+            if m:
+                rd = m.groupdict()['rd']
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+                if 'address_family' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['address_family'] = {}
+                if address_family not in ret_dict['vrf'][vrf]['address_family']:
+                    ret_dict['vrf'][vrf]['address_family'][address_family] = {}
+                if 'route_distinguisher' not in ret_dict['vrf'][vrf]\
+                    ['address_family'][address_family]:
+                    ret_dict['vrf'][vrf]['address_family'][address_family]\
+                        ['route_distinguisher'] = {}
+                if rd not in ret_dict['vrf'][vrf]\
+                    ['address_family'][address_family]['route_distinguisher']:
+                    ret_dict['vrf'][vrf]['address_family'][address_family]\
+                        ['route_distinguisher'][rd] = {}
+
+                sub_dict = ret_dict['vrf'][vrf]['address_family']\
+                    [address_family]['route_distinguisher'][rd]
+
+                sub_dict['rd_vrf'] = m.groupdict()['vrf']
                 continue
 
 
@@ -8958,6 +8989,12 @@ class ShowBgpLabels(ShowBgpSessionsSchema):
                         else:
                             sub_dict = etree_dict['vrf'][vrf]['address_family'][af]
 
+                        # <rd_vrf>vrf-9100</rd_vrf>
+                        try:
+                            sub_dict['rd_vrf'] = rd_root.find('{}rd_vrf'.format(namespace)).text
+                        except:
+                            pass
+
                          # prefix table
                         prefix_tree = rd_root.find('{}TABLE_prefix'.format(namespace))
                         if not prefix_tree:
@@ -8965,11 +9002,15 @@ class ShowBgpLabels(ShowBgpSessionsSchema):
 
                         # -----   loop prefix  -----
                         for prefix_root in prefix_tree.findall('{}ROW_prefix'.format(namespace)):
-                            # neighbor
+                            # <ipprefix>10.1.1.1</ipprefix>
                             try:
                                 prefix = prefix_root.find('{}ipprefix'.format(namespace)).text
                             except:
-                                continue 
+                                # <ipv6prefix>83::/112</ipv6prefix>
+                                try:
+                                    prefix = prefix_root.find('{}ipv6prefix'.format(namespace)).text
+                                except:
+                                    continue 
 
                             if 'prefix' not in sub_dict:
                                 sub_dict['prefix'] = {}
@@ -9009,23 +9050,34 @@ class ShowBgpLabels(ShowBgpSessionsSchema):
                                 sub_dict['prefix'][prefix]['index'][index]['type'] = \
                                     index_root.find('{}type'.format(namespace)).text
 
-                                # <statuscode>*</statuscode>
-                                sub_dict['prefix'][prefix]['index'][index]['status_code'] = \
-                                    index_root.find('{}statuscode'.format(namespace)).text
+                                try:
+                                    # <statuscode>*</statuscode>
+                                    sub_dict['prefix'][prefix]['index'][index]['status_code'] = \
+                                        index_root.find('{}statuscode'.format(namespace)).text
 
-                                # <bestcode>&gt;</bestcode>
-                                best_code = index_root.find('{}bestcode'.format(namespace)).text
-                                best_code = '>' if '&gt;' in best_code else best_code.strip()
-                                if best_code:
-                                    sub_dict['prefix'][prefix]['index'][index]['best_code'] = best_code
-                                   
-                                # <typecode>i</typecode>
-                                sub_dict['prefix'][prefix]['index'][index]['type_code'] = \
-                                    index_root.find('{}typecode'.format(namespace)).text
+                                    # <bestcode>&gt;</bestcode>
+                                    best_code = index_root.find('{}bestcode'.format(namespace)).text
+                                    best_code = '>' if '&gt;' in best_code else best_code.strip()
+                                    if best_code:
+                                        sub_dict['prefix'][prefix]['index'][index]['best_code'] = best_code
+                                       
+                                    # <typecode>i</typecode>
+                                    sub_dict['prefix'][prefix]['index'][index]['type_code'] = \
+                                        index_root.find('{}typecode'.format(namespace)).text
+                                except:
+                                    pass
 
                                 # <ipnexthop>19.0.101.1</ipnexthop>
-                                sub_dict['prefix'][prefix]['index'][index]['nexthop'] = \
-                                    index_root.find('{}ipnexthop'.format(namespace)).text
+                                try:
+                                    sub_dict['prefix'][prefix]['index'][index]['nexthop'] = \
+                                        index_root.find('{}ipnexthop'.format(namespace)).text
+                                except:
+                                    # <ipv6nexthop>50:1::1:101</ipv6nexthop>
+                                    try:
+                                        sub_dict['prefix'][prefix]['index'][index]['nexthop'] = \
+                                            index_root.find('{}ipv6nexthop'.format(namespace)).text
+                                    except:
+                                        pass
 
                                 # <inlabel>nolabel</inlabel>
                                 sub_dict['prefix'][prefix]['index'][index]['in_label'] = \
