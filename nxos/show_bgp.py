@@ -8685,7 +8685,7 @@ class ShowBgpSessionsSchema(MetaParser):
                     Any(): {
                         'table_version': int,
                         'router_id': str,
-                        'prefix': {
+                        Optional('prefix'): {
                             Any(): {
                                 'index': {
                                     Any(): {
@@ -8832,6 +8832,7 @@ class ShowBgpLabels(ShowBgpSessionsSchema):
 
 
             # *>i1.5.210.0/24       19.0.101.1          nolabel/nolabel
+            # * i0.0.0.0/0          95.1.1.0            nolabel/9100
             p3 = re.compile(r'^(?P<status>s|S|x|d|h|\*)'
                              '(?P<best>\>)? *'
                              '(?P<type_code>i|e|c|l|a|r|I)'
