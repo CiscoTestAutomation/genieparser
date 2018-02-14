@@ -2486,11 +2486,12 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 continue
 
             # 4-Byte AS capability: disabled
-            p22 = re.compile(r'^\s*4-Byte AS capability: disabled$')
+            # 4-Byte AS capability: disabled received
+            p22 = re.compile(r'^\s*4-Byte AS capability: +(?P<capability>[\w\s]+)$')
             m = p22.match(line)
             if m:
-                parsed_dict['neighbor'][neighbor_id]\
-                    ['suppress_four_byte_as_capability'] = True
+                if 'disabled' in m.groupdict()['capability']:
+                    parsed_dict['neighbor'][neighbor_id]['suppress_four_byte_as_capability'] = True
                 continue
 
             # Address family VPNv4 Unicast: advertised received
