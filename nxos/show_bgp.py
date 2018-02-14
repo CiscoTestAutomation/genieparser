@@ -3488,9 +3488,9 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
 
     def xml(self, vrf='all'):
 
-        cmd = 'show bgp vrf {} all summary | xml'.format(vrf)
+        cmd = 'show bgp vrf {} all summary'.format(vrf)
 
-        out = self.device.execute(cmd)
+        out = self.device.execute(cmd + ' | xml')
 
         etree_dict = {}
 
@@ -3509,8 +3509,8 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
             return etree_dict
 
         # compare cli command
-        # Common.compose_compare_command(root=root, namespace=namespace,
-        #                                expect_command=cmd)
+        Common.compose_compare_command(root=root, namespace=namespace,
+                                       expect_command=cmd)
 
         # find Vrf root
         root = Common.retrieve_xml_child(root=root, key='TABLE_vrf')
@@ -3960,9 +3960,9 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
         return bgp_dict
 
     def xml(self, vrf='all'):
-        cmd = 'show bgp vrf {} all dampening parameters | xml'.format(vrf)
+        cmd = 'show bgp vrf {} all dampening parameters'.format(vrf)
 
-        out = self.device.execute(cmd)
+        out = self.device.execute(cmd + ' | xml')
 
         etree_dict = {}
 
@@ -3981,8 +3981,8 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
             return etree_dict
 
         # compare cli command
-        # Common.compose_compare_command(root=root, namespace=namespace,
-        #                                expect_command=cmd)
+        Common.compose_compare_command(root=root, namespace=namespace,
+                                       expect_command=cmd)
 
         root = Common.retrieve_xml_child(
                 root=root,
@@ -6832,8 +6832,17 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
                         rd = None
 
                     # <dampeningenabled>true</dampeningenabled>
-                    dampeningenabled = rd_root.find('{}dampeningenabled'
-                                                    .format(namespace)).text
+                    try:
+                        dampeningenabled = rd_root.find('{}dampeningenabled'
+                                                        .format(namespace)).text
+                    except:
+                        # <dampening>true</dampening>
+                        try:
+                            dampeningenabled = rd_root.find('{}dampening'
+                                                            .format(namespace)).text
+                        except:
+                            pass
+                            
                     # <historypaths>0</historypaths>
                     historypaths = int(rd_root.find('{}historypaths'
                                                     .format(namespace)).text)
@@ -8475,10 +8484,10 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
 
     def xml(self, vrf=''):
 
-        cmd = 'show bgp sessions | xml' if not vrf else \
-              'show bgp sessions vrf {} | xml'.format(vrf)
+        cmd = 'show bgp sessions' if not vrf else \
+              'show bgp sessions vrf {}'.format(vrf)
 
-        out = self.device.execute(cmd)
+        out = self.device.execute(cmd + ' | xml')
 
         etree_dict = {}
 
@@ -8497,46 +8506,42 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
             return etree_dict
 
         # compare cli command
-        # Common.compose_compare_command(root=root, namespace=namespace,
-        #                                expect_command=cmd)
+        Common.compose_compare_command(root=root, namespace=namespace,
+                                       expect_command=cmd)
 
         ret = Common.retrieve_xml_child(
                 root=root,
-                key='__XML__OPT_Cmd_show_ip_bgp_session_cmd___readonly__')
+                key='__readonly__')
 
         if hasattr(ret, 'tag'):
-            # cover the senario that __readonly__ may be mssing when
-            # there are values in the output
-            for item in ret:
-                if '__readonly__' in item.tag:
-                    # get total_peers                
-                    try:
-                        total_peers = item.find('{}totalpeers'.format(namespace)).text
-                        etree_dict['total_peers'] = int(total_peers)
-                    except:
-                        pass
+            # get total_peers                
+            try:
+                total_peers = ret.find('{}totalpeers'.format(namespace)).text
+                etree_dict['total_peers'] = int(total_peers)
+            except:
+                pass
 
-                    # get total_established_peers            
-                    try:
-                        total_established_peers = item.find(
-                            '{}totalestablishedpeers'.format(namespace)).text
-                        etree_dict['total_established_peers'] = int(total_established_peers)
-                    except:
-                        pass
+            # get total_established_peers            
+            try:
+                total_established_peers = ret.find(
+                    '{}totalestablishedpeers'.format(namespace)).text
+                etree_dict['total_established_peers'] = int(total_established_peers)
+            except:
+                pass
 
-                    # get local_as               
-                    try:
-                        local_as = item.find('{}localas'.format(namespace)).text
-                        etree_dict['local_as'] = int(local_as)
-                    except:
-                        pass
+            # get local_as               
+            try:
+                local_as = ret.find('{}localas'.format(namespace)).text
+                etree_dict['local_as'] = int(local_as)
+            except:
+                pass
 
         else:
             # output is empty
             return etree_dict
 
         # find Vrf root
-        root = item.find('{}TABLE_vrf'.format(namespace))
+        root = ret.find('{}TABLE_vrf'.format(namespace))
 
         if not root:
             return etree_dict
@@ -8766,6 +8771,7 @@ class ShowBgpLabels(ShowBgpSessionsSchema):
                          'c': 'confed',
                          'l': 'local',
                          'r': 'redist',
+                         'a': 'aggregate',
                          'I': 'injected'}
 
         for line in out.splitlines():
@@ -8893,10 +8899,10 @@ class ShowBgpLabels(ShowBgpSessionsSchema):
                                   'ipv6 unicast', 'ipv6 multicast',
                                   'vpnv4 unicast', 'vpnv6 unicast']
 
-        cmd = 'show bgp {} labels | xml'.format(address_family) if not vrf else \
-              'show bgp {af} labels vrf {vrf} | xml'.format(af=address_family, vrf=vrf)
+        cmd = 'show bgp {} labels'.format(address_family) if not vrf else \
+              'show bgp {af} labels vrf {vrf}'.format(af=address_family, vrf=vrf)
 
-        out = self.device.execute(cmd)
+        out = self.device.execute(cmd + ' | xml')
 
         etree_dict = {}
 
@@ -8915,8 +8921,8 @@ class ShowBgpLabels(ShowBgpSessionsSchema):
             return etree_dict
 
         # compare cli command
-        # Common.compose_compare_command(root=root, namespace=namespace,
-        #                                expect_command=cmd)
+        Common.compose_compare_command(root=root, namespace=namespace,
+                                       expect_command=cmd)
 
         # find Vrf root
         root = Common.retrieve_xml_child(root=root, key='TABLE_vrf')

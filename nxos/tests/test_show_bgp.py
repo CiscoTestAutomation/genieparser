@@ -11783,264 +11783,147 @@ class test_show_bgp_vrf_all_all_summary_xml(unittest.TestCase):
     device = Device(name='aDevice')
     golden_parsed_output = {
         "vrf": {
-            "default": {
+          "default": {
                "neighbor": {
-                    "19.0.102.3": {
+                    "50:1::1:101": {
                          "address_family": {
-                              "ipv4 unicast": {
-                                   "config_peers": 3,
-                                   "msg_rcvd": 0,
-                                   "as": 888,
-                                   "soft_reconfig_combo_paths": 0,
-                                   "clusterlist_entries": "[0/0]",
-                                   "path": {
-                                        "total_entries": 10,
-                                        "memory_usage": 1820
-                                   },
-                                   "bgp_table_version": 7,
-                                   "local_as": 333,
-                                   "capable_peers": 2,
-                                   "state": "idle",
-                                   "prefixes": {
-                                        "total_entries": 5,
-                                        "memory_usage": 1820
-                                   },
-                                   "route_identifier": "19.0.0.6",
-                                   "neighbor_table_version": 4,
-                                   "attribute_entries": "[1/160]",
-                                   "inq": 0,
-                                   "state_pfxrcd": "idle",
-                                   "history_paths": 0,
-                                   "as_path_entries": "[1/34]",
-                                   "msg_sent": 0,
+                              "ipv6 unicast": {
+                                   "route_identifier": "100.1.1.1",
                                    "outq": 0,
-                                   "soft_reconfig_recvd_paths": 10,
-                                   "dampening": True,
-                                   "dampened_paths": 0,
-                                   "tbl_ver": 0,
-                                   "up_down": "3d20h",
-                                   "community_entries": "[0/0]",
-                                   "soft_reconfig_filtered_recvd": 0,
-                                   "soft_reconfig_bytes": 0,
-                                   "soft_reconfig_identical_paths": 10
-                              },
-                              "l2vpn evpn": {
-                                   "config_peers": 3,
-                                   "as": 888,
-                                   "msg_rcvd": 0,
-                                   "clusterlist_entries": "[0/0]",
-                                   "path": {
-                                        "total_entries": 0,
-                                        "memory_usage": 0
-                                   },
-                                   "bgp_table_version": 2,
-                                   "local_as": 333,
-                                   "capable_peers": 0,
-                                   "state": "idle",
-                                   "prefixes": {
-                                        "total_entries": 0,
-                                        "memory_usage": 0
-                                   },
-                                   "route_identifier": "19.0.0.6",
-                                   "attribute_entries": "[0/0]",
-                                   "inq": 0,
-                                   "state_pfxrcd": "idle",
-                                   "history_paths": 0,
-                                   "as_path_entries": "[0/0]",
-                                   "msg_sent": 0,
-                                   "outq": 0,
-                                   "dampening": True,
-                                   "dampened_paths": 0,
-                                   "tbl_ver": 0,
-                                   "up_down": "3d20h",
-                                   "community_entries": "[0/0]",
-                                   "neighbor_table_version": 4
-                              }
-                         }
-                    },
-                    "19.0.102.4": {
-                         "address_family": {
-                              "ipv4 unicast": {
-                                   "config_peers": 3,
-                                   "msg_rcvd": 5584,
-                                   "as": 333,
-                                   "soft_reconfig_combo_paths": 0,
-                                   "clusterlist_entries": "[0/0]",
-                                   "path": {
-                                        "total_entries": 10,
-                                        "memory_usage": 1820
-                                   },
-                                   "bgp_table_version": 7,
-                                   "local_as": 333,
-                                   "capable_peers": 2,
-                                   "state": "established",
-                                   "prefixes": {
-                                        "total_entries": 5,
-                                        "memory_usage": 1820
-                                   },
-                                   "route_identifier": "19.0.0.6",
+                                   "as_path_entries": "[2/16]",
                                    "neighbor_table_version": 4,
-                                   "attribute_entries": "[1/160]",
-                                   "inq": 0,
+                                   "tbl_ver": 34,
+                                   "config_peers": 2,
+                                   "bgp_table_version": 34,
+                                   "path": {
+                                        "memory_usage": 2480,
+                                        "total_entries": 10
+                                   },
+                                   "up_down": "P1DT13H53M16S",
                                    "state_pfxrcd": "5",
-                                   "history_paths": 0,
-                                   "as_path_entries": "[1/34]",
-                                   "msg_sent": 5572,
-                                   "outq": 0,
-                                   "prefix_received": "5",
-                                   "soft_reconfig_recvd_paths": 10,
-                                   "dampening": True,
-                                   "dampened_paths": 0,
-                                   "tbl_ver": 7,
-                                   "up_down": "3d20h",
-                                   "community_entries": "[0/0]",
-                                   "soft_reconfig_filtered_recvd": 0,
-                                   "soft_reconfig_bytes": 0,
-                                   "soft_reconfig_identical_paths": 10
-                              },
-                              "l2vpn evpn": {
-                                   "config_peers": 3,
-                                   "prefix_received": "0",
-                                   "as": 333,
-                                   "msg_rcvd": 5584,
-                                   "clusterlist_entries": "[0/0]",
-                                   "path": {
-                                        "total_entries": 0,
-                                        "memory_usage": 0
-                                   },
-                                   "bgp_table_version": 2,
-                                   "local_as": 333,
-                                   "capable_peers": 0,
+                                   "inq": 0,
                                    "state": "established",
                                    "prefixes": {
-                                        "total_entries": 0,
-                                        "memory_usage": 0
+                                        "memory_usage": 2480,
+                                        "total_entries": 10
                                    },
-                                   "route_identifier": "19.0.0.6",
-                                   "attribute_entries": "[0/0]",
-                                   "inq": 0,
-                                   "state_pfxrcd": "0",
-                                   "history_paths": 0,
-                                   "as_path_entries": "[0/0]",
-                                   "msg_sent": 5572,
-                                   "outq": 0,
-                                   "dampening": True,
-                                   "dampened_paths": 0,
-                                   "tbl_ver": 0,
-                                   "up_down": "3d20h",
-                                   "community_entries": "[0/0]",
-                                   "neighbor_table_version": 4
-                              }
-                         }
-                    },
-                    "9.9.9.9": {
-                         "address_family": {
-                              "vpnv4 unicast": {
-                                   "config_peers": 1,
-                                   "as": 500,
-                                   "msg_rcvd": 0,
+                                   "attribute_entries": "[2/320]",
                                    "clusterlist_entries": "[0/0]",
-                                   "path": {
-                                        "total_entries": 0,
-                                        "memory_usage": 0
-                                   },
-                                   "bgp_table_version": 2,
-                                   "local_as": 333,
-                                   "capable_peers": 0,
-                                   "state": "idle",
-                                   "prefixes": {
-                                        "total_entries": 0,
-                                        "memory_usage": 0
-                                   },
-                                   "route_identifier": "19.0.0.6",
-                                   "attribute_entries": "[0/0]",
-                                   "inq": 0,
-                                   "state_pfxrcd": "idle",
-                                   "history_paths": 0,
-                                   "as_path_entries": "[0/0]",
-                                   "msg_sent": 0,
-                                   "outq": 0,
-                                   "dampening": True,
-                                   "dampened_paths": 0,
-                                   "tbl_ver": 0,
-                                   "up_down": "2d23h",
-                                   "community_entries": "[0/0]",
-                                   "neighbor_table_version": 4
+                                   "local_as": 100,
+                                   "prefix_received": "5",
+                                   "msg_sent": 4549,
+                                   "msg_rcvd": 4549,
+                                   "capable_peers": 2,
+                                   "as": 300,
+                                   "community_entries": "[0/0]"
                               }
                          }
                     },
-                    "19.0.101.1": {
+                    "50.1.1.101": {
                          "address_family": {
                               "ipv4 unicast": {
-                                   "config_peers": 3,
-                                   "msg_rcvd": 5584,
-                                   "as": 333,
-                                   "soft_reconfig_combo_paths": 0,
-                                   "clusterlist_entries": "[0/0]",
-                                   "path": {
-                                        "total_entries": 10,
-                                        "memory_usage": 1820
-                                   },
-                                   "bgp_table_version": 7,
-                                   "local_as": 333,
-                                   "capable_peers": 2,
-                                   "state": "established",
-                                   "prefixes": {
-                                        "total_entries": 5,
-                                        "memory_usage": 1820
-                                   },
-                                   "route_identifier": "19.0.0.6",
+                                   "route_identifier": "100.1.1.1",
+                                   "outq": 0,
+                                   "as_path_entries": "[2/16]",
                                    "neighbor_table_version": 4,
-                                   "attribute_entries": "[1/160]",
-                                   "inq": 0,
-                                   "state_pfxrcd": "5",
-                                   "history_paths": 0,
-                                   "as_path_entries": "[1/34]",
-                                   "msg_sent": 5572,
-                                   "outq": 0,
-                                   "prefix_received": "5",
-                                   "soft_reconfig_recvd_paths": 10,
-                                   "dampening": True,
-                                   "dampened_paths": 0,
-                                   "tbl_ver": 7,
-                                   "up_down": "3d20h",
-                                   "community_entries": "[0/0]",
-                                   "soft_reconfig_filtered_recvd": 0,
-                                   "soft_reconfig_bytes": 0,
-                                   "soft_reconfig_identical_paths": 10
-                              },
-                              "l2vpn evpn": {
-                                   "config_peers": 3,
-                                   "prefix_received": "0",
-                                   "as": 333,
-                                   "msg_rcvd": 5584,
-                                   "clusterlist_entries": "[0/0]",
+                                   "tbl_ver": 69,
+                                   "config_peers": 2,
+                                   "bgp_table_version": 69,
                                    "path": {
-                                        "total_entries": 0,
-                                        "memory_usage": 0
+                                        "memory_usage": 2832,
+                                        "total_entries": 12
                                    },
-                                   "bgp_table_version": 2,
-                                   "local_as": 333,
-                                   "capable_peers": 0,
+                                   "dampening": True,
+                                   "history_paths": 0,
+                                   "state_pfxrcd": "5",
+                                   "dampened_paths": 0,
+                                   "inq": 0,
                                    "state": "established",
                                    "prefixes": {
-                                        "total_entries": 0,
-                                        "memory_usage": 0
+                                        "memory_usage": 2832,
+                                        "total_entries": 12
                                    },
-                                   "route_identifier": "19.0.0.6",
-                                   "attribute_entries": "[0/0]",
-                                   "inq": 0,
-                                   "state_pfxrcd": "0",
-                                   "history_paths": 0,
-                                   "as_path_entries": "[0/0]",
-                                   "msg_sent": 5572,
+                                   "attribute_entries": "[4/640]",
+                                   "clusterlist_entries": "[0/0]",
+                                   "local_as": 100,
+                                   "prefix_received": "5",
+                                   "msg_sent": 4549,
+                                   "msg_rcvd": 6822,
+                                   "capable_peers": 2,
+                                   "as": 300,
+                                   "up_down": "P1DT13H53M14S",
+                                   "community_entries": "[0/0]"
+                              }
+                         }
+                    },
+                    "200:1::1:1": {
+                         "address_family": {
+                              "ipv6 unicast": {
+                                   "route_identifier": "100.1.1.1",
                                    "outq": 0,
+                                   "as_path_entries": "[2/16]",
+                                   "neighbor_table_version": 4,
+                                   "tbl_ver": 34,
+                                   "config_peers": 2,
+                                   "bgp_table_version": 34,
+                                   "path": {
+                                        "memory_usage": 2480,
+                                        "total_entries": 10
+                                   },
+                                   "up_down": "P1DT13H53M53S",
+                                   "state_pfxrcd": "5",
+                                   "inq": 0,
+                                   "state": "established",
+                                   "prefixes": {
+                                        "memory_usage": 2480,
+                                        "total_entries": 10
+                                   },
+                                   "attribute_entries": "[2/320]",
+                                   "clusterlist_entries": "[0/0]",
+                                   "local_as": 100,
+                                   "prefix_received": "5",
+                                   "msg_sent": 2733,
+                                   "msg_rcvd": 6826,
+                                   "capable_peers": 2,
+                                   "as": 100,
+                                   "community_entries": "[0/0]"
+                              }
+                         }
+                    },
+                    "200.1.1.1": {
+                         "address_family": {
+                              "ipv4 unicast": {
+                                   "route_identifier": "100.1.1.1",
+                                   "outq": 0,
+                                   "as_path_entries": "[2/16]",
+                                   "neighbor_table_version": 4,
+                                   "tbl_ver": 69,
+                                   "config_peers": 2,
+                                   "bgp_table_version": 69,
+                                   "path": {
+                                        "memory_usage": 2832,
+                                        "total_entries": 12
+                                   },
                                    "dampening": True,
+                                   "history_paths": 0,
+                                   "state_pfxrcd": "5",
                                    "dampened_paths": 0,
-                                   "tbl_ver": 0,
-                                   "up_down": "3d20h",
-                                   "community_entries": "[0/0]",
-                                   "neighbor_table_version": 4
+                                   "inq": 0,
+                                   "state": "established",
+                                   "prefixes": {
+                                        "memory_usage": 2832,
+                                        "total_entries": 12
+                                   },
+                                   "attribute_entries": "[4/640]",
+                                   "clusterlist_entries": "[0/0]",
+                                   "local_as": 100,
+                                   "prefix_received": "5",
+                                   "msg_sent": 13639,
+                                   "msg_rcvd": 6829,
+                                   "capable_peers": 2,
+                                   "as": 100,
+                                   "up_down": "PT22H20M50S",
+                                   "community_entries": "[0/0]"
                               }
                          }
                     }
@@ -12050,25 +11933,20 @@ class test_show_bgp_vrf_all_all_summary_xml(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
-        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:1.0:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:7.0.3.I7.3.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
          <nf:data>
           <show>
            <bgp>
-            <__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
-             <__XML__BLK_Cmd_show_ip_bgp_regexp_cmd_new_ipv4>
-              <summary>
-               <__XML__OPT_Cmd_show_bgp_summary_cmd_new___readonly__>
+            <vrf>
+             <all>
+              <all>
+               <summary>
                 <__readonly__>
                  <TABLE_vrf>
                   <ROW_vrf>
                    <vrf-name-out>default</vrf-name-out>
-                   <vrf-router-id>19.0.0.6</vrf-router-id>
-                   <vrf-local-as>333</vrf-local-as>
-                  </ROW_vrf>
-                  <ROW_vrf>
-                   <vrf-name-out>default</vrf-name-out>
-                   <vrf-router-id>19.0.0.6</vrf-router-id>
-                   <vrf-local-as>333</vrf-local-as>
+                   <vrf-router-id>100.1.1.1</vrf-router-id>
+                   <vrf-local-as>100</vrf-local-as>
                    <TABLE_af>
                     <ROW_af>
                      <af-id>1</af-id>
@@ -12076,235 +11954,103 @@ class test_show_bgp_vrf_all_all_summary_xml(unittest.TestCase):
                       <ROW_saf>
                        <safi>1</safi>
                        <af-name>IPv4 Unicast</af-name>
-                       <tableversion>7</tableversion>
-                       <configuredpeers>3</configuredpeers>
+                       <tableversion>69</tableversion>
+                       <configuredpeers>2</configuredpeers>
                        <capablepeers>2</capablepeers>
-                       <totalnetworks>5</totalnetworks>
+                       <totalnetworks>12</totalnetworks>
+                       <totalpaths>12</totalpaths>
+                       <memoryused>2832</memoryused>
+                       <numberattrs>4</numberattrs>
+                       <bytesattrs>640</bytesattrs>
+                       <numberpaths>2</numberpaths>
+                       <bytespaths>16</bytespaths>
+                       <numbercommunities>0</numbercommunities>
+                       <bytescommunities>0</bytescommunities>
+                       <numberclusterlist>0</numberclusterlist>
+                       <bytesclusterlist>0</bytesclusterlist>
+                       <dampening>true</dampening>
+                       <historypaths>0</historypaths>
+                       <dampenedpaths>0</dampenedpaths>
+                       <TABLE_neighbor>
+                        <ROW_neighbor>
+                         <neighborid>50.1.1.101</neighborid>
+                         <neighborversion>4</neighborversion>
+                         <msgrecvd>6822</msgrecvd>
+                         <msgsent>4549</msgsent>
+                         <neighbortableversion>69</neighbortableversion>
+                         <inq>0</inq>
+                         <outq>0</outq>
+                         <neighboras>300</neighboras>
+                         <time>P1DT13H53M14S</time>
+                         <state>Established</state>
+                         <prefixreceived>5</prefixreceived>
+                        </ROW_neighbor>
+                        <ROW_neighbor>
+                         <neighborid>200.1.1.1</neighborid>
+                         <neighborversion>4</neighborversion>
+                         <msgrecvd>6829</msgrecvd>
+                         <msgsent>13639</msgsent>
+                         <neighbortableversion>69</neighbortableversion>
+                         <inq>0</inq>
+                         <outq>0</outq>
+                         <neighboras>100</neighboras>
+                         <time>PT22H20M50S</time>
+                         <state>Established</state>
+                         <prefixreceived>5</prefixreceived>
+                        </ROW_neighbor>
+                       </TABLE_neighbor>
+                      </ROW_saf>
+                     </TABLE_saf>
+                    </ROW_af>
+                    <ROW_af>
+                     <af-id>2</af-id>
+                     <TABLE_saf>
+                      <ROW_saf>
+                       <safi>1</safi>
+                       <af-name>IPv6 Unicast</af-name>
+                       <tableversion>34</tableversion>
+                       <configuredpeers>2</configuredpeers>
+                       <capablepeers>2</capablepeers>
+                       <totalnetworks>10</totalnetworks>
                        <totalpaths>10</totalpaths>
-                       <memoryused>1820</memoryused>
-                       <numberattrs>1</numberattrs>
-                       <bytesattrs>160</bytesattrs>
-                       <numberpaths>1</numberpaths>
-                       <bytespaths>34</bytespaths>
+                       <memoryused>2480</memoryused>
+                       <numberattrs>2</numberattrs>
+                       <bytesattrs>320</bytesattrs>
+                       <numberpaths>2</numberpaths>
+                       <bytespaths>16</bytespaths>
                        <numbercommunities>0</numbercommunities>
                        <bytescommunities>0</bytescommunities>
                        <numberclusterlist>0</numberclusterlist>
                        <bytesclusterlist>0</bytesclusterlist>
-                       <dampening>Enabled</dampening>
-                       <historypaths>0</historypaths>
-                       <dampenedpaths>0</dampenedpaths>
-                       <softreconfigrecvdpaths>10</softreconfigrecvdpaths>
-                       <softreconfigidenticalpaths>10</softreconfigidenticalpaths>
-                       <softreconfigcombopaths>0</softreconfigcombopaths>
-                       <softreconfigfilteredrecvd>0</softreconfigfilteredrecvd>
-                       <softreconfigbytes>0</softreconfigbytes>
+                       <dampening>false</dampening>
                        <TABLE_neighbor>
                         <ROW_neighbor>
-                         <neighborid>19.0.101.1</neighborid>
+                         <neighborid>50:1::1:101</neighborid>
                          <neighborversion>4</neighborversion>
-                         <msgrecvd>5584</msgrecvd>
-                         <msgsent>5572</msgsent>
-                         <neighbortableversion>7</neighbortableversion>
+                         <msgrecvd>4549</msgrecvd>
+                         <msgsent>4549</msgsent>
+                         <neighbortableversion>34</neighbortableversion>
                          <inq>0</inq>
                          <outq>0</outq>
-                         <neighboras>333</neighboras>
-                         <time>3d20h</time>
+                         <neighboras>300</neighboras>
+                         <time>P1DT13H53M16S</time>
                          <state>Established</state>
                          <prefixreceived>5</prefixreceived>
                         </ROW_neighbor>
                         <ROW_neighbor>
-                         <neighborid>19.0.102.3</neighborid>
+                         <neighborid>200:1::1:1</neighborid>
                          <neighborversion>4</neighborversion>
-                         <msgrecvd>0</msgrecvd>
-                         <msgsent>0</msgsent>
-                         <neighbortableversion>0</neighbortableversion>
+                         <msgrecvd>6826</msgrecvd>
+                         <msgsent>2733</msgsent>
+                         <neighbortableversion>34</neighbortableversion>
                          <inq>0</inq>
                          <outq>0</outq>
-                         <neighboras>888</neighboras>
-                         <time>3d20h</time>
-                         <state>Idle</state>
-                         <prefixreceived>0</prefixreceived>
-                        </ROW_neighbor>
-                        <ROW_neighbor>
-                         <neighborid>19.0.102.4</neighborid>
-                         <neighborversion>4</neighborversion>
-                         <msgrecvd>5584</msgrecvd>
-                         <msgsent>5572</msgsent>
-                         <neighbortableversion>7</neighbortableversion>
-                         <inq>0</inq>
-                         <outq>0</outq>
-                         <neighboras>333</neighboras>
-                         <time>3d20h</time>
+                         <neighboras>100</neighboras>
+                         <time>P1DT13H53M53S</time>
                          <state>Established</state>
                          <prefixreceived>5</prefixreceived>
                         </ROW_neighbor>
                        </TABLE_neighbor>
-                      </ROW_saf>
-                     </TABLE_saf>
-                    </ROW_af>
-                    <ROW_af>
-                     <af-id>2</af-id>
-                     <TABLE_saf>
-                      <ROW_saf>
-                       <safi>1</safi>
-                       <af-name>IPv6 Unicast</af-name>
-                      </ROW_saf>
-                     </TABLE_saf>
-                    </ROW_af>
-                    <ROW_af>
-                     <af-id>1</af-id>
-                     <TABLE_saf>
-                      <ROW_saf>
-                       <safi>128</safi>
-                       <af-name>VPNv4 Unicast</af-name>
-                       <tableversion>2</tableversion>
-                       <configuredpeers>1</configuredpeers>
-                       <capablepeers>0</capablepeers>
-                       <totalnetworks>0</totalnetworks>
-                       <totalpaths>0</totalpaths>
-                       <memoryused>0</memoryused>
-                       <numberattrs>0</numberattrs>
-                       <bytesattrs>0</bytesattrs>
-                       <numberpaths>0</numberpaths>
-                       <bytespaths>0</bytespaths>
-                       <numbercommunities>0</numbercommunities>
-                       <bytescommunities>0</bytescommunities>
-                       <numberclusterlist>0</numberclusterlist>
-                       <bytesclusterlist>0</bytesclusterlist>
-                       <dampening>Enabled</dampening>
-                       <historypaths>0</historypaths>
-                       <dampenedpaths>0</dampenedpaths>
-                       <TABLE_neighbor>
-                        <ROW_neighbor>
-                         <neighborid>9.9.9.9</neighborid>
-                         <neighborversion>4</neighborversion>
-                         <msgrecvd>0</msgrecvd>
-                         <msgsent>0</msgsent>
-                         <neighbortableversion>0</neighbortableversion>
-                         <inq>0</inq>
-                         <outq>0</outq>
-                         <neighboras>500</neighboras>
-                         <time>2d23h</time>
-                         <state>Idle</state>
-                         <prefixreceived>0</prefixreceived>
-                        </ROW_neighbor>
-                       </TABLE_neighbor>
-                      </ROW_saf>
-                     </TABLE_saf>
-                    </ROW_af>
-                    <ROW_af>
-                     <af-id>2</af-id>
-                     <TABLE_saf>
-                      <ROW_saf>
-                       <safi>128</safi>
-                       <af-name>VPNv6 Unicast</af-name>
-                      </ROW_saf>
-                     </TABLE_saf>
-                    </ROW_af>
-                    <ROW_af>
-                     <af-id>25</af-id>
-                     <TABLE_saf>
-                      <ROW_saf>
-                       <safi>70</safi>
-                       <af-name>L2VPN EVPN</af-name>
-                       <tableversion>2</tableversion>
-                       <configuredpeers>3</configuredpeers>
-                       <capablepeers>0</capablepeers>
-                       <totalnetworks>0</totalnetworks>
-                       <totalpaths>0</totalpaths>
-                       <memoryused>0</memoryused>
-                       <numberattrs>0</numberattrs>
-                       <bytesattrs>0</bytesattrs>
-                       <numberpaths>0</numberpaths>
-                       <bytespaths>0</bytespaths>
-                       <numbercommunities>0</numbercommunities>
-                       <bytescommunities>0</bytescommunities>
-                       <numberclusterlist>0</numberclusterlist>
-                       <bytesclusterlist>0</bytesclusterlist>
-                       <dampening>Enabled</dampening>
-                       <historypaths>0</historypaths>
-                       <dampenedpaths>0</dampenedpaths>
-                       <TABLE_neighbor>
-                        <ROW_neighbor>
-                         <neighborid>19.0.101.1</neighborid>
-                         <neighborversion>4</neighborversion>
-                         <msgrecvd>5584</msgrecvd>
-                         <msgsent>5572</msgsent>
-                         <neighbortableversion>0</neighbortableversion>
-                         <inq>0</inq>
-                         <outq>0</outq>
-                         <neighboras>333</neighboras>
-                         <time>3d20h</time>
-                         <state>Established</state>
-                         <prefixreceived>0</prefixreceived>
-                        </ROW_neighbor>
-                        <ROW_neighbor>
-                         <neighborid>19.0.102.3</neighborid>
-                         <neighborversion>4</neighborversion>
-                         <msgrecvd>0</msgrecvd>
-                         <msgsent>0</msgsent>
-                         <neighbortableversion>0</neighbortableversion>
-                         <inq>0</inq>
-                         <outq>0</outq>
-                         <neighboras>888</neighboras>
-                         <time>3d20h</time>
-                         <state>Idle</state>
-                         <prefixreceived>0</prefixreceived>
-                        </ROW_neighbor>
-                        <ROW_neighbor>
-                         <neighborid>19.0.102.4</neighborid>
-                         <neighborversion>4</neighborversion>
-                         <msgrecvd>5584</msgrecvd>
-                         <msgsent>5572</msgsent>
-                         <neighbortableversion>0</neighbortableversion>
-                         <inq>0</inq>
-                         <outq>0</outq>
-                         <neighboras>333</neighboras>
-                         <time>3d20h</time>
-                         <state>Established</state>
-                         <prefixreceived>0</prefixreceived>
-                        </ROW_neighbor>
-                       </TABLE_neighbor>
-                      </ROW_saf>
-                     </TABLE_saf>
-                    </ROW_af>
-                   </TABLE_af>
-                  </ROW_vrf>
-                  <ROW_vrf>
-                   <vrf-name-out>vpn1</vrf-name-out>
-                   <vrf-router-id>11.11.11.11</vrf-router-id>
-                   <vrf-local-as>333</vrf-local-as>
-                  </ROW_vrf>
-                  <ROW_vrf>
-                   <vrf-name-out>vpn1</vrf-name-out>
-                   <vrf-router-id>11.11.11.11</vrf-router-id>
-                   <vrf-local-as>333</vrf-local-as>
-                  </ROW_vrf>
-                  <ROW_vrf>
-                   <vrf-name-out>vpn2</vrf-name-out>
-                   <vrf-router-id>22.22.22.22</vrf-router-id>
-                   <vrf-local-as>333</vrf-local-as>
-                  </ROW_vrf>
-                  <ROW_vrf>
-                   <vrf-name-out>vpn2</vrf-name-out>
-                   <vrf-router-id>22.22.22.22</vrf-router-id>
-                   <vrf-local-as>333</vrf-local-as>
-                   <TABLE_af>
-                    <ROW_af>
-                     <af-id>1</af-id>
-                     <TABLE_saf>
-                      <ROW_saf>
-                       <safi>1</safi>
-                       <af-name>IPv4 Unicast</af-name>
-                      </ROW_saf>
-                     </TABLE_saf>
-                    </ROW_af>
-                    <ROW_af>
-                     <af-id>2</af-id>
-                     <TABLE_saf>
-                      <ROW_saf>
-                       <safi>1</safi>
-                       <af-name>IPv6 Unicast</af-name>
                       </ROW_saf>
                      </TABLE_saf>
                     </ROW_af>
@@ -12312,10 +12058,10 @@ class test_show_bgp_vrf_all_all_summary_xml(unittest.TestCase):
                   </ROW_vrf>
                  </TABLE_vrf>
                 </__readonly__>
-               </__XML__OPT_Cmd_show_bgp_summary_cmd_new___readonly__>
-              </summary>
-             </__XML__BLK_Cmd_show_ip_bgp_regexp_cmd_new_ipv4>
-            </__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
+               </summary>
+              </all>
+             </all>
+            </vrf>
            </bgp>
           </show>
          </nf:data>
@@ -12441,208 +12187,78 @@ class TestShowBgpVrfAllAllDampeningParameters_xml(unittest.TestCase):
     
     device = Device(name='aDevice')
     golden_parsed_output = {
-         "vrf": {
-            "vpn2": {
-               "address_family": {
-                    "ipv4 unicast": {
-                         "dampening": "True",
-                         "dampening_half_life_time": "1",
-                         "dampening_reuse_time": "10",
-                         "dampening_max_suppress_penalty": "40",
-                         "dampening_suppress_time": "30",
-                         "dampening_max_suppress_time": "2"
-                    },
-               }
-            },
+        "vrf": {
             "default": {
                "address_family": {
                     "ipv4 unicast": {
+                         "dampening_suppress_time": "1500",
+                         "dampening_max_suppress_time": "255",
+                         "dampening_max_suppress_penalty": "1176267",
                          "dampening": "True",
-                         "dampening_half_life_time": "1",
-                         "dampening_reuse_time": "10",
-                         "dampening_max_suppress_penalty": "40",
-                         "dampening_suppress_time": "30",
-                         "dampening_max_suppress_time": "2"
-                    },
-                    "vpnv4 unicast": {
-                         "dampening": "True",
-                         "route_distinguisher": {
-                              "500:1": {
-                                   "dampening_half_life_time": "1",
-                                   "dampening_reuse_time": "10",
-                                   "dampening_max_suppress_penalty": "40",
-                                   "dampening_suppress_time": "30",
-                                   "dampening_max_suppress_time": "2",
-                                   "rd_vrf": "vpn2"
-                              }
-                         }
-                    },
-                    "l2vpn evpn": {
-                         "dampening": "True",
-                         "route_distinguisher": {
-                              "500:1": {
-                                   "dampening_half_life_time": "1",
-                                   "dampening_reuse_time": "10",
-                                   "dampening_max_suppress_penalty": "40",
-                                   "dampening_suppress_time": "30",
-                                   "dampening_max_suppress_time": "2",
-                                   "rd_vrf": "L3",
-                                   'rd_vni_id': '2'
-                              }
-                         }
-                    },
+                         "dampening_half_life_time": "25",
+                         "dampening_reuse_time": "1000"
+                    }
                }
             }
         }
     }
 
     golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
-        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:1.0:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:7.0.3.I7.3.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
          <nf:data>
           <show>
            <bgp>
-            <__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
-             <__XML__BLK_Cmd_show_ip_bgp_policy_cmd_policynew_ipv4>
-              <dampening>
-               <parameters>
-                <__XML__OPT_Cmd_show_ip_bgp_dampened_cmd_newparam_vrf>
-                 <__XML__OPT_Cmd_show_ip_bgp_dampened_cmd_newparam___readonly__>
-                  <__readonly__>
-                   <TABLE_vrf>
-                    <ROW_vrf>
-                     <vrf-name-out>default</vrf-name-out>
-                     <TABLE_afi>
-                      <ROW_afi>
-                       <afi>1</afi>
-                       <TABLE_safi>
-                        <ROW_safi>
-                         <safi>1</safi>
-                         <af-name>IPv4 Unicast</af-name>
-                         <TABLE_rd>
-                          <ROW_rd>
-                           <dampconfigured>Configured</dampconfigured>
-                           <damphalflife>1</damphalflife>
-                           <dampsuppress>30</dampsuppress>
-                           <dampreuse>10</dampreuse>
-                           <dampsuppresstime>2</dampsuppresstime>
-                           <dampmaxpenalty>40</dampmaxpenalty>
-                          </ROW_rd>
-                         </TABLE_rd>
-                        </ROW_safi>
-                       </TABLE_safi>
-                      </ROW_afi>
-                      <ROW_afi>
-                       <afi>2</afi>
-                       <TABLE_safi>
-                        <ROW_safi>
-                         <safi>1</safi>
-                         <af-name>IPv6 Unicast</af-name>
-                        </ROW_safi>
-                       </TABLE_safi>
-                      </ROW_afi>
-                      <ROW_afi>
-                       <afi>1</afi>
-                       <TABLE_safi>
-                        <ROW_safi>
-                         <safi>128</safi>
-                         <af-name>VPNv4 Unicast</af-name>
-                         <TABLE_rd>
-                          <ROW_rd>
-                           <rd_val>500:1</rd_val>
-                           <rd_vrf>vpn2</rd_vrf>
-                           <dampconfigured>Configured</dampconfigured>
-                           <damphalflife>1</damphalflife>
-                           <dampsuppress>30</dampsuppress>
-                           <dampreuse>10</dampreuse>
-                           <dampsuppresstime>2</dampsuppresstime>
-                           <dampmaxpenalty>40</dampmaxpenalty>
-                          </ROW_rd>
-                         </TABLE_rd>
-                        </ROW_safi>
-                       </TABLE_safi>
-                      </ROW_afi>
-                      <ROW_afi>
-                       <afi>2</afi>
-                       <TABLE_safi>
-                        <ROW_safi>
-                         <safi>128</safi>
-                         <af-name>VPNv6 Unicast</af-name>
-                        </ROW_safi>
-                       </TABLE_safi>
-                      </ROW_afi>
-                      <ROW_afi>
-                       <afi>25</afi>
-                       <TABLE_safi>
-                        <ROW_safi>
-                         <safi>70</safi>
-                         <af-name>L2VPN EVPN</af-name>
-                         <TABLE_rd>
-                          <ROW_rd>
-                           <rd_val>500:1</rd_val>
-                           <rd_vrf>L3</rd_vrf>
-                           <rd_vniid>2</rd_vniid>
-                           <dampconfigured>Configured</dampconfigured>
-                           <damphalflife>1</damphalflife>
-                           <dampsuppress>30</dampsuppress>
-                           <dampreuse>10</dampreuse>
-                           <dampsuppresstime>2</dampsuppresstime>
-                           <dampmaxpenalty>40</dampmaxpenalty>
-                          </ROW_rd>
-                         </TABLE_rd>
-                        </ROW_safi>
-                       </TABLE_safi>
-                      </ROW_afi>
-                     </TABLE_afi>
-                    </ROW_vrf>
-                    <ROW_vrf>
-                     <vrf-name-out>vpn1</vrf-name-out>
-                    </ROW_vrf>
-                    <ROW_vrf>
-                     <vrf-name-out>vpn2</vrf-name-out>
-                     <TABLE_afi>
-                      <ROW_afi>
-                       <afi>1</afi>
-                       <TABLE_safi>
-                        <ROW_safi>
-                         <safi>1</safi>
-                         <af-name>IPv4 Unicast</af-name>
-                         <TABLE_rd>
-                          <ROW_rd>
-                           <dampconfigured>Configured</dampconfigured>
-                           <damphalflife>1</damphalflife>
-                           <dampsuppress>30</dampsuppress>
-                           <dampreuse>10</dampreuse>
-                           <dampsuppresstime>2</dampsuppresstime>
-                           <dampmaxpenalty>40</dampmaxpenalty>
-                          </ROW_rd>
-                         </TABLE_rd>
-                        </ROW_safi>
-                       </TABLE_safi>
-                      </ROW_afi>
-                      <ROW_afi>
-                       <afi>2</afi>
-                       <TABLE_safi>
-                        <ROW_safi>
-                         <safi>1</safi>
-                         <af-name>IPv6 Unicast</af-name>
-                        </ROW_safi>
-                       </TABLE_safi>
-                      </ROW_afi>
-                     </TABLE_afi>
-                    </ROW_vrf>
-                   </TABLE_vrf>
-                  </__readonly__>
-                 </__XML__OPT_Cmd_show_ip_bgp_dampened_cmd_newparam___readonly__>
-                </__XML__OPT_Cmd_show_ip_bgp_dampened_cmd_newparam_vrf>
-               </parameters>
-              </dampening>
-             </__XML__BLK_Cmd_show_ip_bgp_policy_cmd_policynew_ipv4>
-            </__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
+            <vrf>
+             <all>
+              <all>
+               <dampening>
+                <parameters>
+                 <__readonly__>
+                  <TABLE_vrf>
+                   <ROW_vrf>
+                    <vrf-name-out>default</vrf-name-out>
+                    <TABLE_afi>
+                     <ROW_afi>
+                      <afi>1</afi>
+                      <TABLE_safi>
+                       <ROW_safi>
+                        <safi>1</safi>
+                        <af-name>IPv4 Unicast</af-name>
+                        <TABLE_rd>
+                         <ROW_rd>
+                          <dampconfigured>Configured</dampconfigured>
+                          <damphalflife>25</damphalflife>
+                          <dampsuppress>1500</dampsuppress>
+                          <dampreuse>1000</dampreuse>
+                          <dampsuppresstime>255</dampsuppresstime>
+                          <dampmaxpenalty>1176267</dampmaxpenalty>
+                         </ROW_rd>
+                        </TABLE_rd>
+                       </ROW_safi>
+                      </TABLE_safi>
+                     </ROW_afi>
+                     <ROW_afi>
+                      <afi>2</afi>
+                      <TABLE_safi>
+                       <ROW_safi>
+                        <safi>1</safi>
+                        <af-name>IPv6 Unicast</af-name>
+                       </ROW_safi>
+                      </TABLE_safi>
+                     </ROW_afi>
+                    </TABLE_afi>
+                   </ROW_vrf>
+                  </TABLE_vrf>
+                 </__readonly__>
+                </parameters>
+               </dampening>
+              </all>
+             </all>
+            </vrf>
            </bgp>
           </show>
          </nf:data>
         </nf:rpc-reply>
-
     '''}
 
     def test_golden_xml(self):
@@ -21661,138 +21277,148 @@ class test_show_bgp_sessions_xml(unittest.TestCase):
     
     device = Device(name='aDevice')
     golden_parsed_output = {
-        "total_established_peers": 2,
-        "vrf": {
-          "vpn1": {
-               "vrf_peers": 0,
-               "router_id": "11.11.11.11",
-               "local_as": 333,
-               "vrf_established_peers": 0
-          },
-          "default": {
-               "vrf_peers": 3,
-               "router_id": "19.0.0.6",
-               "local_as": 333,
-               "neighbor": {
-                    "19.0.102.3": {
-                         "notifications_sent": 0,
-                         "state": "idle",
-                         "local_port": 0,
-                         "last_flap": "01:04:46",
-                         "connections_dropped": 0,
-                         "remote_as": 888,
-                         "notifications_received": 0,
-                         "last_write": "never",
-                         "remote_port": 0,
-                         "last_read": "never"
-                    },
-                    "19.0.102.4": {
-                         "notifications_sent": 0,
-                         "state": "established",
-                         "local_port": 179,
-                         "last_flap": "01:04:41",
-                         "connections_dropped": 0,
-                         "remote_as": 333,
-                         "notifications_received": 0,
-                         "last_write": "00:00:15",
-                         "remote_port": 36462,
-                         "last_read": "00:00:47"
-                    },
-                    "19.0.101.1": {
-                         "notifications_sent": 0,
-                         "state": "established",
-                         "local_port": 179,
-                         "last_flap": "01:04:41",
-                         "connections_dropped": 0,
-                         "remote_as": 333,
-                         "notifications_received": 0,
-                         "last_write": "00:00:15",
-                         "remote_port": 48392,
-                         "last_read": "00:00:47"
-                    }
-               },
-               "vrf_established_peers": 2
-          }
-        },
-        "local_as": 333,
-        "total_peers": 3
+        "total_established_peers": 4,
+         "total_peers": 4,
+         "local_as": 100,
+         "vrf": {
+              "default": {
+                   "vrf_established_peers": 4,
+                   "neighbor": {
+                        "200.1.1.1": {
+                             "state": "established",
+                             "remote_port": 39464,
+                             "last_flap": "22:20:23",
+                             "remote_as": 100,
+                             "local_port": 179,
+                             "notifications_received": 0,
+                             "last_read": "00:00:13",
+                             "last_write": "00:00:01",
+                             "notifications_sent": 1,
+                             "connections_dropped": 1
+                        },
+                        "50.1.1.101": {
+                             "state": "established",
+                             "remote_port": 179,
+                             "last_flap": "1d13h",
+                             "remote_as": 300,
+                             "local_port": 56190,
+                             "notifications_received": 0,
+                             "last_read": "00:00:05",
+                             "last_write": "00:00:28",
+                             "notifications_sent": 0,
+                             "connections_dropped": 0
+                        },
+                        "200:1::1:1": {
+                             "state": "established",
+                             "remote_port": 179,
+                             "last_flap": "1d13h",
+                             "remote_as": 100,
+                             "local_port": 41153,
+                             "notifications_received": 0,
+                             "last_read": "00:00:16",
+                             "last_write": "00:00:12",
+                             "notifications_sent": 0,
+                             "connections_dropped": 0
+                        },
+                        "50:1::1:101": {
+                             "state": "established",
+                             "remote_port": 32851,
+                             "last_flap": "1d13h",
+                             "remote_as": 300,
+                             "local_port": 179,
+                             "notifications_received": 0,
+                             "last_read": "00:00:27",
+                             "last_write": "00:00:18",
+                             "notifications_sent": 0,
+                             "connections_dropped": 0
+                        }
+                   },
+                   "local_as": 100,
+                   "vrf_peers": 4,
+                   "router_id": "100.1.1.1"
+              }
+         }
     }
 
     golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
-        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:1.0:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:7.0.3.I7.3.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
          <nf:data>
           <show>
            <bgp>
-            <__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
-             <sessions>
-              <__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
-               <__XML__OPT_Cmd_show_ip_bgp_session_cmd___readonly__>
-                <__readonly__>
-                 <totalpeers>3</totalpeers>
-                 <totalestablishedpeers>2</totalestablishedpeers>
-                 <localas>333</localas>
-                 <TABLE_vrf>
-                  <ROW_vrf>
-                   <vrf-name-out>default</vrf-name-out>
-                   <local-as>333</local-as>
-                   <vrfpeers>3</vrfpeers>
-                   <vrfestablishedpeers>2</vrfestablishedpeers>
-                   <router-id>19.0.0.6</router-id>
-                   <TABLE_neighbor>
-                    <ROW_neighbor>
-                     <neighbor-id>19.0.101.1</neighbor-id>
-                     <connectionsdropped>0</connectionsdropped>
-                     <remoteas>333</remoteas>
-                     <lastflap>PT1H4M41S</lastflap>
-                     <lastread>PT47S</lastread>
-                     <lastwrite>PT15S</lastwrite>
-                     <state>Established</state>
-                     <localport>179</localport>
-                     <remoteport>48392</remoteport>
-                     <notificationssent>0</notificationssent>
-                     <notificationsreceived>0</notificationsreceived>
-                    </ROW_neighbor>
-                    <ROW_neighbor>
-                     <neighbor-id>19.0.102.3</neighbor-id>
-                     <connectionsdropped>0</connectionsdropped>
-                     <remoteas>888</remoteas>
-                     <lastflap>PT1H4M46S</lastflap>
-                     <lastread>P4M13DT1H42M1S</lastread>
-                     <lastwrite>P4M13DT1H42M1S</lastwrite>
-                     <state>Idle</state>
-                     <localport>0</localport>
-                     <remoteport>0</remoteport>
-                     <notificationssent>0</notificationssent>
-                     <notificationsreceived>0</notificationsreceived>
-                    </ROW_neighbor>
-                    <ROW_neighbor>
-                     <neighbor-id>19.0.102.4</neighbor-id>
-                     <connectionsdropped>0</connectionsdropped>
-                     <remoteas>333</remoteas>
-                     <lastflap>PT1H4M41S</lastflap>
-                     <lastread>PT47S</lastread>
-                     <lastwrite>PT15S</lastwrite>
-                     <state>Established</state>
-                     <localport>179</localport>
-                     <remoteport>36462</remoteport>
-                     <notificationssent>0</notificationssent>
-                     <notificationsreceived>0</notificationsreceived>
-                    </ROW_neighbor>
-                   </TABLE_neighbor>
-                  </ROW_vrf>
-                  <ROW_vrf>
-                   <vrf-name-out>vpn1</vrf-name-out>
-                   <local-as>333</local-as>
-                   <vrfpeers>0</vrfpeers>
-                   <vrfestablishedpeers>0</vrfestablishedpeers>
-                   <router-id>11.11.11.11</router-id>
-                  </ROW_vrf>
-                 </TABLE_vrf>
-                </__readonly__>
-               </__XML__OPT_Cmd_show_ip_bgp_session_cmd___readonly__>
-              </__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
-             </sessions>
-            </__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
+            <sessions>
+             <vrf>
+              <all>
+               <__readonly__>
+                <totalpeers>4</totalpeers>
+                <totalestablishedpeers>4</totalestablishedpeers>
+                <localas>100</localas>
+                <TABLE_vrf>
+                 <ROW_vrf>
+                  <vrf-name-out>default</vrf-name-out>
+                  <local-as>100</local-as>
+                  <vrfpeers>4</vrfpeers>
+                  <vrfestablishedpeers>4</vrfestablishedpeers>
+                  <router-id>100.1.1.1</router-id>
+                  <TABLE_neighbor>
+                   <ROW_neighbor>
+                    <neighbor-id>50.1.1.101</neighbor-id>
+                    <connectionsdropped>0</connectionsdropped>
+                    <remoteas>300</remoteas>
+                    <lastflap>P1DT13H52M46S</lastflap>
+                    <lastread>PT5S</lastread>
+                    <lastwrite>PT28S</lastwrite>
+                    <state>Established</state>
+                    <localport>56190</localport>
+                    <remoteport>179</remoteport>
+                    <notificationssent>0</notificationssent>
+                    <notificationsreceived>0</notificationsreceived>
+                   </ROW_neighbor>
+                   <ROW_neighbor>
+                    <neighbor-id>200.1.1.1</neighbor-id>
+                    <connectionsdropped>1</connectionsdropped>
+                    <remoteas>100</remoteas>
+                    <lastflap>PT22H20M23S</lastflap>
+                    <lastread>PT13S</lastread>
+                    <lastwrite>PT1S</lastwrite>
+                    <state>Established</state>
+                    <localport>179</localport>
+                    <remoteport>39464</remoteport>
+                    <notificationssent>1</notificationssent>
+                    <notificationsreceived>0</notificationsreceived>
+                   </ROW_neighbor>
+                   <ROW_neighbor>
+                    <neighbor-id>50:1::1:101</neighbor-id>
+                    <connectionsdropped>0</connectionsdropped>
+                    <remoteas>300</remoteas>
+                    <lastflap>P1DT13H52M48S</lastflap>
+                    <lastread>PT27S</lastread>
+                    <lastwrite>PT18S</lastwrite>
+                    <state>Established</state>
+                    <localport>179</localport>
+                    <remoteport>32851</remoteport>
+                    <notificationssent>0</notificationssent>
+                    <notificationsreceived>0</notificationsreceived>
+                   </ROW_neighbor>
+                   <ROW_neighbor>
+                    <neighbor-id>200:1::1:1</neighbor-id>
+                    <connectionsdropped>0</connectionsdropped>
+                    <remoteas>100</remoteas>
+                    <lastflap>P1DT13H53M26S</lastflap>
+                    <lastread>PT16S</lastread>
+                    <lastwrite>PT12S</lastwrite>
+                    <state>Established</state>
+                    <localport>41153</localport>
+                    <remoteport>179</remoteport>
+                    <notificationssent>0</notificationssent>
+                    <notificationsreceived>0</notificationsreceived>
+                   </ROW_neighbor>
+                  </TABLE_neighbor>
+                 </ROW_vrf>
+                </TABLE_vrf>
+               </__readonly__>
+              </all>
+             </vrf>
+            </sessions>
            </bgp>
           </show>
          </nf:data>
@@ -21803,7 +21429,7 @@ class test_show_bgp_sessions_xml(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpSessions(device=self.device, context='xml')
-        parsed_output = obj.parse()
+        parsed_output = obj.parse(vrf='all')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -21998,138 +21624,193 @@ class test_show_bgp_labels_xml(unittest.TestCase):
     device = Device(name='aDevice')
     golden_parsed_output = {
         "vrf": {
-            "default": {
+          "default": {
                "address_family": {
                     "ipv4 unicast": {
-                         "table_version": 7,
-                         "router_id": "19.0.0.6",
+                         "table_version": 69,
                          "prefix": {
-                              "1.5.213.0/24": {
+                              "84.0.4.0/24": {
                                    "index": {
                                         0: {
-                                             "type_code": "i",
-                                             "in_label": "nolabel",
+                                             "type_code": "e",
+                                             "status": "valid",
+                                             "best_code": ">",
                                              "status_code": "*",
+                                             "type": "external",
                                              "best_path": True,
-                                             "out_label": "nolabel",
-                                             "nexthop": "19.0.101.1",
-                                             "type": "internal",
-                                             "status": "valid",
-                                             "best_code": ">"
-                                        },
-                                        1: {
-                                             "type_code": "i",
                                              "in_label": "nolabel",
-                                             "status_code": "*",
-                                             "best_path": False,
-                                             "nexthop": "19.0.102.4",
-                                             "type": "internal",
-                                             "status": "valid",
-                                             "out_label": "nolabel"
+                                             "out_label": "nolabel",
+                                             "nexthop": "50.1.1.101"
                                         }
                                    }
                               },
-                              "1.5.212.0/24": {
+                              "84.0.1.0/24": {
                                    "index": {
                                         0: {
-                                             "type_code": "i",
-                                             "in_label": "nolabel",
+                                             "type_code": "e",
+                                             "status": "valid",
+                                             "best_code": ">",
                                              "status_code": "*",
+                                             "type": "external",
                                              "best_path": True,
-                                             "out_label": "nolabel",
-                                             "nexthop": "19.0.101.1",
-                                             "type": "internal",
-                                             "status": "valid",
-                                             "best_code": ">"
-                                        },
-                                        1: {
-                                             "type_code": "i",
                                              "in_label": "nolabel",
-                                             "status_code": "*",
-                                             "best_path": False,
-                                             "nexthop": "19.0.102.4",
-                                             "type": "internal",
-                                             "status": "valid",
-                                             "out_label": "nolabel"
+                                             "out_label": "nolabel",
+                                             "nexthop": "50.1.1.101"
                                         }
                                    }
                               },
-                              "1.5.210.0/24": {
+                              "83.0.3.0/24": {
                                    "index": {
                                         0: {
                                              "type_code": "i",
-                                             "in_label": "nolabel",
+                                             "status": "valid",
+                                             "best_code": ">",
                                              "status_code": "*",
+                                             "type": "internal",
                                              "best_path": True,
-                                             "out_label": "nolabel",
-                                             "nexthop": "19.0.101.1",
-                                             "type": "internal",
-                                             "status": "valid",
-                                             "best_code": ">"
-                                        },
-                                        1: {
-                                             "type_code": "i",
                                              "in_label": "nolabel",
-                                             "status_code": "*",
-                                             "best_path": False,
-                                             "nexthop": "19.0.102.4",
-                                             "type": "internal",
-                                             "status": "valid",
-                                             "out_label": "nolabel"
+                                             "out_label": "nolabel",
+                                             "nexthop": "200.1.1.1"
                                         }
                                    }
                               },
-                              "1.5.211.0/24": {
+                              "85.0.0.0/24": {
                                    "index": {
                                         0: {
-                                             "type_code": "i",
-                                             "in_label": "nolabel",
+                                             "type_code": "r",
+                                             "status": "valid",
+                                             "best_code": ">",
                                              "status_code": "*",
+                                             "type": "redist",
                                              "best_path": True,
-                                             "out_label": "nolabel",
-                                             "nexthop": "19.0.101.1",
-                                             "type": "internal",
-                                             "status": "valid",
-                                             "best_code": ">"
-                                        },
-                                        1: {
-                                             "type_code": "i",
                                              "in_label": "nolabel",
-                                             "status_code": "*",
-                                             "best_path": False,
-                                             "nexthop": "19.0.102.4",
-                                             "type": "internal",
-                                             "status": "valid",
-                                             "out_label": "nolabel"
+                                             "out_label": "nolabel",
+                                             "nexthop": "0.0.0.0"
                                         }
                                    }
                               },
-                              "1.5.214.0/24": {
+                              "83.0.2.0/24": {
                                    "index": {
                                         0: {
                                              "type_code": "i",
-                                             "in_label": "nolabel",
+                                             "status": "valid",
+                                             "best_code": ">",
                                              "status_code": "*",
+                                             "type": "internal",
                                              "best_path": True,
-                                             "out_label": "nolabel",
-                                             "nexthop": "19.0.101.1",
-                                             "type": "internal",
-                                             "status": "valid",
-                                             "best_code": ">"
-                                        },
-                                        1: {
-                                             "type_code": "i",
                                              "in_label": "nolabel",
-                                             "status_code": "*",
-                                             "best_path": False,
-                                             "nexthop": "19.0.102.4",
-                                             "type": "internal",
+                                             "out_label": "nolabel",
+                                             "nexthop": "200.1.1.1"
+                                        }
+                                   }
+                              },
+                              "83.0.1.0/24": {
+                                   "index": {
+                                        0: {
+                                             "type_code": "i",
                                              "status": "valid",
-                                             "out_label": "nolabel"
+                                             "best_code": ">",
+                                             "status_code": "*",
+                                             "type": "internal",
+                                             "best_path": True,
+                                             "in_label": "nolabel",
+                                             "out_label": "nolabel",
+                                             "nexthop": "200.1.1.1"
+                                        }
+                                   }
+                              },
+                              "83.0.0.0/16": {
+                                   "index": {
+                                        0: {
+                                             "type_code": "a",
+                                             "status": "valid",
+                                             "best_code": ">",
+                                             "status_code": "*",
+                                             "type": "aggregate",
+                                             "best_path": True,
+                                             "in_label": "nolabel",
+                                             "out_label": "nolabel",
+                                             "nexthop": "0.0.0.0"
+                                        }
+                                   }
+                              },
+                              "83.0.0.0/24": {
+                                   "index": {
+                                        0: {
+                                             "type_code": "i",
+                                             "status": "valid",
+                                             "best_code": ">",
+                                             "status_code": "*",
+                                             "type": "internal",
+                                             "best_path": True,
+                                             "in_label": "nolabel",
+                                             "out_label": "nolabel",
+                                             "nexthop": "200.1.1.1"
+                                        }
+                                   }
+                              },
+                              "84.0.3.0/24": {
+                                   "index": {
+                                        0: {
+                                             "type_code": "e",
+                                             "status": "valid",
+                                             "best_code": ">",
+                                             "status_code": "*",
+                                             "type": "external",
+                                             "best_path": True,
+                                             "in_label": "nolabel",
+                                             "out_label": "nolabel",
+                                             "nexthop": "50.1.1.101"
+                                        }
+                                   }
+                              },
+                              "84.0.0.0/24": {
+                                   "index": {
+                                        0: {
+                                             "type_code": "e",
+                                             "status": "valid",
+                                             "best_code": ">",
+                                             "status_code": "*",
+                                             "type": "external",
+                                             "best_path": True,
+                                             "in_label": "nolabel",
+                                             "out_label": "nolabel",
+                                             "nexthop": "50.1.1.101"
+                                        }
+                                   }
+                              },
+                              "83.0.4.0/24": {
+                                   "index": {
+                                        0: {
+                                             "type_code": "i",
+                                             "status": "valid",
+                                             "best_code": ">",
+                                             "status_code": "*",
+                                             "type": "internal",
+                                             "best_path": True,
+                                             "in_label": "nolabel",
+                                             "out_label": "nolabel",
+                                             "nexthop": "200.1.1.1"
+                                        }
+                                   }
+                              },
+                              "84.0.2.0/24": {
+                                   "index": {
+                                        0: {
+                                             "type_code": "e",
+                                             "status": "valid",
+                                             "best_code": ">",
+                                             "status_code": "*",
+                                             "type": "external",
+                                             "best_path": True,
+                                             "in_label": "nolabel",
+                                             "out_label": "nolabel",
+                                             "nexthop": "50.1.1.101"
                                         }
                                    }
                               }
-                         }
+                         },
+                         "router_id": "100.1.1.1"
                     }
                }
             }
@@ -22137,223 +21818,274 @@ class test_show_bgp_labels_xml(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
-        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:1.0:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:7.0.3.I7.3.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
          <nf:data>
           <show>
            <bgp>
-            <__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
-             <__XML__BLK_Cmd_show_bgp_cmd_ipv4>
-              <__XML__OPT_Cmd_show_bgp_cmd_vrf>
-               <__XML__OPT_Cmd_show_bgp_cmd___readonly__>
-                <__readonly__>
-                 <TABLE_vrf>
-                  <ROW_vrf>
-                   <vrf-name-out>default</vrf-name-out>
-                   <TABLE_afi>
-                    <ROW_afi>
-                     <afi>1</afi>
-                     <TABLE_safi>
-                      <ROW_safi>
-                       <safi>1</safi>
-                       <af-name>IPv4 Unicast</af-name>
-                       <table-version>7</table-version>
-                       <router-id>19.0.0.6</router-id>
-                       <TABLE_rd>
-                        <ROW_rd>
-                         <TABLE_prefix>
-                          <ROW_prefix>
-                           <ipprefix>1.5.210.0/24</ipprefix>
-                           <TABLE_path>
-                            <ROW_path>
-                             <pathnr>0</pathnr>
-                             <status>valid</status>
-                             <best>bestpath</best>
-                             <type>internal</type>
-                             <statuscode>*</statuscode>
-                             <bestcode>&gt;</bestcode>
-                             <typecode>i</typecode>
-                             <ipnexthop>19.0.101.1</ipnexthop>
-                             <inlabel>nolabel</inlabel>
-                             <outlabel>nolabel</outlabel>
-                             <vpn></vpn>
-                             <hold_down></hold_down>
-                            </ROW_path>
-                            <ROW_path>
-                             <pathnr>1</pathnr>
-                             <status>valid</status>
-                             <best>none</best>
-                             <type>internal</type>
-                             <statuscode>*</statuscode>
-                             <bestcode> </bestcode>
-                             <typecode>i</typecode>
-                             <ipnexthop>19.0.102.4</ipnexthop>
-                             <inlabel>nolabel</inlabel>
-                             <outlabel>nolabel</outlabel>
-                             <vpn></vpn>
-                             <hold_down></hold_down>
-                            </ROW_path>
-                           </TABLE_path>
-                          </ROW_prefix>
-                          <ROW_prefix>
-                           <ipprefix>1.5.211.0/24</ipprefix>
-                           <TABLE_path>
-                            <ROW_path>
-                             <pathnr>0</pathnr>
-                             <status>valid</status>
-                             <best>bestpath</best>
-                             <type>internal</type>
-                             <statuscode>*</statuscode>
-                             <bestcode>&gt;</bestcode>
-                             <typecode>i</typecode>
-                             <ipnexthop>19.0.101.1</ipnexthop>
-                             <inlabel>nolabel</inlabel>
-                             <outlabel>nolabel</outlabel>
-                             <vpn></vpn>
-                             <hold_down></hold_down>
-                            </ROW_path>
-                            <ROW_path>
-                             <pathnr>1</pathnr>
-                             <status>valid</status>
-                             <best>none</best>
-                             <type>internal</type>
-                             <statuscode>*</statuscode>
-                             <bestcode> </bestcode>
-                             <typecode>i</typecode>
-                             <ipnexthop>19.0.102.4</ipnexthop>
-                             <inlabel>nolabel</inlabel>
-                             <outlabel>nolabel</outlabel>
-                             <vpn></vpn>
-                             <hold_down></hold_down>
-                            </ROW_path>
-                           </TABLE_path>
-                          </ROW_prefix>
-                          <ROW_prefix>
-                           <ipprefix>1.5.212.0/24</ipprefix>
-                           <TABLE_path>
-                            <ROW_path>
-                             <pathnr>0</pathnr>
-                             <status>valid</status>
-                             <best>bestpath</best>
-                             <type>internal</type>
-                             <statuscode>*</statuscode>
-                             <bestcode>&gt;</bestcode>
-                             <typecode>i</typecode>
-                             <ipnexthop>19.0.101.1</ipnexthop>
-                             <inlabel>nolabel</inlabel>
-                             <outlabel>nolabel</outlabel>
-                             <vpn></vpn>
-                             <hold_down></hold_down>
-                            </ROW_path>
-                            <ROW_path>
-                             <pathnr>1</pathnr>
-                             <status>valid</status>
-                             <best>none</best>
-                             <type>internal</type>
-                             <statuscode>*</statuscode>
-                             <bestcode> </bestcode>
-                             <typecode>i</typecode>
-                             <ipnexthop>19.0.102.4</ipnexthop>
-                             <inlabel>nolabel</inlabel>
-                             <outlabel>nolabel</outlabel>
-                             <vpn></vpn>
-                             <hold_down></hold_down>
-                            </ROW_path>
-                           </TABLE_path>
-                          </ROW_prefix>
-                          <ROW_prefix>
-                           <ipprefix>1.5.213.0/24</ipprefix>
-                           <TABLE_path>
-                            <ROW_path>
-                             <pathnr>0</pathnr>
-                             <status>valid</status>
-                             <best>bestpath</best>
-                             <type>internal</type>
-                             <statuscode>*</statuscode>
-                             <bestcode>&gt;</bestcode>
-                             <typecode>i</typecode>
-                             <ipnexthop>19.0.101.1</ipnexthop>
-                             <inlabel>nolabel</inlabel>
-                             <outlabel>nolabel</outlabel>
-                             <vpn></vpn>
-                             <hold_down></hold_down>
-                            </ROW_path>
-                            <ROW_path>
-                             <pathnr>1</pathnr>
-                             <status>valid</status>
-                             <best>none</best>
-                             <type>internal</type>
-                             <statuscode>*</statuscode>
-                             <bestcode> </bestcode>
-                             <typecode>i</typecode>
-                             <ipnexthop>19.0.102.4</ipnexthop>
-                             <inlabel>nolabel</inlabel>
-                             <outlabel>nolabel</outlabel>
-                             <vpn></vpn>
-                             <hold_down></hold_down>
-                            </ROW_path>
-                           </TABLE_path>
-                          </ROW_prefix>
-                          <ROW_prefix>
-                           <ipprefix>1.5.214.0/24</ipprefix>
-                           <TABLE_path>
-                            <ROW_path>
-                             <pathnr>0</pathnr>
-                             <status>valid</status>
-                             <best>bestpath</best>
-                             <type>internal</type>
-                             <statuscode>*</statuscode>
-                             <bestcode>&gt;</bestcode>
-                             <typecode>i</typecode>
-                             <ipnexthop>19.0.101.1</ipnexthop>
-                             <inlabel>nolabel</inlabel>
-                             <outlabel>nolabel</outlabel>
-                             <vpn></vpn>
-                             <hold_down></hold_down>
-                            </ROW_path>
-                            <ROW_path>
-                             <pathnr>1</pathnr>
-                             <status>valid</status>
-                             <best>none</best>
-                             <type>internal</type>
-                             <statuscode>*</statuscode>
-                             <bestcode> </bestcode>
-                             <typecode>i</typecode>
-                             <ipnexthop>19.0.102.4</ipnexthop>
-                             <inlabel>nolabel</inlabel>
-                             <outlabel>nolabel</outlabel>
-                             <vpn></vpn>
-                             <hold_down></hold_down>
-                            </ROW_path>
-                           </TABLE_path>
-                          </ROW_prefix>
-                         </TABLE_prefix>
-                        </ROW_rd>
-                       </TABLE_rd>
-                      </ROW_safi>
-                     </TABLE_safi>
-                    </ROW_afi>
-                   </TABLE_afi>
-                  </ROW_vrf>
-                  <ROW_vrf>
-                   <vrf-name-out>vpn2</vrf-name-out>
-                   <TABLE_afi>
-                    <ROW_afi>
-                     <afi>1</afi>
-                     <TABLE_safi>
-                      <ROW_safi>
-                       <safi>1</safi>
-                       <af-name>IPv4 Unicast</af-name>
-                      </ROW_safi>
-                     </TABLE_safi>
-                    </ROW_afi>
-                   </TABLE_afi>
-                  </ROW_vrf>
-                 </TABLE_vrf>
-                </__readonly__>
-               </__XML__OPT_Cmd_show_bgp_cmd___readonly__>
-              </__XML__OPT_Cmd_show_bgp_cmd_vrf>
-             </__XML__BLK_Cmd_show_bgp_cmd_ipv4>
-            </__XML__OPT_Cmd_show_ip_bgp_session_cmd_vrf>
+            <ipv4>
+             <unicast>
+              <labels>
+               <vrf>
+                <all>
+                 <__readonly__>
+                  <TABLE_vrf>
+                   <ROW_vrf>
+                    <vrf-name-out>default</vrf-name-out>
+                    <TABLE_afi>
+                     <ROW_afi>
+                      <afi>1</afi>
+                      <TABLE_safi>
+                       <ROW_safi>
+                        <safi>1</safi>
+                        <af-name>IPv4 Unicast</af-name>
+                        <table-version>69</table-version>
+                        <router-id>100.1.1.1</router-id>
+                        <TABLE_rd>
+                         <ROW_rd>
+                          <TABLE_prefix>
+                           <ROW_prefix>
+                            <ipprefix>83.0.0.0/16</ipprefix>
+                            <TABLE_path>
+                             <ROW_path>
+                              <pathnr>0</pathnr>
+                              <status>valid</status>
+                              <best>bestpath</best>
+                              <type>aggregate</type>
+                              <statuscode>*</statuscode>
+                              <bestcode>&gt;</bestcode>
+                              <typecode>a</typecode>
+                              <ipnexthop>0.0.0.0</ipnexthop>
+                              <inlabel>nolabel</inlabel>
+                              <outlabel>nolabel</outlabel>
+                              <vpn></vpn>
+                              <hold_down></hold_down>
+                             </ROW_path>
+                            </TABLE_path>
+                           </ROW_prefix>
+                           <ROW_prefix>
+                            <ipprefix>83.0.0.0/24</ipprefix>
+                            <TABLE_path>
+                             <ROW_path>
+                              <pathnr>0</pathnr>
+                              <status>valid</status>
+                              <best>bestpath</best>
+                              <type>internal</type>
+                              <statuscode>*</statuscode>
+                              <bestcode>&gt;</bestcode>
+                              <typecode>i</typecode>
+                              <ipnexthop>200.1.1.1</ipnexthop>
+                              <inlabel>nolabel</inlabel>
+                              <outlabel>nolabel</outlabel>
+                              <vpn></vpn>
+                              <hold_down></hold_down>
+                             </ROW_path>
+                            </TABLE_path>
+                           </ROW_prefix>
+                           <ROW_prefix>
+                            <ipprefix>83.0.1.0/24</ipprefix>
+                            <TABLE_path>
+                             <ROW_path>
+                              <pathnr>0</pathnr>
+                              <status>valid</status>
+                              <best>bestpath</best>
+                              <type>internal</type>
+                              <statuscode>*</statuscode>
+                              <bestcode>&gt;</bestcode>
+                              <typecode>i</typecode>
+                              <ipnexthop>200.1.1.1</ipnexthop>
+                              <inlabel>nolabel</inlabel>
+                              <outlabel>nolabel</outlabel>
+                              <vpn></vpn>
+                              <hold_down></hold_down>
+                             </ROW_path>
+                            </TABLE_path>
+                           </ROW_prefix>
+                           <ROW_prefix>
+                            <ipprefix>83.0.2.0/24</ipprefix>
+                            <TABLE_path>
+                             <ROW_path>
+                              <pathnr>0</pathnr>
+                              <status>valid</status>
+                              <best>bestpath</best>
+                              <type>internal</type>
+                              <statuscode>*</statuscode>
+                              <bestcode>&gt;</bestcode>
+                              <typecode>i</typecode>
+                              <ipnexthop>200.1.1.1</ipnexthop>
+                              <inlabel>nolabel</inlabel>
+                              <outlabel>nolabel</outlabel>
+                              <vpn></vpn>
+                              <hold_down></hold_down>
+                             </ROW_path>
+                            </TABLE_path>
+                           </ROW_prefix>
+                           <ROW_prefix>
+                            <ipprefix>83.0.3.0/24</ipprefix>
+                            <TABLE_path>
+                             <ROW_path>
+                              <pathnr>0</pathnr>
+                              <status>valid</status>
+                              <best>bestpath</best>
+                              <type>internal</type>
+                              <statuscode>*</statuscode>
+                              <bestcode>&gt;</bestcode>
+                              <typecode>i</typecode>
+                              <ipnexthop>200.1.1.1</ipnexthop>
+                              <inlabel>nolabel</inlabel>
+                              <outlabel>nolabel</outlabel>
+                              <vpn></vpn>
+                              <hold_down></hold_down>
+                             </ROW_path>
+                            </TABLE_path>
+                           </ROW_prefix>
+                           <ROW_prefix>
+                            <ipprefix>83.0.4.0/24</ipprefix>
+                            <TABLE_path>
+                             <ROW_path>
+                              <pathnr>0</pathnr>
+                              <status>valid</status>
+                              <best>bestpath</best>
+                              <type>internal</type>
+                              <statuscode>*</statuscode>
+                              <bestcode>&gt;</bestcode>
+                              <typecode>i</typecode>
+                              <ipnexthop>200.1.1.1</ipnexthop>
+                              <inlabel>nolabel</inlabel>
+                              <outlabel>nolabel</outlabel>
+                              <vpn></vpn>
+                              <hold_down></hold_down>
+                             </ROW_path>
+                            </TABLE_path>
+                           </ROW_prefix>
+                           <ROW_prefix>
+                            <ipprefix>84.0.0.0/24</ipprefix>
+                            <TABLE_path>
+                             <ROW_path>
+                              <pathnr>0</pathnr>
+                              <status>valid</status>
+                              <best>bestpath</best>
+                              <type>external</type>
+                              <statuscode>*</statuscode>
+                              <bestcode>&gt;</bestcode>
+                              <typecode>e</typecode>
+                              <ipnexthop>50.1.1.101</ipnexthop>
+                              <inlabel>nolabel</inlabel>
+                              <outlabel>nolabel</outlabel>
+                              <vpn></vpn>
+                              <hold_down></hold_down>
+                             </ROW_path>
+                            </TABLE_path>
+                           </ROW_prefix>
+                           <ROW_prefix>
+                            <ipprefix>84.0.1.0/24</ipprefix>
+                            <TABLE_path>
+                             <ROW_path>
+                              <pathnr>0</pathnr>
+                              <status>valid</status>
+                              <best>bestpath</best>
+                              <type>external</type>
+                              <statuscode>*</statuscode>
+                              <bestcode>&gt;</bestcode>
+                              <typecode>e</typecode>
+                              <ipnexthop>50.1.1.101</ipnexthop>
+                              <inlabel>nolabel</inlabel>
+                              <outlabel>nolabel</outlabel>
+                              <vpn></vpn>
+                              <hold_down></hold_down>
+                             </ROW_path>
+                            </TABLE_path>
+                           </ROW_prefix>
+                           <ROW_prefix>
+                            <ipprefix>84.0.2.0/24</ipprefix>
+                            <TABLE_path>
+                             <ROW_path>
+                              <pathnr>0</pathnr>
+                              <status>valid</status>
+                              <best>bestpath</best>
+                              <type>external</type>
+                              <statuscode>*</statuscode>
+                              <bestcode>&gt;</bestcode>
+                              <typecode>e</typecode>
+                              <ipnexthop>50.1.1.101</ipnexthop>
+                              <inlabel>nolabel</inlabel>
+                              <outlabel>nolabel</outlabel>
+                              <vpn></vpn>
+                              <hold_down></hold_down>
+                             </ROW_path>
+                            </TABLE_path>
+                           </ROW_prefix>
+                           <ROW_prefix>
+                            <ipprefix>84.0.3.0/24</ipprefix>
+                            <TABLE_path>
+                             <ROW_path>
+                              <pathnr>0</pathnr>
+                              <status>valid</status>
+                              <best>bestpath</best>
+                              <type>external</type>
+                              <statuscode>*</statuscode>
+                              <bestcode>&gt;</bestcode>
+                              <typecode>e</typecode>
+                              <ipnexthop>50.1.1.101</ipnexthop>
+                              <inlabel>nolabel</inlabel>
+                              <outlabel>nolabel</outlabel>
+                              <vpn></vpn>
+                              <hold_down></hold_down>
+                             </ROW_path>
+                            </TABLE_path>
+                           </ROW_prefix>
+                           <ROW_prefix>
+                            <ipprefix>84.0.4.0/24</ipprefix>
+                            <TABLE_path>
+                             <ROW_path>
+                              <pathnr>0</pathnr>
+                              <status>valid</status>
+                              <best>bestpath</best>
+                              <type>external</type>
+                              <statuscode>*</statuscode>
+                              <bestcode>&gt;</bestcode>
+                              <typecode>e</typecode>
+                              <ipnexthop>50.1.1.101</ipnexthop>
+                              <inlabel>nolabel</inlabel>
+                              <outlabel>nolabel</outlabel>
+                              <vpn></vpn>
+                              <hold_down></hold_down>
+                             </ROW_path>
+                            </TABLE_path>
+                           </ROW_prefix>
+                           <ROW_prefix>
+                            <ipprefix>85.0.0.0/24</ipprefix>
+                            <TABLE_path>
+                             <ROW_path>
+                              <pathnr>0</pathnr>
+                              <status>valid</status>
+                              <best>bestpath</best>
+                              <type>redist</type>
+                              <statuscode>*</statuscode>
+                              <bestcode>&gt;</bestcode>
+                              <typecode>r</typecode>
+                              <ipnexthop>0.0.0.0</ipnexthop>
+                              <inlabel>nolabel</inlabel>
+                              <outlabel>nolabel</outlabel>
+                              <vpn></vpn>
+                              <hold_down></hold_down>
+                             </ROW_path>
+                            </TABLE_path>
+                           </ROW_prefix>
+                          </TABLE_prefix>
+                         </ROW_rd>
+                        </TABLE_rd>
+                       </ROW_safi>
+                      </TABLE_safi>
+                     </ROW_afi>
+                    </TABLE_afi>
+                   </ROW_vrf>
+                  </TABLE_vrf>
+                 </__readonly__>
+                </all>
+               </vrf>
+              </labels>
+             </unicast>
+            </ipv4>
            </bgp>
           </show>
          </nf:data>
