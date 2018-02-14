@@ -1690,7 +1690,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                     af_dict['prefixes'][prefix]['index'][index]['next_hop'] = str(m.groupdict()['next_hop'])
                 
                 # Check if aggregate_address_ipv4_address
-                if '>a' in status_codes+path_type:
+                if 'a' in path_type:
                     address, mask = prefix.split("/")
                     if ':' in prefix:
                         af_dict['v6_aggregate_address_ipv6_address'] = prefix
@@ -1799,7 +1799,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                     af_dict['prefixes'][prefix]['index'][index]['path'] = m3.groupdict()['path'].strip()
 
                 # Check if aggregate_address_ipv4_address
-                if '>a' in status_codes+path_type:
+                if 'a' in path_type:
                     address, mask = prefix.split("/")
                     if ':' in prefix:
                         af_dict['v6_aggregate_address_ipv6_address'] = prefix
@@ -2290,6 +2290,13 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
             if m:
                 parsed_dict['neighbor'][neighbor_id]\
                     ['disable_connected_check'] = True
+                continue
+
+            # Private AS numbers removed from updates sent to this neighbor
+            p11_2 = re.compile(r'^\s*Private +AS +numbers +removed +from +updates +sent +to +this +neighbor$')
+            m = p11_2.match(line)
+            if m:
+                parsed_dict['neighbor'][neighbor_id]['remove_private_as'] = True
                 continue
 
             # External BGP peer might be upto 255 hops away
