@@ -1099,47 +1099,47 @@ class ShowIpOspfLinksParser(MetaParser):
                 # Set previously parsed keys
                 try:
                     sub_dict['name'] = link
-                except:
+                except Exception:
                     pass
                 try:
                     sub_dict['link_state'] = state
-                except:
+                except Exception:
                     pass
                 try:
                     sub_dict['transit_area_id'] = transit_area_id
-                except:
+                except Exception:
                     pass
                 try:
                     sub_dict['backbone_area_id'] = backbone_area_id
-                except:
+                except Exception:
                     pass
                 try:
                     sub_dict['unnumbered_interface'] = unnumbered_interface
-                except:
+                except Exception:
                     pass
                 try:
                     sub_dict['unnumbered_ip_address'] = ip_address
-                except:
+                except Exception:
                     pass
                 try:
                     sub_dict['router_id'] = router_id
-                except:
+                except Exception:
                     pass
                 try:
                     sub_dict['interface'] = intf
-                except:
+                except Exception:
                     pass
                 try:
                     sub_dict['remote_addr'] = remote_addr
-                except:
+                except Exception:
                     pass
                 try:
                     sub_dict['local_id'] = local
-                except:
+                except Exception:
                     pass
                 try:
                     sub_dict['remote_id'] = remote
-                except:
+                except Exception:
                     pass
                 continue
 
@@ -1337,7 +1337,7 @@ class ShowIpOspfLinksParser(MetaParser):
                 try:
                     sub_dict['neighbors'][nbr_router_id]['address'] = remote_addr
                     del remote_addr
-                except:
+                except Exception:
                     pass
                 continue
 
@@ -1873,26 +1873,26 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 try:
                     sub_dict['name'] = interface
                     del interface
-                except:
+                except Exception:
                     pass
                 try:
                     sub_dict['enable'] = bool_dict[enable]
-                except:
+                except Exception:
                     pass
                 try:
                     sub_dict['line_protocol'] = line_protocol
                     del line_protocol
-                except:
+                except Exception:
                     pass
                 try:
                     sub_dict['ip_address'] = ip_address
                     del ip_address
-                except:
+                except Exception:
                     pass
                 try:
                     sub_dict['backbone_area_id'] = backbone_area_id
                     del backbone_area_id
-                except:
+                except Exception:
                     pass
                 continue
 
@@ -2513,7 +2513,7 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 sub_dict['lsas'][lsa]['adv_router'] = adv_router
                 try:
                     sub_dict['lsas'][lsa]['lsa_id'] = lsa_id
-                except:
+                except Exception:
                     pass
 
                 # Set db_dict
@@ -2543,48 +2543,48 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                     # Set previously parsed values
                     header_dict['age'] = age
                     del age
-                except:
+                except Exception:
                     pass
                 try:
                     # Set previously parsed values
                     header_dict['maxage'] = maxage
                     del maxage
-                except:
+                except Exception:
                     pass
 
                 try:
                     header_dict['option'] = option
                     del option
-                except:
+                except Exception:
                     pass
                 try:
                     header_dict['option_desc'] = option_desc
                     del option_desc
-                except:
+                except Exception:
                     pass
                 try:
                     header_dict['type'] = lsa_type
                     del lsa_type
-                except:
+                except Exception:
                     pass
                 try:
                     header_dict['lsa_id'] = lsa_id
-                except:
+                except Exception:
                     pass
                 try:
                     header_dict['adv_router'] = adv_router
                     del adv_router
-                except:
+                except Exception:
                     pass
                 try:
                     header_dict['opaque_type'] = opaque_type
                     del opaque_type
-                except:
+                except Exception:
                     pass
                 try:
                     header_dict['opaque_id'] = opaque_id
                     del opaque_id
-                except:
+                except Exception:
                     pass
 
             # LS Seq Number: 0x80000002
@@ -2708,7 +2708,7 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 try:
                     db_dict['links'][link_id]['type'] = link_type
                     del link_type
-                except:
+                except Exception:
                     pass
                 
                 # Create topology dict under link_id
@@ -2720,17 +2720,17 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 # Set previously parsed values
                 try:
                     db_dict['links'][link_id]['topologies'][mt_id]['mt_id'] = mt_id
-                except:
+                except Exception:
                     pass
                 try:
                     db_dict['links'][link_id]['topologies'][mt_id]['metric'] = metric
                     del metric
-                except:
+                except Exception:
                     pass
                 try:
                     db_dict['links'][link_id]['topologies'][mt_id]['tos'] = tos
                     del tos
-                except:
+                except Exception:
                     pass
                 continue
                 
@@ -2752,7 +2752,7 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 try:
                     db_dict['links'][link_id]['type'] = link_type
                     del link_type
-                except:
+                except Exception:
                     pass
                 
                 # Create topology dict under link_id
@@ -2763,17 +2763,17 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 # Set previously parsed values
                 try:
                     db_dict['links'][link_id]['topologies'][mt_id]['mt_id'] = mt_id
-                except:
+                except Exception:
                     pass
                 try:
                     db_dict['links'][link_id]['topologies'][mt_id]['metric'] = metric
                     del metric
-                except:
+                except Exception:
                     pass
                 try:
                     db_dict['links'][link_id]['topologies'][mt_id]['tos'] = tos
                     del tos
-                except:
+                except Exception:
                     pass
                 continue
 
@@ -2795,7 +2795,7 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 try:
                     db_dict['links'][link_id]['type'] = link_type
                     del link_type
-                except:
+                except Exception:
                     pass
                 
                 # Create topology dict under link_id
@@ -2806,17 +2806,17 @@ class ShowIpOspfDatabaseDetailParser(MetaParser):
                 # Set previously parsed values
                 try:
                     db_dict['links'][link_id]['topologies'][mt_id]['mt_id'] = mt_id
-                except:
+                except Exception:
                     pass
                 try:
                     db_dict['links'][link_id]['topologies'][mt_id]['metric'] = metric
                     del metric
-                except:
+                except Exception:
                     pass
                 try:
                     db_dict['links'][link_id]['topologies'][mt_id]['tos'] = tos
                     del tos
-                except:
+                except Exception:
                     pass
                 continue
 

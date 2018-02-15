@@ -558,7 +558,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 if 'last_clear' not in interface_dict[interface]['counters']:
                     try:
                         last_clear
-                    except:
+                    except Exception:
                         pass
                     else:
                         interface_dict[interface]['counters']\
@@ -2152,7 +2152,7 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
 
                 try:
                     status
-                except:
+                except Exception:
                     pass
                 else:
                     if status.lower() in ['preferred', 'deprecated', 'invalid',
@@ -2183,7 +2183,7 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
             if m and ipv6:
                 try:
                     address
-                except:
+                except Exception:
                     pass
                 else:
                     if 'autoconf' not in ret_dict[intf]['ipv6'][address]:

@@ -1132,7 +1132,7 @@ class ShowPimRp(ShowPimRpSchema):
 
                 try:
                     expires
-                except:
+                except Exception:
                     expires = m.groupdict()['expires']
 
                 # rp_list

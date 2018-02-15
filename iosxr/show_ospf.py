@@ -432,7 +432,7 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                     sub_dict['ip_address'] = ip_address
                     sub_dict['enable'] = bool_dict[enable]
                     sub_dict['line_protocol'] = bool_dict[line_protocol]
-                except:
+                except Exception:
                     pass
 
                 sub_dict['process_id'] = pid
@@ -2132,7 +2132,7 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
                     sub_dict['name'] = real_link_name
                     sub_dict['remote_id'] = sl_remote_id
                     sub_dict['link_state'] = link_state
-                except:
+                except Exception:
                     pass
                 continue
 
@@ -2185,7 +2185,7 @@ class ShowOspfVrfAllInclusiveLinksParser(MetaParser):
                     sub_dict['donotage_lsa'] = donotage_lsa
                     sub_dict['demand_circuit'] = demand_circuit
                     sub_dict['link_state'] = link_state
-                except:
+                except Exception:
                     pass
                 continue
 
@@ -2849,7 +2849,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                     try:
                         int(m.groupdict()['area'])
                         area = str(IPAddress(str(m.groupdict()['area'])))
-                    except:
+                    except Exception:
                         area = str(m.groupdict()['area'])
                 else:
                     area = '0.0.0.0'
@@ -2950,7 +2950,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 sub_dict['lsas'][lsa]['adv_router'] = adv_router
                 try:
                     sub_dict['lsas'][lsa]['lsa_id'] = lsa_id
-                except:
+                except Exception:
                     pass
 
                 # Set db_dict
@@ -2980,47 +2980,47 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 try:
                     header_dict['routing_bit_enable'] = routing_bit_enable
                     del routing_bit_enable
-                except:
+                except Exception:
                     pass
                 try:
                     header_dict['age'] = age
                     del age
-                except:
+                except Exception:
                     pass
                 try:
                     header_dict['option'] = option
                     del option
-                except:
+                except Exception:
                     pass
                 try:
                     header_dict['option_desc'] = option_desc
                     del option_desc
-                except:
+                except Exception:
                     pass
                 try:
                     header_dict['type'] = lsa_type
                     del lsa_type
-                except:
+                except Exception:
                     pass
                 try:
                     header_dict['lsa_id'] = lsa_id
                     del lsa_id
-                except:
+                except Exception:
                     pass
                 try:
                     header_dict['adv_router'] = adv_router
                     del adv_router
-                except:
+                except Exception:
                     pass
                 try:
                     header_dict['opaque_type'] = opaque_type
                     del opaque_type
-                except:
+                except Exception:
                     pass
                 try:
                     header_dict['opaque_id'] = opaque_id
                     del opaque_id
-                except:
+                except Exception:
                     pass
 
             # LS Seq Number: 0x80000002
@@ -3159,7 +3159,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 # Set previously parsed values
                 try:
                     db_dict['links'][link_id]['type'] = link_type
-                except:
+                except Exception:
                     pass
                 
                 # Create topology dict under link_id
@@ -3187,7 +3187,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 # Set previously parsed values
                 try:
                     db_dict['links'][link_id]['type'] = link_type
-                except:
+                except Exception:
                     pass
                 
                 # Create topology dict under link_id
@@ -3215,7 +3215,7 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 # Set previously parsed values
                 try:
                     db_dict['links'][link_id]['type'] = link_type
-                except:
+                except Exception:
                     pass
                 
                 # Create topology dict under link_id

@@ -210,7 +210,7 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
             if m:
                 try:
                     ospf_dict
-                except:
+                except Exception:
                     continue
                 if 'preference' not in ospf_dict:
                     ospf_dict['preference'] = {}

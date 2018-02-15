@@ -408,7 +408,7 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
             try:
                 if value:
                     ret_dict[key] = value
-            except:
+            except Exception:
                 pass
         return ret_dict
 
