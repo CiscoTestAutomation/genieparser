@@ -1613,6 +1613,11 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
 
         for line in out.splitlines():
             line = line.rstrip()
+            # Network            Next Hop            Metric     LocPrf     Weight Path
+            p = re.compile(r'^\s*Network +Next Hop +Metric +LocPrf +Weight Path$')
+            m = p.match(line)
+            if m:
+                continue
 
             # BGP routing table information for VRF VRF1, address family IPv4 Unicast
             p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF'
@@ -1704,6 +1709,142 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                         af_dict['aggregate_address_summary_only'] = True
                         continue
 
+
+            #                     0.0.0.0               100      32768 i
+            #                     19.0.101.1            4444       100 0 3 10 20 30 40 50 60 70 80 90 i
+            # *>i                 19.0.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
+            p3_3 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
+                             '(?P<path_type>(i|e|c|l|a|r|I))?'
+                             ' *(?P<next_hop>[a-zA-Z0-9\.\:]+)'
+                             '(?: +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}]+))?'
+                             ' +(?P<origin_codes>(i|e|\?|\|))$')
+            m = p3_3.match(line)
+
+            # * e                   20.20.2.2                                      0 100 300 ?
+            # *>e                   20.20.1.2                                      0 100 300 ?
+            p3_3_1 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
+                                 '(?P<path_type>(i|e|c|l|a|r|I))?'
+                                 '( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
+                                 ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
+                                 ' +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}\?]+)$')
+            m1 = p3_3_1.match(line)
+            m = m if m else m1
+            if m:
+                # Get keys
+                if m.groupdict()['status_codes']:
+                    status_codes = str(m.groupdict()['status_codes'])
+                if m.groupdict()['path_type']:
+                    path_type = str(m.groupdict()['path_type'])
+                next_hop = str(m.groupdict()['next_hop'])
+                origin_codes = str(m.groupdict()['origin_codes'])
+
+                if data_on_nextline:
+                    data_on_nextline =  False
+                else:
+                    index += 1
+
+                # Init dict
+                if 'prefixes' not in af_dict:
+                    af_dict['prefixes'] = {}
+                if prefix not in af_dict['prefixes']:
+                    af_dict['prefixes'][prefix] = {}
+                if 'index' not in af_dict['prefixes'][prefix]:
+                    af_dict['prefixes'][prefix]['index'] = {}
+                if index not in af_dict['prefixes'][prefix]['index']:
+                    af_dict['prefixes'][prefix]['index'][index] = {}
+
+                # Set keys
+                af_dict['prefixes'][prefix]['index'][index]['next_hop'] = next_hop
+                af_dict['prefixes'][prefix]['index'][index]['origin_codes'] = origin_codes
+
+                try:
+                    # Set values of status_codes and path_type from prefix line
+                    af_dict['prefixes'][prefix]['index'][index]['status_codes'] = status_codes
+                    af_dict['prefixes'][prefix]['index'][index]['path_type'] = path_type
+                except Exception:
+                    pass
+
+                # Parse numbers
+                numbers = m.groupdict()['numbers']
+                
+                # Metric     LocPrf     Weight Path
+                #    4444       100          0  10 3 10 20 30 40 50 60 70 80 90
+                m1 = re.compile(r'^(?P<metric>[0-9]+)'
+                                 '(?P<space1>\s{5,10})'
+                                 '(?P<localprf>[0-9]+)'
+                                 '(?P<space2>\s{5,10})'
+                                 '(?P<weight>[0-9]+)'
+                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
+
+                #    100        ---          0 10 20 30 40 50 60 70 80 90
+                #    ---        100          0 10 20 30 40 50 60 70 80 90
+                #    100        ---      32788 ---
+                #    ---        100      32788 --- 
+                m2 = re.compile(r'^(?P<value>[0-9]+)'
+                                 '(?P<space>\s{2,21})'
+                                 '(?P<weight>[0-9]+)'
+                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
+
+                #    ---        ---      32788 200 33299 51178 47751 {27016}
+                m3 = re.compile(r'^(?P<weight>[0-9]+)'
+                                 ' +(?P<path>[0-9\{\}\s]+)$').match(numbers)
+
+                if m1:
+                    af_dict['prefixes'][prefix]['index'][index]['metric'] = int(m1.groupdict()['metric'])
+                    af_dict['prefixes'][prefix]['index'][index]['localprf'] = int(m1.groupdict()['localprf'])
+                    af_dict['prefixes'][prefix]['index'][index]['weight'] = int(m1.groupdict()['weight'])
+                    # Set path
+                    if m1.groupdict()['path']:
+                        af_dict['prefixes'][prefix]['index'][index]['path'] = m1.groupdict()['path'].strip()
+                        continue
+                elif m2:
+                    af_dict['prefixes'][prefix]['index'][index]['weight'] = int(m2.groupdict()['weight'])
+                    # Set metric or localprf
+                    if len(m2.groupdict()['space']) > 10:
+                        af_dict['prefixes'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
+                    else:
+                        af_dict['prefixes'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
+                    # Set path
+                    if m2.groupdict()['path']:
+                        af_dict['prefixes'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
+                        continue
+                elif m3:
+                    af_dict['prefixes'][prefix]['index'][index]['weight'] = int(m3.groupdict()['weight'])
+                    af_dict['prefixes'][prefix]['index'][index]['path'] = m3.groupdict()['path'].strip()
+                    continue
+                continue
+
+            # Network            Next Hop            Metric     LocPrf     Weight Path
+            # Route Distinguisher: 100:100     (VRF VRF1)
+            # Route Distinguisher: 2:100    (VRF vpn2)
+            p4 = re.compile(r'^\s*Route +Distinguisher *:'
+                             ' +(?P<route_distinguisher>(\S+))'
+                             '(?: +\(VRF +(?P<default_vrf>(\S+))\))?$')
+            m = p4.match(line)
+            if m:
+                route_distinguisher = str(m.groupdict()['route_distinguisher'])
+                new_address_family = original_address_family + ' RD ' + route_distinguisher
+                
+                # Init dict
+                if 'address_family' not in parsed_dict['vrf'][vrf]:
+                    parsed_dict['vrf'][vrf]['address_family'] = {}
+                if new_address_family not in parsed_dict['vrf'][vrf]['address_family']:
+                    parsed_dict['vrf'][vrf]['address_family'][new_address_family] = {}
+                
+                # Set keys
+                parsed_dict['vrf'][vrf]['address_family'][new_address_family]['bgp_table_version'] = bgp_table_version
+                parsed_dict['vrf'][vrf]['address_family'][new_address_family]['local_router_id'] = local_router_id
+                parsed_dict['vrf'][vrf]['address_family'][new_address_family]['route_distinguisher'] = route_distinguisher
+                if m.groupdict()['default_vrf']:
+                    parsed_dict['vrf'][vrf]['address_family']\
+                        [new_address_family]['default_vrf'] = \
+                            str(m.groupdict()['default_vrf'])
+
+                # Reset address_family key and af_dict for use in other regex
+                address_family = new_address_family
+                af_dict = parsed_dict['vrf'][vrf]['address_family'][address_family]
+                continue
+
             # Network            Next Hop            Metric     LocPrf     Weight Path
             # *>a11.0.0.0/8       0.0.0.0                  100      32768 i
             # *>i33.33.33.33/32   3.3.3.3         0        100          0 ?
@@ -1723,6 +1864,16 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                              ' +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}]+)'
                              ' +(?P<origin_codes>(i|e|\?|\&|\|))$')
             m = p3_2.match(line)
+
+            # *&i20.0.1.0/24        192.1.1.2                0        100          0 ?
+            p3_2_1 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
+                                 '(?P<path_type>(i|e|c|l|a|r|I))?'
+                                 '( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
+                                 '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
+                                 ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
+                                 ' +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}\?]+)$')
+            m1 = p3_2_1.match(line)
+            m = m if m else m1
             if m:
                 # New prefix, reset index count
                 index = 1
@@ -1812,130 +1963,6 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                         af_dict['aggregate_address_as_set'] = True
                         af_dict['aggregate_address_summary_only'] = True
                         continue
-
-            #                     0.0.0.0               100      32768 i
-            #                     19.0.101.1            4444       100 0 3 10 20 30 40 50 60 70 80 90 i
-            # *>i                 19.0.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
-            p3_3 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
-                             '(?P<path_type>(i|e|c|l|a|r|I))?'
-                             ' *(?P<next_hop>[a-zA-Z0-9\.\:]+)'
-                             '(?: +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}]+))?'
-                             ' +(?P<origin_codes>(i|e|\?|\|))$')
-            m = p3_3.match(line)
-            if m:
-                # Get keys
-                if m.groupdict()['status_codes']:
-                    status_codes = str(m.groupdict()['status_codes'])
-                if m.groupdict()['path_type']:
-                    path_type = str(m.groupdict()['path_type'])
-                next_hop = str(m.groupdict()['next_hop'])
-                origin_codes = str(m.groupdict()['origin_codes'])
-
-                if data_on_nextline:
-                    data_on_nextline =  False
-                else:
-                    index += 1
-
-                # Init dict
-                if 'prefixes' not in af_dict:
-                    af_dict['prefixes'] = {}
-                if prefix not in af_dict['prefixes']:
-                    af_dict['prefixes'][prefix] = {}
-                if 'index' not in af_dict['prefixes'][prefix]:
-                    af_dict['prefixes'][prefix]['index'] = {}
-                if index not in af_dict['prefixes'][prefix]['index']:
-                    af_dict['prefixes'][prefix]['index'][index] = {}
-
-                # Set keys
-                af_dict['prefixes'][prefix]['index'][index]['next_hop'] = next_hop
-                af_dict['prefixes'][prefix]['index'][index]['origin_codes'] = origin_codes
-
-                try:
-                    # Set values of status_codes and path_type from prefix line
-                    af_dict['prefixes'][prefix]['index'][index]['status_codes'] = status_codes
-                    af_dict['prefixes'][prefix]['index'][index]['path_type'] = path_type
-                except Exception:
-                    pass
-
-                # Parse numbers
-                numbers = m.groupdict()['numbers']
-                
-                # Metric     LocPrf     Weight Path
-                #    4444       100          0  10 3 10 20 30 40 50 60 70 80 90
-                m1 = re.compile(r'^(?P<metric>[0-9]+)'
-                                 '(?P<space1>\s{5,10})'
-                                 '(?P<localprf>[0-9]+)'
-                                 '(?P<space2>\s{5,10})'
-                                 '(?P<weight>[0-9]+)'
-                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
-
-                #    100        ---          0 10 20 30 40 50 60 70 80 90
-                #    ---        100          0 10 20 30 40 50 60 70 80 90
-                #    100        ---      32788 ---
-                #    ---        100      32788 --- 
-                m2 = re.compile(r'^(?P<value>[0-9]+)'
-                                 '(?P<space>\s{2,21})'
-                                 '(?P<weight>[0-9]+)'
-                                 '(?: *(?P<path>[0-9\{\}\s]+))?$').match(numbers)
-
-                #    ---        ---      32788 200 33299 51178 47751 {27016}
-                m3 = re.compile(r'^(?P<weight>[0-9]+)'
-                                 ' +(?P<path>[0-9\{\}\s]+)$').match(numbers)
-
-                if m1:
-                    af_dict['prefixes'][prefix]['index'][index]['metric'] = int(m1.groupdict()['metric'])
-                    af_dict['prefixes'][prefix]['index'][index]['localprf'] = int(m1.groupdict()['localprf'])
-                    af_dict['prefixes'][prefix]['index'][index]['weight'] = int(m1.groupdict()['weight'])
-                    # Set path
-                    if m1.groupdict()['path']:
-                        af_dict['prefixes'][prefix]['index'][index]['path'] = m1.groupdict()['path'].strip()
-                        continue
-                elif m2:
-                    af_dict['prefixes'][prefix]['index'][index]['weight'] = int(m2.groupdict()['weight'])
-                    # Set metric or localprf
-                    if len(m2.groupdict()['space']) > 10:
-                        af_dict['prefixes'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
-                    else:
-                        af_dict['prefixes'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
-                    # Set path
-                    if m2.groupdict()['path']:
-                        af_dict['prefixes'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
-                        continue
-                elif m3:
-                    af_dict['prefixes'][prefix]['index'][index]['weight'] = int(m3.groupdict()['weight'])
-                    af_dict['prefixes'][prefix]['index'][index]['path'] = m3.groupdict()['path'].strip()
-                    continue
-
-            # Network            Next Hop            Metric     LocPrf     Weight Path
-            # Route Distinguisher: 100:100     (VRF VRF1)
-            # Route Distinguisher: 2:100    (VRF vpn2)
-            p4 = re.compile(r'^\s*Route +Distinguisher *:'
-                             ' +(?P<route_distinguisher>(\S+))'
-                             '(?: +\(VRF +(?P<default_vrf>(\S+))\))?$')
-            m = p4.match(line)
-            if m:
-                route_distinguisher = str(m.groupdict()['route_distinguisher'])
-                new_address_family = original_address_family + ' RD ' + route_distinguisher
-                
-                # Init dict
-                if 'address_family' not in parsed_dict['vrf'][vrf]:
-                    parsed_dict['vrf'][vrf]['address_family'] = {}
-                if new_address_family not in parsed_dict['vrf'][vrf]['address_family']:
-                    parsed_dict['vrf'][vrf]['address_family'][new_address_family] = {}
-                
-                # Set keys
-                parsed_dict['vrf'][vrf]['address_family'][new_address_family]['bgp_table_version'] = bgp_table_version
-                parsed_dict['vrf'][vrf]['address_family'][new_address_family]['local_router_id'] = local_router_id
-                parsed_dict['vrf'][vrf]['address_family'][new_address_family]['route_distinguisher'] = route_distinguisher
-                if m.groupdict()['default_vrf']:
-                    parsed_dict['vrf'][vrf]['address_family']\
-                        [new_address_family]['default_vrf'] = \
-                            str(m.groupdict()['default_vrf'])
-
-                # Reset address_family key and af_dict for use in other regex
-                address_family = new_address_family
-                af_dict = parsed_dict['vrf'][vrf]['address_family'][address_family]
-                continue
 
         # order the af prefixes index
         # return dict when parsed dictionary is empty
