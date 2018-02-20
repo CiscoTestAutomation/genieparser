@@ -5867,7 +5867,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
 
                         #    redistribute isis <Isis.pid> route-map <route_policy>
                         p33 = re.compile(r'^\s*redistribute +isis +(?P<af_redist_isis>[0-9]+) +route-map+(?P<af_redist_isis_route_policy>[A-Za-z0-9\-\_]+)$')
-                        m = p32.match(line)
+                        m = p33.match(line)
                         if m:
                             bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_redist_isis'] = \
                                 str(m.groupdict()['af_redist_isis'])
