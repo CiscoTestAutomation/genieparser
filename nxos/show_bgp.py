@@ -1605,6 +1605,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
         # Init dictionary
         parsed_dict = {}
         af_dict = {}
+        prefix_dict = {}
 
         # Init vars
         index = 1
@@ -1986,9 +1987,10 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                         if len(af_dict['prefixes'][prefixes]['index'].keys()) > 1:                            
                             ind = 1
                             nexthop_dict = {}
-                            for i, j in sorted(af_dict['prefixes'][prefixes]['index'].items(),
-                                               key = lambda x:x[1]['next_hop']):
-                                nexthop_dict[ind] = af_dict['prefixes'][prefixes]['index'][i]
+                            sorted_list = sorted(af_dict['prefixes'][prefixes]['index'].items(),
+                                               key = lambda x:x[1]['next_hop'])
+                            for i, j in enumerate(sorted_list):
+                                nexthop_dict[ind] = af_dict['prefixes'][prefixes]['index'][j[0]]
                                 ind += 1
                             del(af_dict['prefixes'][prefixes]['index'])
                             af_dict['prefixes'][prefixes]['index'] = nexthop_dict
