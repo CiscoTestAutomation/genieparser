@@ -1076,6 +1076,953 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 non-critical 10000 ms
         '''}
 
+    golden_parsed_output3 = {
+        'bgp_as_path_entries': 1,
+        'bgp_asformat': 'asplain',
+        'bgp_isolate_mode': 'No',
+        'bgp_memory_state': 'ok',
+        'bgp_mmode': 'Initialized',
+        'bgp_paths_per_hwm_attr': 6,
+        'bgp_performance_mode': 'No',
+        'bgp_pid': 6308,
+        'bgp_protocol_started_reason': 'configuration',
+        'bgp_protocol_state': 'running',
+        'bgp_tag': '100',
+        'bytes_used': 1276,
+        'bytes_used_as_path_entries': 26,
+        'entries_pending_delete': 0,
+        'hwm_attr_entries': 11,
+        'hwm_entries_pending_delete': 0,
+        'num_attr_entries': 11,
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4 unicast': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3333,
+                            'non_critical': 11111},
+                        'peers': 
+                            {1: 
+                                {'active_peers': 1,
+                                'aggregates': 1,
+                                'networks': 0,
+                                'paths': 12,
+                                'routes': 12}},
+                        'redistribution': 
+                            {'direct': 
+                                {'route_map': 'RMAP_Lo0'},
+                            'ospf': 
+                                {'route_map': 'RMAP_OSPF'},
+                            'static': 
+                                {'route_map': 'ALL'}},
+                        'route_reflector': True,
+                        'table_id': '0x1',
+                        'table_state': 'up'},
+                    'ipv6 unicast': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'table_id': '0x80000001',
+                        'table_state': 'up'},
+                    'l2vpn evpn': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {1: 
+                                {'active_peers': 1,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 6,
+                                'routes': 5}},
+                        'table_id': '0x1',
+                        'table_state': 'up'},
+                    'vpnv4 unicast': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 4,
+                                'routes': 3}},
+                        'table_id': '0x1',
+                        'table_state': 'up'},
+                    'vpnv6 unicast': 
+                        {'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'table_id': '0x80000001',
+                        'table_state': 'up'}},
+                'cluster_id': '1.1.1.1',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 100,
+                'num_conf_peers': 1,
+                'num_established_peers': 1,
+                'num_pending_conf_peers': 0,
+                'router_id': '91.1.1.0',
+                'vrf_id': '1',
+                'vrf_rd': 'not configured',
+                'vrf_state': 'up'},
+            'vrf-9100': 
+                {'address_family': 
+                    {'ipv4 unicast': 
+                        {'export_rt_list': '100:9100',
+                        'import_rt_list': '100:9100 100:9100 100:9100',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 4,
+                                'routes': 3}},
+                        'redistribution': 
+                            {'direct': 
+                                {'route_map': 'permitall'},
+                            'hmm': 
+                                {'route_map': 'permitall'}},
+                        'table_id': '0x3',
+                        'table_state': 'up'},
+                    'ipv6 unicast': 
+                        {'export_rt_list': '100:9100',
+                        'import_rt_list': '100:9100 100:9100 100:9100',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'table_id': '0x80000003',
+                        'table_state': 'up'}},
+                'cluster_id': '0.0.0.0',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 0,
+                'num_conf_peers': 0,
+                'num_established_peers': 0,
+                'num_pending_conf_peers': 0,
+                'router_id': '100.100.11.1',
+                'vrf_id': '3',
+                'vrf_state': 'up'},
+            'vrf-9105': 
+                {'address_family': 
+                    {'ipv4 unicast': 
+                        {'export_rt_list': '100:9105',
+                        'import_rt_list': '100:9105 100:9105 100:9105',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'redistribution': 
+                            {'hmm': 
+                                {'route_map': 'permitall'}},
+                        'table_id': '0x4',
+                        'table_state': 'up'},
+                    'ipv6 unicast': 
+                        {'export_rt_list': '100:9105',
+                        'import_rt_list': '100:9105 100:9105 100:9105',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'table_id': '0x80000004',
+                        'table_state': 'up'}},
+                'cluster_id': '0.0.0.0',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 0,
+                'num_conf_peers': 0,
+                'num_established_peers': 0,
+                'num_pending_conf_peers': 0,
+                'router_id': '100.100.16.1',
+                'vrf_id': '4',
+                'vrf_state': 'up'},
+            'vrf-9106': 
+                {'address_family': 
+                    {'ipv4 unicast': 
+                        {'export_rt_list': '100:9106',
+                        'import_rt_list': '100:9106 100:9106 100:9106',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'redistribution': 
+                            {'hmm': 
+                                {'route_map': 'permitall'}},
+                        'table_id': '0x5',
+                        'table_state': 'up'},
+                    'ipv6 unicast': 
+                        {'export_rt_list': '100:9106',
+                        'import_rt_list': '100:9106 100:9106 100:9106',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'table_id': '0x80000005',
+                        'table_state': 'up'}},
+                'cluster_id': '0.0.0.0',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 0,
+                'num_conf_peers': 0,
+                'num_established_peers': 0,
+                'num_pending_conf_peers': 0,
+                'router_id': '100.100.17.1',
+                'vrf_id': '5',
+                'vrf_state': 'up'},
+            'vrf-9107': 
+                {'address_family': 
+                    {'ipv4 unicast': 
+                        {'export_rt_list': '100:9107',
+                        'import_rt_list': '100:9107 100:9107 100:9107',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'redistribution': 
+                            {'hmm': 
+                                {'route_map': 'permitall'}},
+                        'table_id': '0x6',
+                        'table_state': 'up'},
+                    'ipv6 unicast': 
+                        {'export_rt_list': '100:9107',
+                        'import_rt_list': '100:9107 100:9107 100:9107',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'table_id': '0x80000006',
+                        'table_state': 'up'}},
+                'cluster_id': '0.0.0.0',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 0,
+                'num_conf_peers': 0,
+                'num_established_peers': 0,
+                'num_pending_conf_peers': 0,
+                'router_id': '100.100.18.1',
+                'vrf_id': '6',
+                'vrf_state': 'up'},
+            'vrf-9108': 
+                {'address_family': 
+                    {'ipv4 unicast': 
+                        {'export_rt_list': '100:9108',
+                        'import_rt_list': '100:9108 100:9108 100:9108',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'redistribution': 
+                            {'hmm': 
+                                {'route_map': 'permitall'}},
+                        'table_id': '0x7',
+                        'table_state': 'up'},
+                    'ipv6 unicast': 
+                        {'export_rt_list': '100:9108',
+                        'import_rt_list': '100:9108 100:9108 100:9108',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'table_id': '0x80000007',
+                        'table_state': 'up'}},
+                'cluster_id': '0.0.0.0',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 0,
+                'num_conf_peers': 0,
+                'num_established_peers': 0,
+                'num_pending_conf_peers': 0,
+                'router_id': '100.100.19.1',
+                'vrf_id': '7',
+                'vrf_state': 'up'},
+            'vrf-9109': 
+                {'address_family': 
+                    {'ipv4 unicast': 
+                        {'export_rt_list': '100:9109',
+                        'import_rt_list': '100:9109 100:9109 100:9109',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'redistribution': 
+                            {'hmm': 
+                                {'route_map': 'permitall'}},
+                        'table_id': '0x8',
+                        'table_state': 'up'},
+                    'ipv6 unicast': 
+                        {'export_rt_list': '100:9109',
+                        'import_rt_list': '100:9109 100:9109 100:9109',
+                        'label_mode': 'per-vrf',
+                        'next_hop_trigger_delay': 
+                            {'critical': 3000,
+                            'non_critical': 10000},
+                        'peers': 
+                            {0: 
+                                {'active_peers': 0,
+                                'aggregates': 0,
+                                'networks': 0,
+                                'paths': 0,
+                                'routes': 0}},
+                        'table_id': '0x80000008',
+                        'table_state': 'up'}},
+                'cluster_id': '0.0.0.0',
+                'conf_router_id': '0.0.0.0',
+                'confed_id': 0,
+                'num_conf_peers': 0,
+                'num_established_peers': 0,
+                'num_pending_conf_peers': 0,
+                'router_id': '100.100.20.1',
+                'vrf_id': '8',
+                'vrf_state': 'up'}}}
+
+    golden_output3 = {'execute.return_value': '''
+        show bgp process vrf all
+
+        BGP Process Information
+        BGP Process ID                 : 6308
+        BGP Protocol Started, reason:  : configuration
+        BGP Performance Mode:          : No
+        BGP Protocol Tag               : 100
+        BGP Protocol State             : Running
+        BGP Isolate Mode               : No
+        BGP MMODE                      : Initialized
+        BGP Memory State               : OK
+        BGP asformat                   : asplain
+
+        BGP attributes information
+        Number of attribute entries    : 11
+        HWM of attribute entries       : 11
+        Bytes used by entries          : 1276
+        Entries pending delete         : 0
+        HWM of entries pending delete  : 0
+        BGP paths per attribute HWM    : 6
+        BGP AS path entries            : 1
+        Bytes used by AS path entries  : 26
+
+        Information regarding configured VRFs:
+
+        BGP Information for VRF default
+        VRF Id                         : 1
+        VRF state                      : UP
+        VNID                           : 0 (invalid)
+        Router-ID                      : 91.1.1.0
+        Configured Router-ID           : 0.0.0.0
+        Confed-ID                      : 100
+        Cluster-ID                     : 1.1.1.1
+        No. of configured peers        : 1
+        No. of pending config peers    : 0
+        No. of established peers       : 1
+        VRF RD                         : Not configured
+
+            Information for address family IPv4 Unicast in VRF default
+            Table Id                   : 0x1
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            1          1               12         12         0          1         
+
+            Redistribution                
+                direct, route-map RMAP_Lo0
+                static, route-map ALL
+                ospf, route-map RMAP_OSPF
+
+            Wait for IGP convergence is not configured
+            Is a Route-reflector
+
+
+            Nexthop trigger-delay
+                critical 3333 ms
+                non-critical 11111 ms
+            Nexthop route-map: ALL
+
+            Information for address family IPv6 Unicast in VRF default
+            Table Id                   : 0x80000001
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               0          0          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family VPNv4 Unicast in VRF default
+            Table Id                   : 0x1
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               3          4          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family VPNv6 Unicast in VRF default
+            Table Id                   : 0x80000001
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               0          0          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family L2VPN EVPN in VRF default
+            Table Id                   : 0x1
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            1          1               5          6          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+            Retain RT: enabled all
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+        BGP Information for VRF vrf-9100
+        VRF Id                         : 3
+        VRF state                      : UP
+        VNID                           : 9100 (valid)
+          Topo Id                    : 1000
+        Encap type                     : VXLAN
+        VTEP IP                        : 91.1.1.1
+        VTEP Virtual IP                : 91.1.2.1
+        VTEP VIP-R                     : 91.1.2.1
+        Router-MAC                     : 000c.29e2.c046
+        VIP Derived MAC                : 000c.29e2.c046
+        Router-ID                      : 100.100.11.1
+        Configured Router-ID           : 0.0.0.0
+        Confed-ID                      : 0
+        Cluster-ID                     : 0.0.0.0
+        No. of configured peers        : 0
+        No. of pending config peers    : 0
+        No. of established peers       : 0
+        VRF RD                         : 91.1.1.0:3
+        VRF EVPN RD                    : 91.1.1.0:3
+
+            Information for address family IPv4 Unicast in VRF vrf-9100
+            Table Id                   : 0x3
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               3          4          0          0         
+
+            Redistribution                
+                direct, route-map permitall
+                hmm, route-map permitall
+
+            Wait for IGP convergence is not configured
+            Advertise to EVPN             
+
+            Export RT list:
+                100:9100
+            Import RT list:
+                100:9100
+            EVPN Export RT list:
+                100:9100
+            EVPN Import RT list:
+                100:9100
+            Label mode: per-vrf
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family IPv6 Unicast in VRF vrf-9100
+            Table Id                   : 0x80000003
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               0          0          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+            Export RT list:
+                100:9100
+            Import RT list:
+                100:9100
+            EVPN Export RT list:
+                100:9100
+            EVPN Import RT list:
+                100:9100
+            Label mode: per-vrf
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+        BGP Information for VRF vrf-9105
+        VRF Id                         : 4
+        VRF state                      : UP
+        VNID                           : 9105 (valid)
+          Topo Id                    : 1005
+        Encap type                     : VXLAN
+        VTEP IP                        : 91.1.1.1
+        VTEP Virtual IP                : 91.1.2.1
+        VTEP VIP-R                     : 91.1.2.1
+        Router-MAC                     : 000c.29e2.c046
+        VIP Derived MAC                : 000c.29e2.c046
+        Router-ID                      : 100.100.16.1
+        Configured Router-ID           : 0.0.0.0
+        Confed-ID                      : 0
+        Cluster-ID                     : 0.0.0.0
+        No. of configured peers        : 0
+        No. of pending config peers    : 0
+        No. of established peers       : 0
+        VRF RD                         : 91.1.1.0:4
+        VRF EVPN RD                    : 91.1.1.0:4
+
+            Information for address family IPv4 Unicast in VRF vrf-9105
+            Table Id                   : 0x4
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               0          0          0          0         
+
+            Redistribution                
+                hmm, route-map permitall
+
+            Wait for IGP convergence is not configured
+            Advertise to EVPN             
+
+            Export RT list:
+                100:9105
+            Import RT list:
+                100:9105
+            EVPN Export RT list:
+                100:9105
+            EVPN Import RT list:
+                100:9105
+            Label mode: per-vrf
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family IPv6 Unicast in VRF vrf-9105
+            Table Id                   : 0x80000004
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               0          0          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+            Export RT list:
+                100:9105
+            Import RT list:
+                100:9105
+            EVPN Export RT list:
+                100:9105
+            EVPN Import RT list:
+                100:9105
+            Label mode: per-vrf
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+        BGP Information for VRF vrf-9106
+        VRF Id                         : 5
+        VRF state                      : UP
+        VNID                           : 9106 (valid)
+          Topo Id                    : 1006
+        Encap type                     : VXLAN
+        VTEP IP                        : 91.1.1.1
+        VTEP Virtual IP                : 91.1.2.1
+        VTEP VIP-R                     : 91.1.2.1
+        Router-MAC                     : 000c.29e2.c046
+        VIP Derived MAC                : 000c.29e2.c046
+        Router-ID                      : 100.100.17.1
+        Configured Router-ID           : 0.0.0.0
+        Confed-ID                      : 0
+        Cluster-ID                     : 0.0.0.0
+        No. of configured peers        : 0
+        No. of pending config peers    : 0
+        No. of established peers       : 0
+        VRF RD                         : 91.1.1.0:5
+        VRF EVPN RD                    : 91.1.1.0:5
+
+            Information for address family IPv4 Unicast in VRF vrf-9106
+            Table Id                   : 0x5
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               0          0          0          0         
+
+            Redistribution                
+                hmm, route-map permitall
+
+            Wait for IGP convergence is not configured
+            Advertise to EVPN             
+
+            Export RT list:
+                100:9106
+            Import RT list:
+                100:9106
+            EVPN Export RT list:
+                100:9106
+            EVPN Import RT list:
+                100:9106
+            Label mode: per-vrf
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family IPv6 Unicast in VRF vrf-9106
+            Table Id                   : 0x80000005
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               0          0          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+            Export RT list:
+                100:9106
+            Import RT list:
+                100:9106
+            EVPN Export RT list:
+                100:9106
+            EVPN Import RT list:
+                100:9106
+            Label mode: per-vrf
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+        BGP Information for VRF vrf-9107
+        VRF Id                         : 6
+        VRF state                      : UP
+        VNID                           : 9107 (valid)
+          Topo Id                    : 1007
+        Encap type                     : VXLAN
+        VTEP IP                        : 91.1.1.1
+        VTEP Virtual IP                : 91.1.2.1
+        VTEP VIP-R                     : 91.1.2.1
+        Router-MAC                     : 000c.29e2.c046
+        VIP Derived MAC                : 000c.29e2.c046
+        Router-ID                      : 100.100.18.1
+        Configured Router-ID           : 0.0.0.0
+        Confed-ID                      : 0
+        Cluster-ID                     : 0.0.0.0
+        No. of configured peers        : 0
+        No. of pending config peers    : 0
+        No. of established peers       : 0
+        VRF RD                         : 91.1.1.0:6
+        VRF EVPN RD                    : 91.1.1.0:6
+
+            Information for address family IPv4 Unicast in VRF vrf-9107
+            Table Id                   : 0x6
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               0          0          0          0         
+
+            Redistribution                
+                hmm, route-map permitall
+
+            Wait for IGP convergence is not configured
+            Advertise to EVPN             
+
+            Export RT list:
+                100:9107
+            Import RT list:
+                100:9107
+            EVPN Export RT list:
+                100:9107
+            EVPN Import RT list:
+                100:9107
+            Label mode: per-vrf
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family IPv6 Unicast in VRF vrf-9107
+            Table Id                   : 0x80000006
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               0          0          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+            Export RT list:
+                100:9107
+            Import RT list:
+                100:9107
+            EVPN Export RT list:
+                100:9107
+            EVPN Import RT list:
+                100:9107
+            Label mode: per-vrf
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+        BGP Information for VRF vrf-9108
+        VRF Id                         : 7
+        VRF state                      : UP
+        VNID                           : 9108 (valid)
+          Topo Id                    : 1008
+        Encap type                     : VXLAN
+        VTEP IP                        : 91.1.1.1
+        VTEP Virtual IP                : 91.1.2.1
+        VTEP VIP-R                     : 91.1.2.1
+        Router-MAC                     : 000c.29e2.c046
+        VIP Derived MAC                : 000c.29e2.c046
+        Router-ID                      : 100.100.19.1
+        Configured Router-ID           : 0.0.0.0
+        Confed-ID                      : 0
+        Cluster-ID                     : 0.0.0.0
+        No. of configured peers        : 0
+        No. of pending config peers    : 0
+        No. of established peers       : 0
+        VRF RD                         : 91.1.1.0:7
+        VRF EVPN RD                    : 91.1.1.0:7
+
+            Information for address family IPv4 Unicast in VRF vrf-9108
+            Table Id                   : 0x7
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               0          0          0          0         
+
+            Redistribution                
+                hmm, route-map permitall
+
+            Wait for IGP convergence is not configured
+            Advertise to EVPN             
+
+            Export RT list:
+                100:9108
+            Import RT list:
+                100:9108
+            EVPN Export RT list:
+                100:9108
+            EVPN Import RT list:
+                100:9108
+            Label mode: per-vrf
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family IPv6 Unicast in VRF vrf-9108
+            Table Id                   : 0x80000007
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               0          0          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+            Export RT list:
+                100:9108
+            Import RT list:
+                100:9108
+            EVPN Export RT list:
+                100:9108
+            EVPN Import RT list:
+                100:9108
+            Label mode: per-vrf
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+        BGP Information for VRF vrf-9109
+        VRF Id                         : 8
+        VRF state                      : UP
+        VNID                           : 9109 (valid)
+          Topo Id                    : 1009
+        Encap type                     : VXLAN
+        VTEP IP                        : 91.1.1.1
+        VTEP Virtual IP                : 91.1.2.1
+        VTEP VIP-R                     : 91.1.2.1
+        Router-MAC                     : 000c.29e2.c046
+        VIP Derived MAC                : 000c.29e2.c046
+        Router-ID                      : 100.100.20.1
+        Configured Router-ID           : 0.0.0.0
+        Confed-ID                      : 0
+        Cluster-ID                     : 0.0.0.0
+        No. of configured peers        : 0
+        No. of pending config peers    : 0
+        No. of established peers       : 0
+        VRF RD                         : 91.1.1.0:8
+        VRF EVPN RD                    : 91.1.1.0:8
+
+            Information for address family IPv4 Unicast in VRF vrf-9109
+            Table Id                   : 0x8
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               0          0          0          0         
+
+            Redistribution                
+                hmm, route-map permitall
+
+            Wait for IGP convergence is not configured
+            Advertise to EVPN             
+
+            Export RT list:
+                100:9109
+            Import RT list:
+                100:9109
+            EVPN Export RT list:
+                100:9109
+            EVPN Import RT list:
+                100:9109
+            Label mode: per-vrf
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+
+            Information for address family IPv6 Unicast in VRF vrf-9109
+            Table Id                   : 0x80000008
+            Table state                : UP
+            Peers      Active-peers    Routes     Paths      Networks   Aggregates
+            0          0               0          0          0          0         
+
+            Redistribution                
+                None
+
+            Wait for IGP convergence is not configured
+            Export RT list:
+                100:9109
+            Import RT list:
+                100:9109
+            EVPN Export RT list:
+                100:9109
+            EVPN Import RT list:
+                100:9109
+            Label mode: per-vrf
+
+
+            Nexthop trigger-delay
+                critical 3000 ms
+                non-critical 10000 ms
+        '''}
+
     def test_show_bgp_process_vrf_all_golden1_cli(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
@@ -1089,6 +2036,13 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
         obj = ShowBgpProcessVrfAll(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+    def test_show_bgp_process_vrf_all_golden3_cli(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowBgpProcessVrfAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
 
     def test_show_bgp_process_vrf_all_empty_cli(self):
         self.device = Mock(**self.empty_output)

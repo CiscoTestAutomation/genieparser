@@ -327,7 +327,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
 
             # BGP Information for VRF VRF1
             p14 = re.compile(r'^\s*BGP +Information +for +VRF'
-                              ' +(?P<vrf_name>[a-zA-Z0-9]+)$')
+                              ' +(?P<vrf_name>(\S+))$')
             m = p14.match(line)
             if m:
                 if 'vrf' not in parsed_dict:
@@ -430,7 +430,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
             #     Information for address family IPv4 Unicast in VRF VRF1
             p25 = re.compile(r'^\s*Information +for +address +family'
                                ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+)'
-                               ' +in +VRF +(?P<vrf>[a-zA-Z0-9]+)$')
+                               ' +in +VRF +(?P<vrf>(\S+))$')
             m = p25.match(line)
             if m:
                 if 'address_family' not in parsed_dict['vrf'][vrf_name]:
