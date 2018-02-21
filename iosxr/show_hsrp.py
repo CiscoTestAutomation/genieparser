@@ -586,7 +586,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                 if role == 'local':
                     try:
                         priority
-                    except:
+                    except Exception:
                         pass
                     else:
                         group_key['active_priority'] = int(priority)
@@ -615,7 +615,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                 if role == 'local':
                     try:
                         priority
-                    except:
+                    except Exception:
                         pass
                     else:
                         group_key['standby_priority'] = int(priority)

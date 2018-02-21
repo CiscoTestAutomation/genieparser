@@ -1325,7 +1325,7 @@ class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
 
                 try:
                     unnumbered_intf_ref
-                except:
+                except Exception:
                     pass
                 else:
                     if 'unnumbered' not in ipv4_vrf_all_interface_dict[interface]['ipv4']:
@@ -1715,7 +1715,7 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
                     ipv6_vrf_all_interface_dict[interface]['ipv6']\
                         ['ipv6_link_local'] = ipv6_link_local
                     continue
-                except:
+                except Exception:
                     pass
 
             # Global unicast address(es):
@@ -1756,7 +1756,7 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
                     ipv6_vrf_all_interface_dict[interface]['ipv6']\
                         ['ipv6_link_local'] = ipv6_link_local
                     continue
-                except:
+                except Exception:
                     pass
 
             # Global unicast address(es):
@@ -1793,7 +1793,7 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
                     ipv6_vrf_all_interface_dict[interface]['ipv6']\
                         ['ipv6_link_local'] = ipv6_link_local
                     continue
-                except:
+                except Exception:
                     pass
 
             # Global unicast address(es):
@@ -1824,7 +1824,7 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
                     ipv6_vrf_all_interface_dict[interface]['ipv6']\
                         ['ipv6_link_local'] = ipv6_link_local
                     continue
-                except:
+                except Exception:
                     pass
 
             # Joined group address(es): ff02::1:ff00:1 ff02::1:ffa6:78c5 ff02::2
@@ -2159,7 +2159,7 @@ class ShowEthernetTags(ShowEthernetTagsSchema):
                     try:
                         vlan_id = re.match('[\w\.]+:(\d+)', outer_vlan).groups()[0]
                         ret_dict[interface]['vlan_id'] = vlan_id
-                    except:
+                    except Exception:
                         pass
 
                 if mtu and mtu is not '-':

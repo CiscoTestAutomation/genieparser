@@ -1825,7 +1825,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             if m and flag == 'allocated':
                 try:
                     af
-                except:
+                except Exception:
                     continue
                 else:
                     if 'remote_local' not in  ret_dict['instance'][instance]['vrf'][vrf]\
@@ -1851,7 +1851,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             elif m and flag == 'number':
                 try:
                     af
-                except:
+                except Exception:
                     continue
                 else:
                     if 'prefixes_path' not in  ret_dict['instance'][instance]['vrf'][vrf]\
@@ -3282,77 +3282,77 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                     sub_dict = ret_dict['instance'][instance]['vrf'][vrf]['address_family'][addr] = {}
                 try:
                     sub_dict['state'] = state
-                except:
+                except Exception:
                     pass                    
 
                 try:
                     sub_dict['vrf_id'] = vrf_id
-                except:
+                except Exception:
                     pass                    
 
                 try:
                     sub_dict['router_identifier'] = router_identifier
-                except:
+                except Exception:
                     pass                    
 
                 try:
                     sub_dict['route_distinguisher'] = route_distinguisher
-                except:
+                except Exception:
                     pass                    
 
                 try:
                     sub_dict['local_as'] = local_as
-                except:
+                except Exception:
                     pass
 
                 try:
                     sub_dict['generic_scan_interval'] = generic_scan_interval
-                except:
+                except Exception:
                     pass                    
 
                 try:
                     sub_dict['non_stop_routing'] = non_stop_routing
-                except:
+                except Exception:
                     pass
 
                 try:
                     sub_dict['table_state'] = table_state
-                except:
+                except Exception:
                     pass
 
                 try:
                     sub_dict['table_id'] = table_id
-                except:
+                except Exception:
                     pass
 
                 try:
                     sub_dict['rd_version'] = rd_version
-                except:
+                except Exception:
                     pass                    
 
                 try:
                     sub_dict['routing_table_version'] = bgp_table_version
-                except:
+                except Exception:
                     pass
 
                 try:
                     sub_dict['nsr_initial_initsync_version'] = nsr_initial_initsync_version
-                except:
+                except Exception:
                     pass
 
                 try:
                     sub_dict['nsr_initial_init_ver_status'] = nsr_initial_init_ver_status
-                except:
+                except Exception:
                     pass
 
                 try:
                     sub_dict['nsr_issu_sync_group_versions'] = nsr_issu_sync_group_versions
-                except:
+                except Exception:
                     pass
 
                 try:
                     sub_dict['scan_interval'] = scan_interval
-                except:
+                except Exception:
                     pass
 
                 continue
@@ -3367,7 +3367,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
             if m:
                 try:
                     sub_dict
-                except:
+                except Exception:
                     addr = address_family or af
                     if 'address_family' not in ret_dict['instance'][instance]['vrf'][vrf]:
                         ret_dict['instance'][instance]['vrf'][vrf]['address_family'] = {}
@@ -3375,77 +3375,77 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                         sub_dict = ret_dict['instance'][instance]['vrf'][vrf]['address_family'][addr] = {}
                     try:
                         sub_dict['state'] = state
-                    except:
+                    except Exception:
                         pass                    
 
                     try:
                         sub_dict['vrf_id'] = vrf_id
-                    except:
+                    except Exception:
                         pass                    
 
                     try:
                         sub_dict['router_identifier'] = router_identifier
-                    except:
+                    except Exception:
                         pass                    
 
                     try:
                         sub_dict['route_distinguisher'] = route_distinguisher
-                    except:
+                    except Exception:
                         pass                    
 
                     try:
                         sub_dict['local_as'] = local_as
-                    except:
+                    except Exception:
                         pass
 
                     try:
                         sub_dict['generic_scan_interval'] = generic_scan_interval
-                    except:
+                    except Exception:
                         pass                    
 
                     try:
                         sub_dict['non_stop_routing'] = non_stop_routing
-                    except:
+                    except Exception:
                         pass
 
                     try:
                         sub_dict['table_state'] = table_state
-                    except:
+                    except Exception:
                         pass
 
                     try:
                         sub_dict['table_id'] = table_id
-                    except:
+                    except Exception:
                         pass
 
                     try:
                         sub_dict['rd_version'] = rd_version
-                    except:
+                    except Exception:
                         pass                    
 
                     try:
                         sub_dict['routing_table_version'] = bgp_table_version
-                    except:
+                    except Exception:
                         pass
 
                     try:
                         sub_dict['nsr_initial_initsync_version'] = nsr_initial_initsync_version
-                    except:
+                    except Exception:
                         pass
 
                     try:
                         sub_dict['nsr_initial_init_ver_status'] = nsr_initial_init_ver_status
-                    except:
+                    except Exception:
                         pass
 
                     try:
                         sub_dict['nsr_issu_sync_group_versions'] = nsr_issu_sync_group_versions
-                    except:
+                    except Exception:
                         pass
 
                     try:
                         sub_dict['scan_interval'] = scan_interval
-                    except:
+                    except Exception:
                         pass
                     
                 status_codes = str(m.groupdict()['status_codes'])
@@ -3707,7 +3707,7 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
             if m:
                 try:
                     sub_dict
-                except:
+                except Exception:
                     addr = address_family or af
                     if 'address_family' not in ret_dict['instance'][instance]['vrf'][vrf]:
                         ret_dict['instance'][instance]['vrf'][vrf]['address_family'] = {}
@@ -4531,7 +4531,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                     ['address_family'][address_family]['default_vrf'] = default_vrf
                     bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
                     ['address_family'][address_family]['route_distinguisher'] = route_distinguisher
-                except:
+                except Exception:
                     pass
 
             p16_1 = re.compile(r'^\s*(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+) *(?P<prefix>(?P<ip>[\w\:]+)/(?P<mask>\d+)) *(?P<next_hop>[\w\:]+)$')

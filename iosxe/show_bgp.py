@@ -142,7 +142,9 @@ class ShowBgpAllDetail(ShowBgpAllDetailSchema):
             # Paths: (1 available, best #1, table VRF1)
             # Paths: (1 available, best #1, no table)
             # Paths: (1 available, best #1, table default, RIB-failure(17))
-            p2 = re.compile(r'^\s*Paths: +\((?P<paths>(?P<available_path>[0-9]+) +available\, +(no +best +path|best +\#(?P<best_path>[0-9]+))\,?(?: +(table +(?P<vrf_id>(\S+))|no +table),)?(?: +(.*))?)\)')
+            p2 = re.compile(r'^\s*Paths: +\((?P<paths>(?P<available_path>[0-9]+) +available\, +'
+                             '(no +best +path|best +\#(?P<best_path>[0-9]+))\,?'
+                             '(?: +(table +(?P<vrf_id>(\S+))|no +table),?)?(?: +(.*))?)\)')
             m = p2.match(line)
             if m:
                 paths = m.groupdict()['paths']
@@ -993,7 +995,7 @@ class ShowBgpAllNeighborsAdvertisedRoutes(ShowBgpAllNeighborsAdvertisedRoutesSch
                     # Set values of status_codes and path_type from prefix line
                     af_dict['advertised'][prefix]['index'][index]['status_codes'] = status_codes
                     af_dict['advertised'][prefix]['index'][index]['path_type'] = path_type
-                except:
+                except Exception:
                     pass
 
                 # Parse numbers
@@ -1387,7 +1389,7 @@ class ShowBgpAllSummary(ShowBgpAllSummarySchema):
                         nbr_af_dict['community_entries'] = {}
                         nbr_af_dict['community_entries']['total_entries'] = num_community_entries
                         nbr_af_dict['community_entries']['memory_usage'] = community_memory_usage
-                except:
+                except Exception:
                     pass
             else:
                 # when neighbor info break down to 2 lines.
@@ -1472,7 +1474,7 @@ class ShowBgpAllSummary(ShowBgpAllSummarySchema):
                             nbr_af_dict['community_entries'] = {}
                             nbr_af_dict['community_entries']['total_entries'] = num_community_entries
                             nbr_af_dict['community_entries']['memory_usage'] = community_memory_usage
-                    except:
+                    except Exception:
                         pass
 
                 continue
@@ -3354,7 +3356,7 @@ class ShowBgpAllNeighborsReceivedRoutes(ShowBgpAllNeighborsReceivedRoutesSchema)
                     # Set values of status_codes and path_type from prefix line
                     af_dict['received_routes'][prefix]['index'][index]['status_codes'] = status_codes
                     af_dict['received_routes'][prefix]['index'][index]['path_type'] = path_type
-                except:
+                except Exception:
                     pass
 
                 # Parse numbers
@@ -4055,7 +4057,7 @@ class ShowBgpAllNeighborsRoutes(ShowBgpAllNeighborsRoutesSchema):
                     # Set values of status_codes and path_type from prefix line
                     af_dict['routes'][prefix]['index'][index]['status_codes'] = status_codes
                     af_dict['routes'][prefix]['index'][index]['path_type'] = path_type
-                except:
+                except Exception:
                     pass
 
                 # Parse numbers

@@ -151,7 +151,7 @@ class Common():
                            break
                 else:
                     break
-            except:
+            except Exception:
                 pass
 
             # get tag name

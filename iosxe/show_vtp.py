@@ -66,7 +66,7 @@ class ShowVtpStatus(ShowVtpStatusSchema):
                     val = m.groupdict()['val'].split('to')
                     val = list( range( int(val[0]), int(val[1]) + 1 ))
                     ret_dict['vtp']['version_capable'] = val
-                except:
+                except Exception:
                     pass
 
                 continue

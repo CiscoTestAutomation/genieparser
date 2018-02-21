@@ -1009,7 +1009,7 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
                             ret_dict['vrf'][vrf]['address_family']\
                                 [af_name]['rp']['static_rp'][rp_address]['sm']\
                                     ['override'] = override
-                        except:
+                        except Exception:
                             pass
 
                     if 'bidir' in mode.lower():
@@ -1192,7 +1192,7 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
                 try:                    
                     ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr']['rp']\
                         ['up_time'] = up_time
-                except:
+                except Exception:
                     pass
 
                 if 'vrf' not in ret_dict:
@@ -1236,7 +1236,7 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
                         ['up_time'] = up_time
                     ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['rp_list'][address_info_source_type] \
                         ['expiration'] = expiration
-                except:
+                except Exception:
                     pass
                 continue
         return ret_dict
@@ -1748,7 +1748,7 @@ class ShowPimNeighbor(ShowPimNeighborSchema):
                 sub_dict['interface'] = intf
                 try:
                     sub_dict['version'] = m.groupdict()['ver']
-                except:
+                except Exception:
                     pass
 
                 mode_list = m.groupdict()['mode']
