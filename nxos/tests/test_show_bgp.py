@@ -4363,40 +4363,61 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
         '''}
 
     golden_parsed_output2 = {
-        'vrf':
-            {'default':
-                {'address_family':
-                    {'l2vpn evpn':
-                        {'bgp_table_version': 381,
-                        'local_router_id': '1.1.1.2',
-                        'prefixes':
-                            {'[2]:[0]:[0]:[48]:[0000.1986.6d99]:[0]:[0.0.0.0]/216':
-                                {'index':
-                                    {1:
-                                        {'next_hop': '1.2.1.1',
-                                        'localprf': 100,
-                                        'origin_codes': 'i',
-                                        'path_type': 'l',
-                                        'status_codes': '*>',
-                                        'weight': 32768}}},
-                            '[2]:[0]:[0]:[48]:[0000.1986.6d99]:[128]:[2004:ab4:123:20::44]/368':
-                                {'index':
-                                    {1:
-                                        {'next_hop': '1.2.1.1',
-                                        'localprf': 100,
-                                        'origin_codes': 'i',
-                                        'path_type': 'l',
-                                        'status_codes': '*>',
-                                        'weight': 32768}}},
-                            '[2]:[0]:[0]:[48]:[0000.1986.6d99]:[32]:[100.100.20.44]/272':
-                                {'index':
-                                    {1:
-                                        {'next_hop': '1.2.1.1',
-                                        'localprf': 100,
-                                        'origin_codes': 'i',
-                                        'path_type': 'l',
-                                        'status_codes': '*>',
-                                        'weight': 32768}}}}}}}}}
+        "vrf": {
+            "default": {
+               "address_family": {
+                    "l2vpn evpn RD 1.1.1.2:32868": {
+                         "route_distinguisher": "1.1.1.2:32868",
+                         "local_router_id": "1.1.1.2",
+                         "prefixes": {
+                              "[2]:[0]:[0]:[48]:[0000.1986.6d99]:[0]:[0.0.0.0]/216": {
+                                   "index": {
+                                        1: {
+                                             "weight": 32768,
+                                             "next_hop": "1.2.1.1",
+                                             "localprf": 100,
+                                             "status_codes": "*>",
+                                             "path_type": "l",
+                                             "origin_codes": "i"
+                                        }
+                                   }
+                              },
+                              "[2]:[0]:[0]:[48]:[0000.1986.6d99]:[32]:[100.100.20.44]/272": {
+                                   "index": {
+                                        1: {
+                                             "weight": 32768,
+                                             "next_hop": "1.2.1.1",
+                                             "localprf": 100,
+                                             "status_codes": "*>",
+                                             "path_type": "l",
+                                             "origin_codes": "i"
+                                        }
+                                   }
+                              },
+                              "[2]:[0]:[0]:[48]:[0000.1986.6d99]:[128]:[2004:ab4:123:20::44]/368": {
+                                   "index": {
+                                        1: {
+                                             "weight": 32768,
+                                             "next_hop": "1.2.1.1",
+                                             "localprf": 100,
+                                             "status_codes": "*>",
+                                             "path_type": "l",
+                                             "origin_codes": "i"
+                                        }
+                                   }
+                              }
+                         },
+                         "default_vrf": "L2",
+                         "bgp_table_version": 381
+                    },
+                    "l2vpn evpn": {
+                         "local_router_id": "1.1.1.2",
+                         "bgp_table_version": 381
+                    }
+               }
+            }
+        }
+    }
 
     golden_output2 = {'execute.return_value': '''
         BGP routing table information for VRF default, address family L2VPN EVPN
