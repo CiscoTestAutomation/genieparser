@@ -1817,9 +1817,11 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
             # Network            Next Hop            Metric     LocPrf     Weight Path
             # Route Distinguisher: 100:100     (VRF VRF1)
             # Route Distinguisher: 2:100    (VRF vpn2)
+            # Route Distinguisher: 91.1.1.0:3    (L3VNI 9100)
             p4 = re.compile(r'^\s*Route +Distinguisher *:'
                              ' +(?P<route_distinguisher>(\S+))'
-                             '(?: +\(VRF +(?P<default_vrf>(\S+))\))?$')
+                             '(?: +\(((VRF +(?P<default_vrf>\S+))|'
+                             '((?P<default_vrf1>\S+)VNI +(?P<vni>\d+)))\))?$')
             m = p4.match(line)
             if m:
                 route_distinguisher = str(m.groupdict()['route_distinguisher'])
@@ -1835,10 +1837,15 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 parsed_dict['vrf'][vrf]['address_family'][new_address_family]['bgp_table_version'] = bgp_table_version
                 parsed_dict['vrf'][vrf]['address_family'][new_address_family]['local_router_id'] = local_router_id
                 parsed_dict['vrf'][vrf]['address_family'][new_address_family]['route_distinguisher'] = route_distinguisher
+
                 if m.groupdict()['default_vrf']:
                     parsed_dict['vrf'][vrf]['address_family']\
                         [new_address_family]['default_vrf'] = \
                             str(m.groupdict()['default_vrf'])
+                elif m.groupdict()['default_vrf1']:
+                    parsed_dict['vrf'][vrf]['address_family']\
+                        [new_address_family]['default_vrf'] = \
+                            str(m.groupdict()['default_vrf1'])
 
                 # Reset address_family key and af_dict for use in other regex
                 address_family = new_address_family
