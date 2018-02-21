@@ -8839,6 +8839,7 @@ class ShowBgpLabels(ShowBgpSessionsSchema):
 
             # *>i1.5.210.0/24       19.0.101.1          nolabel/nolabel
             # * i0.0.0.0/0          95.1.1.0            nolabel/9100
+            # *>i                   90.1.1.0            nolabel/9100
             p3 = re.compile(r'^(?P<status>s|S|x|d|h|\*)'
                              '(?P<best>\>)? *'
                              '(?P<type_code>i|e|c|l|a|r|I)'
@@ -8889,7 +8890,7 @@ class ShowBgpLabels(ShowBgpSessionsSchema):
                     
                 sub_dict['prefix'][prefix]['index'][index]['in_label'] = in_label
                     
-                sub_dict['prefix'][prefix]['index'][index]['out_label'] = in_label
+                sub_dict['prefix'][prefix]['index'][index]['out_label'] = out_label
                 continue
 
         return ret_dict
