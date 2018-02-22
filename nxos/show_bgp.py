@@ -6679,7 +6679,8 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
             # build keys for dampened_paths and history_paths
             if isinstance(dampened_paths, int):
                 sub_dict['dampened_paths'] = dampened_paths
-                sub_dict['dampening_enabled'] = dampening_enabled
+                sub_dict.setdefault('dampening_enabled', dampening_enabled) \
+                    if dampening_enabled else None
                 
             if isinstance(history_paths, int):
                 sub_dict['history_paths'] = history_paths
