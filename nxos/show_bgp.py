@@ -8888,7 +8888,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
 # Schema for:
 # * 'show bgp <address_family> labels [vrf <WROD>]'
 # ==============================================================================
-class ShowBgpSessionsSchema(MetaParser):
+class ShowBgpLabelsSchema(MetaParser):
     """Schema for:
        show bgp <address_family> labels
        show bgp <address_family> labels vrf <WROD>
@@ -8954,7 +8954,7 @@ class ShowBgpSessionsSchema(MetaParser):
 # Parser for:
 # * 'show bgp <address_family> labels [vrf <WROD>]'
 # ==============================================================================
-class ShowBgpLabels(ShowBgpSessionsSchema):
+class ShowBgpLabels(ShowBgpLabelsSchema):
     """Parser for:
         show bgp <address_family> labels [vrf <WROD>]"""
     
