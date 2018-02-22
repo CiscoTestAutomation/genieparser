@@ -2245,8 +2245,8 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
             # BFD live-detection is configured
             # BFD live-detection is configured and enabled, state is Up
             p6 = re.compile(r'^\s*BFD live-detection is configured'
-                             '( *and (?P<bfd_enabled>\w+), state *is *'
-                             '(?P<bfd_state>\w+))?$')
+                             '(?: +and +(?P<bfd_enabled>(\S+)), +state +is'
+                             ' +(?P<bfd_state>(\S+)))?$')
             m = p6.match(line)
             if m:
                 parsed_dict['neighbor'][neighbor_id]['bfd_live_detection'] = \
