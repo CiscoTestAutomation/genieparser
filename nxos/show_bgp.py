@@ -9051,8 +9051,9 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
             # *>i1.5.210.0/24       19.0.101.1          nolabel/nolabel
             # * i0.0.0.0/0          95.1.1.0            nolabel/9100
             # *>i                   90.1.1.0            nolabel/9100
+            # a83.0.0.0/16        0.0.0.0             nolabel/nolabel
             # *>e88::/112           ::ffff:50.1.1.101
-            p3 = re.compile(r'^(?P<status>s|S|x|d|h|\*)'
+            p3 = re.compile(r'^(?P<status>s|S|x|d|h|\*)?'
                              '(?P<best>\>)? *'
                              '(?P<type_code>i|e|c|l|a|r|I)'
                              '(?P<prefix>[\w\/\.\:]+)? +'
@@ -9085,9 +9086,12 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
                 if index not in sub_dict['prefix'][prefix]['index']:
                     sub_dict['prefix'][prefix]['index'][index] = {}
 
-                sub_dict['prefix'][prefix]['index'][index]['status'] = \
-                    status_map[status_code]
-                sub_dict['prefix'][prefix]['index'][index]['status_code'] = status_code
+                if status_code:
+                    sub_dict['prefix'][prefix]['index'][index]['status'] = \
+                        status_map[status_code]
+                    sub_dict['prefix'][prefix]['index'][index]['status_code'] = status_code
+                else:
+                    sub_dict['prefix'][prefix]['index'][index]['status'] = 'invalid'
 
                 if best_code:
                     sub_dict['prefix'][prefix]['index'][index]['best_code'] = best_code
@@ -9301,8 +9305,9 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
 
                                 try:
                                     # <statuscode>*</statuscode>
-                                    sub_dict['prefix'][prefix]['index'][index]['status_code'] = \
-                                        index_root.find('{}statuscode'.format(namespace)).text
+                                    status_code = index_root.find('{}statuscode'.format(namespace)).text
+                                    sub_dict['prefix'][prefix]['index'][index]\
+                                        .setdefault('status_code', status_code) if status_code else None                                        
 
                                     # <bestcode>&gt;</bestcode>
                                     best_code = index_root.find('{}bestcode'.format(namespace)).text
