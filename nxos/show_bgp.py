@@ -6679,7 +6679,7 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
             # build keys for dampened_paths and history_paths
             if isinstance(dampened_paths, int):
                 sub_dict['dampened_paths'] = dampened_paths
-                sub_dict['dampening_enabled'] = True
+                sub_dict['dampening_enabled'] = dampening_enabled
                 
             if isinstance(history_paths, int):
                 sub_dict['history_paths'] = history_paths
@@ -6719,6 +6719,18 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
             if m:
                 history_paths = int(m.groupdict()['history_paths'])
                 dampened_paths = int(m.groupdict()['dampened_paths'])
+                dampening_enabled = True
+                continue
+
+            # Dampening not configured, 0 history paths, 0 dampened paths
+            p2_1 = re.compile(r'^Dampening +not +configured, +'
+                             '(?P<history_paths>\d+) +history +paths, +'
+                             '(?P<dampened_paths>\d+) +dampened +paths$')
+            m = p2_1.match(line)
+            if m:
+                history_paths = int(m.groupdict()['history_paths'])
+                dampened_paths = int(m.groupdict()['dampened_paths'])
+                dampening_enabled = False
                 continue
 
             # Route Distinguisher: 0:0
