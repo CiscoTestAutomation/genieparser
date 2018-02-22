@@ -707,7 +707,7 @@ class ShowInterface(ShowInterfaceSchema):
                     interface_dict[interface]['counters']['in_broadcast_pkts'] = in_broadcast_pkts
                     try:
                         interface_dict[interface]['counters']['last_clear'] = last_clear
-                    except:
+                    except Exception:
                         pass
                     continue
                     
@@ -1329,7 +1329,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
             # Labeled bytes      : 0/0/0/0/0
             try:
                 interface
-            except:
+            except Exception:
                 continue
 
             if 'ipv4' in ip_interface_vrf_all_dict[interface]:

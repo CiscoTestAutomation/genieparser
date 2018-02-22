@@ -57,12 +57,12 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'status_codes': '*>',
                            'transfer_pathid': '0x0',
                            'weight': '32768'}},
-                       'paths': '(1 '
+                       'paths': '1 '
                                 'available, '
                                 'best '
                                 '#1, '
                                 'table '
-                                'VRF1)',
+                                'VRF1',
                        'table_version': '2'}},
                     'route_distinguisher': '100:100'},
                 'vpnv6 unicast RD 100:100':
@@ -88,12 +88,12 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'status_codes': '*>',
                            'transfer_pathid': '0x0',
                            'weight': '32768'}},
-                       'paths': '(1 '
+                       'paths': '1 '
                                 'available, '
                                 'best '
                                 '#1, '
                                 'table '
-                                'VRF1)',
+                                'VRF1',
                        'table_version': '2'}},
                     'route_distinguisher': '100:100'}}},
             'default':
@@ -118,12 +118,12 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'transfer_pathid': '0x0',
                            'update_group': 3,
                            'weight': '32768'}},
-                       'paths': '(1 '
+                       'paths': '1 '
                                 'available, '
                                 'best '
                                 '#1, '
                                 'table '
-                                'default)',
+                                'default',
                        'table_version': '4'},
                     '10.1.1.0/24':
                       {'available_path': '2',
@@ -157,12 +157,12 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'status_codes': '* '
                                            'i',
                            'update_group': 3}},
-                       'paths': '(2 '
+                       'paths': '2 '
                                 'available, '
                                 'best '
                                 '#1, '
                                 'table '
-                                'default)',
+                                'default',
                        'table_version': '5'},
                     '2.2.2.2/32':
                       {'available_path': '1',
@@ -180,12 +180,12 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'route_info': 'Local',
                            'status_codes': '*>',
                            'transfer_pathid': '0x0'}},
-                       'paths': '(1 '
+                       'paths': '1 '
                                 'available, '
                                 'best '
                                 '#1, '
                                 'table '
-                                'default)',
+                                'default',
                        'table_version': '2'}}},
                 'ipv6 unicast':
                   {'prefixes':
@@ -207,12 +207,12 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'transfer_pathid': '0x0',
                            'update_group': 1,
                            'weight': '32768'}},
-                       'paths': '(1 '
+                       'paths': '1 '
                                 'available, '
                                 'best '
                                 '#1, '
                                 'table '
-                                'default)',
+                                'default',
                        'table_version': '4'},
                     '2001:2:2:2::2/128':
                       {'available_path': '2',
@@ -244,12 +244,12 @@ class test_show_bgp_all_detail(unittest.TestCase):
                            'status_codes': '* '
                                            'i',
                            'transfer_pathid': '0'}},
-                       'paths': '(2 '
+                       'paths': '2 '
                                 'available, '
                                 'best '
                                 '#1, '
                                 'table '
-                                'default)',
+                                'default',
                        'table_version': '2'},
                     '2001:DB8:1:1::/64':
                       {'available_path': '3',
@@ -295,12 +295,12 @@ class test_show_bgp_all_detail(unittest.TestCase):
                             'status_codes': '* '
                                             'i',
                             'update_group': 1}},
-                       'paths': '(3 '
+                       'paths': '3 '
                                 'available, '
                                 'best '
                                 '#1, '
                                 'table '
-                                'default)',
+                                'default',
                        'table_version': '5'}}}}}}}}}
 
     golden_output = {'execute.return_value': '''
@@ -474,12 +474,12 @@ class test_show_bgp_all_detail(unittest.TestCase):
                           'status_codes': '*>',
                           'transfer_pathid': '0x0',
                           'weight': '32768'}},
-                       'paths': '(1 '
+                       'paths': '1 '
                                 'available, '
                                 'best '
                                 '#1, '
                                 'table '
-                                'EVPN-BGP-Table)',
+                                'EVPN-BGP-Table',
                        'table_version': '4'},
                     '3.3.3.0/17':
                       {'available_path': '2',
@@ -540,12 +540,12 @@ class test_show_bgp_all_detail(unittest.TestCase):
                                         'from '
                                         'base',
                           'status_codes': '* '}},
-                       'paths': '(2 '
+                       'paths': '2 '
                                 'available, '
                                 'best '
                                 '#1, '
                                 'table '
-                                'EVPN-BGP-Table)',
+                                'EVPN-BGP-Table',
                        'table_version': '3'}},
                     'route_distinguisher': '65535:1'}}},
                 'evpn1':
@@ -581,12 +581,12 @@ class test_show_bgp_all_detail(unittest.TestCase):
                                'transfer_pathid': '0x0',
                                'update_group': 1,
                                'weight': '32768'}},
-                       'paths': '(1 '
+                       'paths': '1 '
                                 'available, '
                                 'best '
                                 '#1, '
                                 'table '
-                                'evpn1)',
+                                'evpn1',
                        'table_version': '5'},
                         '3.3.3.0/24':
                           {'available_path': '2',
@@ -639,12 +639,12 @@ class test_show_bgp_all_detail(unittest.TestCase):
                                'transfer_pathid': '0x0',
                                'update_group': 1,
                                'weight': '32768'}},
-                       'paths': '(2 '
+                       'paths': '2 '
                                 'available, '
                                 'best '
                                 '#2, '
                                 'table '
-                                'evpn1)',
+                                'evpn1',
                        'table_version': '4'}},
                     'route_distinguisher': '65535:1'}}}}}}}
 

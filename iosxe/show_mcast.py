@@ -231,7 +231,7 @@ class ShowIpMroute(ShowIpMrouteSchema):
                 try:
                     sub_dict['rpf_nbr'] = rpf_nbr
                     sub_dict['incoming_interface_list'][incoming_interface]['rpf_nbr'] = rpf_nbr
-                except:
+                except Exception:
                     sub_dict['rpf_nbr'] = rpf_nbr
                 continue
 

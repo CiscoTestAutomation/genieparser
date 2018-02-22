@@ -627,7 +627,7 @@ class ShowHsrpAll(ShowHsrpAllSchema):
                 if role == 'local':
                     try:
                         priority
-                    except:
+                    except Exception:
                         pass
                     else:
                         active_priority = priority
@@ -658,7 +658,7 @@ class ShowHsrpAll(ShowHsrpAllSchema):
                 if role == 'local':
                     try:
                         priority
-                    except:
+                    except Exception:
                         pass
                     else:
                         standby_priority = priority

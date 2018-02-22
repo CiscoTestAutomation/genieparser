@@ -1238,7 +1238,7 @@ class ShowPlatform(ShowPlatformSchema):
                                         last['subslot'][subslot][name] = {}
                                     sub_dict = last['subslot'][subslot][name]
                             sub_dict['subslot'] = subslot
-                        except:
+                        except Exception:
                             continue
                     else:
                         if 'slot' not in platform_dict:
