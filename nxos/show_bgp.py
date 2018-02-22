@@ -1959,7 +1959,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                     af_dict['prefixes'][prefix]['index'][index]['path'] = m3.groupdict()['path'].strip()
 
                 # Check if aggregate_address_ipv4_address
-                if '>a' in status_codes+path_type:
+                if 'a' in path_type:
                     address, mask = prefix.split("/")
                     if ':' in prefix:
                         af_dict['v6_aggregate_address_ipv6_address'] = prefix

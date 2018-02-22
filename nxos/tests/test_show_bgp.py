@@ -5032,7 +5032,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                 {'address_family':
                     {'ipv4 unicast':
                         {'aggregate_address_as_set': True,
-                        'aggregate_address_ipv4_address': '11.0.0.0',
+                        'aggregate_address_ipv4_address': '123.0.0.0',
                         'aggregate_address_ipv4_mask': '8',
                         'aggregate_address_summary_only': True,
                         'bgp_table_version': 35,
@@ -5153,7 +5153,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                         'local_router_id': '1.1.1.1'},
                     'vpnv4 unicast RD 100:100':
                         {'aggregate_address_as_set': True,
-                        'aggregate_address_ipv4_address': '11.0.0.0',
+                        'aggregate_address_ipv4_address': '123.0.0.0',
                         'aggregate_address_ipv4_mask': '8',
                         'aggregate_address_summary_only': True,
                         'bgp_table_version': 48,
