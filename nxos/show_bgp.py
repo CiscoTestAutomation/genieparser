@@ -9307,7 +9307,7 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
                                     # <statuscode>*</statuscode>
                                     status_code = index_root.find('{}statuscode'.format(namespace)).text
                                     sub_dict['prefix'][prefix]['index'][index]\
-                                        .setdefault('status_code', status_code) if status_code else None                                        
+                                        .setdefault('status_code', status_code) if status_code.strip() else None                                        
 
                                     # <bestcode>&gt;</bestcode>
                                     best_code = index_root.find('{}bestcode'.format(namespace)).text
