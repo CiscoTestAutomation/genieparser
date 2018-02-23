@@ -5032,7 +5032,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                 {'address_family':
                     {'ipv4 unicast':
                         {'aggregate_address_as_set': True,
-                        'aggregate_address_ipv4_address': '11.0.0.0',
+                        'aggregate_address_ipv4_address': '123.0.0.0',
                         'aggregate_address_ipv4_mask': '8',
                         'aggregate_address_summary_only': True,
                         'bgp_table_version': 35,
@@ -5153,7 +5153,7 @@ class test_show_bgp_vrf_all_all(unittest.TestCase):
                         'local_router_id': '1.1.1.1'},
                     'vpnv4 unicast RD 100:100':
                         {'aggregate_address_as_set': True,
-                        'aggregate_address_ipv4_address': '11.0.0.0',
+                        'aggregate_address_ipv4_address': '123.0.0.0',
                         'aggregate_address_ipv4_mask': '8',
                         'aggregate_address_summary_only': True,
                         'bgp_table_version': 48,
@@ -7337,6 +7337,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
                 'bfd_live_detection': True,
                 'bfd_enabled': True,
                 'bfd_state': 'up',
+                'remove_private_as': True,
                 'bgp_negotiated_keepalive_timers':
                     {'hold_time': 45,
                     'keepalive_interval': 15,
@@ -7481,6 +7482,7 @@ class test_show_bgp_vrf_all_neighbors(unittest.TestCase):
           Using loopback0 as update source for this peer
           Connected check is disabled
           BFD live-detection is configured and enabled, state is Up
+          Private AS numbers removed from updates sent to this neighbor
           External BGP peer might be upto 255 hops away
           TCP MD5 authentication is enabled
           Only passive connection setup allowed

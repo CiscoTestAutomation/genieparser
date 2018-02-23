@@ -1696,7 +1696,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                     af_dict['prefixes'][prefix]['index'][index]['next_hop'] = str(m.groupdict()['next_hop'])
                 
                 # Check if aggregate_address_ipv4_address
-                if '>a' in status_codes+path_type:
+                if 'a' in path_type:
                     address, mask = prefix.split("/")
                     if ':' in prefix:
                         af_dict['v6_aggregate_address_ipv6_address'] = prefix
@@ -1839,6 +1839,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                 parsed_dict['vrf'][vrf]['address_family'][new_address_family]['local_router_id'] = local_router_id
                 parsed_dict['vrf'][vrf]['address_family'][new_address_family]['route_distinguisher'] = route_distinguisher
 
+
                 if m.groupdict()['default_vrf']:
                     parsed_dict['vrf'][vrf]['address_family']\
                         [new_address_family]['default_vrf'] = \
@@ -1958,7 +1959,7 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                     af_dict['prefixes'][prefix]['index'][index]['path'] = m3.groupdict()['path'].strip()
 
                 # Check if aggregate_address_ipv4_address
-                if '>a' in status_codes+path_type:
+                if 'a' in path_type:
                     address, mask = prefix.split("/")
                     if ':' in prefix:
                         af_dict['v6_aggregate_address_ipv6_address'] = prefix
@@ -2328,6 +2329,13 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                     ['disable_connected_check'] = True
                 continue
 
+            # Private AS numbers removed from updates sent to this neighbor
+            p11_2 = re.compile(r'^\s*Private +AS +numbers +removed +from +updates +sent +to +this +neighbor$')
+            m = p11_2.match(line)
+            if m:
+                parsed_dict['neighbor'][neighbor_id]['remove_private_as'] = True
+                continue
+
             # External BGP peer might be upto 255 hops away
             p12_1 = re.compile(r'^\s*External +BGP +peer +might +be +upto'
                              ' +(?P<ebgp_multihop_max_hop>[0-9]+) +hops +away$')
@@ -2522,11 +2530,12 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                 continue
 
             # 4-Byte AS capability: disabled
-            p22 = re.compile(r'^\s*4-Byte AS capability: disabled$')
+            # 4-Byte AS capability: disabled received
+            p22 = re.compile(r'^\s*4-Byte AS capability: +(?P<capability>[\w\s]+)$')
             m = p22.match(line)
             if m:
-                parsed_dict['neighbor'][neighbor_id]\
-                    ['suppress_four_byte_as_capability'] = True
+                if 'disabled' in m.groupdict()['capability']:
+                    parsed_dict['neighbor'][neighbor_id]['suppress_four_byte_as_capability'] = True
                 continue
 
             # Address family VPNv4 Unicast: advertised received
@@ -6057,7 +6066,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
 
                         #    redistribute isis <Isis.pid> route-map <route_policy>
                         p33 = re.compile(r'^\s*redistribute +isis +(?P<af_redist_isis>[0-9]+) +route-map+(?P<af_redist_isis_route_policy>[A-Za-z0-9\-\_]+)$')
-                        m = p32.match(line)
+                        m = p33.match(line)
                         if m:
                             bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_redist_isis'] = \
                                 str(m.groupdict()['af_redist_isis'])
