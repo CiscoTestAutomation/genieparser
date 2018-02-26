@@ -9,7 +9,8 @@ from parser.iosxe.show_platform import ShowVersion,\
                                        Dir,\
                                        ShowRedundancy,\
                                        ShowInventory,\
-                                       ShowPlatform, ShowBoot
+                                       ShowPlatform, ShowBoot, \
+                                       ShowSwitchDetail
 
 
 class test_show_version(unittest.TestCase):
@@ -1882,6 +1883,107 @@ class test_show_boot(unittest.TestCase):
         platform_obj = ShowBoot(device=self.dev_asr1k)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_asr1k)
+
+
+class test_show_switch_detail(unittest.TestCase):
+    dev1 = Device(name='empty')
+    dev_c3850 = Device(name='c3850')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_c3850 = {
+        "switch": {
+            "stack": {
+               "1": {
+                    "role": "active",
+                    "hw_ver": "V04",
+                    "port": {
+                         "1": {
+                              "stack_port_status": "ok",
+                              "neighbors_num": 3
+                         },
+                         "2": {
+                              "stack_port_status": "ok",
+                              "neighbors_num": 2
+                         }
+                    },
+                    "state": "ready",
+                    "priority": "3",
+                    "mac_address": "689c.e2d9.df00"
+               },
+               "3": {
+                    "role": "member",
+                    "hw_ver": "V05",
+                    "port": {
+                         "1": {
+                              "stack_port_status": "ok",
+                              "neighbors_num": 2
+                         },
+                         "2": {
+                              "stack_port_status": "ok",
+                              "neighbors_num": 1
+                         }
+                    },
+                    "state": "ready",
+                    "priority": "1",
+                    "mac_address": "c800.84ff.4800"
+               },
+               "2": {
+                    "role": "standby",
+                    "hw_ver": "V05",
+                    "port": {
+                         "1": {
+                              "stack_port_status": "ok",
+                              "neighbors_num": 1
+                         },
+                         "2": {
+                              "stack_port_status": "ok",
+                              "neighbors_num": 3
+                         }
+                    },
+                    "state": "ready",
+                    "priority": "2",
+                    "mac_address": "c800.84ff.7e00"
+               }
+            },
+            "mac_address": "689c.e2d9.df00",
+            "mac_persistency_wait_time": "indefinite"
+        }
+    }
+
+    golden_output_c3850 = {'execute.return_value': '''\
+        Switch/Stack Mac Address : 689c.e2d9.df00 - Local Mac Address
+        Mac persistency wait time: Indefinite
+                                                     H/W   Current
+        Switch#   Role    Mac Address     Priority Version  State 
+        -------------------------------------------------------------------------------------
+        *1       Active   689c.e2d9.df00     3      V04     Ready                
+         2       Standby  c800.84ff.7e00     2      V05     Ready                
+         3       Member   c800.84ff.4800     1      V05     Ready                
+
+
+
+                 Stack Port Status             Neighbors     
+        Switch#  Port 1     Port 2           Port 1   Port 2 
+        --------------------------------------------------------
+          1         OK         OK               3        2 
+          2         OK         OK               1        3 
+          3         OK         OK               2        1 
+    '''
+    }
+
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        platform_obj = ShowSwitchDetail(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_c3850)
+        platform_obj = ShowSwitchDetail(device=self.dev_c3850)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+
 
 if __name__ == '__main__':
     unittest.main()

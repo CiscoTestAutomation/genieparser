@@ -1438,3 +1438,122 @@ class ShowBoot(ShowBootSchema):
                 boot_dict['ipxe_timeout'] = int(m.groupdict()['var'])
                 continue
         return boot_dict
+
+
+
+class ShowSwitchDetailSchema(MetaParser):
+    """Schema for show switch detail"""
+    schema = {
+        'switch': {
+            'mac_address': str,
+            'mac_persistency_wait_time': str,
+            'stack': {
+                Any(): {
+                    'role': str,
+                    'mac_address': str,
+                    'priority': str,
+                    'hw_ver': str,
+                    'state': str,
+                    'port': {
+                        Any(): {
+                            'stack_port_status': str,
+                            'neighbors_num': int
+                        },
+                    }
+                },            
+            }
+        }
+    }
+
+
+class ShowSwitchDetail(ShowSwitchDetailSchema):
+    """Parser for show switch detail."""
+
+    def cli(self):
+
+        # get output from device
+        cmd = 'show switch detail'.format()
+        out = self.device.execute(cmd)
+
+        # initial return dictionary
+        ret_dict = {}
+        switch_dict = {}
+
+        # return empty when no output
+        if not out:
+            return ret_dict
+
+        # initial regexp pattern
+        p1 = re.compile(r'^[Ss]witch\/[Ss]tack +[Mm]ac +[Aa]ddress +\: +'
+                         '(?P<switch_mac_address>[\w\.]+) *(?P<local>[\w\s\-]+)?$')
+        
+        p2 = re.compile(r'^[Mm]ac +persistency +wait +time\: +'
+                         '(?P<mac_persistency_wait_time>[\w\.\:]+)$')
+
+        p3 = re.compile(r'^\*?(?P<switch>\d+) +(?P<role>\w+) +'
+                         '(?P<mac_address>[\w\.]+) +'
+                         '(?P<priority>\d+) +'
+                         '(?P<hw_ver>\w+) +'
+                         '(?P<state>[\w\s]+)$')
+
+        p4 = re.compile(r'^(?P<switch>\d+) +(?P<status1>\w+) +'
+                         '(?P<status2>\w+) +'
+                         '(?P<nei_num_1>\d+) +'
+                         '(?P<nei_num_2>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Switch/Stack Mac Address : 0057.d21b.cc00 - Local Mac Address
+            m = p1.match(line)
+            if m:
+                ret_dict['mac_address'] = m.groupdict()['switch_mac_address']
+                continue
+
+            # Mac persistency wait time: Indefinite
+            m = p2.match(line)
+            if m:
+                ret_dict['mac_persistency_wait_time'] = m.groupdict()['mac_persistency_wait_time'].lower()
+                continue
+
+            #                                              H/W   Current
+            # Switch#   Role    Mac Address     Priority Version  State 
+            # -----------------------------------------------------------
+            # *1       Active   689c.e2d9.df00     3      V04     Ready 
+            m = p3.match(line)
+            if m:
+                stack = m.groupdict()['switch']
+                if 'stack' not in ret_dict:
+                    ret_dict['stack'] = {}
+                if stack not in ret_dict['stack']:
+                    ret_dict['stack'][stack] = {}
+                ret_dict['stack'][stack]['role'] = m.groupdict()['role'].lower()
+                ret_dict['stack'][stack]['priority'] = m.groupdict()['priority']
+                ret_dict['stack'][stack]['mac_address'] = m.groupdict()['mac_address']
+                ret_dict['stack'][stack]['hw_ver'] = m.groupdict()['hw_ver']
+                ret_dict['stack'][stack]['state'] = m.groupdict()['state'].lower()
+                continue
+
+
+            #          Stack Port Status             Neighbors     
+            # Switch#  Port 1     Port 2           Port 1   Port 2 
+            # --------------------------------------------------------
+            #   1         OK         OK               3        2 
+            m = p4.match(line)
+            if m:
+                stack = m.groupdict()['switch']
+                if 'port' not in ret_dict['stack'][stack]:
+                    ret_dict['stack'][stack]['port'] = {}
+                for port in range(1,3):
+                    port = str(port)
+                    if port not in ret_dict['stack'][stack]['port']:
+                        ret_dict['stack'][stack]['port'][port] = {}
+                    ret_dict['stack'][stack]['port'][port]['stack_port_status'] = \
+                        m.groupdict()['status{}'.format(port)].lower()
+                    ret_dict['stack'][stack]['port'][port]['neighbors_num'] = \
+                        int(m.groupdict()['nei_num_{}'.format(port)])
+                continue
+        else:
+            switch_dict['switch'] = {}
+            switch_dict['switch'].update(ret_dict)
+            return switch_dict
