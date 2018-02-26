@@ -1556,4 +1556,4 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
         else:
             switch_dict['switch'] = {}
             switch_dict['switch'].update(ret_dict)
-            return switch_dict
+        return switch_dict
