@@ -1440,7 +1440,6 @@ class ShowBoot(ShowBootSchema):
         return boot_dict
 
 
-
 class ShowSwitchDetailSchema(MetaParser):
     """Schema for show switch detail"""
     schema = {
@@ -1469,10 +1468,9 @@ class ShowSwitchDetailSchema(MetaParser):
 class ShowSwitchDetail(ShowSwitchDetailSchema):
     """Parser for show switch detail."""
 
-    def cli(self):
+    def cli(self, cmd='show switch detail'):
 
         # get output from device
-        cmd = 'show switch detail'.format()
         out = self.device.execute(cmd)
 
         # initial return dictionary
@@ -1557,3 +1555,30 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
             switch_dict['switch'] = {}
             switch_dict['switch'].update(ret_dict)
         return switch_dict
+
+
+class ShowSwitchSchema(MetaParser):
+    """Schema for show switch"""
+    schema = {
+        'switch': {
+            'mac_address': str,
+            'mac_persistency_wait_time': str,
+            'stack': {
+                Any(): {
+                    'role': str,
+                    'mac_address': str,
+                    'priority': str,
+                    'hw_ver': str,
+                    'state': str
+                },            
+            }
+        }
+    }
+
+
+class ShowSwitch(ShowSwitchSchema, ShowSwitchDetail):
+    """Parser for show switch."""
+
+    def cli(self):
+    	return super().cli(cmd='show switch')
+    	
