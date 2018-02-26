@@ -1552,8 +1552,7 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
                         int(m.groupdict()['nei_num_{}'.format(port)])
                 continue
         else:
-            switch_dict['switch'] = {}
-            switch_dict['switch'].update(ret_dict)
+            switch_dict.setdefault('switch', ret_dict) if ret_dict else None
         return switch_dict
 
 

@@ -1988,7 +1988,7 @@ class test_show_switch_detail(unittest.TestCase):
 class test_show_switch(unittest.TestCase):
     dev1 = Device(name='empty')
     dev_c3850 = Device(name='c3850')
-    empty_output = {'execute.return_value': ''}
+    empty_output = {'execute.return_value': '      '}
 
     golden_parsed_output_c3850 = {
         "switch": {
