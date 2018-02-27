@@ -1897,7 +1897,7 @@ class test_show_switch_detail(unittest.TestCase):
                "1": {
                     "role": "active",
                     "hw_ver": "V04",
-                    "port": {
+                    "ports": {
                          "1": {
                               "stack_port_status": "ok",
                               "neighbors_num": 3
@@ -1914,7 +1914,7 @@ class test_show_switch_detail(unittest.TestCase):
                "3": {
                     "role": "member",
                     "hw_ver": "V05",
-                    "port": {
+                    "ports": {
                          "1": {
                               "stack_port_status": "ok",
                               "neighbors_num": 2
@@ -1931,7 +1931,7 @@ class test_show_switch_detail(unittest.TestCase):
                "2": {
                     "role": "standby",
                     "hw_ver": "V05",
-                    "port": {
+                    "ports": {
                          "1": {
                               "stack_port_status": "ok",
                               "neighbors_num": 1
