@@ -1438,3 +1438,135 @@ class ShowBoot(ShowBootSchema):
                 boot_dict['ipxe_timeout'] = int(m.groupdict()['var'])
                 continue
         return boot_dict
+
+
+class ShowSwitchDetailSchema(MetaParser):
+    """Schema for show switch detail"""
+    schema = {
+        'switch': {
+            'mac_address': str,
+            'mac_persistency_wait_time': str,
+            'stack': {
+                Any(): {
+                    'role': str,
+                    'mac_address': str,
+                    'priority': str,
+                    'hw_ver': str,
+                    'state': str,
+                    'ports': {
+                        Any(): {
+                            'stack_port_status': str,
+                            'neighbors_num': int
+                        },
+                    }
+                },            
+            }
+        }
+    }
+
+
+class ShowSwitchDetail(ShowSwitchDetailSchema):
+    """Parser for show switch detail."""
+
+    CLI_CMD = 'show switch detail'
+    STACK_PORT_RANGE = ('1', '2')
+
+    def cli(self):
+
+        # get output from device
+        out = self.device.execute(self.CLI_CMD)
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # return empty when no output
+        if not out:
+            return ret_dict
+
+        # initial regexp pattern
+        p1 = re.compile(r'^[Ss]witch\/[Ss]tack +[Mm]ac +[Aa]ddress +\: +'
+                         '(?P<switch_mac_address>[\w\.]+) *(?P<local>[\w\s\-]+)?$')
+        
+        p2 = re.compile(r'^[Mm]ac +persistency +wait +time\: +'
+                         '(?P<mac_persistency_wait_time>[\w\.\:]+)$')
+
+        p3 = re.compile(r'^\*?(?P<switch>\d+) +(?P<role>\w+) +'
+                         '(?P<mac_address>[\w\.]+) +'
+                         '(?P<priority>\d+) +'
+                         '(?P<hw_ver>\w+) +'
+                         '(?P<state>[\w\s]+)$')
+
+        p4 = re.compile(r'^(?P<switch>\d+) +(?P<status1>\w+) +'
+                         '(?P<status2>\w+) +'
+                         '(?P<nbr_num_1>\d+) +'
+                         '(?P<nbr_num_2>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Switch/Stack Mac Address : 0057.d21b.cc00 - Local Mac Address
+            m = p1.match(line)
+            if m:
+                ret_dict['mac_address'] = m.groupdict()['switch_mac_address']
+                continue
+
+            # Mac persistency wait time: Indefinite
+            m = p2.match(line)
+            if m:
+                ret_dict['mac_persistency_wait_time'] = m.groupdict()['mac_persistency_wait_time'].lower()
+                continue
+
+            #                                              H/W   Current
+            # Switch#   Role    Mac Address     Priority Version  State 
+            # -----------------------------------------------------------
+            # *1       Active   689c.e2d9.df00     3      V04     Ready 
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                stack = group['switch']
+                match_dict = {k:v.lower() for k, v in group.items() if k in ['role', 'state']}
+                match_dict.update({k:v for k, v in group.items() if k in ['priority', 'mac_address', 'hw_ver']})
+                ret_dict.setdefault('stack', {}).setdefault(stack, {}).update(match_dict)
+                continue
+
+
+            #          Stack Port Status             Neighbors     
+            # Switch#  Port 1     Port 2           Port 1   Port 2 
+            # --------------------------------------------------------
+            #   1         OK         OK               3        2 
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                stack = group['switch']
+                stack_ports = ret_dict.setdefault('stack', {}).setdefault(stack, {}).setdefault('ports', {})
+                for port in self.STACK_PORT_RANGE:
+                    port_dict = stack_ports.setdefault(port, {})
+                    port_dict['stack_port_status'] = group['status{}'.format(port)].lower()
+                    port_dict['neighbors_num'] = int(group['nbr_num_{}'.format(port)])
+                continue
+
+        return {'switch': ret_dict} if ret_dict else {}
+
+
+class ShowSwitchSchema(MetaParser):
+    """Schema for show switch"""
+    schema = {
+        'switch': {
+            'mac_address': str,
+            'mac_persistency_wait_time': str,
+            'stack': {
+                Any(): {
+                    'role': str,
+                    'mac_address': str,
+                    'priority': str,
+                    'hw_ver': str,
+                    'state': str
+                },            
+            }
+        }
+    }
+
+
+class ShowSwitch(ShowSwitchSchema, ShowSwitchDetail):
+    """Parser for show switch."""
+    CLI_CMD = 'show switch'
