@@ -1522,9 +1522,10 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
             # *1       Active   689c.e2d9.df00     3      V04     Ready 
             m = p3.match(line)
             if m:
-                stack = m.groupdict()['switch']
-                match_dict = {k:v.lower() for k, v in m.groupdict().items() if k in ['role', 'state']}
-                match_dict.update({k:v for k, v in m.groupdict().items() if k in ['priority', 'mac_address', 'hw_ver']})
+                group = m.groupdict()
+                stack = group['switch']
+                match_dict = {k:v.lower() for k, v in group.items() if k in ['role', 'state']}
+                match_dict.update({k:v for k, v in group.items() if k in ['priority', 'mac_address', 'hw_ver']})
                 ret_dict.setdefault('stack', {}).setdefault(stack, {}).update(match_dict)
                 continue
 
@@ -1535,14 +1536,13 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
             #   1         OK         OK               3        2 
             m = p4.match(line)
             if m:
-                stack = m.groupdict()['switch']
+                group = m.groupdict()
+                stack = group['switch']
                 stack_ports = ret_dict.setdefault('stack', {}).setdefault(stack, {}).setdefault('ports', {})
                 for port in self.STACK_PORT_RANGE:
                     port_dict = stack_ports.setdefault(port, {})
-                    port_dict['stack_port_status'] = \
-                        m.groupdict()['status{}'.format(port)].lower()
-                    port_dict['neighbors_num'] = \
-                        int(m.groupdict()['nbr_num_{}'.format(port)])
+                    port_dict['stack_port_status'] = group['status{}'.format(port)].lower()
+                    port_dict['neighbors_num'] = int(group['nbr_num_{}'.format(port)])
                 continue
 
         return {'switch': ret_dict} if ret_dict else {}
