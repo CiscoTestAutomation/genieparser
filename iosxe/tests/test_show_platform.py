@@ -2410,7 +2410,6 @@ class test_show_power_inline_interface(unittest.TestCase):
         self.dev_c3850 = Mock(**self.golden_output_c3850)
         platform_obj = ShowPowerInlineInterface(device=self.dev_c3850)
         parsed_output = platform_obj.parse(interface='Gi1/0/13')
-        import pdb; pdb.set_trace()
         self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
 
 if __name__ == '__main__':
