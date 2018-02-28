@@ -11,7 +11,9 @@ from parser.iosxe.show_platform import ShowVersion,\
                                        ShowInventory,\
                                        ShowPlatform, ShowBoot, \
                                        ShowSwitchDetail, \
-                                       ShowSwitch
+                                       ShowSwitch, \
+                                       ShowEnvironmentAll, ShowModule, \
+                                       ShowStackPower, ShowPowerInlineInterface
 
 
 class test_show_version(unittest.TestCase):
@@ -2046,6 +2048,370 @@ class test_show_switch(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
 
 
+class test_show_environment_all(unittest.TestCase):
+    dev1 = Device(name='empty')
+    dev_c3850 = Device(name='c3850')
+    empty_output = {'execute.return_value': '      '}
+
+    golden_parsed_output_c3850 = {
+        "switch": {
+            "3": {
+               "system_temperature_state": "ok",
+               "hotspot_temperature": {
+                    "yellow_threshold": "105",
+                    "red_threshold": "125",
+                    "state": "green",
+                    "value": "43"
+               },
+               "power_supply": {
+                    "2": {
+                         "state": "not present",
+                         "status": "not present"
+                    },
+                    "1": {
+                         "pid": "PWR-C1-715WAC",
+                         "serial_number": "DCB1844G1WW",
+                         "watts": "715",
+                         "system_power": "good",
+                         "state": "ok",
+                         "poe_power": "good",
+                         "status": "ok"
+                    }
+               },
+               "inlet_temperature": {
+                    "yellow_threshold": "46",
+                    "red_threshold": "56",
+                    "state": "green",
+                    "value": "33"
+               },
+               "fan": {
+                    "3": {
+                         "state": "ok"
+                    },
+                    "2": {
+                         "state": "ok"
+                    },
+                    "1": {
+                         "state": "ok"
+                    }
+               }
+            },
+            "2": {
+               "system_temperature_state": "ok",
+               "hotspot_temperature": {
+                    "yellow_threshold": "105",
+                    "red_threshold": "125",
+                    "state": "green",
+                    "value": "43"
+               },
+               "power_supply": {
+                    "2": {
+                         "state": "not present",
+                         "status": "not present"
+                    },
+                    "1": {
+                         "pid": "PWR-C1-715WAC",
+                         "serial_number": "DCB1844G1X0",
+                         "watts": "715",
+                         "system_power": "good",
+                         "state": "ok",
+                         "poe_power": "good",
+                         "status": "ok"
+                    }
+               },
+               "inlet_temperature": {
+                    "yellow_threshold": "46",
+                    "red_threshold": "56",
+                    "state": "green",
+                    "value": "33"
+               },
+               "fan": {
+                    "3": {
+                         "state": "ok"
+                    },
+                    "2": {
+                         "state": "ok"
+                    },
+                    "1": {
+                         "state": "ok"
+                    }
+               }
+            },
+            "1": {
+               "system_temperature_state": "ok",
+               "hotspot_temperature": {
+                    "yellow_threshold": "105",
+                    "red_threshold": "125",
+                    "state": "green",
+                    "value": "45"
+               },
+               "power_supply": {
+                    "2": {
+                         "state": "not present",
+                         "status": "not present"
+                    },
+                    "1": {
+                         "pid": "PWR-C1-715WAC",
+                         "serial_number": "DCB1844G1ZY",
+                         "watts": "715",
+                         "system_power": "good",
+                         "state": "ok",
+                         "poe_power": "good",
+                         "status": "ok"
+                    }
+               },
+               "inlet_temperature": {
+                    "yellow_threshold": "46",
+                    "red_threshold": "56",
+                    "state": "green",
+                    "value": "34"
+               },
+               "fan": {
+                    "3": {
+                         "state": "ok"
+                    },
+                    "2": {
+                         "state": "ok"
+                    },
+                    "1": {
+                         "state": "ok"
+                    }
+               }
+            }
+        }
+    }
+
+    golden_output_c3850 = {'execute.return_value': '''\
+        Switch 1 FAN 1 is OK
+        Switch 1 FAN 2 is OK
+        Switch 1 FAN 3 is OK
+        FAN PS-1 is OK
+        FAN PS-2 is NOT PRESENT
+        Switch 2 FAN 1 is OK
+        Switch 2 FAN 2 is OK
+        Switch 2 FAN 3 is OK
+        FAN PS-1 is OK
+        FAN PS-2 is NOT PRESENT
+        Switch 3 FAN 1 is OK
+        Switch 3 FAN 2 is OK
+        Switch 3 FAN 3 is OK
+        FAN PS-1 is OK
+        FAN PS-2 is NOT PRESENT
+        Switch 1: SYSTEM TEMPERATURE is OK
+        Inlet Temperature Value: 34 Degree Celsius
+        Temperature State: GREEN
+        Yellow Threshold : 46 Degree Celsius
+        Red Threshold    : 56 Degree Celsius
+
+        Hotspot Temperature Value: 45 Degree Celsius
+        Temperature State: GREEN
+        Yellow Threshold : 105 Degree Celsius
+        Red Threshold    : 125 Degree Celsius
+        Switch 2: SYSTEM TEMPERATURE is OK
+        Inlet Temperature Value: 33 Degree Celsius
+        Temperature State: GREEN
+        Yellow Threshold : 46 Degree Celsius
+        Red Threshold    : 56 Degree Celsius
+
+        Hotspot Temperature Value: 43 Degree Celsius
+        Temperature State: GREEN
+        Yellow Threshold : 105 Degree Celsius
+        Red Threshold    : 125 Degree Celsius
+        Switch 3: SYSTEM TEMPERATURE is OK
+        Inlet Temperature Value: 33 Degree Celsius
+        Temperature State: GREEN
+        Yellow Threshold : 46 Degree Celsius
+        Red Threshold    : 56 Degree Celsius
+
+        Hotspot Temperature Value: 43 Degree Celsius
+        Temperature State: GREEN
+        Yellow Threshold : 105 Degree Celsius
+        Red Threshold    : 125 Degree Celsius
+        SW  PID                 Serial#     Status           Sys Pwr  PoE Pwr  Watts
+        --  ------------------  ----------  ---------------  -------  -------  -----
+        1A  PWR-C1-715WAC       DCB1844G1ZY  OK              Good     Good     715 
+        1B  Not Present
+        2A  PWR-C1-715WAC       DCB1844G1X0  OK              Good     Good     715 
+        2B  Not Present
+        3A  PWR-C1-715WAC       DCB1844G1WW  OK              Good     Good     715 
+        3B  Not Present
+    '''
+    }
+
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        platform_obj = ShowEnvironmentAll(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_c3850)
+        platform_obj = ShowEnvironmentAll(device=self.dev_c3850)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+
+
+class test_show_module(unittest.TestCase):
+    dev1 = Device(name='empty')
+    dev_c3850 = Device(name='c3850')
+    empty_output = {'execute.return_value': '      '}
+
+    golden_parsed_output_c3850 = {
+        "switch": {
+            "2": {
+               "serial_number": "fcw1909c0n2",
+               "mac_address": "c800.84ff.7e00",
+               "sw_ver": "16.9.1",
+               "model": "ws-c3850-24p-e",
+               "hw_ver": "v05",
+               "port": "32"
+            },
+            "1": {
+               "serial_number": "foc1902x062",
+               "mac_address": "689c.e2d9.df00",
+               "sw_ver": "16.9.1",
+               "model": "ws-c3850-48p-e",
+               "hw_ver": "v04",
+               "port": "56"
+            },
+            "3": {
+               "serial_number": "fcw1909d0jc",
+               "mac_address": "c800.84ff.4800",
+               "sw_ver": "16.9.1",
+               "model": "ws-c3850-24p-e",
+               "hw_ver": "v05",
+               "port": "32"
+            }
+        }
+    }
+
+    golden_output_c3850 = {'execute.return_value': '''\
+        Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver. 
+        ------  -----   ---------             -----------  --------------  -------       --------
+         1       56     WS-C3850-48P-E        FOC1902X062  689c.e2d9.df00  V04           16.9.1        
+         2       32     WS-C3850-24P-E        FCW1909C0N2  c800.84ff.7e00  V05           16.9.1        
+         3       32     WS-C3850-24P-E        FCW1909D0JC  c800.84ff.4800  V05           16.9.1
+    '''
+    }
+
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        platform_obj = ShowModule(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_c3850)
+        platform_obj = ShowModule(device=self.dev_c3850)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+
+
+class test_show_stack_power(unittest.TestCase):
+    dev1 = Device(name='empty')
+    dev_c3850 = Device(name='c3850')
+    empty_output = {'execute.return_value': '      '}
+
+    golden_parsed_output_c3850 = {
+        "power_stack": {
+            "Powerstack-1": {
+                "switch_num": 1,
+                "allocated_power": 200,
+                "topology": "Stndaln",
+                "unused_power": 485,
+                "power_supply_num": 1,
+                "total_power": 715,
+                "mode": "SP-PS",
+                "reserved_power": 30
+            },
+            "Powerstack-12": {
+                "switch_num": 1,
+                "allocated_power": 200,
+                "topology": "Stndaln",
+                "unused_power": 485,
+                "power_supply_num": 1,
+                "total_power": 715,
+                "mode": "SP-PS",
+                "reserved_power": 30
+            },
+            "Powerstack-11": {
+                "switch_num": 1,
+                "allocated_power": 295,
+                "topology": "Stndaln",
+                "unused_power": 390,
+                "power_supply_num": 1,
+                "total_power": 715,
+                "mode": "SP-PS",
+                "reserved_power": 30
+            }
+        }
+    }
+
+    golden_output_c3850 = {'execute.return_value': '''\
+        Power Stack           Stack   Stack    Total   Rsvd    Alloc   Unused  Num  Num
+        Name                  Mode    Topolgy  Pwr(W)  Pwr(W)  Pwr(W)  Pwr(W)  SW   PS
+        --------------------  ------  -------  ------  ------  ------  ------  ---  ---
+        Powerstack-1          SP-PS   Stndaln  715     30      200     485     1    1   
+        Powerstack-11         SP-PS   Stndaln  715     30      295     390     1    1   
+        Powerstack-12         SP-PS   Stndaln  715     30      200     485     1    1 
+    '''
+    }
+
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        platform_obj = ShowStackPower(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_c3850)
+        platform_obj = ShowStackPower(device=self.dev_c3850)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+
+
+class test_show_power_inline_interface(unittest.TestCase):
+    dev1 = Device(name='empty')
+    dev_c3850 = Device(name='c3850')
+    empty_output = {'execute.return_value': '      '}
+
+    golden_parsed_output_c3850 = {
+        "interface": {
+            "GigabitEthernet1/0/13": {
+               "admin_state": "auto",
+               "power": 15.4,
+               "class": "3",
+               "oper_state": "on",
+               "device": "AIR-CAP2602I-A-K9",
+               "max": 30.0
+            }
+        }
+    }
+
+    golden_output_c3850 = {'execute.return_value': '''\
+        Interface Admin  Oper       Power   Device              Class Max
+                                    (Watts)                            
+        --------- ------ ---------- ------- ------------------- ----- ----
+        Gi1/0/13  auto   on         15.4    AIR-CAP2602I-A-K9   3     30.0
+    '''
+    }
+
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        platform_obj = ShowPowerInlineInterface(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse(interface='Gi1/0/13')    
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_c3850)
+        platform_obj = ShowPowerInlineInterface(device=self.dev_c3850)
+        parsed_output = platform_obj.parse(interface='Gi1/0/13')
+        import pdb; pdb.set_trace()
+        self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
 
 if __name__ == '__main__':
     unittest.main()

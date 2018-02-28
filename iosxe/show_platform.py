@@ -17,6 +17,9 @@ try:
 except (ImportError, OSError):
     pass
 
+# import parser utils
+from parser.utils.common import Common
+
 logger = logging.getLogger(__name__)
 
 
@@ -1459,7 +1462,7 @@ class ShowSwitchDetailSchema(MetaParser):
                             'neighbors_num': int
                         },
                     }
-                },            
+                },
             }
         }
     }
@@ -1570,3 +1573,316 @@ class ShowSwitchSchema(MetaParser):
 class ShowSwitch(ShowSwitchSchema, ShowSwitchDetail):
     """Parser for show switch."""
     CLI_CMD = 'show switch'
+
+
+class ShowEnvironmentAllSchema(MetaParser):
+    """Schema for show environment all"""
+    schema = {
+        'switch': {
+            Any(): {
+                'fan': {
+                    Any(): {
+                        'state': str,
+                    }
+                },
+                'power_supply': {
+                    Any(): {
+                        'state': str,
+                        Optional('pid'): str,
+                        Optional('serial_number'): str,
+                        'status': str,
+                        Optional('system_power'): str,
+                        Optional('poe_power'): str,
+                        Optional('watts'): str
+                    }
+                },
+                'system_temperature_state': str,
+                'inlet_temperature':{
+                    'value': str,
+                    'state': str,
+                    'yellow_threshold': str,
+                    'red_threshold': str
+                },
+                'hotspot_temperature':{
+                    'value': str,
+                    'state': str,
+                    'yellow_threshold': str,
+                    'red_threshold': str
+                }
+            }
+        },
+    }
+
+
+class ShowEnvironmentAll(ShowEnvironmentAllSchema):
+    """Parser for show environment all"""
+    PS_MAPPING = {'A': '1', 'B': '2'}
+
+    def cli(self):
+         # get output from device
+        out = self.device.execute('show environment all')
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        p1 = re.compile(r'^Switch +(?P<switch>\d+) +FAN +(?P<fan>\d+) +is +(?P<state>[\w\s]+)$')
+
+        p2 = re.compile(r'^FAN +PS\-(?P<ps>\d+) +is +(?P<state>[\w\s]+)$')
+
+        p3 = re.compile(r'^Switch +(?P<switch>\d+): +SYSTEM +TEMPERATURE +is +(?P<state>[\w\s]+)$')
+
+        p4 = re.compile(r'^(?P<type>\w+) +Temperature +Value: +(?P<temperature>\d+) +Degree +Celsius$')
+
+        p5 = re.compile(r'^Temperature +State: +(?P<state>\w+)$')
+
+        p6 = re.compile(r'^(?P<color>\w+) +Threshold *: +(?P<temperature>\d+) +Degree +Celsius$')
+
+        p7 = re.compile(r'^(?P<sw>\d+)(?P<ps>\w+) *'
+                         '((?P<pid>[\w\-]+) +'
+                         '(?P<serial_number>\w+) +)?'
+                         '(?P<status>(\w+|Not Present)) *'
+                         '((?P<system_power>\w+) +'
+                         '(?P<poe_power>\w+) +'
+                         '(?P<watts>\w+))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Switch 1 FAN 1 is OK
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group['switch']
+                fan = group['fan']
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                root_dict.setdefault('fan', {}).setdefault(fan, {}).setdefault('state', group['state'].lower())
+                continue
+                
+            # FAN PS-1 is OK
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ps = group['ps']
+                power_supply_dict = root_dict.setdefault('power_supply', {}).setdefault(ps, {})
+                power_supply_dict.setdefault('state', group['state'].lower())
+                continue
+
+            # Switch 1: SYSTEM TEMPERATURE is OK
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group['switch']
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                root_dict['system_temperature_state'] = group['state'].lower()
+                continue
+
+            # Inlet Temperature Value: 34 Degree Celsius
+            # Hotspot Temperature Value: 45 Degree Celsius
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                temp_type = group['type'].lower() + '_temperature'
+                temp_dict = root_dict.setdefault(temp_type, {})
+                temp_dict['value'] = group['temperature']
+                continue
+
+            # Temperature State: GREEN
+            m = p5.match(line)
+            if m:
+                temp_dict['state'] = m.groupdict()['state'].lower()
+                continue
+
+            # Yellow Threshold : 46 Degree Celsius
+            # Red Threshold    : 56 Degree Celsius
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                color_type = group['color'].lower() + '_threshold'
+                temp_dict[color_type] = group['temperature']
+                continue
+
+            # SW  PID                 Serial#     Status           Sys Pwr  PoE Pwr  Watts
+            # --  ------------------  ----------  ---------------  -------  -------  -----
+            # 1A  PWR-C1-715WAC       DCB1844G1ZY  OK              Good     Good     715 
+            # 1B  Not Present
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group.pop('sw')
+                ps = self.PS_MAPPING[group.pop('ps')]
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                power_supply_dict = root_dict.setdefault('power_supply', {}).setdefault(ps, {})
+                power_supply_dict.update(
+                       {k:v for k, v in group.items() if k in ['pid', 'serial_number', 'watts'] and v})
+                power_supply_dict.update(
+                       {k:v.lower() for k, v in group.items() \
+                           if k in ['status', 'system_power', 'poe_power'] and v})
+                continue
+        return ret_dict
+
+
+class ShowModuleSchema(MetaParser):
+    """Schema for show module"""
+    schema = {
+        'switch': {
+            Any(): {
+                'port': str,
+                'model': str,
+                'serial_number': str,
+                'mac_address': str,
+                'hw_ver': str,
+                'sw_ver': str
+            },
+        }
+    }
+
+
+class ShowModule(ShowModuleSchema):
+    """Parser for show module"""
+
+    def cli(self):
+         # get output from device
+        out = self.device.execute('show module')
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        p1 = re.compile(r'^(?P<switch>\d+) *'
+                         '(?P<port>\w+) +'
+                         '(?P<model>[\w\-]+) +'
+                         '(?P<serial_number>\w+) +'
+                         '(?P<mac_address>[\w\.]+) +'
+                         '(?P<hw_ver>\w+) +'
+                         '(?P<sw_ver>[\w\.]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver. 
+            # ------  -----   ---------             -----------  --------------  -------       --------
+            #  1       56     WS-C3850-48P-E        FOC1902X062  689c.e2d9.df00  V04           16.9.1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group.pop('switch')
+                switch_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                switch_dict.update(
+                       {k:v.lower() for k, v in group.items()})
+                continue
+        return ret_dict
+
+
+class ShowStackPowerSchema(MetaParser):
+    """Schema for show stack-power"""
+    schema = {
+        'power_stack': {
+            Any(): {
+                'mode': str,
+                'topology': str,
+                'total_power': int,
+                'reserved_power': int,
+                'allocated_power': int,
+                'unused_power': int,
+                'switch_num': int,
+                'power_supply_num': int
+            },
+        }
+    }
+
+
+class ShowStackPower(ShowStackPowerSchema):
+    """Parser for show stack-power"""
+
+    def cli(self):
+         # get output from device
+        out = self.device.execute('show stack-power')
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        p1 = re.compile(r'^(?P<name>[\w\-]+) *'
+                         '(?P<mode>[\w\-]+) +'
+                         '(?P<topology>[\w\-]+) +'
+                         '(?P<total_power>\d+) +'
+                         '(?P<reserved_power>\d+) +'
+                         '(?P<allocated_power>\d+) +'
+                         '(?P<unused_power>\d+) +'
+                         '(?P<switch_num>\d+) +'
+                         '(?P<power_supply_num>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Power Stack           Stack   Stack    Total   Rsvd    Alloc   Unused  Num  Num
+            # Name                  Mode    Topolgy  Pwr(W)  Pwr(W)  Pwr(W)  Pwr(W)  SW   PS
+            # --------------------  ------  -------  ------  ------  ------  ------  ---  ---
+            # Powerstack-1          SP-PS   Stndaln  715     30      200     485     1    1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                name = group.pop('name')
+                stack_dict = ret_dict.setdefault('power_stack', {}).setdefault(name, {})
+                stack_dict['mode'] = group.pop('mode')
+                stack_dict['topology'] = group.pop('topology')
+                stack_dict.update(
+                       {k:int(v) for k, v in group.items()})
+                continue
+        return ret_dict
+
+
+class ShowPowerInlineInterfaceSchema(MetaParser):
+    """Schema for show power inline <interface>"""
+    schema = {
+        'interface': {
+            Any(): {
+                'admin_state': str,
+                'oper_state': str,
+                'power': float,
+                Optional('device'): str,
+                Optional('class'): str,
+                'max': float
+            },
+        }
+    }
+
+
+class ShowPowerInlineInterface(ShowPowerInlineInterfaceSchema):
+    """Parser for show power inline <interface>"""
+
+    def cli(self, interface):
+         # get output from device
+        out = self.device.execute('show power inline {}'.format(interface))
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        p1 = re.compile(r'^(?P<intf>[\w\-\/\.]+) *'
+                         '(?P<admin_state>\w+) +'
+                         '(?P<oper_state>\w+) +'
+                         '(?P<power>[\d\.]+) +'
+                         '(?P<device>[\w\-\/]+) +'
+                         '(?P<class>[\w\/]+) +'
+                         '(?P<max>[\d\.]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Interface Admin  Oper       Power   Device              Class Max
+            #                             (Watts)                            
+            # --------- ------ ---------- ------- ------------------- ----- ----
+            # Gi1/0/13  auto   on         15.4    AIR-CAP2602I-A-K9   3     30.0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group.pop('intf'))
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
+                intf_dict['power'] = float(group.pop('power'))
+                intf_dict['max'] = float(group.pop('max'))
+                intf_dict.update(
+                       {k:v for k, v in group.items() if 'n/a' not in v})
+                continue
+        return ret_dict
