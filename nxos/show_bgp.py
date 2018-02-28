@@ -2997,6 +2997,7 @@ class ShowBgpVrfAllAllNextHopDatabaseSchema(MetaParser):
                             Any(): {                                
                                  Optional('refcount'): int,
                                  Optional('flags'): str,
+                                 Optional('multipath'): str,
                                  Optional('igp_cost'): int,
                                  Optional('igp_route_type'): int,
                                  Optional('igp_preference'): int,
