@@ -1774,115 +1774,166 @@ class ShowModule(ShowModuleSchema):
         return ret_dict
 
 
-class ShowStackPowerSchema(MetaParser):
-    """Schema for show stack-power"""
+class ShowPlatformSoftwareSlotActiveMonitorMemSchema(MetaParser):
+    """Schema for show platform software process slot switch active R0 monitor | inc Mem :|Swap:"""
     schema = {
-        'power_stack': {
-            Any(): {
-                'mode': str,
-                'topology': str,
-                'total_power': int,
-                'reserved_power': int,
-                'allocated_power': int,
-                'unused_power': int,
-                'switch_num': int,
-                'power_supply_num': int
-            },
+        'memory': {
+            'total': int,
+            'free': int,
+            'used': int,
+            'buff_cashe': int
+        },
+        'swap': {
+            'total': int,
+            'free': int,
+            'used': int,
+            'available_memory': int
         }
     }
 
 
-class ShowStackPower(ShowStackPowerSchema):
-    """Parser for show stack-power"""
+class ShowPlatformSoftwareSlotActiveMonitorMem(ShowPlatformSoftwareSlotActiveMonitorMemSchema):
+    """Parser for show platform software process slot switch active R0 monitor | inc Mem :|Swap:"""
 
     def cli(self):
-         # get output from device
-        out = self.device.execute('show stack-power')
+        out = self.device.execute(
+            'show platform software process slot switch active R0 monitor | inc Mem :|Swap:')
 
         # initial return dictionary
         ret_dict = {}
 
         # initial regexp pattern
-        p1 = re.compile(r'^(?P<name>[\w\-]+) *'
-                         '(?P<mode>[\w\-]+) +'
-                         '(?P<topology>[\w\-]+) +'
-                         '(?P<total_power>\d+) +'
-                         '(?P<reserved_power>\d+) +'
-                         '(?P<allocated_power>\d+) +'
-                         '(?P<unused_power>\d+) +'
-                         '(?P<switch_num>\d+) +'
-                         '(?P<power_supply_num>\d+)$')
+        p1 = re.compile(r'^KiB +Mem *: +(?P<total>\d+) *total, +'
+                         '(?P<free>\d+) *free, +(?P<used>\d+) *used, +'
+                         '(?P<buff_cashe>\d+) *buff\/cache$')
+
+        p2 = re.compile(r'^KiB +Swap *: +(?P<total>\d+) *total, +'
+                         '(?P<free>\d+) *free, +(?P<used>\d+) *used. +'
+                         '(?P<available_memory>\d+) *avail +Mem$')
 
         for line in out.splitlines():
             line = line.strip()
-            
-            # Power Stack           Stack   Stack    Total   Rsvd    Alloc   Unused  Num  Num
-            # Name                  Mode    Topolgy  Pwr(W)  Pwr(W)  Pwr(W)  Pwr(W)  SW   PS
-            # --------------------  ------  -------  ------  ------  ------  ------  ---  ---
-            # Powerstack-1          SP-PS   Stndaln  715     30      200     485     1    1
+
+            # KiB Mem :  4010000 total,    16756 free,  1531160 used,  2462084 buff/cache
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                name = group.pop('name')
-                stack_dict = ret_dict.setdefault('power_stack', {}).setdefault(name, {})
-                stack_dict['mode'] = group.pop('mode')
-                stack_dict['topology'] = group.pop('topology')
-                stack_dict.update(
-                       {k:int(v) for k, v in group.items()})
+                name_dict = ret_dict.setdefault('memory', {})
+                name_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+            # KiB Swap:        0 total,        0 free,        0 used.  1778776 avail Mem
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                name_dict = ret_dict.setdefault('swap', {})
+                name_dict.update({k:int(v) for k, v in group.items()})
                 continue
         return ret_dict
 
 
-class ShowPowerInlineInterfaceSchema(MetaParser):
-    """Schema for show power inline <interface>"""
+class ShowPlatformSoftwareStatusControlSchema(MetaParser):
+    """Schema for show platform software status control-processor brief"""
     schema = {
-        'interface': {
+        'slot': {
             Any(): {
-                'admin_state': str,
-                'oper_state': str,
-                'power': float,
-                Optional('device'): str,
-                Optional('class'): str,
-                'max': float
-            },
+                'load_average': {
+                    'status': str,
+                    '1_min': float,
+                    '5_min': float,
+                    '15_min': float,
+                },
+                'memory': {
+                    'status': str,
+                    'total': int,
+                    'used': int,
+                    'used_percentage': int,
+                    'free': int,
+                    'free_percentage': int,
+                    'committed': int,
+                    'committed_percentage': int,
+                },
+                'cpu': {
+                    Any(): {
+                        'user': float,
+                        'system': float,
+                        'nice_process': float,
+                        'idle': float,
+                        'irq': float,
+                        'sirq': float,
+                        'waiting': float
+                    }
+                }
+            }
         }
     }
 
 
-class ShowPowerInlineInterface(ShowPowerInlineInterfaceSchema):
-    """Parser for show power inline <interface>"""
+class ShowPlatformSoftwareStatusControl(ShowPlatformSoftwareStatusControlSchema):
+    """Parser for show platform software status control-processor brief"""
 
-    def cli(self, interface):
-         # get output from device
-        out = self.device.execute('show power inline {}'.format(interface))
+    def cli(self):
+        out = self.device.execute('show platform software status control-processor brief')
 
         # initial return dictionary
         ret_dict = {}
 
         # initial regexp pattern
-        p1 = re.compile(r'^(?P<intf>[\w\-\/\.]+) *'
-                         '(?P<admin_state>\w+) +'
-                         '(?P<oper_state>\w+) +'
-                         '(?P<power>[\d\.]+) +'
-                         '(?P<device>[\w\-\/]+) +'
-                         '(?P<class>[\w\/]+) +'
-                         '(?P<max>[\d\.]+)$')
+        p1 = re.compile(r'^(?P<slot>\S+) +(?P<status>\w+) +'
+                         '(?P<min1>[\d\.]+) +(?P<min5>[\d\.]+) +(?P<min15>[\d\.]+)$')
+        
+        p2 = re.compile(r'^(?P<slot>\S+) +(?P<status>\w+) +'
+                         '(?P<total>\d+) +(?P<used>\d+) +\((?P<used_percentage>\d+)\%\) +'
+                         '(?P<free>\d+) +\((?P<free_percentage>\d+)\%\) +'
+                         '(?P<committed>\d+) +\((?P<committed_percentage>\d+)\%\)$')
+
+        p3 = re.compile(r'^(?P<slot>\S+)? *(?P<cpu>\d+) +'
+                         '(?P<user>[\d\.]+) +(?P<system>[\d\.]+) +'
+                         '(?P<nice_process>[\d\.]+) +(?P<idle>[\d\.]+) +'
+                         '(?P<irq>[\d\.]+) +(?P<sirq>[\d\.]+) +'
+                         '(?P<waiting>[\d\.]+)$')
 
         for line in out.splitlines():
             line = line.strip()
-            
-            # Interface Admin  Oper       Power   Device              Class Max
-            #                             (Watts)                            
-            # --------- ------ ---------- ------- ------------------- ----- ----
-            # Gi1/0/13  auto   on         15.4    AIR-CAP2602I-A-K9   3     30.0
+
+            # Slot  Status  1-Min  5-Min 15-Min
+            # 1-RP0 Healthy   0.26   0.35   0.33
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                intf = Common.convert_intf_name(group.pop('intf'))
-                intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
-                intf_dict['power'] = float(group.pop('power'))
-                intf_dict['max'] = float(group.pop('max'))
-                intf_dict.update(
-                       {k:v for k, v in group.items() if 'n/a' not in v})
+                slot = group.pop('slot').lower()
+                load_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {}).setdefault('load_average', {})
+                load_dict['status'] = group['status'].lower()
+                load_dict['1_min'] = float(group['min1'])
+                load_dict['5_min'] = float(group['min5'])
+                load_dict['15_min'] = float(group['min15'])
+                continue
+
+            # Slot  Status    Total     Used (Pct)     Free (Pct) Committed (Pct)
+            # 1-RP0 Healthy  4010000  2553084 (64%)  1456916 (36%)   3536536 (88%)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                slot = group.pop('slot').lower()
+                mem_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {}).setdefault('memory', {})
+                mem_dict['status'] = group.pop('status').lower()
+                mem_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+            #  Slot  CPU   User System   Nice   Idle    IRQ   SIRQ IOwait
+            # 1-RP0    0   3.89   2.09   0.00  93.80   0.00   0.19   0.00
+            #          1   5.70   1.00   0.00  93.20   0.00   0.10   0.00
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                if group['slot']:
+                    slot = group.pop('slot').lower()
+                else:
+                    group.pop('slot')
+                cpu = group.pop('cpu')
+                cpu_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {}).\
+                    setdefault('cpu', {}).setdefault(cpu, {})
+                cpu_dict.update({k:float(v) for k, v in group.items()})
                 continue
         return ret_dict
+        

@@ -13,7 +13,9 @@ from parser.iosxe.show_platform import ShowVersion,\
                                        ShowSwitchDetail, \
                                        ShowSwitch, \
                                        ShowEnvironmentAll, ShowModule, \
-                                       ShowStackPower, ShowPowerInlineInterface
+                                       ShowPlatformSoftwareStatusControl, \
+                                       ShowPlatformSoftwareSlotActiveMonitorMem
+
 
 
 class test_show_version(unittest.TestCase):
@@ -2309,108 +2311,392 @@ class test_show_module(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
 
 
-class test_show_stack_power(unittest.TestCase):
-    dev1 = Device(name='empty')
-    dev_c3850 = Device(name='c3850')
-    empty_output = {'execute.return_value': '      '}
+class test_show_platform_software_status_control_processor_brief(unittest.TestCase):
 
-    golden_parsed_output_c3850 = {
-        "power_stack": {
-            "Powerstack-1": {
-                "switch_num": 1,
-                "allocated_power": 200,
-                "topology": "Stndaln",
-                "unused_power": 485,
-                "power_supply_num": 1,
-                "total_power": 715,
-                "mode": "SP-PS",
-                "reserved_power": 30
+    dev = Device(name='c3850')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "slot": {
+            "4-rp0": {
+               "memory": {
+                    "used_percentage": 40,
+                    "committed": 1950012,
+                    "free": 2411376,
+                    "total": 4010000,
+                    "committed_percentage": 49,
+                    "status": "healthy",
+                    "used": 1598624,
+                    "free_percentage": 60
+               },
+               "cpu": {
+                    "0": {
+                         "waiting": 0.09,
+                         "system": 3.29,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 93.7,
+                         "user": 2.89
+                    },
+                    "3": {
+                         "waiting": 0.0,
+                         "system": 4.2,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 92.0,
+                         "user": 3.8
+                    },
+                    "1": {
+                         "waiting": 0.0,
+                         "system": 3.4,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 94.7,
+                         "user": 1.9
+                    },
+                    "2": {
+                         "waiting": 0.0,
+                         "system": 3.8,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 93.3,
+                         "user": 2.9
+                    }
+               },
+               "load_average": {
+                    "1_min": 0.08,
+                    "status": "healthy",
+                    "15_min": 0.27,
+                    "5_min": 0.24
+               }
             },
-            "Powerstack-12": {
-                "switch_num": 1,
-                "allocated_power": 200,
-                "topology": "Stndaln",
-                "unused_power": 485,
-                "power_supply_num": 1,
-                "total_power": 715,
-                "mode": "SP-PS",
-                "reserved_power": 30
+            "1-rp0": {
+               "memory": {
+                    "used_percentage": 64,
+                    "committed": 3536536,
+                    "free": 1456916,
+                    "total": 4010000,
+                    "committed_percentage": 88,
+                    "status": "healthy",
+                    "used": 2553084,
+                    "free_percentage": 36
+               },
+               "cpu": {
+                    "0": {
+                         "waiting": 0.0,
+                         "system": 2.09,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.19,
+                         "idle": 93.8,
+                         "user": 3.89
+                    },
+                    "3": {
+                         "waiting": 0.1,
+                         "system": 1.4,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 93.8,
+                         "user": 4.7
+                    },
+                    "1": {
+                         "waiting": 0.0,
+                         "system": 1.0,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.1,
+                         "idle": 93.2,
+                         "user": 5.7
+                    },
+                    "2": {
+                         "waiting": 0.0,
+                         "system": 0.89,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.09,
+                         "idle": 94.1,
+                         "user": 4.89
+                    }
+               },
+               "load_average": {
+                    "1_min": 0.26,
+                    "status": "healthy",
+                    "15_min": 0.33,
+                    "5_min": 0.35
+               }
             },
-            "Powerstack-11": {
-                "switch_num": 1,
-                "allocated_power": 295,
-                "topology": "Stndaln",
-                "unused_power": 390,
-                "power_supply_num": 1,
-                "total_power": 715,
-                "mode": "SP-PS",
-                "reserved_power": 30
+            "3-rp0": {
+               "memory": {
+                    "used_percentage": 40,
+                    "committed": 1940852,
+                    "free": 2418208,
+                    "total": 4010000,
+                    "committed_percentage": 48,
+                    "status": "healthy",
+                    "used": 1591792,
+                    "free_percentage": 60
+               },
+               "cpu": {
+                    "0": {
+                         "waiting": 0.0,
+                         "system": 3.5,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 94.6,
+                         "user": 1.9
+                    },
+                    "3": {
+                         "waiting": 0.0,
+                         "system": 2.6,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 95.49,
+                         "user": 1.9
+                    },
+                    "1": {
+                         "waiting": 0.0,
+                         "system": 3.4,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 93.2,
+                         "user": 3.4
+                    },
+                    "2": {
+                         "waiting": 0.0,
+                         "system": 2.7,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 94.0,
+                         "user": 3.3
+                    }
+               },
+               "load_average": {
+                    "1_min": 0.07,
+                    "status": "healthy",
+                    "15_min": 0.12,
+                    "5_min": 0.09
+               }
+            },
+            "2-rp0": {
+               "memory": {
+                    "used_percentage": 61,
+                    "committed": 3433136,
+                    "free": 1560928,
+                    "total": 4010000,
+                    "committed_percentage": 86,
+                    "status": "healthy",
+                    "used": 2449072,
+                    "free_percentage": 39
+               },
+               "cpu": {
+                    "0": {
+                         "waiting": 0.0,
+                         "system": 1.7,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 94.99,
+                         "user": 3.3
+                    },
+                    "3": {
+                         "waiting": 0.0,
+                         "system": 1.2,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 96.89,
+                         "user": 1.9
+                    },
+                    "1": {
+                         "waiting": 0.0,
+                         "system": 1.3,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 95.39,
+                         "user": 3.3
+                    },
+                    "2": {
+                         "waiting": 0.0,
+                         "system": 1.7,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 94.6,
+                         "user": 3.7
+                    }
+               },
+               "load_average": {
+                    "1_min": 0.17,
+                    "status": "healthy",
+                    "15_min": 0.23,
+                    "5_min": 0.24
+               }
+            },
+            "5-rp0": {
+               "memory": {
+                    "used_percentage": 40,
+                    "committed": 1948956,
+                    "free": 2410820,
+                    "total": 4010000,
+                    "committed_percentage": 49,
+                    "status": "healthy",
+                    "used": 1599180,
+                    "free_percentage": 60
+               },
+               "cpu": {
+                    "0": {
+                         "waiting": 0.0,
+                         "system": 0.8,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 97.39,
+                         "user": 1.8
+                    },
+                    "3": {
+                         "waiting": 0.0,
+                         "system": 0.79,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 97.1,
+                         "user": 2.09
+                    },
+                    "1": {
+                         "waiting": 0.0,
+                         "system": 0.5,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 98.1,
+                         "user": 1.4
+                    },
+                    "2": {
+                         "waiting": 0.0,
+                         "system": 1.3,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 96.8,
+                         "user": 1.9
+                    }
+               },
+               "load_average": {
+                    "1_min": 0.15,
+                    "status": "healthy",
+                    "15_min": 0.14,
+                    "5_min": 0.15
+               }
             }
         }
     }
 
-    golden_output_c3850 = {'execute.return_value': '''\
-        Power Stack           Stack   Stack    Total   Rsvd    Alloc   Unused  Num  Num
-        Name                  Mode    Topolgy  Pwr(W)  Pwr(W)  Pwr(W)  Pwr(W)  SW   PS
-        --------------------  ------  -------  ------  ------  ------  ------  ---  ---
-        Powerstack-1          SP-PS   Stndaln  715     30      200     485     1    1   
-        Powerstack-11         SP-PS   Stndaln  715     30      295     390     1    1   
-        Powerstack-12         SP-PS   Stndaln  715     30      200     485     1    1 
-    '''
+    golden_output = {'execute.return_value': '''\
+        Load Average
+         Slot  Status  1-Min  5-Min 15-Min
+        1-RP0 Healthy   0.26   0.35   0.33
+        2-RP0 Healthy   0.17   0.24   0.23
+        3-RP0 Healthy   0.07   0.09   0.12
+        4-RP0 Healthy   0.08   0.24   0.27
+        5-RP0 Healthy   0.15   0.15   0.14
+
+        Memory (kB)
+         Slot  Status    Total     Used (Pct)     Free (Pct) Committed (Pct)
+        1-RP0 Healthy  4010000  2553084 (64%)  1456916 (36%)   3536536 (88%)
+        2-RP0 Healthy  4010000  2449072 (61%)  1560928 (39%)   3433136 (86%)
+        3-RP0 Healthy  4010000  1591792 (40%)  2418208 (60%)   1940852 (48%)
+        4-RP0 Healthy  4010000  1598624 (40%)  2411376 (60%)   1950012 (49%)
+        5-RP0 Healthy  4010000  1599180 (40%)  2410820 (60%)   1948956 (49%)
+
+        CPU Utilization
+         Slot  CPU   User System   Nice   Idle    IRQ   SIRQ IOwait
+        1-RP0    0   3.89   2.09   0.00  93.80   0.00   0.19   0.00
+                 1   5.70   1.00   0.00  93.20   0.00   0.10   0.00
+                 2   4.89   0.89   0.00  94.10   0.00   0.09   0.00
+                 3   4.70   1.40   0.00  93.80   0.00   0.00   0.10
+        2-RP0    0   3.30   1.70   0.00  94.99   0.00   0.00   0.00
+                 1   3.30   1.30   0.00  95.39   0.00   0.00   0.00
+                 2   3.70   1.70   0.00  94.60   0.00   0.00   0.00
+                 3   1.90   1.20   0.00  96.89   0.00   0.00   0.00
+        3-RP0    0   1.90   3.50   0.00  94.60   0.00   0.00   0.00
+                 1   3.40   3.40   0.00  93.20   0.00   0.00   0.00
+                 2   3.30   2.70   0.00  94.00   0.00   0.00   0.00
+                 3   1.90   2.60   0.00  95.49   0.00   0.00   0.00
+        4-RP0    0   2.89   3.29   0.00  93.70   0.00   0.00   0.09
+                 1   1.90   3.40   0.00  94.70   0.00   0.00   0.00
+                 2   2.90   3.80   0.00  93.30   0.00   0.00   0.00
+                 3   3.80   4.20   0.00  92.00   0.00   0.00   0.00
+        5-RP0    0   1.80   0.80   0.00  97.39   0.00   0.00   0.00
+                 1   1.40   0.50   0.00  98.10   0.00   0.00   0.00
+                 2   1.90   1.30   0.00  96.80   0.00   0.00   0.00
+                 3   2.09   0.79   0.00  97.10   0.00   0.00   0.00'''
     }
 
     def test_empty(self):
-        self.dev1 = Mock(**self.empty_output)
-        platform_obj = ShowStackPower(device=self.dev1)
+        self.dev = Mock(**self.empty_output)
+        obj = ShowPlatformSoftwareStatusControl(device=self.dev)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = platform_obj.parse()    
+            parsered_output = obj.parse()
 
     def test_golden(self):
         self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output_c3850)
-        platform_obj = ShowStackPower(device=self.dev_c3850)
-        parsed_output = platform_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+        self.dev = Mock(**self.golden_output)
+        obj = ShowPlatformSoftwareStatusControl(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
-class test_show_power_inline_interface(unittest.TestCase):
-    dev1 = Device(name='empty')
-    dev_c3850 = Device(name='c3850')
-    empty_output = {'execute.return_value': '      '}
+class test_show_platform_software_slot_active_monitor_Mem_Swap(unittest.TestCase):
 
-    golden_parsed_output_c3850 = {
-        "interface": {
-            "GigabitEthernet1/0/13": {
-               "admin_state": "auto",
-               "power": 15.4,
-               "class": "3",
-               "oper_state": "on",
-               "device": "AIR-CAP2602I-A-K9",
-               "max": 30.0
-            }
+    dev = Device(name='c3850')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "swap": {
+            "used": 0,
+            "total": 0,
+            "available_memory": 1779488,
+            "free": 0
+        },
+        "memory": {
+            "used": 1530208,
+            "total": 4010000,
+            "buff_cashe": 2466212,
+            "free": 13580
         }
     }
 
-    golden_output_c3850 = {'execute.return_value': '''\
-        Interface Admin  Oper       Power   Device              Class Max
-                                    (Watts)                            
-        --------- ------ ---------- ------- ------------------- ----- ----
-        Gi1/0/13  auto   on         15.4    AIR-CAP2602I-A-K9   3     30.0
+    golden_output = {'execute.return_value': '''\
+        show platform software process slot switch active R0 monitor | inc Mem :|Swap:    
+        KiB Mem :  4010000 total,    13580 free,  1530208 used,  2466212 buff/cache
+        KiB Swap:        0 total,        0 free,        0 used.  1779488 avail Mem 
     '''
     }
 
     def test_empty(self):
-        self.dev1 = Mock(**self.empty_output)
-        platform_obj = ShowPowerInlineInterface(device=self.dev1)
+        self.dev = Mock(**self.empty_output)
+        obj = ShowPlatformSoftwareSlotActiveMonitorMem(device=self.dev)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = platform_obj.parse(interface='Gi1/0/13')    
+            parsered_output = obj.parse()
 
     def test_golden(self):
         self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output_c3850)
-        platform_obj = ShowPowerInlineInterface(device=self.dev_c3850)
-        parsed_output = platform_obj.parse(interface='Gi1/0/13')
-        self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+        self.dev = Mock(**self.golden_output)
+        obj = ShowPlatformSoftwareSlotActiveMonitorMem(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
 
 if __name__ == '__main__':
     unittest.main()
