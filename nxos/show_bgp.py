@@ -2997,6 +2997,7 @@ class ShowBgpVrfAllAllNextHopDatabaseSchema(MetaParser):
                             Any(): {                                
                                  Optional('refcount'): int,
                                  Optional('flags'): str,
+                                 Optional('multipath'): str,
                                  Optional('igp_cost'): int,
                                  Optional('igp_route_type'): int,
                                  Optional('igp_preference'): int,
@@ -3075,10 +3076,12 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
 
             # Nexthop: 0.0.0.0, Refcount: 4, IGP cost: 0
             # Nexthop: 200.0.3.1, Flags: 0x41, Refcount: 1, IGP cost: 3
+            # Nexthop: 50:1::1:101, Flags: 0x5, Refcount: 3, IGP cost: 0, Multipath: No
             p3 = re.compile(r'^\s*Nexthop *: +(?P<nh>[a-zA-Z0-9\.\:]+),'
                              '( +Flags *: +(?P<flags>\w+),)?'
                              ' +Refcount *: +(?P<refcount>[0-9]+), +IGP'
-                             ' +cost *: +(?P<igp_cost>[0-9\-]+)$')
+                             ' +cost *: +(?P<igp_cost>[0-9\-]+)'
+                             '(?:, +Multipath: +(?P<multipath>(\S+)))?$')
             m = p3.match(line)
             if m:
                 nexthop = m.groupdict()['nh']
@@ -3091,6 +3094,8 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
                 af_dict['next_hop'][nexthop]['igp_cost'] = int(m.groupdict()['igp_cost'])
                 if m.groupdict()['flags']:
                     af_dict['next_hop'][nexthop]['flags'] = m.groupdict()['flags']
+                if m.groupdict()['multipath']:
+                    af_dict['next_hop'][nexthop]['multipath'] = m.groupdict()['multipath']
                 continue
 
             # IGP Route type: 0, IGP preference: 0
