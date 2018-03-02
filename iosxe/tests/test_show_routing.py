@@ -450,14 +450,6 @@ class test_show_ip_route(unittest.TestCase):
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output_2_with_vrf)
 
-    def test_show_ip_route_with_route(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_2_with_vrf)
-        obj = ShowIpRoute(device=self.device)
-
-        parsed_output = obj.parse(route='0.0.0.0')
-        self.assertEqual(parsed_output, self.golden_parsed_output_2_with_vrf)
-
 
 ###################################################
 # unit test for show ipv6 route updated

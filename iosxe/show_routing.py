@@ -58,18 +58,14 @@ class ShowIpRouteSchema(MetaParser):
 class ShowIpRoute(ShowIpRouteSchema):
     """Parser for :
        show ip route
-       show ip route <Hostname or A.B.C.D>
-       show ip route vrf <vrf>
-       show ip route vrf <vrf> <Hostname or A.B.C.D>"""
+       show ip route vrf <vrf>"""
 
-    def cli(self, vrf="", route=""):
+    def cli(self, vrf=""):
         if vrf:
             cmd = 'show ip route vrf {}'.format(vrf)
         else:
             cmd = 'show ip route'
             vrf = 'default'
-        if route:
-            cmd += ' ' + route
         out = self.device.execute(cmd)
 
         af = 'ipv4'
