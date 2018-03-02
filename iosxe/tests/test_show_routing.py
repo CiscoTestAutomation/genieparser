@@ -7,7 +7,8 @@ from ats.topology import Device
 from metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from parser.iosxe.show_routing import ShowIpRoute, ShowIpv6RouteUpdated
+from parser.iosxe.show_routing import ShowIpRoute, ShowIpv6RouteUpdated,\
+                                      ShowIpRouteWord, ShowIpv6RouteWord
 
 # ============================================
 # unit test for 'show ip route'
@@ -449,6 +450,14 @@ class test_show_ip_route(unittest.TestCase):
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output_2_with_vrf)
 
+    def test_show_ip_route_with_route(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2_with_vrf)
+        obj = ShowIpRoute(device=self.device)
+
+        parsed_output = obj.parse(route='0.0.0.0')
+        self.assertEqual(parsed_output, self.golden_parsed_output_2_with_vrf)
+
 
 ###################################################
 # unit test for show ipv6 route updated
@@ -686,6 +695,139 @@ class test_show_ipv6_route_updated(unittest.TestCase):
         obj = ShowIpv6RouteUpdated(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+
+###################################################
+# unit test for show ip route <WROD>
+####################################################
+class test_show_ip_route_word(unittest.TestCase):
+    """unit test for show ip route <WORD>"""
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_output_with_route = {'execute.return_value': '''
+        show ip route 200.1.2.0
+        Routing entry for 200.1.2.0/24
+          Known via "eigrp 1", distance 130, metric 10880, type internal
+          Redistributing via eigrp 1
+          Last update from 201.1.12.2 on Vlan101, 2w3d ago
+          Routing Descriptor Blocks:
+          * 201.1.12.2, from 201.1.12.2, 2w3d ago, via Vlan101
+              Route metric is 10880, traffic share count is 1
+    '''}
+
+    golden_parsed_output_with_route = {
+        "entry": {
+            "200.1.2.0/24": {
+               "mask": "24",
+               "type": "type internal",
+               "known_via": "eigrp 1",
+               "ip": "200.1.2.0",
+               "redist_via": "eigrp",
+               "distance": "130",
+               "metric": "10880",
+               "redist_via_tag": "1",
+               "update": {
+                    "age": "2w3d",
+                    "interface": "Vlan101",
+                    "from": "201.1.12.2"
+               },
+               "paths": {
+                    1: {
+                         "age": "2w3d",
+                         "interface": "Vlan101",
+                         "from": "201.1.12.2",
+                         "metric": "10880",
+                         "share_count": "1",
+                         "nexthop": "201.1.12.2"
+                    }
+                }
+            }
+        },
+        "total_paths": 1
+    }
+
+    golden_output_with_ipv6_route = {'execute.return_value': '''
+        show ipv6 route 3020:3020::1
+        Routing entry for ::/0
+          Known via "static", distance 1, metric 0
+          Route count is 1/1, share count 0
+          Routing paths:
+            2001:ABAD:BEEF::2
+              Last updated 00:00:02 ago
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpRouteWord(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(route='200.1.2.0')
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_with_route)
+        obj = ShowIpRouteWord(device=self.device)
+        parsed_output = obj.parse(route='200.1.2.0')
+        self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
+
+
+###################################################
+# unit test for show ipv6 route <WROD>
+####################################################
+class test_show_ipv6_route_word(unittest.TestCase):
+    """unit test for show ipv6 route <WORD>"""
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_with_route = {
+    	"total_paths": 1,
+		"entry": {
+		    "2000:2::4:1/128": {
+		       "ip": "2000:2::4:1",
+		       "type": "type level-2",
+		       "distance": "115",
+		       "metric": "20",
+		       "known_via": "isis",
+		       "mask": "128",
+		       "paths": {
+		            1: {
+		                 "age": "2w4d",
+		                 "fwd_intf": "Vlan202",
+		                 "from": "FE80::EEBD:1DFF:FE09:56C2",
+		                 "fwd_ip": "FE80::EEBD:1DFF:FE09:56C2"
+		            }
+		       },
+		       "share_count": "0",
+		       "route_count": "1/1"
+		    }
+		}
+    }
+
+    golden_output_with_ipv6_route = {'execute.return_value': '''
+        Routing entry for 2000:2::4:1/128
+		  Known via "isis", distance 115, metric 20, type level-2
+		  Route count is 1/1, share count 0
+		  Routing paths:
+		    FE80::EEBD:1DFF:FE09:56C2, Vlan202
+		      From FE80::EEBD:1DFF:FE09:56C2
+		      Last updated 2w4d ago
+
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpv6RouteWord(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(route='2000:2::4:1')
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_with_ipv6_route)
+        obj = ShowIpv6RouteWord(device=self.device)
+        parsed_output = obj.parse(route='2000:2::4:1')
+        self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
 
 if __name__ == '__main__':
     unittest.main()

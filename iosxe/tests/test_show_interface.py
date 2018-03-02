@@ -27,7 +27,9 @@ from parser.iosxe.show_interface import ShowInterfacesSwitchport,\
                                         ShowIpInterfaceBriefPipeVlan,\
                                         ShowInterfaces, ShowIpInterface,\
                                         ShowIpv6Interface, \
-                                        ShowEtherchannelSummary
+                                        ShowEtherchannelSummary, \
+                                        ShowInterfacesTrunk, \
+                                        ShowInterfacesCounters
 
 
 class test_show_interface_parsergen(unittest.TestCase):
@@ -1737,6 +1739,162 @@ class test_show_etherchannel_summary(unittest.TestCase):
         parsed_output = interface_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+#############################################################################
+# unitest For show interfaces trunk
+#############################################################################
+class test_show_interfaces_trunk(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {
+        "interface": {
+            "GigabitEthernet1/0/4": {
+               "vlans_allowed_active_in_mgmt_domain": [200, 201,
+                    202, 203, 204, 205, 206, 207, 208, 209, 210, 211],
+               "vlans_allowed_on_trunk": [200, 201,
+                    202, 203, 204, 205, 206, 207, 208, 209, 210, 211],
+               "mode": "on",
+               "native_vlan": "1",
+               "status": "trunking",
+               "vlans_in_stp_forwarding_not_pruned": [200, 201,
+                    202, 203, 204, 205, 206, 207, 208, 209, 210, 211],
+               "name": "GigabitEthernet1/0/4",
+               "encapsulation": "802.1q"
+            },
+            "GigabitEthernet1/0/23": {
+               "vlans_allowed_active_in_mgmt_domain": [200, 201,
+                    202, 203, 204, 205, 206, 207, 208, 209, 210, 211],
+               "vlans_allowed_on_trunk": [200, 201,
+                    202, 203, 204, 205, 206, 207, 208, 209, 210, 211],
+               "mode": "on",
+               "native_vlan": "1",
+               "status": "trunking",
+               "vlans_in_stp_forwarding_not_pruned": [200, 201,
+                    202, 203, 204, 205, 206, 207, 208, 209, 210, 211],
+               "name": "GigabitEthernet1/0/23",
+               "encapsulation": "802.1q"
+            },
+            "Port-channel12": {
+               "vlans_allowed_active_in_mgmt_domain": [
+                    100, 101, 102, 103, 104, 105, 106,
+                    107, 108, 109, 110],
+               "vlans_allowed_on_trunk": [
+                    100, 101, 102, 103, 104, 105, 106,
+                    107, 108, 109, 110],
+               "mode": "on",
+               "native_vlan": "1",
+               "status": "trunking",
+               "vlans_in_stp_forwarding_not_pruned": [
+                    100, 101, 102, 103, 104, 105, 106,
+                    107, 108, 109, 110],
+               "name": "Port-channel12",
+               "encapsulation": "802.1q"
+            },
+            "Port-channel14": {
+               "vlans_allowed_active_in_mgmt_domain": [200, 201,
+                    202, 203, 204, 205, 206, 207, 208, 209, 210, 211],
+               "vlans_allowed_on_trunk": [200, 201,
+                    202, 203, 204, 205, 206, 207, 208, 209, 210, 211],
+               "mode": "on",
+               "native_vlan": "1",
+               "status": "trunking",
+               "vlans_in_stp_forwarding_not_pruned": [200, 201,
+                    202, 203, 204, 205, 206, 207, 208, 209, 210, 211],
+               "name": "Port-channel14",
+               "encapsulation": "802.1q"
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+        Port        Mode             Encapsulation  Status        Native vlan
+        Gi1/0/4     on               802.1q         trunking      1
+        Gi1/0/23    on               802.1q         trunking      1
+        Po12        on               802.1q         trunking      1
+        Po14        on               802.1q         trunking      1
+
+        Port        Vlans allowed on trunk
+        Gi1/0/4     200-211
+        Gi1/0/23    200-211
+        Po12        100-110
+        Po14        200-211
+
+        Port        Vlans allowed and active in management domain
+        Gi1/0/4     200-211
+        Gi1/0/23    200-211
+        Po12        100-110
+        Po14        200-211
+
+        Port        Vlans in spanning tree forwarding state and not pruned
+        Gi1/0/4     200-211
+        Gi1/0/23    200-211
+        Po12        100-110
+                  
+        Port        Vlans in spanning tree forwarding state and not pruned
+        Po14        200-211
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        interface_obj = ShowInterfacesTrunk(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = interface_obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        interface_obj = ShowInterfacesTrunk(device=self.device)
+        parsed_output = interface_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+#############################################################################
+# unitest For show interfaces <WORD> counters
+#############################################################################
+class test_show_interfaces_counters(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {
+        "interface": {
+            "GigabitEthernet1/0/1": {
+               "out": {
+                    "mcast_pkts": 188396,
+                    "bcast_pkts": 0,
+                    "ucast_pkts": 124435064,
+                    "name": "GigabitEthernet1/0/1",
+                    "octets": 24884341205
+               },
+               "in": {
+                    "mcast_pkts": 214513,
+                    "bcast_pkts": 0,
+                    "ucast_pkts": 15716712,
+                    "name": "GigabitEthernet1/0/1",
+                    "octets": 3161931167
+               }
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+        Port            InOctets    InUcastPkts    InMcastPkts    InBcastPkts 
+        Gi1/0/1       3161931167       15716712         214513              0 
+
+        Port           OutOctets   OutUcastPkts   OutMcastPkts   OutBcastPkts 
+        Gi1/0/1      24884341205      124435064         188396              0
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        interface_obj = ShowInterfacesCounters(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = interface_obj.parse(interface='Gi1/0/1')
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        interface_obj = ShowInterfacesCounters(device=self.device)
+        parsed_output = interface_obj.parse(interface='GigabitEthernet1/0/1')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
 
 
 if __name__ == '__main__':
