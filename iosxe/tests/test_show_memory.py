@@ -5,8 +5,7 @@ from ats.topology import Device
 
 from metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
-from parser.iosxe.show_memory import ShowMemoryStatistics, \
-                                     ShowProcessesCpuSorted
+from parser.iosxe.show_memory import ShowMemoryStatistics
 
 
 class test_show_memory_statistics(unittest.TestCase):
@@ -57,102 +56,7 @@ class test_show_memory_statistics(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-
-class test_show_processes_cpu_sorted_CPU(unittest.TestCase):
-
-    dev = Device(name='c3850')
-    empty_output = {'execute.return_value': ''}
-
-    golden_parsed_output = {
-        "five_sec_cpu_high": 7,
-        "five_min_cpu": 6,
-        "one_min_cpu": 6,
-        "five_sec_cpu_low": 1
-    }
-
-    golden_output = {'execute.return_value': '''\
-        show processes cpu sorted 5min | inc CPU
-        CPU utilization for five seconds: 7%/1%; one minute: 6%; five minutes: 6%
-    '''
-    }
-
-    golden_parsed_output_1 = {
-        "five_min_cpu": 6,
-        "five_sec_cpu_low": 1,
-        "one_min_cpu": 6,
-        "nonzero_cpu_processes": [
-          "PLFM-MGR IPC pro",
-          "Spanning Tree"
-        ],
-        "zero_cpu_processes": [
-          "IPC Seat TX Cont"
-        ],
-        "five_sec_cpu_high": 5,
-        "sort": {
-            1: {
-               "five_min_cpu": 0.54,
-               "invoked": 6437005,
-               "usecs": 1236,
-               "one_min_cpu": 0.53,
-               "tty": 0,
-               "process": "PLFM-MGR IPC pro",
-               "five_sec_cpu": 0.31,
-               "runtime": 7962054,
-               "pid": 152
-            },
-            2: {
-               "five_min_cpu": 0.31,
-               "invoked": 14602032,
-               "usecs": 336,
-               "one_min_cpu": 0.31,
-               "tty": 0,
-               "process": "Spanning Tree",
-               "five_sec_cpu": 0.23,
-               "runtime": 4915791,
-               "pid": 242
-            },
-            3: {
-               "five_min_cpu": 0.0,
-               "invoked": 1,
-               "usecs": 0,
-               "one_min_cpu": 0.0,
-               "tty": 0,
-               "process": "IPC Seat TX Cont",
-               "five_sec_cpu": 0.0,
-               "runtime": 0,
-               "pid": 32
-            }
-        }
-    }
-
-    golden_output_1 = {'execute.return_value': '''
-        CPU utilization for five seconds: 5%/1%; one minute: 6%; five minutes: 6%
-         PID Runtime(ms)     Invoked      uSecs   5Sec   1Min   5Min TTY Process          
-         152     7962054     6437005       1236  0.31%  0.53%  0.54%   0 PLFM-MGR IPC pro 
-         242     4915791    14602032        336  0.23%  0.31%  0.31%   0 Spanning Tree    
-          32           0           1          0  0.00%  0.00%  0.00%   0 IPC Seat TX Cont
-    '''}
-
-    def test_empty(self):
-        self.dev = Mock(**self.empty_output)
-        obj = ShowProcessesCpuSorted(device=self.dev)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsered_output = obj.parse()
-
-    def test_golden(self):
-        self.maxDiff = None
-        self.dev = Mock(**self.golden_output)
-        obj = ShowProcessesCpuSorted(device=self.dev)
-        parsed_output = obj.parse(key_word='CPU', sort_time='5min')
-        self.assertEqual(parsed_output, self.golden_parsed_output)
-
-    def test_golden_1(self):
-        self.maxDiff = None
-        self.dev = Mock(**self.golden_output_1)
-        obj = ShowProcessesCpuSorted(device=self.dev)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_1)
-
+        
 if __name__ == '__main__':
     unittest.main()
 
