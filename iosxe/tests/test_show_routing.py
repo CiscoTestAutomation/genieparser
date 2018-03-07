@@ -740,16 +740,6 @@ class test_show_ip_route_word(unittest.TestCase):
         "total_paths": 1
     }
 
-    golden_output_with_ipv6_route = {'execute.return_value': '''
-        show ipv6 route 3020:3020::1
-        Routing entry for ::/0
-          Known via "static", distance 1, metric 0
-          Route count is 1/1, share count 0
-          Routing paths:
-            2001:ABAD:BEEF::2
-              Last updated 00:00:02 ago
-    '''}
-
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpRouteWord(device=self.device)

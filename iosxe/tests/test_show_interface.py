@@ -1793,7 +1793,8 @@ class test_show_interfaces_trunk(unittest.TestCase):
             },
             "Port-channel14": {
                "vlans_allowed_active_in_mgmt_domain": [200, 201,
-                    202, 203, 204, 205, 206, 207, 208, 209, 210, 211],
+                    202, 203, 204, 205, 206, 207, 208, 209, 210, 211,
+                    300, 301, 302],
                "vlans_allowed_on_trunk": [200, 201,
                     202, 203, 204, 205, 206, 207, 208, 209, 210, 211],
                "mode": "on",
@@ -1824,7 +1825,7 @@ class test_show_interfaces_trunk(unittest.TestCase):
         Gi1/0/4     200-211
         Gi1/0/23    200-211
         Po12        100-110
-        Po14        200-211
+        Po14        200-211, 300-302
 
         Port        Vlans in spanning tree forwarding state and not pruned
         Gi1/0/4     200-211
