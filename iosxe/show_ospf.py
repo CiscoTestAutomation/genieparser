@@ -41,6 +41,7 @@ class ShowIpOspfSchema(MetaParser):
                         {'instance': 
                             {Any(): 
                                 {'router_id': str,
+                                 Optional('enable'): bool,
                                 'nsr': 
                                     {'enable': bool},
                                 'bfd': 
@@ -246,6 +247,13 @@ class ShowIpOspf(ShowIpOspfSchema):
                 if 'bfd' not in sub_dict:
                     sub_dict['bfd'] = {}
                     sub_dict['bfd']['enable'] = False
+                continue
+
+            # Routing Process is shutdown
+            p1_1 = re.compile(r'^Routing +Process +is +shutdown$')
+            m = p1_1.match(line)
+            if m:
+                sub_dict['enable'] = False
                 continue
 
             # Domain ID type 0x0005, value 0.0.0.2
@@ -903,6 +911,10 @@ class ShowIpOspf(ShowIpOspfSchema):
                               ' *\((?P<loopback>(\d+)) +loopback\))?$')
             m = p41.match(line)
             if m:
+                if 'areas' not in sub_dict:
+                    sub_dict['areas'] = {}
+                if area not in sub_dict['areas']:
+                    sub_dict['areas'][area] = {}
                 if 'statistics' not in sub_dict['areas'][area]:
                     sub_dict['areas'][area]['statistics'] = {}
                 sub_dict['areas'][area]['statistics']['interfaces_count'] =\
@@ -1323,10 +1335,11 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
             line = line.strip()
 
             # Loopback0 is up, line protocol is up 
-            # GigabitEthernet2 is up, line protocol is up 
+            # GigabitEthernet2 is up, line protocol is up
+            # Port-channel2.100 is administratively down, line protocol is down
             # OSPF_SL1 is up, line protocol is up 
             # OSPF_VL3 is up, line protocol is up 
-            p1 = re.compile(r'^(?P<interface>(\S+)) +is'
+            p1 = re.compile(r'^(?P<interface>(\S+)) +is( +administratively)?'
                              ' +(?P<enable>(unknown|up|down)), +line +protocol'
                              ' +is +(?P<line_protocol>(up|down))$')
             m = p1.match(line)
@@ -1658,7 +1671,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 if m.groupdict()['bfd']:
                     if 'bfd' not in sub_dict:
                         sub_dict['bfd'] = {}
-                    if 'enabled' in m.groupdict()['enabled']:
+                    if 'enabled' in m.groupdict()['bfd']:
                         sub_dict['bfd']['enable'] = True
                     else:
                         sub_dict['bfd']['enable'] = False
