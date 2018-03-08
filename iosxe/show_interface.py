@@ -2523,9 +2523,9 @@ class ShowInterfacesTrunkSchema(MetaParser):
                 'encapsulation': str,
                 'status': str,
                 'native_vlan': str,
-                'vlans_allowed_on_trunk': list,
-                'vlans_allowed_active_in_mgmt_domain': list,
-                'vlans_in_stp_forwarding_not_pruned': list
+                'vlans_allowed_on_trunk': str,
+                'vlans_allowed_active_in_mgmt_domain': str,
+                'vlans_in_stp_forwarding_not_pruned': str
             }
         }
     }
@@ -2581,13 +2581,7 @@ class ShowInterfacesTrunk(ShowInterfacesTrunkSchema):
                 group = m.groupdict()
                 intf = Common.convert_intf_name(group['name'])
                 intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
-                vlan_list = group['vlans'].split(',')
-                vlan_list_all = []
-                for item in vlan_list:
-                    item = item.split('-')
-                    vlan_list_all.extend(list(range(int(item[0]), int(item[-1]) + 1 )) )
-
-                intf_dict.setdefault(vlan_list_type, vlan_list_all) if vlan_list_type else None
+                intf_dict.setdefault(vlan_list_type, group['vlans']) if group['vlans'] else None
                 continue
         return ret_dict
 

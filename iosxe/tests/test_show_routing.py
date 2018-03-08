@@ -737,7 +737,7 @@ class test_show_ip_route_word(unittest.TestCase):
                 }
             }
         },
-        "total_paths": 1
+        "total_prefixes": 1
     }
 
     def test_empty(self):
@@ -764,7 +764,7 @@ class test_show_ipv6_route_word(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output_with_route = {
-    	"total_paths": 1,
+    	"total_prefixes": 1,
 		"entry": {
 		    "2000:2::4:1/128": {
 		       "ip": "2000:2::4:1",

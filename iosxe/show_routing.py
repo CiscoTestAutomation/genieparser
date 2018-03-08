@@ -802,7 +802,7 @@ class ShowIpRouteWordSchema(MetaParser):
                 }
             }
         },
-        'total_paths': int,
+        'total_prefixes': int,
     }
 
 
@@ -954,7 +954,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                 path_dict['age'] = m.groupdict()['age']
                 continue
 
-        ret_dict.update({'total_paths': index}) if ret_dict else None
+        ret_dict.update({'total_prefixes': index}) if ret_dict else None
         return ret_dict
 
 
@@ -984,7 +984,7 @@ class ShowIpv6RouteWordSchema(MetaParser):
                 }
             }
         },
-        'total_paths': int,
+        'total_prefixes': int,
     }
 
 

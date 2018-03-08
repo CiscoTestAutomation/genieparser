@@ -1750,58 +1750,42 @@ class test_show_interfaces_trunk(unittest.TestCase):
     golden_parsed_output = {
         "interface": {
             "GigabitEthernet1/0/4": {
-               "vlans_allowed_active_in_mgmt_domain": [200, 201,
-                    202, 203, 204, 205, 206, 207, 208, 209, 210, 211],
-               "vlans_allowed_on_trunk": [200, 201,
-                    202, 203, 204, 205, 206, 207, 208, 209, 210, 211],
+               "vlans_allowed_active_in_mgmt_domain": '200-211',
+               "vlans_allowed_on_trunk": '200-211',
                "mode": "on",
                "native_vlan": "1",
                "status": "trunking",
-               "vlans_in_stp_forwarding_not_pruned": [200, 201,
-                    202, 203, 204, 205, 206, 207, 208, 209, 210, 211],
+               "vlans_in_stp_forwarding_not_pruned": '200-211',
                "name": "GigabitEthernet1/0/4",
                "encapsulation": "802.1q"
             },
             "GigabitEthernet1/0/23": {
-               "vlans_allowed_active_in_mgmt_domain": [200, 201,
-                    202, 203, 204, 205, 206, 207, 208, 209, 210, 211],
-               "vlans_allowed_on_trunk": [200, 201,
-                    202, 203, 204, 205, 206, 207, 208, 209, 210, 211],
+               "vlans_allowed_active_in_mgmt_domain": '200-211',
+               "vlans_allowed_on_trunk": '200-211',
                "mode": "on",
                "native_vlan": "1",
                "status": "trunking",
-               "vlans_in_stp_forwarding_not_pruned": [200, 201,
-                    202, 203, 204, 205, 206, 207, 208, 209, 210, 211],
+               "vlans_in_stp_forwarding_not_pruned": '200-211',
                "name": "GigabitEthernet1/0/23",
                "encapsulation": "802.1q"
             },
             "Port-channel12": {
-               "vlans_allowed_active_in_mgmt_domain": [
-                    100, 101, 102, 103, 104, 105, 106,
-                    107, 108, 109, 110],
-               "vlans_allowed_on_trunk": [
-                    100, 101, 102, 103, 104, 105, 106,
-                    107, 108, 109, 110],
+               "vlans_allowed_active_in_mgmt_domain": '100-110',
+               "vlans_allowed_on_trunk": '100-110',
                "mode": "on",
                "native_vlan": "1",
                "status": "trunking",
-               "vlans_in_stp_forwarding_not_pruned": [
-                    100, 101, 102, 103, 104, 105, 106,
-                    107, 108, 109, 110],
+               "vlans_in_stp_forwarding_not_pruned": '100-110',
                "name": "Port-channel12",
                "encapsulation": "802.1q"
             },
             "Port-channel14": {
-               "vlans_allowed_active_in_mgmt_domain": [200, 201,
-                    202, 203, 204, 205, 206, 207, 208, 209, 210, 211,
-                    300, 301, 302],
-               "vlans_allowed_on_trunk": [200, 201,
-                    202, 203, 204, 205, 206, 207, 208, 209, 210, 211],
+               "vlans_allowed_active_in_mgmt_domain": '200-211, 300-302',
+               "vlans_allowed_on_trunk": '200-211',
                "mode": "on",
                "native_vlan": "1",
                "status": "trunking",
-               "vlans_in_stp_forwarding_not_pruned": [200, 201,
-                    202, 203, 204, 205, 206, 207, 208, 209, 210, 211],
+               "vlans_in_stp_forwarding_not_pruned": '200-211',
                "name": "Port-channel14",
                "encapsulation": "802.1q"
             }
