@@ -17,6 +17,9 @@ try:
 except (ImportError, OSError):
     pass
 
+# import parser utils
+from parser.utils.common import Common
+
 logger = logging.getLogger(__name__)
 
 
@@ -1459,7 +1462,7 @@ class ShowSwitchDetailSchema(MetaParser):
                             'neighbors_num': int
                         },
                     }
-                },            
+                },
             }
         }
     }
@@ -1570,3 +1573,462 @@ class ShowSwitchSchema(MetaParser):
 class ShowSwitch(ShowSwitchSchema, ShowSwitchDetail):
     """Parser for show switch."""
     CLI_CMD = 'show switch'
+
+
+class ShowEnvironmentAllSchema(MetaParser):
+    """Schema for show environment all"""
+    schema = {
+        'switch': {
+            Any(): {
+                'fan': {
+                    Any(): {
+                        'state': str,
+                    }
+                },
+                'power_supply': {
+                    Any(): {
+                        'state': str,
+                        Optional('pid'): str,
+                        Optional('serial_number'): str,
+                        'status': str,
+                        Optional('system_power'): str,
+                        Optional('poe_power'): str,
+                        Optional('watts'): str
+                    }
+                },
+                'system_temperature_state': str,
+                'inlet_temperature':{
+                    'value': str,
+                    'state': str,
+                    'yellow_threshold': str,
+                    'red_threshold': str
+                },
+                'hotspot_temperature':{
+                    'value': str,
+                    'state': str,
+                    'yellow_threshold': str,
+                    'red_threshold': str
+                }
+            }
+        },
+    }
+
+
+class ShowEnvironmentAll(ShowEnvironmentAllSchema):
+    """Parser for show environment all"""
+    PS_MAPPING = {'A': '1', 'B': '2'}
+
+    def cli(self):
+         # get output from device
+        out = self.device.execute('show environment all')
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        p1 = re.compile(r'^Switch +(?P<switch>\d+) +FAN +(?P<fan>\d+) +is +(?P<state>[\w\s]+)$')
+
+        p2 = re.compile(r'^FAN +PS\-(?P<ps>\d+) +is +(?P<state>[\w\s]+)$')
+
+        p3 = re.compile(r'^Switch +(?P<switch>\d+): +SYSTEM +TEMPERATURE +is +(?P<state>[\w\s]+)$')
+
+        p4 = re.compile(r'^(?P<type>\w+) +Temperature +Value: +(?P<temperature>\d+) +Degree +Celsius$')
+
+        p5 = re.compile(r'^Temperature +State: +(?P<state>\w+)$')
+
+        p6 = re.compile(r'^(?P<color>\w+) +Threshold *: +(?P<temperature>\d+) +Degree +Celsius$')
+
+        p7 = re.compile(r'^(?P<sw>\d+)(?P<ps>\w+) *'
+                         '((?P<pid>[\w\-]+) +'
+                         '(?P<serial_number>\w+) +)?'
+                         '(?P<status>(\w+|Not Present)) *'
+                         '((?P<system_power>\w+) +'
+                         '(?P<poe_power>\w+) +'
+                         '(?P<watts>\w+))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Switch 1 FAN 1 is OK
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group['switch']
+                fan = group['fan']
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                root_dict.setdefault('fan', {}).setdefault(fan, {}).setdefault('state', group['state'].lower())
+                continue
+                
+            # FAN PS-1 is OK
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ps = group['ps']
+                power_supply_dict = root_dict.setdefault('power_supply', {}).setdefault(ps, {})
+                power_supply_dict.setdefault('state', group['state'].lower())
+                continue
+
+            # Switch 1: SYSTEM TEMPERATURE is OK
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group['switch']
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                root_dict['system_temperature_state'] = group['state'].lower()
+                continue
+
+            # Inlet Temperature Value: 34 Degree Celsius
+            # Hotspot Temperature Value: 45 Degree Celsius
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                temp_type = group['type'].lower() + '_temperature'
+                temp_dict = root_dict.setdefault(temp_type, {})
+                temp_dict['value'] = group['temperature']
+                continue
+
+            # Temperature State: GREEN
+            m = p5.match(line)
+            if m:
+                temp_dict['state'] = m.groupdict()['state'].lower()
+                continue
+
+            # Yellow Threshold : 46 Degree Celsius
+            # Red Threshold    : 56 Degree Celsius
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                color_type = group['color'].lower() + '_threshold'
+                temp_dict[color_type] = group['temperature']
+                continue
+
+            # SW  PID                 Serial#     Status           Sys Pwr  PoE Pwr  Watts
+            # --  ------------------  ----------  ---------------  -------  -------  -----
+            # 1A  PWR-C1-715WAC       DCB1844G1ZY  OK              Good     Good     715 
+            # 1B  Not Present
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group.pop('sw')
+                ps = self.PS_MAPPING[group.pop('ps')]
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                power_supply_dict = root_dict.setdefault('power_supply', {}).setdefault(ps, {})
+                power_supply_dict.update(
+                       {k:v for k, v in group.items() if k in ['pid', 'serial_number', 'watts'] and v})
+                power_supply_dict.update(
+                       {k:v.lower() for k, v in group.items() \
+                           if k in ['status', 'system_power', 'poe_power'] and v})
+                continue
+        return ret_dict
+
+
+class ShowModuleSchema(MetaParser):
+    """Schema for show module"""
+    schema = {
+        'switch': {
+            Any(): {
+                'port': str,
+                'model': str,
+                'serial_number': str,
+                'mac_address': str,
+                'hw_ver': str,
+                'sw_ver': str
+            },
+        }
+    }
+
+
+class ShowModule(ShowModuleSchema):
+    """Parser for show module"""
+
+    def cli(self):
+         # get output from device
+        out = self.device.execute('show module')
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        p1 = re.compile(r'^(?P<switch>\d+) *'
+                         '(?P<port>\w+) +'
+                         '(?P<model>[\w\-]+) +'
+                         '(?P<serial_number>\w+) +'
+                         '(?P<mac_address>[\w\.]+) +'
+                         '(?P<hw_ver>\w+) +'
+                         '(?P<sw_ver>[\w\.]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver. 
+            # ------  -----   ---------             -----------  --------------  -------       --------
+            #  1       56     WS-C3850-48P-E        FOC1902X062  689c.e2d9.df00  V04           16.9.1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group.pop('switch')
+                switch_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                switch_dict.update(
+                       {k:v.lower() for k, v in group.items()})
+                continue
+        return ret_dict
+
+
+class ShowPlatformSoftwareSlotActiveMonitorMemSchema(MetaParser):
+    """Schema for show platform software process slot switch active R0 monitor | inc Mem :|Swap:"""
+    schema = {
+        'memory': {
+            'total': int,
+            'free': int,
+            'used': int,
+            'buff_cache': int
+        },
+        'swap': {
+            'total': int,
+            'free': int,
+            'used': int,
+            'available_memory': int
+        }
+    }
+
+
+class ShowPlatformSoftwareSlotActiveMonitorMem(ShowPlatformSoftwareSlotActiveMonitorMemSchema):
+    """Parser for show platform software process slot switch active R0 monitor | inc Mem :|Swap:"""
+
+    def cli(self):
+        out = self.device.execute(
+            'show platform software process slot switch active R0 monitor | inc Mem :|Swap:')
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        p1 = re.compile(r'^KiB +Mem *: +(?P<total>\d+) *total, +'
+                         '(?P<free>\d+) *free, +(?P<used>\d+) *used, +'
+                         '(?P<buff_cache>\d+) *buff\/cache$')
+
+        p2 = re.compile(r'^KiB +Swap *: +(?P<total>\d+) *total, +'
+                         '(?P<free>\d+) *free, +(?P<used>\d+) *used. +'
+                         '(?P<available_memory>\d+) *avail +Mem$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # KiB Mem :  4010000 total,    16756 free,  1531160 used,  2462084 buff/cache
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                name_dict = ret_dict.setdefault('memory', {})
+                name_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+            # KiB Swap:        0 total,        0 free,        0 used.  1778776 avail Mem
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                name_dict = ret_dict.setdefault('swap', {})
+                name_dict.update({k:int(v) for k, v in group.items()})
+                continue
+        return ret_dict
+
+
+class ShowPlatformSoftwareStatusControlSchema(MetaParser):
+    """Schema for show platform software status control-processor brief"""
+    schema = {
+        'slot': {
+            Any(): {
+                'load_average': {
+                    'status': str,
+                    '1_min': float,
+                    '5_min': float,
+                    '15_min': float,
+                },
+                'memory': {
+                    'status': str,
+                    'total': int,
+                    'used': int,
+                    'used_percentage': int,
+                    'free': int,
+                    'free_percentage': int,
+                    'committed': int,
+                    'committed_percentage': int,
+                },
+                'cpu': {
+                    Any(): {
+                        'user': float,
+                        'system': float,
+                        'nice_process': float,
+                        'idle': float,
+                        'irq': float,
+                        'sirq': float,
+                        'waiting': float
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareStatusControl(ShowPlatformSoftwareStatusControlSchema):
+    """Parser for show platform software status control-processor brief"""
+
+    def cli(self):
+        out = self.device.execute('show platform software status control-processor brief')
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        p1 = re.compile(r'^(?P<slot>\S+) +(?P<status>\w+) +'
+                         '(?P<min1>[\d\.]+) +(?P<min5>[\d\.]+) +(?P<min15>[\d\.]+)$')
+        
+        p2 = re.compile(r'^(?P<slot>\S+) +(?P<status>\w+) +'
+                         '(?P<total>\d+) +(?P<used>\d+) +\((?P<used_percentage>\d+)\%\) +'
+                         '(?P<free>\d+) +\((?P<free_percentage>\d+)\%\) +'
+                         '(?P<committed>\d+) +\((?P<committed_percentage>\d+)\%\)$')
+
+        p3 = re.compile(r'^(?P<slot>\S+)? *(?P<cpu>\d+) +'
+                         '(?P<user>[\d\.]+) +(?P<system>[\d\.]+) +'
+                         '(?P<nice_process>[\d\.]+) +(?P<idle>[\d\.]+) +'
+                         '(?P<irq>[\d\.]+) +(?P<sirq>[\d\.]+) +'
+                         '(?P<waiting>[\d\.]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Slot  Status  1-Min  5-Min 15-Min
+            # 1-RP0 Healthy   0.26   0.35   0.33
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                slot = group.pop('slot').lower()
+                load_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {}).setdefault('load_average', {})
+                load_dict['status'] = group['status'].lower()
+                load_dict['1_min'] = float(group['min1'])
+                load_dict['5_min'] = float(group['min5'])
+                load_dict['15_min'] = float(group['min15'])
+                continue
+
+            # Slot  Status    Total     Used (Pct)     Free (Pct) Committed (Pct)
+            # 1-RP0 Healthy  4010000  2553084 (64%)  1456916 (36%)   3536536 (88%)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                slot = group.pop('slot').lower()
+                mem_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {}).setdefault('memory', {})
+                mem_dict['status'] = group.pop('status').lower()
+                mem_dict.update({k:int(v) for k, v in group.items()})
+                continue
+
+            #  Slot  CPU   User System   Nice   Idle    IRQ   SIRQ IOwait
+            # 1-RP0    0   3.89   2.09   0.00  93.80   0.00   0.19   0.00
+            #          1   5.70   1.00   0.00  93.20   0.00   0.10   0.00
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                if group['slot']:
+                    slot = group.pop('slot').lower()
+                else:
+                    group.pop('slot')
+                cpu = group.pop('cpu')
+                cpu_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {}).\
+                    setdefault('cpu', {}).setdefault(cpu, {})
+                cpu_dict.update({k:float(v) for k, v in group.items()})
+                continue
+        return ret_dict
+
+
+class ShowProcessesCpuSortedSchema(MetaParser):
+    """Schema for show processes cpu sorted
+                  show processes cpu sorted <1min|5min|5sec>
+                  show processes cpu sorted | include <WORD>
+                  show processes cpu sorted <1min|5min|5sec> | include <WORD>"""
+    schema = {
+        'five_sec_cpu_interrupts': int,
+        'five_sec_cpu_total': int,
+        'one_min_cpu': int,
+        'five_min_cpu': int,
+        Optional('zero_cpu_processes'): list,
+        Optional('nonzero_cpu_processes'): list,
+        Optional('sort'): {
+            Any(): {
+                'runtime': int,
+                'invoked': int,
+                'usecs': int,
+                'five_sec_cpu': float,
+                'one_min_cpu': float,
+                'five_min_cpu': float,
+                'tty': int,
+                'pid': int,
+                'process': str
+            }
+        }
+    }
+
+
+class ShowProcessesCpuSorted(ShowProcessesCpuSortedSchema):
+    """Parser for show processes cpu sorted
+                  show processes cpu sorted <1min|5min|5sec>
+                  show processes cpu sorted | include <WORD>
+                  show processes cpu sorted <1min|5min|5sec> | include <WORD>"""
+
+    def cli(self, sort_time='', key_word=''):
+        assert sort_time in ['1min', '5min', '5sec', ''], "Not one from 1min 5min 5sec"
+        cmd = 'show processes cpu sorted'
+        if sort_time:
+            cmd += ' ' + sort_time
+        if key_word:
+            cmd += ' | ' + key_word
+
+        out = self.device.execute(cmd)
+
+        # initial return dictionary
+        ret_dict = {}
+        zero_cpu_processes = []
+        nonzero_cpu_processes = []
+        index = 0
+
+        # initial regexp pattern
+        p1 = re.compile(r'^CPU +utilization +for +five +seconds: +'
+                         '(?P<five_sec_cpu_total>\d+)\%\/(?P<five_sec_cpu_interrupts>\d+)\%;'
+                         ' +one +minute: +(?P<one_min_cpu>\d+)\%;'
+                         ' +five +minutes: +(?P<five_min_cpu>\d+)\%$')
+
+        p2 = re.compile(r'^(?P<pid>\d+) +(?P<runtime>\d+) +(?P<invoked>\d+) +(?P<usecs>\d+) +'
+                         '(?P<five_sec_cpu>[\d\.]+)\% +(?P<one_min_cpu>[\d\.]+)\% +'
+                         '(?P<five_min_cpu>[\d\.]+)\% +(?P<tty>\d+) +'
+                         '(?P<process>[\w\-\/\s]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # CPU utilization for five seconds: 5%/1%; one minute: 6%; five minutes: 6%
+            m = p1.match(line)
+            if m:
+                ret_dict.update({k:int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # PID Runtime(ms)     Invoked      uSecs   5Sec   1Min   5Min TTY Process 
+            # 539     6061647    89951558         67  0.31%  0.36%  0.38%   0 HSRP Common 
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                index += 1
+                sort_dict = ret_dict.setdefault('sort', {}).setdefault(index, {})
+                sort_dict['process'] = group['process']
+                sort_dict.update({k:int(v) for k, v in group.items() 
+                    if k in ['runtime', 'invoked', 'usecs', 'tty', 'pid']})
+                sort_dict.update({k:float(v) for k, v in group.items() 
+                    if k in ['five_sec_cpu', 'one_min_cpu', 'five_min_cpu']})
+                if float(group['five_sec_cpu']) or \
+                   float(group['one_min_cpu']) or \
+                   float(group['five_min_cpu']):
+                    nonzero_cpu_processes.append(group['process'])
+                else:
+                    zero_cpu_processes.append(group['process'])
+                continue
+        ret_dict.setdefault('zero_cpu_processes', zero_cpu_processes) if zero_cpu_processes else None
+        ret_dict.setdefault('nonzero_cpu_processes', nonzero_cpu_processes) if nonzero_cpu_processes else None
+        return ret_dict
+
+        
