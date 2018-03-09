@@ -6037,14 +6037,14 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
 
                         #    network { <af_network_number> mask <af_network_mask> } [ route-map <rmap-name> ] +
                         #    network <af_v6_network_number> [ route-map <af_v6_network_route_map> ] +
-                        p31 = re.compile(r'^\s*network +(?P<af_network_number>[0-9\.\:\/]+)( +mask +(?P<af_network_mask>[0-9\.]+))?( +route-map +(?P<af_network_route_map>[A-Za-z0-9\-\_]+))?$')
+                        p31 = re.compile(r'^\s*network +(?P<af_network_number>[0-9\.\:]+)( +mask +(?P<af_network_mask>[0-9\.]+))?( +route-map +(?P<af_network_route_map>[A-Za-z0-9\-\_]+))?$')
                         m = p31.match(line)
                         if m:
                             if m.groupdict()['af_network_mask']:
                                 bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_network_number'] = \
                                     str(m.groupdict()['af_network_number'])
                                 bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_network_mask'] = \
-                                    str(m.groupdict()['af_network_mask'])
+                                    int(m.groupdict()['af_network_mask'])
                                 if m.groupdict()['af_network_route_map']:
                                     bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_network_route_map'] = \
                                         str(m.groupdict()['af_network_route_map'])
@@ -6063,7 +6063,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_network_number'] = \
                                 str(m.groupdict()['af_network_number'])
                             bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_network_mask'] = \
-                                str(m.groupdict()['af_network_mask'])
+                                int(m.groupdict()['af_network_mask'])
                             if m.groupdict()['af_network_route_map']:
                                 bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_network_route_map'] = \
                                     str(m.groupdict()['af_network_route_map'])
