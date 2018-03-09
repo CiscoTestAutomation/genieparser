@@ -11,7 +11,12 @@ from parser.iosxe.show_platform import ShowVersion,\
                                        ShowInventory,\
                                        ShowPlatform, ShowBoot, \
                                        ShowSwitchDetail, \
-                                       ShowSwitch
+                                       ShowSwitch, \
+                                       ShowEnvironmentAll, ShowModule, \
+                                       ShowPlatformSoftwareStatusControl, \
+                                       ShowPlatformSoftwareSlotActiveMonitorMem, \
+                                       ShowProcessesCpuSorted
+
 
 
 class test_show_version(unittest.TestCase):
@@ -2045,6 +2050,748 @@ class test_show_switch(unittest.TestCase):
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
 
+
+class test_show_environment_all(unittest.TestCase):
+    dev1 = Device(name='empty')
+    dev_c3850 = Device(name='c3850')
+    empty_output = {'execute.return_value': '      '}
+
+    golden_parsed_output_c3850 = {
+        "switch": {
+            "3": {
+               "system_temperature_state": "ok",
+               "hotspot_temperature": {
+                    "yellow_threshold": "105",
+                    "red_threshold": "125",
+                    "state": "green",
+                    "value": "43"
+               },
+               "power_supply": {
+                    "2": {
+                         "state": "not present",
+                         "status": "not present"
+                    },
+                    "1": {
+                         "pid": "PWR-C1-715WAC",
+                         "serial_number": "DCB1844G1WW",
+                         "watts": "715",
+                         "system_power": "good",
+                         "state": "ok",
+                         "poe_power": "good",
+                         "status": "ok"
+                    }
+               },
+               "inlet_temperature": {
+                    "yellow_threshold": "46",
+                    "red_threshold": "56",
+                    "state": "green",
+                    "value": "33"
+               },
+               "fan": {
+                    "3": {
+                         "state": "ok"
+                    },
+                    "2": {
+                         "state": "ok"
+                    },
+                    "1": {
+                         "state": "ok"
+                    }
+               }
+            },
+            "2": {
+               "system_temperature_state": "ok",
+               "hotspot_temperature": {
+                    "yellow_threshold": "105",
+                    "red_threshold": "125",
+                    "state": "green",
+                    "value": "43"
+               },
+               "power_supply": {
+                    "2": {
+                         "state": "not present",
+                         "status": "not present"
+                    },
+                    "1": {
+                         "pid": "PWR-C1-715WAC",
+                         "serial_number": "DCB1844G1X0",
+                         "watts": "715",
+                         "system_power": "good",
+                         "state": "ok",
+                         "poe_power": "good",
+                         "status": "ok"
+                    }
+               },
+               "inlet_temperature": {
+                    "yellow_threshold": "46",
+                    "red_threshold": "56",
+                    "state": "green",
+                    "value": "33"
+               },
+               "fan": {
+                    "3": {
+                         "state": "ok"
+                    },
+                    "2": {
+                         "state": "ok"
+                    },
+                    "1": {
+                         "state": "ok"
+                    }
+               }
+            },
+            "1": {
+               "system_temperature_state": "ok",
+               "hotspot_temperature": {
+                    "yellow_threshold": "105",
+                    "red_threshold": "125",
+                    "state": "green",
+                    "value": "45"
+               },
+               "power_supply": {
+                    "2": {
+                         "state": "not present",
+                         "status": "not present"
+                    },
+                    "1": {
+                         "pid": "PWR-C1-715WAC",
+                         "serial_number": "DCB1844G1ZY",
+                         "watts": "715",
+                         "system_power": "good",
+                         "state": "ok",
+                         "poe_power": "good",
+                         "status": "ok"
+                    }
+               },
+               "inlet_temperature": {
+                    "yellow_threshold": "46",
+                    "red_threshold": "56",
+                    "state": "green",
+                    "value": "34"
+               },
+               "fan": {
+                    "3": {
+                         "state": "ok"
+                    },
+                    "2": {
+                         "state": "ok"
+                    },
+                    "1": {
+                         "state": "ok"
+                    }
+               }
+            }
+        }
+    }
+
+    golden_output_c3850 = {'execute.return_value': '''\
+        Switch 1 FAN 1 is OK
+        Switch 1 FAN 2 is OK
+        Switch 1 FAN 3 is OK
+        FAN PS-1 is OK
+        FAN PS-2 is NOT PRESENT
+        Switch 2 FAN 1 is OK
+        Switch 2 FAN 2 is OK
+        Switch 2 FAN 3 is OK
+        FAN PS-1 is OK
+        FAN PS-2 is NOT PRESENT
+        Switch 3 FAN 1 is OK
+        Switch 3 FAN 2 is OK
+        Switch 3 FAN 3 is OK
+        FAN PS-1 is OK
+        FAN PS-2 is NOT PRESENT
+        Switch 1: SYSTEM TEMPERATURE is OK
+        Inlet Temperature Value: 34 Degree Celsius
+        Temperature State: GREEN
+        Yellow Threshold : 46 Degree Celsius
+        Red Threshold    : 56 Degree Celsius
+
+        Hotspot Temperature Value: 45 Degree Celsius
+        Temperature State: GREEN
+        Yellow Threshold : 105 Degree Celsius
+        Red Threshold    : 125 Degree Celsius
+        Switch 2: SYSTEM TEMPERATURE is OK
+        Inlet Temperature Value: 33 Degree Celsius
+        Temperature State: GREEN
+        Yellow Threshold : 46 Degree Celsius
+        Red Threshold    : 56 Degree Celsius
+
+        Hotspot Temperature Value: 43 Degree Celsius
+        Temperature State: GREEN
+        Yellow Threshold : 105 Degree Celsius
+        Red Threshold    : 125 Degree Celsius
+        Switch 3: SYSTEM TEMPERATURE is OK
+        Inlet Temperature Value: 33 Degree Celsius
+        Temperature State: GREEN
+        Yellow Threshold : 46 Degree Celsius
+        Red Threshold    : 56 Degree Celsius
+
+        Hotspot Temperature Value: 43 Degree Celsius
+        Temperature State: GREEN
+        Yellow Threshold : 105 Degree Celsius
+        Red Threshold    : 125 Degree Celsius
+        SW  PID                 Serial#     Status           Sys Pwr  PoE Pwr  Watts
+        --  ------------------  ----------  ---------------  -------  -------  -----
+        1A  PWR-C1-715WAC       DCB1844G1ZY  OK              Good     Good     715 
+        1B  Not Present
+        2A  PWR-C1-715WAC       DCB1844G1X0  OK              Good     Good     715 
+        2B  Not Present
+        3A  PWR-C1-715WAC       DCB1844G1WW  OK              Good     Good     715 
+        3B  Not Present
+    '''
+    }
+
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        platform_obj = ShowEnvironmentAll(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_c3850)
+        platform_obj = ShowEnvironmentAll(device=self.dev_c3850)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+
+
+class test_show_module(unittest.TestCase):
+    dev1 = Device(name='empty')
+    dev_c3850 = Device(name='c3850')
+    empty_output = {'execute.return_value': '      '}
+
+    golden_parsed_output_c3850 = {
+        "switch": {
+            "2": {
+               "serial_number": "fcw1909c0n2",
+               "mac_address": "c800.84ff.7e00",
+               "sw_ver": "16.9.1",
+               "model": "ws-c3850-24p-e",
+               "hw_ver": "v05",
+               "port": "32"
+            },
+            "1": {
+               "serial_number": "foc1902x062",
+               "mac_address": "689c.e2d9.df00",
+               "sw_ver": "16.9.1",
+               "model": "ws-c3850-48p-e",
+               "hw_ver": "v04",
+               "port": "56"
+            },
+            "3": {
+               "serial_number": "fcw1909d0jc",
+               "mac_address": "c800.84ff.4800",
+               "sw_ver": "16.9.1",
+               "model": "ws-c3850-24p-e",
+               "hw_ver": "v05",
+               "port": "32"
+            }
+        }
+    }
+
+    golden_output_c3850 = {'execute.return_value': '''\
+        Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver. 
+        ------  -----   ---------             -----------  --------------  -------       --------
+         1       56     WS-C3850-48P-E        FOC1902X062  689c.e2d9.df00  V04           16.9.1        
+         2       32     WS-C3850-24P-E        FCW1909C0N2  c800.84ff.7e00  V05           16.9.1        
+         3       32     WS-C3850-24P-E        FCW1909D0JC  c800.84ff.4800  V05           16.9.1
+    '''
+    }
+
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        platform_obj = ShowModule(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_c3850)
+        platform_obj = ShowModule(device=self.dev_c3850)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+
+
+class test_show_platform_software_status_control_processor_brief(unittest.TestCase):
+
+    dev = Device(name='c3850')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "slot": {
+            "4-rp0": {
+               "memory": {
+                    "used_percentage": 40,
+                    "committed": 1950012,
+                    "free": 2411376,
+                    "total": 4010000,
+                    "committed_percentage": 49,
+                    "status": "healthy",
+                    "used": 1598624,
+                    "free_percentage": 60
+               },
+               "cpu": {
+                    "0": {
+                         "waiting": 0.09,
+                         "system": 3.29,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 93.7,
+                         "user": 2.89
+                    },
+                    "3": {
+                         "waiting": 0.0,
+                         "system": 4.2,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 92.0,
+                         "user": 3.8
+                    },
+                    "1": {
+                         "waiting": 0.0,
+                         "system": 3.4,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 94.7,
+                         "user": 1.9
+                    },
+                    "2": {
+                         "waiting": 0.0,
+                         "system": 3.8,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 93.3,
+                         "user": 2.9
+                    }
+               },
+               "load_average": {
+                    "1_min": 0.08,
+                    "status": "healthy",
+                    "15_min": 0.27,
+                    "5_min": 0.24
+               }
+            },
+            "1-rp0": {
+               "memory": {
+                    "used_percentage": 64,
+                    "committed": 3536536,
+                    "free": 1456916,
+                    "total": 4010000,
+                    "committed_percentage": 88,
+                    "status": "healthy",
+                    "used": 2553084,
+                    "free_percentage": 36
+               },
+               "cpu": {
+                    "0": {
+                         "waiting": 0.0,
+                         "system": 2.09,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.19,
+                         "idle": 93.8,
+                         "user": 3.89
+                    },
+                    "3": {
+                         "waiting": 0.1,
+                         "system": 1.4,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 93.8,
+                         "user": 4.7
+                    },
+                    "1": {
+                         "waiting": 0.0,
+                         "system": 1.0,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.1,
+                         "idle": 93.2,
+                         "user": 5.7
+                    },
+                    "2": {
+                         "waiting": 0.0,
+                         "system": 0.89,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.09,
+                         "idle": 94.1,
+                         "user": 4.89
+                    }
+               },
+               "load_average": {
+                    "1_min": 0.26,
+                    "status": "healthy",
+                    "15_min": 0.33,
+                    "5_min": 0.35
+               }
+            },
+            "3-rp0": {
+               "memory": {
+                    "used_percentage": 40,
+                    "committed": 1940852,
+                    "free": 2418208,
+                    "total": 4010000,
+                    "committed_percentage": 48,
+                    "status": "healthy",
+                    "used": 1591792,
+                    "free_percentage": 60
+               },
+               "cpu": {
+                    "0": {
+                         "waiting": 0.0,
+                         "system": 3.5,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 94.6,
+                         "user": 1.9
+                    },
+                    "3": {
+                         "waiting": 0.0,
+                         "system": 2.6,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 95.49,
+                         "user": 1.9
+                    },
+                    "1": {
+                         "waiting": 0.0,
+                         "system": 3.4,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 93.2,
+                         "user": 3.4
+                    },
+                    "2": {
+                         "waiting": 0.0,
+                         "system": 2.7,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 94.0,
+                         "user": 3.3
+                    }
+               },
+               "load_average": {
+                    "1_min": 0.07,
+                    "status": "healthy",
+                    "15_min": 0.12,
+                    "5_min": 0.09
+               }
+            },
+            "2-rp0": {
+               "memory": {
+                    "used_percentage": 61,
+                    "committed": 3433136,
+                    "free": 1560928,
+                    "total": 4010000,
+                    "committed_percentage": 86,
+                    "status": "healthy",
+                    "used": 2449072,
+                    "free_percentage": 39
+               },
+               "cpu": {
+                    "0": {
+                         "waiting": 0.0,
+                         "system": 1.7,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 94.99,
+                         "user": 3.3
+                    },
+                    "3": {
+                         "waiting": 0.0,
+                         "system": 1.2,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 96.89,
+                         "user": 1.9
+                    },
+                    "1": {
+                         "waiting": 0.0,
+                         "system": 1.3,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 95.39,
+                         "user": 3.3
+                    },
+                    "2": {
+                         "waiting": 0.0,
+                         "system": 1.7,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 94.6,
+                         "user": 3.7
+                    }
+               },
+               "load_average": {
+                    "1_min": 0.17,
+                    "status": "healthy",
+                    "15_min": 0.23,
+                    "5_min": 0.24
+               }
+            },
+            "5-rp0": {
+               "memory": {
+                    "used_percentage": 40,
+                    "committed": 1948956,
+                    "free": 2410820,
+                    "total": 4010000,
+                    "committed_percentage": 49,
+                    "status": "healthy",
+                    "used": 1599180,
+                    "free_percentage": 60
+               },
+               "cpu": {
+                    "0": {
+                         "waiting": 0.0,
+                         "system": 0.8,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 97.39,
+                         "user": 1.8
+                    },
+                    "3": {
+                         "waiting": 0.0,
+                         "system": 0.79,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 97.1,
+                         "user": 2.09
+                    },
+                    "1": {
+                         "waiting": 0.0,
+                         "system": 0.5,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 98.1,
+                         "user": 1.4
+                    },
+                    "2": {
+                         "waiting": 0.0,
+                         "system": 1.3,
+                         "nice_process": 0.0,
+                         "irq": 0.0,
+                         "sirq": 0.0,
+                         "idle": 96.8,
+                         "user": 1.9
+                    }
+               },
+               "load_average": {
+                    "1_min": 0.15,
+                    "status": "healthy",
+                    "15_min": 0.14,
+                    "5_min": 0.15
+               }
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''\
+        Load Average
+         Slot  Status  1-Min  5-Min 15-Min
+        1-RP0 Healthy   0.26   0.35   0.33
+        2-RP0 Healthy   0.17   0.24   0.23
+        3-RP0 Healthy   0.07   0.09   0.12
+        4-RP0 Healthy   0.08   0.24   0.27
+        5-RP0 Healthy   0.15   0.15   0.14
+
+        Memory (kB)
+         Slot  Status    Total     Used (Pct)     Free (Pct) Committed (Pct)
+        1-RP0 Healthy  4010000  2553084 (64%)  1456916 (36%)   3536536 (88%)
+        2-RP0 Healthy  4010000  2449072 (61%)  1560928 (39%)   3433136 (86%)
+        3-RP0 Healthy  4010000  1591792 (40%)  2418208 (60%)   1940852 (48%)
+        4-RP0 Healthy  4010000  1598624 (40%)  2411376 (60%)   1950012 (49%)
+        5-RP0 Healthy  4010000  1599180 (40%)  2410820 (60%)   1948956 (49%)
+
+        CPU Utilization
+         Slot  CPU   User System   Nice   Idle    IRQ   SIRQ IOwait
+        1-RP0    0   3.89   2.09   0.00  93.80   0.00   0.19   0.00
+                 1   5.70   1.00   0.00  93.20   0.00   0.10   0.00
+                 2   4.89   0.89   0.00  94.10   0.00   0.09   0.00
+                 3   4.70   1.40   0.00  93.80   0.00   0.00   0.10
+        2-RP0    0   3.30   1.70   0.00  94.99   0.00   0.00   0.00
+                 1   3.30   1.30   0.00  95.39   0.00   0.00   0.00
+                 2   3.70   1.70   0.00  94.60   0.00   0.00   0.00
+                 3   1.90   1.20   0.00  96.89   0.00   0.00   0.00
+        3-RP0    0   1.90   3.50   0.00  94.60   0.00   0.00   0.00
+                 1   3.40   3.40   0.00  93.20   0.00   0.00   0.00
+                 2   3.30   2.70   0.00  94.00   0.00   0.00   0.00
+                 3   1.90   2.60   0.00  95.49   0.00   0.00   0.00
+        4-RP0    0   2.89   3.29   0.00  93.70   0.00   0.00   0.09
+                 1   1.90   3.40   0.00  94.70   0.00   0.00   0.00
+                 2   2.90   3.80   0.00  93.30   0.00   0.00   0.00
+                 3   3.80   4.20   0.00  92.00   0.00   0.00   0.00
+        5-RP0    0   1.80   0.80   0.00  97.39   0.00   0.00   0.00
+                 1   1.40   0.50   0.00  98.10   0.00   0.00   0.00
+                 2   1.90   1.30   0.00  96.80   0.00   0.00   0.00
+                 3   2.09   0.79   0.00  97.10   0.00   0.00   0.00'''
+    }
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowPlatformSoftwareStatusControl(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsered_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowPlatformSoftwareStatusControl(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class test_show_platform_software_slot_active_monitor_Mem_Swap(unittest.TestCase):
+
+    dev = Device(name='c3850')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "swap": {
+            "used": 0,
+            "total": 0,
+            "available_memory": 1779488,
+            "free": 0
+        },
+        "memory": {
+            "used": 1530208,
+            "total": 4010000,
+            "buff_cache": 2466212,
+            "free": 13580
+        }
+    }
+
+    golden_output = {'execute.return_value': '''\
+        show platform software process slot switch active R0 monitor | inc Mem :|Swap:    
+        KiB Mem :  4010000 total,    13580 free,  1530208 used,  2466212 buff/cache
+        KiB Swap:        0 total,        0 free,        0 used.  1779488 avail Mem 
+    '''
+    }
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowPlatformSoftwareSlotActiveMonitorMem(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsered_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowPlatformSoftwareSlotActiveMonitorMem(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class test_show_processes_cpu_sorted_CPU(unittest.TestCase):
+
+    dev = Device(name='c3850')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "five_sec_cpu_total": 7,
+        "five_min_cpu": 6,
+        "one_min_cpu": 6,
+        "five_sec_cpu_interrupts": 1
+    }
+
+    golden_output = {'execute.return_value': '''\
+        show processes cpu sorted 5min | inc CPU
+        CPU utilization for five seconds: 7%/1%; one minute: 6%; five minutes: 6%
+    '''
+    }
+
+    golden_parsed_output_1 = {
+        "five_min_cpu": 6,
+        "five_sec_cpu_interrupts": 1,
+        "one_min_cpu": 6,
+        "nonzero_cpu_processes": [
+          "PLFM-MGR IPC pro",
+          "Spanning Tree"
+        ],
+        "zero_cpu_processes": [
+          "IPC Seat TX Cont"
+        ],
+        "five_sec_cpu_total": 5,
+        "sort": {
+            1: {
+               "five_min_cpu": 0.54,
+               "invoked": 6437005,
+               "usecs": 1236,
+               "one_min_cpu": 0.53,
+               "tty": 0,
+               "process": "PLFM-MGR IPC pro",
+               "five_sec_cpu": 0.31,
+               "runtime": 7962054,
+               "pid": 152
+            },
+            2: {
+               "five_min_cpu": 0.31,
+               "invoked": 14602032,
+               "usecs": 336,
+               "one_min_cpu": 0.31,
+               "tty": 0,
+               "process": "Spanning Tree",
+               "five_sec_cpu": 0.23,
+               "runtime": 4915791,
+               "pid": 242
+            },
+            3: {
+               "five_min_cpu": 0.0,
+               "invoked": 1,
+               "usecs": 0,
+               "one_min_cpu": 0.0,
+               "tty": 0,
+               "process": "IPC Seat TX Cont",
+               "five_sec_cpu": 0.0,
+               "runtime": 0,
+               "pid": 32
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+        CPU utilization for five seconds: 5%/1%; one minute: 6%; five minutes: 6%
+         PID Runtime(ms)     Invoked      uSecs   5Sec   1Min   5Min TTY Process          
+         152     7962054     6437005       1236  0.31%  0.53%  0.54%   0 PLFM-MGR IPC pro 
+         242     4915791    14602032        336  0.23%  0.31%  0.31%   0 Spanning Tree    
+          32           0           1          0  0.00%  0.00%  0.00%   0 IPC Seat TX Cont
+    '''}
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        obj = ShowProcessesCpuSorted(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsered_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output)
+        obj = ShowProcessesCpuSorted(device=self.dev)
+        parsed_output = obj.parse(key_word='CPU', sort_time='5min')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_1)
+        obj = ShowProcessesCpuSorted(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 
 if __name__ == '__main__':
