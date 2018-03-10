@@ -275,9 +275,10 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                     continue
 
             # GigabitEthernet0/0/0/2 is up, line protocol is up
+            # Loopback1 is administratively down, line protocol is down
             # OSPF_SL0 is unknown, line protocol is up
             # OSPF_VL0 is unknown, line protocol is up
-            p2 = re.compile(r'^(?P<interface>(\S+)) +is'
+            p2 = re.compile(r'^(?P<interface>(\S+)) +is( +administratively)?'
                              ' +(?P<enable>(unknown|up|down)), +line +protocol'
                              ' +is +(?P<line_protocol>(up|down))$')
             m = p2.match(line)

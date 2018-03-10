@@ -140,6 +140,7 @@ class test_show_ip_ospf(unittest.TestCase):
                                     {'initial_number': 300,
                                      'maximum_number': 300},
                                 'area_transit': True,
+                                'enable': False,
                                 'areas': 
                                     {'0.0.0.1': 
                                         {'area_id': '0.0.0.1',
@@ -283,6 +284,7 @@ class test_show_ip_ospf(unittest.TestCase):
          Routing Process "ospf 2" with ID 11.11.11.11
            Domain ID type 0x0005, value 0.0.0.2
          Start time: 02:17:25.010, Time elapsed: 23:34:42.224
+         Routing Process is shutdown
          Supports only single TOS(TOS0) routes
          Supports opaque LSA
          Supports Link-local Signaling (LLS)

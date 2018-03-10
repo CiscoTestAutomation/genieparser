@@ -1,12 +1,11 @@
 """show_interface.py
 
 NXOS parsers for the following show commands:
-        # show interface
-        # show vrf all interface
-        # show ip interface vrf all
-        # show ipv6 interface detail vrf all
-        # show interface switchport
-
+    * show interface
+    * show vrf all interface
+    * show ip interface vrf all
+    * show ipv6 interface detail vrf all
+    * show interface switchport
 """
 
 # python
@@ -14,21 +13,15 @@ import re
 
 # metaparser
 from metaparser import MetaParser
-from metaparser.util.schemaengine import Schema, \
-                                         Any, \
-                                         Optional, \
-                                         Or, \
-                                         And, \
-                                         Default, \
-                                         Use
+from metaparser.util.schemaengine import Schema, Any, Optional
                                          
 # import parser utils
 from parser.utils.common import Common
 
 
-#############################################################################
-# Schema For Show Interface
-#############################################################################
+# ===========================
+# Schema for 'show interface'
+# ===========================
 class ShowInterfaceSchema(MetaParser):
     """Schema for show interface"""
 
@@ -38,6 +31,8 @@ class ShowInterfaceSchema(MetaParser):
             Optional('types'): str,
             Optional('parent_interface'): str,
             'oper_status': str,
+            Optional('admin_state'): str,
+            Optional('dedicated_intface'): bool,
             Optional('line_protocol'): str,
             Optional('autostate'): bool,
             Optional('link_state'): str,
@@ -143,7 +138,9 @@ class ShowInterfaceSchema(MetaParser):
             },
         }
 
-
+# ===========================
+# Parser for 'show interface'
+# ===========================
 class ShowInterface(ShowInterfaceSchema):
     """Parser for show interface"""
 
@@ -243,30 +240,32 @@ class ShowInterface(ShowInterfaceSchema):
 
             # admin state is up
             # admin state is up,
-            p2 = re.compile(r'^\s*admin *state *is (?P<oper_status>[\w]+)'
-                             ',? *(Dedicated *Interface)?$')
+            # admin state is up, Dedicated Interface
+            # admin state is up, Dedicated Interface, [parent interface is Ethernet2/1]
+            p2 = re.compile(r'^\s*admin +state +is'
+                             ' +(?P<admin_state>([a-zA-Z0-9\/\.]+))(?:,)?'
+                             '(?: +(?P<dedicated_intf>(Dedicated Interface)))?'
+                             '(?:, +\[parent +interface +is'
+                             ' +(?P<parent_intf>(\S+))\])?$')
             m = p2.match(line)
             if m:
-                oper_status = m.groupdict()['oper_status']
-        
-                interface_dict[interface]['oper_status'] = oper_status
+                # admin_state
+                interface_dict[interface]['admin_state'] = \
+                    m.groupdict()['admin_state']
+                # dedicated_interface
+                if m.groupdict()['dedicated_intf']:
+                    interface_dict[interface]['dedicated_intface'] = True
+                # parent_interface
+                if m.groupdict()['parent_intf']:
+                    interface_dict[interface]['parent_interface'] = \
+                        m.groupdict()['parent_intf']
                 continue
 
-            # admin state is down, Dedicated Interface, [parent interface is Ethernet2/1]
-            # admin state is up, Dedicated Interface
-            p2_1 = re.compile(r'^\s*admin *state *is (?P<oper_status>[\w]+),'
-                               ' *Dedicated *Interface(, \[parent *interface *is'
-                               ' *(?P<parent_interface>[a-zA-Z0-9\/\.]+)\])?$')
+            # Dedicated Interface
+            p2_1 = re.compile(r'^\s*Dedicated Interface$')
             m = p2_1.match(line)
             if m:
-                oper_status = m.groupdict()['oper_status']
-                parent_interface = m.groupdict()['parent_interface']
-
-                interface_dict[interface]\
-                        ['oper_status'] = oper_status
-                if parent_interface:
-                    interface_dict[interface]\
-                        ['parent_interface'] = parent_interface
+                interface_dict[interface]['dedicated_intface'] = True
                 continue
 
             # Belongs to Po1
@@ -886,9 +885,9 @@ class ShowInterface(ShowInterfaceSchema):
         return interface_dict
 
 
-#############################################################################
-# Schema for Show Ip Interface Vrf All
-#############################################################################
+# ===================================
+# Schema for 'show interface vrf all'
+# ===================================
 class ShowIpInterfaceVrfAllSchema(MetaParser):
     """Schema for show ip interface vrf all"""
 
@@ -973,6 +972,9 @@ class ShowIpInterfaceVrfAllSchema(MetaParser):
         },
     }   
 
+# ===================================
+# Parser for 'show interface vrf all'
+# ===================================
 class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
     """Parser for show ip interface vrf all"""
 
@@ -1551,12 +1553,9 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
         return ip_interface_vrf_all_dict
 
 
-
-
-# #############################################################################
-# # Schema For Show Vrf All Interface
-# #############################################################################
-
+# ===================================
+# Schema for 'show vrf all interface'
+# ===================================
 class ShowVrfAllInterfaceSchema(MetaParser):
     """Schema for show vrf all interface"""
     schema = { 
@@ -1566,8 +1565,10 @@ class ShowVrfAllInterfaceSchema(MetaParser):
                      'site_of_origin': str
                     },
                 }
-            
 
+# ===================================
+# Parser for 'show vrf all interface'
+# ===================================
 class ShowVrfAllInterface(ShowVrfAllInterfaceSchema):
     """Parser for show vrf all interface"""
 
@@ -1610,9 +1611,10 @@ class ShowVrfAllInterface(ShowVrfAllInterfaceSchema):
 
         return vrf_all_interface_dict
 
-# #############################################################################
-# # Schema For Show Interface Switchport
-# #############################################################################
+
+# ======================================
+# Schema for 'show interface switchport'
+# ======================================
 class ShowInterfaceSwitchportSchema(MetaParser):
     """Schema for show interface switchport"""
 
@@ -1639,7 +1641,9 @@ class ShowInterfaceSwitchportSchema(MetaParser):
             },
         }
                     
-
+# ======================================
+# Parser for 'show interface switchport'
+# ======================================
 class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
     """Parser for show interface switchport"""
 
@@ -1875,10 +1879,9 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
         return interface_switchport_dict
 
 
-# #############################################################################
-# # Schema For Show Ipv6 Interface Vrf All
-# #############################################################################
-
+# ========================================
+# Schema for 'show ipv6 interface vrf all'
+# ========================================
 class ShowIpv6InterfaceVrfAllSchema(MetaParser):
     """Schema for show ipv6 interface vrf all"""
 
@@ -1930,7 +1933,9 @@ class ShowIpv6InterfaceVrfAllSchema(MetaParser):
             },
         }
 
-
+# ========================================
+# Parser for 'show ipv6 interface vrf all'
+# ========================================
 class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
     """Parser for ipv6 interface vrf all"""
 
@@ -2074,7 +2079,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
                 ipv6_interface_dict[interface]['ipv6']['virtual_add'] = True
                 continue
-            
+
             if virtual_add:
                 p6_2 = re.compile(r'^\s*(?P<ipv6_virtual_addresses>[a-z0-9\:\s]+)$')
                 m = p6_2.match(line)
@@ -2273,6 +2278,9 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
         return ipv6_interface_dict
 
 
+# ====================================
+# Schema for 'show ip interface brief'
+# ====================================
 class ShowIpInterfaceBriefSchema(MetaParser):
     """Schema for show ip interface brief"""
     schema = {'interface':
@@ -2289,7 +2297,9 @@ class ShowIpInterfaceBriefSchema(MetaParser):
                 },
             }
 
-
+# ====================================
+# Parser for 'show ip interface brief'
+# ====================================
 class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
     """Parser for show ip interface brief"""
 
@@ -2363,7 +2373,9 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
 
         return interface_dict
 
-
+# ===========================================
+# Parser for 'show ip interface brief | vlan'
+# ===========================================
 class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
     """Parser for show ip interface brief | include Vlan"""
 
@@ -2379,6 +2391,9 @@ class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
         self.cmd = 'show ip interface brief | include Vlan'.format()
 
 
+# =================================
+# Schema for 'show interface brief'
+# =================================
 class ShowInterfaceBriefSchema(MetaParser):
     """Schema for show interface brief"""
 
@@ -2419,7 +2434,9 @@ class ShowInterfaceBriefSchema(MetaParser):
                 }
             }
 
-
+# =================================
+# Parser for 'show interface brief'
+# =================================
 class ShowInterfaceBrief(ShowInterfaceBriefSchema):
     """Parser for show interface brief"""
     #*************************
@@ -2574,28 +2591,3 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
                 continue
 
         return interface_dict
-
-
-
-
-
-
-
-
-
-
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
