@@ -2511,3 +2511,132 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
                 continue
 
         return ret_dict
+
+
+class ShowInterfacesTrunkSchema(MetaParser):
+    """Schema for show interfaces trunk"""
+    schema = {
+        'interface': {
+            Any(): {
+                'name': str,
+                'mode': str,
+                'encapsulation': str,
+                'status': str,
+                'native_vlan': str,
+                'vlans_allowed_on_trunk': str,
+                'vlans_allowed_active_in_mgmt_domain': str,
+                'vlans_in_stp_forwarding_not_pruned': str
+            }
+        }
+    }
+
+class ShowInterfacesTrunk(ShowInterfacesTrunkSchema):
+    """parser for show interfaces trunk"""
+
+    def cli(self):
+        out = self.device.execute('show interfaces trunk')
+
+        # initial regexp pattern
+        p1 = re.compile(r'^(?P<name>[\w\-\/\.]+) +(?P<mode>\w+) +(?P<encapsulation>[\w\.]+) +'
+                         '(?P<status>\w+) +(?P<native_vlan>\d+)$')
+        p2 = re.compile('^Port +Vlans +allowed +on +trunk$')
+        p3 = re.compile('^Port +Vlans +allowed +and +active +in +management +domain$')
+        p4 = re.compile('^Port +Vlans +in +spanning +tree +forwarding +state +and +not +pruned$')
+        p5 = re.compile('^(?P<name>[\w\-\/\.]+) +(?P<vlans>[\d\-\,\s]+)$')
+        # initial variables
+        ret_dict = {}
+        vlan_list_type = None
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Gi1/0/4     on               802.1q         trunking      1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group.pop('name'))
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
+                intf_dict['name'] = intf
+                intf_dict.update({k:v for k,v in group.items()})
+                continue
+
+            # Port        Vlans allowed on trunk
+            if p2.match(line):
+                vlan_list_type = 'vlans_allowed_on_trunk'
+                continue
+
+            # Port        Vlans allowed and active in management domain
+            if p3.match(line):
+                vlan_list_type = 'vlans_allowed_active_in_mgmt_domain'
+                continue
+
+            # Port        Vlans in spanning tree forwarding state and not pruned
+            if p4.match(line):
+                vlan_list_type = 'vlans_in_stp_forwarding_not_pruned'
+                continue
+
+            # Gi1/0/4     200-211
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group['name'])
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
+                intf_dict.setdefault(vlan_list_type, group['vlans']) if group['vlans'] else None
+                continue
+        return ret_dict
+
+
+class ShowInterfacesCountersSchema(MetaParser):
+    """Schema for show interfaces <WORD> counters"""
+    schema = {
+        'interface': {
+            Any(): {
+                Any(): {  # in or out
+                    'octets': int,
+                    'ucast_pkts': int,
+                    'mcast_pkts': int,
+                    'bcast_pkts': int,
+                    'name': str
+                },
+            },
+        }
+    }
+
+class ShowInterfacesCounters(ShowInterfacesCountersSchema):
+    """parser for show interfaces <WORD> counters"""
+
+    def cli(self, interface):
+        out = self.device.execute('show interfaces {} counters'.format(interface))
+
+        # initial regexp pattern
+        p1 = re.compile(r'^(?P<name>[\w\-\/\.]+) +(?P<octets>\d+) +(?P<ucast_pkts>\d+) +'
+                         '(?P<mcast_pkts>\d+) +(?P<bcast_pkts>\d+)$')
+        p2 = re.compile(r'Port +InOctets +InUcastPkts +InMcastPkts +InBcastPkts')
+        p2_1 = re.compile(r'Port +OutOctets +OutUcastPkts +OutMcastPkts +OutBcastPkts')
+
+        # initial variables
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # decide the in or out packets
+            if p2.match(line):
+                in_out = 'in'
+                continue
+
+            if p2_1.match(line):
+                in_out = 'out'
+                continue
+
+            # Gi1/0/4     on               802.1q         trunking      1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group.pop('name'))
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {}).setdefault(in_out, {})
+                intf_dict['name'] = intf
+                intf_dict.update({k:int(v) for k,v in group.items()})
+                continue
+        return ret_dict
+
