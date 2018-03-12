@@ -578,52 +578,131 @@ class test_show_spanning_tree_detail(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output_rapid_pvst)
 
 
-# class test_show_spanning_tree_mst_detail(unittest.TestCase):
-#     dev1 = Device(name='empty')
-#     dev_c3850 = Device(name='c3850')
-#     empty_output = {'execute.return_value': '      '}
+class test_show_spanning_tree_mst_detail(unittest.TestCase):
+    dev1 = Device(name='empty')
+    dev_c3850 = Device(name='c3850')
+    empty_output = {'execute.return_value': '      '}
 
-#     golden_parsed_output_c3850 = {
-#     }
+    golden_parsed_output = {
+        "mst_instances": {
+            0: {
+               "priority": 32768,
+               "interfaces": {
+                    "GigabitEthernet1/0/23": {
+                         "designated_regional_root_cost": 0,
+                         "port_priority": 128,
+                         "designated_root_priority": 32768,
+                         "designated_bridge_port_id": "128.23",
+                         "designated_bridge_priority": 32768,
+                         "forward_delay": 0,
+                         "port_id": "128.23",
+                         "name": "GigabitEthernet1/0/23",
+                         "designated_regional_root_priority": 32768,
+                         "forward_transitions": 1,
+                         "counters": {
+                              "bpdu_sent": 493,
+                              "bpdu_received": 0
+                         },
+                         "designated_regional_root_address": "3820.565b.8600",
+                         "status": "designated forwarding",
+                         "designated_root_cost": 0,
+                         "designated_bridge_address": "3820.565b.8600",
+                         "designated_root_address": "3820.565b.8600",
+                         "cost": 20000,
+                         "message_expires": 0
+                    }
+               },
+               "operational": {
+                    "max_age": 35,
+                    "tx_hold_count": 20,
+                    "hello_time": 10,
+                    "forward_delay": 30
+               },
+               "sysid": 0,
+               "root": "the CIST",
+               "bridge_address": "3820.565b.8600",
+               "configured": {
+                    "max_age": 35,
+                    "forward_delay": 30,
+                    "hello_time": 10,
+                    "max_hops": 10
+               },
+               "mst_id": 0,
+               "vlan": "1-99,201-4094"
+            },
+            10: {
+               "priority": 61450,
+               "interfaces": {
+                    "GigabitEthernet1/0/23": {
+                         "port_priority": 128,
+                         "designated_root_priority": 61450,
+                         "designated_bridge_port_id": "128.23",
+                         "designated_bridge_priority": 61450,
+                         "forward_delay": 0,
+                         "port_id": "128.23",
+                         "name": "GigabitEthernet1/0/23",
+                         "forward_transitions": 1,
+                         "counters": {
+                              "bpdu_sent": 493,
+                              "bpdu_received": 0
+                         },
+                         "message_expires": 0,
+                         "status": "designated forwarding",
+                         "designated_root_cost": 0,
+                         "designated_bridge_address": "3820.565b.8600",
+                         "designated_root_address": "3820.565b.8600",
+                         "cost": 20000
+                    }
+               },
+               "sysid": 10,
+               "root": "MST10",
+               "bridge_address": "3820.565b.8600",
+               "mst_id": 10,
+               "vlan": "100-200"
+            }
+        }
+    }
 
-#     golden_output_c3850 = {'execute.return_value': '''\
-#         ##### MST0    vlans mapped:   1-9,11-99,101-4094
-#         Bridge        address d8b1.9009.bf80  priority      32768 (32768 sysid 0)
-#         Root          this switch for the CIST
-#         Operational   hello time 10, forward delay 30, max age 40, txholdcount 20
-#         Configured    hello time 10, forward delay 30, max age 40, max hops    255
+    golden_output = {'execute.return_value': '''\
+        ##### MST0    vlans mapped:   1-99,201-4094
+        Bridge        address 3820.565b.8600  priority      32768 (32768 sysid 0)
+        Root          this switch for the CIST
+        Operational   hello time 10, forward delay 30, max age 35, txholdcount 20
+        Configured    hello time 10, forward delay 30, max age 35, max hops    10
 
-#         Port-channel14 of MST0 is broken (PVST Sim. Inconsistent)
-#         Port info             port id       128.2390  priority    128  cost        6660
-#         Designated root       address d8b1.9009.bf80  priority  32768  cost           0
-#         Design. regional root address d8b1.9009.bf80  priority  32768  cost           0
-#         Designated bridge     address d8b1.9009.bf80  priority  32768  port id 128.2390
-#         Timers: message expires in 0 sec, forward delay 0, forward transitions 0
-#                 pvst inconsistency timer expires in 39 sec
-#         Bpdus sent 138283, received 167851
+        GigabitEthernet1/0/23 of MST0 is designated forwarding 
+        Port info             port id         128.23  priority    128  cost       20000
+        Designated root       address 3820.565b.8600  priority  32768  cost           0
+        Design. regional root address 3820.565b.8600  priority  32768  cost           0
+        Designated bridge     address 3820.565b.8600  priority  32768  port id   128.23
+        Timers: message expires in 0 sec, forward delay 0, forward transitions 1
+        Bpdus sent 493, received 0
 
-#         Port-channel24 of MST0 is designated forwarding 
-#         Port info             port id       128.2400  priority    128  cost        6660
-#         Designated root       address d8b1.9009.bf80  priority  32768  cost           0
-#         Design. regional root address d8b1.9009.bf80  priority  32768  cost           0
-#         Designated bridge     address d8b1.9009.bf80  priority  32768  port id 128.2400
-#         Timers: message expires in 0 sec, forward delay 0, forward transitions 1
-#         Bpdus sent 1099047, received 2191778
-#     '''
-#     }
+        ##### MST10   vlans mapped:   100-200
+        Bridge        address 3820.565b.8600  priority      61450 (61440 sysid 10)
+        Root          this switch for MST10
 
-#     def test_empty(self):
-#         self.dev1 = Mock(**self.empty_output)
-#         obj = ShowSpanningTreeMstDetail(device=self.dev1)
-#         with self.assertRaises(SchemaEmptyParserError):
-#             parsed_output = obj.parse()    
+        GigabitEthernet1/0/23 of MST10 is designated forwarding 
+        Port info             port id         128.23  priority    128  cost       20000
+        Designated root       address 3820.565b.8600  priority  61450  cost           0
+        Designated bridge     address 3820.565b.8600  priority  61450  port id   128.23
+        Timers: message expires in 0 sec, forward delay 0, forward transitions 1
+        Bpdus (MRecords) sent 493, received 0
+    '''
+    }
 
-#     def test_golden(self):
-#         self.maxDiff = None
-#         self.dev_c3850 = Mock(**self.golden_output_c3850)
-#         obj = ShowSpanningTreeMstDetail(device=self.dev_c3850)
-#         parsed_output = obj.parse()
-#         self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        obj = ShowSpanningTreeMstDetail(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()    
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output)
+        obj = ShowSpanningTreeMstDetail(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
 class test_show_errdisable_recovery(unittest.TestCase):

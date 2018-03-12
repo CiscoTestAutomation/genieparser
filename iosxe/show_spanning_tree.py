@@ -4,6 +4,10 @@
      *  show spanning-tree mst detail
      *  show spanning-tree summary
      *  show errdisable recovery
+     *  show spanning-tree
+     *  show spanning-tree mst <WORD>
+     *  show spanning-tree vlan <WORD>
+     *  show spanning-tree mst configuration
 
 """
 import re
@@ -453,16 +457,52 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
 class ShowSpanningTreeMstDetailSchema(MetaParser):
     """Schema for show spanning-tree detail"""
     schema = {
-        'power_stack': {
+        'mst_instances': {
             Any(): {
-                'mode': str,
-                'topology': str,
-                'total_power': int,
-                'reserved_power': int,
-                'allocated_power': int,
-                'unused_power': int,
-                'switch_num': int,
-                'power_supply_num': int
+                'mst_id': int,
+                Optional('vlan'): str,
+                'bridge_address': str,
+                'priority': int,
+                'sysid': int,
+                'root': str,
+                Optional('operational'): {
+                    'hello_time': int,
+                    'forward_delay': int,
+                    'max_age': int,
+                    'tx_hold_count': int
+                },
+                Optional('configured'): {
+                    'hello_time': int,
+                    'forward_delay': int,
+                    'max_age': int,
+                    'max_hops': int
+                },
+                'interfaces': {
+                    Any(): {
+                        'status': str,
+                        Optional('broken_reason'): str,
+                        'name': str,
+                        'port_id': str,
+                        'cost': int,
+                        'port_priority': int,
+                        'designated_root_priority': int,
+                        'designated_root_address': str,
+                        'designated_root_cost': int,
+                        Optional('designated_regional_root_cost'): int,
+                        Optional('designated_regional_root_priority'): int,
+                        Optional('designated_regional_root_address'): str,
+                        'designated_bridge_priority': int,
+                        'designated_bridge_address': str,
+                        'designated_bridge_port_id': str,
+                        'forward_transitions': int,
+                        'message_expires': int,
+                        'forward_delay': int,
+                        'counters': {
+                            'bpdu_sent': int,
+                            'bpdu_received': int,
+                        }
+                    }
+                }
             },
         }
     }
@@ -479,33 +519,157 @@ class ShowSpanningTreeMstDetail(ShowSpanningTreeMstDetailSchema):
         ret_dict = {}
 
         # initial regexp pattern
-        p1 = re.compile(r'^(?P<name>[\w\-]+) *'
-                         '(?P<mode>[\w\-]+) +'
-                         '(?P<topology>[\w\-]+) +'
-                         '(?P<total_power>\d+) +'
-                         '(?P<reserved_power>\d+) +'
-                         '(?P<allocated_power>\d+) +'
-                         '(?P<unused_power>\d+) +'
-                         '(?P<switch_num>\d+) +'
-                         '(?P<power_supply_num>\d+)$')
+        p1 = re.compile(r'^\#+ +MST(?P<inst>\d+) +'
+                         'vlans +mapped: +(?P<vlan>[\d\-\,\s]+)$')
+
+        p2 = re.compile(r'^Bridge +address +(?P<bridge_address>[\w\.]+) +'
+                         'priority +(?P<priority>\d+) +'
+                         '\((\d+) +sysid +(?P<sysid>\d+)\)$')
+        
+        p3 = re.compile(r'^Root +this +switch +for +(?P<root>[\w\.\s]+)$')
+        
+        p4 = re.compile(r'^Operational +hello +time +(?P<hello_time>\d+), +'
+                         'forward +delay +(?P<forward_delay>\d+), +'
+                         'max +age +(?P<max_age>\d+), +'
+                         'txholdcount +(?P<tx_hold_count>\d+)$')
+        
+        p5 = re.compile(r'^Configured +hello +time +(?P<hello_time>\d+), +'
+                         'forward +delay +(?P<forward_delay>\d+), +'
+                         'max +age +(?P<max_age>\d+), +'
+                         'max +hops +(?P<max_hops>\d+)$')
+        
+        p6 = re.compile(r'^(?P<name>[\w\-\.\/]+) +of +'
+                         'MST(\d+) +is +(?P<status>[\w\s]+)'
+                         '( +\((?P<broken_reason>.*)\))?$')
+        
+        p7 = re.compile(r'^Port +info +port +id +'
+                         '(?P<port_id>[\d\.]+) +'
+                         'priority +(?P<port_priority>\d+) +'
+                         'cost +(?P<cost>\d+)$')
+        
+        p8 = re.compile(r'^Designated +root +address +'
+                         '(?P<designated_root_address>[\w\.]+) +'
+                         'priority +(?P<designated_root_priority>\d+) +'
+                         'cost +(?P<designated_root_cost>\d+)$')
+        
+        p9 = re.compile(r'^Design\. +regional +root +address +'
+                         '(?P<designated_regional_root_address>[\w\.]+) +'
+                         'priority +(?P<designated_regional_root_priority>\d+) +'
+                         'cost +(?P<designated_regional_root_cost>\d+)$')
+        
+        p10 = re.compile(r'^Designated +bridge +address +'
+                         '(?P<designated_bridge_address>[\w\.]+) +'
+                         'priority +(?P<designated_bridge_priority>\d+) +'
+                         'port +id +(?P<designated_bridge_port_id>[\d\.]+)$')
+        
+        p11 = re.compile(r'^Timers: +message +expires +in +(?P<message_expires>\d+) +sec, +'
+                          'forward +delay +(?P<forward_delay>\d+), '
+                          'forward +transitions +(?P<forward_transitions>\d+)$')
+        
+        p12 = re.compile(r'^Bpdus +(\(\w+\) *)?'
+                          'sent +(?P<bpdu_sent>\d+), +'
+                          'received +(?P<bpdu_received>\d+)')
+
 
         for line in out.splitlines():
             line = line.strip()
             
-            # Power Stack           Stack   Stack    Total   Rsvd    Alloc   Unused  Num  Num
-            # Name                  Mode    Topolgy  Pwr(W)  Pwr(W)  Pwr(W)  Pwr(W)  SW   PS
-            # --------------------  ------  -------  ------  ------  ------  ------  ---  ---
-            # Powerstack-1          SP-PS   Stndaln  715     30      200     485     1    1
+            # ##### MST0    vlans mapped:   1-9,11-99,101-4094
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                name = group.pop('name')
-                stack_dict = ret_dict.setdefault('power_stack', {}).setdefault(name, {})
-                stack_dict['mode'] = group.pop('mode')
-                stack_dict['topology'] = group.pop('topology')
-                stack_dict.update(
-                       {k:int(v) for k, v in group.items()})
+                inst = int(group['inst'])
+                inst_dict = ret_dict.setdefault('mst_instances', {}).setdefault(inst, {})
+                inst_dict['mst_id'] = inst
+                inst_dict['vlan'] = group['vlan']
                 continue
+
+            # Bridge        address d8b1.9009.bf80  priority      32768 (32768 sysid 0)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                inst_dict['bridge_address'] = group.pop('bridge_address')
+                inst_dict.update({k:int(v) for k, v in group.items()})
+                continue
+            
+            # Root          this switch for the CIST
+            m = p3.match(line)
+            if m:
+                inst_dict['root'] = m.groupdict()['root']
+                continue
+            
+            # Operational   hello time 10, forward delay 30, max age 40, txholdcount 20
+            m = p4.match(line)
+            if m:
+                inst_dict.setdefault('operational', {}).update(
+                    {k:int(v) for k, v in m.groupdict().items()})
+                continue
+            
+            # Configured    hello time 10, forward delay 30, max age 40, max hops    255
+            m = p5.match(line)
+            if m:
+                inst_dict.setdefault('configured', {}).update(
+                    {k:int(v) for k, v in m.groupdict().items()})
+                continue
+            
+            # Port-channel14 of MST0 is broken (PVST Sim. Inconsistent)
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                intf = group['name']
+                intf_dict = inst_dict.setdefault('interfaces', {}).setdefault(intf, {})
+                intf_dict.update({k:v for k,v in group.items() if v})
+                continue
+            
+            # Port info             port id         128.23  priority    128  cost       20000
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict['port_id'] = group.pop('port_id')
+                intf_dict.update({k:int(v) for k,v in group.items()})
+                continue
+            
+            # Designated root       address 3820.565b.8600  priority  32768  cost           0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict['designated_root_address'] = group.pop('designated_root_address')
+                intf_dict.update({k:int(v) for k,v in group.items()})
+                continue
+            
+            # Design. regional root address 3820.565b.8600  priority  32768  cost           0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict['designated_regional_root_address'] = \
+                    group.pop('designated_regional_root_address')
+                intf_dict.update({k:int(v) for k,v in group.items()})
+                continue
+            
+            # Designated bridge     address 3820.565b.8600  priority  32768  port id   128.23
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict['designated_bridge_priority'] = \
+                    int(group.pop('designated_bridge_priority'))
+                intf_dict.update({k:v for k,v in group.items()})
+                continue
+            
+            # Timers: message expires in 0 sec, forward delay 0, forward transitions 1
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({k:int(v) for k,v in group.items()})
+                continue
+            
+            # Bpdus (MRecords) sent 493, received 0
+            # Bpdus sent 493, received 0
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.setdefault('counters', {}).update({k:int(v) for k,v in group.items()})
+                continue
+
         return ret_dict
 
 
@@ -555,7 +719,7 @@ class ShowErrdisableRecovery(ShowErrdisableRecoverySchema):
 
 
 class ShowSpanningTreeSchema(MetaParser):
-    """Schema for show spanning-tree"""
+    """Schema for show spanning-tree [mst|vlan <WORD>]"""
     schema = {
         Any(): {     # mstp, pvst, rapid_pvst
             Any(): {   # mst_instances, vlans
@@ -590,7 +754,7 @@ class ShowSpanningTreeSchema(MetaParser):
 
 
 class ShowSpanningTree(ShowSpanningTreeSchema):
-    """Parser for show spanning-tree"""
+    """Parser for show spanning-tree [mst|vlan <WORD>]"""
 
     MODE_NAME_MAP = {'mstp': 'mstp',
                      'ieee': 'pvst',
@@ -609,9 +773,16 @@ class ShowSpanningTree(ShowSpanningTreeSchema):
                 'BLK': 'blocking',
                 'Altn': 'alternate',}
 
-    def cli(self):
-         # get output from device
-        out = self.device.execute('show spanning-tree')
+    def cli(self, mst='', vlan=''):
+        # get output from device
+        if vlan:
+            out = self.device.execute('show spanning-tree vlan {}'.format(vlan))
+        elif mst:
+            out = self.device.execute('show spanning-tree mst {}'.format(mst))
+        else:
+            out = self.device.execute('show spanning-tree')
+        
+             
 
         # initial return dictionary
         ret_dict = {}
