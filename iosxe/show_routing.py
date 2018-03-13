@@ -766,3 +766,233 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
         if len(result_dict):
             result_dict['ipv6_unicast_routing_enabled'] = True
         return result_dict
+
+
+# ====================================================
+#  schema for show ip route <WORD>
+# ====================================================
+class ShowIpRouteWordSchema(MetaParser):
+    """Schema for show ip route <WORD>"""
+    schema = {
+        'entry': {
+            Any(): {
+                'ip': str,                
+                'mask': str,
+                'known_via': str,
+                'distance': str,
+                'metric': str,
+                Optional('type'): str,
+                Optional('net'): str,
+                Optional('redist_via'): str,
+                Optional('redist_via_tag'): str,
+                Optional('update'): {
+                    'from': str,
+                    'interface': str,
+                    'age': str
+                },
+                'paths': {
+                    Any(): {
+                        'nexthop': str,
+                        Optional('from'): str,
+                        Optional('age'): str,
+                        Optional('interface'): str,
+                        Optional('metric'): str,
+                        Optional('share_count'): str
+                    }
+                }
+            }
+        },
+        'total_prefixes': int,
+    }
+
+
+# ====================================================
+#  parser for show ip route <WORD>
+# ====================================================
+class ShowIpRouteWord(ShowIpRouteWordSchema):
+    """Parser for :
+       show ip route <Hostname or A.B.C.D>
+       show ip route vrf <vrf> <Hostname or A.B.C.D>"""
+    IP_VER = 'ip'
+
+    def cli(self, route, vrf=''):
+
+        # excute command to get output
+        if vrf:
+            cmd = 'show {ip} route vrf {v} {r}'.format(v=vrf, r=route, ip=self.IP_VER)
+        else:
+            cmd = 'show {ip} route {r}'.format(r=route, ip=self.IP_VER)
+
+        out = self.device.execute(cmd)
+
+        # initial regexp pattern
+        p1 = re.compile(r'^Routing +entry +for +'
+                         '(?P<entry>(?P<ip>[\w\:\.]+)\/(?P<mask>\d+))'
+                         '(, +(?P<net>[\w\s]+))?$')
+        p2 = re.compile(r'^Known +via +\"(?P<known_via>[\w\s]+)\", +'
+                         'distance +(?P<distance>\d+), +'
+                         'metric +(?P<metric>\d+)'
+                         '(, +(?P<type>[\w\-\s]+)(?P<connected>, connected)?)?$')
+        p3 = re.compile(r'^Redistributing +via +(?P<redist_via>\w+) *'
+                         '(?P<redist_via_tag>\d+)?$')
+        p4 = re.compile(r'^Last +update +from +(?P<from>[\w\.]+) +'
+                         'on +(?P<interface>[\w\.\/\-]+), +'
+                         '(?P<age>[\w\.\:]+) +ago$')
+        p5 = re.compile(r'^\*? *(?P<nexthop>[\w\.]+)(, +'
+                         'from +(?P<from>[\w\.]+), +'
+                         '(?P<age>[\w\.\:]+) +ago, +'
+                         'via +(?P<interface>[\w\.\/\-]+))?$')
+        p6 = re.compile(r'^Route +metric +is +(?P<metric>\d+), +'
+                         'traffic +share +count +is +(?P<share_count>\d+)$')
+
+        # ipv6 specific
+        p7 = re.compile(r'^Route +count +is +(?P<route_count>[\d\/]+), +'
+        	             'share +count +(?P<share_count>[\d\/]+)$')
+        p8 = re.compile(r'^(?P<fwd_ip>[\w\:]+)(, +(?P<fwd_intf>[\w\.\/\-]+)'
+        	             '( indirectly connected)?)?$')
+        p8_1 = re.compile(r'^receive +via +(?P<fwd_intf>[\w\.\/\-]+)$')
+        p9 = re.compile(r'^Last +updated +(?P<age>[\w\:\.]+) +ago$')
+        p10 = re.compile(r'^From +(?P<from>[\w\:]+)$')
+
+        # initial variables
+        ret_dict = {}
+        index = 0
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Routing entry for 61.0.0.0/24, 1 known subnets
+            # Routing entry for 0.0.0.0/0, supernet
+            # Routing entry for 200.1.2.0/24
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                entry = group.pop('entry')
+                entry_dict = ret_dict.setdefault('entry', {}).setdefault(entry, {})
+                entry_dict.update({k:v for k,v in group.items() if v})
+                continue
+
+            # Known via "static", distance 1, metric 0, candidate default path
+            # Known via "eigrp 1", distance 130, metric 10880, type internal
+            # Known via "rip", distance 120, metric 2
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({k:v for k,v in group.items() if v})
+                continue
+
+            # Redistributing via rip
+            # Redistributing via eigrp 1
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({k:v for k,v in group.items() if v})
+                continue
+
+            # Last update from 201.1.12.2 on Vlan101, 2w3d ago
+            # Last update from 201.3.12.2 on Vlan103, 00:00:12 ago
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                update_dict = entry_dict.setdefault('update', {})
+                update_dict.update({k:v for k,v in group.items() if v})
+                continue
+
+            # * 201.1.12.2, from 201.1.12.2, 2w3d ago, via Vlan101
+            # * 18.0.1.2
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                index += 1
+                path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
+                path_dict.update({k:v for k,v in group.items() if v})
+                continue
+
+            # Route metric is 10880, traffic share count is 1
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
+                path_dict.update({k:v for k,v in group.items() if v})
+                continue
+
+            # Route count is 1/1, share count 0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({k:v for k,v in group.items() if v})
+                continue
+
+            # FE80::EEBD:1DFF:FE09:56C2, Vlan202
+            # FE80::EEBD:1DFF:FE09:56C2
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                index += 1
+                path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
+                path_dict.update({k:v for k,v in group.items() if v})
+                continue
+
+            # receive via Loopback4
+            m = p8_1.match(line)
+            if m:
+                group = m.groupdict()
+                index += 1
+                path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
+                path_dict.update({k:v for k,v in group.items() if v})
+                continue
+
+            # From FE80::EEBD:1DFF:FE09:56C2
+            m = p10.match(line)
+            if m:
+                path_dict['from'] = m.groupdict()['from']
+                continue
+
+            # Last updated 2w4d ago
+            m = p9.match(line)
+            if m:
+                path_dict['age'] = m.groupdict()['age']
+                continue
+
+        ret_dict.update({'total_prefixes': index}) if ret_dict else None
+        return ret_dict
+
+
+# ====================================================
+#  schema for show ip route <WORD>
+# ====================================================
+class ShowIpv6RouteWordSchema(MetaParser):
+    """Schema for show ip route <WORD>"""
+    schema = {
+        'entry': {
+            Any(): {
+                'ip': str,                
+                'mask': str,
+                'known_via': str,
+                'distance': str,
+                'metric': str,
+                Optional('route_count'): str,
+                Optional('share_count'): str,
+                Optional('type'): str,
+                'paths': {
+                    Any(): {
+                        Optional('fwd_ip'): str,
+                        Optional('fwd_intf'): str,
+                        Optional('from'): str,
+                        Optional('age'): str
+                    }
+                }
+            }
+        },
+        'total_prefixes': int,
+    }
+
+
+# ====================================================
+#  parser for show ipv6 route <WORD>
+# ====================================================
+class ShowIpv6RouteWord(ShowIpv6RouteWordSchema, ShowIpRouteWord):
+    """Parser for :
+       show ipv6 route <Hostname or A.B.C.D>
+       show ipv6 route vrf <vrf> <Hostname or A.B.C.D>"""
+    IP_VER = 'ipv6'
