@@ -6070,7 +6070,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             continue
 
                         #    redistribute isis <Isis.pid> route-map <route_policy>
-                        p33 = re.compile(r'^\s*redistribute +isis +(?P<af_redist_isis>[0-9]+) +route-map+(?P<af_redist_isis_route_policy>[A-Za-z0-9\-\_]+)$')
+                        p33 = re.compile(r'^\s*redistribute +isis +(?P<af_redist_isis>[0-9]+) +route-map +(?P<af_redist_isis_route_policy>[A-Za-z0-9\-\_]+)$')
                         m = p33.match(line)
                         if m:
                             bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_redist_isis'] = \
@@ -6080,7 +6080,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             continue
 
                         #    redistribute isis <Isis.pid> route-map <route_policy>
-                        p34 = re.compile(r'^\s*redistribute +isis +(?P<af_redist_isis>[0-9]+) +route-map+(?P<af_redist_isis_route_policy>[A-Za-z0-9\-\_]+)$')
+                        p34 = re.compile(r'^\s*redistribute +isis +(?P<af_redist_isis>[0-9]+) +route-map +(?P<af_redist_isis_route_policy>[A-Za-z0-9\-\_]+)$')
                         m = p34.match(line)
                         if m:
                             bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_redist_isis'] = \
@@ -6090,7 +6090,8 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             continue
 
                         #    redistribute ospf <Ospf.pid> route-map <route_policy>
-                        p35 = re.compile(r'^\s*redistribute +ospf +(?P<af_redist_ospf>[0-9]+) +route-map+(?P<af_redist_ospf_route_policy>[A-Za-z0-9\-\_]+)$')
+                        #    redistribute ospfv3 <Ospf.pid> route-map <route_policy>
+                        p35 = re.compile(r'^\s*redistribute +(ospf|ospfv3) +(?P<af_redist_ospf>[0-9]+) +route-map +(?P<af_redist_ospf_route_policy>[A-Za-z0-9\-\_]+)$')
                         m = p35.match(line)
                         if m:
                             bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_redist_ospf'] = \
