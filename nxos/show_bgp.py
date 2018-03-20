@@ -90,6 +90,14 @@ class ShowBgpProcessVrfAllSchema(MetaParser):
             {Any(): 
                 {'vrf_id': str,
                  'vrf_state': str,
+                 Optional('vnid'): str,
+                 Optional('topo_id'): str,
+                 Optional('encap_type'): str,
+                 Optional('vtep_ip'): str,
+                 Optional('vtep_virtual_ip'): str,
+                 Optional('vtep_vip_r'): str,
+                 Optional('router_mac'): str,
+                 Optional('vip_derived_mac'): str,
                  Optional('router_id'): str,
                  Optional('conf_router_id'): str,
                  Optional('confed_id'): int,
@@ -98,6 +106,7 @@ class ShowBgpProcessVrfAllSchema(MetaParser):
                  'num_pending_conf_peers': int,
                  'num_established_peers': int,
                  Optional('vrf_rd'): str,
+                 Optional('vrf_evpn_rd'): str,
                  Optional('graceful_restart'): bool,
                  Optional('graceful_restart_helper_only'): bool,
                  Optional('graceful_restart_restart_time'): int,
@@ -129,6 +138,10 @@ class ShowBgpProcessVrfAllSchema(MetaParser):
                             },
                          Optional('export_rt_list'): str,
                          Optional('import_rt_list'): str,
+                         Optional('evpn_export_rt_list'): str,
+                         Optional('evpn_import_rt_list'): str,
+                         Optional('mvpn_export_rt_list'): str,
+                         Optional('mvpn_import_rt_list'): str,
                          Optional('label_mode'): str,
                          Optional('aggregate_label'): str,
                          Optional('route_reflector'): bool,
@@ -355,6 +368,70 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                     str(m.groupdict()['vrf_state']).lower()
                 continue
 
+            # VNID                           : 9105 (valid)
+            p16_1 = re.compile(r'^\s*VNID *:'
+                              ' +(?P<vnid>[a-zA-Z0-9]+)(?: +\((\S+)\))?$')
+            m = p16_1.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['vnid'] = m.groupdict()['vnid']
+                continue
+
+            # Topo Id                        : 1005
+            p16_2 = re.compile(r'^\s*Topo +Id *: +(?P<topo_id>(\d+))$')
+            m = p16_2.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['topo_id'] = \
+                    m.groupdict()['topo_id']
+                continue
+
+            # Encap type                     : VXLAN
+            p16_3 = re.compile(r'^\s*Encap +type *: +(?P<etype>(\S+))$')
+            m = p16_3.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['encap_type'] = \
+                    m.groupdict()['etype']
+                continue
+
+            # VTEP IP                        : 91.1.1.1
+            p16_4 = re.compile(r'^\s*VTEP +IP *: +(?P<vtep_ip>(\S+))$')
+            m = p16_4.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['vtep_ip'] = \
+                    m.groupdict()['vtep_ip']
+                continue
+
+            # VTEP Virtual IP                : 91.1.2.1
+            p16_5 = re.compile(r'^\s*VTEP +Virtual +IP *: +(?P<vtep_vip>(\S+))$')
+            m = p16_5.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['vtep_virtual_ip'] = \
+                    m.groupdict()['vtep_vip']
+                continue
+
+            # VTEP VIP-R                     : 91.1.2.1
+            p16_6 = re.compile(r'^\s*VTEP +VIP-R *: +(?P<vipr>(\S+))$')
+            m = p16_6.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['vtep_vip_r'] = \
+                    m.groupdict()['vipr']
+                continue
+
+            # Router-MAC                     : 000c.29e2.c046
+            p16_7 = re.compile(r'^\s*Router-MAC *: +(?P<router_mac>(\S+))$')
+            m = p16_7.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['router_mac'] = \
+                    m.groupdict()['router_mac']
+                continue
+
+            # VIP Derived MAC                : 000c.29e2.c046
+            p16_8 = re.compile(r'^\s*VIP +Derived +MAC *: +(?P<vipd_mac>(\S+))$')
+            m = p16_8.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['vip_derived_mac'] = \
+                    m.groupdict()['vipd_mac']
+                continue
+
             # Router-ID                      : 11.11.11.11
             p17 = re.compile(r'^\s*Router-ID *:'
                               ' +(?P<router_id>[0-9\.]+)$')
@@ -419,12 +496,23 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                 continue
             
             # VRF RD                         : 100:100
+            # VRF RD                         : 91.1.1.0:4
             p24 = re.compile(r'^\s*VRF +RD *:'
-                              ' +(?P<vrf_rd>[a-zA-Z0-9\:\s]+)$')
+                              ' +(?P<vrf_rd>[a-zA-Z0-9\:\.\s]+)$')
             m = p24.match(line)
             if m:
                 parsed_dict['vrf'][vrf_name]['vrf_rd'] = \
                     str(m.groupdict()['vrf_rd']).lower()
+                continue
+
+            # VRF EVPN RD                    : 100:100
+            # VRF EVPN RD                    : 91.1.1.0:4
+            p24_1 = re.compile(r'^\s*VRF +EVPN +RD *:'
+                              ' +(?P<vrf_evpn_rd>[a-zA-Z0-9\:\.\s]+)$')
+            m = p24_1.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['vrf_evpn_rd'] = \
+                    str(m.groupdict()['vrf_evpn_rd']).lower()
                 continue
 
             #     Information for address family IPv4 Unicast in VRF VRF1
@@ -530,50 +618,38 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                             ['route_map'] = str(m.groupdict()['route_map'])
                     continue
             
-            #     Export RT list: 100:100
-            p30 = re.compile(r'^\s*Export +RT +list *:'
-                              '(?: +(?P<export_rt_list>[0-9\:]+))?$')
+            # Export RT list:
+            # Import RT list:
+            # EVPN Export RT list:
+            # EVPN Import RT list:
+            # MVPN Export RT list:
+            # MVPN Import RT list:
+            # Export RT list: 100:1
+            # Import RT list: 100:1
+            p30 = re.compile(r'^\s*(?P<type>(Export|Import|EVPN Export|'
+                              'EVPN Import|MVPN Export|MVPN Import)) +RT +list'
+                              ' *:(?: +(?P<rt_list>[0-9\:]+))?$')
             m = p30.match(line)
             if m:
-                export_rt_found = True
-                import_rt_found = False
-                if m.groupdict()['export_rt_list'] != None:
+                rt_list_type = str(m.groupdict()['type']).lower()
+                rt_list_type = rt_list_type.replace(' ', '_')
+                rt_list_type += '_rt_list'
+                values = ''
+                if m.groupdict()['rt_list']:
+                    values = values + ' ' + m.groupdict()['rt_list']
                     parsed_dict['vrf'][vrf_name]['address_family']\
-                        [address_family]['export_rt_list'] = \
-                            str(m.groupdict()['export_rt_list'])
+                        [address_family][rt_list_type] = values.strip()
                 continue
 
-            # Export RT list:
-            #   100:1
-            #   400:400
-            p30_1 = re.compile(r'^\s*(?P<export_rt_list>(\d+)\:(\d+))$')
-            m = p30_1.match(line)
-            if m and export_rt_found:
-                export_rt_values = export_rt_values + ' ' + str(m.groupdict()['export_rt_list'])
-                parsed_dict['vrf'][vrf_name]['address_family']\
-                        [address_family]['export_rt_list'] = export_rt_values.strip()
-
-            #     Import RT list: 100:100
-            p31 = re.compile(r'^\s*Import +RT +list *:'
-                              '(?: +(?P<import_rt_list>[0-9\:]+))?$')
+            # 100:1
+            # 400:400
+            p31 = re.compile(r'^\s*(?P<rt_list>(\d+)\:(\d+))$')
             m = p31.match(line)
             if m:
-                import_rt_found = True
-                export_rt_found = False
-                if m.groupdict()['import_rt_list'] != None:
-                    parsed_dict['vrf'][vrf_name]['address_family']\
-                        [address_family]['import_rt_list'] = \
-                            str(m.groupdict()['import_rt_list'])
+                values = values + ' ' + m.groupdict()['rt_list']
+                parsed_dict['vrf'][vrf_name]['address_family'][address_family]\
+                    [rt_list_type] = values.strip()
                 continue
-
-            # Import RT list:
-            #   100:1
-            p31_1 = re.compile(r'^\s*(?P<import_rt_list>(\d+)\:(\d+))$')
-            m = p31_1.match(line)
-            if m and import_rt_found:
-                import_rt_values = import_rt_values + ' ' + str(m.groupdict()['import_rt_list'])
-                parsed_dict['vrf'][vrf_name]['address_family']\
-                        [address_family]['import_rt_list'] = import_rt_values.strip()
 
             #     Label mode: per-prefix
             p32 = re.compile(r'^\s*Label +mode *: +(?P<label_mode>[a-zA-Z\-]+)$')
@@ -3141,8 +3217,10 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
                 continue
 
             # Nexthop last resolved: never, using 0.0.0.0/0
+            # Nexthop last resolved: 00:00:39, using 95.1.1.0/32
+            # Nexthop last resolved: 0.596958, using 95.1.1.0/32
             p6 = re.compile(r'^\s*Nexthop +last +resolved *:'
-                             ' +(?P<nexthop_last_resolved>[a-zA-Z0-9\:]+),'
+                             ' +(?P<nexthop_last_resolved>[a-zA-Z0-9\:\.\s]+),'
                              ' +using +(?P<nexthop_resolved_using>[\w\:\-\.\/]+)$')
             m = p6.match(line)
             if m:
@@ -6070,7 +6148,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             continue
 
                         #    redistribute isis <Isis.pid> route-map <route_policy>
-                        p33 = re.compile(r'^\s*redistribute +isis +(?P<af_redist_isis>[0-9]+) +route-map+(?P<af_redist_isis_route_policy>[A-Za-z0-9\-\_]+)$')
+                        p33 = re.compile(r'^\s*redistribute +isis +(?P<af_redist_isis>[0-9]+) +route-map +(?P<af_redist_isis_route_policy>[A-Za-z0-9\-\_]+)$')
                         m = p33.match(line)
                         if m:
                             bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_redist_isis'] = \
@@ -6080,7 +6158,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             continue
 
                         #    redistribute isis <Isis.pid> route-map <route_policy>
-                        p34 = re.compile(r'^\s*redistribute +isis +(?P<af_redist_isis>[0-9]+) +route-map+(?P<af_redist_isis_route_policy>[A-Za-z0-9\-\_]+)$')
+                        p34 = re.compile(r'^\s*redistribute +isis +(?P<af_redist_isis>[0-9]+) +route-map +(?P<af_redist_isis_route_policy>[A-Za-z0-9\-\_]+)$')
                         m = p34.match(line)
                         if m:
                             bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_redist_isis'] = \
@@ -6090,7 +6168,8 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             continue
 
                         #    redistribute ospf <Ospf.pid> route-map <route_policy>
-                        p35 = re.compile(r'^\s*redistribute +ospf +(?P<af_redist_ospf>[0-9]+) +route-map+(?P<af_redist_ospf_route_policy>[A-Za-z0-9\-\_]+)$')
+                        #    redistribute ospfv3 <Ospf.pid> route-map <route_policy>
+                        p35 = re.compile(r'^\s*redistribute +(ospf|ospfv3) +(?P<af_redist_ospf>[0-9]+) +route-map +(?P<af_redist_ospf_route_policy>[A-Za-z0-9\-\_]+)$')
                         m = p35.match(line)
                         if m:
                             bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_redist_ospf'] = \

@@ -27,312 +27,313 @@ class test_show_version(unittest.TestCase):
     dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': ''}
     semi_empty_output = {'execute.return_value': '''\
-Cisco IOS-XE software, Copyright (c) 2005-2017 by cisco Systems, Inc.
-'''}
+        Cisco IOS-XE software, Copyright (c) 2005-2017 by cisco Systems, Inc.
+    '''}
 
     golden_parsed_output_c3850 = {
-                                    'version': {
-                                        'version_short': '16.4',
-                                        'platform': 'Catalyst L3 Switch',
-                                        'version': '16.4.20170410:165034',
-                                        'image_id': 'CAT3K_CAA-UNIVERSALK9-M',
-                                        'rom': 'IOS-XE ROMMON',
-                                        'bootldr': 'CAT3K_CAA Boot Loader (CAT3K_CAA-HBOOT-M) Version 4.318, engineering software (D)',
-                                        'hostname': 'R1',
-                                        'uptime': '1 hour, 24 minutes',
-                                        'uptime_this_cp': '1 hour, 27 minutes',
-                                        'system_restarted_at': '17:23:53 UTC Mon Apr 10 2017',
-                                        'system_image': 'tftp://10.1.6.241//auto/tftp-ssr/Edison/cat3k_caa-universalk9.BLD_V164_THROTTLE_LATEST_20170410_174845.SSA.bin',
-                                        'last_reload_reason': 'Admin reload CLI',
-                                        'license_type': 'Permanent',
-                                        'license_level': 'ipservicesk9',
-                                        'next_reload_license_level': 'ipservicesk9',
-                                        'chassis': 'WS-C3850-24P',
-                                        'processor_type': 'MIPS',
-                                        'chassis_sn': 'FCW1932D0LB',
-                                        'rtr_type': 'Edison',
-                                        'os': 'IOS-XE',
-                                        'curr_config_register': '0x102',
-                                        'main_mem': '862498',
-                                        'number_of_intfs': {
-                                            'Virtual Ethernet': '13',
-                                            'Gigabit Ethernet': '140',
-                                            'Ten Gigabit Ethernet': '20',
-                                        },
-                                        'mem_size': {
-                                            'non-volatile configuration': '2048',
-                                            'physical': '4194304',
-                                        },
-                                        'disks': {
-                                            'crashinfo:.': {
-                                                'disk_size': '262143',
-                                                'type_of_disk': 'Crash Files',
-                                            },
-                                            'crashinfo-2:.': {
-                                                'disk_size': '250456',
-                                                'type_of_disk': 'Crash Files',
-                                            },
-                                            'crashinfo-3:.': {
-                                                'disk_size': '250456',
-                                                'type_of_disk': 'Crash Files',
-                                            },
-                                            'crashinfo-4:.': {
-                                                'disk_size': '250456',
-                                                'type_of_disk': 'Crash Files',
-                                            },
-                                            'crashinfo-5:.': {
-                                                'disk_size': '250456',
-                                                'type_of_disk': 'Crash Files',
-                                            },
-                                            'flash:.': {
-                                                'disk_size': '1586119',
-                                                'type_of_disk': 'Flash',
-                                            },
-                                            'flash-2:.': {
-                                                'disk_size': '1609272',
-                                                'type_of_disk': 'Flash',
-                                            },
-                                            'flash-3:.': {
-                                                'disk_size': '1609272',
-                                                'type_of_disk': 'Flash',
-                                            },
-                                            'flash-4:.': {
-                                                'disk_size': '1609272',
-                                                'type_of_disk': 'Flash',
-                                            },
-                                            'flash-5:.': {
-                                                'disk_size': '1609272',
-                                                'type_of_disk': 'Flash',
-                                            },
-                                            'webui:.': {
-                                                'disk_size': '0',
-                                                'type_of_disk': '',
-                                            },
-                                        },
-                                        'switch_num': {
-                                            '1': {
-                                                'uptime': '1 hour, 27 minutes',
-                                                'mac_address': '38:20:56:72:7d:80',
-                                                'mb_assembly_num': '73-15805-04',
-                                                'mb_sn': 'FOC19315RWV',
-                                                'model_rev_num': 'U0',
-                                                'mb_rev_num': 'A0',
-                                                'model_num': 'WS-C3850-24P',
-                                                'system_sn': 'FCW1932D0LB',
-                                                'mode': 'BUNDLE',
-                                                'model': 'WS-C3850-24P',
-                                                'sw_image': 'CAT3K_CAA-UNIVERSALK9',
-                                                'ports': '32',
-                                                'sw_ver': '16.4.2',
-                                                'active': True,
-                                            },
-                                            '2': {
-                                                'uptime': '1 hour, 27 minutes',
-                                                'mac_address': '38:20:56:29:7b:00',
-                                                'mb_assembly_num': '73-15805-04',
-                                                'mb_sn': 'FOC19315SCE',
-                                                'model_rev_num': 'U0',
-                                                'mb_rev_num': 'A0',
-                                                'model_num': 'WS-C3850-24P',
-                                                'system_sn': 'FOC1932X0K1',
-                                                'mode': 'BUNDLE',
-                                                'model': 'WS-C3850-24P',
-                                                'sw_image': 'CAT3K_CAA-UNIVERSALK9',
-                                                'ports': '32',
-                                                'sw_ver': '16.4.2',
-                                                'active': False
-                                            },
-                                            '3': {
-                                                'uptime': '1 hour, 27 minutes',
-                                                'mac_address': '38:20:56:72:a8:00',
-                                                'mb_assembly_num': '73-15805-04',
-                                                'mb_sn': 'FOC193182KD',
-                                                'model_rev_num': 'U0',
-                                                'mb_rev_num': 'A0',
-                                                'model_num': 'WS-C3850-24P',
-                                                'system_sn': 'FCW1932C0MA',
-                                                'mode': 'BUNDLE',
-                                                'model': 'WS-C3850-24P',
-                                                'sw_image': 'CAT3K_CAA-UNIVERSALK9',
-                                                'ports': '32',
-                                                'sw_ver': '16.4.2',
-                                                'active': False
-                                            },
-                                            '4': {
-                                                'uptime': '1 hour, 27 minutes',
-                                                'mac_address': '38:20:56:29:97:00',
-                                                'mb_assembly_num': '73-15805-04',
-                                                'mb_sn': 'FOC193182KG',
-                                                'model_rev_num': 'U0',
-                                                'mb_rev_num': 'A0',
-                                                'model_num': 'WS-C3850-24P',
-                                                'system_sn': 'FCW1932D0L0',
-                                                'mode': 'BUNDLE',
-                                                'model': 'WS-C3850-24P',
-                                                'sw_image': 'CAT3K_CAA-UNIVERSALK9',
-                                                'ports': '32',
-                                                'sw_ver': '16.4.2',
-                                                'active': False
-                                            },
-                                            '5': {
-                                                'uptime': '1 hour, 27 minutes',
-                                                'mac_address': '38:20:56:29:49:00',
-                                                'mb_assembly_num': '73-15805-04',
-                                                'mb_sn': 'FOC193182KB',
-                                                'model_rev_num': 'U0',
-                                                'mb_rev_num': 'A0',
-                                                'model_num': 'WS-C3850-24P',
-                                                'system_sn': 'FOC1932X0F9',
-                                                'mode': 'BUNDLE',
-                                                'model': 'WS-C3850-24P',
-                                                'sw_image': 'CAT3K_CAA-UNIVERSALK9',
-                                                'ports': '32',
-                                                'sw_ver': '16.4.2',
-                                                'active': False,
-                                            },
-                                        }
-                                    }
-                                }
+        'version': {
+            'version_short': '16.4',
+            'platform': 'Catalyst L3 Switch',
+            'version': '16.4.20170410:165034',
+            'image_id': 'CAT3K_CAA-UNIVERSALK9-M',
+            'rom': 'IOS-XE ROMMON',
+            'bootldr': 'CAT3K_CAA Boot Loader (CAT3K_CAA-HBOOT-M) Version 4.318, engineering software (D)',
+            'hostname': 'R1',
+            'image_type': 'developer image',
+            'uptime': '1 hour, 24 minutes',
+            'uptime_this_cp': '1 hour, 27 minutes',
+            'system_restarted_at': '17:23:53 UTC Mon Apr 10 2017',
+            'system_image': 'tftp://10.1.6.241//auto/tftp-ssr/Edison/cat3k_caa-universalk9.BLD_V164_THROTTLE_LATEST_20170410_174845.SSA.bin',
+            'last_reload_reason': 'Admin reload CLI',
+            'license_type': 'Permanent',
+            'license_level': 'ipservicesk9',
+            'next_reload_license_level': 'ipservicesk9',
+            'chassis': 'WS-C3850-24P',
+            'processor_type': 'MIPS',
+            'chassis_sn': 'FCW1932D0LB',
+            'rtr_type': 'Edison',
+            'os': 'IOS-XE',
+            'curr_config_register': '0x102',
+            'main_mem': '862498',
+            'number_of_intfs': {
+                'Virtual Ethernet': '13',
+                'Gigabit Ethernet': '140',
+                'Ten Gigabit Ethernet': '20',
+            },
+            'mem_size': {
+                'non-volatile configuration': '2048',
+                'physical': '4194304',
+            },
+            'disks': {
+                'crashinfo:.': {
+                    'disk_size': '262143',
+                    'type_of_disk': 'Crash Files',
+                },
+                'crashinfo-2:.': {
+                    'disk_size': '250456',
+                    'type_of_disk': 'Crash Files',
+                },
+                'crashinfo-3:.': {
+                    'disk_size': '250456',
+                    'type_of_disk': 'Crash Files',
+                },
+                'crashinfo-4:.': {
+                    'disk_size': '250456',
+                    'type_of_disk': 'Crash Files',
+                },
+                'crashinfo-5:.': {
+                    'disk_size': '250456',
+                    'type_of_disk': 'Crash Files',
+                },
+                'flash:.': {
+                    'disk_size': '1586119',
+                    'type_of_disk': 'Flash',
+                },
+                'flash-2:.': {
+                    'disk_size': '1609272',
+                    'type_of_disk': 'Flash',
+                },
+                'flash-3:.': {
+                    'disk_size': '1609272',
+                    'type_of_disk': 'Flash',
+                },
+                'flash-4:.': {
+                    'disk_size': '1609272',
+                    'type_of_disk': 'Flash',
+                },
+                'flash-5:.': {
+                    'disk_size': '1609272',
+                    'type_of_disk': 'Flash',
+                },
+                'webui:.': {
+                    'disk_size': '0',
+                    'type_of_disk': '',
+                },
+            },
+            'switch_num': {
+                '1': {
+                    'uptime': '1 hour, 27 minutes',
+                    'mac_address': '38:20:56:72:7d:80',
+                    'mb_assembly_num': '73-15805-04',
+                    'mb_sn': 'FOC19315RWV',
+                    'model_rev_num': 'U0',
+                    'mb_rev_num': 'A0',
+                    'model_num': 'WS-C3850-24P',
+                    'system_sn': 'FCW1932D0LB',
+                    'mode': 'BUNDLE',
+                    'model': 'WS-C3850-24P',
+                    'sw_image': 'CAT3K_CAA-UNIVERSALK9',
+                    'ports': '32',
+                    'sw_ver': '16.4.2',
+                    'active': True,
+                },
+                '2': {
+                    'uptime': '1 hour, 27 minutes',
+                    'mac_address': '38:20:56:29:7b:00',
+                    'mb_assembly_num': '73-15805-04',
+                    'mb_sn': 'FOC19315SCE',
+                    'model_rev_num': 'U0',
+                    'mb_rev_num': 'A0',
+                    'model_num': 'WS-C3850-24P',
+                    'system_sn': 'FOC1932X0K1',
+                    'mode': 'BUNDLE',
+                    'model': 'WS-C3850-24P',
+                    'sw_image': 'CAT3K_CAA-UNIVERSALK9',
+                    'ports': '32',
+                    'sw_ver': '16.4.2',
+                    'active': False
+                },
+                '3': {
+                    'uptime': '1 hour, 27 minutes',
+                    'mac_address': '38:20:56:72:a8:00',
+                    'mb_assembly_num': '73-15805-04',
+                    'mb_sn': 'FOC193182KD',
+                    'model_rev_num': 'U0',
+                    'mb_rev_num': 'A0',
+                    'model_num': 'WS-C3850-24P',
+                    'system_sn': 'FCW1932C0MA',
+                    'mode': 'BUNDLE',
+                    'model': 'WS-C3850-24P',
+                    'sw_image': 'CAT3K_CAA-UNIVERSALK9',
+                    'ports': '32',
+                    'sw_ver': '16.4.2',
+                    'active': False
+                },
+                '4': {
+                    'uptime': '1 hour, 27 minutes',
+                    'mac_address': '38:20:56:29:97:00',
+                    'mb_assembly_num': '73-15805-04',
+                    'mb_sn': 'FOC193182KG',
+                    'model_rev_num': 'U0',
+                    'mb_rev_num': 'A0',
+                    'model_num': 'WS-C3850-24P',
+                    'system_sn': 'FCW1932D0L0',
+                    'mode': 'BUNDLE',
+                    'model': 'WS-C3850-24P',
+                    'sw_image': 'CAT3K_CAA-UNIVERSALK9',
+                    'ports': '32',
+                    'sw_ver': '16.4.2',
+                    'active': False
+                },
+                '5': {
+                    'uptime': '1 hour, 27 minutes',
+                    'mac_address': '38:20:56:29:49:00',
+                    'mb_assembly_num': '73-15805-04',
+                    'mb_sn': 'FOC193182KB',
+                    'model_rev_num': 'U0',
+                    'mb_rev_num': 'A0',
+                    'model_num': 'WS-C3850-24P',
+                    'system_sn': 'FOC1932X0F9',
+                    'mode': 'BUNDLE',
+                    'model': 'WS-C3850-24P',
+                    'sw_image': 'CAT3K_CAA-UNIVERSALK9',
+                    'ports': '32',
+                    'sw_ver': '16.4.2',
+                    'active': False,
+                },
+            }
+        }
+    }
 
     golden_output_c3850 = {'execute.return_value': '''\
-Cisco IOS Software [Everest], Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Experimental Version 16.4.20170410:165034 [v164_throttle-BLD-BLD_V164_THROTTLE_LATEST_20170410_174845 105]
-Copyright (c) 1986-2017 by Cisco Systems, Inc.
-Compiled Mon 10-Apr-17 13:02 by mcpre
+        Cisco IOS Software [Everest], Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Experimental Version 16.4.20170410:165034 [v164_throttle-BLD-BLD_V164_THROTTLE_LATEST_20170410_174845 105]
+        Copyright (c) 1986-2017 by Cisco Systems, Inc.
+        Compiled Mon 10-Apr-17 13:02 by mcpre
 
 
-Cisco IOS-XE software, Copyright (c) 2005-2017 by cisco Systems, Inc.
-All rights reserved.  Certain components of Cisco IOS-XE software are
-licensed under the GNU General Public License ("GPL") Version 2.0.  The
-software code licensed under GPL Version 2.0 is free software that comes
-with ABSOLUTELY NO WARRANTY.  You can redistribute and/or modify such
-GPL code under the terms of GPL Version 2.0.  For more details, see the
-documentation or "License Notice" file accompanying the IOS-XE software,
-or the applicable URL provided on the flyer accompanying the IOS-XE
-software.
+        Cisco IOS-XE software, Copyright (c) 2005-2017 by cisco Systems, Inc.
+        All rights reserved.  Certain components of Cisco IOS-XE software are
+        licensed under the GNU General Public License ("GPL") Version 2.0.  The
+        software code licensed under GPL Version 2.0 is free software that comes
+        with ABSOLUTELY NO WARRANTY.  You can redistribute and/or modify such
+        GPL code under the terms of GPL Version 2.0.  For more details, see the
+        documentation or "License Notice" file accompanying the IOS-XE software,
+        or the applicable URL provided on the flyer accompanying the IOS-XE
+        software.
 
 
-ROM: IOS-XE ROMMON
-BOOTLDR: CAT3K_CAA Boot Loader (CAT3K_CAA-HBOOT-M) Version 4.318, engineering software (D)
+        ROM: IOS-XE ROMMON
+        BOOTLDR: CAT3K_CAA Boot Loader (CAT3K_CAA-HBOOT-M) Version 4.318, engineering software (D)
 
-R1 uptime is 1 hour, 24 minutes
-Uptime for this control processor is 1 hour, 27 minutes
-System returned to ROM by reload at 17:05:27 UTC Mon Apr 10 2017
-System restarted at 17:23:53 UTC Mon Apr 10 2017
-System image file is "tftp://10.1.6.241//auto/tftp-ssr/Edison/cat3k_caa-universalk9.BLD_V164_THROTTLE_LATEST_20170410_174845.SSA.bin"
-Last reload reason: Admin reload CLI
-
-
-
-This product contains cryptographic features and is subject to United
-States and local country laws governing import, export, transfer and
-use. Delivery of Cisco cryptographic products does not imply
-third-party authority to import, export, distribute or use encryption.
-Importers, exporters, distributors and users are responsible for
-compliance with U.S. and local country laws. By using this product you
-agree to comply with applicable laws and regulations. If you are unable
-to comply with U.S. and local laws, return this product immediately.
-
-A summary of U.S. laws governing Cisco cryptographic products may be found at:
-http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
-
-If you require further assistance please contact us by sending email to
-export@cisco.com.
+        R1 uptime is 1 hour, 24 minutes
+        Uptime for this control processor is 1 hour, 27 minutes
+        System returned to ROM by reload at 17:05:27 UTC Mon Apr 10 2017
+        System restarted at 17:23:53 UTC Mon Apr 10 2017
+        System image file is "tftp://10.1.6.241//auto/tftp-ssr/Edison/cat3k_caa-universalk9.BLD_V164_THROTTLE_LATEST_20170410_174845.SSA.bin"
+        Last reload reason: Admin reload CLI
 
 
-Technology Package License Information: 
 
------------------------------------------------------------------
-Technology-package                   Technology-package
-Current             Type             Next reboot  
-------------------------------------------------------------------
-ipservicesk9        Permanent        ipservicesk9
+        This product contains cryptographic features and is subject to United
+        States and local country laws governing import, export, transfer and
+        use. Delivery of Cisco cryptographic products does not imply
+        third-party authority to import, export, distribute or use encryption.
+        Importers, exporters, distributors and users are responsible for
+        compliance with U.S. and local country laws. By using this product you
+        agree to comply with applicable laws and regulations. If you are unable
+        to comply with U.S. and local laws, return this product immediately.
 
-cisco WS-C3850-24P (MIPS) processor (revision U0) with 862498K/6147K bytes of memory.
-Processor board ID FCW1932D0LB
-13 Virtual Ethernet interfaces
-140 Gigabit Ethernet interfaces
-20 Ten Gigabit Ethernet interfaces
-2048K bytes of non-volatile configuration memory.
-4194304K bytes of physical memory.
-262143K bytes of Crash Files at crashinfo:.
-250456K bytes of Crash Files at crashinfo-2:.
-250456K bytes of Crash Files at crashinfo-3:.
-250456K bytes of Crash Files at crashinfo-4:.
-250456K bytes of Crash Files at crashinfo-5:.
-1586119K bytes of Flash at flash:.
-1609272K bytes of Flash at flash-2:.
-1609272K bytes of Flash at flash-3:.
-1609272K bytes of Flash at flash-4:.
-1609272K bytes of Flash at flash-5:.
-0K bytes of  at webui:.
+        A summary of U.S. laws governing Cisco cryptographic products may be found at:
+        http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
 
-Base Ethernet MAC Address          : 38:20:56:72:7d:80
-Motherboard Assembly Number        : 73-15805-04
-Motherboard Serial Number          : FOC19315RWV
-Model Revision Number              : U0
-Motherboard Revision Number        : A0
-Model Number                       : WS-C3850-24P
-System Serial Number               : FCW1932D0LB
+        If you require further assistance please contact us by sending email to
+        export@cisco.com.
 
 
-Switch Ports Model              SW Version        SW Image              Mode   
------- ----- -----              ----------        ----------            ----   
-*    1 32    WS-C3850-24P       16.4.2            CAT3K_CAA-UNIVERSALK9 BUNDLE 
-     2 32    WS-C3850-24P       16.4.2            CAT3K_CAA-UNIVERSALK9 BUNDLE 
-     3 32    WS-C3850-24P       16.4.2            CAT3K_CAA-UNIVERSALK9 BUNDLE 
-     4 32    WS-C3850-24P       16.4.2            CAT3K_CAA-UNIVERSALK9 BUNDLE 
-     5 32    WS-C3850-24P       16.4.2            CAT3K_CAA-UNIVERSALK9 BUNDLE 
+        Technology Package License Information: 
+
+        -----------------------------------------------------------------
+        Technology-package                   Technology-package
+        Current             Type             Next reboot  
+        ------------------------------------------------------------------
+        ipservicesk9        Permanent        ipservicesk9
+
+        cisco WS-C3850-24P (MIPS) processor (revision U0) with 862498K/6147K bytes of memory.
+        Processor board ID FCW1932D0LB
+        13 Virtual Ethernet interfaces
+        140 Gigabit Ethernet interfaces
+        20 Ten Gigabit Ethernet interfaces
+        2048K bytes of non-volatile configuration memory.
+        4194304K bytes of physical memory.
+        262143K bytes of Crash Files at crashinfo:.
+        250456K bytes of Crash Files at crashinfo-2:.
+        250456K bytes of Crash Files at crashinfo-3:.
+        250456K bytes of Crash Files at crashinfo-4:.
+        250456K bytes of Crash Files at crashinfo-5:.
+        1586119K bytes of Flash at flash:.
+        1609272K bytes of Flash at flash-2:.
+        1609272K bytes of Flash at flash-3:.
+        1609272K bytes of Flash at flash-4:.
+        1609272K bytes of Flash at flash-5:.
+        0K bytes of  at webui:.
+
+        Base Ethernet MAC Address          : 38:20:56:72:7d:80
+        Motherboard Assembly Number        : 73-15805-04
+        Motherboard Serial Number          : FOC19315RWV
+        Model Revision Number              : U0
+        Motherboard Revision Number        : A0
+        Model Number                       : WS-C3850-24P
+        System Serial Number               : FCW1932D0LB
 
 
-Switch 02
----------
-Switch uptime                      : 1 hour, 27 minutes 
+        Switch Ports Model              SW Version        SW Image              Mode   
+        ------ ----- -----              ----------        ----------            ----   
+        *    1 32    WS-C3850-24P       16.4.2            CAT3K_CAA-UNIVERSALK9 BUNDLE 
+             2 32    WS-C3850-24P       16.4.2            CAT3K_CAA-UNIVERSALK9 BUNDLE 
+             3 32    WS-C3850-24P       16.4.2            CAT3K_CAA-UNIVERSALK9 BUNDLE 
+             4 32    WS-C3850-24P       16.4.2            CAT3K_CAA-UNIVERSALK9 BUNDLE 
+             5 32    WS-C3850-24P       16.4.2            CAT3K_CAA-UNIVERSALK9 BUNDLE 
 
-Base Ethernet MAC Address          : 38:20:56:29:7b:00
-Motherboard Assembly Number        : 73-15805-04
-Motherboard Serial Number          : FOC19315SCE
-Model Revision Number              : U0
-Motherboard Revision Number        : A0
-Model Number                       : WS-C3850-24P
-System Serial Number               : FOC1932X0K1
 
-Switch 03
----------
-Switch uptime                      : 1 hour, 27 minutes 
+        Switch 02
+        ---------
+        Switch uptime                      : 1 hour, 27 minutes 
 
-Base Ethernet MAC Address          : 38:20:56:72:a8:00
-Motherboard Assembly Number        : 73-15805-04
-Motherboard Serial Number          : FOC193182KD
-Model Revision Number              : U0
-Motherboard Revision Number        : A0
-Model Number                       : WS-C3850-24P
-System Serial Number               : FCW1932C0MA
+        Base Ethernet MAC Address          : 38:20:56:29:7b:00
+        Motherboard Assembly Number        : 73-15805-04
+        Motherboard Serial Number          : FOC19315SCE
+        Model Revision Number              : U0
+        Motherboard Revision Number        : A0
+        Model Number                       : WS-C3850-24P
+        System Serial Number               : FOC1932X0K1
 
-Switch 04
----------
-Switch uptime                      : 1 hour, 27 minutes 
+        Switch 03
+        ---------
+        Switch uptime                      : 1 hour, 27 minutes 
 
-Base Ethernet MAC Address          : 38:20:56:29:97:00
-Motherboard Assembly Number        : 73-15805-04
-Motherboard Serial Number          : FOC193182KG
-Model Revision Number              : U0
-Motherboard Revision Number        : A0
-Model Number                       : WS-C3850-24P
-System Serial Number               : FCW1932D0L0
+        Base Ethernet MAC Address          : 38:20:56:72:a8:00
+        Motherboard Assembly Number        : 73-15805-04
+        Motherboard Serial Number          : FOC193182KD
+        Model Revision Number              : U0
+        Motherboard Revision Number        : A0
+        Model Number                       : WS-C3850-24P
+        System Serial Number               : FCW1932C0MA
 
-Switch 05
----------
-Switch uptime                      : 1 hour, 27 minutes 
+        Switch 04
+        ---------
+        Switch uptime                      : 1 hour, 27 minutes 
 
-Base Ethernet MAC Address          : 38:20:56:29:49:00
-Motherboard Assembly Number        : 73-15805-04
-Motherboard Serial Number          : FOC193182KB
-Model Revision Number              : U0
-Motherboard Revision Number        : A0
-Model Number                       : WS-C3850-24P
-System Serial Number               : FOC1932X0F9
+        Base Ethernet MAC Address          : 38:20:56:29:97:00
+        Motherboard Assembly Number        : 73-15805-04
+        Motherboard Serial Number          : FOC193182KG
+        Model Revision Number              : U0
+        Motherboard Revision Number        : A0
+        Model Number                       : WS-C3850-24P
+        System Serial Number               : FCW1932D0L0
 
-Configuration register is 0x102
+        Switch 05
+        ---------
+        Switch uptime                      : 1 hour, 27 minutes 
+
+        Base Ethernet MAC Address          : 38:20:56:29:49:00
+        Motherboard Assembly Number        : 73-15805-04
+        Motherboard Serial Number          : FOC193182KB
+        Model Revision Number              : U0
+        Motherboard Revision Number        : A0
+        Model Number                       : WS-C3850-24P
+        System Serial Number               : FOC1932X0F9
+
+        Configuration register is 0x102
 '''}
 
     golden_parsed_output_asr1k = {
@@ -344,6 +345,7 @@ Configuration register is 0x102
                                         'rom': 'IOS-XE ROMMON',
                                         'hostname': 'PE1',
                                         'uptime': '32 minutes',
+                                        'image_type': 'developer image',
                                         'uptime_this_cp': '34 minutes',
                                         'system_restarted_at': '09:08:57 PDT Mon Apr 10 2017',
                                         'system_image': 'harddisk:test-image-PE1-13113029',
@@ -384,63 +386,63 @@ Configuration register is 0x102
                                 }
 
     golden_output_asr1k = {'execute.return_value': '''\
-Cisco IOS XE Software, Version BLD_V163_MR_THROTTLE_LATEST_20170410_093453_V16_3_3_24
-Cisco IOS Software [Denali], ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Experimental Version 16.3.20170410:103306 [v163_mr_throttle-BLD-BLD_V163_MR_THROTTLE_LATEST_20170410_093453 118]
-Copyright (c) 1986-2017 by Cisco Systems, Inc.
-Compiled Mon 10-Apr-17 04:35 by mcpre
+        Cisco IOS XE Software, Version BLD_V163_MR_THROTTLE_LATEST_20170410_093453_V16_3_3_24
+        Cisco IOS Software [Denali], ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Experimental Version 16.3.20170410:103306 [v163_mr_throttle-BLD-BLD_V163_MR_THROTTLE_LATEST_20170410_093453 118]
+        Copyright (c) 1986-2017 by Cisco Systems, Inc.
+        Compiled Mon 10-Apr-17 04:35 by mcpre
 
 
-Cisco IOS-XE software, Copyright (c) 2005-2017 by cisco Systems, Inc.
-All rights reserved.  Certain components of Cisco IOS-XE software are
-licensed under the GNU General Public License ("GPL") Version 2.0.  The
-software code licensed under GPL Version 2.0 is free software that comes
-with ABSOLUTELY NO WARRANTY.  You can redistribute and/or modify such
-GPL code under the terms of GPL Version 2.0.  For more details, see the
-documentation or "License Notice" file accompanying the IOS-XE software,
-or the applicable URL provided on the flyer accompanying the IOS-XE
-software.
+        Cisco IOS-XE software, Copyright (c) 2005-2017 by cisco Systems, Inc.
+        All rights reserved.  Certain components of Cisco IOS-XE software are
+        licensed under the GNU General Public License ("GPL") Version 2.0.  The
+        software code licensed under GPL Version 2.0 is free software that comes
+        with ABSOLUTELY NO WARRANTY.  You can redistribute and/or modify such
+        GPL code under the terms of GPL Version 2.0.  For more details, see the
+        documentation or "License Notice" file accompanying the IOS-XE software,
+        or the applicable URL provided on the flyer accompanying the IOS-XE
+        software.
 
 
-ROM: IOS-XE ROMMON
+        ROM: IOS-XE ROMMON
 
-PE1 uptime is 32 minutes
-Uptime for this control processor is 34 minutes
-System returned to ROM by reload at 02:14:51 PDT Mon Apr 10 2017
-System restarted at 09:08:57 PDT Mon Apr 10 2017
-System image file is "harddisk:test-image-PE1-13113029"
-Last reload reason: Reload Command
+        PE1 uptime is 32 minutes
+        Uptime for this control processor is 34 minutes
+        System returned to ROM by reload at 02:14:51 PDT Mon Apr 10 2017
+        System restarted at 09:08:57 PDT Mon Apr 10 2017
+        System image file is "harddisk:test-image-PE1-13113029"
+        Last reload reason: Reload Command
 
 
 
-This product contains cryptographic features and is subject to United
-States and local country laws governing import, export, transfer and
-use. Delivery of Cisco cryptographic products does not imply
-third-party authority to import, export, distribute or use encryption.
-Importers, exporters, distributors and users are responsible for
-compliance with U.S. and local country laws. By using this product you
-agree to comply with applicable laws and regulations. If you are unable
-to comply with U.S. and local laws, return this product immediately.
+        This product contains cryptographic features and is subject to United
+        States and local country laws governing import, export, transfer and
+        use. Delivery of Cisco cryptographic products does not imply
+        third-party authority to import, export, distribute or use encryption.
+        Importers, exporters, distributors and users are responsible for
+        compliance with U.S. and local country laws. By using this product you
+        agree to comply with applicable laws and regulations. If you are unable
+        to comply with U.S. and local laws, return this product immediately.
 
-A summary of U.S. laws governing Cisco cryptographic products may be found at:
-http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+        A summary of U.S. laws governing Cisco cryptographic products may be found at:
+        http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
 
-If you require further assistance please contact us by sending email to
-export@cisco.com.
+        If you require further assistance please contact us by sending email to
+        export@cisco.com.
 
-License Type: RightToUse
-License Level: advipservices
-Next reload license Level: advipservices
+        License Type: RightToUse
+        License Level: advipservices
+        Next reload license Level: advipservices
 
-cisco ASR1006 (RP2) processor (revision RP2) with 4138965K/6147K bytes of memory.
-Processor board ID FOX1444GPXU
-5 Gigabit Ethernet interfaces
-32768K bytes of non-volatile configuration memory.
-8388608K bytes of physical memory.
-1925119K bytes of eUSB flash at bootflash:.
-78085207K bytes of SATA hard disk at harddisk:.
-0K bytes of  at webui:.
+        cisco ASR1006 (RP2) processor (revision RP2) with 4138965K/6147K bytes of memory.
+        Processor board ID FOX1444GPXU
+        5 Gigabit Ethernet interfaces
+        32768K bytes of non-volatile configuration memory.
+        8388608K bytes of physical memory.
+        1925119K bytes of eUSB flash at bootflash:.
+        78085207K bytes of SATA hard disk at harddisk:.
+        0K bytes of  at webui:.
 
-Configuration register is 0x2000 (will be 0x2002 at next reload)
+        Configuration register is 0x2000 (will be 0x2002 at next reload)
 '''}
 
     def test_empty(self):

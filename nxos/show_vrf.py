@@ -173,7 +173,7 @@ class ShowVrfDetail(ShowVrfDetailSchema):
                 continue
 
             # RD: 300:1
-            p3 = re.compile(r'^RD: +(?P<rd>[\w\:]+)$')
+            p3 = re.compile(r'^RD: +(?P<rd>[\w\:\.]+)$')
             m = p3.match(line)
             if m:
                 vrf_dict[vrf]['route_distinguisher'] = m.groupdict()['rd']
