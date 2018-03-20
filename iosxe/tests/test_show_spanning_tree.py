@@ -26,7 +26,7 @@ class test_show_spanning_tree_summary(unittest.TestCase):
         "total_statistics": {
           "forwardings": 10,
           "listenings": 0,
-          "root_bridges": 2,
+          "num_of_msts": 2,
           "stp_actives": 16,
           "learnings": 0,
           "blockings": 6
@@ -54,9 +54,13 @@ class test_show_spanning_tree_summary(unittest.TestCase):
         "uplink_fast": False,
         "backbone_fast": False,
         "portfast_default": False,
-        "loop_guard": False
-
+        "loop_guard": False,
+        "configured_pathcost": {
+            'method': 'short',
+            'operational_value': 'long',
+        }
     }
+
     golden_parsed_output_pvst = {
         "etherchannel_misconfig_guard": True,
         "mode": {
@@ -107,14 +111,16 @@ class test_show_spanning_tree_summary(unittest.TestCase):
           "stp_actives": 5,
           "forwardings": 0,
           "blockings": 0,
-          "root_bridges": 5,
+          "num_of_vlans": 5,
           "learnings": 0,
           "listenings": 5
         },
         "loop_guard": False,
         "uplink_fast": False,
-        "root_bridge_for": "VLAN0100-VLAN0101, VLAN0405-VLAN0407"
-
+        "root_bridge_for": "VLAN0100-VLAN0101, VLAN0405-VLAN0407",
+        "configured_pathcost": {
+            'method': 'short'
+        }
     }
 
     golden_output_mstp = {'execute.return_value': '''\
@@ -217,13 +223,13 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                         "bridge_address": "d8b1.9009.bf80",
                         "interfaces": {
                              "Port-channel24": {
-                                  "forward_transitions": 1,
+                                  "number_of_forward_transitions": 1,
                                   "designated_port_id": "128.2400",
                                   "status": "designated forwarding",
                                   "designated_bridge_priority": 32768,
                                   "forward_delay": 0,
                                   "designated_bridge_address": "d8b1.9009.bf80",
-                                  "designated_cost": 0,
+                                  "designated_path_cost": 0,
                                   "designated_root_priority": 32768,
                                   "port_identifier": "128.2400.",
                                   "cost": 6660,
@@ -242,13 +248,13 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                                   "loop_guard": True
                              },
                              "Port-channel14": {
-                                  "forward_transitions": 0,
+                                  "number_of_forward_transitions": 0,
                                   "designated_port_id": "128.2390",
                                   "status": "broken  (PVST Sim. Inconsistent)",
                                   "designated_bridge_priority": 32768,
                                   "forward_delay": 0,
                                   "designated_bridge_address": "d8b1.9009.bf80",
-                                  "designated_cost": 0,
+                                  "designated_path_cost": 0,
                                   "designated_root_priority": 32768,
                                   "port_identifier": "128.2390.",
                                   "cost": 6660,
@@ -311,8 +317,8 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                                   },
                                   "port_num": 2388,
                                   "message_age": 0,
-                                  "forward_transitions": 1,
-                                  "designated_cost": 0,
+                                  "number_of_forward_transitions": 1,
+                                  "designated_path_cost": 0,
                                   "forward_delay": 0,
                                   "name": "Port-channel12",
                                   "designated_root_priority": 24676,
@@ -335,9 +341,8 @@ class test_show_spanning_tree_detail(unittest.TestCase):
               "max_age": 20,
               "forwarding_delay": 15
          }
-
-
     }
+
     golden_parsed_output_rapid_pvst = {
         "rapid_pvst": {
               "forwarding_delay": 15,
@@ -363,7 +368,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                         "interfaces": {
                              "GigabitEthernet1/0/5": {
                                   "designated_bridge_address": "ecbd.1d09.5680",
-                                  "forward_transitions": 1,
+                                  "number_of_forward_transitions": 1,
                                   "port_identifier": "128.5.",
                                   "counters": {
                                        "bpdu_received": 4,
@@ -382,7 +387,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                                   "peer": "STP",
                                   "link_type": "point-to-point",
                                   "designated_bridge_priority": 28873,
-                                  "designated_cost": 3,
+                                  "designated_path_cost": 3,
                                   "name": "GigabitEthernet1/0/5"
                              }
                         },
@@ -411,7 +416,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                         "interfaces": {
                              "Port-channel12": {
                                   "designated_bridge_address": "3820.565b.1b80",
-                                  "forward_transitions": 1,
+                                  "number_of_forward_transitions": 1,
                                   "port_identifier": "128.2388.",
                                   "counters": {
                                        "bpdu_received": 0,
@@ -429,7 +434,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                                   "message_age": 0,
                                   "link_type": "point-to-point",
                                   "designated_bridge_priority": 24676,
-                                  "designated_cost": 0,
+                                  "designated_path_cost": 0,
                                   "name": "Port-channel12"
                              }
                         },
@@ -586,7 +591,7 @@ class test_show_spanning_tree_mst_detail(unittest.TestCase):
     golden_parsed_output = {
         "mst_instances": {
             0: {
-               "priority": 32768,
+               "bridge_priority": 32768,
                "interfaces": {
                     "GigabitEthernet1/0/23": {
                          "designated_regional_root_cost": 0,
@@ -619,7 +624,7 @@ class test_show_spanning_tree_mst_detail(unittest.TestCase):
                     "forward_delay": 30
                },
                "sysid": 0,
-               "root": "the CIST",
+               "root": "CIST",
                "bridge_address": "3820.565b.8600",
                "configured": {
                     "max_age": 35,
@@ -631,7 +636,7 @@ class test_show_spanning_tree_mst_detail(unittest.TestCase):
                "vlan": "1-99,201-4094"
             },
             10: {
-               "priority": 61450,
+               "bridge_priority": 61450,
                "interfaces": {
                     "GigabitEthernet1/0/23": {
                          "port_priority": 128,
@@ -739,6 +744,13 @@ class test_show_errdisable_recovery(unittest.TestCase):
           "evc-lite input mapping fa": False,
           "pppoe-ia-rate-limit": False,
           "dhcp-rate-limit": False
+        },
+        "interfaces": {
+            "FastEthernet2/4": {
+                'interface': "FastEthernet2/4",
+                'errdisable_reason': 'bpduguard',
+                'time_left': 273,
+            }
         }
     }
 
@@ -775,6 +787,10 @@ class test_show_errdisable_recovery(unittest.TestCase):
         Timer interval: 333 seconds
 
         Interfaces that will be enabled at the next timeout:
+
+        Interface      Errdisable reason      Time left(sec)
+        ---------    ---------------------    --------------
+          Fa2/4                bpduguard          273
     '''
     }
 
@@ -812,8 +828,8 @@ class test_show_spanning_tree(unittest.TestCase):
                          "GigabitEthernet1/0/5": {
                               "port_state": "forwarding",
                               "bound": "RSTP",
-                              "designated_port_num": 5,
-                              "designated_port_priority": 128,
+                              "port_num": 5,
+                              "port_priority": 128,
                               "type": "P2p",
                               "cost": 20000,
                               "role": "root"
@@ -821,8 +837,8 @@ class test_show_spanning_tree(unittest.TestCase):
                          "Port-channel14": {
                               "port_state": "broken",
                               "bound": "PVST",
-                              "designated_port_num": 2390,
-                              "designated_port_priority": 128,
+                              "port_num": 2390,
+                              "port_priority": 128,
                               "type": "P2p",
                               "cost": 6660,
                               "role": "designated"
@@ -830,8 +846,8 @@ class test_show_spanning_tree(unittest.TestCase):
                          "Port-channel24": {
                               "port_state": "forwarding",
                               "bound": "PVST",
-                              "designated_port_num": 2400,
-                              "designated_port_priority": 128,
+                              "port_num": 2400,
+                              "port_priority": 128,
                               "type": "P2p",
                               "cost": 6660,
                               "role": "designated"
@@ -860,8 +876,8 @@ class test_show_spanning_tree(unittest.TestCase):
                          "GigabitEthernet1/0/5": {
                               "port_state": "forwarding",
                               "bound": "RSTP",
-                              "designated_port_num": 5,
-                              "designated_port_priority": 128,
+                              "port_num": 5,
+                              "port_priority": 128,
                               "type": "P2p",
                               "cost": 20000,
                               "role": "master "
@@ -869,8 +885,8 @@ class test_show_spanning_tree(unittest.TestCase):
                          "Port-channel14": {
                               "port_state": "broken",
                               "bound": "PVST",
-                              "designated_port_num": 2390,
-                              "designated_port_priority": 128,
+                              "port_num": 2390,
+                              "port_priority": 128,
                               "type": "P2p",
                               "cost": 6660,
                               "role": "designated"
@@ -904,16 +920,16 @@ class test_show_spanning_tree(unittest.TestCase):
                          "GigabitEthernet1/0/5": {
                               "peer": "STP",
                               "port_state": "forwarding",
-                              "designated_port_num": 5,
-                              "designated_port_priority": 128,
+                              "port_num": 5,
+                              "port_priority": 128,
                               "type": "P2p",
                               "cost": 4,
                               "role": "designated"
                          },
                          "Port-channel14": {
                               "port_state": "forwarding",
-                              "designated_port_num": 2390,
-                              "designated_port_priority": 128,
+                              "port_num": 2390,
+                              "port_priority": 128,
                               "type": "P2p",
                               "cost": 3,
                               "role": "root"
@@ -943,16 +959,16 @@ class test_show_spanning_tree(unittest.TestCase):
                          "GigabitEthernet1/0/5": {
                               "peer": "STP",
                               "port_state": "forwarding",
-                              "designated_port_num": 5,
-                              "designated_port_priority": 128,
+                              "port_num": 5,
+                              "port_priority": 128,
                               "type": "P2p",
                               "cost": 4,
                               "role": "designated"
                          },
                          "Port-channel14": {
                               "port_state": "forwarding",
-                              "designated_port_num": 2390,
-                              "designated_port_priority": 128,
+                              "port_num": 2390,
+                              "port_priority": 128,
                               "type": "P2p",
                               "cost": 3,
                               "role": "root"

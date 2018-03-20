@@ -37,6 +37,10 @@ class ShowSpanningTreeSummarySchema(MetaParser):
         'uplink_fast': bool,
         'backbone_fast': bool,
         'root_bridge_for': str,
+        "configured_pathcost": {
+            'method': str,
+            Optional('operational_value'): str,
+        },
         'mode': {
             Any(): {  # mstp, pvst, rapid_pvst
                 Any(): {   # <mst_domain>,  <pvst_id>
@@ -48,13 +52,14 @@ class ShowSpanningTreeSummarySchema(MetaParser):
                 }
             }
         },
-        'total_statistics': {            
-            'root_bridges': int,
+        'total_statistics': {
             'blockings': int,
             'listenings': int,
             'learnings': int,
             'forwardings': int,
             'stp_actives': int,
+            Optional('num_of_msts'): int,
+            Optional('num_of_vlans'): int,
         }
     }
 
@@ -75,8 +80,11 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
         p3 = re.compile(r'^(?P<name>[\w\s]+) +is +(?P<value>disabled|enabled)$')
         p4 = re.compile(r'^(?P<id>\w+) +(?P<blocking>\d+) +(?P<listening>\d+)'
                          ' +(?P<learning>\d+) +(?P<forwarding>\d+) +(?P<stp_active>\d+)$')
-        p5 = re.compile(r'^(?P<root_bridges>\d+) +(msts|vlans) +(?P<blockings>\d+) +(?P<listenings>\d+)'
+        p5 = re.compile(r'^(?P<num>\d+) +(msts|vlans) +(?P<blockings>\d+) +(?P<listenings>\d+)'
                          ' +(?P<learnings>\d+) +(?P<forwardings>\d+) +(?P<stp_actives>\d+)$')
+        p6 = re.compile(r'^Configured +Pathcost +method +used +is +(?P<method>\w+) *'
+                         '(\(Operational +value +is +(?P<operational_value>\w+)\))?$')
+
         key_map = {'EtherChannel misconfig guard': 'etherchannel_misconfig_guard',
                    'Extended system ID': 'extended_system_id',
                    'Portfast Default': 'portfast_default',
@@ -120,7 +128,8 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
             if m:
                 group = m.groupdict()
                 mode_id = group.pop('id')
-                mode_dict = ret_dict.setdefault('mode', {}).setdefault(mode, {}).setdefault(mode_id, {})
+                mode_dict = ret_dict.setdefault('mode', {})\
+                    .setdefault(mode, {}).setdefault(mode_id, {})
                 mode_dict.update({k:int(v) for k, v in group.items()})
                 continue
 
@@ -129,7 +138,24 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict.setdefault('total_statistics', {}).update({k:int(v) for k, v in group.items()})
+                if 'mst' in line:
+                    key = 'num_of_msts'
+                else:
+                    key = 'num_of_vlans'
+                ret_dict.setdefault('total_statistics', {})\
+                    .setdefault(key, int(group.pop('num')))
+                ret_dict.setdefault('total_statistics', {})\
+                    .update({k:int(v) for k, v in group.items()})
+                continue
+
+            # Configured Pathcost method used is short
+            # Configured Pathcost method used is short (Operational value is long)
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                
+                ret_dict.setdefault('configured_pathcost', {})\
+                    .update({k:v for k, v in group.items() if v})
                 continue
 
         return ret_dict
@@ -186,11 +212,11 @@ class ShowSpanningTreeDetailSchema(MetaParser):
                             'port_identifier': str,
                             'designated_root_priority': int,
                             'designated_root_address': str,
-                            'designated_cost': int,
+                            'designated_path_cost': int,
                             'designated_port_id': str,
                             'designated_bridge_priority': int,
                             'designated_bridge_address': str,
-                            'forward_transitions': int,
+                            'number_of_forward_transitions': int,
                             'message_age': int,
                             'forward_delay': int,
                             'hold': int,
@@ -278,13 +304,13 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                           'address +(?P<designated_bridge_address>[\w\.]+)$')
 
         p15 = re.compile(r'^Designated +port +id +is +(?P<designated_port_id>[\w\.]+), +'
-                          'designated +path +cost +(?P<designated_cost>\d+)$')
+                          'designated +path +cost +(?P<designated_path_cost>\d+)$')
 
         p16 = re.compile(r'^Timers: +message +age +(?P<message_age>\d+), +'
                           'forward +delay +(?P<forward_delay>\d+), +hold +(?P<hold>\d+)$')
 
         p17 = re.compile(r'^Number +of +transitions +to +forwarding +'
-                          'state: +(?P<forward_transitions>\d+)$')
+                          'state: +(?P<number_of_forward_transitions>\d+)$')
 
         p18 = re.compile(r'^Link +type +is +(?P<link_type>[\w\-]+) +by +default'
                           '(, *(Boundary +(?P<boundary>\w+)|Peer +is +(?P<peer>\w+)))?$')
@@ -412,7 +438,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                intf_dict['designated_cost'] = int(group['designated_cost'])
+                intf_dict['designated_path_cost'] = int(group['designated_path_cost'])
                 intf_dict['designated_port_id'] = group['designated_port_id']
                 continue
 
@@ -426,7 +452,8 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
             # Number of transitions to forwarding state: 0
             m = p17.match(line)
             if m:
-                intf_dict['forward_transitions'] = int(m.groupdict()['forward_transitions'])
+                intf_dict['number_of_forward_transitions'] = \
+                    int(m.groupdict()['number_of_forward_transitions'])
                 continue
 
             # Link type is point-to-point by default, Boundary PVST
@@ -462,7 +489,7 @@ class ShowSpanningTreeMstDetailSchema(MetaParser):
                 'mst_id': int,
                 Optional('vlan'): str,
                 'bridge_address': str,
-                'priority': int,
+                'bridge_priority': int,
                 'sysid': int,
                 'root': str,
                 Optional('operational'): {
@@ -523,10 +550,10 @@ class ShowSpanningTreeMstDetail(ShowSpanningTreeMstDetailSchema):
                          'vlans +mapped: +(?P<vlan>[\d\-\,\s]+)$')
 
         p2 = re.compile(r'^Bridge +address +(?P<bridge_address>[\w\.]+) +'
-                         'priority +(?P<priority>\d+) +'
+                         'priority +(?P<bridge_priority>\d+) +'
                          '\((\d+) +sysid +(?P<sysid>\d+)\)$')
         
-        p3 = re.compile(r'^Root +this +switch +for +(?P<root>[\w\.\s]+)$')
+        p3 = re.compile(r'^Root +this +switch +for +(the +)?(?P<root>[\w\.\s]+)$')
         
         p4 = re.compile(r'^Operational +hello +time +(?P<hello_time>\d+), +'
                          'forward +delay +(?P<forward_delay>\d+), +'
@@ -680,6 +707,13 @@ class ShowErrdisableRecoverySchema(MetaParser):
             Any(): bool,
         },
         'bpduguard_timeout_recovery': int,
+        Optional('interfaces'): {
+            Any(): {
+                'interface': str,
+                'errdisable_reason': str,
+                'time_left': int,
+            },
+        }
     }
 
 
@@ -697,6 +731,9 @@ class ShowErrdisableRecovery(ShowErrdisableRecoverySchema):
         p1 = re.compile(r'^Timer +interval: +(?P<interval>\d+) +seconds$')
         p2 = re.compile(r'^(?P<name>[\w\-\s\(\)\"\:"]+) +'
                          '(?P<status>(Disabled|Enabled)+)$')
+        p3 = re.compile(r'^(?P<interface>[\w\-\/\.]+) +'
+                         '(?P<errdisable_reason>\w+) +'
+                         '(?P<time_left>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -713,6 +750,17 @@ class ShowErrdisableRecovery(ShowErrdisableRecoverySchema):
                 group = m.groupdict()
                 status_dict = ret_dict.setdefault('timer_status', {})
                 status_dict[group['name'].strip()] = False if 'disabled' in group['status'].lower() else True
+                continue
+
+            # Fa2/4                bpduguard          273
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group.pop('interface'))
+                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(intf, {})
+                intf_dict['interface'] = intf
+                intf_dict['time_left'] = int(group.pop('time_left'))
+                intf_dict.update({k:v for k,v in group.items()})
                 continue
 
         return ret_dict
@@ -740,8 +788,8 @@ class ShowSpanningTreeSchema(MetaParser):
                             'role': str,
                             'port_state': str,
                             'cost': int,
-                            'designated_port_priority': int,
-                            'designated_port_num': int,
+                            'port_priority': int,
+                            'port_num': int,
                             'type': str,
                             Optional('peer'): str,
                             Optional('bound'): str,
@@ -801,8 +849,8 @@ class ShowSpanningTree(ShowSpanningTreeSchema):
         p9 = re.compile(r'^Aging +Time +(?P<aging_time>\d+) +sec$')
         p10 = re.compile(r'^(?P<interface>[\w\-\/\.]+) +'
                           '(?P<role>[\w\*]+) +(?P<port_state>[A-Z\*]+) *'
-                          '(?P<cost>\d+) +(?P<designated_port_priority>\d+)\.'
-                          '(?P<designated_port_num>\d+) +(?P<type>\w+)'
+                          '(?P<cost>\d+) +(?P<port_priority>\d+)\.'
+                          '(?P<port_num>\d+) +(?P<type>\w+)'
                           '( +(Bound\((?P<bound>\w+)\)|Peer\((?P<peer>\w+)\)))?'
                           '( +\*\S+)?$')
 
@@ -879,15 +927,12 @@ class ShowSpanningTree(ShowSpanningTreeSchema):
                 intf = Common.convert_intf_name(group.pop('interface'))
                 intf_dict = inst_dict.setdefault('interfaces', {}).setdefault(intf, {})
                 intf_dict['cost'] = int(group.pop('cost'))
-                intf_dict['designated_port_priority'] = int(group.pop('designated_port_priority'))
-                intf_dict['designated_port_num'] = int(group.pop('designated_port_num'))
+                intf_dict['port_priority'] = int(group.pop('port_priority'))
+                intf_dict['port_num'] = int(group.pop('port_num'))
                 intf_dict['role'] = self.ROLE_MAP[group.pop('role')]
                 intf_dict['port_state'] = self.PORT_STATE_MAP[group.pop('port_state')]
                 intf_dict.update({k:v for k,v in group.items() if v})
                 continue
-
-
-
         return ret_dict
 
 
