@@ -22,26 +22,28 @@ class ShowCryptoPkiCertificatesSchema(MetaParser):
     schema = {
         'trustpoints': {
             Any(): {
-                Any(): { # certificate, ca_certificate                    
-                    'status': str,
-                    'serial_number_in_hex': str,
-                    'usage': str,
-                    'issuer': {
-                        'cn': str,
-                        'o': str
+                'associated_trustpoints':{
+                    Any(): { # certificate, ca_certificate                    
+                        'status': str,
+                        'serial_number_in_hex': str,
+                        'usage': str,
+                        'issuer': {
+                            'cn': str,
+                            'o': str
+                        },
+                        'subject': {
+                            Optional('name'): str,
+                            Optional('serial_number'): str,
+                            Optional('pid'): str,
+                            'cn': str,
+                            Optional('o'): str,
+                        },
+                        'crl_distribution_points': str,
+                        'validity_date': {
+                            'start_date':str,
+                            'end_date': str
+                        }
                     },
-                    'subject': {
-                        Optional('name'): str,
-                        Optional('serial_number'): str,
-                        Optional('pid'): str,
-                        'cn': str,
-                        Optional('o'): str,
-                    },
-                    'crl_distribution_points': str,
-                    'validity_date': {
-                        'start_date':str,
-                        'end_date': str
-                    }
                 }
             },
         }
@@ -169,6 +171,6 @@ class ShowCryptoPkiCertificates(ShowCryptoPkiCertificatesSchema):
                 trustpoints = m.groupdict()['trustpoints'] 
                 continue
         try:
-            return {'trustpoints': {trustpoints: ret_dict}}
+            return {'trustpoints': {trustpoints: {'associated_trustpoints': ret_dict}}}
         except Exception:
             return {}
