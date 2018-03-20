@@ -47,6 +47,7 @@ class test_show_ip_ospf(unittest.TestCase):
                                     {'initial_number': 300,
                                     'maximum_number': 300},
                                 'area_transit': True,
+                                'enable': True,
                                 'areas': 
                                     {'0.0.0.0': 
                                         {'area_id': '0.0.0.0',

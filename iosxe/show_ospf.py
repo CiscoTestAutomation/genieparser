@@ -41,8 +41,9 @@ class ShowIpOspfSchema(MetaParser):
                         {'instance': 
                             {Any(): 
                                 {'router_id': str,
-                                 Optional('enable'): bool,
-                                'nsr': 
+                                # Optional('enable'): bool,
+                                 'enable': bool,
+                                'nsr':
                                     {'enable': bool},
                                 'bfd': 
                                     {'enable': bool,
@@ -239,7 +240,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                 sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
                             ['instance'][instance]
                 sub_dict['router_id'] = router_id
-
+                sub_dict['enable'] = True
                 # Set some default values
                 if 'nsr' not in sub_dict:
                     sub_dict['nsr'] = {}
@@ -823,7 +824,7 @@ class ShowIpOspf(ShowIpOspfSchema):
                     sub_dict['auto_cost']['enable'] = True
                 continue
 
-            # Area BACKBONE(0)
+            # Area BACKBONE(0) (Inactive)
             # Area 1
             p38 = re.compile(r'^Area +(?P<area>(\S+))(?: +inactive)?$')
             m = p38.match(line)

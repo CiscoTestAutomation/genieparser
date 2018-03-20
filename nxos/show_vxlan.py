@@ -51,39 +51,33 @@ class ShowNvePeers(ShowNvePeersSchema):
         out = self.device.execute('show nve peers')
 
         result_dict = {}
+        # Interface Peer-IP          State LearnType Uptime   Router-Mac
+        # nve1      201.202.1.1      Up    CP        01:15:09 n/a
+        # nve1      204.1.1.1        Up    CP        00:03:05 5e00.0002.0007
+
+        p1 = re.compile(r'^\s*(?P<nve_name>[\w\/]+) +(?P<peer_ip>[\w\.]+) +(?P<peer_state>[\w]+)'
+                        ' +(?P<learn_type>[\w]+) +(?P<uptime>[\w\:]+) +(?P<router_mac>[\w\.\/]+)$')
+
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
             else:
                 continue
 
-            # Interface Peer-IP          State LearnType Uptime   Router-Mac
-            # nve1      201.202.1.1      Up    CP        01:15:09 n/a
-            # nve1      204.1.1.1        Up    CP        00:03:05 5e00.0002.0007
-
-            p1 = re.compile(r'^\s*(?P<nve_name>[\w\/]+) +(?P<peer_ip>[\w\.]+) +(?P<state>[\w]+)'
-                           ' +(?P<learn_type>[\w]+) +(?P<uptime>[\w\:]+) +(?P<router_mac>[\w\.\/]+)$')
             m = p1.match(line)
             if m:
-                nve_name = m.groupdict()['nve_name']
-                peer_ip = m.groupdict()['peer_ip']
-                state = m.groupdict()['state'].lower()
-                learn_type = m.groupdict()['learn_type']
-                uptime = m.groupdict()['uptime']
-                router_mac = m.groupdict()['router_mac']
+                group = m.groupdict()
+                nve_name = group.pop('nve_name')
+                peer_ip = group.pop('peer_ip')
+                nve_dict = result_dict.setdefault(nve_name,{})
+                nve_dict.update({'nve_name': nve_name})
 
-                if nve_name not in result_dict:
-                    result_dict[nve_name] = {}
-                result_dict[nve_name]['nve_name'] = nve_name
-                if 'peer_ip' not in result_dict[nve_name]:
-                    result_dict[nve_name]['peer_ip'] = {}
-                if peer_ip not in result_dict[nve_name]['peer_ip']:
-                    result_dict[nve_name]['peer_ip'][peer_ip] = {}
+                peer_dict = nve_dict.setdefault('peer_ip',{}).setdefault(peer_ip,{})
 
-                result_dict[nve_name]['peer_ip'][peer_ip]['learn_type'] = learn_type
-                result_dict[nve_name]['peer_ip'][peer_ip]['uptime'] = uptime
-                result_dict[nve_name]['peer_ip'][peer_ip]['router_mac'] = router_mac
-                result_dict[nve_name]['peer_ip'][peer_ip]['peer_state'] = state
+                peer_dict.update({'learn_type': group.pop('learn_type')})
+                peer_dict.update({'uptime': group.pop('uptime')})
+                peer_dict.update({'router_mac': group.pop('router_mac')})
+                peer_dict.update({'peer_state': group.pop('peer_state').lower()})
 
                 continue
 
@@ -119,45 +113,29 @@ class ShowNveVniSummary(ShowNveVniSummarySchema):
         out = self.device.execute('show nve vni summary')
 
         result_dict = {}
+        # Total CP VNIs: 21    [Up: 21, Down: 0]
+        # Total DP VNIs: 0    [Up: 0, Down: 0]
+        p1 = re.compile(
+            r'^\s*Total +CP +VNIs: +(?P<cp_vni_count>[\d]+) +\[Up: +(?P<cp_vni_up>[\d]+), +Down: +(?P<cp_vni_down>[\d]+)\]$')
+        p2 = re.compile(
+            r'^\s*Total +DP +VNIs: +(?P<dp_vni_count>[\d]+) +\[Up: +(?P<dp_vni_up>[\d]+), +Down: +(?P<dp_vni_down>[\d]+)\]$')
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
             else:
                 continue
 
-            # Total CP VNIs: 21    [Up: 21, Down: 0]
-            p1 = re.compile(r'^\s*Total +CP +VNIs: +(?P<cp_count>[\d]+) +\[Up: +(?P<cp_up>[\d]+), +Down: +(?P<cp_down>[\d]+)\]$')
             m = p1.match(line)
             if m:
-                cp_count = m.groupdict()['cp_count']
-                cp_up = m.groupdict()['cp_up']
-                cp_down = m.groupdict()['cp_down']
-
-                if 'vni' not in result_dict:
-                    result_dict['vni'] = {}
-                if 'summary' not in result_dict['vni']:
-                    result_dict['vni']['summary'] = {}
-                result_dict['vni']['summary']['cp_vni_count'] = int(cp_count)
-                result_dict['vni']['summary']['cp_vni_up'] = int(cp_up)
-                result_dict['vni']['summary']['cp_vni_down'] = int(cp_down)
+                group = m.groupdict()
+                vni_dict = result_dict.setdefault('vni',{}).setdefault('summary',{})
+                vni_dict.update({k:int(v) for k,v in group.items()})
                 continue
 
-            # Total DP VNIs: 0    [Up: 0, Down: 0]
-            p2 = re.compile(
-                r'^\s*Total +DP +VNIs: +(?P<dp_count>[\d]+) +\[Up: +(?P<dp_up>[\d]+), +Down: +(?P<dp_down>[\d]+)\]$')
             m = p2.match(line)
             if m:
-                dp_count = m.groupdict()['dp_count']
-                dp_up = m.groupdict()['dp_up']
-                dp_down = m.groupdict()['dp_down']
-
-                if 'vni' not in result_dict:
-                    result_dict['vni'] = {}
-                if 'summary' not in result_dict['vni']:
-                    result_dict['vni']['summary'] = {}
-                result_dict['vni']['summary']['dp_vni_count'] = int(dp_count)
-                result_dict['vni']['summary']['dp_vni_up'] = int(dp_up)
-                result_dict['vni']['summary']['dp_vni_down'] = int(dp_down)
+                group = m.groupdict()
+                vni_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
         return result_dict
@@ -195,45 +173,36 @@ class ShowNveVni(ShowNveVniSchema):
         out = self.device.execute('show nve vni')
 
         result_dict = {}
+
+        # Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
+        #  --------- -------- ----------------- ----- ---- ------------------ -----
+        # nve1      5001     234.1.1.1         Up    CP   L2 [1001]
+
+        p1 = re.compile(r'^\s*(?P<nve_name>[\w\/]+) +(?P<vni>[\d]+) +(?P<mcast>[\w\.\/]+)'
+                        ' +(?P<vni_state>[\w]+) +(?P<mode>[\w]+) +(?P<type>[\w\s\-\[\]]+)( +(?P<flags>[\w]+))?$')
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
             else:
                 continue
 
-            # Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
-            #  --------- -------- ----------------- ----- ---- ------------------ -----
-            # nve1      5001     234.1.1.1         Up    CP   L2 [1001]
 
-            p1 = re.compile(r'^\s*(?P<nve_name>[\w\/]+) +(?P<vni>[\d]+) +(?P<multicast_group>[\w\.\/]+)'
-                            ' +(?P<state>[\w]+) +(?P<mode>[\w]+) +(?P<type>[\w\s\-\[\]]+)( +(?P<flags>[\w]+))?$')
             m = p1.match(line)
             if m:
-                nve_name = m.groupdict()['nve_name']
-                vni = int(m.groupdict()['vni'])
-                multicast_group = m.groupdict()['multicast_group']
-                state = m.groupdict()['state'].lower()
-                mode = m.groupdict()['mode']
-                type = m.groupdict()['type']
-                if m.groupdict()['flags']:
-                    flags = m.groupdict()['flags']
+                group = m.groupdict()
+                nve_name = group.pop('nve_name')
+                vni = int(group.pop('vni'))
+                nve_dict = result_dict.setdefault(nve_name,{}).setdefault('vni',{}).setdefault(vni,{})
+                nve_dict.update({'vni': vni})
+                nve_dict.update({'mcast': group.pop('mcast')})
+                nve_dict.update({'vni_state': group.pop('vni_state').lower()})
+                nve_dict.update({'mode': group.pop('mode')})
+                nve_dict.update({'type': group.pop('type')})
+                if group.get('flags'):
+                    nve_dict.update({'flags': group.pop('flags')})
                 else:
-                    flags= ""
-
-                if nve_name not in result_dict:
-                    result_dict[nve_name] = {}
-                if 'vni' not in result_dict[nve_name]:
-                    result_dict[nve_name]['vni'] = {}
-                if vni not in result_dict[nve_name]['vni']:
-                    result_dict[nve_name]['vni'][vni] = {}
-                result_dict[nve_name]['vni'][vni]['vni'] = int(vni)
-                result_dict[nve_name]['vni'][vni]['mcast'] = multicast_group
-                result_dict[nve_name]['vni'][vni]['vni_state'] = state
-                result_dict[nve_name]['vni'][vni]['mode'] = mode
-                result_dict[nve_name]['vni'][vni]['type'] = type
-                result_dict[nve_name]['vni'][vni]['flags'] = flags
+                    nve_dict.update({'flags': ""})
                 continue
-
 
         return result_dict
 
@@ -290,190 +259,211 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         out = self.device.execute('show nve interface {} detail'.format(intf))
 
         result_dict = {}
+        # Interface: nve1, State: Up, encapsulation: VXLAN
+        p1 = re.compile(r'^\s*Interface: +(?P<nve_name>[\w\/]+), +State: +(?P<state>[\w]+),'
+                        ' +encapsulation: +(?P<encapsulation>[\w]+)$')
+        p2 = re.compile(r'^\s*VPC Capability: +(?P<vpc_capability>[\w\s\-\[\]]+)$')
+        p3 = re.compile(r'^\s*Local Router MAC: +(?P<local_router_mac>[\w\.]+)$')
+        p4 = re.compile(r'^\s*Host Learning Mode: +(?P<host_learning_mode>[\w\-]+)$')
+        p5 = re.compile(r'^\s*Source-Interface: +(?P<source_if>[\w\/]+)'
+                        ' +\(primary: +(?P<primary_ip>[\w\.]+), +secondary: +(?P<secondary_ip>[\w\.]+)\)$')
+        p6 = re.compile(r'^\s*Source +Interface +State: +(?P<source_state>[\w]+)$')
+        p7 = re.compile(r'^\s*IR +Capability +Mode: +(?P<mode>[\w]+)$')
+        p8 = re.compile(r'^\s*Virtual +RMAC +Advertisement: +(?P<adv_vmac>[\w]+)$')
+        p9 = re.compile(r'^\s*NVE +Flags:( +(?P<flags>[\w]+))?$')
+        p10 = re.compile(r'^\s*Interface +Handle: +(?P<intf_handle>[\w]+)$')
+        p11 = re.compile(r'^\s*Source +Interface +hold-down-time: +(?P<hold_down_time>[\d]+)$')
+        p12 = re.compile(r'^\s*Source +Interface +hold-up-time: +(?P<hold_up_time>[\d]+)$')
+        p13 = re.compile(r'^\s*Remaining +hold-down +time: +(?P<hold_time_left>[\d]+) +seconds$')
+        p14 = re.compile(r'^\s*Virtual +Router +MAC: +(?P<v_router_mac>[\w\.]+)$')
+        p15 = re.compile(r'^\s*Virtual +Router +MAC +Re\-origination: +(?P<v_router_mac_re>[\w\.]+)$')
+        p16 = re.compile(r'^\s*Interface +state: +(?P<intf_state>[\w\-]+)$')
+        p17 = re.compile(r'^\s*unknown-peer-forwarding: +(?P<peer_forwarding>[\w]+)$')
+        p18 = re.compile(r'^\s*down-stream +vni +config +mode: +(?P<vni_config_mode>[\w\/]+)$')
+        p19 = re.compile(r'^\s*Nve +Src +node +last +notif +sent: +(?P<last_notif_sent>[\w\-]+)$')
+        p20 = re.compile(r'^\s*Nve +Mcast +Src +node +last +notif +sent: +(?P<last_notif_sent>[\w\-]+)$')
+        p23 = re.compile(r'^\s*Nve +MultiSite +Src +node +last +notif +sent: +(?P<notif_sent>[\w\-]+)$')
+        p21 = re.compile(
+            r'^\s*Multisite +bgw\-if: +(?P<multisite_bgw_if>[\w\/\-]+) +\(ip: +(?P<multisite_bgw_if_ip>[\w\.]+),'
+            ' +admin: +(?P<multisite_bgw_if_admin_state>[\w]+), +oper: +(?P<multisite_bgw_if_oper_state>[\w]+)\)$')
+        p22 = re.compile(r'^\s*Multisite +bgw\-if +oper +down +reason: +(?P<reason>[\w\.\s]+)$')
+
+
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
             else:
                 continue
 
-            # Interface: nve1, State: Up, encapsulation: VXLAN
-            p1 = re.compile(r'^\s*Interface: +(?P<nve_name>[\w\/]+), +State: +(?P<state>[\w]+),'
-                            ' +encapsulation: +(?P<encapsulation>[\w]+)$')
             m = p1.match(line)
             if m:
+                group = m.groupdict()
+                nve_name = group.pop('nve_name')
+                nve_dict = result_dict.setdefault(nve_name , {})
                 nve_name = m.groupdict()['nve_name']
-                state = m.groupdict()['state'].lower()
-                encapsulation = m.groupdict()['encapsulation'].lower()
-
-                if nve_name not in result_dict:
-                    result_dict[nve_name] = {}
-
-                result_dict[nve_name]['if_name'] = nve_name
-                result_dict[nve_name]['if_state'] = state
-                result_dict[nve_name]['encap_type'] = encapsulation
+                nve_dict.update({'if_name': nve_name})
+                nve_dict.update({'if_state': group.pop('state').lower()})
+                nve_dict.update({'encap_type': group.pop('encapsulation').lower()})
                 continue
 
             # VPC Capability: VPC-VIP-Only [notified]
-            p2 = re.compile(r'^\s*VPC Capability: +(?P<vpc_capability>[\w\s\-\[\]]+)$')
             m = p2.match(line)
             if m:
-                result_dict[nve_name]['vpc_capability'] = m.groupdict()['vpc_capability'].lower()
+                group = m.groupdict()
+                nve_dict.update({'vpc_capability': group.pop('vpc_capability').lower()})
                 continue
 
             #  Local Router MAC: 5e00.0005.0007
-            p3 = re.compile(r'^\s*Local Router MAC: +(?P<local_router_mac>[\w\.]+)$')
             m = p3.match(line)
             if m:
-                result_dict[nve_name]['local_rmac'] = m.groupdict()['local_router_mac']
+                group = m.groupdict()
+                nve_dict.update({'local_rmac': group.pop('local_router_mac')})
                 continue
 
             #  Host Learning Mode: Control-Plane
-            p4 = re.compile(r'^\s*Host Learning Mode: +(?P<host_learning_mode>[\w\-]+)$')
             m = p4.match(line)
             if m:
-                result_dict[nve_name]['host_reach_mode'] = m.groupdict()['host_learning_mode'].lower()
+                group = m.groupdict()
+                nve_dict.update({'host_reach_mode': group.pop('host_learning_mode').lower()})
                 continue
 
             #  Source-Interface: loopback1 (primary: 201.11.11.11, secondary: 201.12.11.22)
-            p5 = re.compile(r'^\s*Source-Interface: +(?P<source_if>[\w\/]+)'
-                            ' +\(primary: +(?P<primary_ip>[\w\.]+), +secondary: +(?P<secondary_ip>[\w\.]+)\)$')
             m = p5.match(line)
             if m:
-                result_dict[nve_name]['source_if'] = m.groupdict()['source_if']
-                result_dict[nve_name]['primary_ip'] = m.groupdict()['primary_ip']
-                result_dict[nve_name]['secondary_ip'] = m.groupdict()['secondary_ip']
+                group = m.groupdict()
+                nve_dict.update({k:v for k,v in group.items()})
                 continue
 
             #  Source Interface State: Up
-            p6 = re.compile(r'^\s*Source +Interface +State: +(?P<source_state>[\w]+)$')
             m = p6.match(line)
             if m:
-                result_dict[nve_name]['src_if_state'] = m.groupdict()['source_state'].lower()
+                group = m.groupdict()
+                nve_dict.update({'src_if_state': group.pop('source_state').lower()})
                 continue
 
             #  IR Capability Mode: No
-            p7 = re.compile(r'^\s*IR +Capability +Mode: +(?P<mode>[\w]+)$')
             m = p7.match(line)
             if m:
-                result_dict[nve_name]['ir_cap_mode'] = m.groupdict()['mode'].lower()
+                group = m.groupdict()
+                nve_dict.update({'ir_cap_mode': group.pop('mode').lower()})
                 continue
 
             #  Virtual RMAC Advertisement: Yes
-            p8 = re.compile(r'^\s*Virtual +RMAC +Advertisement: +(?P<adv_vmac>[\w]+)$')
             m = p8.match(line)
             if m:
-                result_dict[nve_name]['adv_vmac'] = True if m.groupdict()['adv_vmac'].lower() == 'yes' else False
+                group = m.groupdict()
+                nve_dict.update({'adv_vmac': True if group.pop('adv_vmac').lower() == 'yes' else False})
                 continue
 
             #  NVE Flags:
-            p9 = re.compile(r'^\s*NVE +Flags:( +(?P<flags>[\w]+))?$')
             m = p9.match(line)
             if m:
-                if m.groupdict()['flags']:
-                    result_dict[nve_name]['nve_flags'] = m.groupdict()['flags']
+                group = m.groupdict()
+                if group.get("flags"):
+                    nve_dict.update({'nve_flags': group.pop('flags')})
                 else:
-                    result_dict[nve_name]['nve_flags'] = ""
+                    nve_dict.update({'nve_flags': ""})
                 continue
 
             #  Interface Handle: 0x49000001
-            p10 = re.compile(r'^\s*Interface +Handle: +(?P<intf_handle>[\w]+)$')
             m = p10.match(line)
             if m:
-                result_dict[nve_name]['nve_if_handle'] = int(m.groupdict()['intf_handle'],0)
+                group = m.groupdict()
+                nve_dict.update({'nve_if_handle': int(group.pop('intf_handle'),0)})
                 continue
 
             #  Source Interface hold-down-time: 180
-            p11 = re.compile(r'^\s*Source +Interface +hold-down-time: +(?P<hold_down_time>[\d]+)$')
             m = p11.match(line)
             if m:
-                result_dict[nve_name]['src_if_holddown_tm'] = int(m.groupdict()['hold_down_time'])
+                group = m.groupdict()
+                nve_dict.update({'src_if_holddown_tm': int(group.pop('hold_down_time'))})
                 continue
 
             #  Source Interface hold-up-time: 30
-            p12 = re.compile(r'^\s*Source +Interface +hold-up-time: +(?P<hold_up_time>[\d]+)$')
             m = p12.match(line)
             if m:
-                result_dict[nve_name]['src_if_holdup_tm'] = int(m.groupdict()['hold_up_time'])
+                group = m.groupdict()
+                nve_dict.update({'src_if_holdup_tm': int(group.pop('hold_up_time'))})
                 continue
 
             #  Remaining hold-down time: 0 seconds
-            p13 = re.compile(r'^\s*Remaining +hold-down +time: +(?P<hold_time_left>[\d]+) +seconds$')
             m = p13.match(line)
             if m:
-                result_dict[nve_name]['src_if_holddown_left'] = int(m.groupdict()['hold_time_left'])
+                group = m.groupdict()
+                nve_dict.update({'src_if_holddown_left': int(group.pop('hold_time_left'))})
                 continue
 
             #  Virtual Router MAC: 0200.c90c.0b16
-            p14 = re.compile(r'^\s*Virtual +Router +MAC: +(?P<v_router_mac>[\w\.]+)$')
             m = p14.match(line)
             if m:
-                result_dict[nve_name]['vip_rmac'] = m.groupdict()['v_router_mac']
+                group = m.groupdict()
+                nve_dict.update({'vip_rmac': group.pop('v_router_mac')})
                 continue
 
             #  Virtual Router MAC Re-origination: 0200.6565.6565
-            p15 = re.compile(r'^\s*Virtual +Router +MAC +Re\-origination: +(?P<v_router_mac_re>[\w\.]+)$')
             m = p15.match(line)
             if m:
-                result_dict[nve_name]['vip_rmac_ro'] = m.groupdict()['v_router_mac_re']
+                group = m.groupdict()
+                nve_dict.update({'vip_rmac_ro': group.pop('v_router_mac_re')})
                 continue
 
             #  Interface state: nve-intf-add-complete
-            p16 = re.compile(r'^\s*Interface +state: +(?P<intf_state>[\w\-]+)$')
             m = p16.match(line)
             if m:
-                result_dict[nve_name]['sm_state'] = m.groupdict()['intf_state']
+                group = m.groupdict()
+                nve_dict.update({'sm_state': group.pop('intf_state')})
                 continue
 
             #  unknown-peer-forwarding: disable
-            p17 = re.compile(r'^\s*unknown-peer-forwarding: +(?P<peer_forwarding>[\w]+)$')
             m = p17.match(line)
             if m:
-                result_dict[nve_name]['peer_forwarding_mode'] = False if m.groupdict()['peer_forwarding']== 'disable' else True
+                group = m.groupdict()
+                nve_dict.update({'peer_forwarding_mode': False if group.pop('peer_forwarding') == 'disable' else True})
                 continue
 
             #  down-stream vni config mode: n/a
-            p18 = re.compile(r'^\s*down-stream +vni +config +mode: +(?P<vni_config_mode>[\w\/]+)$')
             m = p18.match(line)
             if m:
-                result_dict[nve_name]['dwn_strm_vni_cfg_mode'] = m.groupdict()['vni_config_mode']
+                group = m.groupdict()
+                nve_dict.update({'dwn_strm_vni_cfg_mode': group.pop('vni_config_mode')})
                 continue
 
             # Nve Src node last notif sent: Port-up
-            p19 = re.compile(r'^\s*Nve +Src +node +last +notif +sent: +(?P<last_notif_sent>[\w\-]+)$')
             m = p19.match(line)
             if m:
-                result_dict[nve_name]['src_intf_last_reinit_notify_type'] = m.groupdict()['last_notif_sent'].lower()
+                group = m.groupdict()
+                nve_dict.update({'src_intf_last_reinit_notify_type': group.pop('last_notif_sent').lower()})
                 continue
 
             # Nve Mcast Src node last notif sent: None
-            p20 = re.compile(r'^\s*Nve +Mcast +Src +node +last +notif +sent: +(?P<last_notif_sent>[\w\-]+)$')
             m = p20.match(line)
             if m:
-                result_dict[nve_name]['mcast_src_intf_last_reinit_notify_type'] = m.groupdict()['last_notif_sent'].lower()
+                group = m.groupdict()
+                nve_dict.update({'mcast_src_intf_last_reinit_notify_type': group.pop('last_notif_sent').lower()})
                 continue
 
             # Nve MultiSite Src node last notif sent: None
-            p23 = re.compile(r'^\s*Nve +MultiSite +Src +node +last +notif +sent: +(?P<notif_sent>[\w\-]+)$')
             m = p23.match(line)
             if m:
-                result_dict[nve_name]['multi_src_intf_last_reinit_notify_type'] = m.groupdict()['notif_sent'].lower()
+                group = m.groupdict()
+                nve_dict.update({'multi_src_intf_last_reinit_notify_type': group.pop('notif_sent').lower()})
+                continue
 
             # Multisite bgw-if: loopback2 (ip: 101.101.101.101, admin: Down, oper: Down)
-            p21 = re.compile(r'^\s*Multisite +bgw\-if: +(?P<intf>[\w\/\-]+) +\(ip: +(?P<ip>[\w\.]+),'
-                             ' +admin: +(?P<admin>[\w]+), +oper: +(?P<oper>[\w]+)\)$')
             m = p21.match(line)
             if m:
-                result_dict[nve_name]['multisite_bgw_if'] = m.groupdict()['intf']
-                result_dict[nve_name]['multisite_bgw_if_ip'] = m.groupdict()['ip']
-                result_dict[nve_name]['multisite_bgw_if_admin_state'] = m.groupdict()['admin'].lower()
-                result_dict[nve_name]['multisite_bgw_if_oper_state'] = m.groupdict()['oper'].lower()
+                group = m.groupdict()
+                nve_dict.update({'multisite_bgw_if': group.pop('intf')})
+                nve_dict.update({'multisite_bgw_if_ip': group.pop('ip')})
+                nve_dict.update({'multisite_bgw_if_admin_state': group.pop('admin').lower()})
+                nve_dict.update({'multisite_bgw_if_oper_state': group.pop('oper').lower()})
                 continue
 
             # Multisite bgw-if oper down reason: NVE not up.
-            p22 = re.compile(r'^\s*Multisite +bgw\-if +oper +down +reason: +(?P<reason>[\w\.\s]+)$')
             m = p22.match(line)
             if m:
-                result_dict[nve_name]['multisite_bgw_if_oper_state_down_reason']= m.groupdict()['reason']
+                group = m.groupdict()
+                nve_dict.update({'multisite_bgw_if_oper_state_down_reason': group.pop('reason')})
                 continue
         return result_dict
 
@@ -506,29 +496,26 @@ class ShowNveMultisiteDciLinks(ShowNveMultisiteSchema):
         out = self.device.execute('show nve multisite dci-links')
 
         result_dict = {}
+        # Interface      State
+        # ---------      -----
+        # Ethernet1/53   Up
+
+        p1 = re.compile(r'^\s*(?P<if_name>(?!Interface)[\w\/]+) +(?P<if_state>[\w]+)$')
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
             else:
                 continue
 
-            # Interface      State
-            # ---------      -----
-            # Ethernet1/53   Up
-
-            p1 = re.compile(r'^\s*(?P<nve_name>(?!Interface)[\w\/]+) +(?P<state>[\w]+)$')
             m = p1.match(line)
             if m:
-                if_name = m.groupdict()['nve_name']
-                if_state = m.groupdict()['state'].lower()
+                group = m.groupdict()
+                if_name = group.pop('if_name')
+                if_state = group.pop('if_state')
+                if_dict = result_dict.setdefault('multisite', {}).setdefault(if_name, {})
 
-                if 'multisite' not in result_dict:
-                    result_dict['multisite'] = {}
-                if if_name not in result_dict['multisite']:
-                    result_dict['multisite'][if_name] = {}
-
-                result_dict['multisite'][if_name]['if_name'] = if_name
-                result_dict['multisite'][if_name]['if_state'] = if_state
+                if_dict.update({'if_name': if_name})
+                if_dict.update({'if_state': if_state.lower()})
                 continue
 
         return result_dict
@@ -544,6 +531,12 @@ class ShowNveMultisiteFabricLinks(ShowNveMultisiteSchema):
     def cli(self):
         out = self.device.execute('show nve multisite fabric-links')
 
+        # Interface      State
+        # ---------      -----
+        # Ethernet1/53   Up
+
+        p1 = re.compile(r'^\s*(?P<if_name>(?!Interface)[\w\/]+) +(?P<if_state>[\w]+)$')
+
         result_dict = {}
         for line in out.splitlines():
             if line:
@@ -551,23 +544,16 @@ class ShowNveMultisiteFabricLinks(ShowNveMultisiteSchema):
             else:
                 continue
 
-            # Interface      State
-            # ---------      -----
-            # Ethernet1/53   Up
 
-            p1 = re.compile(r'^\s*(?P<nve_name>(?!Interface)[\w\/]+) +(?P<state>[\w]+)$')
             m = p1.match(line)
             if m:
-                if_name = m.groupdict()['nve_name']
-                if_state = m.groupdict()['state'].lower()
+                group = m.groupdict()
+                if_name = group.pop('if_name')
+                if_state = group.pop('if_state')
+                if_dict = result_dict.setdefault('multisite',{}).setdefault(if_name,{})
 
-                if 'multisite' not in result_dict:
-                    result_dict['multisite'] = {}
-                if if_name not in result_dict['multisite']:
-                    result_dict['multisite'][if_name] = {}
-
-                result_dict['multisite'][if_name]['if_name'] = if_name
-                result_dict['multisite'][if_name]['if_state'] = if_state
+                if_dict.update({'if_name': if_name})
+                if_dict.update({'if_state': if_state.lower()})
                 continue
 
         return result_dict
@@ -620,18 +606,56 @@ class ShowNveEthernetSegment(ShowNveEthernetSegmentSchema):
         out = self.device.execute('show nve ethernet-segment')
         df_vlans = ""
         result_dict = {}
+
+        # ESI: 0300.0000.0001.2c00.0309
+        #   Parent interface: nve1
+        #   ES State: Up
+        #   Port-channel state: N/A
+        #   NVE Interface: nve1
+        #   NVE State: Up
+        #  Host Learning Mode: control-plane
+        #   Active Vlans: 1,101-105,1001-1100,2001-2100,3001-3005
+        #  DF Vlans: 102,104,1002,1004,1006,1008,1010,1012,1014,1016,1018,1020,1022,1024
+        # ,1026,1028,1030,1032,1034,1036,1038,1040,1042,1044,1046,1048,1050,1052,1054,1056
+        #    Active VNIs: 501001-501100,502001-502100,503001-503005,600101-600105
+        #   CC failed for VLANs:
+        #   VLAN CC timer: 0
+        #   Number of ES members: 2
+        #  My ordinal: 0
+        #  DF timer start time: 00:00:00
+        #  Config State: N/A
+        #  DF List: 201.0.0.55 201.0.0.66
+        #  ES route added to L2RIB: True
+        #  EAD/ES routes added to L2RIB: False
+        #  EAD/EVI route timer age: not running
+
+        p1 = re.compile(r'^\s*ESI: +(?P<esi>[\w\.]+)$')
+        p2 = re.compile(r'^\s*Parent +interface: +(?P<parent_intf>[\w\.\/]+)$')
+        p3 = re.compile(r'^\s*ES +State: +(?P<es_state>[\w\/]+)$')
+        p4 = re.compile(r'^\s*Port-channel +state: +(?P<po_state>[\w\/]+)$')
+        p5 = re.compile(r'^\s*NVE +Interface: +(?P<nve_intf>[\w\.\/]+)$')
+        p6 = re.compile(r'^\s*NVE +State: +(?P<nve_state>[\w\/]+)$')
+        p7 = re.compile(r'^\s*Host +Learning +Mode: +(?P<host_learning_mode>[\w\-]+)$')
+        p8 = re.compile(r'^\s*Active +Vlans: +(?P<active_vlans>[\d\-\,]+)$')
+        p9 = re.compile(r'^\s*DF Vlans: +(?P<df_vlans>[\d\-\,]+)$')
+        p10 = re.compile(r'^\s*,(?P<df_vlans>[\d\-\,]+)$')
+        p11 = re.compile(r'^\s*Active +VNIs: +(?P<active_vnis>[\d\-\,]+)$')
+        p12 = re.compile(r'^\s*CC +failed +for +VLANs:( +(?P<cc_failed_vlans>[\w\/]+))?$')
+        p13 = re.compile(r'^\s*VLAN CC timer: +(?P<cc_timer_left>[\d]+)?$')
+        p14 = re.compile(r'^\s*Number +of +ES +members: +(?P<num_es_mem>[\d]+)?$')
+        p15 = re.compile(r'^\s*My +ordinal: +(?P<local_ordinal>[\d]+)$')
+        p16 = re.compile(r'^\s*DF +timer +start +time: +(?P<df_timer_start_time>[\w\:]+)$')
+        p17 = re.compile(r'^\s*Config +State: +(?P<config_status>[\w\/]+)$')
+        p18 = re.compile(r'^\s*DF +List: +(?P<df_list>[\d\s\.]+)$')
+        p19 = re.compile(r'^\s*ES +route +added +to +L2RIB: +(?P<is_es_added_to_l2rib>[\w]+)$')
+        p20 = re.compile(r'^\s*EAD\/ES +routes +added +to +L2RIB: +(?P<ead_rt_added>[\w]+)$')
+        p21 = re.compile(r'^\s*EAD/EVI +route +timer +age: +(?P<ead_evi_rt_timer_age>[\w\s]+)$')
+
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
             else:
                 continue
-
-            # ESI: 0300.0000.0001.2c00.0309
-            p1 = re.compile(r'^\s*ESI: +(?P<esi>[\w\.]+)$')
-            p2 = re.compile(r'^\s*Parent +interface: +(?P<parent_intf>[\w\.\/]+)$')
-            p3 = re.compile(r'^\s*ES +State: +(?P<es_state>[\w\/]+)$')
-            p4 = re.compile(r'^\s*Port-channel +state: +(?P<po_state>[\w\/]+)$')
-            p5 = re.compile(r'^\s*NVE +Interface: +(?P<nve_intf>[\w\.\/]+)$')
 
             m = p1.match(line)
             if m:
@@ -641,21 +665,17 @@ class ShowNveEthernetSegment(ShowNveEthernetSegmentSchema):
                 esi_dict.update({'esi':esi})
                 continue
 
-            #    Parent interface: nve1
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 esi_dict.update({'if_name': group.pop('parent_intf')})
                 continue
 
-            #   ES State: Up
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 esi_dict.update({'es_state': group.pop('es_state').lower()})
                 continue
-
-            #   Port-channel state: N/A
 
             m = p4.match(line)
             if m:
@@ -663,49 +683,37 @@ class ShowNveEthernetSegment(ShowNveEthernetSegmentSchema):
                 esi_dict.update({'po_state': group.pop('po_state').lower()})
                 continue
 
-            #   NVE Interface: nve1
             m = p5.match(line)
             if m:
                 group = m.groupdict()
                 esi_dict.update({'nve_if_name': group.pop('nve_intf')})
                 continue
 
-            #    NVE State: Up
-            p6 = re.compile(r'^\s*NVE +State: +(?P<nve_state>[\w\/]+)$')
             m = p6.match(line)
             if m:
                 group = m.groupdict()
                 esi_dict.update({'nve_state': group.pop('nve_state').lower()})
                 continue
 
-            #    Host Learning Mode: control-plane
-            p7 = re.compile(r'^\s*Host +Learning +Mode: +(?P<host_learning_mode>[\w\-]+)$')
             m = p7.match(line)
             if m:
                 group = m.groupdict()
                 esi_dict.update({'host_reach_mode': group.pop('host_learning_mode').lower()})
                 continue
 
-            #   Active Vlans: 1,101-105,1001-1100,2001-2100,3001-3005
-            p8 = re.compile(r'^\s*Active +Vlans: +(?P<active_vlans>[\d\-\,]+)$')
             m = p8.match(line)
             if m:
                 group = m.groupdict()
                 esi_dict.update({'active_vlans': group.pop('active_vlans')})
                 continue
 
-            #  DF Vlans: 102,104,1002,1004,1006,1008,1010,1012,1014,1016,1018,1020,1022,1024
-            p9 = re.compile(r'^\s*DF Vlans: +(?P<df_vlans>[\d\-\,]+)$')
             m = p9.match(line)
             if m:
                 group = m.groupdict()
                 df_vlans = group.pop('df_vlans')
                 esi_dict.update({'df_vlans':df_vlans})
-
                 continue
 
-            # ,1026,1028,1030,1032,1034,1036,1038,1040,1042,1044,1046,1048,1050,1052,1054,1056
-            p10 = re.compile(r'^\s*,(?P<df_vlans>[\d\-\,]+)$')
             m = p10.match(line)
             if m:
                 group = m.groupdict()
@@ -713,16 +721,12 @@ class ShowNveEthernetSegment(ShowNveEthernetSegmentSchema):
                 esi_dict.update({'df_vlans': df_vlans})
                 continue
 
-            #    Active VNIs: 501001-501100,502001-502100,503001-503005,600101-600105
-            p11 = re.compile(r'^\s*Active +VNIs: +(?P<active_vnis>[\d\-\,]+)$')
             m = p11.match(line)
             if m:
                 group = m.groupdict()
                 esi_dict.update({'active_vnis': group.pop('active_vnis')})
                 continue
 
-            #   CC failed for VLANs:
-            p12 = re.compile(r'^\s*CC +failed +for +VLANs:( +(?P<cc_failed_vlans>[\w\/]+))?$')
             m = p12.match(line)
             if m:
                 group = m.groupdict()
@@ -730,75 +734,56 @@ class ShowNveEthernetSegment(ShowNveEthernetSegmentSchema):
                     esi_dict.update({'cc_failed_vlans': ''})
                 else:
                     esi_dict.update({'cc_failed_vlans': group.pop('cc_failed_vlans')})
-
                 continue
 
-            #   VLAN CC timer: 0
-            p13 = re.compile(r'^\s*VLAN CC timer: +(?P<cc_timer_left>[\d]+)?$')
             m = p13.match(line)
             if m:
                 group = m.groupdict()
                 esi_dict.update({'cc_timer_left': group.pop('cc_timer_left')})
                 continue
 
-            #   Number of ES members: 2
-            p14 = re.compile(r'^\s*Number +of +ES +members: +(?P<num_es_mem>[\d]+)?$')
             m = p14.match(line)
             if m:
                 group = m.groupdict()
                 esi_dict.update({'num_es_mem': int(group.pop('num_es_mem'))})
                 continue
 
-            #   My ordinal: 0
-            p15 = re.compile(r'^\s*My +ordinal: +(?P<local_ordinal>[\d]+)$')
             m = p15.match(line)
             if m:
                 group = m.groupdict()
                 esi_dict.update({'local_ordinal': int(group.pop('local_ordinal'))})
                 continue
 
-            #   DF timer start time: 00:00:00
-            p16 = re.compile(r'^\s*DF +timer +start +time: +(?P<df_timer_start_time>[\w\:]+)$')
             m = p16.match(line)
             if m:
                 group = m.groupdict()
                 esi_dict.update({'df_timer_st': group.pop('df_timer_start_time')})
                 continue
 
-            #   Config State: N/A
-            p17 = re.compile(r'^\s*Config +State: +(?P<config_status>[\w\/]+)$')
             m = p17.match(line)
             if m:
                 group = m.groupdict()
                 esi_dict.update({'config_status': group.pop('config_status').lower()})
                 continue
 
-            #   DF List: 201.0.0.55 201.0.0.66
-            p18 = re.compile(r'^\s*DF +List: +(?P<df_list>[\d\s\.]+)$')
             m = p18.match(line)
             if m:
                 group = m.groupdict()
                 esi_dict.update({'df_list': group.pop('df_list')})
                 continue
 
-            #  ES route added to L2RIB: True
-            p19 = re.compile(r'^\s*ES +route +added +to +L2RIB: +(?P<is_es_added_to_l2rib>[\w]+)$')
             m = p19.match(line)
             if m:
                 group = m.groupdict()
                 esi_dict.update({'es_rt_added': False if 'False' in group.pop('is_es_added_to_l2rib') else True})
                 continue
 
-            # EAD/ES routes added to L2RIB: False
-            p20 = re.compile(r'^\s*EAD\/ES +routes +added +to +L2RIB: +(?P<ead_rt_added>[\w]+)$')
             m = p20.match(line)
             if m:
                 group = m.groupdict()
                 esi_dict.update({'ead_rt_added': False if 'False' in group.pop('ead_rt_added') else True})
                 continue
 
-            # #   EAD/EVI route timer age: not running
-            p21 = re.compile(r'^\s*EAD/EVI +route +timer +age: +(?P<ead_evi_rt_timer_age>[\w\s]+)$')
             m = p21.match(line)
             if m:
                 group = m.groupdict()
@@ -840,19 +825,18 @@ class ShowL2routeEvpnEternetSegmentAll(ShowL2routeEvpnEternetSegmentAllSchema):
 
         result_dict = {}
         index = 1
+        # ESI                      Orig Rtr. IP Addr  Prod  Ifindex      NFN Bitmap
+        # ------------------------ -----------------  ----- ----------- ----------
+        # 0300.0000.0001.2c00.0309 201.0.0.55         VXLAN nve1         64
+
+        p1 = re.compile(r'^\s*(?P<ethernet_segment>(?!ESI)[\w\.]+) +(?P<originating_rtr>[\d\.]+)'
+                        ' +(?P<prod_name>[\w]+) +(?P<int_ifhdl>[\w\/]+) +(?P<client_nfn>[\w\.]+)$')
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
             else:
                 continue
 
-
-            # ESI                      Orig Rtr. IP Addr  Prod  Ifindex      NFN Bitmap
-            # ------------------------ -----------------  ----- ----------- ----------
-            # 0300.0000.0001.2c00.0309 201.0.0.55         VXLAN nve1         64
-
-            p1 = re.compile(r'^\s*(?P<ethernet_segment>(?!ESI)[\w\.]+) +(?P<originating_rtr>[\d\.]+)'
-                             ' +(?P<prod_name>[\w]+) +(?P<int_ifhdl>[\w\/]+) +(?P<client_nfn>[\w\.]+)$')
             m = p1.match(line)
             if m:
                 evpn_dict = result_dict.setdefault('evpn',{}).setdefault('ethernet_segment', {}).setdefault(index, {})
@@ -916,33 +900,33 @@ class ShowL2routeTopologyDetail(ShowL2routeTopologyDetailSchema):
         out = self.device.execute('show l2route topology detail')
 
         result_dict = {}
+        # Topology ID   Topology Name   Attributes
+        # -----------   -------------   ----------
+        # 101           Vxlan-10001     VNI: 10001
+        #                   Encap:0 IOD:0 IfHdl:1224736769
+        #                   VTEP IP: 201.11.11.11
+        #                   Emulated IP: 201.12.11.22
+        #                   Emulated RO IP: 201.12.11.22
+        #                   TX-ID: 20 (Rcvd Ack: 0)
+        #                   RMAC: 5e00.0005.0007, VRFID: 3
+        #                   VMAC: 0200.c90c.0b16
+        #                   Flags: L3cp, Sub_Flags: --, Prev_Flags: -
+        p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<topo_name>[\w\-]+) +(?P<topo_type>[\w]+): +(?P<vni>[\d]+)$')
+        p2 = re.compile(r'^\s*Encap:(?P<encap_type>[\d]+) +IOD:(?P<iod>[\d]+) +IfHdl:(?P<if_hdl>[\d]+)$')
+        p3 = re.compile(r'^\s*VTEP +IP: +(?P<vtep_ip>[\d\.]+)$')
+        p4 = re.compile(r'^\s*Emulated +IP: +(?P<emulated_ip>[\d\.]+)$')
+        p5 = re.compile(r'^\s*Emulated +RO +IP: +(?P<emulated_ro_ip>[\d\.]+)$')
+        p6 = re.compile(r'^\s*TX-ID: +(?P<tx_id>[\d]+) +\((Rcvd +Ack: +(?P<rcvd_flag>[\d]+))\)$')
+        p7 = re.compile(r'^\s*RMAC: +(?P<rmac>[\w\.]+), VRFID: +(?P<vrf_id>[\d]+)$')
+        p8 = re.compile(r'^\s*VMAC: +(?P<vmac>[\w\.]+)$')
+        p9 = re.compile(
+            r'^\s*Flags: +(?P<flags>[\w]+), +Sub_Flags: +(?P<sub_flags>[\w\-]+), +Prev_Flags: +(?P<prev_flags>[\w\-]+)$')
+
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
             else:
                 continue
-
-
-            #Topology ID   Topology Name   Attributes
-            # -----------   -------------   ----------
-            # 101           Vxlan-10001     VNI: 10001
-            #                   Encap:0 IOD:0 IfHdl:1224736769
-            #                   VTEP IP: 201.11.11.11
-            #                   Emulated IP: 201.12.11.22
-            #                   Emulated RO IP: 201.12.11.22
-            #                   TX-ID: 20 (Rcvd Ack: 0)
-            #                   RMAC: 5e00.0005.0007, VRFID: 3
-            #                   VMAC: 0200.c90c.0b16
-            #                   Flags: L3cp, Sub_Flags: --, Prev_Flags: -
-            p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<topo_name>[\w\-]+) +(?P<topo_type>[\w]+): +(?P<vni>[\d]+)$')
-            p2 = re.compile(r'^\s*Encap:(?P<encap_type>[\d]+) +IOD:(?P<iod>[\d]+) +IfHdl:(?P<if_hdl>[\d]+)$')
-            p3 = re.compile(r'^\s*VTEP +IP: +(?P<vtep_ip>[\d\.]+)$')
-            p4 = re.compile(r'^\s*Emulated +IP: +(?P<emulated_ip>[\d\.]+)$')
-            p5 = re.compile(r'^\s*Emulated +RO +IP: +(?P<emulated_ro_ip>[\d\.]+)$')
-            p6 = re.compile(r'^\s*TX-ID: +(?P<tx_id>[\d]+) +\((Rcvd +Ack: +(?P<rcvd_flag>[\d]+))\)$')
-            p7 = re.compile(r'^\s*RMAC: +(?P<rmac>[\w\.]+), VRFID: +(?P<vrf_id>[\d]+)$')
-            p8 = re.compile(r'^\s*VMAC: +(?P<vmac>[\w\.]+)$')
-            p9 = re.compile(r'^\s*Flags: +(?P<flags>[\w]+), +Sub_Flags: +(?P<sub_flags>[\w\-]+), +Prev_Flags: +(?P<prev_flags>[\w\-]+)$')
 
             m0 = p1.match(line)
             if m0:
@@ -1031,26 +1015,27 @@ class ShowL2routeMacAllDetail(ShowL2routeMacAllDetailSchema):
         out = self.device.execute('show l2route mac all detail')
 
         result_dict = {}
+        # Topology    Mac Address    Prod   Flags         Seq No     Next-Hops
+        # ----------- -------------- ------ ------------- ---------- ----------------
+        # 101         5e00.0002.0007 VXLAN  Rmac          0          204.1.1.1
+        #            Route Resolution Type: Regular
+        #            Forwarding State: Resolved (PeerID: 2)
+        #            Sent To: BGP
+        #            SOO: 774975538
+        p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<prod_type>[\w\,]+)'
+                        ' +(?P<flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.]+)$')
+
+        p2 = re.compile(r'^\s*Route +Resolution +Type: +(?P<rte_res>[\w]+)$')
+        p3 = re.compile(r'^\s*Forwarding +State: +(?P<fwd_state>[\w\s\:\(\)]+)$')
+        p4 = re.compile(r'^\s*Sent +To: +(?P<sent_to>[\w]+)$')
+        p5 = re.compile(r'^\s*SOO: +(?P<soo>[\d]+)$')
+
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
             else:
                 continue
 
-            #Topology    Mac Address    Prod   Flags         Seq No     Next-Hops
-            #----------- -------------- ------ ------------- ---------- ----------------
-            #101         5e00.0002.0007 VXLAN  Rmac          0          204.1.1.1
-            #            Route Resolution Type: Regular
-            #            Forwarding State: Resolved (PeerID: 2)
-            #            Sent To: BGP
-            #            SOO: 774975538
-            p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<prod_type>[\w\,]+)'
-                            ' +(?P<flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.]+)$')
-
-            p2 = re.compile(r'^\s*Route +Resolution +Type: +(?P<rte_res>[\w]+)$')
-            p3 = re.compile(r'^\s*Forwarding +State: +(?P<fwd_state>[\w\s\:\(\)]+)$')
-            p4 = re.compile(r'^\s*Sent +To: +(?P<sent_to>[\w]+)$')
-            p5 = re.compile(r'^\s*SOO: +(?P<soo>[\d]+)$')
 
             m = p1.match(line)
             if m:
@@ -1139,26 +1124,26 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         out = self.device.execute('show l2route mac-ip all detail')
 
         result_dict = {}
+        # Topology    Mac Address    Prod   Flags         Seq No     Host IP         Next-Hops
+        # ----------- -------------- ------ ---------- --------------- ---------------
+        # 1001        fa16.3ec2.34fe BGP    --            0          5.1.10.11      204.1.1.1
+        # 1001        fa16.3ea3.fb66 HMM    --            0          5.1.10.55      Local
+        #            Sent To: BGP
+        #            SOO: 774975538
+        #            L3-Info: 10001
+        p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<mac_ip_prod_type>[\w\,]+)'
+                        ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<host_ip>[\w\/\.]+)'
+                        ' +(?P<next_hop1>[\w\/\.]+)$')
+
+        p2 = re.compile(r'^\s*Sent +To: +(?P<sent_to>[\w]+)$')
+        p3 = re.compile(r'^\s*SOO: +(?P<soo>[\d]+)$')
+        p4 = re.compile(r'^\s*L3-Info: +(?P<l3_info>[\d]+)$')
+
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
             else:
                 continue
-
-            #Topology    Mac Address    Prod   Flags         Seq No     Host IP         Next-Hops
-            #----------- -------------- ------ ---------- --------------- ---------------
-            #1001        fa16.3ec2.34fe BGP    --            0          5.1.10.11      204.1.1.1
-            #1001        fa16.3ea3.fb66 HMM    --            0          5.1.10.55      Local
-            #            Sent To: BGP
-            #            SOO: 774975538
-            #            L3-Info: 10001
-            p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<mac_ip_prod_type>[\w\,]+)'
-                            ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<host_ip>[\w\/\.]+)'
-                            ' +(?P<next_hop1>[\w\/\.]+)$')
-
-            p2 = re.compile(r'^\s*Sent +To: +(?P<sent_to>[\w]+)$')
-            p3 = re.compile(r'^\s*SOO: +(?P<soo>[\d]+)$')
-            p4 = re.compile(r'^\s*L3-Info: +(?P<l3_info>[\d]+)$')
 
             m = p1.match(line)
             if m:
@@ -1234,27 +1219,27 @@ class ShowL2routeSummary(ShowL2routeSummarySchema):
         out = self.device.execute('show l2route summary')
 
         result_dict = {}
+        # L2ROUTE Summary
+        # Total Memory: 6967
+        # Number of Converged Tables: 47
+        # Table Name: Topology
+        # Producer   (ID)   Objects      Memory (Bytes)
+        # ---------------   ----------   --------------
+        # VXLAN     (11 )   21           5927
+        # ---------------------------------------------
+        # Total             21           5927
+        # ---------------------------------------------
+        p1 = re.compile(r'^\s*Total +Memory: +(?P<total_memory>[\d]+)$')
+        p2 = re.compile(r'^\s*Number +of +Converged +Tables: +(?P<numof_converged_tables>[\d]+)$')
+        p3 = re.compile(r'^\s*Table +Name: +(?P<table_name>[\w\-]+)$')
+        p4 = re.compile(r'^\s*(?P<producer_name>[\w]+) +\((?P<id>[\d\s]+)\) +(?P<objects>[\d]+) +(?P<memory>[\d]+)$')
+        p5 = re.compile(r'^\s*Total +(?P<total_obj>[\d]+) +(?P<total_mem>[\d]+)$')
+
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
             else:
                 continue
-
-            # L2ROUTE Summary
-            # Total Memory: 6967
-            # Number of Converged Tables: 47
-            # Table Name: Topology
-            # Producer   (ID)   Objects      Memory (Bytes)
-            # ---------------   ----------   --------------
-            # VXLAN     (11 )   21           5927
-            # ---------------------------------------------
-            # Total             21           5927
-            # ---------------------------------------------
-            p1 = re.compile(r'^\s*Total +Memory: +(?P<total_memory>[\d]+)$')
-            p2 = re.compile(r'^\s*Number +of +Converged +Tables: +(?P<numof_converged_tables>[\d]+)$')
-            p3 = re.compile(r'^\s*Table +Name: +(?P<table_name>[\w\-]+)$')
-            p4 = re.compile(r'^\s*(?P<producer_name>[\w]+) +\((?P<id>[\d\s]+)\) +(?P<objects>[\d]+) +(?P<memory>[\d]+)$')
-            p5 = re.compile(r'^\s*Total +(?P<total_obj>[\d]+) +(?P<total_mem>[\d]+)$')
 
             m = p1.match(line)
             if m:

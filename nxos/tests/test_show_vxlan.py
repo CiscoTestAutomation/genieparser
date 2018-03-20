@@ -1082,5 +1082,70 @@ class test_show_l2route_summary(unittest.TestCase):
             parsed_output = obj.parse()
 
 
+# ==============================================================
+#  Unit test for 'show l2route mac-ip all detail'
+# ==============================================================
+
+class test_show_l2route_mac_ip_all_detail(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'topology': {
+            'topo_id': {
+                1001: {
+                    'mac_ip': {
+                        'fa16.3ec2.34fe': {
+                            'mac_addr': 'fa16.3ec2.34fe',
+                            'mac_ip_prod_type': 'bgp',
+                            'mac_ip_flags': '--',
+                            'seq_num': 0,
+                            'next_hop1': '204.1.1.1',
+                            'host_ip': '5.1.10.11',
+                        },
+                        'fa16.3ea3.fb66': {
+                            'mac_addr': 'fa16.3ea3.fb66',
+                            'mac_ip_prod_type': 'hmm',
+                            'mac_ip_flags': '--',
+                            'seq_num': 0,
+                            'next_hop1': 'local',
+                            'host_ip': '5.1.10.55',
+                            'sent_to': 'bgp',
+                            'soo': 774975538,
+                            'l3_info': 10001,
+                        },
+                    },
+                },
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+    BL1# show l2route mac-ip all detail
+    Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote (V):vPC link
+    (Dup):Duplicate (Spl):Split (Rcv):Recv(D):Del Pending (S):Stale (C):Clear
+    (Ps):Peer Sync (Ro):Re-Originated
+    Topology    Mac Address    Prod   Flags         Seq No     Host IP         Next-Hops
+    ----------- -------------- ------ ---------- --------------- ---------------
+    1001        fa16.3ec2.34fe BGP    --            0          5.1.10.11      204.1.1.1
+    1001        fa16.3ea3.fb66 HMM    --            0          5.1.10.55      Local
+                Sent To: BGP
+                SOO: 774975538
+                L3-Info: 10001
+    '''}
+
+    def test_show_l2route_mac_ip_all_detail(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowL2routeMacIpAllDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_mac_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowL2routeMacIpAllDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
 if __name__ == '__main__':
     unittest.main()
