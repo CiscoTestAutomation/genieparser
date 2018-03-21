@@ -781,6 +781,8 @@ class ShowSpanningTreeSchema(MetaParser):
                         Optional('cost'): int,
                         Optional('port'): int,
                         Optional('interface'): str,
+                        Optional('configured_bridge_priority'): int,
+                        Optional('sys_id_ext'): int,
                         'hello_time': int,
                         'max_age': int,
                         'forward_delay': int,
@@ -842,7 +844,9 @@ class ShowSpanningTree(ShowSpanningTreeSchema):
         p1 = re.compile(r'^(MST|VLAN)(?P<inst>\d+)$')
         p2 = re.compile(r'^Spanning +tree +enabled p+rotocol +(?P<mode>\w+)$')
         p3 = re.compile(r'^Root +ID +Priority +(?P<priority>\d+)$')
-        p4 = re.compile(r'^Bridge +ID +Priority +(?P<priority>\d+)(.*)?$')
+        p4 = re.compile(r'^Bridge +ID +Priority +(?P<priority>\d+)'
+                         '( *\(priority +(?P<configured_bridge_priority>\d+) +'
+                         'sys\-id\-ext +(?P<sys_id_ext>\d+)\))?$')
         p5 = re.compile(r'^Address +(?P<address>[\w\.]+)$')
         p6 = re.compile(r'^Cost +(?P<cost>\d+)$')
         p7 = re.compile(r'^Port +(?P<port>\d+) +\((?P<interface>[\w\-\/\.]+)\)$')
@@ -912,7 +916,7 @@ class ShowSpanningTree(ShowSpanningTreeSchema):
             m = p4.match(line)
             if m:
                 role_dict = inst_dict.setdefault('bridge', {})
-                role_dict['priority'] = int(m.groupdict()['priority'])
+                role_dict.update({k:int(v) for k,v in m.groupdict().items() if v})
                 continue
 
             # Aging Time  300 sec

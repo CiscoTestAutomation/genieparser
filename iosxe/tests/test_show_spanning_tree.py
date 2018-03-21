@@ -825,7 +825,9 @@ class test_show_spanning_tree(unittest.TestCase):
                          "priority": 32768,
                          "forward_delay": 15,
                          "address": "ecbd.1d09.5680",
-                         "max_age": 12
+                         "max_age": 12,
+                         "configured_bridge_priority": 32768,
+                         "sys_id_ext": 0,
                     },
                     "interfaces": {
                          "GigabitEthernet1/0/5": {
@@ -873,7 +875,9 @@ class test_show_spanning_tree(unittest.TestCase):
                          "priority": 61450,
                          "forward_delay": 15,
                          "address": "ecbd.1d09.5680",
-                         "max_age": 12
+                         "max_age": 12,
+                         "configured_bridge_priority": 61440,
+                         "sys_id_ext": 10,
                     },
                     "interfaces": {
                          "GigabitEthernet1/0/5": {
@@ -917,7 +921,9 @@ class test_show_spanning_tree(unittest.TestCase):
                          "forward_delay": 15,
                          "max_age": 20,
                          "aging_time": 300,
-                         "address": "ecbd.1d09.5680"
+                         "address": "ecbd.1d09.5680",
+                         "configured_bridge_priority": 28672,
+                         "sys_id_ext": 200,
                     },
                     "interfaces": {
                          "GigabitEthernet1/0/5": {
@@ -956,7 +962,9 @@ class test_show_spanning_tree(unittest.TestCase):
                          "forward_delay": 15,
                          "max_age": 20,
                          "aging_time": 300,
-                         "address": "ecbd.1d09.5680"
+                         "address": "ecbd.1d09.5680",
+                         "configured_bridge_priority": 28672,
+                         "sys_id_ext": 201,
                     },
                     "interfaces": {
                          "GigabitEthernet1/0/5": {
