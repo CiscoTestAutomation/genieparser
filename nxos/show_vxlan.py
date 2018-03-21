@@ -469,18 +469,19 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
 
 
 # ====================================================
-#  schema for show nve multisite
+#  schema for show nve multisite dci-links
 # ====================================================
-class ShowNveMultisiteSchema(MetaParser):
+class ShowNveMultisiteDciLinksSchema(MetaParser):
     """Schema for:
-        show nve multisite dci-links
-        show nve multisite fabric-links"""
+        show nve multisite dci-links"""
 
     schema ={
         'multisite': {
-            Any():{
-                'if_name': str,
-                'if_state': str
+            'dci_links': {
+                Any():{
+                    'if_name': str,
+                    'if_state': str
+                },
             },
         },
     }
@@ -488,7 +489,7 @@ class ShowNveMultisiteSchema(MetaParser):
 # ====================================================
 #  Parser for show nve multisite dci-link
 # ====================================================
-class ShowNveMultisiteDciLinks(ShowNveMultisiteSchema):
+class ShowNveMultisiteDciLinks(ShowNveMultisiteDciLinksSchema):
     """parser for:
         show nve multisite dci-links"""
 
@@ -512,7 +513,7 @@ class ShowNveMultisiteDciLinks(ShowNveMultisiteSchema):
                 group = m.groupdict()
                 if_name = group.pop('if_name')
                 if_state = group.pop('if_state')
-                if_dict = result_dict.setdefault('multisite', {}).setdefault(if_name, {})
+                if_dict = result_dict.setdefault('multisite', {}).setdefault('dci_links', {}).setdefault(if_name, {})
 
                 if_dict.update({'if_name': if_name})
                 if_dict.update({'if_state': if_state.lower()})
@@ -520,11 +521,28 @@ class ShowNveMultisiteDciLinks(ShowNveMultisiteSchema):
 
         return result_dict
 
+# ====================================================
+#  schema for show nve multisite fabric-links
+# ====================================================
+class ShowNveMultisiteFabricLinksSchema(MetaParser):
+    """Schema for:
+        show nve multisite fabric-links"""
+
+    schema = {
+        'multisite': {
+            'fabric_links': {
+                Any(): {
+                    'if_name': str,
+                    'if_state': str
+                },
+            },
+        },
+    }
 
 # ====================================================
 #  Parser for show nve multisite fabric-link
 # ====================================================
-class ShowNveMultisiteFabricLinks(ShowNveMultisiteSchema):
+class ShowNveMultisiteFabricLinks(ShowNveMultisiteFabricLinksSchema):
     """parser for:
         show nve multisite fabric-links"""
 
@@ -544,13 +562,12 @@ class ShowNveMultisiteFabricLinks(ShowNveMultisiteSchema):
             else:
                 continue
 
-
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 if_name = group.pop('if_name')
                 if_state = group.pop('if_state')
-                if_dict = result_dict.setdefault('multisite',{}).setdefault(if_name,{})
+                if_dict = result_dict.setdefault('multisite',{}).setdefault('fabric_links',{}).setdefault(if_name,{})
 
                 if_dict.update({'if_name': if_name})
                 if_dict.update({'if_state': if_state.lower()})
@@ -567,31 +584,35 @@ class ShowNveEthernetSegmentSchema(MetaParser):
           show nve ethernet-segment"""
 
     schema ={
-        'ethernet_segment': {
-            'esi': {
-                Any(): {
-                    'esi': str,
-                    'if_name': str,
-                    'es_state': str,
-                    'po_state': str,
-                    'nve_if_name': str,
-                    'nve_state': str,
-                    'host_reach_mode': str,
-                    'active_vlans': str,
-                    'df_vlans': str,
-                    'active_vnis': str,
-                    'cc_failed_vlans': str,
-                    'cc_timer_left': str,
-                    'num_es_mem': int,
-                    'local_ordinal': int,
-                    'df_timer_st': str,
-                    'config_status': str,
-                    'df_list': str,
-                    'es_rt_added': bool,
-                    'ead_rt_added': bool,
-                    'ead_evi_rt_timer_age': str,
-                }
-            }
+        'nve':{
+            Any():{
+                'ethernet_segment': {
+                    'esi': {
+                        Any(): {
+                            'esi': str,
+                            'if_name': str,
+                            'es_state': str,
+                            'po_state': str,
+                            'nve_if_name': str,
+                            'nve_state': str,
+                            'host_reach_mode': str,
+                            'active_vlans': str,
+                            'df_vlans': str,
+                            'active_vnis': str,
+                            'cc_failed_vlans': str,
+                            'cc_timer_left': str,
+                            'num_es_mem': int,
+                            'local_ordinal': int,
+                            'df_timer_st': str,
+                            'config_status': str,
+                            'df_list': str,
+                            'es_rt_added': bool,
+                            'ead_rt_added': bool,
+                            'ead_evi_rt_timer_age': str,
+                        },
+                    },
+                },
+            },
         }
     }
 
@@ -661,32 +682,38 @@ class ShowNveEthernetSegment(ShowNveEthernetSegmentSchema):
             if m:
                 group = m.groupdict()
                 esi = group.pop('esi')
-                esi_dict = result_dict.setdefault('ethernet_segment',{}).setdefault('esi',{}).setdefault(esi,{})
-                esi_dict.update({'esi':esi})
                 continue
 
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                esi_dict.update({'if_name': group.pop('parent_intf')})
+                if_name = group.pop('parent_intf')
                 continue
 
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                esi_dict.update({'es_state': group.pop('es_state').lower()})
+                es_state = group.pop('es_state').lower()
                 continue
 
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                esi_dict.update({'po_state': group.pop('po_state').lower()})
+                po_state =  group.pop('po_state').lower()
                 continue
 
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                esi_dict.update({'nve_if_name': group.pop('nve_intf')})
+                nve_if_name = group.pop('nve_intf')
+                esi_dict = result_dict.setdefault('nve', {}).setdefault(nve_if_name, {}).\
+                                       setdefault('ethernet_segment', {}).setdefault('esi', {}).\
+                                       setdefault(esi, {})
+                esi_dict.update({'esi': esi})
+                esi_dict.update({'nve_if_name': nve_if_name})
+                esi_dict.update({'po_state': po_state})
+                esi_dict.update({'if_name': if_name})
+                esi_dict.update({'es_state': es_state})
                 continue
 
             m = p6.match(line)

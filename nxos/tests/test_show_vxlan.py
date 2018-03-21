@@ -296,7 +296,6 @@ class test_show_nve_interface_detail(unittest.TestCase):
             'src_intf_last_reinit_notify_type': "port-up",  # Ops Str 'port-up'
             'mcast_src_intf_last_reinit_notify_type': "none",  # Ops Str 'none'
             'multi_src_intf_last_reinit_notify_type': "none",  # Ops Str 'none'
-
         },
     }
 
@@ -322,7 +321,6 @@ class test_show_nve_interface_detail(unittest.TestCase):
     Nve Src node last notif sent: Port-up
     Nve Mcast Src node last notif sent: None
     Nve MultiSite Src node last notif sent: None
-
         '''}
 
     golden_parsed_output_2 = {
@@ -403,13 +401,15 @@ class test_show_fabric_links(unittest.TestCase):
 
     golden_parsed_output = {
         'multisite': {
-            'Ethernet1/53':{
-                'if_name': 'Ethernet1/53',
-                'if_state': 'up'
-            },
-            'Ethernet1/54': {
-                'if_name': 'Ethernet1/54',
-                'if_state': 'down'
+            'fabric_links':{
+                'Ethernet1/53':{
+                    'if_name': 'Ethernet1/53',
+                    'if_state': 'up'
+                },
+                'Ethernet1/54': {
+                    'if_name': 'Ethernet1/54',
+                    'if_state': 'down'
+                },
             },
         },
     }
@@ -446,13 +446,15 @@ class test_show_dci_links(unittest.TestCase):
 
     golden_parsed_output = {
         'multisite': {
-            'Ethernet1/50':{
-                'if_name': 'Ethernet1/50',
-                'if_state': 'up'
-            },
-            'Ethernet1/52': {
-                'if_name': 'Ethernet1/52',
-                'if_state': 'up'
+            'dci_links':{
+                'Ethernet1/50':{
+                    'if_name': 'Ethernet1/50',
+                    'if_state': 'up'
+                },
+                'Ethernet1/52': {
+                    'if_name': 'Ethernet1/52',
+                    'if_state': 'up'
+                },
             },
         },
     }
@@ -489,39 +491,43 @@ class test_show_nve_ethernet_segment(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-			'ethernet_segment': {
-				'esi': {
-					'0300.0000.0001.2c00.0309': {
-						'esi': '0300.0000.0001.2c00.0309',
-						'if_name': 'nve1',
-						'es_state': 'up',
-						'po_state': 'n/a',
-						'nve_if_name': 'nve1',
-						'nve_state': 'up',
-						'host_reach_mode': 'control-plane',
-						'active_vlans': '1,101-105,1001-1100,2001-2100,3001-3005',
-						'df_vlans': '102,104,1002,1004,1006,1008,1010,1012,1014,1016,1018,1020,1022,1024'\
-                                    ',1026,1028,1030,1032,1034,1036,1038,1040,1042,1044,1046,1048,1050,1052,1054,1056'\
-                                    ',1058,1060,1062,1064,1066,1068,1070,1072,1074,1076,1078,1080,1082,1084,1086,1088'\
-                                    ',1090,1092,1094,1096,1098,1100,2002,2004,2006,2008,2010,2012,2014,2016,2018,2020'\
-                                    ',2022,2024,2026,2028,2030,2032,2034,2036,2038,2040,2042,2044,2046,2048,2050,2052'\
-                                    ',2054,2056,2058,2060,2062,2064,2066,2068,2070,2072,2074,2076,2078,2080,2082,2084'\
-                                    ',2086,2088,2090,2092,2094,2096,2098,2100,3002,3004',
-						'active_vnis':  '501001-501100,502001-502100,503001-503005,600101-600105',
-						'cc_failed_vlans': '',
-						'cc_timer_left': '0',
-						'num_es_mem':  2,
-						'local_ordinal': 0,
-						'df_timer_st': '00:00:00',
-						'config_status': 'n/a',
-						'df_list': '201.0.0.55 201.0.0.66',
-						'es_rt_added': True,
-						'ead_rt_added': False,
-						'ead_evi_rt_timer_age': 'not running',
-					},
-				},
-			},
-		}
+        'nve':{
+            'nve1':{
+			    'ethernet_segment': {
+                    'esi': {
+                        '0300.0000.0001.2c00.0309': {
+                            'esi': '0300.0000.0001.2c00.0309',
+                            'if_name': 'nve1',
+                            'es_state': 'up',
+                            'po_state': 'n/a',
+                            'nve_if_name': 'nve1',
+                            'nve_state': 'up',
+                            'host_reach_mode': 'control-plane',
+                            'active_vlans': '1,101-105,1001-1100,2001-2100,3001-3005',
+                            'df_vlans': '102,104,1002,1004,1006,1008,1010,1012,1014,1016,1018,1020,1022,1024'\
+                                        ',1026,1028,1030,1032,1034,1036,1038,1040,1042,1044,1046,1048,1050,1052,1054,1056'\
+                                        ',1058,1060,1062,1064,1066,1068,1070,1072,1074,1076,1078,1080,1082,1084,1086,1088'\
+                                        ',1090,1092,1094,1096,1098,1100,2002,2004,2006,2008,2010,2012,2014,2016,2018,2020'\
+                                        ',2022,2024,2026,2028,2030,2032,2034,2036,2038,2040,2042,2044,2046,2048,2050,2052'\
+                                        ',2054,2056,2058,2060,2062,2064,2066,2068,2070,2072,2074,2076,2078,2080,2082,2084'\
+                                        ',2086,2088,2090,2092,2094,2096,2098,2100,3002,3004',
+                            'active_vnis':  '501001-501100,502001-502100,503001-503005,600101-600105',
+                            'cc_failed_vlans': '',
+                            'cc_timer_left': '0',
+                            'num_es_mem':  2,
+                            'local_ordinal': 0,
+                            'df_timer_st': '00:00:00',
+                            'config_status': 'n/a',
+                            'df_list': '201.0.0.55 201.0.0.66',
+                            'es_rt_added': True,
+                            'ead_rt_added': False,
+                            'ead_evi_rt_timer_age': 'not running',
+                        },
+                    },
+                },
+            },
+		},
+	}
 
     golden_output = {'execute.return_value': '''
     MS-BL5(config)# sh nve ethernet-segment
