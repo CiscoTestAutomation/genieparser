@@ -182,6 +182,7 @@ class ShowSpanningTreeDetailSchema(MetaParser):
                     Optional('hello_time'): int,
                     Optional('max_age'): int,
                     Optional('forwarding_delay'): int,
+                    Optional('hold_count'): int,
                     'bridge_priority': int,
                     'bridge_sysid': int,
                     'bridge_address': str,
@@ -346,7 +347,9 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                mode_dict.update({k:int(v) for k, v in group.items() if v})
+                update_dict = {k:int(v) for k, v in group.items() if v}
+                mode_dict.update(update_dict)
+                inst_dict.update(update_dict)
                 continue
 
             # We are the root of the spanning tree

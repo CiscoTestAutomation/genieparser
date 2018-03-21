@@ -277,7 +277,8 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                         "topology_from_port": "Port-channel24",
                         "bridge_priority": 32768,
                         "topology_detected_flag": False,
-                        "max_age": 40
+                        "max_age": 40,
+                        "hold_count": 20
                    }
               },
               "forwarding_delay": 30,
@@ -392,6 +393,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                              }
                         },
                         "max_age": 20,
+                        "hold_count": 6,
                         "vlan_id": 201
                    },
                    100: {
@@ -439,6 +441,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
                              }
                         },
                         "max_age": 20,
+                        "hold_count": 6,
                         "vlan_id": 100
                    }
               },
