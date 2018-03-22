@@ -192,7 +192,7 @@ class ShowSpanningTreeDetailSchema(MetaParser):
                     'hold_time': int,
                     'topology_changes': int,
                     'time_since_topology_change': str,
-                    'topology_from_port': str,
+                    Optional('topology_from_port'): str,
                     'hello_time': int,
                     'max_age': int,
                     'forwarding_delay': int,
@@ -305,7 +305,8 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                           'address +(?P<designated_bridge_address>[\w\.]+)$')
 
         p15 = re.compile(r'^Designated +port +id +is +(?P<designated_port_id>[\w\.]+), +'
-                          'designated +path +cost +(?P<designated_path_cost>\d+)$')
+                          'designated +path +cost +(?P<designated_path_cost>\d+)'
+                          '( +[\w\s]+)?$')
 
         p16 = re.compile(r'^Timers: +message +age +(?P<message_age>\d+), +'
                           'forward +delay +(?P<forward_delay>\d+), +hold +(?P<hold>\d+)$')
@@ -485,7 +486,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
 
 
 class ShowSpanningTreeMstDetailSchema(MetaParser):
-    """Schema for show spanning-tree detail"""
+    """Schema for show spanning-tree mst detail"""
     schema = {
         'mst_instances': {
             Any(): {
@@ -539,11 +540,11 @@ class ShowSpanningTreeMstDetailSchema(MetaParser):
 
 
 class ShowSpanningTreeMstDetail(ShowSpanningTreeMstDetailSchema):
-    """Parser for show spanning-tree detail"""
+    """Parser for show spanning-tree mst detail"""
 
     def cli(self):
          # get output from device
-        out = self.device.execute('show spanning-tree detail')
+        out = self.device.execute('show spanning-tree mst detail')
 
         # initial return dictionary
         ret_dict = {}
@@ -704,7 +705,7 @@ class ShowSpanningTreeMstDetail(ShowSpanningTreeMstDetailSchema):
 
 
 class ShowErrdisableRecoverySchema(MetaParser):
-    """Schema for show spanning-tree detail"""
+    """Schema for show errdisable recovery"""
     schema = {
         'timer_status': {
             Any(): bool,
@@ -721,11 +722,11 @@ class ShowErrdisableRecoverySchema(MetaParser):
 
 
 class ShowErrdisableRecovery(ShowErrdisableRecoverySchema):
-    """Parser for show spanning-tree detail"""
+    """Parser for show errdisable recovery"""
 
     def cli(self):
          # get output from device
-        out = self.device.execute('show spanning-tree detail')
+        out = self.device.execute('show errdisable recovery')
 
         # initial return dictionary
         ret_dict = {}
@@ -819,6 +820,7 @@ class ShowSpanningTree(ShowSpanningTreeSchema):
                      'BLK': 'blocking',
                      'DIS': 'disabled',
                      'LRN': 'learning',
+                     'LIS': 'listensing',
                      'BKN*': 'broken'}
     ROLE_MAP = {'Mstr': 'master ',
                 'Desg': 'designated',
