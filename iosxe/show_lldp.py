@@ -124,8 +124,11 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                         'O': 'other'}
 
     def cli(self, entry='*'):
-         # get output from device
-        out = self.device.execute('show lldp entry {}'.format(entry))
+        # get output from device
+        if hasattr(self, 'CMD'):
+            out = self.device.execute(self.CMD)
+        else:
+            out = self.device.execute('show lldp entry {}'.format(entry))
 
         # initial return dictionary
         ret_dict = {}
@@ -324,7 +327,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
 class ShowLldpNeighborsDetail(ShowLldpEntry):
     '''Parser for show lldp neighbors detail'''
-    pass
+    CMD = 'show lldp neighbors detail'
 
 
 class ShowLldpTrafficSchema(MetaParser):
