@@ -272,7 +272,7 @@ class test_show_nve_interface_detail(unittest.TestCase):
 
     golden_parsed_output = {
         'nve1': {
-            'if_name': 'nve1',
+            'nve_name': 'nve1',
             'if_state': "up",
             'encap_type': "vxlan",  # Ops Str 'vxlan'
             'vpc_capability': "vpc-vip-only [notified]",  # Ops Str 'vpc-vip-only [notified]'
@@ -325,7 +325,7 @@ class test_show_nve_interface_detail(unittest.TestCase):
 
     golden_parsed_output_2 = {
         'nve1': {
-            'if_name': 'nve1',
+            'nve_name': 'nve1',
             'if_state': "down",
             'encap_type': "vxlan",
             'vpc_capability': "vpc-vip-only [notified]",

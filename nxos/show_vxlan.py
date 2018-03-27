@@ -215,7 +215,7 @@ class ShowNveInterfaceDetailSchema(MetaParser):
 
     schema ={
         Any(): {
-            'if_name': str,
+            'nve_name': str,
             'if_state': str,
             'encap_type': str,
             'vpc_capability': str,
@@ -301,7 +301,7 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                 nve_name = group.pop('nve_name')
                 nve_dict = result_dict.setdefault(nve_name , {})
                 nve_name = m.groupdict()['nve_name']
-                nve_dict.update({'if_name': nve_name})
+                nve_dict.update({'nve_name': nve_name})
                 nve_dict.update({'if_state': group.pop('state').lower()})
                 nve_dict.update({'encap_type': group.pop('encapsulation').lower()})
                 continue
@@ -1013,18 +1013,18 @@ class ShowL2routeMacAllDetailSchema(MetaParser):
     schema ={
         'topology': {
             'topo_id': {
-                Any(): {  # Conf/Ops Int 101
+                Any(): {
                     'mac': {
-                        Any(): {  # Ops Str '5e00.0002.0007'
-                            'mac_addr': str,  # Ops Str 't300.0002.0007'
-                            'prod_type': str,  # Ops Str 'vxlan'
-                            'flags': str,  # Ops Str 'rmac'
-                            'seq_num': int,  # Ops Int 0
-                            'next_hop1': str,  # Ops Str '204.1.1.1'
-                            'rte_res': str,  # Ops Str 'regular'
-                            'fwd_state': str,  # Ops Str 'Resolved (PeerID: 2)'
-                            Optional('sent_to'): str,  # Ops Str 'bgp'
-                            Optional('soo'): int,  # Ops Int 774975538
+                        Any(): {
+                            'mac_addr': str,
+                            'prod_type': str,
+                            'flags': str,
+                            'seq_num': int,
+                            'next_hop1': str,
+                            'rte_res': str,
+                            'fwd_state': str,
+                            Optional('sent_to'): str,
+                            Optional('soo'): int,
                         }
                     }
                 }
@@ -1122,18 +1122,18 @@ class ShowL2routeMacIpAllDetailSchema(MetaParser):
     schema ={
         'topology': {
             'topo_id': {
-                Any(): {  # Conf/Ops Int 101
+                Any(): {
                     'mac_ip': {
-                        Any(): {  # Ops Str '5e00.0002.0007'
-                            'mac_addr': str,  # Ops Str 't300.0002.0007'
-                            'mac_ip_prod_type': str,  # Ops Str 'bgp'
-                            'mac_ip_flags': str,  # Ops Str '--'
-                            'seq_num': int,  # Ops Int 0
-                            'next_hop1': str,  # Ops Str '204.1.1.1'
-                            'host_ip': str,  # Ops Str '5.1.10.11'
-                            Optional('sent_to'): str,  # Ops Str 'bgp'
-                            Optional('soo'): int,  # Ops Int 774975538
-                            Optional('l3_info'): int,  # Ops Int 10001
+                        Any(): {
+                            'mac_addr': str,
+                            'mac_ip_prod_type': str,
+                            'mac_ip_flags': str,
+                            'seq_num': int,
+                            'next_hop1': str,
+                            'host_ip': str,
+                            Optional('sent_to'): str,
+                            Optional('soo'): int,
+                            Optional('l3_info'): int,
                         }
                     }
                 }
@@ -1216,19 +1216,19 @@ class ShowL2routeSummarySchema(MetaParser):
 
     schema ={
         'summary': {
-            'total_memory': int, # Ops Int 6967
-            'numof_converged_tables': int, # Ops Int 47
+            'total_memory': int,
+            'numof_converged_tables': int,
             'table_name': {
-                Any(): { # Ops Str 'Topology'
+                Any(): {
                     'producer_name': {
-                        Any(): { # Ops Str 'vxlan'
-                            'producer_name': str, # Ops Str 'vxlan'
-                            'id': int, # Ops Int 11
-                            'objects': int, # Ops Int 21
-                            'memory': int, # Ops Int 5927
+                        Any(): {
+                            'producer_name': str,
+                            'id': int,
+                            'objects': int,
+                            'memory': int,
                         },
-                        'total_obj': int, # Ops Int 21
-                        'total_mem': int, # Ops Int 5927
+                        'total_obj': int,
+                        'total_mem': int,
                     }
                 }
             }
