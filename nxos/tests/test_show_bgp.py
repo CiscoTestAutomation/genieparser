@@ -561,8 +561,7 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                         'export_default_map': 'PERMIT_ALL_RM',
                         'export_default_prefix_count': 2,
                         'export_default_prefix_limit': 1000,
-                        'export_rt_list': '100:1 '
-                                          '400:400',
+                        'export_rt_list': '100:1 400:400',
                         'import_default_map': 'PERMIT_ALL_RM',
                         'import_default_prefix_count': 3,
                         'import_default_prefix_limit': 1000,
@@ -602,8 +601,7 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                         'export_default_map': 'PERMIT_ALL_RM',
                         'export_default_prefix_count': 2,
                         'export_default_prefix_limit': 1000,
-                        'export_rt_list': '1:100 '
-                                          '600:600',
+                        'export_rt_list': '1:100 600:600',
                         'import_default_map': 'PERMIT_ALL_RM',
                         'import_default_prefix_count': 3,
                         'import_default_prefix_limit': 1000,
@@ -632,6 +630,7 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'router_id': '33.33.33.33',
                 'vrf_id': '5',
                 'vrf_rd': '1:100',
+                'vrf_evpn_rd': '1:100',
                 'vrf_state': 'up'},
             'vpn2':
                 {'address_family':
@@ -674,6 +673,7 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'router_id': '0.0.0.0',
                 'vrf_id': '6',
                 'vrf_rd': '2:100',
+                'vrf_evpn_rd': '2:100',
                 'vrf_state': 'up'}}}
 
     golden_output2 = {'execute.return_value': '''
@@ -1176,6 +1176,7 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'cluster_id': '1.1.1.1',
                 'conf_router_id': '0.0.0.0',
                 'confed_id': 100,
+                'vnid': '0',
                 'num_conf_peers': 1,
                 'num_established_peers': 1,
                 'num_pending_conf_peers': 0,
@@ -1187,7 +1188,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 {'address_family':
                     {'ipv4 unicast':
                         {'export_rt_list': '100:9100',
-                        'import_rt_list': '100:9100 100:9100 100:9100',
+                        'import_rt_list': '100:9100',
+                        'evpn_export_rt_list': '100:9100',
+                        'evpn_import_rt_list': '100:9100',
                         'label_mode': 'per-vrf',
                         'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -1208,7 +1211,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                         'table_state': 'up'},
                     'ipv6 unicast':
                         {'export_rt_list': '100:9100',
-                        'import_rt_list': '100:9100 100:9100 100:9100',
+                        'import_rt_list': '100:9100',
+                        'evpn_export_rt_list': '100:9100',
+                        'evpn_import_rt_list': '100:9100',
                         'label_mode': 'per-vrf',
                         'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -1225,17 +1230,29 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'cluster_id': '0.0.0.0',
                 'conf_router_id': '0.0.0.0',
                 'confed_id': 0,
+                'encap_type': 'VXLAN',
+                'router_mac': '000c.29e2.c046',
+                'topo_id': '1000',
+                'vip_derived_mac': '000c.29e2.c046',
+                'vnid': '9100',
+                'vtep_ip': '91.1.1.1',
+                'vtep_vip_r': '91.1.2.1',
+                'vtep_virtual_ip': '91.1.2.1',
                 'num_conf_peers': 0,
                 'num_established_peers': 0,
                 'num_pending_conf_peers': 0,
                 'router_id': '100.100.11.1',
                 'vrf_id': '3',
+                'vrf_rd': '91.1.1.0:3',
+                'vrf_evpn_rd': '91.1.1.0:3',
                 'vrf_state': 'up'},
             'vrf-9105':
                 {'address_family':
                     {'ipv4 unicast':
                         {'export_rt_list': '100:9105',
-                        'import_rt_list': '100:9105 100:9105 100:9105',
+                        'import_rt_list': '100:9105',
+                        'evpn_export_rt_list': '100:9105',
+                        'evpn_import_rt_list': '100:9105',
                         'label_mode': 'per-vrf',
                         'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -1254,7 +1271,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                         'table_state': 'up'},
                     'ipv6 unicast':
                         {'export_rt_list': '100:9105',
-                        'import_rt_list': '100:9105 100:9105 100:9105',
+                        'import_rt_list': '100:9105',
+                        'evpn_export_rt_list': '100:9105',
+                        'evpn_import_rt_list': '100:9105',
                         'label_mode': 'per-vrf',
                         'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -1271,17 +1290,29 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'cluster_id': '0.0.0.0',
                 'conf_router_id': '0.0.0.0',
                 'confed_id': 0,
+                'encap_type': 'VXLAN',
+                'router_mac': '000c.29e2.c046',
+                'topo_id': '1005',
+                'vip_derived_mac': '000c.29e2.c046',
+                'vnid': '9105',
+                'vtep_ip': '91.1.1.1',
+                'vtep_vip_r': '91.1.2.1',
+                'vtep_virtual_ip': '91.1.2.1',
                 'num_conf_peers': 0,
                 'num_established_peers': 0,
                 'num_pending_conf_peers': 0,
                 'router_id': '100.100.16.1',
                 'vrf_id': '4',
+                'vrf_rd': '91.1.1.0:4',
+                'vrf_evpn_rd': '91.1.1.0:4',
                 'vrf_state': 'up'},
             'vrf-9106':
                 {'address_family':
                     {'ipv4 unicast':
                         {'export_rt_list': '100:9106',
-                        'import_rt_list': '100:9106 100:9106 100:9106',
+                        'import_rt_list': '100:9106',
+                        'evpn_export_rt_list': '100:9106',
+                        'evpn_import_rt_list': '100:9106',
                         'label_mode': 'per-vrf',
                         'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -1300,7 +1331,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                         'table_state': 'up'},
                     'ipv6 unicast':
                         {'export_rt_list': '100:9106',
-                        'import_rt_list': '100:9106 100:9106 100:9106',
+                        'import_rt_list': '100:9106',
+                        'evpn_export_rt_list': '100:9106',
+                        'evpn_import_rt_list': '100:9106',
                         'label_mode': 'per-vrf',
                         'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -1317,17 +1350,29 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'cluster_id': '0.0.0.0',
                 'conf_router_id': '0.0.0.0',
                 'confed_id': 0,
+                'encap_type': 'VXLAN',
+                'router_mac': '000c.29e2.c046',
+                'topo_id': '1006',
+                'vip_derived_mac': '000c.29e2.c046',
+                'vnid': '9106',
+                'vtep_ip': '91.1.1.1',
+                'vtep_vip_r': '91.1.2.1',
+                'vtep_virtual_ip': '91.1.2.1',
                 'num_conf_peers': 0,
                 'num_established_peers': 0,
                 'num_pending_conf_peers': 0,
                 'router_id': '100.100.17.1',
                 'vrf_id': '5',
+                'vrf_rd': '91.1.1.0:5',
+                'vrf_evpn_rd': '91.1.1.0:5',
                 'vrf_state': 'up'},
             'vrf-9107':
                 {'address_family':
                     {'ipv4 unicast':
                         {'export_rt_list': '100:9107',
-                        'import_rt_list': '100:9107 100:9107 100:9107',
+                        'import_rt_list': '100:9107',
+                        'evpn_export_rt_list': '100:9107',
+                        'evpn_import_rt_list': '100:9107',
                         'label_mode': 'per-vrf',
                         'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -1346,7 +1391,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                         'table_state': 'up'},
                     'ipv6 unicast':
                         {'export_rt_list': '100:9107',
-                        'import_rt_list': '100:9107 100:9107 100:9107',
+                        'import_rt_list': '100:9107',
+                        'evpn_export_rt_list': '100:9107',
+                        'evpn_import_rt_list': '100:9107',
                         'label_mode': 'per-vrf',
                         'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -1363,17 +1410,29 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'cluster_id': '0.0.0.0',
                 'conf_router_id': '0.0.0.0',
                 'confed_id': 0,
+                'encap_type': 'VXLAN',
+                'router_mac': '000c.29e2.c046',
+                'topo_id': '1007',
+                'vip_derived_mac': '000c.29e2.c046',
+                'vnid': '9107',
+                'vtep_ip': '91.1.1.1',
+                'vtep_vip_r': '91.1.2.1',
+                'vtep_virtual_ip': '91.1.2.1',
                 'num_conf_peers': 0,
                 'num_established_peers': 0,
                 'num_pending_conf_peers': 0,
                 'router_id': '100.100.18.1',
                 'vrf_id': '6',
+                'vrf_rd': '91.1.1.0:6',
+                'vrf_evpn_rd': '91.1.1.0:6',
                 'vrf_state': 'up'},
             'vrf-9108':
                 {'address_family':
                     {'ipv4 unicast':
                         {'export_rt_list': '100:9108',
-                        'import_rt_list': '100:9108 100:9108 100:9108',
+                        'import_rt_list': '100:9108',
+                        'evpn_export_rt_list': '100:9108',
+                        'evpn_import_rt_list': '100:9108',
                         'label_mode': 'per-vrf',
                         'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -1392,7 +1451,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                         'table_state': 'up'},
                     'ipv6 unicast':
                         {'export_rt_list': '100:9108',
-                        'import_rt_list': '100:9108 100:9108 100:9108',
+                        'import_rt_list': '100:9108',
+                        'evpn_export_rt_list': '100:9108',
+                        'evpn_import_rt_list': '100:9108',
                         'label_mode': 'per-vrf',
                         'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -1409,17 +1470,29 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'cluster_id': '0.0.0.0',
                 'conf_router_id': '0.0.0.0',
                 'confed_id': 0,
+                'encap_type': 'VXLAN',
+                'router_mac': '000c.29e2.c046',
+                'topo_id': '1008',
+                'vip_derived_mac': '000c.29e2.c046',
+                'vnid': '9108',
+                'vtep_ip': '91.1.1.1',
+                'vtep_vip_r': '91.1.2.1',
+                'vtep_virtual_ip': '91.1.2.1',
                 'num_conf_peers': 0,
                 'num_established_peers': 0,
                 'num_pending_conf_peers': 0,
                 'router_id': '100.100.19.1',
                 'vrf_id': '7',
+                'vrf_rd': '91.1.1.0:7',
+                'vrf_evpn_rd': '91.1.1.0:7',
                 'vrf_state': 'up'},
             'vrf-9109':
                 {'address_family':
                     {'ipv4 unicast':
                         {'export_rt_list': '100:9109',
-                        'import_rt_list': '100:9109 100:9109 100:9109',
+                        'import_rt_list': '100:9109',
+                        'evpn_export_rt_list': '100:9109',
+                        'evpn_import_rt_list': '100:9109',
                         'label_mode': 'per-vrf',
                         'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -1438,7 +1511,9 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                         'table_state': 'up'},
                     'ipv6 unicast':
                         {'export_rt_list': '100:9109',
-                        'import_rt_list': '100:9109 100:9109 100:9109',
+                        'import_rt_list': '100:9109',
+                        'evpn_export_rt_list': '100:9109',
+                        'evpn_import_rt_list': '100:9109',
                         'label_mode': 'per-vrf',
                         'next_hop_trigger_delay':
                             {'critical': 3000,
@@ -1455,11 +1530,21 @@ class test_show_bgp_process_vrf_all_cli(unittest.TestCase):
                 'cluster_id': '0.0.0.0',
                 'conf_router_id': '0.0.0.0',
                 'confed_id': 0,
+                'encap_type': 'VXLAN',
+                'router_mac': '000c.29e2.c046',
+                'topo_id': '1009',
+                'vip_derived_mac': '000c.29e2.c046',
+                'vnid': '9109',
+                'vtep_ip': '91.1.1.1',
+                'vtep_vip_r': '91.1.2.1',
+                'vtep_virtual_ip': '91.1.2.1',
                 'num_conf_peers': 0,
                 'num_established_peers': 0,
                 'num_pending_conf_peers': 0,
                 'router_id': '100.100.20.1',
                 'vrf_id': '8',
+                'vrf_rd': '91.1.1.0:8',
+                'vrf_evpn_rd': '91.1.1.0:8',
                 'vrf_state': 'up'}}}
 
     golden_output3 = {'execute.return_value': '''
@@ -3124,6 +3209,7 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                 'router_id': '33.33.33.33',
                 'vrf_id': '5',
                 'vrf_rd': '1:100',
+                'vrf_evpn_rd': '1:100',
                 'vrf_state': 'up'},
             'vpn2':
                 {'address_family':
@@ -3162,6 +3248,7 @@ class test_show_bgp_process_vrf_all_yang(unittest.TestCase):
                 'router_id': '0.0.0.0',
                 'vrf_id': '6',
                 'vrf_rd': '2:100',
+                'vrf_evpn_rd': '2:100',
                 'vrf_state': 'up'}}}
 
     cli_output = '''\

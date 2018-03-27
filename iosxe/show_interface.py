@@ -1297,7 +1297,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Trunking VLANs Enabled: 200-211
-            p21 =  re.compile(r'^Trunking +VLANs +Enabled: +(?P<trunk_vlans>[\w\-]+)$')
+            # Trunking VLANs Enabled: 1,2
+            p21 =  re.compile(r'^Trunking +VLANs +Enabled: +(?P<trunk_vlans>[\w\-\,\s]+)$')
             m = p21.match(line)
             if m:
                 ret_dict[intf]['trunk_vlans'] = m.groupdict()['trunk_vlans'].lower()

@@ -32,6 +32,7 @@ class ShowVersionSchema(MetaParser):
                     'version': str,
                     'image_id': str,
                     'rom': str,
+                    'image_type': str,
                     Optional('bootldr'): str,
                     'hostname': str,
                     'uptime': str,
@@ -105,14 +106,16 @@ class ShowVersion(ShowVersionSchema):
         cmd = 'show version'.format()
         out = self.device.execute(cmd)
         version_dict = {}
-        switch_number = '1'
+        active_dict = {}
         rtr_type = ''
         for line in out.splitlines():
             line = line.rstrip()
 
             # version
             p1 = re.compile(
-                r'^\s*[Cc]isco +IOS +[Ss]oftware.+, (?P<platform>.+) Software +\((?P<image_id>.+)\).+[Vv]ersion +(?P<version>[a-zA-Z0-9\.\:]+) +')
+                r'^\s*[Cc]isco +IOS +[Ss]oftware.+, (?P<platform>.+) '
+                 'Software +\((?P<image_id>.+)\).+[Vv]ersion +'
+                 '(?P<version>[a-zA-Z0-9\.\:]+) +')
             m = p1.match(line)
             if m:
                 version = m.groupdict()['version']
@@ -135,7 +138,9 @@ class ShowVersion(ShowVersionSchema):
             # Cisco IOS Software [Fuji], Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Experimental Version 16.8.20170924:182909 [polaris_dev-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20170924_191550 132]
 
             p1_1 = re.compile(
-                r'^\s*[Cc]isco +IOS +[Ss]oftware.+, (?P<platform>.+) Software +\((?P<image_id>.+)\).+( +Experimental)? +[Vv]ersion +(?P<version>[a-zA-Z0-9\.\:]+) *,? +')
+                r'^\s*[Cc]isco +IOS +[Ss]oftware.+, (?P<platform>.+) '
+                 'Software +\((?P<image_id>.+)\).+( +Experimental)? +'
+                 '[Vv]ersion +(?P<version>[a-zA-Z0-9\.\:]+) *,?.*')
             m = p1_1.match(line)
             if m:
                 version = m.groupdict()['version']
@@ -153,6 +158,22 @@ class ShowVersion(ShowVersionSchema):
                     version_dict['version']['image_id'] = \
                         m.groupdict()['image_id']
                     continue
+
+            # Copyright (c) 1986-2016 by Cisco Systems, Inc.
+            p25 = re.compile(
+                r'^\s*Copyright +(.*)$')
+            m = p25.match(line)
+            if m:
+                version_dict.setdefault('version', {}).setdefault('image_type', 'developer image')
+                continue
+
+            # Technical Support: http://www.cisco.com/techsupport
+            p25_1 = re.compile(
+                r'^\s*Technical +Support: +http\:\/\/www\.cisco\.com\/techsupport')
+            m = p25_1.match(line)
+            if m:
+                version_dict.setdefault('version', {}).setdefault('image_type', 'production image')
+                continue
 
             # rom
             p2 = re.compile(
@@ -343,15 +364,16 @@ class ShowVersion(ShowVersionSchema):
                 continue
 
             # switch_number
-            p16 = re.compile(r'^s*[Ss]witch +0(?P<switch_number>\d+)')
+            p16 = re.compile(r'^\s*[Ss]witch +0(?P<switch_number>\d+)$')
             m = p16.match(line)
             if m:
                 switch_number = m.groupdict()['switch_number']
-            if 'Edison' in rtr_type:
-                if 'switch_num' not in version_dict['version']:
-                    version_dict['version']['switch_num'] = {}
-                if switch_number not in version_dict['version']['switch_num']:
-                    version_dict['version']['switch_num'][switch_number] = {}
+                if 'Edison' in rtr_type:
+                    if 'switch_num' not in version_dict['version']:
+                        version_dict['version']['switch_num'] = {}
+                    if switch_number not in version_dict['version']['switch_num']:
+                        version_dict['version']['switch_num'][switch_number] = {}
+                continue
 
             # uptime
             p17 = re.compile(
@@ -369,60 +391,73 @@ class ShowVersion(ShowVersionSchema):
             m = p18.match(line)
             if m:
                 if 'switch_num' not in version_dict['version']:
+                    active_dict.setdefault('mac_address', m.groupdict()['mac_address'])
                     continue
                 version_dict['version']['switch_num'][switch_number]['mac_address'] = m.groupdict()['mac_address']
                 continue
+
             # mb_assembly_num
             p19 = re.compile(
                 r'^\s*[Mm]otherboard +[Aa]ssembly +[Nn]umber +\: +(?P<mb_assembly_num>.+)$')
             m = p19.match(line)
             if m:
                 if 'switch_num' not in version_dict['version']:
+                    active_dict.setdefault('mb_assembly_num', m.groupdict()['mb_assembly_num'])
                     continue
                 version_dict['version']['switch_num'][switch_number]['mb_assembly_num'] = m.groupdict()['mb_assembly_num']
                 continue
+
             # mb_sn
             p20 = re.compile(
                 r'^\s*[Mm]otherboard +[Ss]erial +[Nn]umber +\: +(?P<mb_sn>.+)$')
             m = p20.match(line)
             if m:
                 if 'switch_num' not in version_dict['version']:
+                    active_dict.setdefault('mb_sn', m.groupdict()['mb_sn'])
                     continue
                 version_dict['version']['switch_num'][switch_number]['mb_sn'] = m.groupdict()['mb_sn']
                 continue
+
             # model_rev_num
             p21 = re.compile(
                 r'^\s*[Mm]odel +[Rr]evision +[Nn]umber +\: +(?P<model_rev_num>.+)$')
             m = p21.match(line)
             if m:
                 if 'switch_num' not in version_dict['version']:
+                    active_dict.setdefault('model_rev_num', m.groupdict()['model_rev_num'])
                     continue
                 version_dict['version']['switch_num'][switch_number]['model_rev_num'] = m.groupdict()['model_rev_num']
                 continue
+
             # mb_rev_num
             p22 = re.compile(
                 r'^\s*[Mm]otherboard +[Rr]evision +[Nn]umber +\: +(?P<mb_rev_num>.+)$')
             m = p22.match(line)
             if m:
                 if 'switch_num' not in version_dict['version']:
+                    active_dict.setdefault('mb_rev_num', m.groupdict()['mb_rev_num'])
                     continue
                 version_dict['version']['switch_num'][switch_number]['mb_rev_num'] = m.groupdict()['mb_rev_num']
                 continue
+
             # model_num
             p23 = re.compile(
                 r'^\s*[Mm]odel +[Nn]umber +\: +(?P<model_num>.+)$')
             m = p23.match(line)
             if m:
                 if 'switch_num' not in version_dict['version']:
+                    active_dict.setdefault('model_num', m.groupdict()['model_num'])
                     continue
                 version_dict['version']['switch_num'][switch_number]['model_num'] = m.groupdict()['model_num']
                 continue
+
             # system_sn
             p24 = re.compile(
                 r'^\s*[Ss]ystem +[Ss]erial +[Nn]umber +\: +(?P<system_sn>.+)$')
             m = p24.match(line)
             if m:
                 if 'switch_num' not in version_dict['version']:
+                    active_dict.setdefault('system_sn', m.groupdict()['system_sn'])
                     continue
                 version_dict['version']['switch_num'][switch_number]['system_sn'] = m.groupdict()['system_sn']
                 continue
@@ -485,6 +520,8 @@ class ShowVersion(ShowVersionSchema):
                                 version_dict['version']['switch_num'][switch_no][k] = v
                         version_dict['version']['switch_num'][switch_no]['uptime'] = uptime_this_cp
                         version_dict['version']['switch_num'][switch_no]['active'] = True
+                        version_dict['version']['switch_num'][switch_no].\
+                            update(active_dict) if active_dict else None
                 else:
                     for k, v in res2.entries[key].items():
                         if key not in version_dict['version']['switch_num']:
