@@ -1079,6 +1079,14 @@ class DirSchema(MetaParser):
             'dir_name': str,
             'total_bytes': str,
             'total_free_bytes': str,
+            Optional('files'):
+                {Any():
+                    {Optional('size'): str,
+                     Optional('date'): str,
+                     Optional('permission'): str,
+                     Optional('index'): str,
+                     Optional('time'): str}
+                },
             },
         }
 
@@ -1118,6 +1126,29 @@ class Dir(DirSchema):
                     str(m.groupdict()['total_free_bytes'])
                 continue
         
+            # 20 -rw-r--r-- 1   773 May 10  2017 cvac.log
+            # 15 lrwxrwxrwx 1    12 May 10  2017 config -> /misc/config
+            # 11 drwx------ 2 16384 Mar 28 12:23 lost+found
+            p3 = re.compile(r'^\s*(?P<index>[0-9]+) +(?P<permission>[a-z\-]+) '
+                '+(?P<unknown>[0-9]+) +(?P<size>[0-9]+) +(?P<month>[a-zA-Z]+) '
+                '+(?P<day>[0-9]+) +(?P<year>[0-9\:]+) '
+                '+(?P<file>[a-zA-Z0-9\.\/\_\-\+\>\s]+)$')
+            m = p3.match(line)
+            if m:
+                file = m.groupdict()['file']
+                date = m.groupdict()['month'].strip() \
+                    + ' ' + m.groupdict()['day'].strip() + ' ' \
+                    + m.groupdict()['year'].strip()
+                if 'files' not in dir_dict['dir']:
+                    dir_dict['dir']['files'] = {}
+                dir_dict['dir']['files'][file] = {}
+                dir_dict['dir']['files'][file]['size'] = m.groupdict()['size']
+                dir_dict['dir']['files'][file]['permission'] = \
+                    m.groupdict()['permission']
+                dir_dict['dir']['files'][file]['index'] = m.groupdict()['index']
+                dir_dict['dir']['files'][file]['date'] = date
+                continue
+
         return dir_dict
 
 # vim: ft=python et sw=4

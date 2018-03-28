@@ -992,9 +992,32 @@ class test_dir(unittest.TestCase):
 
     golden_parsed_output1 = {
         'dir': {
-            'dir_name': '/misc/scratch',
+            'total_free_bytes': '939092 kbytes',
+            'files':
+                {'pnet_cfg.log':
+                    {'permission': '-rw-r--r--', 'date': 'May 10 2017', 'index': '14', 'size': '10429'},
+                 'status_file':
+                    {'permission': '-rw-r--r--', 'date': 'May 10 13:15', 'index': '18', 'size': '2458'},
+                 'nvgen_traces':
+                    {'permission': 'drwxr-xr-x', 'date': 'May 10 14:02', 'index': '16353', 'size': '4096'},
+                 'clihistory':
+                    {'permission': 'drwx------', 'date': 'May 10 2017', 'index': '8177', 'size': '4096'},
+                 'core':
+                    {'permission': 'drwxr-xr-x', 'date': 'May 10 2017', 'index': '12', 'size': '4096'},
+                 'cvac.log':
+                    {'permission': '-rw-r--r--', 'date': 'May 10 2017', 'index': '20', 'size': '773'},
+                 'kim':
+                    {'permission': 'drwxr-xr-x', 'date': 'May 10 2017', 'index': '8178', 'size': '4096'},
+                 'config -> /misc/config':
+                    {'permission': 'lrwxrwxrwx', 'date': 'May 10 2017', 'index': '15', 'size': '12'},
+                 'ztp':
+                    {'permission': 'drwxr-xr-x', 'date': 'May 10 13:41', 'index': '8179', 'size': '4096'},
+                 'lost+found':
+                    {'permission': 'drwx------', 'date': 'May 10 2017', 'index': '11', 'size': '16384'},
+                 'envoke_log':
+                    {'permission': '-rw-r--r--', 'date': 'May 10 2017', 'index': '13', 'size': '1438'}},
             'total_bytes': '1012660 kbytes',
-            'total_free_bytes': '939092 kbytes'}}
+            'dir_name': '/misc/scratch'}}
 
     golden_output1 = {'execute.return_value': '''
         Directory of /misc/scratch
@@ -1027,6 +1050,67 @@ class test_dir(unittest.TestCase):
         2562719744 bytes total (1918621184 bytes free)
         '''}
 
+    golden_parsed_output3 = {
+        'dir':
+            {'dir_name': '/misc/scratch',
+             'total_bytes': '1012660 kbytes',
+             'total_free_bytes': '938440 kbytes',
+             'files':
+                {'fake_config.tcl':
+                    {'date': 'Mar 22 08:47', 'index': '39', 'permission': '-rwxr--r--', 'size': '0'},
+                 'cvac':
+                    {'date': 'Mar 7 14:29', 'index': '16353', 'permission': 'drwxrwxrwx', 'size': '4096'},
+                 'nvgen_traces':
+                    {'date': 'Mar 7 07:22', 'index': '16354', 'permission': 'drwxr-xr-x', 'size': '4096'},
+                 'ztp':
+                    {'date': 'Mar 7 07:01', 'index': '8179', 'permission': 'drwxr-xr-x', 'size': '4096'},
+                 'lost+found':
+                    {'date': 'Mar 7 14:26', 'index': '11', 'permission': 'drwx------', 'size': '16384'},
+                 'config -> /misc/config':
+                    {'date': 'Mar 7 14:26', 'index': '15', 'permission': 'lrwxrwxrwx', 'size': '12'},
+                 'clihistory':
+                    {'date': 'Mar 7 14:27', 'index': '8177', 'permission': 'drwx---r-x', 'size': '4096'},
+                 'core':
+                    {'date': 'Mar 7 14:26', 'index': '12', 'permission': 'drwxr-xr-x', 'size': '4096'},
+                 'cvac.log':
+                    {'date': 'Mar 7 06:29', 'index': '32', 'permission': '-rw-rw-rw-', 'size': '824'},
+                 'status_file':
+                    {'date': 'Mar 12 14:35', 'index': '41', 'permission': '-rw-r--r--', 'size': '1985'},
+                 'kim':
+                    {'date': 'Mar 7 14:27', 'index': '8178', 'permission': 'drwxr-xr-x', 'size': '4096'},
+                 'oor_aware_process':
+                    {'date': 'Mar 7 06:34', 'index': '16', 'permission': '-rw-r--r--', 'size': '98'},
+                 'fake_config_2.tcl':
+                    {'date': 'Mar 22 08:58', 'index': '43', 'permission': '-rwxr--r--', 'size': '0'},
+                 '.python-history':
+                    {'date': 'Mar 20 11:08', 'index': '42', 'permission': '-rw-------', 'size': '0'},
+                 'pnet_cfg.log':
+                    {'date': 'Mar 7 14:26', 'index': '14', 'permission': '-rw-r--r--', 'size': '10429'},
+                 'envoke_log':
+                    {'date': 'Mar 7 14:26', 'index': '13', 'permission': '-rw-r--r--', 'size': '1438'}}}}
+
+    golden_output3 = {'execute.return_value': '''
+        Directory of /misc/scratch
+           32 -rw-rw-rw- 1   824 Mar  7 06:29 cvac.log
+           43 -rwxr--r-- 1     0 Mar 22 08:58 fake_config_2.tcl
+           41 -rw-r--r-- 1  1985 Mar 12 14:35 status_file
+           13 -rw-r--r-- 1  1438 Mar  7 14:26 envoke_log
+           16 -rw-r--r-- 1    98 Mar  7 06:34 oor_aware_process
+         8178 drwxr-xr-x 2  4096 Mar  7 14:27 kim
+         8177 drwx---r-x 2  4096 Mar  7 14:27 clihistory
+           15 lrwxrwxrwx 1    12 Mar  7 14:26 config -> /misc/config
+           39 -rwxr--r-- 1     0 Mar 22 08:47 fake_config.tcl
+           12 drwxr-xr-x 2  4096 Mar  7 14:26 core
+           14 -rw-r--r-- 1 10429 Mar  7 14:26 pnet_cfg.log
+           11 drwx------ 2 16384 Mar  7 14:26 lost+found
+         8179 drwxr-xr-x 8  4096 Mar  7 07:01 ztp
+           42 -rw------- 1     0 Mar 20 11:08 .python-history
+        16354 drwxr-xr-x 2  4096 Mar  7 07:22 nvgen_traces
+        16353 drwxrwxrwx 3  4096 Mar  7 14:29 cvac
+
+        1012660 kbytes total (938440 kbytes free)
+        '''}
+
     def test_dir_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
@@ -1040,6 +1124,13 @@ class test_dir(unittest.TestCase):
         dir_obj2 = Dir(device=self.device)
         parsed_output2 = dir_obj2.parse()
         self.assertEqual(parsed_output2,self.golden_parsed_output2)
+
+    def test_dir_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        dir_obj3 = Dir(device=self.device)
+        parsed_output3 = dir_obj3.parse()
+        self.assertEqual(parsed_output3,self.golden_parsed_output3)
 
     def test_dir_empty(self):
         self.device = Mock(**self.empty_output)
