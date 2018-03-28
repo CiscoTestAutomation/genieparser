@@ -470,7 +470,7 @@ class ShowInstallActiveSchema(MetaParser):
     schema = {'boot_images':
                 {Optional('kickstart_image'): str,
                  Optional('system_image'): str},
-              'active_packages':
+              Optional('active_packages'):
                 {Any():
                   {Optional('active_package_name'): str}
                 },

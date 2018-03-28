@@ -274,7 +274,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                          'detected +flag +(?P<topology_detected_flag>[\w\s]+)$')
 
         p6 = re.compile(r'^Number +of +topology +changes +(?P<topology_changes>\d+) +'
-                         'last +change +occurred +(?P<time_since_topology_change>[\w\.\:]+) +ago$')
+                         'last +change +occurred +(?P<time_since_topology_change>[\w\.\:]+)( +ago)?$')
 
         p7 = re.compile(r'^from +(?P<topology_from_port>[\w\.\/\-]+)$')
 
