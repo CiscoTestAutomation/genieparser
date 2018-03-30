@@ -306,7 +306,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
 
         p15 = re.compile(r'^Designated +port +id +is +(?P<designated_port_id>[\w\.]+), +'
                           'designated +path +cost +(?P<designated_path_cost>\d+)'
-                          '( +[\w\s]+)?$')
+                          '( +[\w\s\,]+)?$')
 
         p16 = re.compile(r'^Timers: +message +age +(?P<message_age>\d+), +'
                           'forward +delay +(?P<forward_delay>\d+), +hold +(?P<hold>\d+)$')

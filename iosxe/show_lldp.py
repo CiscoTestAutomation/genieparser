@@ -80,7 +80,7 @@ class ShowLldpEntrySchema(MetaParser):
     """Schema for show lldp entry [<WORD>|*]"""
     schema = {
         'total_entries': int,
-        'interfaces': {
+        Optional('interfaces'): {
             Any(): {
                 'if_name': str,
                 'neighbors': {
