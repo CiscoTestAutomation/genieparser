@@ -9459,40 +9459,40 @@ class ShowBgpL2vpnEvpnSummarySchema(MetaParser):
         'instance': {
             Any(): {
                 'vrf': {
-                    Any(): { # Ops Str 'default'
-                        'vrf_name_out': str, # Ops Str 'defaut'
-                        'vrf_router_id': str, # Ops Str '201.11.11.11'
-                        'vrf_local_as': int, # Ops Int 100
+                    Any(): { 
+                        'vrf_name_out': str, 
+                        'vrf_router_id': str,
+                        'vrf_local_as': int, 
                         'address_family': {
-                            Any(): { # Ops Str 'l2vpn evpn'
-                                'tableversion': int, # Ops Int 155
-                                'configuredpeers': int, # Ops Int 2
-                                'capablepeers': int, # Ops Int 2
-                                'totalnetworks': int, # Ops Int 32
-                                'totalpaths': int, # Ops Int 32
-                                'memoryused': int, # Ops Int 5708
-                                'numberattrs': int, # Ops Int 20
-                                'bytesattrs': int, # Ops Int 3200
-                                'numberpaths': int, # Ops Int 0
-                                'bytespaths': int, # Ops Int 0
-                                'numbercommunities': int, # Ops Int 1
+                            Any(): { 
+                                'tableversion': int, 
+                                'configuredpeers': int, 
+                                'capablepeers': int, 
+                                'totalnetworks': int, 
+                                'totalpaths': int, 
+                                'memoryused': int, 
+                                'numberattrs': int,
+                                'bytesattrs': int, 
+                                'numberpaths': int,
+                                'bytespaths': int, 
+                                'numbercommunities': int, 
                                 'bytescommunities': int,
-                                'mumberclusterlist': int, # Ops Int 3
-                                'bytesclusterlist': int, # Ops Int 12
-                                'dampening': str, # Ops Str 'disabled'
+                                'numberclusterlist': int, 
+                                'bytesclusterlist': int, 
+                                'dampening': str, 
                                 'neighbor': {
                                     Any(): {
-                                        'neighborid': str, # Ops Str '191.13.1.8'
-                                        'neighborversion': int, # Ops Int 4
-                                        'msgrecvd': int, # Ops Int 131
-                                        'msgsent': int, # Ops Int 139
-                                        'neighbortableversion': int, # Ops Int 155
-                                        'inq': int, # Ops Int 0
-                                        'outq': int, # Ops Int 0
-                                        'neighboras': int, # Ops Int 200
-                                        'time': str, # Ops Str '02:05:10'
-                                        'state': str, # Ops Str 'established'
-                                        'prefixreceived': int, # Ops Int 0
+                                        'neighbor': str, 
+                                        'version': int, 
+                                        'msgrecvd': int, 
+                                        'msgsent': int, 
+                                        'neighbortableversion': int, 
+                                        'inq': int, 
+                                        'outq': int, 
+                                        'remoteas': int, 
+                                        'time': str, 
+                                        'state': str,
+                                        'prefixreceived': int, 
                                     }
                                 }
                             }
@@ -9511,7 +9511,7 @@ class ShowBgpL2vpnEvpnSummary(ShowBgpL2vpnEvpnSummarySchema):
         show bgp l2vpn evpn summary"""
 
     def cli(self):
-        out = self.device.execute('show bgp l2route evpn summary')
+        out = self.device.execute('show bgp l2vpn evpn summary')
 
         result_dict = {}
         # BGP summary information for VRF default, address family L2VPN EVPN
@@ -9538,7 +9538,7 @@ class ShowBgpL2vpnEvpnSummary(ShowBgpL2vpnEvpnSummarySchema):
                         ' +BGP +AS +path +entries +\[(?P<numberpaths>[\d]+)\/(?P<bytespaths>[\d]+)\]$')
 
         p6 = re.compile(r'^\s*BGP +community +entries +\[(?P<numbercommunities>[\d]+)\/(?P<bytescommunities>[\d]+)\],'
-                        ' +BGP +clusterlist +entries +\[(?P<mumberclusterlist>[\d]+)\/(?P<bytesclusterlist>[\d]+)\]$')
+                        ' +BGP +clusterlist +entries +\[(?P<numberclusterlist>[\d]+)\/(?P<bytesclusterlist>[\d]+)\]$')
 
         p7 = re.compile(
             r'^\s*(?P<neighborid>[\d\.]+) +(?P<neighborversion>[\d]+) +(?P<neighboras>[\d]+) +(?P<msgrecvd>[\d]+)'
@@ -9600,9 +9600,9 @@ class ShowBgpL2vpnEvpnSummary(ShowBgpL2vpnEvpnSummarySchema):
                 neighborid = group.pop('neighborid')
                 neighbor_dict = af_dict.setdefault('neighbor',{}).setdefault(neighborid, {})
 
-                neighbor_dict.update({'neighborid':neighborid})
-                neighbor_dict.update({'neighboras': int(group.pop('neighboras'))})
-                neighbor_dict.update({'neighborversion': int(group.pop('neighborversion'))})
+                neighbor_dict.update({'neighbor':neighborid})
+                neighbor_dict.update({'remoteas': int(group.pop('neighboras'))})
+                neighbor_dict.update({'version': int(group.pop('neighborversion'))})
                 neighbor_dict.update({'msgrecvd': int(group.pop('msgrecvd'))})
                 neighbor_dict.update({'msgsent': int(group.pop('msgsent'))})
                 neighbor_dict.update({'neighbortableversion': int(group.pop('neighbortableversion'))})
@@ -9631,9 +9631,9 @@ class ShowBgpL2vpnEvpnRouteTypeSchema(MetaParser):
                             Any(): {
                                 'rd': {
                                     Any(): {
-                                        Optional('rd'): str,  # Ops Str '11.0.0.55:27001' <<<<<
-                                        Optional('rd_vrf'): str,  # Ops Str 'l2' <<<<<
-                                        Optional('rd_vniid'): int,  # Ops Int 25000 <<<<<
+                                        Optional('rd'): str,
+                                        Optional('rd_vrf'): str,
+                                        Optional('rd_vniid'): int,
                                         'prefix': {
                                             Any(): {
                                                 'nonipprefix': str,
@@ -9749,15 +9749,14 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
                 group = m.groupdict()
                 instance = 'default'
                 vrf_name_out = group.pop('vrf_name_out')
-                bgp_dict = result_dict.setdefault('instance', {}).setdefault(instance, {}).\
-                                       setdefault('vrf', {}).setdefault(vrf_name_out,{})
                 af_name = group.get('af_name').lower()
-                af_dict = bgp_dict.setdefault('address_family',{}).setdefault(af_name,{})
                 continue
 
             m = p2.match(line)
             if m:
                 group = m.groupdict()
+                bgp_dict = result_dict.setdefault('instance', {}).setdefault(instance, {}).\
+                                                setdefault('vrf', {}).setdefault(vrf_name_out, {})
                 af_dict = bgp_dict.setdefault('address_family', {}).setdefault(af_name, {})
                 rd = group.pop('rd')
                 rd_dict = af_dict.setdefault('rd',{}).setdefault(rd,{})
@@ -9882,124 +9881,124 @@ class ShowBgpL2vpnEvpnNeighborsSchema(MetaParser):
         'instance': {
             Any(): {
                 'vrf': {
-                    Any(): { # Ops Str 'default' (hardcode)
+                    Any(): { 
                         'address_family': {
-                            Any(): { # Ops Str 'l2vpn evpn' (hardcode. comes from CLI)
-                                'neighbors': {
-                                    Any(): { # Ops Str '191.13.1.8'
-                                        'neighbor': str, # Ops Str '191.13.1.8'
-                                        'remoteas': int, # Ops Int 200
-                                        Optional('localas'): int, # Ops Int
-                                        'link': str, # Ops Str 'ebgp'
-                                        'index': int, # Ops Int 3
-                                        'version': int, # Ops Int 4
-                                        'remote_id': str, # Ops Str '201.33.33.33'
-                                        'state': str, # Ops Str 'established'
-                                        'up': bool, # Ops Bool True
-                                        'elapsedtime': str, # Ops Str '02:12:22'
-                                        Optional('connectedif'): str, # Ops Str 'Ethernet1/6'
-                                        Optional('bfd'): bool, # Ops Bool True
-                                        Optional('ttlsecurity'): bool, # Ops Bool False
-                                        Optional('password'): bool, # Ops Bool True
-                                        Optional('passiveonly'): bool, # Ops Bool False
-                                        Optional('localas_inactive'): bool, # Ops Bool False
-                                        Optional('remote_privateas'): bool, # Ops Bool False
-                                        'lastread': str, # Ops Str '00:00:20'
-                                        'holdtime': int, # Ops Int 180
-                                        'keepalivetime': int, # Ops Int 60
-                                        'lastwrite': str, # Ops Str '00:00:50'
-                                        'keepalive': str, # Ops Str '00:00:09'
-                                        'msgrecvd': int, # Ops Int 138
-                                        'notificationsrcvd': int, # Ops Int 0
-                                        'recvbufbytes': int, # Ops Int 0
-                                        'msgsent': int, # Ops Int 146
-                                        'notificationssent': int, # Ops Int 0
-                                        'sentbytesoutstanding': int, # Ops Int 0
-                                        Optional('totalbytessent'): int, # Ops Int 0
-                                        'connsestablished': int, # Ops Int 1
-                                        'connsdropped': int, # Ops Int 0
-                                        Optional('resettime'): str, # Ops Str 'never'
-                                        Optional('resetreason'): str, # Ops Str 'no error'
-                                        Optional('peerresettime'): str, # Ops Str 'never'
-                                        Optional('peerresetreason'): str, # Ops Str 'no error'
-                                        Optional('capsnegotiated'): bool, # Ops Bool False
-                                        'capmpadvertised': bool, # Ops Bool True
-                                        'caprefreshadvertised': bool, # Ops Bool True
-                                        'capgrdynamicadvertised': bool, # Ops Bool True
-                                        'capmprecvd': bool, # Ops Bool True
-                                        'caprefreshrecvd': bool, # Ops Bool True
-                                        'capgrdynamicrecvd': bool, # Ops Bool True
-                                        'capolddynamicadvertised': bool, # Ops Bool True
-                                        'capolddynamicrecvd': bool, # Ops Bool True
-                                        'caprradvertised': bool, # Ops Bool True
-                                        'caprrrecvd': bool, # Ops Bool True
-                                        'capoldrradvertised': bool, # Ops Bool True
-                                        'capoldrrrecvd': bool, # Ops Bool True
-                                        'capas4advertised': bool, # Ops Bool True
-                                        'capas4recvd': bool, # Ops Bool True
+                            Any(): { 
+                                'neighbor': {
+                                    Any(): {
+                                        'neighbor': str, 
+                                        'remoteas': int, 
+                                        Optional('localas'): int,
+                                        'link': str, 
+                                        'index': int, 
+                                        'version': int, 
+                                        'remote_id': str, 
+                                        'state': str, 
+                                        'up': bool, 
+                                        'elapsedtime': str, 
+                                        Optional('connectedif'): str,
+                                        Optional('bfd'): bool,
+                                        Optional('ttlsecurity'): bool, 
+                                        Optional('password'): bool,
+                                        Optional('passiveonly'): bool,
+                                        Optional('localas_inactive'): bool,
+                                        Optional('remote_privateas'): bool,
+                                        'lastread': str, 
+                                        'holdtime': int, 
+                                        'keepalivetime': int, 
+                                        'lastwrite': str,
+                                        'keepalive': str,
+                                        'msgrecvd': int, 
+                                        'notificationsrcvd': int,
+                                        'recvbufbytes': int, 
+                                        'msgsent': int, 
+                                        'notificationssent': int, 
+                                        'sentbytesoutstanding': int,
+                                        Optional('totalbytessent'): int, 
+                                        'connsestablished': int,
+                                        'connsdropped': int, 
+                                        Optional('resettime'): str,
+                                        Optional('resetreason'): str, 
+                                        Optional('peerresettime'): str, 
+                                        Optional('peerresetreason'): str,
+                                        Optional('capsnegotiated'): bool,
+                                        'capmpadvertised': bool, 
+                                        'caprefreshadvertised': bool, 
+                                        'capgrdynamicadvertised': bool,
+                                        'capmprecvd': bool,
+                                        'caprefreshrecvd': bool, 
+                                        'capgrdynamicrecvd': bool, 
+                                        'capolddynamicadvertised': bool, 
+                                        'capolddynamicrecvd': bool, 
+                                        'caprradvertised': bool, 
+                                        'caprrrecvd': bool, 
+                                        'capoldrradvertised': bool, 
+                                        'capoldrrrecvd': bool, 
+                                        'capas4advertised': bool, 
+                                        'capas4recvd': bool, 
                                         'af': {
-                                            Any(): { # Ops Str 'l2vpn evpn'
-                                                'af_advertised': bool, # Ops Bool True
-                                                'af_recvd': bool, # Ops Bool True
-                                                'af_name': str, # Ops Str 'l2vpn evpn'
+                                            Any(): { 
+                                                'af_advertised': bool, 
+                                                'af_recvd': bool, 
+                                                'af_name': str, 
                                             }
                                         },
-                                        'capgradvertised': bool, # Ops Bool True
-                                        'capgrrecvd': bool, # Ops Bool True
-                                        'graf': {
-                                            Any(): { # Ops Str 'l2vpn evpn'
-                                                'gr_af_name': str, # Ops Str 'l2vpn evpn'
-                                                'gr_adv': bool, # Ops Bool True
-                                                'gr_recv': bool, # Ops Bool True
-                                                'gr_fwd': bool, # Ops Bool False
+                                        'capgradvertised': bool, 
+                                        'capgrrecvd': bool, 
+                                        Optional('graf'): {
+                                            Any(): { 
+                                                Optional('gr_af_name'): str,
+                                                Optional('gr_adv'): bool,
+                                                Optional('gr_recv'): bool,
+                                                Optional('gr_fwd'): bool,
                                             }
                                         },
-                                        'grrestarttime': int, # Ops Int 120
-                                        'grstaletiem': int, # Ops Int 300
-                                        'grrecvdrestarttime': int, # Ops Int 120
-                                        'capextendednhadvertised': bool, # Ops Bool True
-                                        'capextendednhrecvd': bool, # Ops Bool True
-                                        'capextendednhaf': {
-                                            Any(): { # Ops Str 'ipv4 unicast'
-                                                'capextendednh_af_name': str, # Ops Str 'ipv4 unicast'
+                                        'grrestarttime': int, 
+                                        'grstaletiem': int,
+                                        'grrecvdrestarttime': int,
+                                        'capextendednhadvertised': bool, 
+                                        'capextendednhrecvd': bool, 
+                                        Optional('capextendednhaf'): {
+                                            Any(): { 
+                                                Optional('capextendednh_af_name'): str,
                                             }
                                         },
-                                        Optional('epe'): bool, # Ops Bool False
-                                        Optional('firstkeepalive'): bool, # Ops Bool False
-                                        'openssent': int, # Ops Int 1
-                                        'opensrecvd': int, # Ops Int 1
-                                        'updatessent': int, # Ops Int 70
-                                        'updatesrecvd': int, # Ops Int 1
-                                        'keepalivesent': int, # Ops Int 129
-                                        'keepaliverecvd': int, # Ops Int 134
-                                        'rtrefreshsent': int, # Ops Int 0
-                                        'rtrefreshrecvd': int, # Ops Int 0
-                                        'capabilitiessent': int, # Ops Int 2
-                                        'capabilitiesrecvd': int, # Ops Int 2
-                                        'bytessent': int, # Ops Int 10398
-                                        'bytesrecvd': int, # Ops Int 2614
+                                        Optional('epe'): bool, 
+                                        Optional('firstkeepalive'): bool, 
+                                        'openssent': int, 
+                                        'opensrecvd': int, 
+                                        'updatessent': int,
+                                        'updatesrecvd': int, 
+                                        'keepalivesent': int, 
+                                        'keepaliverecvd': int,
+                                        'rtrefreshsent': int, 
+                                        'rtrefreshrecvd': int,
+                                        'capabilitiessent': int, 
+                                        'capabilitiesrecvd': int,
+                                        'bytessent': int,
+                                        'bytesrecvd': int,
                                         'peraf': {
-                                            Any(): { # Ops Str 'l2vpn evpn'
-                                                'per_af_name': str, # Ops Str 'l2vpn evpn'
-                                                'tableversion': int, # Ops Int 191
-                                                'neighbortableversion': int, # Ops Int 191
-                                                Optional('pfxrecvd'): int, # Ops Int 0
-                                                Optional('pfxbytes'): int, # Ops Int 0
-                                                Optional('insoftreconfigallowed'): bool, # Ops Bool False
-                                                Optional('sendcommunity'): bool, # Ops Bool True
-                                                Optional('sendextcommunity'): bool, # Ops Bool True
-                                                Optional('asoverride'): bool, # Ops Bool False
-                                                Optional('peerascheckdisabled'): bool, # Ops Bool False
-                                                Optional('rrconfigured'): bool, # Ops Bool False
-                                                Optional('pfxbytes'): int, # Ops Int 5
+                                            Any(): { 
+                                                'per_af_name': str, 
+                                                'tableversion': int,
+                                                'neighbortableversion': int,
+                                                Optional('pfxrecvd'): int,
+                                                Optional('pfxbytes'): int,
+                                                Optional('insoftreconfigallowed'): bool, 
+                                                Optional('sendcommunity'): bool, 
+                                                Optional('sendextcommunity'): bool, 
+                                                Optional('asoverride'): bool, 
+                                                Optional('peerascheckdisabled'): bool, 
+                                                Optional('rrconfigured'): bool, 
+                                                Optional('pfxbytes'): int, 
 
                                             }
                                         },
-                                        'localaddr': str, # Ops Str '191.13.1.6'
-                                        'localport': int, # Ops Int 179
-                                        'remoteaddr': str, # Ops Str '191.13.1.8'
-                                        'remoteport': int, # Ops Int 52715
-                                        'fd': int, # Ops Int 84
+                                        'localaddr': str, 
+                                        'localport': int, 
+                                        'remoteaddr': str, 
+                                        'remoteport': int, 
+                                        'fd': int, 
                                     }
                                 }
                             }
@@ -10021,8 +10020,7 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
         out = self.device.execute('show bgp l2vpn evpn neighbors')
 
         result_dict = {}
-        gr_adv = ""
-        recieve_flag = gr_flag =False
+        recieve_flag = gr_adv_flag = gr_recv_flag = gr_fwd_flag = False
         # BGP neighbor is 191.13.1.8, remote AS 200, ebgp link, Peer index 3
         # BGP version 4, remote router ID 201.33.33.33
         # BGP state = Idle, down for 4w6d, retry in 0.000000
@@ -10114,7 +10112,7 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
         p20 = re.compile(r'^\s*Graceful Restart capability: +(?P<capgradvertised>[\w]+)( +(?P<capgrrecvd>[\w]+))?$')
         p20_1 = re.compile(r'^\s*Graceful Restart Parameters:$')
         p21 = re.compile(r'^\s*Address families advertised to peer:$')
-        p22 = re.compile(r'^\s*(?P<space>\s{4})(?P<gr_af_name>[L][\w\s]+)$')
+        p22 = re.compile(r'^(?P<space>\s{4})((?P<gr_af_name>(?!Sent)[\w].*)+)$')
         p23 = re.compile(r'^\s*Address families received from peer:$')
         p24_1 = re.compile(r'^\s*Forwarding state preserved by peer for:$')
         p25 = re.compile(r'^\s*Restart time advertised to peer: +(?P<grrestarttime>[\d]+) +seconds$')
@@ -10122,7 +10120,7 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
         p27 = re.compile(r'^\s*Restart time advertised by peer: +(?P<grrecvdrestarttime>[\d]+) +seconds$')
         p28 = re.compile(r'^\s*Extended Next Hop Encoding Capability: +(?P<capextendednhadvertised>[\w]+)( +(?P<capextendednhrecvd>[\w]+))?$')
         p29 = re.compile(r'^\s*Receive IPv6 next hop encoding Capability for AF:$')
-        p30 = re.compile(r'^\s*(?P<space>\s{4})(?P<capextendednh_af_name>[IP|ip][\w\s]+)$')
+        p30 = re.compile(r'^\s*(?P<space>\s{4})(?P<capextendednh_af_name>[\w\s]+)$')
         p31 = re.compile(r'^\s*Opens: +(?P<openssent>[\d]+) +(?P<opensrecvd>[\d]+)$')
         p32 = re.compile(r'^\s*Notifications: +(?P<notificationssent>[\d]+) +(?P<notificationsrcvd>[\d]+)$')
         p33 = re.compile(r'^\s*Updates: +(?P<updatessent>[\d]+) +(?P<updatesrecvd>[\d]+)$')
@@ -10161,7 +10159,7 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
                 af_name = 'l2vpn evpn'
                 af_dict = bgp_dict.setdefault('address_family',{}).setdefault(af_name,{})
                 neighbor = group.get('neighbor')
-                neighbor_dict = af_dict.setdefault('neighbors',{}).setdefault(neighbor,{})
+                neighbor_dict = af_dict.setdefault('neighbor',{}).setdefault(neighbor,{})
                 for k, v in group.items():
                     if v.isdigit():
                         neighbor_dict.update({k:int(v)})
@@ -10274,10 +10272,14 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
                 group = m.groupdict()
                 af = group.pop('af_name').lower()
                 af_dict = neighbor_dict.setdefault('af',{}).setdefault(af,{})
-                if group.get('af_advertised').strip() == 'advertised':
+                if group.get('af_advertised') and group.get('af_advertised').strip() == 'advertised':
                     af_dict.update({'af_advertised':True})
+                else:
+                    af_dict.update({'af_advertised': False})
                 if group.get('af_recvd') and  group.get('af_recvd').strip() == 'received':
                     af_dict.update({'af_recvd':True})
+                else:
+                    af_dict.update({'af_recvd': False})
 
                 af_dict.update({'af_name':af})
                 continue
@@ -10291,35 +10293,48 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
 
             m = p20_1.match(line)
             if m:
-                gr_dict = neighbor_dict.setdefault('graf',{})
                 gr_flag = True
                 continue
 
             m = p21.match(line)
             if m:
-                gr_adv = True
+                gr_adv_flag = True
                 continue
 
             m = p22.match(line)
             if m:
                 if gr_flag:
                     group = m.groupdict()
-                    gr_af_name = group.pop('gr_af_name').lower()
-                    graf_dict = gr_dict.setdefault(gr_af_name,{})
-                    graf_dict.update({'gr_af_name':gr_af_name})
-                    if gr_adv:
-                        graf_dict.update({'gr_adv': True})
-                gr_flag = False
+                    gr_dict = neighbor_dict.setdefault('graf', {})
+                    gr_af_name_list = group.pop('gr_af_name').split("  ")
+                    for gr_af in gr_af_name_list:
+                        gr_af_name  = gr_af.lower()
+                        graf_dict = gr_dict.setdefault(gr_af_name,{})
+                        graf_dict.update({'gr_af_name':gr_af_name})
+                        if gr_adv_flag:
+                            graf_dict.update({'gr_adv': True})
+                        if gr_recv_flag:
+                            graf_dict.update({'gr_recv': True})
+                        if gr_fwd_flag:
+                            graf_dict.update({'gr_fwd': True})
+                if recieve_flag:
+                    group = m.groupdict()
+                    capextendednh_af_name = group.pop('gr_af_name').lower()
+                    cap_dict = neighbor_dict.setdefault('capextendednhaf',{}).setdefault(capextendednh_af_name,{})
+                    cap_dict.update({'capextendednh_af_name': capextendednh_af_name})
+
+                recieve_flag = gr_recv_flag = gr_adv_flag = gr_fwd_flag = False
                 continue
 
             m = p23.match(line)
             if m:
-                graf_dict.update({'gr_recv': True})
+
+                gr_recv_flag = True
                 continue
 
             m = p24_1.match(line)
             if m:
-                graf_dict.update({'gr_fwd': True})
+                gr_fwd_flag = True
                 continue
 
             m = p25.match(line)
@@ -10353,18 +10368,8 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
 
             m = p29.match(line)
             if m:
+                gr_recv_flag = gr_adv_flag = gr_fwd_flag = False
                 recieve_flag = True
-                continue
-
-            m = p30.match(line)
-            if m:
-
-                if recieve_flag:
-                    group = m.groupdict()
-                    capextendednh_af_name = group.pop('capextendednh_af_name').lower()
-                    cap_dict = neighbor_dict.setdefault('capextendednhaf',{}).setdefault(capextendednh_af_name,{})
-                    cap_dict.update({'capextendednh_af_name': capextendednh_af_name})
-                recieve_flag = False
                 continue
 
             m3 = ""

@@ -23197,32 +23197,32 @@ class test_show_bgp_l2vpn_evpn_summary(unittest.TestCase):
                                 'bytespaths': 0,
                                 'numbercommunities': 1,
                                 'bytescommunities': 32,
-                                'mumberclusterlist': 3,
+                                'numberclusterlist': 3,
                                 'bytesclusterlist': 12,
                                 'dampening': 'disabled',
                                 'neighbor': {
                                     '191.13.1.8': {
-                                        'neighborid': '191.13.1.8',
-                                        'neighborversion': 4,
+                                        'neighbor': '191.13.1.8',
+                                        'version': 4,
                                         'msgrecvd': 130,
                                         'msgsent': 139,
                                         'neighbortableversion': 155,
                                         'inq': 0,
                                         'outq': 0,
-                                        'neighboras': 200,
+                                        'remoteas': 200,
                                         'time': '02:05:01',
                                         'state': 'established',
                                         'prefixreceived': 0,
                                     },
                                     '211.1.1.1':{
-                                        'neighborid': '211.1.1.1',
-                                        'neighborversion': 4,
+                                        'neighbor': '211.1.1.1',
+                                        'version': 4,
                                         'msgrecvd': 182,
                                         'msgsent': 128,
                                         'neighbortableversion': 155,
                                         'inq': 0,
                                         'outq': 0,
-                                        'neighboras': 100,
+                                        'remoteas': 100,
                                         'time': '01:42:47',
                                         'state': 'established',
                                         'prefixreceived': 12,
@@ -23832,6 +23832,12 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
             191.13.1.8
     '''}
 
+    golden_output_no_rd = {'execute.return_value': '''
+        TOR1# show bgp l2vpn evpn route-type 1
+        BGP routing table information for VRF default, address family L2VPN EVPN
+        TOR1# E
+    '''}
+
     def test_show_l2route_route_type_4(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -23854,6 +23860,14 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
         parsed_output = obj.parse(route_type=1)
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
+    def test_show_l2route_route_type_no_rd(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_no_rd)
+        obj = ShowBgpL2vpnEvpnRouteType(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(route_type=1)
+
+
     def test_show_route_type_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpL2vpnEvpnRouteType(device=self.device)
@@ -23875,7 +23889,7 @@ class test_show_bgp_l2vpn_evpn_neighbors(unittest.TestCase):
                     'default': {  # Ops Str 'default'
                         'address_family': {
                             'l2vpn evpn': {  # Ops Str 'l2vpn evpn'
-                                'neighbors': {
+                                'neighbor': {
                                     '191.13.1.8': {  # Ops Str '191.13.1.8'
                                         'neighbor': '191.13.1.8',  # Ops Str '191.13.1.8'
                                         'remoteas': 200,  # Ops Int 200
@@ -23917,64 +23931,64 @@ class test_show_bgp_l2vpn_evpn_neighbors(unittest.TestCase):
                                         'caprradvertised': True,  # Ops Bool True
                                         'caprrrecvd': True,  # Ops Bool True
                                         'capoldrradvertised': True,  # Ops Bool True
-                                        'capoldrrrecvd': True,  # Ops Bool True
-                                        'capas4advertised': True,  # Ops Bool True
-                                        'capas4recvd': True,  # Ops Bool True
+                                        'capoldrrrecvd': True,
+                                        'capas4advertised': True,
+                                        'capas4recvd': True,
                                         'af': {
-                                            'l2vpn evpn': {  # Ops Str 'l2vpn evpn'
-                                                'af_advertised': True,  # Ops Bool True
-                                                'af_recvd': True,  # Ops Bool True
-                                                'af_name': 'l2vpn evpn',  # Ops Str 'l2vpn evpn'
+                                            'l2vpn evpn': {
+                                                'af_advertised': True,
+                                                'af_recvd': True,
+                                                'af_name': 'l2vpn evpn',
                                             }
                                         },
-                                        'capgradvertised': True,  # Ops Bool True
-                                        'capgrrecvd': True,  # Ops Bool True
+                                        'capgradvertised': True,
+                                        'capgrrecvd': True,
                                         'graf': {
-                                            'l2vpn evpn': {  # Ops Str 'l2vpn evpn'
-                                                'gr_af_name': 'l2vpn evpn',  # Ops Str 'l2vpn evpn'
-                                                'gr_adv': True,  # Ops Bool True
-                                                'gr_recv': True,  # Ops Bool True
-                                                'gr_fwd': True,  # Ops Bool False
+                                            'l2vpn evpn': {
+                                                'gr_af_name': 'l2vpn evpn',
+                                                'gr_adv': True,
+                                                'gr_recv': True,
+                                            },
+                                            'ipv4 unicast': {
+                                                'gr_af_name': 'ipv4 unicast',
+                                                'gr_adv': True,
                                             }
                                         },
-                                        'grrestarttime': 120,  # Ops Int 120
-                                        'grstaletiem': 300,  # Ops Int 300
-                                        'grrecvdrestarttime': 120,  # Ops Int 120
-                                        'capextendednhadvertised': True,  # Ops Bool True
-                                        'capextendednhrecvd': True,  # Ops Bool True
+                                        'grrestarttime': 120,
+                                        'grstaletiem': 300,
+                                        'grrecvdrestarttime': 120,
+                                        'capextendednhadvertised': True,
+                                        'capextendednhrecvd': True,
                                         'capextendednhaf': {
-                                            'ipv4 unicast': {  # Ops Str 'ipv4 unicast'
+                                            'ipv4 unicast': {
                                                 'capextendednh_af_name': 'ipv4 unicast',
                                             },
                                         },
-                                        'openssent': 1,  # Ops Int 1
-                                        'opensrecvd':1,  # Ops Int 1
-                                        'updatessent': 70,  # Ops Int 70
-                                        'updatesrecvd': 1,  # Ops Int 1
-                                        'keepalivesent': 129,  # Ops Int 129
-                                        'keepaliverecvd': 133,  # Ops Int 134
-                                        'rtrefreshsent': 0,  # Ops Int 0
-                                        'rtrefreshrecvd': 0,  # Ops Int 0
-                                        'capabilitiessent': 2,  # Ops Int 2
-                                        'capabilitiesrecvd': 2,  # Ops Int 2
-                                        'bytessent': 10398,  # Ops Int 10398
-                                        'bytesrecvd': 2595,  # Ops Int 2614
+                                        'openssent': 1,
+                                        'opensrecvd':1,
+                                        'updatessent': 70,
+                                        'updatesrecvd': 1,
+                                        'keepalivesent': 129,
+                                        'keepaliverecvd': 133,
+                                        'rtrefreshsent': 0,
+                                        'rtrefreshrecvd': 0,
+                                        'capabilitiessent': 2,
+                                        'capabilitiesrecvd': 2,
+                                        'bytessent': 10398,
+                                        'bytesrecvd': 2595,
                                         'peraf': {
-                                            'l2vpn evpn': {  # Ops Str 'l2vpn evpn'
-                                                'per_af_name': 'l2vpn evpn',  # Ops Str 'l2vpn evpn'
-                                                'tableversion': 191,  # Ops Int 191
-                                                'neighbortableversion': 191,  # Ops Int 191
-                                                'pfxrecvd': 0,  # Ops Int 0
-                                                'pfxbytes': 0,  # Ops Int 0
-                                                'sendcommunity': True,  # Ops Bool True
-                                                'sendextcommunity': True,  # Ops Bool True
-                                                #'rrconfigured': False,  # Ops Bool False
-                                                #'pfxbytes': 5,  # Ops Int 5
-
+                                            'l2vpn evpn': {
+                                                'per_af_name': 'l2vpn evpn',
+                                                'tableversion': 191,
+                                                'neighbortableversion': 191,
+                                                'pfxrecvd': 0,
+                                                'pfxbytes': 0,
+                                                'sendcommunity': True,
+                                                'sendextcommunity': True,
                                             }
                                         },
-                                        'localaddr': '191.13.1.6',  # Ops Str '191.13.1.6'
-                                        'localport': 179,  # Ops Int 179
+                                        'localaddr': '191.13.1.6',
+                                        'localport': 179,
                                         'remoteaddr': '191.13.1.8',
                                         'remoteport': 52715,
                                         'fd': 84,
@@ -24016,7 +24030,7 @@ BGP neighbor is 191.13.1.8, remote AS 200, ebgp link, Peer index 3
 
   Graceful Restart Parameters:
   Address families advertised to peer:
-    L2VPN EVPN
+    IPv4 Unicast  L2VPN EVPN
   Address families received from peer:
     L2VPN EVPN
   Forwarding state preserved by peer for:

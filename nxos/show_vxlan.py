@@ -8,6 +8,12 @@ NXOS parser for the following show commands:
     * show nve vni summary
     * show nve multisite dci-links
     * show nve multisite fabric-links
+    * show l2route fl all
+    * show l2route evpn ethernet-segment all
+    * show l2route topology detail
+    * show l2route mac all detail
+    * show l2route mac-ip all detail
+    * show l2route summary
 """
 
 # Python
@@ -150,13 +156,13 @@ class ShowNveVniSchema(MetaParser):
     schema ={
         Any(): {
             'vni': {
-                Any(): { # Conf/Ops Int 5001
-                    'vni': int, # Conf/Ops Int 5001
-                    'mcast': str, # Conf/Ops Str '234.1.1.1'
-                    'vni_state': str, # Ops Str 'up'
-                    'mode': str, # Ops Str 'cp'
-                    'type': str, # Ops Str 'L2 [1001]'
-                    'flags': str, # Ops Str ''
+                Any(): {
+                    'vni': int,
+                    'mcast': str,
+                    'vni_state': str,
+                    'mode': str,
+                    'type': str,
+                    'flags': str,
                 }
             }
         }
@@ -207,6 +213,47 @@ class ShowNveVni(ShowNveVniSchema):
         return result_dict
 
 # ====================================================
+#  schema for show interface | i nve
+# ====================================================
+class ShowNveInterfaceSchema(MetaParser):
+    """Schema for:
+        show nve interface | i nve"""
+
+    schema = {
+        'nves':
+            {Any():
+                 {'nve_name': str,
+                  'nve_state': str,
+                 },
+             },
+    }
+#=======================================
+#  show interface | i nve
+#=======================================
+class ShowNveInterface(ShowNveInterfaceSchema):
+    """Parser for show interface | i nve"""
+
+    def cli(self):
+        cmd = 'show interface | i nve'
+        out = self.device.execute(cmd)
+        # Init vars
+        result_dict = {}
+        # nve1 is down (other)
+        p1 = re.compile(r'^\s*nve(?P<nve>(\d+)) +is +(?P<nve_state>[\w]+)( +(?P<other>[\w\(\)]+))?$')
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                nve_name = "{}{}".format('nve',group.pop('nve'))
+                nve_dict = result_dict.setdefault('nves', {}).setdefault(nve_name,{})
+                nve_dict.update({'nve_name': nve_name})
+                nve_dict.update({'nve_state': group.pop('nve_state').lower()})
+                continue
+        return result_dict
+# ====================================================
 #  schema for show nve interface <nve> detail
 # ====================================================
 class ShowNveInterfaceDetailSchema(MetaParser):
@@ -256,7 +303,10 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         show nve interface <nve> detail"""
 
     def cli(self, intf=""):
-        out = self.device.execute('show nve interface {} detail'.format(intf))
+        if intf:
+            out = self.device.execute('show nve interface {} detail'.format(intf))
+        else:
+            out = self.device.execute('show nve interface')
 
         result_dict = {}
         # Interface: nve1, State: Up, encapsulation: VXLAN
@@ -890,26 +940,26 @@ class ShowL2routeTopologyDetailSchema(MetaParser):
     schema ={
         'topology': {
             'topo_id': {
-                Any(): {  # Conf/Ops Int '101'
+                Any(): {
                     'topo_name': {
-                        Any(): {  # Ops Str 'Vxlan-10001'
-                            'topo_name': str,  # Ops Str 'Vxlan-10001'
-                            'topo_type': str,  # Ops Str 'vni'
-                            'vni': int,  # Ops Int 10001
-                            'encap_type': int,  # Ops Int 0
-                            'iod': int,  # Ops Int 0
-                            'if_hdl': int,  # Ops Int 1224736769
-                            'vtep_ip': str,  # Conf/Ops Str '201.11.11.11'
-                            'emulated_ip': str,  # Ops Str '201.12.11.12'
-                            'emulated_ro_ip': str,  # Ops Str '201.12.11.22'
-                            'tx_id': int,  # Ops Int 20
-                            'rcvd_flag': int,  # Ops Int 0
-                            'rmac': str,  # Ops Str '5e00.0005.0007'
-                            'vrf_id': int,  # Ops Int 3
-                            'vmac': str,  # Ops Str '0200.c90c.0b16'
-                            'flags': str,  # Ops Str 'l3cp'
-                            'sub_flags': str,  # Ops Str '--'
-                            'prev_flags': str,  # Ops Str '-'
+                        Any(): {
+                            'topo_name': str,
+                            Optional('topo_type'): str,
+                            Optional('vni'): int,
+                            Optional('encap_type'): int,
+                            Optional('iod'): int,
+                            Optional('if_hdl'): int,
+                            Optional('vtep_ip'): str,
+                            Optional('emulated_ip'): str,
+                            Optional('emulated_ro_ip'): str,
+                            Optional('tx_id'): int,
+                            Optional('rcvd_flag'): int,
+                            Optional('rmac'): str,
+                            Optional('vrf_id'): int,
+                            Optional('vmac'): str,
+                            Optional('flags'): str,
+                            Optional('sub_flags'): str,
+                            Optional('prev_flags'): str,
                         }
                     }
                 }
@@ -938,7 +988,7 @@ class ShowL2routeTopologyDetail(ShowL2routeTopologyDetailSchema):
         #                   RMAC: 5e00.0005.0007, VRFID: 3
         #                   VMAC: 0200.c90c.0b16
         #                   Flags: L3cp, Sub_Flags: --, Prev_Flags: -
-        p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<topo_name>[\w\-]+) +(?P<topo_type>[\w]+): +(?P<vni>[\d]+)$')
+        p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<topo_name>[\w\-]+) +(?P<topo_type>[\w\/]+)(: +(?P<vni>[\d]+))?$')
         p2 = re.compile(r'^\s*Encap:(?P<encap_type>[\d]+) +IOD:(?P<iod>[\d]+) +IfHdl:(?P<if_hdl>[\d]+)$')
         p3 = re.compile(r'^\s*VTEP +IP: +(?P<vtep_ip>[\d\.]+)$')
         p4 = re.compile(r'^\s*Emulated +IP: +(?P<emulated_ip>[\d\.]+)$')
@@ -961,11 +1011,13 @@ class ShowL2routeTopologyDetail(ShowL2routeTopologyDetailSchema):
                 topo_id = int(group.pop('topo_id'))
                 topo_name = group.pop('topo_name')
                 topo_type = group.pop('topo_type').lower()
-                vni = int(group.pop('vni'))
                 topo_dict = result_dict.setdefault('topology', {}).setdefault('topo_id', {}).setdefault(topo_id,{}).\
                                         setdefault('topo_name',{}).setdefault(topo_name,{})
 
-                topo_dict.update({'vni': vni})
+                if m0.groupdict()['vni']:
+                    vni = int(group.pop('vni'))
+                    topo_dict.update({'vni': vni})
+
                 topo_dict.update({'topo_type': topo_type})
                 topo_dict.update({'topo_name': topo_name})
                 continue
@@ -1218,7 +1270,7 @@ class ShowL2routeSummarySchema(MetaParser):
         'summary': {
             'total_memory': int,
             'numof_converged_tables': int,
-            'table_name': {
+            Optional('table_name'): {
                 Any(): {
                     'producer_name': {
                         Any(): {
@@ -1309,3 +1361,63 @@ class ShowL2routeSummary(ShowL2routeSummarySchema):
         return result_dict
 
 
+# ====================================================
+#  schema for show l2route fl all
+# ====================================================
+class ShowL2routeFlAllSchema(MetaParser):
+    """Schema for:
+        show l2route fl all"""
+
+    schema = {
+        'topology': {
+            'topo_id': {
+                Any():{
+                    'peer_id':{
+                        Any():{
+                            'topo_id': int,
+                            'peer_id': int,
+                            'flood_list': str,
+                            'is_service_node': str,
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+# ====================================================
+#  Parser for show l2route fl all
+# ====================================================
+class ShowL2routeFlAll(ShowL2routeFlAllSchema):
+    """parser for:
+        show l2route fl all"""
+
+    def cli(self):
+        out = self.device.execute('show l2route fl all')
+
+        result_dict = {}
+        # Topology ID Peer-id     Flood List      Service Node
+        # ----------- ----------- --------------- ------------
+
+        p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<peer_id>[\d]+) +(?P<flood_list>[\w\.d]+) +(?P<is_service_node>[\w]+)$')
+
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                topo_id = int(group.pop('topo_id'))
+                peer_id = int(group.pop('peer_id'))
+                peer_dict = result_dict.setdefault('topology', {}).setdefault('topo_id', {}).setdefault(topo_id, {}). \
+                                                setdefault('peer_id', {}).setdefault(peer_id, {})
+                peer_dict.update({'topo_id': topo_id})
+                peer_dict.update({'peer_id': peer_id})
+                peer_dict.update({'flood_list': group.pop('flood_list')})
+                peer_dict.update({'is_service_node': group.pop('is_service_node').lower()})
+                continue
+
+        return result_dict

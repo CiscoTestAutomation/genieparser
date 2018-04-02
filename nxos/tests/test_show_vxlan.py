@@ -19,8 +19,8 @@ from parser.nxos.show_vxlan import  ShowNvePeers,\
                                     ShowL2routeTopologyDetail,\
                                     ShowL2routeMacAllDetail,\
                                     ShowL2routeMacIpAllDetail,\
-                                    ShowL2routeSummary
-
+                                    ShowL2routeSummary,\
+                                    ShowL2routeFlAll
 # Metaparser
 from metaparser.util.exceptions import SchemaEmptyParserError
 
@@ -771,13 +771,49 @@ class test_show_l2route_topology_detail(unittest.TestCase):
                               RMAC: 0000.0000.0000, VRFID: 0
                               VMAC: 0200.c90c.0b16
                               Flags: L2cpBgp, Sub_Flags: Adv-MAC, Prev_Flags: -
+'''}
 
-    4294967291    BARRIER         N/A
-    4294967294    GLOBAL          N/A
-    4294967295    ALL             N/A
-
+    golden_output_2 = {'execute.return_value': '''
+        Topology ID   Topology Name   Attributes
+    -----------   -------------   ----------
+        4294967291    BARRIER         N/A
+        4294967294    GLOBAL          N/A
+        4294967295    ALL             N/A
 
     '''}
+    golden_parsed_output_2 = {
+        'topology': {
+            'topo_id': {
+                4294967291: {
+                    'topo_name': {
+                        'BARRIER': {
+                            'topo_name': 'BARRIER',
+                            'topo_type': 'n/a'
+                        }
+                    },
+                },
+                4294967294: {
+                    'topo_name': {
+                        'GLOBAL': {
+                            'topo_name': 'GLOBAL',
+                            'topo_type': 'n/a'
+                        }
+                    },
+                },
+                4294967295: {
+                    'topo_name': {
+                        'ALL': {
+                            'topo_name': 'ALL',
+                            'topo_type': 'n/a'
+                        }
+                    },
+                },
+            },
+        },
+    }
+
+
+
 
     def test_show_l2route_topology(self):
         self.maxDiff = None
@@ -785,6 +821,13 @@ class test_show_l2route_topology_detail(unittest.TestCase):
         obj = ShowL2routeTopologyDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_l2route_topology_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowL2routeTopologyDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
     def test_show_topology_empty(self):
         self.device = Mock(**self.empty_output)
@@ -1074,12 +1117,33 @@ class test_show_l2route_summary(unittest.TestCase):
 
     '''}
 
+    golden_output_1 = {'execute.return_value': '''
+        BL1# show l2route summary
+        L2ROUTE Summary
+        Total Memory: 0
+        Number of Converged Tables: 47
+
+        '''}
+
+    golden_parsed_output_1 = {
+        'summary': {
+            'total_memory': 0,
+            'numof_converged_tables': 47
+        },
+    }
     def test_show_l2route_summary(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowL2routeSummary(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_l2route_summary_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowL2routeSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
     def test_show_mac_empty(self):
         self.device = Mock(**self.empty_output)
@@ -1152,6 +1216,91 @@ class test_show_l2route_mac_ip_all_detail(unittest.TestCase):
         obj = ShowL2routeMacIpAllDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+# ==============================================================
+#  Unit test for 'show l2route fl all'
+# ==============================================================
+class test_show_l2route_fl_all(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'topology': {
+            'topo_id': {
+                1001: {
+                    'peer_id': {
+                        8: {
+                            'topo_id': 1001,
+                            'peer_id': 8,
+                            'flood_list' : '201.34.33.44',
+                            'is_service_node': 'no',
+                        },
+                        2: {
+                            'topo_id': 1001,
+                            'peer_id': 2,
+                            'flood_list': '201.0.0.55',
+                            'is_service_node': 'no',
+                        },
+                        1: {
+                            'topo_id': 1001,
+                            'peer_id': 1,
+                            'flood_list': '201.0.0.66',
+                            'is_service_node': 'no',
+                        },
+                    },
+                },
+                1002: {
+                    'peer_id': {
+                        8: {
+                            'topo_id': 1002,
+                            'peer_id': 8,
+                            'flood_list': '201.34.33.44',
+                            'is_service_node': 'no',
+                        },
+                        2: {
+                            'topo_id': 1002,
+                            'peer_id': 2,
+                            'flood_list': '201.0.0.55',
+                            'is_service_node': 'no',
+                        },
+                        1: {
+                            'topo_id': 1002,
+                            'peer_id': 1,
+                            'flood_list': '201.0.0.66',
+                            'is_service_node': 'no',
+                        },
+                    },
+                },
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+    MS-VPC-BL1(config-if)# sh l2route fl all
+    Topology ID Peer-id     Flood List      Service Node
+    ----------- ----------- --------------- ------------
+    1001        8           201.34.33.44    no
+    1001        2           201.0.0.55      no
+    1001        1           201.0.0.66      no
+    1002        8           201.34.33.44    no
+    1002        2           201.0.0.55      no
+    1002        1           201.0.0.66      no
+
+    '''}
+
+    def test_show_l2route_fl_all(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowL2routeFlAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_mac_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowL2routeFlAll(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
 
 if __name__ == '__main__':
     unittest.main()
