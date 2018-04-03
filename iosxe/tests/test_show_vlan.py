@@ -289,7 +289,7 @@ class test_show_vlan_mtu(unittest.TestCase):
 
     def test_missing_parsed_key(self):
         self.device = Mock(**self.silver_output)
-        vlan_obj = ShowVlan(device=self.device)
+        vlan_obj = ShowVlanMtu(device=self.device)
         with self.assertRaises(Exception):
             parsed_output = vlan_obj.parse()
 
