@@ -50,14 +50,14 @@ class ShowAccessListsSchema(MetaParser):
                                 'protocol': str,
                                 Optional('precedence'): str,
                                 Optional('precedence_code'): int,
-                                'destination_ipv4_network': {
+                                'destination_network': {
                                     Any(): {
-                                        'destination_ipv4_network': str,
+                                        'destination_network': str,
                                     }
                                 },
-                                'source_ipv4_network': {
+                                'source_network': {
                                     Any(): {
-                                        'source_ipv4_network': str,
+                                        'source_network': str,
                                     }
                                 }
                             },
@@ -295,10 +295,10 @@ class ShowAccessLists(ShowAccessListsSchema):
                 l3_dict = seq_dict.setdefault('matches', {}).setdefault('l3', {})\
                     .setdefault(protocol, {})
                 l3_dict['protocol'] = protocol
-                l3_dict.setdefault('source_ipv4_network', {})\
-                    .setdefault(src, {}).setdefault('source_ipv4_network', src)
-                l3_dict.setdefault('destination_ipv4_network', {})\
-                    .setdefault(dst, {}).setdefault('destination_ipv4_network', dst)
+                l3_dict.setdefault('source_network', {})\
+                    .setdefault(src, {}).setdefault('source_network', src)
+                l3_dict.setdefault('destination_network', {})\
+                    .setdefault(dst, {}).setdefault('destination_network', dst)
 
                 l3_dict.setdefault('dscp', re.search('dscp +(\w+)', left).groups()[0])\
                     if 'dscp' in left else None
