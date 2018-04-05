@@ -1057,7 +1057,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
 
             # Operational Mode: trunk (member of bundle Po12)
             # Operational Mode: down (suspended member of bundle Po12)
-            p4 =  re.compile(r'^Operational +Mode: +(?P<operational_mode>\w+)'
+            p4 =  re.compile(r'^Operational +Mode: +(?P<operational_mode>[\w\s]+)'
                               '( +\((?P<dummy>[\w\s]+)? *member +of +bundle +(?P<port_channel_int>[\w\/\.\-]+)\))?$')
             m = p4.match(line)
             if m:

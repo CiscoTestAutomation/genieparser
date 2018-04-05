@@ -2015,7 +2015,7 @@ class ShowProcessesCpuSorted(ShowProcessesCpuSortedSchema):
         if sort_time:
             cmd += ' ' + sort_time
         if key_word:
-            cmd += ' | ' + key_word
+            cmd += ' | include ' + key_word
 
         out = self.device.execute(cmd)
 

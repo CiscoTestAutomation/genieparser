@@ -136,8 +136,9 @@ class ShowVrfDetail(ShowVrfDetailSchema):
                 continue
 
             # Address family ipv4 unicast (Table ID = 0x1):
+            # Address family ipv4 (Table ID = 2 (0x2)):
             p4 = re.compile(r'^Address +family +(?P<af>[\w\s]+) +'
-                             '\(Table +ID +\= +(?P<table_id>\w+)\):$')
+                             '\(Table +ID +\= +(?P<table_id>\w+)( *[\w\(\)]+)?\):$')
             m = p4.match(line)
             if m:
                 af = m.groupdict()['af'].lower()
