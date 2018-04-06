@@ -278,7 +278,7 @@ class ShowIpv6StaticDetail(ShowIpv6StaticDetailSchema):
             # 2001:2:2:2::2/128 via 2001:10:1:2::2, GigabitEthernet0/0, distance 11, tag 100
             # *   2001:3:3:3::3/128 via GigabitEthernet0/3, distance 1
             p2 = re.compile(r'^\s*((?P<star>[*]+)  +)?(?P<route>[\w\/\:]+)?'
-                            ' +via +((?P<nexthop>[\w\:]+), )?'
+                            ' +via +((?P<nexthop>[0-9a-fA-F\:]+), )?'
                             '((?P<interface>[a-zA-Z][\w\.\/]+), )?'
                             '(distance (?P<distance>[\d]+))?'
                             '(, +tag +(?P<tag>[\d]+))?$')
