@@ -187,7 +187,35 @@ class ShowAccessLists(ShowAccessListsSchema):
         'time':         37,
         'uucp':         540,
         'whois':        43,
-        'www':          80
+        'www':          80,
+       'biff':           512,
+       'bootpc':         68,
+       'bootps':         67,
+       'discard':        9,
+       'dnsix':          195,
+       'domain':         53,
+       'echo':           7,
+       'isakmp':         500,
+       'mobile-ip':      434,
+       'nameserver':     42,
+       'netbios-dgm':    138,
+       'netbios-ns':     137,
+       'netbios-ss':     139,
+       'non500-isakmp':  4500,
+       'ntp':            123,
+       'pim-auto-rp':    496,
+       'rip':            520,
+       'ripv6':          21,
+       'snmp':           161,
+       'snmptrap':       162,
+       'sunrpc':         111,
+       'syslog':         514,
+       'tacacs':         49,
+       'talk':           517,
+       'tftp':           69,
+       'time':           37,
+       'who':            513,
+       'xdmcp':          177
     }
 
     def cli(self):
@@ -312,7 +340,10 @@ class ShowAccessLists(ShowAccessListsSchema):
                     prec = re.search('precedence +(\w+)', left).groups()[0]
                     if prec.isdigit():
                         l3_dict['precedence_code'] = int(prec)
-                        l3_dict['precedence'] = self.PRECED_MAP[prec]
+                        try:
+                            l3_dict['precedence'] = self.PRECED_MAP[prec]
+                        except Exception:
+                            pass
                     else:
                         l3_dict['precedence'] = prec
 
@@ -322,7 +353,10 @@ class ShowAccessLists(ShowAccessListsSchema):
                 if 'options' in left:
                     options_name = re.sealrch('options +(\w+)', left).groups()[0]
                     if not options_name.isdigit():
-                        l4_dict['options'] = self.OPT_MAP[options_name]
+                        try:
+                            l4_dict['options'] = self.OPT_MAP[options_name]
+                        except Exception:
+                            pass
                         l4_dict['options_name'] = options_name
                     else:
                         l4_dict['options'] = options_name
@@ -343,11 +377,17 @@ class ShowAccessLists(ShowAccessListsSchema):
                         lower_port = src_port.split()[0]
                         upper_port = src_port.split()[1]
                         if not lower_port.isdigit():
-                            lower_port = self.OPER_MAP[lower_port]
+                            try:
+                                lower_port = self.OPER_MAP[lower_port]
+                            except Exception:
+                                pass
                         else:
                             lower_port = int(lower_port)
                         if not upper_port.isdigit():
-                            upper_port = self.OPER_MAP[upper_port]
+                            try:
+                                upper_port = self.OPER_MAP[upper_port]
+                            except Exception:
+                                pass
                         else:
                             upper_port = int(upper_port)
                         l4_dict.setdefault('source_port', {}).setdefault('range', {})\
@@ -363,12 +403,18 @@ class ShowAccessLists(ShowAccessListsSchema):
                     if val1.isdigit():
                         val1 = int(val1)
                     else:
-                        val1 = self.OPER_MAP[val1]
+                        try:
+                            val1 = self.OPER_MAP[val1]
+                        except Exception:
+                            pass
                     val2 = dst_oper.groups()[-1]
                     if val2 and val2.isdigit():
                         val2 = int(val2)
                     elif val2:
-                        val2 = self.OPER_MAP[val2]
+                        try:
+                            val2 = self.OPER_MAP[val2]
+                        except Exception:
+                            pass
                     if 'range' not in operator:
                         l4_dict.setdefault('destination_port', {}).setdefault('operator', {})\
                             .setdefault('operator', operator)
@@ -383,8 +429,9 @@ class ShowAccessLists(ShowAccessListsSchema):
                 # icmp type and code
                 if protocol == 'icmp':
                     code_group = re.search('^(\d+) +(\d+)', left)
-                    l4_dict['type'] = int(code_group.groups()[0])
-                    l4_dict['code'] = int(code_group.groups()[1])
+                    if code_group:
+                        l4_dict['type'] = int(code_group.groups()[0])
+                        l4_dict['code'] = int(code_group.groups()[1])
                 continue
 
             # deny   any any vlan 10
