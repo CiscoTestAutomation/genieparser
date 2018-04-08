@@ -287,8 +287,9 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
             
             # MTU 1500 bytes, BW 768 Kbit/sec, DLY 3330 usec,
+            # MTU 1500 bytes, BW 10000 Kbit, DLY 1000 usec, 
             p6 = re.compile(r'^MTU +(?P<mtu>[0-9]+) +bytes, +BW'
-                             ' +(?P<bandwidth>[0-9]+) +Kbit/sec, +DLY'
+                             ' +(?P<bandwidth>[0-9]+) +Kbit(/sec)?, +DLY'
                              ' +(?P<delay>[0-9]+) +usec,$')
             m = p6.match(line)
             if m:

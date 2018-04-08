@@ -22,7 +22,7 @@ class ShowVrfDetailSchema(MetaParser):
 
     schema = {Any():
                 {
-                 'vrf_id':  int,
+                 Optional('vrf_id'):  int,
                  Optional('route_distinguisher'): str,
                  Optional('vpn_id'): str,
                  Optional('interfaces'):  list,
@@ -87,8 +87,9 @@ class ShowVrfDetail(ShowVrfDetailSchema):
 
             # VRF VRF1 (VRF Id = 1); default RD 100:1; default VPNID <not set>
             # VRF Mgmt-vrf (VRF Id = 1); default RD <not set>; default VPNID <not set>
-            p1 = re.compile(r'^VRF +(?P<vrf>[\w\-]+) +'
-                             '\(VRF +Id +\= +(?P<vrf_id>\d+)\); +'
+            # VRF vrf1; default RD 1:1; default VPNID <not set>
+            p1 = re.compile(r'^VRF +(?P<vrf>[\w\-]+)( +'
+                             '\(VRF +Id +\= +(?P<vrf_id>\d+)\))?; +'
                              'default +RD +(?P<rd>[\w\s\:\<\>]+); +'
                              'default +VPNID +(?P<vpn_id>[\w\s\:\<\>]+)$')
             m = p1.match(line)
@@ -96,7 +97,8 @@ class ShowVrfDetail(ShowVrfDetailSchema):
                 vrf = m.groupdict()['vrf']
                 if vrf not in vrf_dict:
                     vrf_dict[vrf] = {}
-                vrf_dict[vrf]['vrf_id'] = int(m.groupdict()['vrf_id'])
+                if m.groupdict()['vrf_id']:
+                    vrf_dict[vrf]['vrf_id'] = int(m.groupdict()['vrf_id'])
                 if 'not' not in m.groupdict()['rd']:
                     vrf_dict[vrf]['route_distinguisher'] = m.groupdict()['rd']
                 if 'not' not in m.groupdict()['vpn_id']:
