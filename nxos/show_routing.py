@@ -311,7 +311,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                 continue
 
             # IP Route Table for VRF "default"
-            p1 = re.compile(r'^\s*IP +Route +Table +for VRF +\"(?P<vrf>[\w]+)\"$')
+            p1 = re.compile(r'^\s*IP +Route +Table +for VRF +\"(?P<vrf>[\w\_]+)\"$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
