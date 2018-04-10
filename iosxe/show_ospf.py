@@ -4227,14 +4227,19 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                 continue
 
             # Process ID 1, Area 0
+            # Process ID 100, Area 0.0.0.0
             # Process ID 2, VRF VRF1, Area 1
             p2 = re.compile(r'^Process +ID +(?P<instance>(\S+)),'
                              '(?: +VRF +(?P<vrf>(\S+)),)?'
-                             ' +Area +(?P<area>(\d+))$')
+                             ' +Area +(?P<area>(\S+))$')
             m = p2.match(line)
             if m:
                 instance = str(m.groupdict()['instance'])
-                area = str(IPAddress(str(m.groupdict()['area'])))
+                try:
+                    int(m.groupdict()['area'])
+                    area = str(IPAddress(str(m.groupdict()['area'])))
+                except:
+                    area = m.groupdict()['area']
                 if m.groupdict()['vrf']:
                     vrf = str(m.groupdict()['vrf'])
                 else:
@@ -4532,10 +4537,15 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
                 continue
 
             # Area 1 MPLS TE not initialized
-            p3 = re.compile(r'^Area +(?P<area>(\d+)) +MPLS +TE +not +initialized$')
+            # Area 0.0.0.0 MPLS TE not initialized
+            p3 = re.compile(r'^Area +(?P<area>(\S+)) +MPLS +TE +not +initialized$')
             m = p3.match(line)
             if m:
-                area = str(IPAddress(str(m.groupdict()['area'])))
+                try:
+                    int(m.groupdict()['area'])
+                    area = str(IPAddress(str(m.groupdict()['area'])))
+                except:
+                    area = m.groupdict()['area']
                 # Create dict
                 if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]\
                         ['instance'][instance]:
