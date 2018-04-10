@@ -824,8 +824,9 @@ class ShowIpOspf(ShowIpOspfSchema):
                 continue
 
             # Area BACKBONE(0)
+            # Area BACKBONE(0.0.0.0) (Inactive)
             # Area 1
-            p38 = re.compile(r'^Area +(?P<area>(\S+))(?: +inactive)?$')
+            p38 = re.compile(r'^Area +(?P<area>(\S+))(?: *\((I|i)nactive\))?$')
             m = p38.match(line)
             if m:
                 parsed_area = str(m.groupdict()['area'])
