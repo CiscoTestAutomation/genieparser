@@ -27,7 +27,7 @@ class ShowAccessListsSchema(MetaParser):
             'name': str,
             'type': str,
             Optional('per_user'): bool,
-            'aces': {
+            Optional('aces'): {
                 Any(): {
                     'name': str,
                     'matches': {
@@ -66,7 +66,6 @@ class ShowAccessListsSchema(MetaParser):
                             Any(): {   # protocols
                                 Optional('type'): int,
                                 Optional('code'): int,
-                                'sequence_number': int,
                                 Optional('acknowledgement_number'): int,
                                 Optional('data_offset'): int,
                                 Optional('reserved'): int,
@@ -231,24 +230,24 @@ class ShowAccessLists(ShowAccessListsSchema):
         p_mac = re.compile(r'^Extended +MAC +access +list +(?P<name>[\w\-\.]+)( *\((?P<per_user>.*)\))?$')
         p_ip_acl = re.compile(
             r'^(?P<seq>\d+)? +(?P<actions_forwarding>(deny|permit)) +'
-            '(?P<protocol>\w+) +((host +(?P<src1>(\d+.){3}\d+|any))|'
+            '(?P<protocol>\w+) +(((?P<src1>host +(\d+.){3}\d+|any))|'
             '(?P<src>(((\d+.){3}\d+ +(\d+.){3}\d+)|any)))'
             '( *(?P<src_operator>(eq|gt|lt|neq|range)) +'
             '(?P<src_port>[\w\-\s]+))?'
-            '( *host)? +(?P<dst>(any|((\d+.){3}\d+ +(\d+.){3}\d+)|'
+            '(?P<dst>( *host)? +(any|((\d+.){3}\d+ +(\d+.){3}\d+)|'
             '(\d+.){3}\d+))( *(?P<left>.*))?$')
         p_ipv6_acl = re.compile(
             r'^(?P<actions_forwarding>(deny|permit)) +'
             '(?P<protocol>(ahp|esp|hbh|icmp|ipv6|pcp|sctp|tcp|udp))'
-            ' +((host +(?P<src1>[\w\:]+|any))|'
+            ' +(((?P<src1>host +[\w\:]+|any))|'
             '(?P<src>(any|([\w\:]+ +[\w\:]+))))'
             '( *(?P<src_operator>(eq|gt|lt|neq|range)) +(?P<src_port>[\w\-\s]+))?'
-            '( +((host +(?P<dst1>[\w\:]+|any))|'
+            '( +(((?P<dst1>host +[\w\:]+|any))|'
             '(?P<dst>any|([\w\:]+ +[\w\:]+))))( *(?P<left>.*))?'
             ' +sequence +(?P<seq>\d+)$')
         p_mac_acl = re.compile(
             r'^(?P<actions_forwarding>(deny|permit)) +'
-            '(host *)?(?P<src>[\w\.]+) +(host *)?(?P<dst>[\w\.]+)( *(?P<left>.*))?$')
+            '(?P<src>(host *)?[\w\.]+) +(?P<dst>(host *)?[\w\.]+)( *(?P<left>.*))?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -301,8 +300,10 @@ class ShowAccessLists(ShowAccessListsSchema):
                 actions_forwarding = group['actions_forwarding']
                 src = group['src'] if group['src'] else group['src1']
                 dst = group['dst']
+                src = src.strip()
                 if 'dst1' in group:
                     dst = dst if dst else group['dst1']
+                dst = dst.strip()
                 # optional keys
                 src_operator = group['src_operator']
                 src_port = group['src_port']
@@ -363,8 +364,6 @@ class ShowAccessLists(ShowAccessListsSchema):
 
                 l4_dict['established'] = True \
                     if 'established' in left else False
-
-                l4_dict['sequence_number'] = int(group['seq'])
 
                 # source_port operator
                 if src_port and src_operator:
@@ -446,6 +445,8 @@ class ShowAccessLists(ShowAccessListsSchema):
                 actions_forwarding = group['actions_forwarding']
                 src = group['src']
                 dst = group['dst']
+                src = src.strip()
+                dst = dst.strip()
                 left = str(group['left'])
 
                 # actions
