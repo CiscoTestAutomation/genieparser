@@ -9007,6 +9007,7 @@ class ShowBgpLabelsSchema(MetaParser):
                                         'nexthop': str,
                                         'in_label': str,
                                         'out_label': str,
+                                        Optional('vrf'): str,
                                         Optional('vpn'): str,
                                         Optional('hold_down'): str,
                                     },
@@ -9029,6 +9030,7 @@ class ShowBgpLabelsSchema(MetaParser):
                                                 'nexthop': str,
                                                 'in_label': str,
                                                 'out_label': str,
+                                                Optional('vrf'): str,
                                                 Optional('vpn'): str,
                                                 Optional('hold_down'): str,
                                             },
@@ -9145,14 +9147,15 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
             # * i0.0.0.0/0          95.1.1.0            nolabel/9100
             # *>i                   90.1.1.0            nolabel/9100
             # a83.0.0.0/16        0.0.0.0             nolabel/nolabel
+            # *>e85.0.0.0/24        55.1.1.101          492288/nolabel (VRF1)
             # *>e88::/112           ::ffff:50.1.1.101
             p3 = re.compile(r'^(?P<status>s|S|x|d|h|\*)?'
-                             '(?P<best>\>)? *'
-                             '(?P<type_code>i|e|c|l|a|r|I)'
-                             '(?P<prefix>[\w\/\.\:]+)? +'
-                             '(?P<next_hop>[\w\/\.\:]+)( +'
-                             '(?P<in_label>\w+)\/'
-                             '(?P<out_label>\w+))?$')
+                             '(?P<best>\>)?'
+                             ' *(?P<type_code>i|e|c|l|a|r|I)'
+                             '(?P<prefix>[\w\/\.\:]+)?'
+                             ' +(?P<next_hop>[\w\/\.\:]+)'
+                             '(?: +(?P<in_label>\w+)\/(?P<out_label>\w+))?'
+                             '(?: +\((?P<vrf>(\S+))\))?$')
             m = p3.match(line)
             if m:
                 prefix_cur = m.groupdict()['prefix']
@@ -9168,6 +9171,7 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
                 next_hop = m.groupdict()['next_hop']
                 in_label = m.groupdict()['in_label']
                 out_label = m.groupdict()['out_label']
+                vrf = m.groupdict()['vrf']
 
 
                 if 'prefix' not in sub_dict:
@@ -9201,18 +9205,25 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
                     .setdefault('in_label', in_label) if in_label else None
                 sub_dict['prefix'][prefix]['index'][index]\
                     .setdefault('out_label', out_label) if out_label else None
+                sub_dict['prefix'][prefix]['index'][index]\
+                    .setdefault('vrf', vrf) if vrf else None
                 continue
 
             #                                           nolabel/16
-            p3_1 = re.compile(r'^(?P<in_label>\w+)\/(?P<out_label>\w+)$')
+            #                                           22/17 (VRF1)
+            p3_1 = re.compile(r'^(?P<in_label>\w+)\/(?P<out_label>\w+)'
+                               '(?: +\((?P<vrf>(\S+))\))?$')
             m = p3_1.match(line)
             if m:
                 in_label = m.groupdict()['in_label']
                 out_label = m.groupdict()['out_label']
+                vrf = m.groupdict()['vrf']
                 sub_dict['prefix'][prefix]['index'][index]\
                     .setdefault('in_label', in_label) if in_label else None
                 sub_dict['prefix'][prefix]['index'][index]\
                     .setdefault('out_label', out_label) if out_label else None
+                sub_dict['prefix'][prefix]['index'][index]\
+                    .setdefault('vrf', vrf) if vrf else None
                 continue
 
         return ret_dict
