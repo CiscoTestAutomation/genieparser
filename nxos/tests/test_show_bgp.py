@@ -22667,14 +22667,485 @@ class test_show_bgp_labels_cli(unittest.TestCase):
         * i                   19.0.102.4          nolabel/nolabel
         *>i1.5.214.0/24       19.0.101.1          nolabel/nolabel
         * i                   19.0.102.4          nolabel/nolabel
-    '''}
+        '''}
 
-    def test_golden_vrf_all(self):
+    golden_parsed_output_2 = {
+        'vrf': 
+            {'VRF1': 
+                {'address_family': 
+                    {'ipv4 unicast': 
+                        {'prefix': 
+                            {'85.0.0.0/24': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': '492288',
+                                        'nexthop': '55.1.1.101',
+                                        'out_label': 'nolabel',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e',
+                                        'vrf': 'VRF1'}}},
+                            '85.0.1.0/24': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': '492288',
+                                        'nexthop': '55.1.1.101',
+                                        'out_label': 'nolabel',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e',
+                                        'vrf': 'VRF1'}}},
+                            '85.0.2.0/24': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': '492288',
+                                        'nexthop': '55.1.1.101',
+                                        'out_label': 'nolabel',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e',
+                                        'vrf': 'VRF1'}}},
+                            '85.0.3.0/24': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': '492288',
+                                        'nexthop': '55.1.1.101',
+                                        'out_label': 'nolabel',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e',
+                                        'vrf': 'VRF1'}}},
+                            '85.0.4.0/24': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': '492288',
+                                        'nexthop': '55.1.1.101',
+                                        'out_label': 'nolabel',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e',
+                                        'vrf': 'VRF1'}}},
+                            '88.0.0.0/24': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': '16',
+                                        'nexthop': '50.1.1.101',
+                                        'out_label': '16',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e',
+                                        'vrf': 'VRF1'}}},
+                            '88.0.1.0/24': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': '17',
+                                        'nexthop': '50.1.1.101',
+                                        'out_label': '17',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e',
+                                        'vrf': 'VRF1'}}},
+                            '88.0.2.0/24': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': '18',
+                                        'nexthop': '50.1.1.101',
+                                        'out_label': '18',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e',
+                                        'vrf': 'VRF1'}}},
+                            '88.0.3.0/24': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': '19',
+                                        'nexthop': '50.1.1.101',
+                                        'out_label': '19',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e',
+                                        'vrf': 'VRF1'}}},
+                            '88.0.4.0/24': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': '20',
+                                        'nexthop': '50.1.1.101',
+                                        'out_label': '20',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e',
+                                        'vrf': 'VRF1'}}}},
+                        'router_id': '110.1.1.1',
+                        'table_version': 18}}},
+            'default': 
+                {'address_family': 
+                    {'ipv4 unicast': 
+                        {'prefix': 
+                            {'83.0.0.0/16': 
+                                {'index': 
+                                    {0: 
+                                        {'best_path': False,
+                                        'in_label': 'nolabel',
+                                        'nexthop': '0.0.0.0',
+                                        'out_label': 'nolabel',
+                                        'status': 'invalid',
+                                        'type': 'aggregate',
+                                        'type_code': 'a'}}},
+                            '84.0.0.0/24': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': 'nolabel',
+                                        'nexthop': '50.1.1.101',
+                                        'out_label': 'nolabel',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e'}}},
+                            '84.0.1.0/24': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': 'nolabel',
+                                        'nexthop': '50.1.1.101',
+                                        'out_label': 'nolabel',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e'}}},
+                            '84.0.2.0/24': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': 'nolabel',
+                                        'nexthop': '50.1.1.101',
+                                        'out_label': 'nolabel',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e'}}},
+                            '85.0.0.0/24': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': 'nolabel',
+                                        'nexthop': '0.0.0.0',
+                                        'out_label': 'nolabel',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'redist',
+                                        'type_code': 'r'}}}},
+                        'router_id': '100.1.1.1',
+                        'table_version': 17}}}}}
+
+    golden_output_2 = {'execute.return_value': '''
+        2018-04-10T05:02:05: %UNICON-20-INFO: +++ execute  +++
+        show bgp ipv4 unicast labels vrf all
+        BGP routing table information for VRF VRF1, address family IPv4 Unicast
+        BGP table version is 18, Local Router ID is 110.1.1.1
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            In label/Out label
+        *>e85.0.0.0/24        55.1.1.101          492288/nolabel (VRF1)
+        *>e85.0.1.0/24        55.1.1.101          492288/nolabel (VRF1)
+        *>e85.0.2.0/24        55.1.1.101          492288/nolabel (VRF1)
+        *>e85.0.3.0/24        55.1.1.101          492288/nolabel (VRF1)
+        *>e85.0.4.0/24        55.1.1.101          492288/nolabel (VRF1)
+        *>e88.0.0.0/24        50.1.1.101          16/16 (VRF1)
+        *>e88.0.1.0/24        50.1.1.101          17/17 (VRF1)
+        *>e88.0.2.0/24        50.1.1.101          18/18 (VRF1)
+        *>e88.0.3.0/24        50.1.1.101          19/19 (VRF1)
+        *>e88.0.4.0/24        50.1.1.101          20/20 (VRF1)
+
+        BGP routing table information for VRF default, address family IPv4 Unicast
+        BGP table version is 17, Local Router ID is 100.1.1.1
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            In label/Out label
+          a83.0.0.0/16        0.0.0.0             nolabel/nolabel
+        *>e84.0.0.0/24        50.1.1.101          nolabel/nolabel
+        *>e84.0.1.0/24        50.1.1.101          nolabel/nolabel
+        *>e84.0.2.0/24        50.1.1.101          nolabel/nolabel
+        *>r85.0.0.0/24        0.0.0.0             nolabel/nolabel
+        '''}
+
+    golden_parsed_output_3 = {
+        'vrf': 
+            {'VRF1': 
+                {'address_family': 
+                    {'ipv6 unicast': 
+                        {'prefix': 
+                            {'85::/112': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': '492287',
+                                        'nexthop': '55:1::1:101',
+                                        'out_label': 'nolabel',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e',
+                                        'vrf': 'VRF1'}}},
+                            '85::1:0/112': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': '492287',
+                                        'nexthop': '55:1::1:101',
+                                        'out_label': 'nolabel',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e',
+                                        'vrf': 'VRF1'}}},
+                            '85::2:0/112': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': '492287',
+                                        'nexthop': '55:1::1:101',
+                                        'out_label': 'nolabel',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e',
+                                        'vrf': 'VRF1'}}},
+                            '85::3:0/112': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': '492287',
+                                        'nexthop': '55:1::1:101',
+                                        'out_label': 'nolabel',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e',
+                                        'vrf': 'VRF1'}}},
+                            '85::4:0/112': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': '492287',
+                                        'nexthop': '55:1::1:101',
+                                        'out_label': 'nolabel',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e',
+                                        'vrf': 'VRF1'}}},
+                            '88::/112': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': '21',
+                                        'nexthop': '::ffff:50.1.1.101',
+                                        'out_label': '16',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e',
+                                        'vrf': 'VRF1'}}},
+                            '88::1:0/112': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': '22',
+                                        'nexthop': '::ffff:50.1.1.101',
+                                        'out_label': '17',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e',
+                                        'vrf': 'VRF1'}}},
+                            '88::2:0/112': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': '23',
+                                        'nexthop': '::ffff:50.1.1.101',
+                                        'out_label': '18',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e',
+                                        'vrf': 'VRF1'}}},
+                            '88::3:0/112': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': '24',
+                                        'nexthop': '::ffff:50.1.1.101',
+                                        'out_label': '19',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e',
+                                        'vrf': 'VRF1'}}},
+                            '88::4:0/112': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': '25',
+                                        'nexthop': '::ffff:50.1.1.101',
+                                        'out_label': '20',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e',
+                                        'vrf': 'VRF1'}}}},
+                        'router_id': '110.1.1.1',
+                        'table_version': 18}}},
+            'default': 
+                {'address_family': 
+                    {'ipv6 unicast': 
+                        {'prefix': 
+                            {'84::/112': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': 'nolabel',
+                                        'nexthop': '50:1::1:101',
+                                        'out_label': 'nolabel',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e'}}},
+                            '84::1:0/112': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': 'nolabel',
+                                        'nexthop': '50:1::1:101',
+                                        'out_label': 'nolabel',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e'}}},
+                            '84::2:0/112': 
+                                {'index': 
+                                    {0: 
+                                        {'best_code': '>',
+                                        'best_path': True,
+                                        'in_label': 'nolabel',
+                                        'nexthop': '50:1::1:101',
+                                        'out_label': 'nolabel',
+                                        'status': 'valid',
+                                        'status_code': '*',
+                                        'type': 'external',
+                                        'type_code': 'e'}}}},
+                        'router_id': '100.1.1.1',
+                        'table_version': 11}}}}}
+
+    golden_output_3 = {'execute.return_value': '''
+        2018-04-10T05:02:05: %UNICON-20-INFO: +++ execute  +++
+        show bgp ipv6 unicast labels vrf all
+        BGP routing table information for VRF VRF1, address family IPv6 Unicast
+        BGP table version is 18, Local Router ID is 110.1.1.1
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            In label/Out label
+        *>e85::/112           55:1::1:101         492287/nolabel (VRF1)
+        *>e85::1:0/112        55:1::1:101         492287/nolabel (VRF1)
+        *>e85::2:0/112        55:1::1:101         492287/nolabel (VRF1)
+        *>e85::3:0/112        55:1::1:101         492287/nolabel (VRF1)
+        *>e85::4:0/112        55:1::1:101         492287/nolabel (VRF1)
+        *>e88::/112           ::ffff:50.1.1.101
+                                                  21/16 (VRF1)
+        *>e88::1:0/112        ::ffff:50.1.1.101
+                                                  22/17 (VRF1)
+        *>e88::2:0/112        ::ffff:50.1.1.101
+                                                  23/18 (VRF1)
+        *>e88::3:0/112        ::ffff:50.1.1.101
+                                                  24/19 (VRF1)
+        *>e88::4:0/112        ::ffff:50.1.1.101
+                                                  25/20 (VRF1)
+
+        BGP routing table information for VRF default, address family IPv6 Unicast
+        BGP table version is 11, Local Router ID is 100.1.1.1
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+
+           Network            Next Hop            In label/Out label
+        *>e84::/112           50:1::1:101         nolabel/nolabel
+        *>e84::1:0/112        50:1::1:101         nolabel/nolabel
+        *>e84::2:0/112        50:1::1:101         nolabel/nolabel
+        '''}
+
+    def test_golden_vrf_all1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
         obj = ShowBgpLabels(device=self.device)
         parsed_output = obj.parse(address_family='ipv4 unicast', vrf='all')
-        self.assertEqual(parsed_output,self.golden_parsed_output_1)
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden_vrf_all2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowBgpLabels(device=self.device)
+        parsed_output = obj.parse(address_family='ipv4 unicast', vrf='all')
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_vrf_all3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowBgpLabels(device=self.device)
+        parsed_output = obj.parse(address_family='ipv6 unicast', vrf='all')
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
