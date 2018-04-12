@@ -144,11 +144,10 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
                     key = 'num_of_msts'
                 elif 'vlan' in line:
                     key = 'num_of_vlans'
-
                 ret_dict.setdefault('total_statistics', {})\
                     .setdefault(key, int(group.pop('num')))
                 ret_dict.setdefault('total_statistics', {})\
-                    .update({k.lower():int(v) for k, v in group.items()})
+                    .update({k:int(v) for k, v in group.items()})
                 continue
 
             # Configured Pathcost method used is short
