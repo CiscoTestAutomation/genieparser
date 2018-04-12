@@ -39,9 +39,13 @@ class ShowIpArp(ShowIpArpSchema):
     def cli(self):
         output = self.device.execute('show ip arp')
          
+        if not 'Flags' not in output:
+            header = ['Address', 'Age', 'MAC Address', 'Interface']
+        else:
+            header = ['Address', 'Age', 'MAC Address', 'Interface', 'Flags']
         result = parsergen.oper_fill_tabular(
                       device_output=output,
                       device_os= 'nxos',
-                      header_fields= ['Address', 'Age', 'MAC Address', 'Interface', 'Flags'],
+                      header_fields= header,
                       index= [0])
         return result.entries
