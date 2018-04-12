@@ -1806,8 +1806,9 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                             [trigger]['trig_tid'] = int(m.groupdict()['trig_tid'])
                 continue
 
+
             #                       Allocated       Freed         
-            # Remote Prefixes:      10              0           
+            # Remote Prefixes:      10              0
             # Remote Path-elems:    10              0
 
             #                       Number          Mem Used      
@@ -1878,7 +1879,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
         return ret_dict
 
 
-    def yang(self, vrf_type):
+    def yang(self, vrf_type , af_type=''):
 
         if not vrf_type in ['all', 'vrf']:
             raise Exception("Variable 'vrf_type' can only be 'all' or 'vrf'")
@@ -3002,7 +3003,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
 
         return ret_dict
 
-    def yang(self, vrf_type):
+    def yang(self, vrf_type, af_type=''):
 
         if not vrf_type in ['all', 'vrf']:
             raise Exception("Variable 'vrf_type' can only be 'all' or 'vrf'")
