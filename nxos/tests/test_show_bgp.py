@@ -22687,7 +22687,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
-                                        'vrf': 'VRF1'}}},
+                                        'vpn': 'VRF1'}}},
                             '85.0.1.0/24': 
                                 {'index': 
                                     {0: 
@@ -22700,7 +22700,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
-                                        'vrf': 'VRF1'}}},
+                                        'vpn': 'VRF1'}}},
                             '85.0.2.0/24': 
                                 {'index': 
                                     {0: 
@@ -22713,7 +22713,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
-                                        'vrf': 'VRF1'}}},
+                                        'vpn': 'VRF1'}}},
                             '85.0.3.0/24': 
                                 {'index': 
                                     {0: 
@@ -22726,7 +22726,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
-                                        'vrf': 'VRF1'}}},
+                                        'vpn': 'VRF1'}}},
                             '85.0.4.0/24': 
                                 {'index': 
                                     {0: 
@@ -22739,7 +22739,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
-                                        'vrf': 'VRF1'}}},
+                                        'vpn': 'VRF1'}}},
                             '88.0.0.0/24': 
                                 {'index': 
                                     {0: 
@@ -22752,7 +22752,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
-                                        'vrf': 'VRF1'}}},
+                                        'vpn': 'VRF1'}}},
                             '88.0.1.0/24': 
                                 {'index': 
                                     {0: 
@@ -22765,7 +22765,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
-                                        'vrf': 'VRF1'}}},
+                                        'vpn': 'VRF1'}}},
                             '88.0.2.0/24': 
                                 {'index': 
                                     {0: 
@@ -22778,7 +22778,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
-                                        'vrf': 'VRF1'}}},
+                                        'vpn': 'VRF1'}}},
                             '88.0.3.0/24': 
                                 {'index': 
                                     {0: 
@@ -22791,7 +22791,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
-                                        'vrf': 'VRF1'}}},
+                                        'vpn': 'VRF1'}}},
                             '88.0.4.0/24': 
                                 {'index': 
                                     {0: 
@@ -22804,7 +22804,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
-                                        'vrf': 'VRF1'}}}},
+                                        'vpn': 'VRF1'}}}},
                         'router_id': '110.1.1.1',
                         'table_version': 18}}},
             'default': 
@@ -22925,7 +22925,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
-                                        'vrf': 'VRF1'}}},
+                                        'vpn': 'VRF1'}}},
                             '85::1:0/112': 
                                 {'index': 
                                     {0: 
@@ -22938,7 +22938,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
-                                        'vrf': 'VRF1'}}},
+                                        'vpn': 'VRF1'}}},
                             '85::2:0/112': 
                                 {'index': 
                                     {0: 
@@ -22951,7 +22951,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
-                                        'vrf': 'VRF1'}}},
+                                        'vpn': 'VRF1'}}},
                             '85::3:0/112': 
                                 {'index': 
                                     {0: 
@@ -22964,7 +22964,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
-                                        'vrf': 'VRF1'}}},
+                                        'vpn': 'VRF1'}}},
                             '85::4:0/112': 
                                 {'index': 
                                     {0: 
@@ -22977,7 +22977,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
-                                        'vrf': 'VRF1'}}},
+                                        'vpn': 'VRF1'}}},
                             '88::/112': 
                                 {'index': 
                                     {0: 
@@ -22990,7 +22990,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
-                                        'vrf': 'VRF1'}}},
+                                        'vpn': 'VRF1'}}},
                             '88::1:0/112': 
                                 {'index': 
                                     {0: 
@@ -23003,7 +23003,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
-                                        'vrf': 'VRF1'}}},
+                                        'vpn': 'VRF1'}}},
                             '88::2:0/112': 
                                 {'index': 
                                     {0: 
@@ -23016,7 +23016,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
-                                        'vrf': 'VRF1'}}},
+                                        'vpn': 'VRF1'}}},
                             '88::3:0/112': 
                                 {'index': 
                                     {0: 
@@ -23029,7 +23029,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
-                                        'vrf': 'VRF1'}}},
+                                        'vpn': 'VRF1'}}},
                             '88::4:0/112': 
                                 {'index': 
                                     {0: 
@@ -23042,7 +23042,7 @@ class test_show_bgp_labels_cli(unittest.TestCase):
                                         'status_code': '*',
                                         'type': 'external',
                                         'type_code': 'e',
-                                        'vrf': 'VRF1'}}}},
+                                        'vpn': 'VRF1'}}}},
                         'router_id': '110.1.1.1',
                         'table_version': 18}}},
             'default': 
