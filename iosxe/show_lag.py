@@ -418,7 +418,7 @@ class ShowPagpInternalSchema(MetaParser):
     }
 
 # ====================================================
-#  parser for show pagp counters
+#  parser for show pagp Internal
 # ====================================================
 class ShowPagpInternal(ShowPagpInternalSchema):
     """Parser for :
@@ -555,7 +555,7 @@ class ShowPagpNeighbor(ShowPagpNeighborSchema):
         return result_dict
 
 # ====================================================
-#  schema for show lacp internal
+#  schema for show pagp internal
 # ====================================================
 class ShowPagpInternalSchema(MetaParser):
     """Schema for:
