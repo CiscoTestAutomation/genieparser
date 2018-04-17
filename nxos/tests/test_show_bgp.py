@@ -12,8 +12,10 @@ from ats.topology import loader
 from metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # nxos show_bgp
-from parser.nxos.show_bgp import ShowBgpProcessVrfAll, ShowBgpPeerSession,\
-                                 ShowBgpPeerPolicy, ShowBgpPeerTemplate,\
+from parser.nxos.show_bgp import ShowBgpProcessVrfAll,\
+                                 ShowBgpPeerSession,\
+                                 ShowBgpPeerPolicy,\
+                                 ShowBgpPeerTemplate,\
                                  ShowBgpVrfAllAll,\
                                  ShowBgpVrfAllNeighbors,\
                                  ShowBgpVrfAllAllNextHopDatabase,\
@@ -29,7 +31,8 @@ from parser.nxos.show_bgp import ShowBgpProcessVrfAll, ShowBgpPeerSession,\
                                  ShowBgpPolicyStatisticsRedistribute, \
                                  ShowBgpPolicyStatisticsNeighbor, \
                                  ShowBgpPolicyStatisticsDampening,\
-                                 ShowBgpSessions, ShowBgpLabels
+                                 ShowBgpSessions,\
+                                 ShowBgpLabels
 
 
 # =========================================
@@ -12840,6 +12843,7 @@ class test_show_bgp_vrf_all_all_summary(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+
 class test_show_bgp_vrf_all_all_summary_xml(unittest.TestCase):
 
     '''Unit test for show bgp vrf <WORD> all summary - XML'''
@@ -13144,7 +13148,7 @@ class test_show_bgp_vrf_all_all_summary_xml(unittest.TestCase):
 #  Unit test for 'show bgp process vrf all all dampening parameters'
 # ==================================================================
 
-class TestShowBgpVrfAllAllDampeningParameters(unittest.TestCase):
+class test_show_bgp_vrf_all_all_dampening_parameters_cli(unittest.TestCase):
     ''' unittest for "show bgp vrf all all dampening parameters"
     '''
     device = Device(name='aDevice')
@@ -13245,7 +13249,7 @@ class TestShowBgpVrfAllAllDampeningParameters(unittest.TestCase):
             parsed_output = bgp_obj.parse()
 
 
-class TestShowBgpVrfAllAllDampeningParameters_xml(unittest.TestCase):
+class test_show_bgp_vrf_all_all_dampening_parameters_xml(unittest.TestCase):
 
     '''Unit test for show bgp vrf <WORD> all dampening parameters - XML'''
     
@@ -14220,6 +14224,7 @@ class test_show_bgp_vrf_all_neighbors_advertised_routes(unittest.TestCase):
         obj = ShowBgpVrfAllNeighborsAdvertisedRoutes(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(vrf='all', neighbor='10.4.6.6')
+
 
 # ===============================================================
 # Unit test for 'show bgp vrf <WORD> all neighbors <WORD> routes'
@@ -21281,9 +21286,9 @@ class test_show_bgp_peer_template_xml(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-# =============================================================================
-#  Unit test for 'show bgp [vrf xxx] xxx unicast policy statistics redistribute'
-# =============================================================================
+# ================================================================================
+#  Unit test for 'show bgp vrf <WORD> <AF> unicast policy statistics redistribute'
+# ================================================================================
 
 class test_show_bgp_unicast_ps_redistrubute_cli(unittest.TestCase):
 
@@ -21679,9 +21684,10 @@ class test_show_bgp_unicast_ps_redistrubute_xml(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 
-# =============================================================================
-#  Unit test for 'show bgp [vrf xxx] xxx unicast policy statistics neighbor xxx'
-# =============================================================================
+# ==================================================================================
+#  Unit test for 'show bgp vrf <WORD> <AF> unicast policy statistics neighbor <NBR>'
+# ==================================================================================
+
 class test_show_bgp_unicast_ps_neighbor_cli(unittest.TestCase):
 
     '''Unit test for show bgp [vrf xxx] xxx unicast policy
@@ -21919,7 +21925,7 @@ class test_show_bgp_unicast_ps_neighbor_xml(unittest.TestCase):
 
 
 # =============================================================================
-#  Unit test for 'show bgp [vrf xxx] xxx unicast policy statistics dampening'
+#  Unit test for 'show bgp vrf <WORD> <AF> unicast policy statistics dampening'
 # =============================================================================
 
 class test_show_bgp_unicast_ps_dampening_cli(unittest.TestCase):
@@ -22150,9 +22156,9 @@ class test_show_bgp_unicast_ps_dampening_xml(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-# =============================================================================
-#  Unit test for 'show bgp sessions [vrf <WROD>]'
-# =============================================================================
+# =============================================
+#  Unit test for 'show bgp sessions vrf <WORD>'
+# =============================================
 
 class test_show_bgp_sessions_cli(unittest.TestCase):
 
@@ -22498,14 +22504,14 @@ class test_show_bgp_sessions_xml(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-# =============================================================================
-#  Unit test for 'show bgp <address_family> labels [vrf <WROD>]'
-# =============================================================================
+# ============================================================
+#  Unit test for 'show bgp <address_family> labels vrf <WORD>'
+# ============================================================
 
 class test_show_bgp_labels_cli(unittest.TestCase):
 
-    '''Unit test for show bgp <address_family> labels [vrf <WROD>] - CLI'''
-    
+    '''Unit test for show bgp <address_family> labels vrf <WORD> - CLI'''
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -23156,8 +23162,9 @@ class test_show_bgp_labels_cli(unittest.TestCase):
 class test_show_bgp_labels_xml(unittest.TestCase):
 
     '''Unit test for show bgp <address_family> labels [vrf <WROD>] - XML'''
-    
+
     device = Device(name='aDevice')
+
     golden_parsed_output = {
         "vrf": {
           "default": {
@@ -23634,6 +23641,7 @@ class test_show_bgp_labels_xml(unittest.TestCase):
         obj = ShowBgpLabels(device=self.device, context='xml')
         parsed_output = obj.parse(address_family='ipv4 unicast', vrf='all')
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
 
 if __name__ == '__main__':
     unittest.main()

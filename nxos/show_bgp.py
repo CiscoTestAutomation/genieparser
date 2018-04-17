@@ -3924,6 +3924,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
                 
         return etree_dict
 
+
 # ==================================================
 # Schema for 'show bgp vrf <WROD> all dampening parameters'
 # ==================================================
@@ -4246,6 +4247,7 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
                             pass
 
         return etree_dict
+
 
 # ==========================================================================
 # Schema for 'show bgp vrf <vrf> all neighbors <neighbor> advertised-routes'
@@ -8242,7 +8244,7 @@ class ShowBgpPolicyStatisticsSchema(MetaParser):
 # * 'show bgp vrf <vrf> <address_family>  policy statistics dampening''
 # * 'show bgp vrf <vrf> <address_family>  policy statistics neighbor <neighbor>'
 # ==============================================================================
-class ShowBgpPolicyStatistics(ShowBgpPolicyStatisticsSchema):
+class ShowBgpPolicyStatisticsParser(ShowBgpPolicyStatisticsSchema):
     """Parser for:
         show bgp [vrf <vrf>] <address_family>  policy statistics redistribute
         show bgp [vrf <vrf>] <address_family>  policy statistics dampening
@@ -8544,7 +8546,7 @@ class ShowBgpPolicyStatistics(ShowBgpPolicyStatisticsSchema):
 # ===============================================================================
 # Parser for 'show bgp vrf <vrf> <address_family> policy statistics redistribute'
 # ===============================================================================
-class ShowBgpPolicyStatisticsRedistribute(ShowBgpPolicyStatistics):
+class ShowBgpPolicyStatisticsRedistribute(ShowBgpPolicyStatisticsParser):
     """Parser for:
         show bgp [vrf <vrf>] <address_family> policy statistics redistribute
         parser class implements detail parsing mechanisms for cli,xml output"""
@@ -8570,7 +8572,7 @@ class ShowBgpPolicyStatisticsRedistribute(ShowBgpPolicyStatistics):
 # ==================================================================================
 # Parser for 'show bgp vrf <vrf> <address_family> policy statistics neighbor <WORD>'
 # ==================================================================================
-class ShowBgpPolicyStatisticsNeighbor(ShowBgpPolicyStatistics):
+class ShowBgpPolicyStatisticsNeighbor(ShowBgpPolicyStatisticsParser):
     """Parser for:
         show bgp [vrf <vrf>] <address_family> policy statistics neighbor <neighbor>
         parser class implements detail parsing mechanisms for cli,xml output"""
@@ -8596,7 +8598,7 @@ class ShowBgpPolicyStatisticsNeighbor(ShowBgpPolicyStatistics):
 # ============================================================================
 # Parser for 'show bgp vrf <vrf> <address_family> policy statistics dampening'
 # ============================================================================
-class ShowBgpPolicyStatisticsDampening(ShowBgpPolicyStatistics):
+class ShowBgpPolicyStatisticsDampening(ShowBgpPolicyStatisticsParser):
     """Parser for:
         show bgp [vrf <vrf>] <address_family> policy statistics dampening
         parser class implements detail parsing mechanisms for cli,xml output"""
@@ -8620,10 +8622,9 @@ class ShowBgpPolicyStatisticsDampening(ShowBgpPolicyStatistics):
         return super().xml(cmd)
 
 
-# ==============================================================================
-# Schema for:
-# * 'show bgp sessions [vrf <WORD>]'
-# ==============================================================================
+# =========================================
+# Schema for 'show bgp sessions vrf <WORD>'
+# =========================================
 class ShowBgpSessionsSchema(MetaParser):
     """Schema for:
        show bgp sessions
@@ -8658,10 +8659,9 @@ class ShowBgpSessionsSchema(MetaParser):
         }
     }
 
-# ==============================================================================
-# Parser for:
-# * 'show bgp sessions'
-# ==============================================================================
+# =========================================
+# Parser for 'show bgp sessions vrf <WORD>'
+# =========================================
 class ShowBgpSessions(ShowBgpSessionsSchema):
     """Parser for:
         show bgp sessions"""
@@ -8977,10 +8977,9 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
         return etree_dict
 
 
-# ==============================================================================
-# Schema for:
-# * 'show bgp <address_family> labels [vrf <WROD>]'
-# ==============================================================================
+# ========================================================
+# Schema for 'show bgp <address_family> labels vrf <WORD>'
+# ========================================================
 class ShowBgpLabelsSchema(MetaParser):
     """Schema for:
        show bgp <address_family> labels
@@ -9043,10 +9042,9 @@ class ShowBgpLabelsSchema(MetaParser):
         }
     }
 
-# ==============================================================================
-# Parser for:
-# * 'show bgp <address_family> labels [vrf <WROD>]'
-# ==============================================================================
+# ========================================================
+# Parser for 'show bgp <address_family> labels vrf <WORD>'
+# ========================================================
 class ShowBgpLabels(ShowBgpLabelsSchema):
     """Parser for:
         show bgp <address_family> labels [vrf <WROD>]"""
@@ -9223,27 +9221,6 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
                 sub_dict['prefix'][prefix]['index'][index]\
                     .setdefault('vpn', vpn) if vpn else None
                 continue
-
-        if 'vrf' not in ret_dict:
-            return ret_dict
-
-        for vrf in ret_dict['vrf']:
-            if 'address_family' not in ret_dict['vrf'][vrf]:
-                continue
-            for af in ret_dict['vrf'][vrf]['address_family']:
-                af_dict = ret_dict['vrf'][vrf]['address_family'][af]
-                if 'prefix' in af_dict:
-                    for prefix in af_dict['prefix']:
-                        if len(af_dict['prefix'][prefix]['index'].keys()) > 1:
-                            ind = 1
-                            nexthop_dict = {}
-                            sorted_list = sorted(af_dict['prefix'][prefix]['index'].items(),
-                                               key = lambda x:x[1]['nexthop'])
-                            for i, j in enumerate(sorted_list):
-                                nexthop_dict[ind] = af_dict['prefix'][prefix]['index'][j[0]]
-                                ind += 1
-                            del(af_dict['prefix'][prefix]['index'])
-                            af_dict['prefix'][prefix]['index'] = nexthop_dict
 
         return ret_dict
 
@@ -9474,6 +9451,5 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
                                 hold_down = index_root.find('{}hold_down'.format(namespace)).text
                                 if hold_down:
                                     sub_dict['prefix'][prefix]['index'][index]['hold_down'] = hold_down
-
 
         return etree_dict
