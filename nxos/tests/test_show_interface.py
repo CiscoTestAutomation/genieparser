@@ -2622,7 +2622,7 @@ class test_show_interface_brief(unittest.TestCase):
                               {'ethernet': 
                                 {'Eth1/1': {'mode': 'routed',
                                             'port_ch': '--',
-                                            'reason': 'none                      ',
+                                            'reason': 'none',
                                             'speed': '1000(D)',
                                             'status': 'up',
                                             'type': 'eth',
@@ -2630,7 +2630,7 @@ class test_show_interface_brief(unittest.TestCase):
                                  'Eth1/3': {'mode': 'access',
                                             'port_ch': '--',
                                             'reason': 'Administratively '
-                                                      'down     ',
+                                                      'down',
                                             'speed': 'auto(D)',
                                             'status': 'down',
                                             'type': 'eth',
@@ -2638,7 +2638,7 @@ class test_show_interface_brief(unittest.TestCase):
                                  'Eth1/6': {'mode': 'access',
                                             'port_ch': '--',
                                             'reason': 'Link not '
-                                                      'connected        ',
+                                                      'connected',
                                             'speed': 'auto(D)',
                                             'status': 'down',
                                             'type': 'eth',
@@ -2659,7 +2659,7 @@ class test_show_interface_brief(unittest.TestCase):
                                   {'mode': 'access',
                                    'protocol': 'none',
                                    'reason': 'No operational '
-                                             'members     ',
+                                             'members',
                                    'speed': 'auto(I) ',
                                    'status': 'down',
                                    'type': 'eth',

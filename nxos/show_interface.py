@@ -2522,7 +2522,7 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
                 interface_dict['interface']['ethernet'][interface]['status'] =\
                     m.groupdict()['status']
                 interface_dict['interface']['ethernet'][interface]['reason'] =\
-                    m.groupdict()['reason']
+                    m.groupdict()['reason'].strip()
                 interface_dict['interface']['ethernet'][interface]['speed'] =\
                     m.groupdict()['speed']
                 interface_dict['interface']['ethernet'][interface]['port_ch'] =\
@@ -2559,7 +2559,7 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
                 interface_dict['interface']['port_channel'][interface]['status'] = \
                     m.groupdict()['status']
                 interface_dict['interface']['port_channel'][interface]['reason'] = \
-                    m.groupdict()['reason']
+                    m.groupdict()['reason'].strip()
                 interface_dict['interface']['port_channel'][interface]['speed'] = \
                     m.groupdict()['speed']
                 interface_dict['interface']['port_channel'][interface]['protocol'] = \

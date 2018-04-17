@@ -9145,14 +9145,15 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
             # * i0.0.0.0/0          95.1.1.0            nolabel/9100
             # *>i                   90.1.1.0            nolabel/9100
             # a83.0.0.0/16        0.0.0.0             nolabel/nolabel
+            # *>e85.0.0.0/24        55.1.1.101          492288/nolabel (VRF1)
             # *>e88::/112           ::ffff:50.1.1.101
             p3 = re.compile(r'^(?P<status>s|S|x|d|h|\*)?'
-                             '(?P<best>\>)? *'
-                             '(?P<type_code>i|e|c|l|a|r|I)'
-                             '(?P<prefix>[\w\/\.\:]+)? +'
-                             '(?P<next_hop>[\w\/\.\:]+)( +'
-                             '(?P<in_label>\w+)\/'
-                             '(?P<out_label>\w+))?$')
+                             '(?P<best>\>)?'
+                             ' *(?P<type_code>i|e|c|l|a|r|I)'
+                             '(?P<prefix>[\w\/\.\:]+)?'
+                             ' +(?P<next_hop>[\w\/\.\:]+)'
+                             '(?: +(?P<in_label>\w+)\/(?P<out_label>\w+))?'
+                             '(?: +\((?P<vpn>(\S+))\))?$')
             m = p3.match(line)
             if m:
                 prefix_cur = m.groupdict()['prefix']
@@ -9168,6 +9169,7 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
                 next_hop = m.groupdict()['next_hop']
                 in_label = m.groupdict()['in_label']
                 out_label = m.groupdict()['out_label']
+                vpn = m.groupdict()['vpn']
 
 
                 if 'prefix' not in sub_dict:
@@ -9201,19 +9203,47 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
                     .setdefault('in_label', in_label) if in_label else None
                 sub_dict['prefix'][prefix]['index'][index]\
                     .setdefault('out_label', out_label) if out_label else None
+                sub_dict['prefix'][prefix]['index'][index]\
+                    .setdefault('vpn', vpn) if vpn else None
                 continue
 
             #                                           nolabel/16
-            p3_1 = re.compile(r'^(?P<in_label>\w+)\/(?P<out_label>\w+)$')
+            #                                           22/17 (VRF1)
+            p3_1 = re.compile(r'^(?P<in_label>\w+)\/(?P<out_label>\w+)'
+                               '(?: +\((?P<vpn>(\S+))\))?$')
             m = p3_1.match(line)
             if m:
                 in_label = m.groupdict()['in_label']
                 out_label = m.groupdict()['out_label']
+                vpn = m.groupdict()['vpn']
                 sub_dict['prefix'][prefix]['index'][index]\
                     .setdefault('in_label', in_label) if in_label else None
                 sub_dict['prefix'][prefix]['index'][index]\
                     .setdefault('out_label', out_label) if out_label else None
+                sub_dict['prefix'][prefix]['index'][index]\
+                    .setdefault('vpn', vpn) if vpn else None
                 continue
+
+        if 'vrf' not in ret_dict:
+            return ret_dict
+
+        for vrf in ret_dict['vrf']:
+            if 'address_family' not in ret_dict['vrf'][vrf]:
+                continue
+            for af in ret_dict['vrf'][vrf]['address_family']:
+                af_dict = ret_dict['vrf'][vrf]['address_family'][af]
+                if 'prefix' in af_dict:
+                    for prefix in af_dict['prefix']:
+                        if len(af_dict['prefix'][prefix]['index'].keys()) > 1:
+                            ind = 1
+                            nexthop_dict = {}
+                            sorted_list = sorted(af_dict['prefix'][prefix]['index'].items(),
+                                               key = lambda x:x[1]['nexthop'])
+                            for i, j in enumerate(sorted_list):
+                                nexthop_dict[ind] = af_dict['prefix'][prefix]['index'][j[0]]
+                                ind += 1
+                            del(af_dict['prefix'][prefix]['index'])
+                            af_dict['prefix'][prefix]['index'] = nexthop_dict
 
         return ret_dict
 
@@ -9447,6 +9477,7 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
 
 
         return etree_dict
+<<<<<<< HEAD
 
 # ====================================================
 #  schema for show bgp l2vpn evpn summary
@@ -10439,3 +10470,5 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
                 continue
         return result_dict
 
+=======
+>>>>>>> dev

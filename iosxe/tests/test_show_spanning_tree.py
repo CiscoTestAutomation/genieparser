@@ -175,7 +175,7 @@ class test_show_spanning_tree_summary(unittest.TestCase):
         5 vlans                      0         5        0          0          5
 
     '''
-    }
+   }
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
