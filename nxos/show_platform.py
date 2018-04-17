@@ -346,67 +346,6 @@ class ShowVersion(ShowVersionSchema):
 
         return version_dict
 
-    def xml(self):
-        ''' parsing mechanism: xml
-
-        Function xml() defines the xml type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
-        '''
-        output =  tcl.q.caas.abstract(device=self.device.handle, 
-                                      exec='show version | xml')
-        result = tcl.cast_any(output[1])
-
-        # transform the parser output to compliance with CLI version
-        result.update({'cmp':{'module':{'*':{'bios_compile_time':'',
-                                             'bios_version':'',
-                                             'image_compile_time':'',
-                                             'image_version':'',
-                                             'status':'',}}}})
-        return result
-
-    def yang(self):
-        ''' parsing mechanism: yang
-
-        Function yang() defines the yang type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
-        '''
-        base = testmodel.BaseTest()
-        base.connect_netconf()
-
-        netconf_request = """
-          <rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
-            <get>
-              <filter>
-                <native xmlns="">
-                    <version>
-                    </version>
-                </native>
-              </filter>
-            </get>
-          </rpc>
-        """
-        
-        netconf_request += "\n##\n"
-        ncout = base.netconf.send_config(netconf_request)
-        
-        #    ### XML output from yang
-        #    <ns0:rpc-reply xmlns:ns0="urn:ietf:params:xml:ns:netconf:base:1.0" 
-        #    xmlns:ns1="urn:ios" message-id="101"><ns0:data><ns1:native>
-        #    ....
-        #    </ns1:native></ns0:data></ns0:rpc-reply>
-        
-        filtered_result = xmltodict.parse(ncout, 
-                                          process_namespaces=True,
-                                          namespaces={
-                            'urn:ietf:params:xml:ns:netconf:base:1.0':None,
-                            'urn:ios':None,'urn:iosxr':None,'urn:nxos':None,})
-        partial_result = dict(
-                            filtered_result['rpc-reply']['data'].get('native'))
-        # to satisfy the schema, need to complete the dict by merging cli output
-        result = self.cli()
-        result.update(partial_result)
-        return result
-
 class ShowInventorySchema(MetaParser):
     """Schema for show inventory"""
     schema = {'name':

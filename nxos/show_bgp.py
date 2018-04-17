@@ -9224,6 +9224,27 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
                     .setdefault('vpn', vpn) if vpn else None
                 continue
 
+        if 'vrf' not in ret_dict:
+            return ret_dict
+
+        for vrf in ret_dict['vrf']:
+            if 'address_family' not in ret_dict['vrf'][vrf]:
+                continue
+            for af in ret_dict['vrf'][vrf]['address_family']:
+                af_dict = ret_dict['vrf'][vrf]['address_family'][af]
+                if 'prefix' in af_dict:
+                    for prefix in af_dict['prefix']:
+                        if len(af_dict['prefix'][prefix]['index'].keys()) > 1:
+                            ind = 1
+                            nexthop_dict = {}
+                            sorted_list = sorted(af_dict['prefix'][prefix]['index'].items(),
+                                               key = lambda x:x[1]['nexthop'])
+                            for i, j in enumerate(sorted_list):
+                                nexthop_dict[ind] = af_dict['prefix'][prefix]['index'][j[0]]
+                                ind += 1
+                            del(af_dict['prefix'][prefix]['index'])
+                            af_dict['prefix'][prefix]['index'] = nexthop_dict
+
         return ret_dict
 
     def xml(self, address_family, vrf=''):

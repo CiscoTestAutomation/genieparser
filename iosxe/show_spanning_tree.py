@@ -41,7 +41,7 @@ class ShowSpanningTreeSummarySchema(MetaParser):
             'method': str,
             Optional('operational_value'): str,
         },
-        'mode': {
+        Optional('mode'): {
             Any(): {  # mstp, pvst, rapid_pvst
                 Any(): {   # <mst_domain>,  <pvst_id>
                     'blocking': int,
@@ -78,12 +78,14 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
         p1 = re.compile(r'^Switch +is +in +(?P<mode>[\w\-]+) +mode( *\(IEEE +Standard\))?$')
         p2 = re.compile(r'^Root +bridge +for: +(?P<root_bridge_for>[\w\-\,\s]+)$')
         p3 = re.compile(r'^(?P<name>[\w\s]+) +is +(?P<value>disabled|enabled)$')
-        p4 = re.compile(r'^(?P<id>\w+) +(?P<blocking>\d+) +(?P<listening>\d+)'
+        p4 = re.compile(r'^(?P<id>(?!Total)\w+) +(?P<blocking>\d+) +(?P<listening>\d+)'
                          ' +(?P<learning>\d+) +(?P<forwarding>\d+) +(?P<stp_active>\d+)$')
         p5 = re.compile(r'^(?P<num>\d+) +(msts|vlans) +(?P<blockings>\d+) +(?P<listenings>\d+)'
                          ' +(?P<learnings>\d+) +(?P<forwardings>\d+) +(?P<stp_actives>\d+)$')
         p6 = re.compile(r'^Configured +Pathcost +method +used +is +(?P<method>\w+) *'
                          '(\(Operational +value +is +(?P<operational_value>\w+)\))?$')
+        p7 = re.compile(r'Total +(?P<blockings>\d+) +(?P<listenings>\d+)'
+                         ' +(?P<learnings>\d+) +(?P<forwardings>\d+) +(?P<stp_actives>\d+)$')
 
         key_map = {'EtherChannel misconfig guard': 'etherchannel_misconfig_guard',
                    'Extended system ID': 'extended_system_id',
@@ -96,7 +98,7 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
 
         for line in out.splitlines():
             line = line.strip()
-            
+
             # Switch is in mst mode (IEEE Standard)
             m = p1.match(line)
             if m:
@@ -140,7 +142,7 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
                 group = m.groupdict()
                 if 'mst' in line:
                     key = 'num_of_msts'
-                else:
+                elif 'vlan' in line:
                     key = 'num_of_vlans'
                 ret_dict.setdefault('total_statistics', {})\
                     .setdefault(key, int(group.pop('num')))
@@ -156,6 +158,13 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
                 
                 ret_dict.setdefault('configured_pathcost', {})\
                     .update({k:v for k, v in group.items() if v})
+                continue
+
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('total_statistics', {}) \
+                     .update({k: int(v) for k, v in group.items()})
                 continue
 
         return ret_dict

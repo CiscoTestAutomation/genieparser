@@ -975,12 +975,10 @@ class ShowRedundancy(ShowRedundancySchema):
             # Active node booted Tue Jan  2 07:32:33 2018: 1 day, 1 hour, 6 minutes ago
             # Active node booted Thu Jan 11 12:32:03 2018: 1 week, 4 days, 20 hours, 19 minutes ago
             p7 = re.compile(r'\s*Active +node +booted'
-                             ' +(?P<node_uptime_timestamp>[a-zA-Z0-9\:\s]+):'
-                             ' +(?P<node_uptime>((?P<ignore>\d+ \w+, *)?'
-                             '(?P<day>\d+) +(day|days), *)?'
-                             '((?P<hour>\d+) +(hour|hours), *)?'
-                             '(((?P<minute>\d+) +(minute|minutes))|'
-                             '((?P<second>\d+) +(seconds|seconds)))?) +ago$')
+                            ' +(?P<node_uptime_timestamp>[a-zA-Z0-9\:\s]+):'
+                            ' +(?P<node_uptime>((?P<ignore>\d+ \w+, *)?((?P<week>\d+) +(week|weeks), )?'
+                            '(((?P<day>\d+) +(day|days))?, )?)?(((?P<hour>\d+) +(hour|hours))?, )?'
+                            '(((?P<minute>\d+) +(minute|minutes))|((?P<second>\d+) +(seconds|seconds)))?) +ago$')
             m = p7.match(line)
             if m:
                 redundancy_dict['node'][node]['node_uptime_timestamp'] = \
@@ -988,6 +986,8 @@ class ShowRedundancy(ShowRedundancySchema):
                 redundancy_dict['node'][node]['node_uptime'] = \
                     str(m.groupdict()['node_uptime'])
                 time_in_seconds = 0
+                if m.groupdict()['week']:
+                    time_in_seconds += int(m.groupdict()['week']) * 7 * 86400
                 if m.groupdict()['day']:
                     time_in_seconds += int(m.groupdict()['day']) * 86400
                 if m.groupdict()['hour']:
