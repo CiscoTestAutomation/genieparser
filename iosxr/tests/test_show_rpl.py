@@ -59,7 +59,7 @@ class test_show_rpl_route_policy(unittest.TestCase):
                                'conditions': {}},
                           20: {'actions': {'actions': 'pass'},
                                'conditions': {'match_area_eq': '1',
-                                              'match_level_eq': 'level-2'}},
+                                              'match_level_eq': 'level-1'}},
                           30: {'actions': {'actions': 'pass'},
                                'conditions': {'match_as_path_list': 'test',
                                               'match_prefix_list': 'prefix-set1'}},
