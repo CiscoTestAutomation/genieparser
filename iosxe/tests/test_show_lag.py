@@ -76,6 +76,7 @@ class test_show_lacp_counters(unittest.TestCase):
         'interfaces': {
             'Port-channel1': {
                 'name': 'Port-channel1',
+                'protocol': 'lacp',
                 'members': {
                     'GigabitEthernet2': {
                         'interface': 'GigabitEthernet2',
@@ -105,6 +106,7 @@ class test_show_lacp_counters(unittest.TestCase):
             },
             'Port-channel2': {
                'name': 'Port-channel2',
+               'protocol': 'lacp',
                'members': {
                     'GigabitEthernet4': {
                         'interface': 'GigabitEthernet4',
@@ -202,8 +204,10 @@ class test_show_lacp_internal(unittest.TestCase):
                         'port_num': 1,
                         'lacp_port_priority': 32768,
                         'flags': 'SA',
+                        'activity': 'auto',
                         'state': 'bndl',
                         'bundled': True,
+                        'port_state': 61,
                         },
                     'GigabitEthernet3': {
                         'interface': 'GigabitEthernet3',
@@ -212,8 +216,10 @@ class test_show_lacp_internal(unittest.TestCase):
                         'port_num': 1,
                         'lacp_port_priority': 32768,
                         'flags': 'SA',
+                        'activity': 'auto',
                         'state': 'bndl',
                         'bundled': True,
+                        'port_state': 61,
                     },
                 },
             },
@@ -229,7 +235,9 @@ class test_show_lacp_internal(unittest.TestCase):
                         'lacp_port_priority': 32768,
                         'flags': 'SA',
                         'state': 'bndl',
+                        'activity': 'auto',
                         'bundled': True,
+                        'port_state': 61,
                     },
                     'GigabitEthernet5': {
                         'interface': 'GigabitEthernet5',
@@ -238,8 +246,10 @@ class test_show_lacp_internal(unittest.TestCase):
                         'port_num': 1,
                         'lacp_port_priority': 32768,
                         'flags': 'SA',
+                        'activity': 'auto',
                         'state': 'bndl',
                         'bundled': True,
+                        'port_state': 61,
                     },
                     'GigabitEthernet6': {
                         'interface': 'GigabitEthernet6',
@@ -248,12 +258,14 @@ class test_show_lacp_internal(unittest.TestCase):
                         'port_num': 1,
                         'lacp_port_priority': 32768,
                         'flags': 'SA',
+                        'activity': 'auto',
                         'state': 'bndl',
                         'bundled': True,
+                        'port_state': 61,
+                    },
                 },
             },
-        },
-    }
+        }
     }
 
     def test_empty(self):
@@ -316,7 +328,7 @@ class test_show_lacp_neighbor(unittest.TestCase):
                         'activity' : 'active',
                         'partner_id': '001e.49e6.bc00',
                         'age': 25,
-                        'port_state': '0x3D'
+                        'port_state': 61
                         },
                     'GigabitEthernet3': {
                         'interface': 'GigabitEthernet3',
@@ -326,7 +338,7 @@ class test_show_lacp_neighbor(unittest.TestCase):
                         'lacp_port_priority': 32768,
                         'flags': 'SA',
                         'activity': 'active',
-                        'port_state': '0x3D',
+                        'port_state': 61,
                         'partner_id': '001e.49e6.bc00',
                         'age': 19,
                     },
@@ -343,7 +355,7 @@ class test_show_lacp_neighbor(unittest.TestCase):
                         'port_num': 1,
                         'lacp_port_priority': 32768,
                         'flags': 'SP',
-                        'port_state': '0x3C',
+                        'port_state': 60,
                         'activity': 'passive',
                         'partner_id': '001e.49e6.bc00',
                         'age': 15,
@@ -355,7 +367,7 @@ class test_show_lacp_neighbor(unittest.TestCase):
                         'port_num': 1,
                         'lacp_port_priority': 32768,
                         'flags': 'SP',
-                        'port_state': '0x3C',
+                        'port_state': 60,
                         'activity': 'passive',
                         'partner_id': '001e.49e6.bc00',
                         'age': 1
@@ -367,14 +379,14 @@ class test_show_lacp_neighbor(unittest.TestCase):
                         'port_num': 1,
                         'lacp_port_priority': 32768,
                         'flags': 'SP',
-                        'port_state': '0x3C',
+                        'port_state': 60,
                         'activity': 'passive',
                         'partner_id': '001e.49e6.bc00',
                         'age': 0
+                    },
                 },
             },
-        },
-    }
+        }
     }
 
     def test_empty(self):
@@ -545,7 +557,6 @@ class test_show_pagp_counters(unittest.TestCase):
                             'flush_out_pkts': 0,
                         },
                     },
-
                 },
             },
             'Port-channel2': {

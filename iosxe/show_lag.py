@@ -59,6 +59,7 @@ class ShowLacpCountersSchema(MetaParser):
         'interfaces': {
             Any(): {
                 'name': str,
+                'protocol': str,
                 'members': {
                     Any(): {
                         'interface': str,
@@ -111,6 +112,7 @@ class ShowLacpCounters(ShowLacpCountersSchema):
                 name = 'Port-channel'+ group.pop("channel_group")
                 intf_dict = result_dict.setdefault('interfaces', {}).setdefault(name,{})
                 intf_dict.update({'name': name})
+                intf_dict.update({'protocol': 'lacp'})
                 continue
 
             m = p2.match(line)
@@ -150,8 +152,10 @@ class ShowLacpInternalSchema(MetaParser):
                         'port_num': int,
                         'lacp_port_priority': int,
                         'flags': str,
+                        Optional('activity'): str,
                         'state': str,
                         'bundled': bool,
+                        'port_state': int,
                     },
                 }
             },
@@ -201,7 +205,11 @@ class ShowLacpInternal(ShowLacpInternalSchema):
                 interface = Common.convert_intf_name(group.pop("interface"))
                 member_dict = intf_dict.setdefault('members', {}).setdefault(interface, {})
                 member_dict.update({'interface': interface})
-                member_dict.update({'flags': group.pop('flags')})
+                flags = group.pop('flags')
+                activity = 'auto' if 'a' in flags.lower() else None
+                if activity:
+                    member_dict.update({'activity': activity})
+                member_dict.update({'flags': flags})
                 state = group.pop('state')
                 if 'bndl' in state:
                     bundled = True
@@ -213,6 +221,7 @@ class ShowLacpInternal(ShowLacpInternalSchema):
                 member_dict.update({'admin_key': int(group.pop('admin_key'),0)})
                 member_dict.update({'oper_key': int(group.pop('oper_key'),0)})
                 member_dict.update({'port_num': int(group.pop('port_num'),0)})
+                member_dict.update({'port_state': int(group.pop('port_state'),0)})
                 continue
 
         return result_dict
@@ -240,7 +249,7 @@ class ShowLacpNeighborSchema(MetaParser):
                         'age': int,
                         'flags': str,
                         'lacp_port_priority': int,
-                        'port_state': str,
+                        'port_state': int,
                     },
                 }
             },
@@ -303,7 +312,7 @@ class ShowLacpNeighbor(ShowLacpNeighborSchema):
                 member_dict.update({'oper_key': int(group.pop('oper_key'), 0)})
                 member_dict.update({'port_num': int(group.pop('port_num'), 0)})
                 member_dict.update({'partner_id': group.pop('partner_id')})
-                member_dict.update({'port_state': group.pop('port_state')})
+                member_dict.update({'port_state': int(group.pop('port_state'),0)})
                 member_dict.update({'age': int(group.pop('age'))})
                 continue
 
@@ -390,93 +399,6 @@ class ShowPagpCounters(ShowPagpCountersSchema):
         return result_dict
 
 # ====================================================
-#  schema for show pagp internal
-# ====================================================
-class ShowPagpInternalSchema(MetaParser):
-    """Schema for:
-        show pagp internal"""
-
-    schema = {
-        'interfaces': {
-            Any(): {
-                'name': str,
-                'protocol': str,
-                'members': {
-                    Any(): {
-                        'interface': str,
-                        'oper_key': int,
-                        'admin_key':int,
-                        'port_num': int,
-                        'lacp_port_priority': int,
-                        'flags': str,
-                        'state': str,
-                        'bundled': bool,
-                    },
-                }
-            },
-        },
-    }
-
-# ====================================================
-#  parser for show pagp Internal
-# ====================================================
-class ShowPagpInternal(ShowPagpInternalSchema):
-    """Parser for :
-      show pagp internal"""
-
-    def cli(self, channel_group=""):
-        out = self.device.execute('show lacp {} internal'.format(channel_group))
-
-        result_dict = {}
-        # Channel group 1
-        #                             LACP port     Admin     Oper    Port        Port
-        # Port      Flags   State     Priority      Key       Key     Number      State
-        # Gi2       SA      bndl      32768         0x1       0x1     0x1         0x3D
-
-        p1 = re.compile(r'^\s*Channel +group +(?P<channel_group>[\d]+)$')
-        p2 = re.compile(r'^\s*(?P<interface>[\w\/]+) +(?P<flags>[\w]+)'
-                        ' +(?P<state>[\w]+) +(?P<lacp_port_priority>[\d]+) +(?P<admin_key>[\w]+)'
-                        ' +(?P<oper_key>[\w]+) +(?P<port_num>[\w]+)'
-                        ' +(?P<port_state>[\w]+)$')
-
-        for line in out.splitlines():
-            if line:
-                line = line.rstrip()
-            else:
-                continue
-
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                name = 'Port-channel' + group.pop("channel_group")
-                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(name, {})
-                intf_dict.update({'name': name})
-                intf_dict.update({'protocol': 'lacp'})
-                continue
-
-            m = p2.match(line)
-            if m:
-                group = m.groupdict()
-                interface = Common.convert_intf_name(group.pop("interface"))
-                member_dict = intf_dict.setdefault('members', {}).setdefault(interface, {})
-                member_dict.update({'interface': interface})
-                member_dict.update({'flags': group.pop('flags')})
-                state = group.pop('state')
-                if 'bndl' in state:
-                    bundled = True
-                else:
-                    bundled = False
-                member_dict.update({'state': state})
-                member_dict.update({'bundled': bundled})
-                member_dict.update({'lacp_port_priority': int(group.pop('lacp_port_priority'))})
-                member_dict.update({'admin_key': int(group.pop('admin_key'),0)})
-                member_dict.update({'oper_key': int(group.pop('oper_key'),0)})
-                member_dict.update({'port_num': int(group.pop('port_num'),0)})
-                continue
-
-        return result_dict
-
-# ====================================================
 #  schema for show pagp neighbor
 # ====================================================
 class ShowPagpNeighborSchema(MetaParser):
@@ -491,6 +413,7 @@ class ShowPagpNeighborSchema(MetaParser):
                 'members': {
                     Any(): {
                         'interface': str,
+                        Optional('activity'): str,
                         'partner_name': str,
                         'partner_id': str,
                         'partner_port': str,
@@ -544,7 +467,11 @@ class ShowPagpNeighbor(ShowPagpNeighborSchema):
                 interface = Common.convert_intf_name(group.pop("interface"))
                 member_dict = intf_dict.setdefault('members', {}).setdefault(interface, {})
                 member_dict.update({'interface': interface})
-                member_dict.update({'flags': group.pop('flags')})
+                flags = group.pop('flags')
+                activity = 'auto' if 'a'in flags.lower() else None
+                if activity:
+                    member_dict.update({'activity': activity})
+                member_dict.update({'flags': flags})
                 member_dict.update({'partner_name': group.pop('partner_name')})
                 member_dict.update({'partner_id': group.pop('partner_id')})
                 member_dict.update({'partner_port': Common.convert_intf_name(group.pop('partner_port'))})
@@ -649,13 +576,14 @@ class ShowEtherchannelSummarySchema(MetaParser):
     schema = {
         'number_of_lag_in_use': int,
         'number_of_aggregators': int,
-        'interfaces': {
+        Optional('interfaces'): {
             Any(): {
-                'name': str,
-                'bundle_id': int,
+                Optional('name'): str,
+                Optional('bundle_id'): int,
                 Optional('protocol'): str,
-                'flags': str,
-                'oper_status': str,
+                Optional('flags'): str,
+                Optional('oper_status'): str,
+                Optional('activity'): str,
                 Optional('members'): {
                     Any(): {
                         Optional('interface'): str,
@@ -723,6 +651,9 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
 
                 flags = group.pop("flags")
                 intf_dict.update({'flags': flags})
+                activity = 'auto' if 'a' in flags.lower() else None
+                if activity:
+                    intf_dict.update({'activity': activity})
                 oper_status = 'up' if flags in ['RU', 'SU'] else 'down'
                 intf_dict.update({'oper_status': oper_status})
 
