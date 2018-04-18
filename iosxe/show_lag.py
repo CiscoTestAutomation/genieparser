@@ -419,7 +419,7 @@ class ShowPagpNeighborSchema(MetaParser):
                         'partner_port': str,
                         'age': int,
                         'flags': str,
-                        'group_cap': int,
+                        'group_cap': str,
                     },
                 }
             },
@@ -443,8 +443,8 @@ class ShowPagpNeighbor(ShowPagpNeighborSchema):
         # Gi0/1     iosvl2-2             5e02.4001.8000   Gi0/1       11s SC      10001
         p1 = re.compile(r'^\s*Channel +group +(?P<channel_group>[\d]+) +neighbors$')
         p2 = re.compile(r'^\s*(?P<interface>[\w\/]+) +(?P<partner_name>[\w\-]+)'
-                        ' +(?P<partner_id>[\w\.]+) +(?P<partner_port>[\w\/]+) +(?P<age>[\d]+)s +(?P<flags>[\w]+)'
-                        ' +(?P<group_cap>[\d]+)$')
+                        ' +(?P<partner_id>[\w\.]+)[\t](?P<partner_port>[\w\/]+) +(?P<age>[\d]+)s +(?P<flags>[\w]+)'
+                        '[\t](?P<group_cap>[\w]+)$')
 
         for line in out.splitlines():
             if line:
@@ -475,7 +475,7 @@ class ShowPagpNeighbor(ShowPagpNeighborSchema):
                 member_dict.update({'partner_name': group.pop('partner_name')})
                 member_dict.update({'partner_id': group.pop('partner_id')})
                 member_dict.update({'partner_port': Common.convert_intf_name(group.pop('partner_port'))})
-                member_dict.update({'group_cap': int(group.pop('group_cap'))})
+                member_dict.update({'group_cap': group.pop('group_cap')})
                 member_dict.update({'age': int(group.pop('age'))})
                 continue
 
@@ -536,6 +536,7 @@ class ShowPagpInternal(ShowPagpInternalSchema):
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
+                line = line.replace("\t",'    ')
             else:
                 continue
 

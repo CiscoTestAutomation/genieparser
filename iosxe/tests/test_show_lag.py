@@ -412,83 +412,53 @@ class test_show_pagp_neighbor(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
-    iosvl2-1#show pagp neighbor
-    Flags:  S - Device is sending Slow hello.  C - Device is in Consistent state.
-            A - Device is in Auto mode.        P - Device learns on physical port.
+iosvl2-1#show pagp neighbor
+Flags:  S - Device is sending Slow hello.  C - Device is in Consistent state.
+        A - Device is in Auto mode.        P - Device learns on physical port.
 
-    Channel group 1 neighbors
-              Partner              Partner          Partner         Partner Group
-    Port      Name                 Device ID        Port       Age  Flags   Cap.
-    Gi0/1     iosvl2-2             5e02.4001.8000   Gi0/1       11s SC      10001
-    Gi0/2     iosvl2-2             5e02.4001.8000   Gi0/2       16s SC      10001
-
-    Channel group 2 neighbors
-              Partner              Partner          Partner         Partner Group
-    Port      Name                 Device ID        Port       Age  Flags   Cap.
-    Gi0/3     iosvl2-2             5e02.4001.8000   Gi0/3       18s SC      20001
-    Gi1/0     iosvl2-2             5e02.4001.8000   Gi1/0       25s SC      20001
-    Gi1/1     iosvl2-2             5e02.4001.8000   Gi1/1        0s SC      20001
+Channel group 14 neighbors
+         Partner              Partner          Partner         Partner Group
+Port      Name                 Device ID        Port       Age  Flags   Cap.
+Gi1/0/7   R4                   ecbd.1d09.5680	Gi1/0/7     22s SC	E0001
+Gi1/0/8   R4                   ecbd.1d09.5680	Gi1/0/8     16s SC	E0001
+Gi1/0/9   R4                   ecbd.1d09.5680	Gi1/0/9     18s SC	E0001
     '''}
 
     golden_parsed_output = {
-        'interfaces': {
-            'Port-channel1': {
-                'name': 'Port-channel1',
-                'protocol': 'pagp',
-                'members': {
-                    'GigabitEthernet0/1': {
-                        'interface': 'GigabitEthernet0/1',
-                        'partner_name': 'iosvl2-2',
-                        'partner_id': '5e02.4001.8000',
-                        'partner_port': 'GigabitEthernet0/1',
-                        'age': 11,
-                        'flags': 'SC',
-                        'group_cap': 10001,
+        "interfaces": {
+            "Port-channel14": {
+                "members": {
+                    "GigabitEthernet1/0/7": {
+                        "age": 22,
+                        "flags": "SC",
+                        "group_cap": "E0001",
+                        "interface": "GigabitEthernet1/0/7",
+                        "partner_id": "ecbd.1d09.5680",
+                        "partner_name": "R4",
+                        "partner_port": "GigabitEthernet1/0/7"
                     },
-                    'GigabitEthernet0/2': {
-                        'interface': 'GigabitEthernet0/2',
-                        'partner_name': 'iosvl2-2',
-                        'partner_id': '5e02.4001.8000',
-                        'partner_port': 'GigabitEthernet0/2',
-                        'age': 16,
-                        'flags': 'SC',
-                        'group_cap': 10001,
+                    "GigabitEthernet1/0/8": {
+                        "age": 16,
+                        "flags": "SC",
+                        "group_cap": "E0001",
+                        "interface": "GigabitEthernet1/0/8",
+                        "partner_id": "ecbd.1d09.5680",
+                        "partner_name": "R4",
+                        "partner_port": "GigabitEthernet1/0/8"
                     },
+                    "GigabitEthernet1/0/9": {
+                        "age": 18,
+                        "flags": "SC",
+                        "group_cap": "E0001",
+                        "interface": "GigabitEthernet1/0/9",
+                        "partner_id": "ecbd.1d09.5680",
+                        "partner_name": "R4",
+                        "partner_port": "GigabitEthernet1/0/9"
+                    }
                 },
-            },
-            'Port-channel2': {
-                'name': 'Port-channel2',
-                'protocol': 'pagp',
-                'members': {
-                    'GigabitEthernet0/3': {
-                        'interface': 'GigabitEthernet0/3',
-                        'partner_name': 'iosvl2-2',
-                        'partner_id': '5e02.4001.8000',
-                        'partner_port': 'GigabitEthernet0/3',
-                        'age': 18,
-                        'flags': 'SC',
-                        'group_cap': 20001,
-                    },
-                    'GigabitEthernet1/0': {
-                        'interface': 'GigabitEthernet1/0',
-                        'partner_name': 'iosvl2-2',
-                        'partner_id': '5e02.4001.8000',
-                        'partner_port': 'GigabitEthernet1/0',
-                        'age': 25,
-                        'flags': 'SC',
-                        'group_cap': 20001,
-                    },
-                    'GigabitEthernet1/1': {
-                        'interface': 'GigabitEthernet1/1',
-                        'partner_name': 'iosvl2-2',
-                        'partner_id': '5e02.4001.8000',
-                        'partner_port': 'GigabitEthernet1/1',
-                        'age': 0,
-                        'flags': 'SC',
-                        'group_cap': 20001,
-                    },
-                },
-            },
+                "name": "Port-channel14",
+                "protocol": "pagp"
+            }
         }
     }
 
