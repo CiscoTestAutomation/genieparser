@@ -42,6 +42,9 @@ NXOS parsers for the following show commands:
     * 'show bgp <address_family>  labels vrf <WORD> | xml'
     * 'show bgp <address_family>  labels'
     * 'show bgp <address_family>  labels | xml'
+    * 'show bgp l2vpn evpn summary'
+    * 'show bgp l2vpn evpn route-type <route-type>'
+
 """
 
 # Python
@@ -5550,8 +5553,17 @@ class ShowRunningConfigBgpSchema(MetaParser):
         'bgp':
             {'instance':
                 {'default':
-                    {'bgp_id': int,
+                    {
+                    'bgp_id': int,
                     'protocol_shutdown': bool,
+                    Optional('evpn'):{
+                        Any():{
+                           Optional("evpn_vni"): int,
+                           Optional("rd"): str,
+                           Optional("evpn_vni_rt_type"): str,
+                           Optional("evpn_vni_rt"): str,
+                        },
+                    },
                     Optional('ps_name'):
                         {Any():
                             {'ps_fall_over_bfd': bool,
@@ -5591,7 +5603,9 @@ class ShowRunningConfigBgpSchema(MetaParser):
                              Optional('pp_soo'): str}},
                     'vrf':
                         {Any():
-                            {Optional('always_compare_med'): bool,
+                            {
+                            Optional('rd'): str,
+                            Optional('always_compare_med'): bool,
                             Optional('bestpath_compare_routerid'): bool,
                             Optional('bestpath_cost_community_ignore'): bool,
                             Optional('bestpath_med_missing_at_worst'): bool,
@@ -5616,7 +5630,10 @@ class ShowRunningConfigBgpSchema(MetaParser):
                             Optional('disable_policy_batching_ipv6'): str,
                             Optional('af_name'):
                                 {Any():
-                                    {Optional('af_dampening'): bool,
+                                    {
+                                    Optional('af_evpn_vni_rt_type'): str,
+                                    Optional('af_evpn_vni_rt'): str,
+                                    Optional('af_dampening'): bool,
                                     Optional('af_dampening_route_map'): str,
                                     Optional('af_dampening_half_life_time'): int,
                                     Optional('af_dampening_reuse_time'): int,
@@ -5662,7 +5679,10 @@ class ShowRunningConfigBgpSchema(MetaParser):
                                     Optional('af_v6_network_route_map'): str,
                                     Optional('af_v6_allocate_label_all'): bool,
                                     Optional('af_retain_rt_all'): bool,
-                                    Optional('af_label_allocation_mode'): str}},
+                                    Optional('af_label_allocation_mode'): str,
+                                    Optional('af_advertise_pip'): bool
+                                     }
+                                 },
                             Optional('neighbor_id'):
                                 {Any():
                                     {Optional('nbr_fall_over_bfd'): bool,
@@ -5684,6 +5704,7 @@ class ShowRunningConfigBgpSchema(MetaParser):
                                      Optional('nbr_update_source'): str,
                                      Optional('nbr_password_text'): str,
                                      Optional('nbr_transport_connection_mode'): str,
+                                     Optional('nbr_peer_type'): str,
                                      Optional('nbr_af_name'):
                                         {Any():
                                             {Optional('nbr_af_allowas_in'): bool,
@@ -5698,6 +5719,7 @@ class ShowRunningConfigBgpSchema(MetaParser):
                                             Optional('nbr_af_route_map_name_out'): str,
                                             Optional('nbr_af_route_reflector_client'): bool,
                                             Optional('nbr_af_send_community'): str,
+                                            Optional('nbr_af_rewrite_evpn_rt_asn'): bool,
                                             Optional('nbr_af_soft_reconfiguration'): bool,
                                             Optional('nbr_af_next_hop_self'): bool,
                                             Optional('nbr_af_as_override'): bool,
@@ -5735,6 +5757,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
         nbr_af_name = ''
         ps_name = ''
         pp_name = ''
+        vni_flag = False
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -5767,8 +5790,46 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     bgp_dict['bgp']['instance']['default']['protocol_shutdown'] = True
                     continue
 
-                #   vrf vpn1
-                p3 = re.compile(r'^\s*vrf +(?P<vrf>[a-z0-9]+)$')
+                # evpn
+                p2_1 = re.compile(r'^\s*evpn$')
+                m = p2_1.match(line)
+                if m:
+                    if 'evpn' not in bgp_dict['bgp']['instance']['default']:
+                        bgp_dict['bgp']['instance']['default']['evpn'] = {}
+                    continue
+
+                # vni 5001 l2
+                p2_2 = re.compile(r'^\s*vni +(?P<evpn_vni>\d+) +l2$')
+                m = p2_2.match(line)
+                if m:
+                    vni_flag = True
+                    evpn_vni = int(m.groupdict()['evpn_vni'])
+                    if evpn_vni not in  bgp_dict['bgp']['instance']['default']['evpn']:
+                        bgp_dict['bgp']['instance']['default']['evpn'][evpn_vni] = {}
+                    bgp_dict['bgp']['instance']['default']['evpn'][evpn_vni]['evpn_vni'] = evpn_vni
+                    continue
+
+                if vni_flag:
+                    # rd auto
+                    p2_3 = re.compile(r'^\s*rd +(?P<rd>[\w]+)$')
+                    m = p2_3.match(line)
+                    if m:
+                        bgp_dict['bgp']['instance']['default']['evpn'][evpn_vni]['rd'] = m.groupdict()['rd']
+                        continue
+
+                    # route-target import auto
+                    # route-target export auto
+                    p2_4 = re.compile(
+                        r'^\s*route-target +(?P<evpn_vni_rt_type>[\w]+) +(?P<evpn_vni_rt>[\w\s]+)$')
+                    m = p2_4.match(line)
+                    if m:
+                        bgp_dict['bgp']['instance']['default']['evpn'][evpn_vni]['evpn_vni_rt_type'] = \
+                            m.groupdict()['evpn_vni_rt_type']
+                        bgp_dict['bgp']['instance']['default']['evpn'][evpn_vni]['evpn_vni_rt'] = \
+                            m.groupdict()['evpn_vni_rt']
+                        continue
+
+                p3 = re.compile(r'^\s*vrf( +context)? +(?P<vrf>[\w\-]+)$')
                 m = p3.match(line)
                 if m:
                     # Get keys
@@ -5776,6 +5837,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     af_name = ''
                     neighbor_id = ''
                     nbr_af_name = ''
+                    vni_flag = False
                     if 'vrf' not in bgp_dict['bgp']['instance']['default']:
                         bgp_dict['bgp']['instance']['default']['vrf'] = {}
                     if vrf not in bgp_dict['bgp']['instance']['default']['vrf']:
@@ -5783,6 +5845,13 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     continue
 
                 if vrf:
+                    # rd auto
+                    p3_1 = re.compile(r'^\s*rd +(?P<rd>[\w]+)$')
+                    m = p3_1.match(line)
+                    if m:
+                        bgp_dict['bgp']['instance']['default']['vrf'][vrf]['rd'] =  m.groupdict()['rd']
+                        continue
+
                     #   bestpath cost-community ignore
                     #   bestpath compare-routerid
                     #   bestpath med missing-as-worst
@@ -5965,6 +6034,17 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             continue
 
                     if af_name:
+                        # route-target both auto
+                        # route-target both auto evpn
+                        p21_1 = re.compile(r'^\s*route-target +(?P<af_evpn_vni_rt_type>[\w]+) +(?P<af_evpn_vni_rt>[\w\s]+)$')
+                        m = p21_1.match(line)
+                        if m:
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]['af_evpn_vni_rt_type'] =\
+                                m.groupdict()['af_evpn_vni_rt_type']
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name][
+                                'af_evpn_vni_rt'] = \
+                                m.groupdict()['af_evpn_vni_rt']
+
                         #    dampening [ { <af_dampening_half_life_time>
                         #    <af_dampening_resuse_time> <af_dampening_suppress_time>
                         #    <af_dampening_max_suppress_time> } |
@@ -6228,6 +6308,13 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                                 str(m.groupdict()['per_vrf'])
                             continue
 
+                        #    advertise-pip
+                        p103 = re.compile(r'^\s*advertise-pip$')
+                        m = p103.match(line)
+                        if m:
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['af_name'][af_name]\
+                                ['af_advertise_pip'] = True
+                            continue
                     #   neighbor <neighbor_id>
                     p42 = re.compile(r'^\s*neighbor +(?P<neighbor_id>[a-z0-9\.\:]+)$')
                     m = p42.match(line)
@@ -6390,6 +6477,14 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                                 str(m.groupdict()['nbr_transport_connection_mode'])
                             continue
 
+                        # peer-type fabric-external
+                        p101 = re.compile(r'^\s*peer-type +(?P<nbr_peer_type>[\w\-]+)$')
+                        m = p101.match(line)
+                        if m:
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]\
+                                ['nbr_peer_type'] = m.groupdict()['nbr_peer_type']
+                            continue
+
                         #   address-family <nbr_af_name>
                         p57 = re.compile(r'^\s*address-family +(?P<nbr_af_name>[A-Za-z0-9\s\-]+)$')
                         m = p57.match(line)
@@ -6502,6 +6597,14 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                                 else:
                                     bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_af_name'][nbr_af_name]['nbr_af_send_community'] = \
                                         'extended'
+                                continue
+
+                            # rewrite-evpn-rt-asn
+                            p100 = re.compile(r'^\s*rewrite-evpn-rt-asn$')
+                            m = p100.match(line)
+                            if m:
+                                bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id][
+                                    'nbr_af_name'][nbr_af_name]['nbr_af_rewrite_evpn_rt_asn'] = True
                                 continue
 
                             #   route-reflector-client
@@ -9477,7 +9580,6 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
 
 
         return etree_dict
-<<<<<<< HEAD
 
 # ====================================================
 #  schema for show bgp l2vpn evpn summary
@@ -10470,5 +10572,3 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
                 continue
         return result_dict
 
-=======
->>>>>>> dev
