@@ -605,6 +605,7 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
         out = self.device.execute('show etherchannel summary')
 
         result_dict = {}
+        m1 = ""
         # Number of channel-groups in use: 2
         # Number of aggregators:           2
         #
@@ -614,9 +615,10 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
 
         p1 = re.compile(r'^\s*Number +of +channel-groups +in +use: +(?P<number_of_lag_in_use>[\d]+)$')
         p2 = re.compile(r'^\s*Number +of +aggregators: +(?P<number_of_aggregators>[\d]+)$')
-        p3 = re.compile(r'^\s*(?P<bundle_id>[\d\t]+)(?P<name>[\w\-\t]+)\((?P<flags>[\w]+)\)'
+        p3 = re.compile(r'^\s*(?P<bundle_id>[\d\s]+)(?P<name>[\w\-]+)\((?P<flags>[\w]+)\)?'
+                        '( +(?P<protocol>[\w\-]+))?( +((?P<ports>[\w\-\s\/\(\)]+)))?$')
+        p4 = re.compile(r'^\s*(?P<bundle_id>[\d\t]+)(?P<name>[\w\-\t]+)\((?P<flags>[\w]+)\)'
                         '(?P<protocol>[\w\-\t]+)?((?P<ports>[\w\-\s\/\(\)]+))?$')
-
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
@@ -635,17 +637,22 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
                 result_dict.update({'number_of_aggregators': int(group.pop('number_of_aggregators'))})
                 continue
 
-            m = p3.match(line)
-            if m:
-                group = m.groupdict()
+            if p3.match(line):
+                m1 = p3.match(line)
+            if p4.match(line):
+                m1 = p4.match(line)
+            if m1:
+                protocol = None
+                group = m1.groupdict()
                 name = Common.convert_intf_name(group.pop("name"))
                 intf_dict = result_dict.setdefault('interfaces', {}).setdefault(name, {})
                 intf_dict.update({'name': name})
                 intf_dict.update({'bundle_id': int(group.pop("bundle_id"))})
-                if group.get("protocol").strip() == "-":
-                    protocol = None
-                else:
-                    protocol = group.pop("protocol").replace("\t","").lower()
+                if group.get("protocol"):
+                    if '-' in group.get("protocol"):
+                        protocol = None
+                    else:
+                        protocol = group.pop("protocol").strip().lower()
                 if protocol:
                     intf_dict.update({'protocol': protocol})
 
