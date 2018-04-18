@@ -23161,12 +23161,12 @@ class test_show_bgp_labels_cli(unittest.TestCase):
         *>e84::2:0/112        50:1::1:101         nolabel/nolabel
         '''}
 
-    # def test_golden_vrf_all1(self):
-    #     self.maxDiff = None
-    #     self.device = Mock(**self.golden_output_1)
-    #     obj = ShowBgpLabels(device=self.device)
-    #     parsed_output = obj.parse(address_family='ipv4 unicast', vrf='all')
-    #     self.assertEqual(parsed_output, self.golden_parsed_output_1)
+    def test_golden_vrf_all1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowBgpLabels(device=self.device)
+        parsed_output = obj.parse(address_family='ipv4 unicast', vrf='all')
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
     def test_golden_vrf_all2(self):
         self.maxDiff = None
