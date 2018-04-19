@@ -9,10 +9,10 @@ from ats.topology import Device
 from ats.topology import loader
 
 # Metaparser
-from metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # iosxr show_bgp
-from parser.iosxr.show_bgp import ShowPlacementProgramAll,\
+from genie.libs.parser.iosxr.show_bgp import ShowPlacementProgramAll,\
                                   ShowBgpInstanceAfGroupConfiguration,\
                                   ShowBgpInstanceSessionGroupConfiguration,\
                                   ShowBgpInstanceProcessDetail,\

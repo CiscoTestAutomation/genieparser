@@ -5,9 +5,9 @@ import xmltodict
 import re
 import logging
 
-from metaparser import MetaParser
-from parser.utils.common import Common
-from metaparser.util.schemaengine import Schema, \
+from genie.metaparser import MetaParser
+from genie.libs.parser.utils.common import Common
+from genie.metaparser.util.schemaengine import Schema, \
                                          Any, \
                                          Optional, \
                                          Or, \

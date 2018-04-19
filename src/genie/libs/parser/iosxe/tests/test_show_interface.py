@@ -9,21 +9,19 @@ from textwrap import dedent
 ats_mock = Mock()
 with patch.dict('sys.modules',
         {'ats' : ats_mock}, autospec=True):
-    import parsergen
-    from parsergen import oper_fill
-    from parsergen import oper_check
-    from parsergen import oper_fill_tabular
-    from parsergen.examples.parsergen.pyAts import parsergen_demo_mkpg
+    import genie.parsergen
+    from genie.parsergen import oper_fill
+    from genie.parsergen import oper_check
+    from genie.parsergen import oper_fill_tabular
+    from genie.parsergen.examples.parsergen.pyAts import parsergen_demo_mkpg
 
 import xml.etree.ElementTree as ET
 
 from ats.topology import Device
 
-from genie.ops.base import Context
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from metaparser.util.exceptions import SchemaEmptyParserError
-
-from parser.iosxe.show_interface import ShowInterfacesSwitchport,\
+from genie.libs.parser.iosxe.show_interface import ShowInterfacesSwitchport,\
                                         ShowIpInterfaceBriefPipeVlan,\
                                         ShowInterfaces, ShowIpInterface,\
                                         ShowIpv6Interface, \
@@ -68,7 +66,7 @@ class test_show_interface_parsergen(unittest.TestCase):
         device1 = Mock(**device_kwargs)
         device1.name='router3'
 
-        result = parsergen.oper_fill_tabular(device=device1,
+        result = genie.parsergen.oper_fill_tabular(device=device1,
                                              show_command="show ip interface brief",
                                              refresh_cache=True,
                                              header_fields=

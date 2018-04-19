@@ -1,1 +1,3 @@
-__import__('abstract'). declare_token(__name__)
+from genie import abstract
+
+abstract.declare_package(__name__)

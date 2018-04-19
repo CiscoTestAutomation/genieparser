@@ -3,9 +3,9 @@ import unittest
 from unittest.mock import Mock
 from ats.topology import Device
 
-from metaparser.util.exceptions import SchemaEmptyParserError,\
+from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
-from parser.iosxe.show_acl import ShowAccessLists
+from genie.libs.parser.iosxe.show_acl import ShowAccessLists
 
 
 class test_show_access_lists(unittest.TestCase):

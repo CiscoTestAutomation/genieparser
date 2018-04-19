@@ -14,7 +14,7 @@ try:
 except (ImportError, OSError):
     pass
 
-from metaparser import MetaParser
+from genie.metaparser import MetaParser
 
 
 def tcl_invoke_ats_cmd(cmd, *, cast_=None, **kwargs):

@@ -8,12 +8,12 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Parser
-from parser.iosxe.show_standby import ShowStandbyInternal,\
+from genie.libs.parser.iosxe.show_standby import ShowStandbyInternal,\
                                       ShowStandbyAll,\
                                       ShowStandbyDelay
 
 # Metaparser
-from metaparser.util.exceptions import SchemaEmptyParserError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 
 # =========================================

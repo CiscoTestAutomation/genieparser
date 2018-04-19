@@ -5,9 +5,9 @@ from unittest.mock import Mock
 
 from ats.topology import Device
 
-from metaparser.util.exceptions import SchemaEmptyParserError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from parser.nxos.show_platform import  ShowBoot,\
+from genie.libs.parser.nxos.show_platform import  ShowBoot,\
                                          ShowInventory,\
                                          ShowInstallActive,\
                                          ShowSystemRedundancyStatus,\

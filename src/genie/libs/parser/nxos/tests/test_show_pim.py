@@ -5,11 +5,11 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Metaparset
-from metaparser.util.exceptions import SchemaEmptyParserError, \
+from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
 # Parser
-from parser.nxos.show_pim import ShowIpPimInterface,\
+from genie.libs.parser.nxos.show_pim import ShowIpPimInterface,\
                                  ShowIpv6PimVrfAllDetail,\
                                  ShowIpPimRp,\
                                  ShowIpPimPolicyStaticticsRegisterPolicy,\

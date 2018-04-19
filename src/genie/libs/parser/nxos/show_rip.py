@@ -11,8 +11,8 @@ try:
 except (ImportError, OSError):
     pass
 
-from metaparser import MetaParser
-from metaparser.util.schemaengine import Schema, Any, Optional, Or, And, Default, Use
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And, Default, Use
 
 def regexp(expression):
     def match(value):

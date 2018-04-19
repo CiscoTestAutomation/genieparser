@@ -4,9 +4,9 @@ from unittest.mock import Mock
 
 from ats.topology import Device
 
-from metaparser.util.exceptions import SchemaEmptyParserError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from parser.nxos.show_vlan import ShowVlan, ShowVlanOld, ShowVlanIdVnSegment, \
+from genie.libs.parser.nxos.show_vlan import ShowVlan, ShowVlanOld, ShowVlanIdVnSegment, \
                                              ShowVlanInternalInfo, \
                                              ShowVlanFilter, \
                                              ShowVlanAccessMap\

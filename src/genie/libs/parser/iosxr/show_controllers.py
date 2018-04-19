@@ -8,10 +8,10 @@ import re
 import logging
 from netaddr import EUI
 
-from metaparser import MetaParser
-from metaparser.util.schemaengine import Any
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Any
 
-from parser.base import *
+from genie.libs.parser.base import *
 
 logger = logging.getLogger(__name__)
 

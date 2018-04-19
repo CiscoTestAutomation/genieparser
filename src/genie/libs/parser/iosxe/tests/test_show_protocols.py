@@ -7,10 +7,10 @@ from ats.topology import Device
 from ats.topology import loader
 
 # Metaparser
-from metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # iosxr show_ospf
-from parser.iosxe.show_protocols import ShowIpProtocols
+from genie.libs.parser.iosxe.show_protocols import ShowIpProtocols
 
 # =================================
 # Unit test for 'show ip protocols'

@@ -4,8 +4,8 @@
 import re
 import logging
 
-from metaparser import MetaParser
-from metaparser.util.schemaengine import Schema, \
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Schema, \
                                          Any, \
                                          Optional, \
                                          Or, \
@@ -13,12 +13,12 @@ from metaparser.util.schemaengine import Schema, \
                                          Default, \
                                          Use
 try:
-    import parsergen
+    import genie.parsergen
 except (ImportError, OSError):
     pass
 
 # import parser utils
-from parser.utils.common import Common
+from genie.libs.parser.utils.common import Common
 
 logger = logging.getLogger(__name__)
 
@@ -463,7 +463,7 @@ class ShowVersion(ShowVersionSchema):
                 continue
 
         # table2 for C3850
-        tmp2 = parsergen.oper_fill_tabular(right_justified=True,
+        tmp2 = genie.parsergen.oper_fill_tabular(right_justified=True,
                                            header_fields=
                                                   [ "Switch",
                                                     "Ports",
@@ -487,7 +487,7 @@ class ShowVersion(ShowVersionSchema):
             res2 = tmp2
             # switch_number
         # license table for Cat3850
-        tmp = parsergen.oper_fill_tabular(right_justified=True,
+        tmp = genie.parsergen.oper_fill_tabular(right_justified=True,
                                           header_fields=
                                                   [ "Current            ",
                                                     "Type            ",

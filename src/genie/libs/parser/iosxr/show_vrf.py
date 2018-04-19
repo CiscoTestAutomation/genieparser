@@ -9,8 +9,8 @@ import re
 import xmltodict
 
 # Metaparser
-from metaparser import MetaParser
-from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
 
 

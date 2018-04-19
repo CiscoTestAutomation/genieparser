@@ -8,10 +8,10 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Parser
-from parser.nxos.show_hsrp import ShowHsrpSummary, ShowHsrpAll, ShowHsrpDelay
+from genie.libs.parser.nxos.show_hsrp import ShowHsrpSummary, ShowHsrpAll, ShowHsrpDelay
 
 # Metaparser
-from metaparser.util.exceptions import SchemaEmptyParserError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 
 # ======================================

@@ -19,9 +19,9 @@ import re
 from netaddr import IPAddress, IPNetwork
 
 # Metaparser
-from metaparser import MetaParser
-from metaparser.util.schemaengine import Schema, Any, Or, Optional
-from parser.utils.common import Common
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
+from genie.libs.parser.utils.common import Common
 
 
 # ==================================================

@@ -5,8 +5,8 @@
 import re
 
 # metaparser
-from metaparser import MetaParser
-from metaparser.util.schemaengine import Schema, \
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Schema, \
                                          Any, \
                                          Optional, \
                                          Or, \

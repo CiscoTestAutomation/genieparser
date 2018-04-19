@@ -8,10 +8,10 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Parser
-from parser.iosxr.show_vrf import ShowVrfAllDetail
+from genie.libs.parser.iosxr.show_vrf import ShowVrfAllDetail
 
 # Metaparser
-from metaparser.util.exceptions import SchemaEmptyParserError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
  
 # =====================================
