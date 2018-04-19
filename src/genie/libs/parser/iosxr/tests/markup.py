@@ -1,4 +1,4 @@
-import parsergen as pg 
+from genie import parsergen as pg 
 from genie.libs.parsergen import extend_markup
 from textwrap import dedent
 
