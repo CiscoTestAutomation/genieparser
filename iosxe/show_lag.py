@@ -442,7 +442,7 @@ class ShowPagpNeighbor(ShowPagpNeighborSchema):
         # Port      Name                 Device ID        Port       Age  Flags   Cap.
         # Gi0/1     iosvl2-2             5e02.4001.8000   Gi0/1       11s SC      10001
         p1 = re.compile(r'^\s*Channel +group +(?P<channel_group>[\d]+) +neighbors$')
-        p2 = re.compile(r'^\s*(?P<interface>[\w\/]+) +(?P<partner_name>[\w\-]+)'
+        p2 = re.compile(r'^\s*(?P<interface>[\w\/]+) +(?P<partner_name>[\w\-\.]+)'
                         ' +(?P<partner_id>[\w\.]+)[\t](?P<partner_port>[\w\/]+) +(?P<age>[\d]+)s +(?P<flags>[\w]+)'
                         '[\t](?P<group_cap>[\w]+)$')
 
