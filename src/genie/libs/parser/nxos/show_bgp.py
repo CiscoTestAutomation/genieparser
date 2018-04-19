@@ -50,15 +50,15 @@ from copy import deepcopy
 import xml.etree.ElementTree as ET
 
 # Metaparser
-from metaparser import MetaParser
-from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
 
 # Parser
-from parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
+from genie.libs.parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
 
 # import parser utils
-from parser.utils.common import Common
+from genie.libs.parser.utils.common import Common
 
 
 # =====================================

@@ -7,10 +7,10 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Metaparser
-from metaparser.util.exceptions import SchemaEmptyParserError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # nxos show_routing
-from parser.nxos.show_routing import ShowRoutingVrfAll, ShowRoutingIpv6VrfAll,\
+from genie.libs.parser.nxos.show_routing import ShowRoutingVrfAll, ShowRoutingIpv6VrfAll,\
                                      ShowIpRoute, ShowIpv6Route
 
 # =====================================

@@ -9,9 +9,9 @@ from ats.topology import Device
 
 from genie.ops.base import Context
 
-from metaparser.util.exceptions import SchemaEmptyParserError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from parser.iosxe.show_interface import ShowIpInterfaceBriefPipeVlan, \
+from genie.libs.parser.iosxe.show_interface import ShowIpInterfaceBriefPipeVlan, \
                                                    ShowInterfacesSwitchport
 
 

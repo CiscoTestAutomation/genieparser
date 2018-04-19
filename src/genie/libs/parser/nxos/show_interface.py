@@ -12,11 +12,11 @@ NXOS parsers for the following show commands:
 import re
 
 # metaparser
-from metaparser import MetaParser
-from metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Schema, Any, Optional
                                          
 # import parser utils
-from parser.utils.common import Common
+from genie.libs.parser.utils.common import Common
 
 
 # ===========================

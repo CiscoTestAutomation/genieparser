@@ -8,9 +8,9 @@
 
 import logging
 
-from metaparser import MetaParser
-from metaparser.util import merge_dict, keynames_convert
-from metaparser.util.schemaengine import Schema, \
+from genie.metaparser import MetaParser
+from genie.metaparser.util import merge_dict, keynames_convert
+from genie.metaparser.util.schemaengine import Schema, \
                                          Any, \
                                          Optional, \
                                          Or, \
@@ -19,10 +19,10 @@ from metaparser.util.schemaengine import Schema, \
                                          Use
 import re
 
-from metaparser import MetaParser
-from metaparser.util.schemaengine import Any
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Any
 
-from parser.base import *
+from genie.libs.parser.base import *
 
 def regexp(expression):
     def match(value):

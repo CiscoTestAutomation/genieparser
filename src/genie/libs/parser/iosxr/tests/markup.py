@@ -1,5 +1,5 @@
 import parsergen as pg 
-from parsergen import extend_markup
+from genie.libs.parsergen import extend_markup
 from textwrap import dedent
 
 marked_up_show_bgp_all_all_all_instance = '''\

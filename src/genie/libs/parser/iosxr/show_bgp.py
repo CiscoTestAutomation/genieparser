@@ -48,13 +48,13 @@ import collections
 from ipaddress import ip_address, ip_network
 
 # Metaparser
-from parser.base import *
-from metaparser import MetaParser
-from metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
+from genie.libs.parser.base import *
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
 
 # Parser
-from parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
+from genie.libs.parser.yang.bgp_openconfig_yang import BgpOpenconfigYang
 
 # Logger
 logger = logging.getLogger(__name__)

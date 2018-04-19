@@ -12,8 +12,8 @@
 """
 import re
 
-from metaparser import MetaParser
-from metaparser.util.schemaengine import Schema, \
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Schema, \
                                          Any, \
                                          Optional, \
                                          Or, \
@@ -22,7 +22,7 @@ from metaparser.util.schemaengine import Schema, \
                                          Use
 
 # import parser utils
-from parser.utils.common import Common
+from genie.libs.parser.utils.common import Common
 
 
 class ShowSpanningTreeSummarySchema(MetaParser):

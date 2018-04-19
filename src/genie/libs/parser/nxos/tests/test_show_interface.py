@@ -4,10 +4,10 @@ from unittest.mock import Mock
 
 from ats.topology import Device
 
-from metaparser.util.exceptions import SchemaEmptyParserError, \
+from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from parser.nxos.show_interface import ShowInterface, ShowVrfAllInterface, \
+from genie.libs.parser.nxos.show_interface import ShowInterface, ShowVrfAllInterface, \
                                        ShowInterfaceSwitchport, ShowIpv6InterfaceVrfAll, \
                                        ShowIpInterfaceVrfAll, \
                                        ShowIpInterfaceBrief, \

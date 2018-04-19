@@ -7,7 +7,7 @@ try:
 except (ImportError, OSError):
     pass
 
-from parser import CaasMetaParser
+from genie.libs.parser import CaasMetaParser
 
 class IosxrCaasMetaParser(CaasMetaParser):
 

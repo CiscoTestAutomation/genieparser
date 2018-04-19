@@ -3,10 +3,10 @@ from unittest.mock import Mock
 
 from ats.topology import Device
 
-from metaparser.util.exceptions import SchemaEmptyParserError,\
+from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
 
-from parser.nxos.show_route_map import ShowRouteMap
+from genie.libs.parser.nxos.show_route_map import ShowRouteMap
 
 
 class test_show_route_map(unittest.TestCase):

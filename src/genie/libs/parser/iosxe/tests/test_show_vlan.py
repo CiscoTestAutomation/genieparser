@@ -4,9 +4,9 @@ from unittest.mock import Mock
 
 from ats.topology import Device
 
-from metaparser.util.exceptions import SchemaEmptyParserError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from parser.iosxe.show_vlan import ShowVlan, \
+from genie.libs.parser.iosxe.show_vlan import ShowVlan, \
                                           ShowVlanMtu, \
                                           ShowVlanAccessMap, \
                                           ShowVlanRemoteSpan, \

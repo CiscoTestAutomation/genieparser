@@ -9,10 +9,10 @@ from ats.topology import Device
 from ats.topology import loader
 
 # Metaparser
-from metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # nxos show_bgp
-from parser.nxos.show_bgp import ShowBgpProcessVrfAll,\
+from genie.libs.parser.nxos.show_bgp import ShowBgpProcessVrfAll,\
                                  ShowBgpPeerSession,\
                                  ShowBgpPeerPolicy,\
                                  ShowBgpPeerTemplate,\

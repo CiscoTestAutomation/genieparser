@@ -6,11 +6,11 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Metaparset
-from metaparser.util.exceptions import SchemaEmptyParserError, \
+from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
 # Parser
-from parser.nxos.show_igmp import ShowIpIgmpInterface, \
+from genie.libs.parser.nxos.show_igmp import ShowIpIgmpInterface, \
                                   ShowIpIgmpGroups, \
                                   ShowIpIgmpLocalGroups, \
                                   ShowIpIgmpSnooping

@@ -7,14 +7,14 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Parser
-from parser.iosxr.show_platform import ShowRedundancy, ShowPlatformVm,\
+from genie.libs.parser.iosxr.show_platform import ShowRedundancy, ShowPlatformVm,\
                                 ShowPlatform, ShowSdrDetail,\
                                 ShowInstallActiveSummary, ShowInventory,\
                                 ShowRedundancySummary, AdminShowDiagChassis,\
                                 ShowVersion, Dir
 
 # Metaparser
-from metaparser.util.exceptions import SchemaEmptyParserError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # ==============================
 #  Unit test for 'show version'       

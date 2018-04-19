@@ -5,10 +5,10 @@ from unittest.mock import Mock
 
 from ats.topology import Device
 
-from metaparser.util.exceptions import SchemaEmptyParserError, \
+from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from parser.iosxr.show_interface import ShowInterfacesDetail, \
+from genie.libs.parser.iosxr.show_interface import ShowInterfacesDetail, \
                                         ShowVlanInterface, \
                                         ShowIpv4VrfAllInterface, \
                                         ShowIpv6VrfAllInterface, ShowEthernetTags

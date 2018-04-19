@@ -4,10 +4,10 @@ show bridge domain parser class
 
 """
 
-from metaparser import MetaParser
-from metaparser.util.schemaengine import Any
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Any
 
-from parser.base import *
+from genie.libs.parser.base import *
 
 """
     TODO: bpetrovi - Aug 2, 2016

@@ -8,10 +8,10 @@ import re
 from netaddr import EUI
 from ipaddress import ip_address
 
-from metaparser import MetaParser
-from metaparser.util.schemaengine import Any
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Any
 
-from parser.base import *
+from genie.libs.parser.base import *
 
 
 class ShowL2routeTopology(MetaParser):

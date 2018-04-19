@@ -7,10 +7,10 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Metaparser
-from metaparser.util.exceptions import SchemaEmptyParserError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # Parser
-from parser.nxos.show_ospf import ShowIpOspf,\
+from genie.libs.parser.nxos.show_ospf import ShowIpOspf,\
                                   ShowIpOspfMplsLdpInterface,\
                                   ShowIpOspfVirtualLinks,\
                                   ShowIpOspfShamLinks,\

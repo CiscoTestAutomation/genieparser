@@ -7,8 +7,8 @@ IOSXE parsers for the following show commands:
     * 'show ipv6 route vrf <WORD> bgp'
 """
 import re   
-from metaparser import MetaParser   
-from metaparser.util.schemaengine import Any, Optional 
+from genie.metaparser import MetaParser   
+from genie.metaparser.util.schemaengine import Any, Optional 
 
 
 class ShowIpRouteSchema(MetaParser):

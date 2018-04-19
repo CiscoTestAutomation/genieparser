@@ -4,10 +4,10 @@ from unittest.mock import Mock
 # ATS
 from ats.topology import Device
 
-from metaparser.util.exceptions import SchemaEmptyParserError, \
+from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from parser.nxos.show_static_routing import ShowIpStaticRoute, \
+from genie.libs.parser.nxos.show_static_routing import ShowIpStaticRoute, \
                                             ShowIpv6StaticRoute
 
 # ============================================

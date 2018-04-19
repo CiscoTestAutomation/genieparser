@@ -6,15 +6,15 @@ Example parser class
 import re
 
 
-from metaparser import MetaParser
-from metaparser.util.schemaengine import Schema, \
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Schema, \
                                          Any, \
                                          Optional, \
                                          Or, \
                                          And, \
                                          Default, \
                                          Use
-from parser.utils.common import Common
+from genie.libs.parser.utils.common import Common
 
 # ====================================================
 #  schema for show vlan

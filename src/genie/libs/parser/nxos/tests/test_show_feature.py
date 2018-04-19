@@ -7,10 +7,10 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Parser
-from parser.nxos.show_feature import ShowFeature, ShowFeatureSet
+from genie.libs.parser.nxos.show_feature import ShowFeature, ShowFeatureSet
 
 # Metaparser
-from metaparser.util.exceptions import SchemaEmptyParserError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
  
 # =========================

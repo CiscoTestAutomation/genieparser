@@ -3,9 +3,9 @@ from unittest.mock import Mock
 
 from ats.topology import Device
 
-from metaparser.util.exceptions import SchemaEmptyParserError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from parser.iosxe.show_ip_route import ShowIpRoute, ShowIpv6Route
+from genie.libs.parser.iosxe.show_ip_route import ShowIpRoute, ShowIpv6Route
 
 
 # =========================================

@@ -8,10 +8,10 @@ from ats.topology import Device
 from ats.topology import loader
 
 # Metaparser
-from metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # iosxe show_ospf
-from parser.iosxe.show_ospf import ShowIpOspf,\
+from genie.libs.parser.iosxe.show_ospf import ShowIpOspf,\
                                    ShowIpOspfInterface,\
                                    ShowIpOspfNeighborDetail,\
                                    ShowIpOspfShamLinks,\

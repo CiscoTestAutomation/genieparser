@@ -4,10 +4,10 @@ from unittest.mock import Mock
 
 from ats.topology import Device
 
-from metaparser.util.exceptions import SchemaEmptyParserError, \
+from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from parser.iosxe.show_bgp import ShowBgpAllSummary, ShowBgpAllClusterIds, \
+from genie.libs.parser.iosxe.show_bgp import ShowBgpAllSummary, ShowBgpAllClusterIds, \
                                   ShowBgpAllNeighborsAdvertisedRoutes, \
                                   ShowBgpAllNeighborsReceivedRoutes, \
                                   ShowIpBgpTemplatePeerPolicy, \
