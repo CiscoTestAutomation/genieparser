@@ -11,7 +11,7 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
-import parsergen
+from genie import parsergen
 
 # =====================================
 # Schema for 'show ip arp'
