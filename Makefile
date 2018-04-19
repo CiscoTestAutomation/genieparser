@@ -8,8 +8,8 @@
 #                           Genie Parser Makefile
 #
 # Author:
-#   Siming Yuan        (siyuan)    - CSG
-#   Jean-Benoit Aubin  (jeaubin)   - CSG
+#   Siming Yuan        (siyuan@cisco.com)    - CSG
+#   Jean-Benoit Aubin  (jeaubin@cisco.com)   - CSG
 #
 # Support:
 #	python-core@cisco.com
@@ -100,10 +100,6 @@ help:
 	@echo " test                 run all unittests in an efficient manner"
 	@echo " develop              set all package to development mode"
 	@echo " undevelop            unset the above development mode"
-	@echo ""
-	@echo "     --- cisco internal/confidential builds ---"
-	@echo ""
-	@echo " all                  make all available Genie packages"
 	@echo ""
 	@echo "     --- cisco external/devnet builds ---"
 	@echo ""
