@@ -15519,26 +15519,6 @@ class test_show_running_config_bgp(unittest.TestCase):
         "default": {
             "bgp_id": 333,
             "protocol_shutdown": True,
-            "evpn": {
-                8100: {
-                    "rd": "auto",
-                    "evpn_vni_rt_type": "export",
-                    "evpn_vni_rt": "auto",
-                    "evpn_vni": 8100
-                },
-                8101: {
-                    "rd": "auto",
-                    "evpn_vni_rt_type": "export",
-                    "evpn_vni_rt": "auto",
-                    "evpn_vni": 8101
-                },
-                8103: {
-                    "rd": "auto",
-                    "evpn_vni_rt_type": "export",
-                    "evpn_vni_rt": "auto",
-                    "evpn_vni": 8103
-                }
-            },
             "vrf": {
               "management": {
                 "graceful_restart": True,
@@ -15644,22 +15624,6 @@ class test_show_running_config_bgp(unittest.TestCase):
                 "flush_routes": False,
                 "fast_external_fallover": True,
                 "isolate": False
-              },
-              "vpn2": {
-                    "flush_routes": False,
-                    "isolate": False,
-                    "af_name": {
-                        "ipv6 unicast": {
-                            "af_client_to_client_reflection": True
-                        },
-                        "ipv4 unicast": {
-                            "af_client_to_client_reflection": True
-                        }
-                    },
-                    "fast_external_fallover": True,
-                    "enforce_first_as": True,
-                    "graceful_restart": True,
-                    "log_neighbor_changes": False
               },
               "default": {
                 "dynamic_med_interval": 70,
@@ -15989,7 +15953,43 @@ class test_show_running_config_bgp(unittest.TestCase):
             }
           }
         }
-      }
+      },
+        'vxlan':{
+            'evpn':{
+                "evpn_vni": {
+                    8100: {
+                        "evpn_vni_rd": "auto",
+                        "evpn_vni_rt":{
+                             "auto":{
+                                 "evpn_vni_rt": "auto",
+                                 "evpn_vni_rt_type": "export",
+                                 },
+                            },
+                        "evpn_vni": 8100,
+                        },
+                    8101: {
+                        "evpn_vni_rd": "auto",
+                        "evpn_vni_rt": {
+                            "auto": {
+                                "evpn_vni_rt": "auto",
+                                "evpn_vni_rt_type": "export",
+                                }
+                            },
+                        "evpn_vni": 8101
+                        },
+                    8103: {
+                        "evpn_vni_rd": "auto",
+                        "evpn_vni_rt": {
+                            "auto": {
+                                "evpn_vni_rt": "auto",
+                                "evpn_vni_rt_type": "export",
+                            }
+                        },
+                        "evpn_vni": 8103
+                    },
+                },
+            },
+        },
     }
 
 

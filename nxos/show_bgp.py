@@ -5558,14 +5558,6 @@ class ShowRunningConfigBgpSchema(MetaParser):
                     {
                     'bgp_id': int,
                     'protocol_shutdown': bool,
-                    Optional('evpn'):{
-                        Any():{
-                           Optional("evpn_vni"): int,
-                           Optional("rd"): str,
-                           Optional("evpn_vni_rt_type"): str,
-                           Optional("evpn_vni_rt"): str,
-                        },
-                    },
                     Optional('ps_name'):
                         {Any():
                             {'ps_fall_over_bfd': bool,
@@ -5736,7 +5728,23 @@ class ShowRunningConfigBgpSchema(MetaParser):
                         },
                     },
                 },
-            }
+        Optional('vxlan'): {
+            'evpn': {
+                'evpn_vni': {
+                    Any(): {
+                        Optional("evpn_vni"): int,
+                        Optional("evpn_vni_rd"): str,
+                        Optional("evpn_vni_rt"):{
+                            Any():{
+                                Optional("evpn_vni_rt"): str,
+                                Optional("evpn_vni_rt_type"): str,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
 
 # ====================================
 # Parser for 'show running-config bgp'
@@ -5796,8 +5804,10 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                 p2_1 = re.compile(r'^\s*evpn$')
                 m = p2_1.match(line)
                 if m:
-                    if 'evpn' not in bgp_dict['bgp']['instance']['default']:
-                        bgp_dict['bgp']['instance']['default']['evpn'] = {}
+                    if 'vxlan' not in bgp_dict:
+                        bgp_dict['vxlan'] = {}
+                    if 'evpn' not in bgp_dict['vxlan']:
+                        bgp_dict['vxlan']['evpn'] = {}
                     continue
 
                 # vni 5001 l2
@@ -5805,10 +5815,12 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                 m = p2_2.match(line)
                 if m:
                     vni_flag = True
+                    if 'evpn_vni' not in bgp_dict['vxlan']['evpn']:
+                        bgp_dict['vxlan']['evpn']['evpn_vni'] = {}
                     evpn_vni = int(m.groupdict()['evpn_vni'])
-                    if evpn_vni not in  bgp_dict['bgp']['instance']['default']['evpn']:
-                        bgp_dict['bgp']['instance']['default']['evpn'][evpn_vni] = {}
-                    bgp_dict['bgp']['instance']['default']['evpn'][evpn_vni]['evpn_vni'] = evpn_vni
+                    if evpn_vni not in  bgp_dict['vxlan']['evpn']['evpn_vni']:
+                        bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni] = {}
+                    bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]['evpn_vni'] = evpn_vni
                     continue
 
                 if vni_flag:
@@ -5816,7 +5828,7 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     p2_3 = re.compile(r'^\s*rd +(?P<rd>[\w]+)$')
                     m = p2_3.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['evpn'][evpn_vni]['rd'] = m.groupdict()['rd']
+                        bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]['evpn_vni_rd'] = m.groupdict()['rd']
                         continue
 
                     # route-target import auto
@@ -5825,13 +5837,19 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                         r'^\s*route-target +(?P<evpn_vni_rt_type>[\w]+) +(?P<evpn_vni_rt>[\w\s]+)$')
                     m = p2_4.match(line)
                     if m:
-                        bgp_dict['bgp']['instance']['default']['evpn'][evpn_vni]['evpn_vni_rt_type'] = \
-                            m.groupdict()['evpn_vni_rt_type']
-                        bgp_dict['bgp']['instance']['default']['evpn'][evpn_vni]['evpn_vni_rt'] = \
-                            m.groupdict()['evpn_vni_rt']
+                        evpn_vni_rt = m.groupdict()['evpn_vni_rt']
+                        if 'evpn_vni_rt' not in bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]:
+                            bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]['evpn_vni_rt'] = {}
+                        if evpn_vni_rt not in bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]['evpn_vni_rt']:
+                            bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]['evpn_vni_rt'][evpn_vni_rt] = {}
+
+                        bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]['evpn_vni_rt'][evpn_vni_rt]\
+                            ['evpn_vni_rt_type'] = m.groupdict()['evpn_vni_rt_type']
+                        bgp_dict['vxlan']['evpn']['evpn_vni'][evpn_vni]['evpn_vni_rt'][evpn_vni_rt]\
+                            ['evpn_vni_rt'] = evpn_vni_rt
                         continue
 
-                p3 = re.compile(r'^\s*vrf( +context)? +(?P<vrf>[\w\-]+)$')
+                p3 = re.compile(r'^\s*vrf +(?P<vrf>[\w\-]+)$')
                 m = p3.match(line)
                 if m:
                     # Get keys
