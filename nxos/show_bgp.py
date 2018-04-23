@@ -10129,7 +10129,7 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
         out = self.device.execute('show bgp l2vpn evpn neighbors')
 
         result_dict = {}
-        recieve_flag = gr_adv_flag = gr_recv_flag = gr_fwd_flag = False
+        recieve_flag = gr_adv_flag = gr_recv_flag = gr_fwd_flag = gr_flag = False
         # BGP neighbor is 191.13.1.8, remote AS 200, ebgp link, Peer index 3
         # BGP version 4, remote router ID 201.33.33.33
         # BGP state = Idle, down for 4w6d, retry in 0.000000
@@ -10202,9 +10202,9 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
         p4 = re.compile(r'^\s*Peer is directly attached, interface +(?P<connectedif>[\w\/]+)$')
         p5 = re.compile(r'^\s*BFD live-detection is configured and enabled, state is +(?P<bfd_state>[\w]+)?$')
         p6 = re.compile(r'^\s*TCP MD5 authentication is set \(enabled\)$')
-        p7 = re.compile(r'^\s*Last read +(?P<lastread>[\w\:]+), hold time = +(?P<holdtime>[\d]+),'
+        p7 = re.compile(r'^\s*Last read +(?P<lastread>[\w\:\.]+), hold time = +(?P<holdtime>[\d]+),'
                             ' +keepalive interval is +(?P<keepalivetime>[\d]+) +seconds$')
-        p8 = re.compile(r'^\s*Last written +(?P<lastwrite>[\w\:]+), keepalive timer expiry due +(?P<keepalive>[\w\:]+)$')
+        p8 = re.compile(r'^\s*Last written +(?P<lastwrite>[\w\:\.]+), keepalive timer expiry due +(?P<keepalive>[\w\:]+)$')
         p9 = re.compile(r'^\s*Received +(?P<msgrecvd>[\d]+) +messages, +(?P<notificationsrcvd>[\d]+) +notifications,'
                         ' +(?P<recvbufbytes>[\d]+)+ bytes in queue$')
         p10 = re.compile(r'^\s*Sent +(?P<msgsent>[\d]+) messages, +(?P<notificationssent>[\d]+)'
