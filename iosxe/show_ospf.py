@@ -41,8 +41,7 @@ class ShowIpOspfSchema(MetaParser):
                         {'instance': 
                             {Any(): 
                                 {'router_id': str,
-                                # Optional('enable'): bool,
-                                 'enable': bool,
+                                Optional('enable'): bool,
                                 'nsr':
                                     {'enable': bool},
                                 'bfd': 
