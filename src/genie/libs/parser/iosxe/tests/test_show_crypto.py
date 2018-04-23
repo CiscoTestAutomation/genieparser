@@ -1,17 +1,23 @@
-#!/bin/env python
+
+# Python
 import unittest
 from unittest.mock import Mock
+
+# ATS
 from ats.topology import Device
 
-from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
-                                       SchemaMissingKeyError
+# Genie
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.iosxe.show_crypto import ShowCryptoPkiCertificates
 
 
+# ====================================================
+#  Unit test for 'show crypto pki certificates <WORD>'
+# ====================================================
 class test_show_crypto_pki_certificate(unittest.TestCase):
-    dev1 = Device(name='empty')
-    dev_c3850 = Device(name='c3850')
-    empty_output = {'execute.return_value': '      '}
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
 
     golden_parsed_output_c3850 = {
         "trustpoints": {
@@ -60,7 +66,7 @@ class test_show_crypto_pki_certificate(unittest.TestCase):
         }
     }
 
-    golden_output_c3850 = {'execute.return_value': '''\
+    golden_output_c3850 = {'execute.return_value': '''
         Certificate
           Status: Available
           Certificate Serial Number (hex): 793B572700000003750B
@@ -96,22 +102,63 @@ class test_show_crypto_pki_certificate(unittest.TestCase):
             start date: 13:50:58 UTC Nov 12 2012
             end   date: 13:00:17 UTC Nov 12 2037
           Associated Trustpoints: CISCO_IDEVID_SUDI Trustpool
-    '''
-    }
+        '''}
+
+    golden_parsed_output_csr1000 = {
+        'trustpoints': 
+            {'TP-self-signed-4146203551': 
+                {'associated_trustpoints': 
+                    {'router_self_signed_certificate': 
+                        {'issuer': 
+                            {'cn': 'IOS-Self-Signed-Certificate-4146203551'},
+                        'serial_number_in_hex': '01',
+                        'status': 'Available',
+                        'storage': 'nvram:IOS-Self-Sig#1.cer',
+                        'subject': 
+                            {'cn': 'IOS-Self-Signed-Certificate-4146203551',
+                            'name': 'IOS-Self-Signed-Certificate-4146203551'},
+                        'usage': 'General Purpose',
+                        'validity_date': 
+                            {'end_date': '00:00:00 UTC Jan 1 2020',
+                            'start_date': '21:37:27 UTC Apr 23 2018'}}}}}}
+
+    golden_output_csr1000 = {'execute.return_value': '''
+        Router Self-Signed Certificate
+          Status: Available
+          Certificate Serial Number (hex): 01
+          Certificate Usage: General Purpose
+          Issuer:
+            cn=IOS-Self-Signed-Certificate-4146203551
+          Subject:
+            Name: IOS-Self-Signed-Certificate-4146203551
+            cn=IOS-Self-Signed-Certificate-4146203551
+          Validity Date:
+            start date: 21:37:27 UTC Apr 23 2018
+            end   date: 00:00:00 UTC Jan 1 2020
+          Associated Trustpoints: TP-self-signed-4146203551
+          Storage: nvram:IOS-Self-Sig#1.cer
+        '''}
 
     def test_empty(self):
-        self.dev1 = Mock(**self.empty_output)
-        obj = ShowCryptoPkiCertificates(device=self.dev1)
+        self.device = Mock(**self.empty_output)
+        obj = ShowCryptoPkiCertificates(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()    
 
-    def test_golden(self):
+    def test_c3850(self):
         self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output_c3850)
-        obj = ShowCryptoPkiCertificates(device=self.dev_c3850)
+        self.device = Mock(**self.golden_output_c3850)
+        obj = ShowCryptoPkiCertificates(device=self.device)
         parsed_output = obj.parse(trustpoint_name='CISCO_IDEVID_SUDI')
-        self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+        self.assertEqual(parsed_output, self.golden_parsed_output_c3850)
+
+    def test_csr1000(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_csr1000)
+        obj = ShowCryptoPkiCertificates(device=self.device)
+        parsed_output = obj.parse(trustpoint_name='TP-self-signed-4146203551')
+        self.assertEqual(parsed_output, self.golden_parsed_output_csr1000)
+
 
 if __name__ == '__main__':
     unittest.main()
-
