@@ -4153,6 +4153,7 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
 
                     # -----   loop rd  -----
                     for rd_root in rd_tree.findall('{}ROW_rd'.format(namespace)):
+
                         # neighbor
                         try:
                             rd = rd_root.find('{}rd_val'.format(namespace)).text
@@ -4245,6 +4246,49 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
                                 rd_root.find('{}dampmaxpenalty'.format(namespace)).text
                         except Exception:
                             pass
+
+                        # TABLE_rpm
+                        rpm_tree = rd_root.find('{}TABLE_rpm'.format(namespace))
+                        if not rpm_tree:
+                            continue
+
+                        # ROW_rpm
+                        for rpm_root in rpm_tree.findall('{}ROW_rpm'.format(namespace)):
+
+                            # <rpmdamphalflife>1</rpmdamphalflife>
+                            try:
+                                sub_dict['dampening_half_life_time'] = \
+                                    rpm_root.find('{}rpmdamphalflife'.format(namespace)).text
+                            except Exception:
+                                pass
+
+                            # <rpmdampsuppress>30</rpmdampsuppress>
+                            try:
+                                sub_dict['dampening_suppress_time'] = \
+                                    rpm_root.find('{}rpmdampsuppress'.format(namespace)).text
+                            except Exception:
+                                pass
+
+                            # <rpmdampreuse>10</rpmdampreuse>
+                            try:
+                                sub_dict['dampening_reuse_time'] = \
+                                    rpm_root.find('{}rpmdampreuse'.format(namespace)).text
+                            except Exception:
+                                pass
+
+                            # <rpmdampsuppresstime>2</rpmdampsuppresstime>
+                            try:
+                                sub_dict['dampening_max_suppress_time'] = \
+                                    rpm_root.find('{}rpmdampsuppresstime'.format(namespace)).text
+                            except Exception:
+                                pass
+
+                            # <rpmdampmaxpenalty>40</rpmdampmaxpenalty>
+                            try:
+                                sub_dict['dampening_max_suppress_penalty'] = \
+                                    rpm_root.find('{}rpmdampmaxpenalty'.format(namespace)).text
+                            except Exception:
+                                pass
 
         return etree_dict
 

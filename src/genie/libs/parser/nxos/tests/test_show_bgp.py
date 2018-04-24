@@ -13329,12 +13329,195 @@ class test_show_bgp_vrf_all_all_dampening_parameters_xml(unittest.TestCase):
         </nf:rpc-reply>
     '''}
 
+    golden_parsed_output2 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4 multicast': 
+                        {'dampening': 'True',
+                        'dampening_half_life_time': '30',
+                        'dampening_max_suppress_penalty': '24000',
+                        'dampening_max_suppress_time': '120',
+                        'dampening_reuse_time': '1500',
+                        'dampening_route_map': 'dampening_params',
+                        'dampening_suppress_time': '10000'},
+                    'ipv4 unicast': 
+                        {'dampening': 'True',
+                        'dampening_half_life_time': '25',
+                        'dampening_max_suppress_penalty': '1176267',
+                        'dampening_max_suppress_time': '255',
+                        'dampening_reuse_time': '1000',
+                        'dampening_suppress_time': '1500'},
+                    'ipv6 multicast': 
+                        {'dampening': 'True',
+                        'dampening_half_life_time': '30',
+                        'dampening_max_suppress_penalty': '24000',
+                        'dampening_max_suppress_time': '120',
+                        'dampening_reuse_time': '1500',
+                        'dampening_route_map': 'dampening_params',
+                        'dampening_suppress_time': '10000'}}}}}
+
+    golden_output_2 = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
+        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:7.0.3.I7.4.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+         <nf:data>
+          <show>
+           <bgp>
+            <vrf>
+             <all>
+              <all>
+               <dampening>
+                <parameters>
+                 <__readonly__>
+                  <TABLE_vrf>
+                   <ROW_vrf>
+                    <vrf-name-out>VRF1</vrf-name-out>
+                    <TABLE_afi>
+                     <ROW_afi>
+                      <afi>1</afi>
+                      <TABLE_safi>
+                       <ROW_safi>
+                        <safi>1</safi>
+                        <af-name>IPv4 Unicast</af-name>
+                       </ROW_safi>
+                      </TABLE_safi>
+                     </ROW_afi>
+                     <ROW_afi>
+                      <afi>2</afi>
+                      <TABLE_safi>
+                       <ROW_safi>
+                        <safi>1</safi>
+                        <af-name>IPv6 Unicast</af-name>
+                       </ROW_safi>
+                      </TABLE_safi>
+                     </ROW_afi>
+                    </TABLE_afi>
+                   </ROW_vrf>
+                   <ROW_vrf>
+                    <vrf-name-out>default</vrf-name-out>
+                    <TABLE_afi>
+                     <ROW_afi>
+                      <afi>1</afi>
+                      <TABLE_safi>
+                       <ROW_safi>
+                        <safi>1</safi>
+                        <af-name>IPv4 Unicast</af-name>
+                        <TABLE_rd>
+                         <ROW_rd>
+                          <dampconfigured>Configured</dampconfigured>
+                          <damphalflife>25</damphalflife>
+                          <dampsuppress>1500</dampsuppress>
+                          <dampreuse>1000</dampreuse>
+                          <dampsuppresstime>255</dampsuppresstime>
+                          <dampmaxpenalty>1176267</dampmaxpenalty>
+                         </ROW_rd>
+                        </TABLE_rd>
+                       </ROW_safi>
+                      </TABLE_safi>
+                     </ROW_afi>
+                     <ROW_afi>
+                      <afi>1</afi>
+                      <TABLE_safi>
+                       <ROW_safi>
+                        <safi>2</safi>
+                        <af-name>IPv4 Multicast</af-name>
+                        <TABLE_rd>
+                         <ROW_rd>
+                          <rpmname>dampening_params</rpmname>
+                          <TABLE_rpm>
+                           <ROW_rpm>
+                            <rpmindex>1</rpmindex>
+                            <rpmdamphalflife>30</rpmdamphalflife>
+                            <rpmdampsuppress>10000</rpmdampsuppress>
+                            <rpmdampreuse>1500</rpmdampreuse>
+                            <rpmdampsuppresstime>120</rpmdampsuppresstime>
+                            <rpmdampmaxpenalty>24000</rpmdampmaxpenalty>
+                           </ROW_rpm>
+                          </TABLE_rpm>
+                         </ROW_rd>
+                        </TABLE_rd>
+                       </ROW_safi>
+                      </TABLE_safi>
+                     </ROW_afi>
+                     <ROW_afi>
+                      <afi>2</afi>
+                      <TABLE_safi>
+                       <ROW_safi>
+                        <safi>1</safi>
+                        <af-name>IPv6 Unicast</af-name>
+                       </ROW_safi>
+                      </TABLE_safi>
+                     </ROW_afi>
+                     <ROW_afi>
+                      <afi>2</afi>
+                      <TABLE_safi>
+                       <ROW_safi>
+                        <safi>2</safi>
+                        <af-name>IPv6 Multicast</af-name>
+                        <TABLE_rd>
+                         <ROW_rd>
+                          <rpmname>dampening_params</rpmname>
+                          <TABLE_rpm>
+                           <ROW_rpm>
+                            <rpmindex>1</rpmindex>
+                            <rpmdamphalflife>30</rpmdamphalflife>
+                            <rpmdampsuppress>10000</rpmdampsuppress>
+                            <rpmdampreuse>1500</rpmdampreuse>
+                            <rpmdampsuppresstime>120</rpmdampsuppresstime>
+                            <rpmdampmaxpenalty>24000</rpmdampmaxpenalty>
+                           </ROW_rpm>
+                          </TABLE_rpm>
+                         </ROW_rd>
+                        </TABLE_rd>
+                       </ROW_safi>
+                      </TABLE_safi>
+                     </ROW_afi>
+                     <ROW_afi>
+                      <afi>1</afi>
+                      <TABLE_safi>
+                       <ROW_safi>
+                        <safi>128</safi>
+                        <af-name>VPNv4 Unicast</af-name>
+                       </ROW_safi>
+                      </TABLE_safi>
+                     </ROW_afi>
+                     <ROW_afi>
+                      <afi>2</afi>
+                      <TABLE_safi>
+                       <ROW_safi>
+                        <safi>128</safi>
+                        <af-name>VPNv6 Unicast</af-name>
+                       </ROW_safi>
+                      </TABLE_safi>
+                     </ROW_afi>
+                    </TABLE_afi>
+                   </ROW_vrf>
+                  </TABLE_vrf>
+                 </__readonly__>
+                </parameters>
+               </dampening>
+              </all>
+             </all>
+            </vrf>
+           </bgp>
+          </show>
+         </nf:data>
+        </nf:rpc-reply>
+        ]]>]]>
+        '''}
+
     def test_golden_xml(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpVrfAllAllDampeningParameters(device=self.device, context='xml')
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_xml2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowBgpVrfAllAllDampeningParameters(device=self.device, context='xml')
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 # ==========================================================================
@@ -23642,7 +23825,7 @@ class test_show_bgp_labels_xml(unittest.TestCase):
                }
             }
         }
-    }
+        }
 
     golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
         <nf:rpc-reply xmlns="http://www.cisco.com/nxos:7.0.3.I7.3.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -23917,7 +24100,7 @@ class test_show_bgp_labels_xml(unittest.TestCase):
           </show>
          </nf:data>
         </nf:rpc-reply>
-    '''}
+        '''}
 
     def test_golden_xml(self):
         self.maxDiff = None
