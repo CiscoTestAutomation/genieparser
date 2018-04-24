@@ -21064,7 +21064,8 @@ class test_show_bgp_peer_template_xml(unittest.TestCase):
     '''Unit test for show bgp peer-template - XML'''
     
     device = Device(name='aDevice')
-    golden_parsed_output = {
+
+    golden_parsed_output_1 = {
         "template": {
           "PEER1": {
                "passive_only": False,
@@ -21348,7 +21349,7 @@ class test_show_bgp_peer_template_xml(unittest.TestCase):
         }
     }
 
-    golden_output = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
+    golden_output_1 = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
         <nf:rpc-reply xmlns="http://www.cisco.com/nxos:7.0.3.I7.2.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
          <nf:data>
           <show>
@@ -21745,12 +21746,86 @@ class test_show_bgp_peer_template_xml(unittest.TestCase):
         ]]>]]>
         '''}
 
-    def test_golden_xml(self):
+    golden_parsed_output_2 = {
+        'template': 
+            {'PEER-TEMPLATE': 
+                {'address_family': 
+                    {'ipv4 unicast': 
+                        {'as_override': False,
+                        'default_originate': False,
+                        'in_soft_reconfig_allowed': True,
+                        'peer_as_check_disabled': False,
+                        'rr_configured': False,
+                        'third_party_nexthop': False}},
+                'local_as_inactive': False,
+                'logging_neighbor_events': False,
+                'passive_only': False,
+                'remove_private_as': False}}}
+
+    golden_output_2 = {'execute.return_value': '''<?xml version="1.0" encoding="ISO-8859-1"?>
+        <nf:rpc-reply xmlns="http://www.cisco.com/nxos:7.0.3.I7.4.:bgp" xmlns:nf="urn:ietf:params:xml:ns:netconf:base:1.0">
+         <nf:data>
+          <show>
+           <bgp>
+            <peer-template>
+             <__readonly__>
+              <TABLE_neighbor>
+               <ROW_neighbor>
+                <templatepeer>PEER-TEMPLATE</templatepeer>
+                <ttlsecurity>false</ttlsecurity>
+                <passiveonly>false</passiveonly>
+                <localas-inactive>false</localas-inactive>
+                <remove-privateas>false</remove-privateas>
+                <TABLE_peraf>
+                 <ROW_peraf>
+                  <per-afi>1</per-afi>
+                  <TABLE_persaf>
+                   <ROW_persaf>
+                    <per-safi>1</per-safi>
+                    <per-af-name>IPv4 Unicast</per-af-name>
+                    <insoftreconfigallowed>true</insoftreconfigallowed>
+                    <insoftreconfigallowedalways>false</insoftreconfigallowedalways>
+                    <thirdpartynexthop>false</thirdpartynexthop>
+                    <asoverride>false</asoverride>
+                    <peerascheckdisabled>false</peerascheckdisabled>
+                    <rrconfigured>false</rrconfigured>
+                    <defaultoriginate>false</defaultoriginate>
+                   </ROW_persaf>
+                  </TABLE_persaf>
+                 </ROW_peraf>
+                </TABLE_peraf>
+                <TABLE_vrf>
+                 <ROW_vrf>
+                  <vrf-name>VRF1</vrf-name>
+                 </ROW_vrf>
+                 <ROW_vrf>
+                  <vrf-name>default</vrf-name>
+                 </ROW_vrf>
+                </TABLE_vrf>
+               </ROW_neighbor>
+              </TABLE_neighbor>
+             </__readonly__>
+            </peer-template>
+           </bgp>
+          </show>
+         </nf:data>
+        </nf:rpc-reply>
+        ]]>]]>
+        '''}
+
+    def test_golden_xml_1(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output)
+        self.device = Mock(**self.golden_output_1)
         obj = ShowBgpPeerTemplateCmd(device=self.device, context='xml')
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden_xml_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowBgpPeerTemplateCmd(device=self.device, context='xml')
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 # ================================================================================

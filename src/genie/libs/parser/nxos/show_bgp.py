@@ -8108,40 +8108,58 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
                     pass
 
                 # <sendcommunity>true</sendcommunity>
-                if af_root.find('{}sendcommunity'.format(namespace)).text == 'true':
-                    sub_dict['send_community'] = True
-                else:
-                    sub_dict['send_community'] = False
+                try:
+                    if af_root.find('{}sendcommunity'.format(namespace)).text == 'true':
+                        sub_dict['send_community'] = True
+                    else:
+                        sub_dict['send_community'] = False
+                except Exception:
+                    pass
 
                 # <sendextcommunity>true</sendextcommunity>
-                if af_root.find('{}sendextcommunity'.format(namespace)).text == 'true':
-                    sub_dict['send_ext_community'] = True
-                else:
-                    sub_dict['send_ext_community'] = False
+                try:
+                    if af_root.find('{}sendextcommunity'.format(namespace)).text == 'true':
+                        sub_dict['send_ext_community'] = True
+                    else:
+                        sub_dict['send_ext_community'] = False
+                except Exception:
+                    pass
 
                 # <thirdpartynexthop>false</thirdpartynexthop>
-                if af_root.find('{}thirdpartynexthop'.format(namespace)).text == 'true':
-                    sub_dict['third_party_nexthop'] = True
-                else:
-                    sub_dict['third_party_nexthop'] = False
+                try:
+                    if af_root.find('{}thirdpartynexthop'.format(namespace)).text == 'true':
+                        sub_dict['third_party_nexthop'] = True
+                    else:
+                        sub_dict['third_party_nexthop'] = False
+                except Exception:
+                    pass
 
-                    # <asoverride>true</asoverride>
-                if af_root.find('{}asoverride'.format(namespace)).text == 'true':
-                    sub_dict['as_override'] = True
-                else:
-                    sub_dict['as_override'] = False
+                # <asoverride>true</asoverride>
+                try:
+                    if af_root.find('{}asoverride'.format(namespace)).text == 'true':
+                        sub_dict['as_override'] = True
+                    else:
+                        sub_dict['as_override'] = False
+                except Exception:
+                    pass
 
                 # <peerascheckdisabled>false</peerascheckdisabled>
-                if af_root.find('{}peerascheckdisabled'.format(namespace)).text == 'true':
-                    sub_dict['peer_as_check_disabled'] = True
-                else:
-                    sub_dict['peer_as_check_disabled'] = False
+                try:
+                    if af_root.find('{}peerascheckdisabled'.format(namespace)).text == 'true':
+                        sub_dict['peer_as_check_disabled'] = True
+                    else:
+                        sub_dict['peer_as_check_disabled'] = False
+                except Exception:
+                    pass
 
                 # <rrconfigured>false</rrconfigured>
-                if af_root.find('{}rrconfigured'.format(namespace)).text == 'true':
-                    sub_dict['rr_configured'] = True
-                else:
-                    sub_dict['rr_configured'] = False
+                try:
+                    if af_root.find('{}rrconfigured'.format(namespace)).text == 'true':
+                        sub_dict['rr_configured'] = True
+                    else:
+                        sub_dict['rr_configured'] = False
+                except:
+                    Exception
 
                 # <localnexthop>0.0.0.0</localnexthop>
                 try:
