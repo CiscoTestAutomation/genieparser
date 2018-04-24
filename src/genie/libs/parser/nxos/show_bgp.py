@@ -7011,26 +7011,29 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
                         ['route_identifier'][route_identifier]
                 continue
 
-            # d e 2.3.1.0/24       19.0.102.3                38   00:09:36 00:01:40 35/30/10
-            p4 = re.compile(r'^(?P<best>[\*])?(?P<status>\w+)'
-                             ' +(?P<pathtype>[e|i])'
+            # d e 2.3.1.0/24       19.0.102.3                38   00:09:36 00:01:40  35/30/10
+            # *>e 83.0.0.0/24       210.1.1.1                 1   00:20:56          570/1500/1000
+            p4 = re.compile(r'^(?P<status>[\*|d|s|h|\s])?'
+                             '(?P<best>[\>|\s])?'
+                             '(?P<pathtype>[e|i])?'
                              ' +(?P<network>\S+)'
                              ' +(?P<peer>[\w\/\.\:]+)'
                              ' +(?P<flaps>\d+)'
                              ' +(?P<duration>[\w\:\.]+)'
-                             '( +(?P<reuse_time>[\w\:\.]+))?'
+                             '(?: +(?P<reuse_time>[\w\:\.]+))?'
                              ' +(?P<current_penalty>\d+)\/'
                              '(?P<suppress_limit>\d+)\/(?P<reuse_limit>\d+)$')
             m = p4.match(line)
 
             # d e [2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/61619.0.102.3                38   00:09:36 00:01:40 34/30/10
-            p4_1 = re.compile(r'^(?P<best>[\*])?(?P<status>\w+)'
-                             ' +(?P<pathtype>[e|i])'
+            p4_1 = re.compile(r'^(?P<status>[\*|d|s|h|\s])?'
+                             '(?P<best>[\>|\s])?'
+                             '(?P<pathtype>[e|i|\s])?'
                              ' +(?P<network>\S+\/\d{1,3})'
                              '(?P<peer>[1|2][\d\.\:]+)'
                              ' +(?P<flaps>\d+)'
                              ' +(?P<duration>[\w\:\.]+)'
-                             '( +(?P<reuse_time>[\w\:\.]+))?'
+                             '(?: +(?P<reuse_time>[\w\:\.]+))?'
                              ' +(?P<current_penalty>\d+)\/'
                              '(?P<suppress_limit>\d+)\/(?P<reuse_limit>\d+)$')
             m1 = p4_1.match(line)
@@ -7042,7 +7045,7 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
                 if network not in sub_dict['network']:
                     sub_dict['network'][network] = {}
 
-                if m.groupdict()['best']:
+                if not m.groupdict()['best'].isspace():
                     sub_dict['network'][network]['best'] = True
                 else:
                     sub_dict['network'][network]['best'] = False
