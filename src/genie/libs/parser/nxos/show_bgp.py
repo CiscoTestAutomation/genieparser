@@ -7745,7 +7745,7 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
                 continue
 
             # Inbound soft reconfiguration allowed(always)
-            p25 = re.compile(r'^Inbound +soft +reconfiguration +allowed\(always\)$')
+            p25 = re.compile(r'^Inbound +soft +reconfiguration +allowed(?: *\(always\))?$')
             m = p25.match(line)
             if m:
                 sub_dict['in_soft_reconfig_allowed'] = True
