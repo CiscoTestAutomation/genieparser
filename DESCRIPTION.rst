@@ -46,10 +46,10 @@ Quick Start
     $ pip install genie
 
     # to upgrade this package manually
-    $ pip install --upgrade genie.parser
+    $ pip install --upgrade genie.libs.parser
 
     # to install alpha/beta versions, add --pre
-    $ pip install --pre genie.parser
+    $ pip install --pre genie.libs.parser
 
 
 For more information on setting up your Python development environment,
