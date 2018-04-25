@@ -100,7 +100,7 @@ __version__ = 1.0
 #*   import sys
 #*   import xmltodict
 #*   from ats import tcl
-#*   from metaparser import MetaParser
+#*   from genie.metaparser import MetaParser
 #*
 #* Read More:
 #*   Python Import System
@@ -110,8 +110,8 @@ __version__ = 1.0
 #
 # imports statements
 #
-from metaparser.util.schemaengine import Any
-from metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Any
+from genie.metaparser import MetaParser
 
 #*******************************************************************************
 #* ShowParser: parser class

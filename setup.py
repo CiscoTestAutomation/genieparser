@@ -34,7 +34,7 @@ URL = _EXTERNAL_URL if is_devnet_build() else _INTERNAL_URL
 version, version_range = version_info('src', 'genie', 'libs', 'parser', '__init__.py')
 
 # generate package dependencies
-install_requires = []
+install_requires = ['xmltodict']
 
 #install_requires.extend(['genie.{pkg} {range}'.format(pkg = pkg,
 #                                                     range = version_range)
@@ -81,7 +81,7 @@ setup(
     keywords = 'genie pyats test automation',
 
     # uses namespace package
-    namespace_packages = ['genie.libs'],
+    namespace_packages = ['genie', 'genie.libs'],
 
     # project packages
     packages = find_packages(where = 'src'),
