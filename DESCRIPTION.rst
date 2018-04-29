@@ -23,9 +23,9 @@ home page at
 
 
 Parser Package
-------------
+--------------
 
-This is a sub-component of Genie that parse the device output into structure
+This is a sub-component of Genie that parse the device output into structured
 datastructure.
 
 Requirements
