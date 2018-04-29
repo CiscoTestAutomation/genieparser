@@ -38,12 +38,9 @@ Quick Start
 -----------
 
 .. code-block:: console
- 
-    # install pyats as a whole
-    $ pip install pyats
 
     # install genie as a whole
-    $ pip install genie
+    $ pip install genie.metaparser
 
     # to upgrade this package manually
     $ pip install --upgrade genie.libs.parser
