@@ -3,7 +3,7 @@
         genie.libs.parser
 
     Description:
-        This is the library sub-component of Genie for `genie.parser`.
+        This is the library sub-component of Genie for `genie.metaparser`.
 
 '''
 
