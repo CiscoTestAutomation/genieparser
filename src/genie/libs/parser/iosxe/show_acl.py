@@ -1,4 +1,4 @@
-"""show_spanning_tree.py
+"""show_acl.py
    supported commands:
      *  show access-lists
 """
