@@ -34,7 +34,7 @@ URL = _EXTERNAL_URL if is_devnet_build() else _INTERNAL_URL
 version, version_range = version_info('src', 'genie', 'libs', 'parser', '__init__.py')
 
 # generate package dependencies
-install_requires = []
+install_requires = ['xmltodict']
 
 #install_requires.extend(['genie.{pkg} {range}'.format(pkg = pkg,
 #                                                     range = version_range)
@@ -81,7 +81,7 @@ setup(
     keywords = 'genie pyats test automation',
 
     # uses namespace package
-    namespace_packages = ['genie.libs'],
+    namespace_packages = ['genie', 'genie.libs'],
 
     # project packages
     packages = find_packages(where = 'src'),
@@ -94,9 +94,6 @@ setup(
     # additional package data files that goes into the package itself
     package_data = {
     },
-
-    # custom argument specifying the list of cythonized modules
-    cisco_cythonized_modules = generate_cython_modules('src/'),
 
     # console entry point
     entry_points = {

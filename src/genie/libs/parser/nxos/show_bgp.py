@@ -4153,6 +4153,7 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
 
                     # -----   loop rd  -----
                     for rd_root in rd_tree.findall('{}ROW_rd'.format(namespace)):
+
                         # neighbor
                         try:
                             rd = rd_root.find('{}rd_val'.format(namespace)).text
@@ -4245,6 +4246,49 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
                                 rd_root.find('{}dampmaxpenalty'.format(namespace)).text
                         except Exception:
                             pass
+
+                        # TABLE_rpm
+                        rpm_tree = rd_root.find('{}TABLE_rpm'.format(namespace))
+                        if not rpm_tree:
+                            continue
+
+                        # ROW_rpm
+                        for rpm_root in rpm_tree.findall('{}ROW_rpm'.format(namespace)):
+
+                            # <rpmdamphalflife>1</rpmdamphalflife>
+                            try:
+                                sub_dict['dampening_half_life_time'] = \
+                                    rpm_root.find('{}rpmdamphalflife'.format(namespace)).text
+                            except Exception:
+                                pass
+
+                            # <rpmdampsuppress>30</rpmdampsuppress>
+                            try:
+                                sub_dict['dampening_suppress_time'] = \
+                                    rpm_root.find('{}rpmdampsuppress'.format(namespace)).text
+                            except Exception:
+                                pass
+
+                            # <rpmdampreuse>10</rpmdampreuse>
+                            try:
+                                sub_dict['dampening_reuse_time'] = \
+                                    rpm_root.find('{}rpmdampreuse'.format(namespace)).text
+                            except Exception:
+                                pass
+
+                            # <rpmdampsuppresstime>2</rpmdampsuppresstime>
+                            try:
+                                sub_dict['dampening_max_suppress_time'] = \
+                                    rpm_root.find('{}rpmdampsuppresstime'.format(namespace)).text
+                            except Exception:
+                                pass
+
+                            # <rpmdampmaxpenalty>40</rpmdampmaxpenalty>
+                            try:
+                                sub_dict['dampening_max_suppress_penalty'] = \
+                                    rpm_root.find('{}rpmdampmaxpenalty'.format(namespace)).text
+                            except Exception:
+                                pass
 
         return etree_dict
 
@@ -7011,26 +7055,29 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
                         ['route_identifier'][route_identifier]
                 continue
 
-            # d e 2.3.1.0/24       19.0.102.3                38   00:09:36 00:01:40 35/30/10
-            p4 = re.compile(r'^(?P<best>[\*])?(?P<status>\w+)'
-                             ' +(?P<pathtype>[e|i])'
+            # d e 2.3.1.0/24       19.0.102.3                38   00:09:36 00:01:40  35/30/10
+            # *>e 83.0.0.0/24       210.1.1.1                 1   00:20:56          570/1500/1000
+            p4 = re.compile(r'^(?P<status>[\*|d|s|h|\s])?'
+                             '(?P<best>[\>|\s])?'
+                             '(?P<pathtype>[e|i])?'
                              ' +(?P<network>\S+)'
                              ' +(?P<peer>[\w\/\.\:]+)'
                              ' +(?P<flaps>\d+)'
                              ' +(?P<duration>[\w\:\.]+)'
-                             '( +(?P<reuse_time>[\w\:\.]+))?'
+                             '(?: +(?P<reuse_time>[\w\:\.]+))?'
                              ' +(?P<current_penalty>\d+)\/'
                              '(?P<suppress_limit>\d+)\/(?P<reuse_limit>\d+)$')
             m = p4.match(line)
 
             # d e [2]:[77][7,0][39.39.39.39,2,656877351][39.1.1.1,22][19.0.102.3,39.0.1.31]/61619.0.102.3                38   00:09:36 00:01:40 34/30/10
-            p4_1 = re.compile(r'^(?P<best>[\*])?(?P<status>\w+)'
-                             ' +(?P<pathtype>[e|i])'
+            p4_1 = re.compile(r'^(?P<status>[\*|d|s|h|\s])?'
+                             '(?P<best>[\>|\s])?'
+                             '(?P<pathtype>[e|i|\s])?'
                              ' +(?P<network>\S+\/\d{1,3})'
                              '(?P<peer>[1|2][\d\.\:]+)'
                              ' +(?P<flaps>\d+)'
                              ' +(?P<duration>[\w\:\.]+)'
-                             '( +(?P<reuse_time>[\w\:\.]+))?'
+                             '(?: +(?P<reuse_time>[\w\:\.]+))?'
                              ' +(?P<current_penalty>\d+)\/'
                              '(?P<suppress_limit>\d+)\/(?P<reuse_limit>\d+)$')
             m1 = p4_1.match(line)
@@ -7042,7 +7089,7 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
                 if network not in sub_dict['network']:
                     sub_dict['network'][network] = {}
 
-                if m.groupdict()['best']:
+                if not m.groupdict()['best'].isspace():
                     sub_dict['network'][network]['best'] = True
                 else:
                     sub_dict['network'][network]['best'] = False
@@ -7698,7 +7745,7 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
                 continue
 
             # Inbound soft reconfiguration allowed(always)
-            p25 = re.compile(r'^Inbound +soft +reconfiguration +allowed\(always\)$')
+            p25 = re.compile(r'^Inbound +soft +reconfiguration +allowed(?: *\(always\))?$')
             m = p25.match(line)
             if m:
                 sub_dict['in_soft_reconfig_allowed'] = True
@@ -8061,40 +8108,58 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
                     pass
 
                 # <sendcommunity>true</sendcommunity>
-                if af_root.find('{}sendcommunity'.format(namespace)).text == 'true':
-                    sub_dict['send_community'] = True
-                else:
-                    sub_dict['send_community'] = False
+                try:
+                    if af_root.find('{}sendcommunity'.format(namespace)).text == 'true':
+                        sub_dict['send_community'] = True
+                    else:
+                        sub_dict['send_community'] = False
+                except Exception:
+                    pass
 
                 # <sendextcommunity>true</sendextcommunity>
-                if af_root.find('{}sendextcommunity'.format(namespace)).text == 'true':
-                    sub_dict['send_ext_community'] = True
-                else:
-                    sub_dict['send_ext_community'] = False
+                try:
+                    if af_root.find('{}sendextcommunity'.format(namespace)).text == 'true':
+                        sub_dict['send_ext_community'] = True
+                    else:
+                        sub_dict['send_ext_community'] = False
+                except Exception:
+                    pass
 
                 # <thirdpartynexthop>false</thirdpartynexthop>
-                if af_root.find('{}thirdpartynexthop'.format(namespace)).text == 'true':
-                    sub_dict['third_party_nexthop'] = True
-                else:
-                    sub_dict['third_party_nexthop'] = False
+                try:
+                    if af_root.find('{}thirdpartynexthop'.format(namespace)).text == 'true':
+                        sub_dict['third_party_nexthop'] = True
+                    else:
+                        sub_dict['third_party_nexthop'] = False
+                except Exception:
+                    pass
 
-                    # <asoverride>true</asoverride>
-                if af_root.find('{}asoverride'.format(namespace)).text == 'true':
-                    sub_dict['as_override'] = True
-                else:
-                    sub_dict['as_override'] = False
+                # <asoverride>true</asoverride>
+                try:
+                    if af_root.find('{}asoverride'.format(namespace)).text == 'true':
+                        sub_dict['as_override'] = True
+                    else:
+                        sub_dict['as_override'] = False
+                except Exception:
+                    pass
 
                 # <peerascheckdisabled>false</peerascheckdisabled>
-                if af_root.find('{}peerascheckdisabled'.format(namespace)).text == 'true':
-                    sub_dict['peer_as_check_disabled'] = True
-                else:
-                    sub_dict['peer_as_check_disabled'] = False
+                try:
+                    if af_root.find('{}peerascheckdisabled'.format(namespace)).text == 'true':
+                        sub_dict['peer_as_check_disabled'] = True
+                    else:
+                        sub_dict['peer_as_check_disabled'] = False
+                except Exception:
+                    pass
 
                 # <rrconfigured>false</rrconfigured>
-                if af_root.find('{}rrconfigured'.format(namespace)).text == 'true':
-                    sub_dict['rr_configured'] = True
-                else:
-                    sub_dict['rr_configured'] = False
+                try:
+                    if af_root.find('{}rrconfigured'.format(namespace)).text == 'true':
+                        sub_dict['rr_configured'] = True
+                    else:
+                        sub_dict['rr_configured'] = False
+                except:
+                    Exception
 
                 # <localnexthop>0.0.0.0</localnexthop>
                 try:
