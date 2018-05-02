@@ -1,0 +1,194 @@
+'''show_issu.py
+
+IOSXE parsers for the following show commands:
+   * show issu state detail
+   * show issu rollback-timer
+'''
+
+# Python
+import re
+
+# Metaparser
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
+                                               Default, Use
+
+# Genie Libs
+from genie.libs.parser.utils.common import Common
+
+
+# ====================================
+#  Schema for 'show issu state detail'
+# ====================================
+class ShowIssuStateDetailSchema(MetaParser):
+
+    """Schema for show issu state detail"""
+
+    schema = {
+        'issu_in_progress': bool,
+        Optional('slot'):
+            {Any(): 
+                {'loadversion_time': str,
+                'context': str,
+                'last_operation': str,
+                'rollback_state': str,
+                Optional('rollback_time'): str,
+                Optional('rollback_reason'): str,
+                'original_rollback_image': str,
+                'running_image': str,
+                'operating_mode': str,
+                'terminal_state_reached': bool,
+                'runversion_executed': bool,
+                },
+            },
+        }
+
+# ====================================
+#  Parser for 'show issu state detail'
+# ====================================
+class ShowIssuStateDetail(ShowIssuStateDetailSchema):
+
+    """Parser for show issu state detail"""
+
+    def cli(self):
+         
+        # Execute command to get output from device
+        out = self.device.execute('show issu state detail')
+
+        # Init parsed dict
+        ret_dict = {}
+
+        # Compile regexp patterns
+
+        # No ISSU operation is in progress
+        p1 = re.compile(r'^No +ISSU +operation +is +in +progress$')
+
+        # Slot being modified: R1
+        p2 = re.compile(r'^Slot +being +modified: +(?P<slot>(\S+))$')
+        
+        # Loadversion time: 20180430 19:13:51 on vty 0
+        p3 = re.compile(r'^Loadversion +time: +(?P<date>(\S+))'
+                         ' +(?P<time>(\S+))(?: +on +(?P<context>.*))?$')
+
+        # Last operation: loadversion
+        p4 = re.compile(r'^Last +operation:'
+            ' (?P<last>(loadversion|runversion|acceptversion|commitversion))$')
+
+        # Rollback: automatic, remaining time before rollback: 00:35:58
+        p5_1 = re.compile(r'^Rollback: +(?P<state>(automatic)), +remaining +time'
+                           ' +before +rollback: +(?P<time>(\S+))$')
+
+        # Rollback: inactive, timer canceled by acceptversion
+        p5_2 = re.compile(r'^Rollback: +(?P<state>(inactive)), +(?P<reason>.*)$')
+
+        # Original (rollback) image: harddisk:asr1000rpx86-universalk9.16.08.01sprd1.SPA.bin
+        p6 = re.compile(r'^Original +\(rollback\) +image: +(?P<orig_image>(\S+))$')
+
+        # Running image: harddisk:asr1000rpx86-universalk9.BLD_V168_1_THROTTLE_LATEST_20180426_165658_V16_8_0_265.SSA.bin
+        p7 = re.compile(r'^Running +image: +(?P<run_image>(\S+))$')
+
+        # Operating mode: sso, terminal state not reached
+        p8 = re.compile(r'^Operating +mode: +(?P<mode>(\S+)), +terminal +state'
+                         ' +(?P<terminal_state>(reached|not reached))$')
+
+        # Notes: runversion executed, active RP is being provisioned
+        p9 = re.compile(r'^Notes: +runversion +executed, +active +RP +is +being'
+                         ' +provisioned$')
+
+        # Parse all lines
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # No ISSU operation is in progress
+            # p1 = re.compile(r'^No ISSU operation is in progress$')
+            m = p1.match(line)
+            if m:
+                ret_dict['issu_in_progress'] = False
+                continue
+
+            # Slot being modified: R1
+            # p2 = re.compile(r'^Slot +being +modified: +(?P<slot>(\S+))$')
+            m = p2.match(line)
+            if m:
+                ret_dict['issu_in_progress'] = True
+                slot = m.groupdict()['slot']
+                if 'slot' not in ret_dict:
+                    ret_dict['slot'] = {}
+                if slot not in ret_dict['slot']:
+                    ret_dict['slot'][slot] = {}
+                ret_dict['slot'][slot]['runversion_executed'] = False
+                continue
+
+            # Loadversion time: 20180430 19:13:51 on vty 0
+            # p3 = re.compile(r'^Loadversion +time: +(?P<date>(\S+))'
+            #                  ' +(?P<time>(\S+))(?: +on +(?P<context>.*))?$')
+            m = p3.match(line)
+            if m:
+                ret_dict['slot'][slot]['loadversion_time'] = \
+                    m.groupdict()['date'] + ' ' + m.groupdict()['time']
+                ret_dict['slot'][slot]['context'] = m.groupdict()['context']  
+                continue
+
+            # Last operation: loadversion
+            # p4 = re.compile(r'^Last +operation:'
+            # ' (?P<last>(loadversion|runversion|acceptversion|commitversion))$')
+            m = p4.match(line)
+            if m:
+                ret_dict['slot'][slot]['last_operation'] = m.groupdict()['last']  
+                continue
+
+            # Rollback: automatic, remaining time before rollback: 00:35:58
+            # p5_1 = re.compile(r'^Rollback: +(?P<state>(automatic)), +remaining +time'
+            #                    ' +before +rollback: +(?P<rollback_time>(\S+))$')
+            m = p5_1.match(line)
+            if m:
+                ret_dict['slot'][slot]['rollback_state'] = m.groupdict()['state']
+                ret_dict['slot'][slot]['rollback_time'] = m.groupdict()['time']
+                continue
+
+            # Rollback: inactive, timer canceled by acceptversion
+            # p5_2 = re.compile(r'^Rollback: +(?P<state>(inactive)),'
+            #                ' +(?P<reason>[a-zA-Z0-9\s+])$')
+            m = p5_2.match(line)
+            if m:
+                ret_dict['slot'][slot]['rollback_state'] = m.groupdict()['state']
+                ret_dict['slot'][slot]['rollback_reason'] = m.groupdict()['reason']
+                continue
+
+            # Original (rollback) image: harddisk:asr1000rpx86-universalk9.16.08.01sprd1.SPA.bin
+            # p6 = re.compile(r'^Original +\(rollback\) +image: +(?P<image>(\S+))$')
+            m = p6.match(line)
+            if m:
+                ret_dict['slot'][slot]['original_rollback_image'] = \
+                    m.groupdict()['orig_image']
+                continue
+
+            # Running image: harddisk:asr1000rpx86-universalk9.BLD_V168_1_THROTTLE_LATEST_20180426_165658_V16_8_0_265.SSA.bin
+            # p7 = re.compile(r'^Running +image: +(?P<run_image>(\S+))$')
+            m = p7.match(line)
+            if m:
+                ret_dict['slot'][slot]['running_image'] = \
+                    m.groupdict()['run_image']
+                continue
+
+            # Operating mode: sso, terminal state not reached
+            # p8 = re.compile(r'^Operating +mode: +(?P<mode>(\S+)), +terminal +state'
+            #                  ' +(?P<terminal_state>(reached|not reached))$')
+            m = p8.match(line)
+            if m:
+                ret_dict['slot'][slot]['operating_mode'] = m.groupdict()['mode']
+                if 'not' in m.groupdict()['terminal_state']:
+                    ret_dict['slot'][slot]['terminal_state_reached'] = False
+                else:
+                    ret_dict['slot'][slot]['terminal_state_reached'] = True
+                continue
+
+            # Notes: runversion executed, active RP is being provisioned
+            # p9 = re.compile(r'^Notes: +runversion +executed, +active +RP +is +being'
+            #              ' +provisioned$')
+            m = p9.match(line)
+            if m:
+                ret_dict['slot'][slot]['runversion_executed'] = True
+                continue
+
+        return ret_dict
