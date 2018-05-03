@@ -112,11 +112,8 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
             if m:
                 ret_dict['issu_in_progress'] = True
                 slot = m.groupdict()['slot']
-                if 'slot' not in ret_dict:
-                    ret_dict['slot'] = {}
-                if slot not in ret_dict['slot']:
-                    ret_dict['slot'][slot] = {}
-                ret_dict['slot'][slot]['runversion_executed'] = False
+                slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
+                slot_dict['runversion_executed'] = False
                 continue
 
             # Loadversion time: 20180430 19:13:51 on vty 0
@@ -124,9 +121,9 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
             #                  ' +(?P<time>(\S+))(?: +on +(?P<context>.*))?$')
             m = p3.match(line)
             if m:
-                ret_dict['slot'][slot]['loadversion_time'] = \
-                    m.groupdict()['date'] + ' ' + m.groupdict()['time']
-                ret_dict['slot'][slot]['context'] = m.groupdict()['context']  
+                group = m.groupdict()
+                slot_dict['loadversion_time'] = group['date'] + ' ' + group['time']
+                slot_dict['context'] = group['context']
                 continue
 
             # Last operation: loadversion
@@ -134,7 +131,7 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
             # ' (?P<last>(loadversion|runversion|acceptversion|commitversion))$')
             m = p4.match(line)
             if m:
-                ret_dict['slot'][slot]['last_operation'] = m.groupdict()['last']  
+                slot_dict['last_operation'] = m.groupdict()['last']
                 continue
 
             # Rollback: automatic, remaining time before rollback: 00:35:58
@@ -142,8 +139,9 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
             #                    ' +before +rollback: +(?P<rollback_time>(\S+))$')
             m = p5_1.match(line)
             if m:
-                ret_dict['slot'][slot]['rollback_state'] = m.groupdict()['state']
-                ret_dict['slot'][slot]['rollback_time'] = m.groupdict()['time']
+                group = m.groupdict()
+                slot_dict['rollback_state'] = group['state']
+                slot_dict['rollback_time'] = group['time']
                 continue
 
             # Rollback: inactive, timer canceled by acceptversion
@@ -151,24 +149,23 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
             #                ' +(?P<reason>[a-zA-Z0-9\s+])$')
             m = p5_2.match(line)
             if m:
-                ret_dict['slot'][slot]['rollback_state'] = m.groupdict()['state']
-                ret_dict['slot'][slot]['rollback_reason'] = m.groupdict()['reason']
+                group = m.groupdict()
+                slot_dict['rollback_state'] = group['state']
+                slot_dict['rollback_reason'] = group['reason']
                 continue
 
             # Original (rollback) image: harddisk:asr1000rpx86-universalk9.16.08.01sprd1.SPA.bin
             # p6 = re.compile(r'^Original +\(rollback\) +image: +(?P<image>(\S+))$')
             m = p6.match(line)
             if m:
-                ret_dict['slot'][slot]['original_rollback_image'] = \
-                    m.groupdict()['orig_image']
+                slot_dict['original_rollback_image'] = m.groupdict()['orig_image']
                 continue
 
             # Running image: harddisk:asr1000rpx86-universalk9.BLD_V168_1_THROTTLE_LATEST_20180426_165658_V16_8_0_265.SSA.bin
             # p7 = re.compile(r'^Running +image: +(?P<run_image>(\S+))$')
             m = p7.match(line)
             if m:
-                ret_dict['slot'][slot]['running_image'] = \
-                    m.groupdict()['run_image']
+                slot_dict['running_image'] = m.groupdict()['run_image']
                 continue
 
             # Operating mode: sso, terminal state not reached
@@ -176,11 +173,11 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
             #                  ' +(?P<terminal_state>(reached|not reached))$')
             m = p8.match(line)
             if m:
-                ret_dict['slot'][slot]['operating_mode'] = m.groupdict()['mode']
+                slot_dict['operating_mode'] = m.groupdict()['mode']
                 if 'not' in m.groupdict()['terminal_state']:
-                    ret_dict['slot'][slot]['terminal_state_reached'] = False
+                    slot_dict['terminal_state_reached'] = False
                 else:
-                    ret_dict['slot'][slot]['terminal_state_reached'] = True
+                    slot_dict['terminal_state_reached'] = True
                 continue
 
             # Notes: runversion executed, active RP is being provisioned
@@ -188,7 +185,7 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
             #              ' +provisioned$')
             m = p9.match(line)
             if m:
-                ret_dict['slot'][slot]['runversion_executed'] = True
+                slot_dict['runversion_executed'] = True
                 continue
 
         return ret_dict
@@ -237,8 +234,9 @@ class ShowIssuRollbackTimer(ShowIssuRollbackTimerSchema):
             # p1 = re.compile(r'^Rollback: +(?P<state>(\S+)), +(?P<reason>.*)$')
             m = p1.match(line)
             if m:
-                ret_dict['rollback_timer_state'] = m.groupdict()['state']
-                ret_dict['rollback_timer_reason'] = m.groupdict()['reason']
+                group = m.groupdict()
+                ret_dict['rollback_timer_state'] = group['state']
+                ret_dict['rollback_timer_reason'] = group['reason']
                 continue
 
         return ret_dict
