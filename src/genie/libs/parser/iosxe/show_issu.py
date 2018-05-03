@@ -192,3 +192,53 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
                 continue
 
         return ret_dict
+
+
+# ======================================
+#  Schema for 'show issu rollback-timer'
+# ======================================
+class ShowIssuRollbackTimerSchema(MetaParser):
+
+    """Schema for show issu rollback-timer"""
+
+    schema = {
+        'rollback_timer_state': str,
+        'rollback_timer_reason': str,
+        }
+
+# ======================================
+#  Parser for 'show issu rollback-timer'
+# ======================================
+class ShowIssuRollbackTimer(ShowIssuRollbackTimerSchema):
+
+    """Parser for show issu rollback-timer"""
+
+    def cli(self):
+         
+        # Execute command to get output from device
+        out = self.device.execute('show issu rollback-timer')
+
+        # Init parsed dict
+        ret_dict = {}
+
+        # Compile regexp patterns
+
+        # Rollback: inactive, no ISSU operation is in progress
+        # Rollback: inactive, timer canceled by acceptversion
+        p1 = re.compile(r'^Rollback: +(?P<state>(\S+)), +(?P<reason>.*)$')
+
+
+        # Parse all lines
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Rollback: inactive, no ISSU operation is in progress
+            # Rollback: inactive, timer canceled by acceptversion
+            # p1 = re.compile(r'^Rollback: +(?P<state>(\S+)), +(?P<reason>.*)$')
+            m = p1.match(line)
+            if m:
+                ret_dict['rollback_timer_state'] = m.groupdict()['state']
+                ret_dict['rollback_timer_reason'] = m.groupdict()['reason']
+                continue
+
+        return ret_dict
