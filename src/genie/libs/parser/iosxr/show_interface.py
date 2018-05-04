@@ -249,13 +249,16 @@ class ShowInterfaceBriefSchema(MetaParser):
     schema = {'interface':
                 {'ethernet':
                     {Any():
-                        {'vlan': str,
-                         'type': str,
-                         'mode': str,
+                        {Optional('vlan'): str,
+                         Optional('type'): str,
+                         Optional('mode'): str,
                          'status': str,
-                         'speed': str,
-                         'reason': str,
-                         'port_ch': str}
+                         Optional('speed'): str,
+                         Optional('reason'): str,
+                         Optional('encap_type'): str,
+                         Optional('mtu'): str,
+                         Optional('bw'): int,
+                         Optional('port_ch'): str}
                     },
                 Optional('port'):
                     {Any():
@@ -263,7 +266,9 @@ class ShowInterfaceBriefSchema(MetaParser):
                          Optional('status'): str,
                          Optional('ip_address'): str,
                          Optional('speed'): str,
-                         Optional('mtu'): str}
+                         Optional('encap_type'): str,
+                         Optional('mtu'): str,
+                         Optional('bw'): int,}
                     },
                 Optional('port_channel'):
                     {Any():
@@ -273,11 +278,17 @@ class ShowInterfaceBriefSchema(MetaParser):
                          Optional('status'): str,
                          Optional('speed'): str,
                          Optional('reason'): str,
+                         Optional('encap_type'): str,
+                         Optional('mtu'): str,
+                         Optional('bw'): int,
                          Optional('protocol'): str}
                     },
                 Optional('loopback'):
                     {Any():
                         {Optional('status'): str,
+                         Optional('encap_type'): str,
+                         Optional('mtu'): str,
+                         Optional('bw'): int,
                          Optional('description'): str}
                     },
                 }
@@ -320,9 +331,9 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
                     interface_dict['interface']['port'] = {}
                 continue
 
-            p2 = re.compile(r'^\s*(?P<port>[a-zA-Z0-9]+)'
+            p2 = re.compile(r'^\s*(?P<port>[a-zA-Z0-9\/\.]+)'
                              ' +(?P<vrf>[a-zA-Z0-9\-]+)'
-                             ' +(?P<status>[a-zA-Z]+) +(?P<ip_address>[0-9\.]+)'
+                             ' +(?P<status>[a-zA-Z\-]+) +(?P<ip_address>[0-9\.]+)'
                              ' +(?P<speed>[0-9]+) +(?P<mtu>[0-9]+)$')
             m = p2.match(line)
             if m:
@@ -438,6 +449,33 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
                 interface_dict['interface']['loopback'][interface]['description'] = \
                     m.groupdict()['description']
                 continue
+
+
+            p9 = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/]+)'
+                             ' +(?P<intf_state>[a-zA-Z0-9\-]+)'
+                             ' +(?P<line_state>[a-zA-Z0-9\-]+)'
+                             ' +(?P<type>[a-zA-Z]+)'
+                             ' +(?P<mtu>\d+)'
+                             ' +(?P<bw>\d+)$')
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                interface = Common.convert_intf_name(group['interface'])
+                sub_dict = interface_dict.setdefault('interface', {})
+                if 'Lo' in interface:
+                    intf_dict = sub_dict.setdefault('loopback', {}).setdefault(interface, {})
+                if 'Po' in interface:
+                    intf_dict = sub_dict.setdefault('port_channel', {}).setdefault(interface, {})
+                if 'Eth' in interface:
+                    intf_dict = sub_dict.setdefault('ethernet', {}).setdefault(interface, {})
+                else:
+                    intf_dict = sub_dict.setdefault('port', {}).setdefault(interface, {})
+                intf_dict['status'] = group['intf_state']
+                intf_dict['encap_type'] = group['type']
+                intf_dict['mtu'] = group['mtu']
+                intf_dict['bw'] = int(group['bw'])
+                continue
+
 
         return interface_dict
         
