@@ -259,7 +259,7 @@ class ShowIpv6NdInterface(ShowIpv6NdInterfaceSchema):
         # ICMPv6 ND Interfaces for VRF "default"
         p1 = re.compile(r'^\s*ICMPv6 ND Interfaces for VRF +\"(?P<vrf>[\w]+)\"$')
         # Ethernet1/1, Interface status: protocol-up/link-up/admin-up
-        p2 = re.compile(r'^\s*(?P<interface>[\w\/]+), +Interface status:'
+        p2 = re.compile(r'^\s*(?P<interface>[\w\/\.]+), +Interface status:'
                         ' +protocol-(?P<protocol_status>[\w]+)/link-(?P<link_status>[\w]+)/admin-(?P<admin_status>[\w]+)$')
         #   IPv6 address:
         p3 = re.compile(r'^\s*IPv6 address:$')
@@ -494,7 +494,7 @@ class ShowIpv6IcmpNeighborDetailSchema(MetaParser):
                         'link_layer_address': str,
                         'neighbor_state': str,
                         'age': str,
-                        'physical_interface': str,
+                        Optional('physical_interface'): str,
                         },
                     },
                 },
@@ -526,9 +526,9 @@ class ShowIpv6IcmpNeighborDetail(ShowIpv6IcmpNeighborDetailSchema):
         # ICMPv6 Adjacency Table for all VRFs
         p1 = re.compile(r'^\s*ICMPv6 Adjacency Table for +(?P<vrf>[\w]+) +VRFs$')
 
-        p2 = re.compile(r'^\s*(?P<neighbor>[\w\:]+)?( +(?P<age>[\w\:]+)'
-                        ' +(?P<link_layer_address>[a-f0-9\.]+) +(?P<neighbor_state>[\w]+) +(?P<interface>[\w\/]+)'
-                        ' +(?P<physical_interface>[\w\/]+))?$')
+        p2 = re.compile(r'^\s*(?P<neighbor>[\w\:]+)?( +(?P<age>[\d\:]+)'
+                        ' +(?P<link_layer_address>[a-f0-9\.]+) +(?P<neighbor_state>[\w]+) +(?P<interface>[\w\/\.]+)'
+                        ' +(?P<physical_interface>[\w\/\.]+))?$')
 
         for line in out.splitlines():
             if line:
@@ -623,7 +623,7 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
 
         # Router fe80::f816:3eff:fe82:6320 on Ethernet1/1 , last update time 3.2 min
         p1 = re.compile(r'^\s*((?P<router>\w+) )?(?P<neighbor>[a-f0-9\:]+) +on'
-                        ' +(?P<interface>[\w\/]+) +,'
+                        ' +(?P<interface>[\w\/\.]+) +,'
                         ' +last +update +time +(?P<last_update>[\d\.]+) +min$')
         # Current_hop_limit 64, Lifetime 1800, AddrFlag 0, OtherFlag 0, MTU 1500
         p2 = re.compile(r'^\s*Current_hop_limit +(?P<current_hop_limit>\d+), +Lifetime +(?P<lifetime>\d+),'
@@ -635,7 +635,7 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
         # Reachable time 0 msec, Retransmission time 0 msec
         p4 = re.compile(r'^\s*Reachable time +(?P<reachable_time>\d+) +msec, +Retransmission time +(?P<retransmission_time>\d+) +msec$')
         #   Prefix 2010:2:3::/64  onlink_flag 1 autonomous_flag 1
-        p5 = re.compile(r'^\s*Prefix +(?P<prefix>[\w\:\/]+) +onlink_flag +(?P<onlink_flag>\d+) +autonomous_flag +(?P<autonomous_flag>\d+)$')
+        p5 = re.compile(r'^\s*Prefix +(?P<prefix>[\w\:\/\s]+)onlink_flag +(?P<onlink_flag>\d+) +autonomous_flag +(?P<autonomous_flag>\d+)$')
         #   valid lifetime 2592000, preferred lifetime 604800
         p6 = re.compile(r'^\s*valid lifetime +(?P<valid_lifetime>\d+), +preferred lifetime +(?P<preferred_lifetime>\d+)$')
 
@@ -680,7 +680,7 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                neighbor_dict.update({'prefix':group.pop('prefix')})
+                neighbor_dict.update({'prefix':group.pop('prefix').strip()})
                 neighbor_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
