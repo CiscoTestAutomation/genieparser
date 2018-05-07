@@ -3231,8 +3231,9 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
                 continue
 
             # Metric next advertise: Never
+            # Metric next advertise: 00:06:11
             p7 = re.compile(r'^\s*Metric +next +advertise *:'
-                             ' +(?P<metric_next_advertise>[a-zA-Z0-9]+)$')
+                             ' +(?P<metric_next_advertise>[a-zA-Z0-9\:]+)$')
             m = p7.match(line)
             if m:
                 af_dict['next_hop'][nexthop]['metric_next_advertise'] = \
