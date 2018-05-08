@@ -23,9 +23,13 @@ from ats.log.utils import banner
 import xmltodict
 try:
     import iptools
-    from ats import tcl
     from cnetconf import testmodel
 except (ImportError, OSError):
+    pass
+
+try:
+    from ats import tcl
+except Exception:
     pass
 
 from genie.metaparser import MetaParser
