@@ -55,6 +55,7 @@ class ShowVrfAllDetail(ShowVrfAllDetailSchema):
         rt_type = None
 
         for line in out.splitlines():
+            line = line.replace('\t', '    ')
             line = line.strip()
 
             # VRF VRF1; RD 200:1; VPN ID not set
