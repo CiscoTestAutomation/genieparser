@@ -23,9 +23,9 @@ home page at
 
 
 Parser Package
-------------
+--------------
 
-This is a sub-component of Genie that parse the device output into structure
+This is a sub-component of Genie that parse the device output into structured
 datastructure.
 
 Requirements
@@ -38,18 +38,15 @@ Quick Start
 -----------
 
 .. code-block:: console
- 
-    # install pyats as a whole
-    $ pip install pyats
 
     # install genie as a whole
-    $ pip install genie
+    $ pip install genie.metaparser
 
     # to upgrade this package manually
-    $ pip install --upgrade genie.parser
+    $ pip install --upgrade genie.libs.parser
 
     # to install alpha/beta versions, add --pre
-    $ pip install --pre genie.parser
+    $ pip install --pre genie.libs.parser
 
 
 For more information on setting up your Python development environment,

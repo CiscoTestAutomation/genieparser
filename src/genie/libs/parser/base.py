@@ -11,7 +11,7 @@ import os
 try:
     from ats import tcl
     from ats.tcl import tclstr, TclCommand
-except (ImportError, OSError):
+except Exception:
     pass
 
 from genie.metaparser import MetaParser

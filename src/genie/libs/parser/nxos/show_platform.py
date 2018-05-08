@@ -9,7 +9,7 @@ import xmltodict
 
 try:
     from ats import tcl
-except (ImportError, OSError):
+except Exception:
     pass
 
 from genie.metaparser import MetaParser
