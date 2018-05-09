@@ -29,3 +29,7 @@ Installation guide can be found on [our website].
 ```
 $ pip install genie.metaparser
 ```
+
+# ChangeLog
+
+Change logs can be found [here](changelog/CHANGELOG.md).
