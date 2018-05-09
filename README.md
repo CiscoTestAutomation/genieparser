@@ -32,4 +32,4 @@ $ pip install genie.metaparser
 
 # ChangeLog
 
-Change logs can be found [here](CHANGELOG.md).
+Change logs can be found [here](changelog/CHANGELOG.md).
