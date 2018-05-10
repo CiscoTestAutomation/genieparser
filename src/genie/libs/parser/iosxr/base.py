@@ -4,7 +4,7 @@ __all__ = (
 
 try:
     from ats import tcl
-except (ImportError, OSError):
+except Exception:
     pass
 
 from genie.libs.parser import CaasMetaParser
