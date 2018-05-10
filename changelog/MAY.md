@@ -27,6 +27,10 @@
 	* show mac address-table
 	* show mac address-table aging-time
 	* show mac address-table learning
+	* ShowIpv6NeighborDetail
+	* ShowIpv6NdInterface
+	* ShowIpv6IcmpNeighborDetail
+	* ShowIpv6Routers
 
 * Fixed the following parsers.
 	* ShowBgpVrfAllAllNextHopDatabase
