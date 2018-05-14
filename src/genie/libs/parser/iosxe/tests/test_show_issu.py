@@ -23,12 +23,6 @@ class test_show_issu_state_detail(unittest.TestCase):
 
     golden_output_1 = {'execute.return_value': '''
         PE1#show issu state  detail 
-        --- Starting local lock acquisition on R0 ---
-        Finished local lock acquisition on R0
-
-        --- Starting installation state synchronization ---
-        Finished installation state synchronization
-
         --- Starting local lock acquisition on R1 ---
         Finished local lock acquisition on R1
 
@@ -42,10 +36,10 @@ class test_show_issu_state_detail(unittest.TestCase):
         '''}
 
     golden_parsed_output_1 = {
-        'issu_in_progress': True,
         'slot': 
             {'R1': 
-                {'context': 'vty 0',
+                {'issu_in_progress': True,
+                'context': 'vty 0',
                 'last_operation': 'acceptversion',
                 'loadversion_time': '20180430 20:31:25',
                 'operating_mode': 'sso',
@@ -72,10 +66,10 @@ class test_show_issu_state_detail(unittest.TestCase):
         '''}
 
     golden_parsed_output_2 = {
-        'issu_in_progress': True,
         'slot': 
             {'R1': 
-                {'context': 'vty 0',
+                {'issu_in_progress': True,
+                'context': 'vty 0',
                 'last_operation': 'runversion',
                 'loadversion_time': '20180430 19:13:51',
                 'operating_mode': 'sso',
@@ -107,10 +101,12 @@ class test_show_issu_state_detail(unittest.TestCase):
         '''}
 
     golden_parsed_output_3 = {
-        'issu_in_progress': True,
-        'slot': 
-            {'R1': 
-                {'context': 'vty 0',
+        'slot':
+            {'R0':
+                {'issu_in_progress': False},
+            'R1':
+                {'issu_in_progress': True,
+                'context': 'vty 0',
                 'last_operation': 'loadversion',
                 'loadversion_time': '20180430 19:13:51',
                 'operating_mode': 'sso',
@@ -133,7 +129,9 @@ class test_show_issu_state_detail(unittest.TestCase):
         '''}
 
     golden_parsed_output_4 = {
-        'issu_in_progress': False}
+        'slot':
+            {'R0':
+                {'issu_in_progress': False}}}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)

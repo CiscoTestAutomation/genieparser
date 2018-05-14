@@ -25,20 +25,20 @@ class ShowIssuStateDetailSchema(MetaParser):
     """Schema for show issu state detail"""
 
     schema = {
-        'issu_in_progress': bool,
-        Optional('slot'):
-            {Any(): 
-                {'loadversion_time': str,
-                'context': str,
-                'last_operation': str,
-                'rollback_state': str,
+        'slot':
+            {Any():
+                {'issu_in_progress': bool,
+                Optional('loadversion_time'): str,
+                Optional('context'): str,
+                Optional('last_operation'): str,
+                Optional('rollback_state'): str,
                 Optional('rollback_time'): str,
                 Optional('rollback_reason'): str,
-                'original_rollback_image': str,
-                'running_image': str,
-                'operating_mode': str,
-                'terminal_state_reached': bool,
-                'runversion_executed': bool,
+                Optional('original_rollback_image'): str,
+                Optional('running_image'): str,
+                Optional('operating_mode'): str,
+                Optional('terminal_state_reached'): bool,
+                Optional('runversion_executed'): bool,
                 },
             },
         }
@@ -59,6 +59,10 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
         ret_dict = {}
 
         # Compile regexp patterns
+
+        # Finished local lock acquisition on R0
+        p0 = re.compile(r'^Finished +local +lock +acquisition'
+                         ' +on +(?P<slot>(\S+))$')
 
         # No ISSU operation is in progress
         p1 = re.compile(r'^No +ISSU +operation +is +in +progress$')
@@ -99,21 +103,31 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
         for line in out.splitlines():
             line = line.strip()
             
+            # Finished local lock acquisition on R0
+            # p0 = re.compile(r'^Finished +local +lock +acquisition'
+            #                  ' +on +(?P<slot>(\S+))$')
+            m = p0.match(line)
+            if m:
+                slot = m.groupdict()['slot']
+                slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
+                slot_dict['issu_in_progress'] = False
+                continue
+
             # No ISSU operation is in progress
             # p1 = re.compile(r'^No ISSU operation is in progress$')
             m = p1.match(line)
             if m:
-                ret_dict['issu_in_progress'] = False
+                slot_dict['issu_in_progress'] = False
                 continue
 
             # Slot being modified: R1
             # p2 = re.compile(r'^Slot +being +modified: +(?P<slot>(\S+))$')
             m = p2.match(line)
             if m:
-                ret_dict['issu_in_progress'] = True
-                slot = m.groupdict()['slot']
-                slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
-                slot_dict['runversion_executed'] = False
+                modified_slot = m.groupdict()['slot']
+                if slot == modified_slot:
+                    slot_dict['issu_in_progress'] = True
+                    slot_dict['runversion_executed'] = False
                 continue
 
             # Loadversion time: 20180430 19:13:51 on vty 0
