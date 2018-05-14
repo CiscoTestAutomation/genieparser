@@ -2188,6 +2188,7 @@ class ShowBgpVrfAllNeighborsSchema(MetaParser):
                  Optional('address_family'): 
                     {Any(): 
                         {Optional('bgp_table_version'): int,
+                         Optional('session_state'): str,
                          Optional('neighbor_version'): int,
                          Optional('send_community'): str,
                          Optional('soo'): str,
@@ -2763,7 +2764,9 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                     ['address_family']:
                     parsed_dict['neighbor'][neighbor_id]['address_family']\
                         [address_family] = {}
-                    continue
+                parsed_dict['neighbor'][neighbor_id]['address_family'][address_family] \
+                    ['session_state'] = session_state.lower()
+                continue
 
             # BGP table version 48, neighbor version 48
             p32 = re.compile(r'^\s*BGP +table +version'
@@ -3231,9 +3234,8 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
                 continue
 
             # Metric next advertise: Never
-            # Metric next advertise: 00:06:11
             p7 = re.compile(r'^\s*Metric +next +advertise *:'
-                             ' +(?P<metric_next_advertise>[a-zA-Z0-9\:]+)$')
+                             ' +(?P<metric_next_advertise>[a-zA-Z0-9]+)$')
             m = p7.match(line)
             if m:
                 af_dict['next_hop'][nexthop]['metric_next_advertise'] = \
